@@ -29,7 +29,7 @@ extern scenario_data_type scenario;
 extern special_node_type null_spec_node;
 extern talking_node_type null_talk_node;
 extern piles_of_stuff_dumping_type *data_store;
-extern pascal Boolean cd_event_filter();
+extern Boolean cd_event_filter();
 extern location cur_out;
 
 short store_which_ter;

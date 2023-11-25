@@ -37,7 +37,7 @@ short dlog_pat_placed = 0;
 short current_pattern = -1;
 HPALETTE syspal = NULL;
 
-void init_palette(BYTE huge * lpDib)
+void init_palette(BYTE * lpDib)
 {
 	HDC hdc;
 	short i,red,green,blue;
@@ -56,7 +56,7 @@ void init_palette(BYTE huge * lpDib)
 	pal_ok = TRUE;
 
 	if (GetDibInfoHeaderSize(lpDib) == sizeof(BITMAPCOREHEADER)) {
-		wBitCount = ((BITMAPCOREHEADER huge *) lpDib)->bcBitCount;
+		wBitCount = ((BITMAPCOREHEADER *) lpDib)->bcBitCount;
 		if (wBitCount != 24)
 			dwNumColors = 1L << wBitCount;
 			else dwNumColors = 0;
@@ -70,9 +70,9 @@ void init_palette(BYTE huge * lpDib)
 		}
 	}
 	else {
-		wBitCount = ((BITMAPINFOHEADER huge *) lpDib)->biBitCount;
+		wBitCount = ((BITMAPINFOHEADER *) lpDib)->biBitCount;
 		if (GetDibInfoHeaderSize(lpDib) >= 36)
-			dwNumColors = ((BITMAPINFOHEADER huge *) lpDib)->biClrUsed;
+			dwNumColors = ((BITMAPINFOHEADER *) lpDib)->biClrUsed;
 		if (dwNumColors == 0) {
 			if (wBitCount != 24)
 				dwNumColors = 1L << wBitCount;
@@ -124,7 +124,7 @@ plgpl = (LOGPALETTE*) LocalLock(l);
 
 // extracts and inflicts palette from given dib. WARNING ...
 // does NOT do any deleting or cleanup
-void extract_given_palette(BYTE huge * lpDib)
+void extract_given_palette(BYTE * lpDib)
 {
 	HDC hdc;
 	short i,red,green,blue;
@@ -139,7 +139,7 @@ void extract_given_palette(BYTE huge * lpDib)
 	HBRUSH hbr;
 
 	if (GetDibInfoHeaderSize(lpDib) == sizeof(BITMAPCOREHEADER)) {
-		wBitCount = ((BITMAPCOREHEADER huge *) lpDib)->bcBitCount;
+		wBitCount = ((BITMAPCOREHEADER *) lpDib)->bcBitCount;
 		if (wBitCount != 24)
 			dwNumColors = 1L << wBitCount;
 			else dwNumColors = 0;
@@ -153,9 +153,9 @@ void extract_given_palette(BYTE huge * lpDib)
 		}
 	}
 	else {
-		wBitCount = ((BITMAPINFOHEADER huge *) lpDib)->biBitCount;
+		wBitCount = ((BITMAPINFOHEADER *) lpDib)->biBitCount;
 		if (GetDibInfoHeaderSize(lpDib) >= 36)
-			dwNumColors = ((BITMAPINFOHEADER huge *) lpDib)->biClrUsed;
+			dwNumColors = ((BITMAPINFOHEADER *) lpDib)->biClrUsed;
 		if (dwNumColors == 0) {
 			if (wBitCount != 24)
 				dwNumColors = 1L << wBitCount;
@@ -285,41 +285,41 @@ void reset_palette()
 
 }
 
-DWORD GetDibInfoHeaderSize(BYTE huge * lpDib)
+DWORD GetDibInfoHeaderSize(BYTE * lpDib)
 {
-return ((BITMAPINFOHEADER huge *) lpDib)->biSize;
+return ((BITMAPINFOHEADER *) lpDib)->biSize;
 }
 
-WORD GetDibWidth(BYTE huge * lpDib)
+WORD GetDibWidth(BYTE * lpDib)
 {
 	if (GetDibInfoHeaderSize(lpDib) == sizeof(BITMAPCOREHEADER))
-		return (WORD) (((BITMAPCOREHEADER huge *) lpDib)->bcWidth);
-		else return (WORD) (((BITMAPINFOHEADER huge *) lpDib)->biWidth);
+		return (WORD) (((BITMAPCOREHEADER *) lpDib)->bcWidth);
+		else return (WORD) (((BITMAPINFOHEADER *) lpDib)->biWidth);
 }
 
-WORD GetDibHeight(BYTE huge * lpDib)
+WORD GetDibHeight(BYTE * lpDib)
 {
 	if (GetDibInfoHeaderSize(lpDib) == sizeof(BITMAPCOREHEADER))
-		return (WORD) (((BITMAPCOREHEADER huge *) lpDib)->bcHeight);
-		else return (WORD) (((BITMAPINFOHEADER huge *) lpDib)->biHeight);
+		return (WORD) (((BITMAPCOREHEADER *) lpDib)->bcHeight);
+		else return (WORD) (((BITMAPINFOHEADER *) lpDib)->biHeight);
 }
-BYTE huge * GetDibBitsAddr(BYTE huge * lpDib)
+BYTE * GetDibBitsAddr(BYTE * lpDib)
 {
 	DWORD dwNumColors, dwColorTableSize;
 	WORD wBitCount;
 	short i;
 
 	if (GetDibInfoHeaderSize(lpDib) == sizeof(BITMAPCOREHEADER)) {
-		wBitCount = ((BITMAPCOREHEADER huge *) lpDib)->bcBitCount;
+		wBitCount = ((BITMAPCOREHEADER *) lpDib)->bcBitCount;
 		if (wBitCount != 24)
 			dwNumColors = 1L << wBitCount;
 			else dwNumColors = 0;
 	dwColorTableSize = dwNumColors * sizeof(RGBTRIPLE);
 	}
 	else {
-		wBitCount = ((BITMAPINFOHEADER huge *) lpDib)->biBitCount;
+		wBitCount = ((BITMAPINFOHEADER *) lpDib)->biBitCount;
 		if (GetDibInfoHeaderSize(lpDib) >= 36)
-			dwNumColors = ((BITMAPINFOHEADER huge *) lpDib)->biClrUsed;
+			dwNumColors = ((BITMAPINFOHEADER *) lpDib)->biClrUsed;
 		if (dwNumColors == 0) {
 			if (wBitCount != 24)
 				dwNumColors = 1L << wBitCount;
@@ -334,11 +334,11 @@ BYTE huge * GetDibBitsAddr(BYTE huge * lpDib)
 
 HBITMAP ReadDib(char * name,HDC hdc) {
 BITMAPFILEHEADER bmfh;
-BYTE huge * lpDib;
+BYTE * lpDib;
 DWORD dwDibSize, dwOffset, dwHeaderSize;
 int hFile;
 WORD wDibRead;
-BYTE huge * lpDibBits;
+BYTE * lpDibBits;
 HBITMAP bmap;
 OFSTRUCT store;
 char real_name[256] = "",*name_ptr;
@@ -378,7 +378,7 @@ short i,last_slash = -1;
 //		return NULL;
 //		}
 	dwDibSize = bmfh.bfSize - sizeof(BITMAPFILEHEADER);
-	lpDib = (BYTE huge *) GlobalAllocPtr(GMEM_MOVEABLE, dwDibSize);
+	lpDib = (BYTE *) GlobalAllocPtr(GMEM_MOVEABLE, dwDibSize);
 	if (lpDib == NULL){
 		_lclose(hFile);
 		return NULL;

@@ -26,7 +26,7 @@ extern setup_save_type setup_save;
 extern stored_items_list_type stored_items[3];
 extern stored_town_maps_type town_maps;
 extern stored_outdoor_maps_type o_maps;
-extern pascal Boolean cd_event_filter();
+extern Boolean cd_event_filter();
 
 extern Boolean dialog_not_toast,ed_reg;
 extern long ed_flag,ed_key;

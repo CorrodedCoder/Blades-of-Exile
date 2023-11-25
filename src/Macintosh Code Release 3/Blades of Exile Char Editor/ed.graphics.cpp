@@ -33,7 +33,7 @@ extern stored_outdoor_maps_type o_maps;
 
 extern WindowPtr	mainPtr;
 extern Boolean registered,play_sounds,file_in_mem,party_in_scen;
-extern pascal Boolean cd_event_filter();
+extern Boolean cd_event_filter();
 
 extern short store_flags[3];
 extern GWorldPtr button_num_gworld;

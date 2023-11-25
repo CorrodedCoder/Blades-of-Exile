@@ -240,7 +240,7 @@ short select_pc(short active_only,short free_inv_only)
 }
 
 
-BOOL FAR PASCAL _export choice_dialog_proc
+BOOL FAR PASCAL choice_dialog_proc
 	(HWND hDlg, UINT message, UINT wParam, LONG lParam) {
 	RECT to_rect = {8,8,44,44};
 	short i;

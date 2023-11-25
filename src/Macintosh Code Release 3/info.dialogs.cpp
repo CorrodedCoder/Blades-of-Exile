@@ -40,7 +40,7 @@ extern party_record_type	party;
 extern short mage_range[66],priest_range[66];
 extern short spell_cost[2][62],cur_town_talk_loaded;
 extern Boolean in_startup_mode,give_intro_hint;
-extern pascal Boolean cd_event_filter();
+extern Boolean cd_event_filter();
 extern Boolean dialog_not_toast;
 extern WindowPtr mainPtr;
 extern short on_monst_menu[256];

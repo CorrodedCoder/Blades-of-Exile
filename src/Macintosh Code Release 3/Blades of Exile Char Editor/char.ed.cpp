@@ -135,12 +135,12 @@ void load_cursors();
 void set_cursor(CursHandle which_curs);
 void find_quickdraw();
 void check_sys_7();
-pascal OSErr handle_open_app(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon);
-pascal OSErr handle_open_doc(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon);
-pascal OSErr handle_quit(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon);
+OSErr handle_open_app(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon);
+OSErr handle_open_doc(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon);
+OSErr handle_quit(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon);
 Boolean verify_restore_quit(short mode);
 void set_up_apple_events();
-pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit);
+Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit);
 void set_pixel_depth();
 void handle_item_menu(int item_hit);
 item_record_type convert_item (short_item_record_type s_item);
@@ -878,12 +878,12 @@ void check_sys_7()
 		else sys_7_avail = FALSE;
 }
 
-pascal OSErr handle_open_app(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon)
+OSErr handle_open_app(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon)
 {
 	return noErr;
 }
 
-pascal OSErr handle_open_doc(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon)
+OSErr handle_open_doc(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon)
 {
 	FSSpec myFSS;
 	AEDescList docList;
@@ -915,7 +915,7 @@ pascal OSErr handle_open_doc(AppleEvent *theAppleEvent,AppleEvent *reply,long ha
 	return noErr;
 }
 
-pascal OSErr handle_quit(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon)
+OSErr handle_quit(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon)
 {
 	short choice;
 			
@@ -963,7 +963,7 @@ void set_up_apple_events()
 }
 
  
-pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit)
+Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit)
 {	
 	char chr,chr2;
 	short the_type,wind_hit,item_hit;

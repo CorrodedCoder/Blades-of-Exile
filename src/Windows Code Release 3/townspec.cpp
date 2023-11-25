@@ -14,9 +14,6 @@
 #include "itemdata.h"
 #include "townspec.h"
 #include "exlsound.h"
-#include "small.h"
-#include "medium.h"
-#include "large.h"
 
 extern short overall_mode;
 extern party_record_type far party;
