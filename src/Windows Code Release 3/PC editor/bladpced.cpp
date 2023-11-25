@@ -30,7 +30,7 @@ Blades of Exile Game/Scenario Editor/Character Editor
 #include "math.h"
 
 #include "global.h"
-#include "graphics.h" 
+#include "graphics.h"
 #include "editors.h"
 #include "edfileio.h"
 #include "edsound.h"
@@ -71,12 +71,12 @@ Boolean bgm_on = FALSE,bgm_init = FALSE;
 Boolean gInBackground = FALSE;
 long start_time;
 
-// Cursors 
+// Cursors
 short current_cursor = 120;
 HCURSOR arrow_curs[3][3], sword_curs, boot_curs, key_curs, target_curs,talk_curs,look_curs;
 
 RECT pc_area_buttons[6][4] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
-RECT item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 - 
+RECT item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 -
 RECT pc_info_rect; // Frame that holds a pc's basic info and items
 RECT name_rect; //Holds pc name inside pc_info_rect
 RECT info_area_rect;
@@ -156,7 +156,8 @@ HBITMAP bmap = NULL;
 HPALETTE hpal;
 PALETTEENTRY far ape[256];
 HDC main_dc,main_dc2,main_dc3;
-HANDLE store_hInstance,accel;
+HINSTANCE store_hInstance;
+HACCEL accel;
 BOOL event_handled;
 
 char szWinName[] = "Blades of Exile dialogs";
@@ -168,10 +169,10 @@ Boolean block_erase = FALSE;
 #include "itemdata.h"
 
 
-long FAR PASCAL _export WndProc (HWND, UINT, UINT, LONG);
+long WndProc (HWND, UINT, UINT, LONG);
 Boolean handle_menu (short, HMENU);
 
-int PASCAL WinMain (hInstance,hPrevInstance,
+int WinMain (hInstance,hPrevInstance,
   lpszCmdParam, nCmdShow)
 HANDLE hInstance;
 HANDLE hPrevInstance;
@@ -195,9 +196,9 @@ int nCmdShow;
 		wndclass.hbrBackground = GetStockObject(WHITE_BRUSH);
 		wndclass.lpszMenuName = MAKEINTRESOURCE(1);
 		wndclass.lpszClassName = szAppName;
-		
+
 		RegisterClass(&wndclass);
-	
+
 		wndclass2.style = CS_HREDRAW | CS_VREDRAW | CS_BYTEALIGNWINDOW;
 		wndclass2.lpfnWndProc = WndProc;
 		wndclass2.cbClsExtra = 0;
@@ -208,7 +209,7 @@ int nCmdShow;
 		wndclass2.hbrBackground = GetStockObject(WHITE_BRUSH);
 		wndclass2.lpszMenuName = NULL;
 		wndclass2.lpszClassName = szWinName;
-		
+
 		RegisterClass(&wndclass2);
 		}
 
@@ -282,7 +283,7 @@ int nCmdShow;
 		return msg.wParam;
 }
 
-long FAR PASCAL _export WndProc (hwnd,message,wParam,lParam)
+long WndProc (hwnd,message,wParam,lParam)
 HWND hwnd;
 UINT message;
 UINT wParam;
@@ -292,7 +293,7 @@ HDC hdc;
 PAINTSTRUCT ps;
 RECT rect;
 short cxDib, cyDib;
-BYTE huge * lpDibBits;
+BYTE * lpDibBits;
 //RECT s_rect = {0,0,30,30},d_rect = {0,0,30,30},d2 = {0,0,420,216},s2 = {0,0,420,216};
 POINT press;
 short handled = 0;
@@ -320,7 +321,8 @@ RECT dlg_rect,wind_rect;
 			check_cd_event(hwnd,message,wParam,lParam);
 			else {
 				SetFocus(hwnd);
-				press = MAKEPOINT(lParam);
+				press.x = LOWORD(lParam);
+				press.y = HIWORD(lParam);
 
 				All_Done = handle_action(press, wParam,lParam);
 				check_game_done();
@@ -349,7 +351,7 @@ RECT dlg_rect,wind_rect;
 			inflict_palette();
 			}
 		break;
-		
+
 	case WM_ACTIVATE:
 		if (hwnd == mainPtr) {
 			if (((wParam == WA_ACTIVE) ||(wParam == WA_CLICKACTIVE)) &&
@@ -381,7 +383,7 @@ RECT dlg_rect,wind_rect;
 		return 0;
 
 
-	case WM_COMMAND:    
+	case WM_COMMAND:
 		if (hwnd == mainPtr) {
 
 			menu = GetMenu(mainPtr);
@@ -424,7 +426,7 @@ void check_game_done()
   //	through_sending();
 	if (All_Done == TRUE) {
 		lose_graphics();
-		//showcursor(TRUE);       
+		//showcursor(TRUE);
 		PostQuitMessage(0);
 		}
 }
@@ -473,7 +475,7 @@ Boolean handle_menu (short item, HMENU menu)
 				redraw_screen();
 
 		break;
-		
+
 		case 44:
 			if (party.stuff_done[304][0] > 0) {
 				FCD(909,0);
@@ -482,7 +484,7 @@ Boolean handle_menu (short item, HMENU menu)
 			FCD(901,0);
 			leave_town();
 			break;
-	
+
 		case 45:
 			if (party.stuff_done[304][0] == 0) {
 				FCD(911,0);
@@ -494,10 +496,10 @@ Boolean handle_menu (short item, HMENU menu)
 			party.stuff_done[304][0] = 0;
 			for (i = 0; i < 6; i++)
 				if (adven[i].main_status >= 10)
-					adven[i].main_status -= 10;				
+					adven[i].main_status -= 10;
 			redraw_screen();
 			break;
-			
+
 
 		case 48:
 			display_strings(20,20,0,0,"Editing party",57,707,0);
@@ -571,7 +573,7 @@ Boolean handle_menu (short item, HMENU menu)
 				}
 			display_strings(20,13,0,0,"Editing party",57,715,0);
 			for (i = 0; i < 96; i++)
-				for (j = 0; j < 96; j++)   
+				for (j = 0; j < 96; j++)
 					out_e[i][j] = 1;
 			for (i = 0; i < 100; i++)
 				for (j = 0; j < 6; j++)
@@ -620,7 +622,7 @@ void load_cursors()
 {
 	short i,j;
 	sword_curs = LoadCursor(store_hInstance,MAKEINTRESOURCE(120));
-	
+
 	set_cursor(sword_curs);
 	current_cursor = 124;
 
@@ -685,7 +687,7 @@ item_record_type convert_item (short_item_record_type s_item) {
 	item_record_type i;
 	location l = {0,0};
 	short temp_val;
-	
+
 	i.variety = (short) s_item.variety;
 	i.item_level = (short) s_item.item_level;
 	i.awkward = (short) s_item.awkward;
@@ -717,7 +719,7 @@ item_record_type convert_item (short_item_record_type s_item) {
 		i.treas_class = 3;
 	if (temp_val >= 2400)
 		i.treas_class = 4;
-		
+
 	i.magic_use_type = s_item.magic_use_type;
 	i.ability_strength = s_item.ability_strength;
 	i.reserved1 = 0;
@@ -756,7 +758,7 @@ void update_item_menu()
 		DeleteMenu(menu[j],1000 + j,MF_BYCOMMAND);
 		}
 
-			
+
 
 
 }
@@ -799,11 +801,13 @@ void check_cd_event(HWND hwnd,UINT message,UINT wparam,LONG lparam)
 			break;
 
 		case WM_LBUTTONDOWN:
-			press = MAKEPOINT(lparam);
+			press.x = LOWORD(lparam);
+			press.y = HIWORD(lparam);
 			wind_hit = cd_process_click(hwnd,press, wparam, lparam,&item_hit);
 			break;
 		case WM_RBUTTONDOWN:
-			press = MAKEPOINT(lparam);
+			press.x = LOWORD(lparam);
+			press.y = HIWORD(lparam);
 			wparam = wparam | MK_CONTROL;
 			wind_hit = cd_process_click(hwnd,press, wparam, lparam,&item_hit);
 			break;

@@ -35,20 +35,6 @@ short dist(location p1,location p2)
 							(p1.y - p2.y) * (p1.y - p2.y)));
 }
 
-short max(short a,short b)
-{
-	if (a > b)
-		return a;
-		else return b;
-}
-
-short min(short a,short b)
-{
-	if (a < b)
-		return a;
-		else return b;
-}
-
 short minmax(short min,short max,short k)
 {
 	if (k < min)

@@ -176,7 +176,7 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw,short dest)
 	short anim_type = 0;
 	location l;
 	HDC hdc;
-	HBITMAP store_bmp;
+	HGDIOBJ store_bmp;
 
 	source_gworld = storage_gworld;
 
@@ -1091,7 +1091,8 @@ void frame_space(location where,short mode,short width,short height)
 	HDC hdc;
  //	DWORD color[3] = {RGB(255,0,0),RGB(0,255,0),RGB(0,0,255)};
 	DWORD color[3] = {PALETTEINDEX(43),PALETTEINDEX(2),PALETTEINDEX(22)};
-	HPEN hpen,old_pen;
+	HPEN hpen;
+	HGDIOBJ old_pen;
 	COLORREF x[3] = {RGB(200,0,0),RGB(102,255,0),RGB(200,0,200)};//RGB(204,204,204);
 	UINT c;
 
@@ -1107,7 +1108,7 @@ void frame_space(location where,short mode,short width,short height)
 	to_frame.right = 46 + where_put.x * 28 + 28 * (width - 1);
 
 	hdc = GetDC(mainPtr);
-	SetViewportOrg(hdc,ulx,uly);
+	SetViewportOrgEx(hdc,ulx,uly, NULL);
 	SelectPalette(hdc,hpal,0);
 	c = GetNearestPaletteIndex(hpal,x[mode]);
 //	hbrush = CreateSolidBrush(PALETTEINDEX(c));//59));
@@ -1116,7 +1117,7 @@ void frame_space(location where,short mode,short width,short height)
 	old_pen = SelectObject(hdc,hpen);
 //	RoundRect(hdc,to_frame.left,to_frame.top,
 //		to_frame.right,to_frame.bottom, 5,5);
-	MoveTo(hdc,to_frame.left,to_frame.top);
+	MoveToEx(hdc,to_frame.left,to_frame.top, NULL);
 	LineTo(hdc,to_frame.right,to_frame.top);
 	LineTo(hdc,to_frame.right,to_frame.bottom);
 	LineTo(hdc,to_frame.left,to_frame.bottom);

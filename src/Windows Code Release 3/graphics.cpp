@@ -65,7 +65,7 @@ extern HDC main_dc,main_dc2,main_dc3;
 extern HFONT fantasy_font,font,small_bold_font,italic_font,underline_font,bold_font;
 extern HCURSOR arrow_curs[3][3], sword_curs, key_curs, target_curs,talk_curs,look_curs;
 
-extern HANDLE store_hInstance;
+extern HINSTANCE store_hInstance;
 extern Boolean modeless_exists[18],diff_depth_ok;
 extern short modeless_key[18];
 extern HWND modeless_dialogs[18];
@@ -203,7 +203,7 @@ void plop_fancy_startup()
 
 	RECT screen_rect = {0,0,613,448},from_rect = {0,0,350,350},to_rect,whole_window;
 	POINT graphic_ul;
-	HBRUSH old_brush;
+	HGDIOBJ old_brush;
 	long cur_time;
 	RECT big_pic_from = {2,48,641,434};
 
@@ -240,10 +240,10 @@ void plop_fancy_startup()
 		SelectObject(main_dc,font);
 		SetBkMode(main_dc,TRANSPARENT);
 		main_dc2 = CreateCompatibleDC(main_dc);
-		SetMapMode(main_dc2,GetMapMode(mainPtr));
+		SetMapMode(main_dc2,GetMapMode(main_dc));
 		SelectPalette(main_dc2,hpal,0);
 		main_dc3 = CreateCompatibleDC(main_dc);
-		SetMapMode(main_dc3,GetMapMode(mainPtr));
+		SetMapMode(main_dc3,GetMapMode(main_dc));
 		SelectPalette(main_dc3,hpal,0);
 		SetStretchBltMode(main_dc,STRETCH_DELETESCANS);
 		SetStretchBltMode(main_dc2,STRETCH_DELETESCANS);
@@ -489,7 +489,7 @@ void draw_startup_anim()
 void draw_start_button(short which_position,short which_button)
 {
 	RECT from_rect,to_rect;
-	char *button_labels[] = {"Load Game","Make New Party","How To Order",
+	const char * const button_labels[] = {"Load Game","Make New Party","How To Order",
 		"Start Scenario","Custom Scenario","Quit"};
 	RECT button_from = {172,0,202,30};
 	COLORREF colors[5] = {RGB(0,0,0),RGB(255,0,0),RGB(255,255,255),RGB(0,255,255),RGB(0,0,255)};
@@ -844,11 +844,11 @@ void redraw_screen(short mode)
 	if (text_sbar == NULL) {
 		text_sbar = CreateWindow("scrollbar",NULL,
 			WS_CHILD | WS_TABSTOP | SBS_VERT | WS_VISIBLE, sbar_rect.left,sbar_rect.top,sbar_rect.right,sbar_rect.bottom,
-			mainPtr,1,store_hInstance,NULL);
+			mainPtr, reinterpret_cast<HMENU>(1),store_hInstance,NULL);
 		SetScrollRange(text_sbar,SB_CTL,0,58,FALSE);
 		item_sbar = CreateWindow("scrollbar",NULL,
 			WS_CHILD | WS_TABSTOP | SBS_VERT | WS_VISIBLE, item_sbar_rect.left,item_sbar_rect.top,item_sbar_rect.right,item_sbar_rect.bottom,
-			mainPtr,2,store_hInstance,NULL);
+			mainPtr, reinterpret_cast<HMENU>(2),store_hInstance,NULL);
 		SetScrollRange(item_sbar,SB_CTL,0,16,FALSE);
  		ShowScrollBar(text_sbar,SB_CTL,TRUE);
 		ShowScrollBar(item_sbar,SB_CTL,TRUE);
@@ -912,11 +912,11 @@ void draw_main_screen()
 	if (text_sbar == NULL) {
 		text_sbar = CreateWindow("scrollbar",NULL,
 			WS_CHILD | WS_TABSTOP | SBS_VERT | WS_VISIBLE, sbar_rect.left,sbar_rect.top,sbar_rect.right,sbar_rect.bottom,
-			mainPtr,1,store_hInstance,NULL);
+			mainPtr, reinterpret_cast<HMENU>(1),store_hInstance,NULL);
 		SetScrollRange(text_sbar,SB_CTL,0,58,FALSE);
 		item_sbar = CreateWindow("scrollbar",NULL,
 			WS_CHILD | WS_TABSTOP | SBS_VERT | WS_VISIBLE, item_sbar_rect.left,item_sbar_rect.top,item_sbar_rect.right,item_sbar_rect.bottom,
-			mainPtr,2,store_hInstance,NULL);
+			mainPtr, reinterpret_cast<HMENU>(2),store_hInstance,NULL);
 		SetScrollRange(item_sbar,SB_CTL,0,16,FALSE);
 		ShowScrollBar(text_sbar,SB_CTL,TRUE);
 		ShowScrollBar(item_sbar,SB_CTL,TRUE);
@@ -985,7 +985,7 @@ void put_background()
 
 	SelectClipRgn(main_dc,clip_region);
 	GetClientRect(mainPtr,&r);
-	paint_pattern(mainPtr, 1,r,wp);
+	paint_pattern(reinterpret_cast<HBITMAP>(mainPtr), 1,r,wp);
 	undo_clip();
 
 	//ShowScrollBar(text_sbar,SB_CTL,TRUE);
@@ -1132,7 +1132,7 @@ void put_text_bar(char *str)
 	char status_str[256];
 	short xpos = 205;
 	HDC hdc;
-	HBITMAP store_bmp;
+	HGDIOBJ store_bmp;
 	RECT text_rect = {5,3,279,21};
 	COLORREF x = RGB(0,0,0),y = RGB(255,255,255);
 	UINT c;
@@ -2433,7 +2433,7 @@ void draw_targeting_line(POINT where_curs)
 	location from_loc;
 	RECT on_screen_terrain_area = {18, 18, 269,341};
 	char dam_str[20];
-	HPEN white_pen,store_pen;
+	HGDIOBJ white_pen,store_pen;
 	static LOGPEN white_pen_data = {PS_SOLID,2,2,RGB(255,255,255)};
 	COLORREF colors[2] = {RGB(0,0,0),RGB(255,255,255)},storec;
 	UINT c[2];
@@ -2467,15 +2467,15 @@ void draw_targeting_line(POINT where_curs)
 			if ((loc_off_act_area(which_space) == FALSE) && 
 				(can_see(from_loc,which_space,0) < 5)
 			 && (dist(from_loc,which_space) <= current_spell_range)) {
-				SetViewportOrg(  main_dc,ulx,uly);
+				SetViewportOrgEx(main_dc,ulx,uly, NULL);
 				white_pen = CreatePenIndirect(&white_pen_data);
-				store_pen = SelectObject(main_dc,white_pen);
+				store_pen = SelectObject(main_dc, static_cast<HGDIOBJ>(white_pen));
 
 				//InsetRect(&terrain_rect,13,13);
 				//OffsetRect(&terrain_rect,5 + ulx,5 + uly);
 				OffsetRect(&on_screen_terrain_area,-1 * ulx,-1 * uly);
 				ClipRect(&on_screen_terrain_area);
-				MoveTo(main_dc,where_curs.x - ulx,where_curs.y - uly);
+				MoveToEx(main_dc,where_curs.x - ulx,where_curs.y - uly, NULL);
 				LineTo(main_dc,k,l);
 
 				redraw_rect.left = min(where_curs.x,k) - 4;
@@ -2499,7 +2499,7 @@ void draw_targeting_line(POINT where_curs)
 								target_rect.top = 13 + BITMAP_HEIGHT * j + 5;// + uly;
 								target_rect.bottom = target_rect.top + BITMAP_HEIGHT;
 
-								MoveTo(main_dc,target_rect.left,target_rect.top);
+								MoveToEx(main_dc,target_rect.left,target_rect.top, NULL);
 								LineTo(main_dc,target_rect.right,target_rect.top);
 								LineTo(main_dc,target_rect.right,target_rect.bottom);
 								LineTo(main_dc,target_rect.left,target_rect.bottom);

@@ -24,8 +24,8 @@ extern HFONT fantasy_font,font,italic_font,underline_font,bold_font,tiny_font,sm
 extern HWND mainPtr;
 extern HPALETTE hpal;
 extern HDC main_dc;
-extern HANDLE store_hInstance;
-long FAR PASCAL _export WndProc (HWND, UINT, UINT, LONG);
+extern HINSTANCE store_hInstance;
+long WndProc (HWND, UINT, UINT, LONG);
 extern HBRUSH bg[14];
 
 // Necessary evil
@@ -39,7 +39,7 @@ extern HBITMAP startmsc_gworld;
 extern short far terrain_pic[256];
 extern short ulx,uly;
 
-extern HANDLE accel;
+extern HACCEL accel;
 extern unsigned char m_pic_index_x[200];
 extern unsigned char m_pic_index_y[200];
 extern unsigned char m_pic_index[200];
@@ -76,7 +76,7 @@ HDC dlg_force_dc = NULL; // save HDCs when dealing with dlogs
 short store_free_slot,store_dlog_num;
 HWND store_parent;
 
-short available_dlog_buttons[NUM_DLOG_B] = {0,63,64,65,1,4,5,8, 
+short available_dlog_buttons[NUM_DLOG_B] = {0,63,64,65,1,4,5,8,
 								128,
 								9,
 								10, // 10
@@ -136,7 +136,7 @@ char button_def_key[150] = {0,0,20,21,'k', 24,0,0,0,0,
 							'g','1','2','3','4', '5','6',0,0,0,
 							0,0,0,0,0,' ',0,22,23,0,
 							0,0,0,0,0,'1','2','3','4','5',
-							'6','7','8','9','a', 'b','c','d','e','f',  
+							'6','7','8','9','a', 'b','c','d','e','f',
 							'g',0,0,0,0,0,0,0,0,0,
 							0,0,0,0,'y','n',0,'?','r',0,
 							0,0,0,0,0,0,0,0,0, 0,
@@ -156,9 +156,8 @@ short button_ul_y[15] = {0,0,132,23,46, 69,46,69,36,36, 36,23,92,92,0};
 short button_width[15] = {23,63,102,16,63, 63,63,63,6,14, 14,63,63,63,30};
 short button_height[15] = {23,23,23,13,23, 23,23,23,6,10,10,23,40,40,30};
 
-BOOL FAR PASCAL _export dummy_dialog_proc
-	(HWND hDlg, UINT message, UINT wParam, LONG lParam);
-long FAR PASCAL _export fresh_edit_proc(HWND hwnd, UINT message, UINT wParam, LONG lParam);
+INT_PTR dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+long fresh_edit_proc(HWND hwnd, UINT message, UINT wParam, LONG lParam);
 
 
 	FARPROC d_proc;
@@ -186,7 +185,7 @@ void cd_init_dialogs()
 	edit_proc = MakeProcInstance ((FARPROC) fresh_edit_proc,store_hInstance);
 }
 
-long FAR PASCAL _export fresh_edit_proc(HWND hwnd, UINT message, UINT wParam, LONG lParam)
+long fresh_edit_proc(HWND hwnd, UINT message, UINT wParam, LONG lParam)
 {
 
 	switch (message) {
@@ -389,7 +388,7 @@ short cd_create_custom_dialog(HWND parent,
 				(char *) strs[i]);
       		cur_item++;
        		}
-	
+
 	dlg_highest_item[free_slot] = cur_item - 1;
 
 	// finally, do button rects
@@ -408,16 +407,16 @@ short cd_create_custom_dialog(HWND parent,
 				win_width = item_rect[but_items[i]].right + 6;
 				win_height = item_rect[but_items[i]].bottom + 6;
 				}
-			}	
-	
-	//MoveWindow(dlgs[free_slot],(windRect.right - win_width) / 2,(windRect.bottom - win_width) / 2 + 20,FALSE);	
+			}
+
+	//MoveWindow(dlgs[free_slot],(windRect.right - win_width) / 2,(windRect.bottom - win_width) / 2 + 20,FALSE);
 	//SizeWindow(dlgs[free_slot],win_width,win_height,FALSE);
 	win_height += 18;
 
 	MoveWindow(dlgs[free_slot],0,0,win_width,win_height,FALSE);
 	center_window(dlgs[free_slot]);
 	ShowWindow(dlgs[free_slot],SW_SHOW);
-					
+
 	if (dlg_parent[free_slot] != NULL) {
 		EnableWindow(dlg_parent[free_slot],FALSE);
 		if (dlg_parent[free_slot] == mainPtr)
@@ -527,8 +526,8 @@ short cd_create_dialog(short dlog_num,HWND parent)
 	return 0;
 }
 
-BOOL FAR PASCAL _export dummy_dialog_proc
-	(HWND hDlg, UINT message, UINT wParam, LONG lParam) {
+INT_PTR dummy_dialog_proc
+	(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
 	short i,j,k,free_slot = -1,free_item = -1,type,flag;
 	char item_str[256];
 	Boolean str_stored = FALSE;
@@ -995,16 +994,16 @@ void cd_get_text_edit_str(short dlog_num, char *str)
 			else str[0] = 0;
 }
 // NOTE!!! Expects a c string
-void cd_set_text_edit_str(short dlog_num, char *str)
+void cd_set_text_edit_str(short dlog_num, const char *str)
 {
 		if (edit_box != NULL)
 			SetWindowText(edit_box,str);
 }
-void cdsin(short dlog_num, short item_num, short num) 
+void cdsin(short dlog_num, short item_num, short num)
 {
 	cd_set_item_num( dlog_num,  item_num,  num);
 }
-void csit(short dlog_num, short item_num, char *str)
+void csit(short dlog_num, short item_num, const char *str)
 {
 cd_set_item_text( dlog_num,  item_num, str);
 }
@@ -1014,7 +1013,7 @@ void csp(short dlog_num, short item_num, short pict_num)
 }
 
 
-void cd_set_item_text(short dlog_num, short item_num, char *str)
+void cd_set_item_text(short dlog_num, short item_num, const char *str)
 {
 	short k,dlg_index,item_index;
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
@@ -1438,7 +1437,7 @@ void cd_erase_item(short dlog_num, short item_num)
 	SelectObject(win_dc,old_brush);
 	SelectObject(win_dc,old_pen);  */
 	paint_pattern(win_dc,2,to_fry,0);
-	cd_kill_dc(dlg_index,win_dc);  
+	cd_kill_dc(dlg_index,win_dc);
 
 
 
@@ -1505,13 +1504,13 @@ void cd_press_button(short dlog_num, short item_num)
 	OffsetRect(&from_rect,-1 * button_width[item_flag[item_index]],0);
 	rect_draw_some_item(dlgbtns_gworld,from_rect,win_dc,item_rect[item_index],0,2);
 	*/
-	
+
 	from_rect.top = button_ul_y[button_type[item_flag[item_index]]];
 	from_rect.left = button_ul_x[button_type[item_flag[item_index]]];
 	from_rect.bottom = from_rect.top + button_height[button_type[item_flag[item_index]]];
 	from_rect.right = from_rect.left + button_width[button_type[item_flag[item_index]]];
 	OffsetRect(&from_rect,button_width[button_type[item_flag[item_index]]],0);
-	
+
 	rect_draw_some_item(dlg_buttons_gworld,from_rect,win_dc,item_rect[item_index],0,2);
 
 	SelectObject(win_dc,bold_font);
@@ -1524,7 +1523,7 @@ void cd_press_button(short dlog_num, short item_num)
 		}
 		else {
 			char_win_draw_string(win_dc,item_rect[item_index],
-			 (char *) ((item_index < 10) ? text_long_str[item_index] : 
+			 (char *) ((item_index < 10) ? text_long_str[item_index] :
 			text_short_str[item_index - 10]),1,8);
 			}
 	if (item_type[item_index] < 2)
@@ -1549,7 +1548,7 @@ void cd_press_button(short dlog_num, short item_num)
 		}
 		else {
 			char_win_draw_string(win_dc,item_rect[item_index],
-			 (char *) ((item_index < 10) ? text_long_str[item_index] : 
+			 (char *) ((item_index < 10) ? text_long_str[item_index] :
 			text_short_str[item_index - 10]),1,8);
 			}
 	if (item_type[item_index] < 2)
@@ -1715,8 +1714,8 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 // 900 + x  B&W graphic
 // 950 null item
 // 1000 + x  Talking face
-// 1100 - item info help  
-// 1200 - pc screen help  
+// 1100 - item info help
+// 1200 - pc screen help
 // 1300 - combat ap
 // 1400-1402 - button help
 // 1500 - stat symbols help
@@ -1732,7 +1731,7 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 	RECT m_to_rect = {10,6,38,42};
 	RECT bw_from = {0,0,120,120};
 	RECT map_from = {0,0,240,240};
-	
+
 	RECT pc_info_from = {0,127,106,157};
 	RECT item_info_from = {174,0,312,112};
 	RECT button_help_from = {0,0,320,100};

@@ -12,7 +12,7 @@
 HGLOBAL sound_handles[NUM_SOUNDS];
 char far *snds[NUM_SOUNDS];
 
-extern HANDLE store_hInstance;
+extern HINSTANCE store_hInstance;
 
 extern Boolean play_sounds,in_startup_mode;
 extern HWND mainPtr;

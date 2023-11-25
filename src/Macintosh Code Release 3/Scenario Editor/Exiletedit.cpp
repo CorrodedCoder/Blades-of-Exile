@@ -49,7 +49,7 @@ Blades of Exile Game/Scenario Editor/Character Editor
 Rect	windRect, Drag_Rect;
 Boolean Multifinder_Present, All_Done = FALSE,dialog_not_toast = FALSE,play_sounds = TRUE;
 EventRecord	event;
-WindowPtr	mainPtr;	
+WindowPtr	mainPtr;
 town_record_type town;
 big_tr_type t_d;
 Boolean diff_depth_ok = FALSE,mouse_button_held = FALSE,editing_town = FALSE;
@@ -94,11 +94,11 @@ void handle_outdoor_menu(int item_hit);
 void handle_item_menu(int item_hit);
 void handle_monst_menu(int item_hit);
 void handle_help_menu(int item_hit);
-pascal void right_sbar_action(ControlHandle bar, short part);
+void right_sbar_action(ControlHandle bar, short part);
 void Mouse_Pressed();
 void close_program();
- void ding();
- pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit);
+void ding();
+Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit);
 void set_pixel_depth();
 void restore_depth();
 void find_quickdraw() ;
@@ -108,7 +108,7 @@ scenario_data_type scenario;
 piles_of_stuff_dumping_type *data_store;
 Rect right_sbar_rect;
 
-// 
+//
 //	Main body of program Exileedit
 //
 
@@ -127,14 +127,14 @@ void main(void)
 	MoreMasters();
 	MoreMasters();
 
-	data_store = (piles_of_stuff_dumping_type *) NewPtr(sizeof(piles_of_stuff_dumping_type));	
+	data_store = (piles_of_stuff_dumping_type *) NewPtr(sizeof(piles_of_stuff_dumping_type));
 	init_current_terrain();
 	//create_file();
 	//ExitToShell();
 	cd_init_dialogs();
 
 	cen_x = 18; cen_y = 18;
-	
+
 	Initialize();
 	load_sounds();
 	init_directories();
@@ -144,11 +144,11 @@ void main(void)
 	init_town(1);
 	init_out();
 	init_scenario();
-	
+
 	make_cursor_sword();
-	
+
 	Set_Window_Drag_Bdry();
-	
+
 	Set_up_win();
 	init_screen_locs();
 
@@ -170,30 +170,30 @@ void main(void)
 	AddResMenu(apple_menu, 'DRVR');
 	shut_down_menus(0);
 	DrawMenuBar();
-		
+
 	//update_item_menu();
-	
+
 //	to_create = get_town_to_edit();
 
 //	load_terrain(to_create);
 
 //	modify_lists();
 	set_up_start_screen();
-	
-	Multifinder_Present = (NGetTrapAddress(_WaitNextEvent, ToolTrap) != 
+
+	Multifinder_Present = (NGetTrapAddress(_WaitNextEvent, ToolTrap) !=
 		NGetTrapAddress(_Unimplemented, ToolTrap));
 
 	TextFace(bold);
-	
+
 	redraw_screen();
-	
-	while (All_Done == FALSE) 
+
+	while (All_Done == FALSE)
 		Handle_One_Event();
-	
+
 	close_program();
 }
 
-// 
+//
 //	Initialize everything for the program, make sure we can run
 //
 
@@ -204,10 +204,10 @@ void Initialize(void)
 	Str255 tit = "  ";
 	OSErr		error;
 	SysEnvRec	theWorld;
-		
+
 	//
-	//	Test the computer to be sure we can do color.  
-	//	If not we would crash, which would be bad.  
+	//	Test the computer to be sure we can do color.
+	//	If not we would crash, which would be bad.
 	//	If we canÕt run, just beep and exit.
 	//
 
@@ -216,7 +216,7 @@ void Initialize(void)
 		SysBeep(50);
 		ExitToShell();					/* If no color QD, we must leave. */
 	}
-	
+
 	/* Initialize all the needed managers. */
 	InitGraf(&qd.thePort);
 	InitFonts();
@@ -236,7 +236,7 @@ void Initialize(void)
 	GetDateTime((unsigned long*) &qd.randSeed);
 
 	//
-	//	Make a new window for drawing in, and it must be a color window.  
+	//	Make a new window for drawing in, and it must be a color window.
 	//	The window is full screen size, made smaller to make it more visible.
 	//
 	windRect = qd.screenBits.bounds;
@@ -246,16 +246,16 @@ void Initialize(void)
 	//InsetRect(&windRect, 5, 34);
 	InsetRect(&windRect,(windRect.right - 584) / 2,(windRect.bottom - 420) / 2);
 	OffsetRect(&windRect,0,18);
-	mainPtr = NewCWindow(nil, &windRect, "\pBlades of Exile Scenario Editor", true, documentProc, 
+	mainPtr = NewCWindow(nil, &windRect, "\pBlades of Exile Scenario Editor", true, documentProc,
 						(WindowPtr) -1, false, 0);
-	windRect = mainPtr->portRect;	
+	windRect = mainPtr->portRect;
 	SetPort(mainPtr);						/* set window to current graf port */
 	right_sbar_rect.top = RIGHT_AREA_UL_Y;
 	right_sbar_rect.left = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 1 - 16;
 	right_sbar_rect.bottom = RIGHT_AREA_UL_Y + RIGHT_AREA_HEIGHT;
 	right_sbar_rect.right = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 1;
 	right_sbar = NewControl(mainPtr,&right_sbar_rect,tit,TRUE,0,0,0,scrollBarProc,1);
-	 
+
 }
 
 void Set_Window_Drag_Bdry()
@@ -287,7 +287,7 @@ void Handle_One_Event()
 			// but, well ... it works.
 			//ding();
 		}
-		
+
 	switch (event.what)
 	{
 		case keyDown: case autoKey:
@@ -296,7 +296,7 @@ void Handle_One_Event()
 				if ((event.modifiers & cmdKey) != 0) {
 					if (event.what != autoKey) {
 						BringToFront(mainPtr);
-						SetPort(mainPtr);						
+						SetPort(mainPtr);
 						menu_choice = MenuKey(chr);
 						handle_menu_choice(menu_choice);
 						}
@@ -305,24 +305,24 @@ void Handle_One_Event()
 						All_Done = TRUE;
 						else handle_keystroke(chr,chr2,event);
 			break;
-		
+
 		case mouseDown:
 			Mouse_Pressed();
 			break;
-		
-		
+
+
 		case mouseUp:
 			mouse_button_held = FALSE;
 			break;
-			
+
 		case activateEvt:
 			Handle_Activate();
 			break;
-		
+
 		case updateEvt:
 			Handle_Update();
 			break;
-		} 
+		}
 }
 
 
@@ -335,17 +335,17 @@ void Handle_Update()
 {
 	WindowPtr the_window;
 	GrafPtr		old_port;
-	
+
 	the_window = (WindowPtr) event.message;
-	
+
 	GetPort (&old_port);
 	SetPort (the_window);
-	
+
 	BeginUpdate(the_window);
-	
+
 	redraw_screen();
 	EndUpdate(the_window);
-	
+
 	SetPort(old_port);
 	restore_cursor();
 }
@@ -366,7 +366,7 @@ void handle_menu_choice(long choice)
 			case 550:
 				handle_file_menu(menu_item);
 				break;
-			case 600: 
+			case 600:
 				handle_scenario_menu(menu_item);
 				break;
 			case 650:
@@ -381,12 +381,12 @@ void handle_menu_choice(long choice)
 			case 700: case 701: case 702: case 703: case 704:
 				handle_item_menu(menu_item + 80 * (menu - 700) - 1);
 				break;
-			case 750: case 751: case 752: case 753: 
+			case 750: case 751: case 752: case 753:
 				handle_monst_menu(menu_item + 64 * (menu - 750) - 1);
 				break;
 
 			}
-		} 
+		}
 	HiliteMenu(0);
 }
 
@@ -394,7 +394,7 @@ void handle_apple_menu(int item_hit)
 {
 	Str255 desk_acc_name;
 	short desk_acc_num;
-	
+
 	switch (item_hit) {
 		case 1:
 			fancy_choice_dialog(1062,0);
@@ -410,7 +410,7 @@ void handle_apple_menu(int item_hit)
 void handle_file_menu(int item_hit)
 {
 	short create;
-	
+
 	switch (item_hit) {
 		case 1: // open
 			load_scenario();
@@ -440,7 +440,7 @@ void handle_file_menu(int item_hit)
 void handle_scenario_menu(int item_hit)
 {
 	short i;
-	
+
 	switch (item_hit) {
 		case 1:
 			if (change_made == TRUE) {
@@ -466,7 +466,7 @@ void handle_scenario_menu(int item_hit)
 			set_starting_loc();
 			break;
 		case 6:
-			if (check_p(user_given_password) == TRUE) 
+			if (check_p(user_given_password) == TRUE)
 				given_password = get_password(); break;
 		case 9:  SetControlValue(right_sbar,0); start_special_editing(0,0); break;
 		case 10:
@@ -548,7 +548,7 @@ void handle_scenario_menu(int item_hit)
 void handle_town_menu(int item_hit)
 {
 	short i;
-	
+
 				change_made = TRUE;
 	switch (item_hit) {
 		case 1: edit_town_details(); break;
@@ -585,7 +585,7 @@ void handle_town_menu(int item_hit)
 void handle_outdoor_menu(int item_hit)
 {
 	short i;
-	
+
 				change_made = TRUE;
 	switch (item_hit) {
 		case 1: outdoor_details(); break;
@@ -604,7 +604,7 @@ void handle_outdoor_menu(int item_hit)
 void handle_help_menu(int item_hit)
 {
 	short i;
-	
+
 	switch (item_hit) {
 		case 1: fancy_choice_dialog(986,0); break; // started
 		case 2: fancy_choice_dialog(1000,0); break; // testing
@@ -633,17 +633,17 @@ void handle_monst_menu(int item_hit)
 
 
 
-pascal void right_sbar_action(ControlHandle bar, short part)
+void right_sbar_action(ControlHandle bar, short part)
 {
 	short old_setting,new_setting,max,i;
-	
+
 	if (part == 0)
 		return;
-	
+
 	old_setting = GetControlValue(bar);
 	new_setting = old_setting;
 	max = GetControlMaximum(bar);
-	
+
 	switch (part) {
 		case inUpButton: new_setting--; break;
 		case inDownButton: new_setting++; break;
@@ -662,9 +662,9 @@ void Mouse_Pressed()
 	short	the_part,content_part,i;
 	long menu_choice;
 	ControlHandle control_hit;
-	
+
 	the_part = FindWindow( event.where, &the_window);
-	
+
 	switch (the_part)
 	{
 		case inMenuBar:
@@ -674,15 +674,15 @@ void Mouse_Pressed()
 
 		case inSysWindow:
 			break;
-		
+
 		case inDrag:
 			DragWindow(the_window, event.where, &qd.screenBits.bounds);
 			break;
-		
+
 		case inGoAway:
 			All_Done = TRUE;
 			break;
-		
+
 		case inContent:
 						SetPort(mainPtr);
 						GlobalToLocal(&event.where);
@@ -695,7 +695,7 @@ void Mouse_Pressed()
 										if (content_part == inThumb) {
 											draw_rb();
 											}
-														
+
 									break;
 								case inUpButton: case inPageUp: case inDownButton: case inPageDown:
 									if (control_hit == right_sbar)
@@ -703,7 +703,7 @@ void Mouse_Pressed()
 									break;
 
 								}
-								
+
 							} // a control hit
 					 		else  // ordinary click
 								All_Done = handle_action(event.where,event);
@@ -720,18 +720,18 @@ void close_program()
  {
  	SysBeep(1);
  }
- 
- pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit)
-{	
+
+ Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit)
+{
 	char chr,chr2;
 	short the_type,wind_hit,item_hit;
 	Handle the_handle = NULL;
 	Rect the_rect,button_rect;
 	Point the_point;
 	CWindowPeek w;
-	
+
 	dummy_item_hit = 0;
-	
+
 	switch (event->what) {
 		case updateEvt:
 		w = (CWindowPeek) hDlg;
@@ -744,7 +744,7 @@ void close_program()
 		DrawDialog(hDlg);
 		return FALSE;
 		break;
-		
+
 		case keyDown:
 		chr = event->message & charCodeMask;
 		chr2 = (char) ((event->message & keyCodeMask) >> 8);
@@ -762,10 +762,10 @@ void close_program()
 
 		wind_hit = cd_process_keystroke(hDlg,chr,&item_hit);
 		break;
-	
+
 		case mouseDown:
 		the_point = event->where;
-		GlobalToLocal(&the_point);	
+		GlobalToLocal(&the_point);
 		wind_hit = cd_process_click(hDlg,the_point, event->modifiers,&item_hit);
 		break;
 
@@ -835,20 +835,20 @@ void set_pixel_depth() {
 	PixMapHandle screen_pixmap_handle;
 	OSErr err;
 	short choice;
-	
-	cur_device = GetGDevice();	
-	
+
+	cur_device = GetGDevice();
+
 	if ((HasDepth(cur_device,8,1,1)) == 0) {
 		choice_dialog(0,1070);
 		ExitToShell();
 		}
-	
+
 	screen_pixmap_handle = (**(cur_device)).gdPMap;
 	pixel_depth = (**(screen_pixmap_handle)).pixelSize;
-	
+
 	if ((pixel_depth <= 8) && (diff_depth_ok == TRUE))
 		return;
-	
+
 	if (pixel_depth != 8) {
 		choice = choice_dialog(0,1071);
 		if (choice == 3)
@@ -870,8 +870,8 @@ void restore_depth()
 	PixMapHandle screen_pixmap_handle;
 	OSErr err;
 	short choice;
-	
-	cur_device = GetGDevice();	
+
+	cur_device = GetGDevice();
 
 	screen_pixmap_handle = (**(cur_device)).gdPMap;
 
@@ -887,7 +887,7 @@ void find_quickdraw() {
 	OSErr err;
 	long response;
 	short choice;
-	
+
 	err = Gestalt(gestaltQuickdrawVersion, &response);
 	if (err == noErr) {
 		if (response == 0x000) {

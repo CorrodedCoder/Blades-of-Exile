@@ -40,7 +40,7 @@ extern party_record_type	party;
 extern short mage_range[66],priest_range[66];
 extern short spell_cost[2][62],cur_town_talk_loaded;
 extern Boolean in_startup_mode,give_intro_hint;
-extern pascal Boolean cd_event_filter();
+extern Boolean cd_event_filter();
 extern Boolean dialog_not_toast;
 extern WindowPtr mainPtr;
 extern short on_monst_menu[256];
@@ -72,7 +72,7 @@ short store_str_label_1,store_str_label_2,store_str_label_1b,store_str_label_2b;
 // Misc dialog vars
 short store_display_mode,store_displayed_item,position,cur_entry,num_entries,store_help_mode;
 creature_data_type hold_m;
-	
+
 void put_spell_info()
 {
 	Str255 store_text;
@@ -82,7 +82,7 @@ void put_spell_info()
 	pos = (store_display_mode == 0) ? mage_spell_pos : priest_spell_pos;
 	res = (store_display_mode == 0) ? 7 : 8;
 	ran = (store_display_mode == 0) ? mage_range[pos] : priest_range[pos];
-	
+
 	get_str (store_text, res, pos * 2 + 1);
 	cd_set_item_text(1096,4,(char *) store_text);
 
@@ -124,7 +124,7 @@ Boolean display_spells_event_filter (short item_hit)
 						else priest_spell_pos = store;
 					put_spell_info();
 					break;
-				}	
+				}
 
 	return FALSE;
 }
@@ -154,11 +154,11 @@ void display_spells(short mode,short force_spell,short parent_num)
 #ifndef EXILE_BIG_GUNS
 	while (dialog_not_toast)
 		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
+#endif
 #ifdef EXILE_BIG_GUNS
 	while (dialog_not_toast)
 		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+#endif
 	cd_kill_dialog(1096,0);
 
 }
@@ -169,7 +169,7 @@ void put_skill_info()
 	short pos;
 
 	pos = skill_pos;
-	
+
 	get_str(store_text,9,pos * 2 + 1);
 	cd_set_item_text(1097,3,(char *) store_text);
 	cd_set_item_num(1097,4,skill_cost[pos]);
@@ -222,11 +222,11 @@ void display_skills(short force_skill,short parent)
 #ifndef EXILE_BIG_GUNS
 	while (dialog_not_toast)
 		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
+#endif
 #ifdef EXILE_BIG_GUNS
 	while (dialog_not_toast)
 		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+#endif
 	cd_kill_dialog(1097,0);
 
 }
@@ -266,13 +266,13 @@ Boolean display_pc_event_filter (short item_hit)
 						pc_num = (pc_num == 5) ? 0 : pc_num + 1;
 						} while (adven[pc_num].main_status == 0);
 					which_pc_displayed = pc_num;
-					put_pc_graphics();	
+					put_pc_graphics();
 					break;
-					
+
 				case 100:
 					break;
 
-				}	
+				}
 	return FALSE;
 }
 
@@ -280,7 +280,7 @@ void display_pc(short pc_num,short mode,short parent)
 {
 	short i,item_hit;
 	Str255 label_str;
-	
+
 	if (adven[pc_num].main_status == 0) {
 		for (pc_num = 0; pc_num < 6; pc_num++)
 			if (adven[pc_num].main_status == 1)
@@ -303,11 +303,11 @@ void display_pc(short pc_num,short mode,short parent)
 #ifndef EXILE_BIG_GUNS
 	while (dialog_not_toast)
 		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
+#endif
 #ifdef EXILE_BIG_GUNS
 	while (dialog_not_toast)
 		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+#endif
 	cd_kill_dialog(991,0);
 }
 
@@ -315,21 +315,21 @@ void put_item_info(short pc,short item)////
 {
 	char store_text[256];
 	Str255 desc_str;
-	short pos,i;	
+	short pos,i;
 	item_record_type s_i;
 	char *item_types[] = {"","1-Handed weapon","2-Handed weapon","","Bow","Arrows","Thrown missile",
 			"Potion/Magic Item","Scroll/Magic Item","Wand","Tool","","Shield","Armor","Helm",
 			"Gloves","Shield","Boots","Ring","Necklace",
 			"Weapon Poison","Gem, Stone, Etc.","Pants","Crossbow","Bolts","Missile Weapon"};
 
-		
+
 	s_i = store_i;
-	
+
 	csp(998,1,950);
 	if (s_i.graphic_num >= 150)
 		csp(998,1,s_i.graphic_num - 150 + 2000);
 		else csp(998,1,1800 + s_i.graphic_num);
-		
+
 	// id? magic?
 	if ((is_magic(store_i) == TRUE) && (is_ident(store_i) == TRUE))
 		cd_set_led(998,17,1);
@@ -338,38 +338,38 @@ void put_item_info(short pc,short item)////
 		cd_set_led(998,16,1);
 		else cd_set_led(998,16,0);
 	cd_set_item_text(998,4,	item_types[s_i.variety]);
-	
+
 	// Clear fields
 	for (i = 5; i < 13; i++) {
 		cd_set_item_text(998,i,	"");
 		}
-			
+
 
 	if (is_ident(s_i) == FALSE) {
 			cd_set_item_text(998,3,	s_i.name);
 			return;
-		}	
-			
+		}
+
 	cd_set_item_text(998,3,	s_i.full_name);
 	i = item_weight(s_i);
 	cd_set_item_num(998,20,i);
-	
+
 	cd_set_item_num(998,5,(s_i.charges > 0) ? s_i.value * s_i.charges : s_i.value);
 
 	if (s_i.ability > 0) {////
 		get_str(desc_str,23,s_i.ability + 1);
 		cd_set_item_text(998,12,(char *) desc_str);
-		}	
+		}
 	if (s_i.charges > 0)
 		cd_set_item_num(998,10,s_i.charges);
-	if (s_i.protection > 0)	
+	if (s_i.protection > 0)
 		cd_set_item_num(998,8,s_i.protection);
 
 	switch (s_i.variety) {
 		case 1: case 2:
 			cd_set_item_num(998,6,s_i.item_level);
 			cd_set_item_num(998,7,s_i.bonus);
-		
+
 			switch (s_i.type) {
 				case 1:sprintf((char *) store_text, "Edged weapon");
 					break;
@@ -387,35 +387,35 @@ void put_item_info(short pc,short item)////
 			break;
 		case 5:	case 6: case 24: case 25:
 			cd_set_item_num(998,6,s_i.item_level);
-			cd_set_item_num(998,7,s_i.bonus);	
+			cd_set_item_num(998,7,s_i.bonus);
 			break;
 		case 7: case 18:
 			cd_set_item_num(998,11,s_i.item_level);
 			break;
-		case 12: case 13: case 14: case 15: case 16: case 17: 			
-			cd_set_item_num(998,7,s_i.bonus + s_i.protection);	
-			cd_set_item_num(998,8,s_i.item_level);	
+		case 12: case 13: case 14: case 15: case 16: case 17:
+			cd_set_item_num(998,7,s_i.bonus + s_i.protection);
+			cd_set_item_num(998,8,s_i.item_level);
 			cd_set_item_num(998,9,s_i.awkward);
-			break;	
+			break;
 		case 20:
 			cd_set_item_num(998,11,s_i.item_level);
 			break;
-		}	
+		}
 
 }
 
 Boolean display_pc_item_event_filter (short item_hit)
 {
 	short item,pc_num;
-	
+
 	item = store_displayed_item;
 	pc_num = store_item_pc;
-	
+
 			switch (item_hit) {
 				case 1: case 13:
 					dialog_not_toast = FALSE;
 					break;
-				
+
 				case 14:
 					do {
 						item = (item == 0) ? 23 : item - 1;
@@ -435,8 +435,8 @@ Boolean display_pc_item_event_filter (short item_hit)
 
 				case 100:
 					break;
-					
-				}	
+
+				}
 	return FALSE;
 }
 
@@ -479,11 +479,11 @@ void display_pc_item(short pc_num,short item,item_record_type si,short parent)
 #ifndef EXILE_BIG_GUNS
 	while (dialog_not_toast)
 		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
+#endif
 #ifdef EXILE_BIG_GUNS
 	while (dialog_not_toast)
 		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+#endif
 	cd_kill_dialog(998,0);
 
 }
@@ -493,14 +493,14 @@ void put_monst_info()////
 {
 	char store_text[256];
 	Str255 str;
-	short abil,i;	
-	
-	if ( store_m->m_d.spec_skill == 11) 
+	short abil,i;
+
+	if ( store_m->m_d.spec_skill == 11)
 		cd_set_pict(999,4,400);
 		else if (store_m->m_d.picture_num < 1000)
 			cd_set_pict(999,4,400 + store_m->m_d.picture_num);
 			else cd_set_pict(999,4,2000 + (store_m->m_d.picture_num % 1000));
-		
+
 	get_m_name((char *) store_text,store_m->number);
 	cd_set_item_text(999,5,store_text);
 	// Clear fields
@@ -513,14 +513,14 @@ void put_monst_info()////
 	cd_set_item_text(999,19,(char *) str);
 	get_str(str,20,store_m->m_d.radiate_1 + 50);
 	cd_set_item_text(999,31,(char *) str);
-	
+
 	for (i = 0; i < 3; i++)
 		if (store_m->m_d.a[i] > 0) {
 			sprintf((char *) store_text," %dd%d              ",
 				store_m->m_d.a[i] / 100 + 1, store_m->m_d.a[i] % 100);
 
 			cd_set_item_text(999,13 + i,store_text);
-			}				
+			}
 	cd_set_item_num(999,6,store_m->m_d.level);
 	cd_set_item_num(999,7,store_m->m_d.health);
 	cd_set_item_num(999,8,store_m->m_d.mp);
@@ -545,7 +545,7 @@ void put_monst_info()////
 Boolean display_monst_event_filter (short item_hit)
 {
 	short i,dummy = 0;
-	
+
 			switch (item_hit) {
 				case 1:  case 3:
 					dialog_not_toast = FALSE;
@@ -558,7 +558,7 @@ Boolean display_monst_event_filter (short item_hit)
 						position = i;
 						}
 						else position--;
-						
+
 					if (on_monst_menu[position] < 0)
 						position = 0;
 					store_m->number = (unsigned char)on_monst_menu[position];
@@ -586,9 +586,9 @@ void display_monst(short array_pos,creature_data_type *which_m,short mode)
 //creature_data_type *which_m; // if NULL, show full roster
 //short mode; // if 1, full roster, else use monster from storwhich_me_m
 {
-	
+
 	short item_hit;
-	
+
 	position = array_pos;
 	full_roster = FALSE;
 	if (mode == 1) {
@@ -638,11 +638,11 @@ void display_monst(short array_pos,creature_data_type *which_m,short mode)
 #ifndef EXILE_BIG_GUNS
 	while (dialog_not_toast)
 		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
+#endif
 #ifdef EXILE_BIG_GUNS
 	while (dialog_not_toast)
 		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+#endif
 	cd_kill_dialog(999,0);
 }
 
@@ -650,21 +650,21 @@ void display_monst(short array_pos,creature_data_type *which_m,short mode)
 Boolean display_help_event_filter (short item_hit)
 {
 	Str255 get_text;
-	
+
 			switch (item_hit) {
 				case 1: case 3:
 					dialog_not_toast = FALSE;
 					break;
 
 				case 4: case 5:
-					if (item_hit == 4) 
+					if (item_hit == 4)
 						cur_entry = (cur_entry == 3) ? num_entries + 2 : cur_entry - 1;
 						else cur_entry = (cur_entry == num_entries + 2) ? 3 : cur_entry + 1;
 					get_str (get_text, 25 + store_help_mode, cur_entry);
 					cd_set_item_text(997,7,(char *) get_text);
 					break;
-				}	
-			
+				}
+
 	return FALSE;
 }
 
@@ -673,7 +673,7 @@ void display_help(short mode,short parent)
 	Str255 get_text;
    long get_val;
    short item_hit;
-	
+
 	store_help_mode = mode;
 	cur_entry = 3;
 
@@ -692,11 +692,11 @@ void display_help(short mode,short parent)
 #ifndef EXILE_BIG_GUNS
 	while (dialog_not_toast)
 		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
+#endif
 #ifdef EXILE_BIG_GUNS
 	while (dialog_not_toast)
 		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+#endif
 	cd_kill_dialog(997,0);
 
 }
@@ -734,11 +734,11 @@ void display_alchemy()
 #ifndef EXILE_BIG_GUNS
 	while (dialog_not_toast)
 		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
+#endif
 #ifdef EXILE_BIG_GUNS
 	while (dialog_not_toast)
 		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+#endif
 	cd_kill_dialog(996,0);
 	dialog_not_toast = TRUE;
 
@@ -785,7 +785,7 @@ void pick_race_abil_event_filter(short item_hit)
 					if (store_trait_mode != 1)
 						pc->traits[item_hit - 36 + 10] = (pc->traits[item_hit - 36 + 10] == TRUE) ? FALSE : TRUE;
 					display_traits_graphics();
-					get_str(abil_str,5,item_hit - 36 + 11);				
+					get_str(abil_str,5,item_hit - 36 + 11);
 					csit(1013,19,(char *) abil_str);
 					break;
 				default:
@@ -794,10 +794,10 @@ void pick_race_abil_event_filter(short item_hit)
 					if (store_trait_mode != 1)
 						pc->traits[item_hit - 7] = (pc->traits[item_hit - 7] == TRUE) ? FALSE : TRUE;
 					display_traits_graphics();
-					get_str(abil_str,5,item_hit - 6);				
+					get_str(abil_str,5,item_hit - 6);
 					csit(1013,19,(char *) abil_str);
 					break;
-				}	
+				}
 
 }
 
@@ -807,7 +807,7 @@ void pick_race_abil(pc_record_type *pc,short mode,short parent_num)
 	char *start_str1 = "Click on button by name for description.";
 	char *start_str2 = "Click on advantage button to add/remove.";
 	short item_hit;
-	
+
 	store_trait_mode = mode;
 	store_pc = pc;
 	make_cursor_sword();
@@ -822,11 +822,11 @@ void pick_race_abil(pc_record_type *pc,short mode,short parent_num)
 #ifndef EXILE_BIG_GUNS
 	while (dialog_not_toast)
 		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
+#endif
 #ifdef EXILE_BIG_GUNS
 	while (dialog_not_toast)
 		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+#endif
 	cd_kill_dialog(1013,0);
 	dialog_not_toast = TRUE;
 }
@@ -837,11 +837,11 @@ void display_pc_info()
 	Str255 str;
 	short pc;
 	char to_draw[60];
-	
+
 	short weap1 = 24,weap2 = 24,hit_adj = 0, dam_adj = 0,skill_item;
 
 	pc = store_pc_num;
-	
+
 	store = pc_carry_weight(pc);
 	i = amount_pc_can_carry(pc);
 	sprintf ((char *) to_draw, "%s is carrying %d stones out of %d.",adven[pc].name,store,i);
@@ -875,8 +875,8 @@ void display_pc_info()
 						weap1 = i;
 						else weap2 = i;
 					}
-				
-	hit_adj = stat_adj(pc,1) * 5 - (total_encumberance(pc)) * 5 
+
+	hit_adj = stat_adj(pc,1) * 5 - (total_encumberance(pc)) * 5
 		+ 5 * minmax(-8,8,adven[pc].status[1]);
 	if ((adven[pc].traits[2] == FALSE) && (weap2 < 24))
 		hit_adj -= 25;
@@ -891,11 +891,11 @@ void display_pc_info()
 		hit_adj += adven[pc].items[skill_item].item_level * 2;
 		}
 
-		
-	csit(1019,56,"No weapon.");	
-	csit(1019,57,"");	
-	csit(1019,59,"No weapon.");	
-	csit(1019,60,"");	
+
+	csit(1019,56,"No weapon.");
+	csit(1019,57,"");
+	csit(1019,59,"No weapon.");
+	csit(1019,60,"");
 	if (weap1 < 24) {
 		if (is_ident(adven[pc].items[weap1]) == FALSE)
 			csit(1019,56,"Not identified.");
@@ -934,17 +934,17 @@ void give_pc_info_event_filter(short item_hit)
 
 	pc = store_pc_num;
 	switch (item_hit) {
-		case 1: 
+		case 1:
 			dialog_not_toast = FALSE;
 			break;
-		case 2: 
-			do				
+		case 2:
+			do
 				store_pc_num = (store_pc_num == 0) ? 5 : store_pc_num - 1;
 				while (adven[store_pc_num].main_status != 1);
 			display_pc_info();
 			break;
-		case 3: 
-			do 
+		case 3:
+			do
 				store_pc_num = (store_pc_num + 1) % 6;
 				while (adven[store_pc_num].main_status != 1);
 			display_pc_info();
@@ -961,7 +961,7 @@ void give_pc_info_event_filter(short item_hit)
 		case 68:
 			display_alchemy();
 			break;
-		}	
+		}
 
 }
 
@@ -969,7 +969,7 @@ void give_pc_info(short pc_num)
 {
 	short item_hit ,i;
 	Str255 str;
-	
+
 	store_pc_num = pc_num;
 	make_cursor_sword();
 
@@ -979,15 +979,15 @@ void give_pc_info(short pc_num)
 		get_str(str,9,1 + i * 2);
 		csit(1019,17 + i * 2,(char *) str);
 		}
-	display_pc_info(); 
+	display_pc_info();
 #ifndef EXILE_BIG_GUNS
 	while (dialog_not_toast)
 		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
+#endif
 #ifdef EXILE_BIG_GUNS
 	while (dialog_not_toast)
 		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+#endif
 	cd_kill_dialog(1019,0);
 }
 
@@ -995,12 +995,12 @@ void adventure_notes_event_filter (short item_hit)
 {
 	short i;
 	Str255 place_str;
-	
+
 			switch (item_hit) {
-				case 1: 
+				case 1:
 					dialog_not_toast = FALSE;
 					break;
-				
+
 				case 7: case 8:
 					if (item_hit == 7) {
 						if (store_page_on == 0)
@@ -1011,8 +1011,8 @@ void adventure_notes_event_filter (short item_hit)
 							if (store_page_on == (store_num_i - 1) / 3)
 								store_page_on = 0;
 								else store_page_on++;
-							}					
-					
+							}
+
 					break;
 				case 10: case 9: case 11:
 					party.special_notes_str[(store_page_on * 3) + item_hit - 9][0] = -1;
@@ -1024,7 +1024,7 @@ void adventure_notes_event_filter (short item_hit)
 				case 0: strcpy((char *) place_str,data_store->scen_strs[party.special_notes_str[i][0] % 1000]); break;
 				case 1:
 					 load_outdoors(party.special_notes_str[i][1] % scenario.out_width,
-					 	party.special_notes_str[i][1] / scenario.out_width, 
+					 	party.special_notes_str[i][1] / scenario.out_width,
 					 0,0,1,party.special_notes_str[i][0] % 1000,(char *)place_str);
 					break;
 				case 2: load_town(party.special_notes_str[i][1],2,party.special_notes_str[i][0],(char *)place_str); break;
@@ -1042,7 +1042,7 @@ void adventure_notes_event_filter (short item_hit)
 				case 0: strcpy((char *) place_str,data_store->scen_strs[party.special_notes_str[i][0] % 1000]); break;
 				case 1:
 					 load_outdoors(party.special_notes_str[i][1] % scenario.out_width,
-					 	party.special_notes_str[i][1] / scenario.out_width, 
+					 	party.special_notes_str[i][1] / scenario.out_width,
 					 0,0,1,party.special_notes_str[i][0] % 1000,(char *)place_str);
 					break;
 				case 2: load_town(party.special_notes_str[i][1],2,party.special_notes_str[i][0] % 1000,(char *)place_str); break;
@@ -1065,7 +1065,7 @@ void adventure_notes()
 
 	short i,item_hit;
 	Str255 place_str;
-	
+
 	store_num_i = 0;
 	for (i = 0; i < 140; i++)
 		if (party.special_notes_str[i][0] > 0)
@@ -1076,7 +1076,7 @@ void adventure_notes()
 		print_buf();
 		return;
 		}
-	
+
 	make_cursor_sword();
 
 	cd_create_dialog_parent_num(961,0);
@@ -1087,7 +1087,7 @@ void adventure_notes()
 				case 0: strcpy((char *) place_str,data_store->scen_strs[party.special_notes_str[i][0] % 1000]); break;
 				case 1:
 					 load_outdoors(party.special_notes_str[i][1] % scenario.out_width,
-					 	party.special_notes_str[i][1] / scenario.out_width, 
+					 	party.special_notes_str[i][1] / scenario.out_width,
 					 0,0,1,party.special_notes_str[i][0] % 1000,(char *)place_str);
 					break;
 				case 2: load_town(party.special_notes_str[i][1],2,party.special_notes_str[i][0] % 1000,(char *)place_str); break;
@@ -1105,11 +1105,11 @@ void adventure_notes()
 #ifndef EXILE_BIG_GUNS
 	while (dialog_not_toast)
 		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
+#endif
 #ifdef EXILE_BIG_GUNS
 	while (dialog_not_toast)
 		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+#endif
 	cd_kill_dialog(961,0);
 
 }
@@ -1118,7 +1118,7 @@ void put_talk()
 {
 	short personality;
 	Str255 place_str;
-	
+
 	csit(960,3,"");
 	csit(960,5,"");
 	csit(960,7,"");
@@ -1129,12 +1129,12 @@ void put_talk()
 
 		load_town(party.talk_save[store_page_on].town_num,2,0,(char *) place_str);
 		csit(960,9,(char *) place_str);
-		
+
 		//get_str(place_str,120 + ((personality - 1) / 10),((personality - 1) % 10) + 1);
 		csit(960,7,data_store->talk_strs[personality % 10]);
 
 		if (party.talk_save[store_page_on].str1 >= 1000) {
-			if (party.talk_save[store_page_on].str1 >= 3000) 
+			if (party.talk_save[store_page_on].str1 >= 3000)
 				csit(960,3,data_store->scen_strs[party.talk_save[store_page_on].str1 - 3000 ]);
 				else {
 					load_town(party.talk_save[store_page_on].town_num,2,
@@ -1146,7 +1146,7 @@ void put_talk()
 				csit(960,3,data_store->talk_strs[party.talk_save[store_page_on].str1]);
 
 		if (party.talk_save[store_page_on].str2 >= 1000) {
-			if (party.talk_save[store_page_on].str2 >= 3000) 
+			if (party.talk_save[store_page_on].str2 >= 3000)
 				csit(960,5,data_store->scen_strs[party.talk_save[store_page_on].str2 - 3000 + 160]);
 				else {
 					load_town(party.talk_save[store_page_on].town_num,2,
@@ -1164,10 +1164,10 @@ void talk_notes_event_filter (short item_hit)
 	short i;
 	Str255 place_str;
 			switch (item_hit) {
-				case 1: 
+				case 1:
 					dialog_not_toast = FALSE;
 					break;
-				
+
 				case 10: case 11:
 					if (item_hit == 10) {
 						if (store_page_on == 0)
@@ -1178,8 +1178,8 @@ void talk_notes_event_filter (short item_hit)
 							if (store_page_on == store_num_i - 1)
 								store_page_on = 0;
 								else store_page_on++;
-							}					
-					
+							}
+
 					break;
 				case 12:
 					party.talk_save[store_page_on].personality = -1;
@@ -1194,7 +1194,7 @@ void talk_notes()
 
 	short i,item_hit;
 	Str255 place_str;
-	
+
 	store_num_i = 0;
 	for (i = 0; i < 120; i++)
 		if (party.talk_save[i].personality != -1)
@@ -1205,7 +1205,7 @@ void talk_notes()
 		print_buf();
 		return;
 		}
-	
+
 	make_cursor_sword();
 
 	cd_create_dialog_parent_num(960,0);
@@ -1215,15 +1215,15 @@ void talk_notes()
 		cd_activate_item(960,10,0);
 		cd_activate_item(960,11,0);
 		}
-		
+
 #ifndef EXILE_BIG_GUNS
 	while (dialog_not_toast)
 		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
+#endif
 #ifdef EXILE_BIG_GUNS
 	while (dialog_not_toast)
 		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+#endif
 	cd_kill_dialog(960,0);
 
 }
@@ -1232,12 +1232,12 @@ void journal_event_filter (short item_hit)
 {
 	short i;
 	Str255 place_str;
-	
+
 			switch (item_hit) {
-				case 1: 
+				case 1:
 					dialog_not_toast = FALSE;
 					break;
-				
+
 				case 7: case 8:
 					if (item_hit == 7) {
 						if (store_page_on == 0)
@@ -1248,8 +1248,8 @@ void journal_event_filter (short item_hit)
 							if (store_page_on == (store_num_i - 1) / 3)
 								store_page_on = 0;
 								else store_page_on++;
-							}					
-					
+							}
+
 					break;
 
 				}
@@ -1271,13 +1271,13 @@ void journal()
 
 	short i,item_hit;
 	Str255 place_str;
-	
+
 	store_num_i = 0;
 	for (i = 0; i < 120; i++)
 		if (party.journal_str[i] > 0)
 			store_num_i = i + 1;
 	store_page_on = 0;
-	
+
 	make_cursor_sword();
 
 	cd_create_dialog_parent_num(962,0);
@@ -1297,18 +1297,18 @@ void journal()
 #ifndef EXILE_BIG_GUNS
 	while (dialog_not_toast)
 		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
+#endif
 #ifdef EXILE_BIG_GUNS
 	while (dialog_not_toast)
 		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+#endif
 	cd_kill_dialog(962,0);
 
 }
 void add_to_journal(short event)
 {
 	short i;
-	
+
 	for (i = 0; i < 120; i++)
 		if (party.journal_str[i] == 0) {
 			party.journal_str[i] = event;
@@ -1322,11 +1322,11 @@ void add_to_journal(short event)
 // Only call these when main window is in foreground!
 void display_enc_string(short val1,short val2,short sound)
 {
-//	display_strings(val1,val2,0,0,"",sound,708,0);	
+//	display_strings(val1,val2,0,0,"",sound,708,0);
 }
 void display_2_enc_string(short val1,short val2,short val3,short val4,short sound)
 {
-//	display_strings(val1,val2,val3,val4,"",sound,708,0);	
+//	display_strings(val1,val2,val3,val4,"",sound,708,0);
 }
 
 // Call call this anywhere, but don't forget parent!!!
@@ -1334,7 +1334,7 @@ void give_help(short help1,short help2,short parent_num)
 {
 	Boolean help_forced = FALSE;
 	Str255 str1,str2;
-	
+
 	if (help1 >= 200) {
 		help_forced = TRUE;
 		help1 -= 200;
@@ -1357,7 +1357,7 @@ void give_help(short help1,short help2,short parent_num)
 void put_spec_item_info (short which_i)
 {
 	Str255 item_name;
-	
+
 	display_strings(data_store->scen_strs[60 + 1 + which_i * 2],"",
 	-1,-1,-1,-1,
 	data_store->scen_strs[60 + which_i * 2],57,1600 + scenario.intro_pic,0);
@@ -1370,7 +1370,7 @@ void display_strings_event_filter (short item_hit)////
 {
 	short i;
 	Boolean had1 = FALSE, had2 = FALSE;
-	
+
 	switch (item_hit) {
 		case 1:
 			dialog_not_toast = FALSE;
@@ -1385,13 +1385,13 @@ void display_strings_event_filter (short item_hit)////
 				//give_help(58,0,store_which_string_dlog);
 				for (i = 0; i < 140; i++)
 					if (party.special_notes_str[i][0] <= 0) {
-						party.special_notes_str[i][0] = store_str_label_1;		
-						party.special_notes_str[i][1] = store_str_label_1b;		
-						//party.special_notes_str[i][1] = store_str1b;	
-						ASB("Info added to Encounter Notes.");	
+						party.special_notes_str[i][0] = store_str_label_1;
+						party.special_notes_str[i][1] = store_str_label_1b;
+						//party.special_notes_str[i][1] = store_str1b;
+						ASB("Info added to Encounter Notes.");
 						i = 140;
 						}
-			
+
 				}
 			for (i = 0; i < 140; i++)
 				if ((store_str_label_2 == party.special_notes_str[i][0]) &&
@@ -1400,12 +1400,12 @@ void display_strings_event_filter (short item_hit)////
 			if (had2 == FALSE) {
 				for (i = 0; i < 140; i++)
 					if (party.special_notes_str[i][0] <= 0) {
-						party.special_notes_str[i][0] = store_str_label_2;		
-						party.special_notes_str[i][1] = store_str_label_2b;		
-						//party.special_notes_str[i][1] = store_str2b;		
+						party.special_notes_str[i][0] = store_str_label_2;
+						party.special_notes_str[i][1] = store_str_label_2b;
+						//party.special_notes_str[i][1] = store_str2b;
 						i = 140;
 						}
-			
+
 				}
 			break;
 		}
@@ -1413,9 +1413,9 @@ void display_strings_event_filter (short item_hit)////
 
 // str_label_1 & str_label_2 uysed for saving button for journal
 // 1000 + x scen 2000 + x out 3000 + x town
-void display_strings(char *text1, char *text2,short str_label_1,short str_label_2,short str_label_1b,
+void display_strings(const char *text1, const char *text2,short str_label_1,short str_label_2,short str_label_1b,
 	short str_label_2b,
-	char *title,short sound_num,short graphic_num,short parent_num)
+	const char *title,short sound_num,short graphic_num,short parent_num)
 {
 
 	short item_hit;
@@ -1424,7 +1424,7 @@ void display_strings(char *text1, char *text2,short str_label_1,short str_label_
 	Boolean sound_done = FALSE;
 
 	make_cursor_sword();
-	
+
 	store_str_label_1 = str_label_1;
 	store_str_label_2 = str_label_2;
 	store_str_label_1b = str_label_1b;
@@ -1433,7 +1433,7 @@ void display_strings(char *text1, char *text2,short str_label_1,short str_label_
 //	store_str1b = str1b;
 //	store_str2a = str2a;
 //	store_str2b = str2b;
-	
+
 //	if ((str1a <= 0) || (str1b <= 0))
 //		return;
 	store_which_string_dlog = 970;
@@ -1442,9 +1442,9 @@ void display_strings(char *text1, char *text2,short str_label_1,short str_label_
 	if ((text2 != NULL) && (text2[0] != 0))
 		store_which_string_dlog++;
 	cd_create_dialog_parent_num(store_which_string_dlog,parent_num);
-	
+
 	csp(store_which_string_dlog,store_which_string_dlog,graphic_num);
-	
+
 	csit(store_which_string_dlog,4,(char *) text1);
 	if (text2 != NULL) {
 		csit(store_which_string_dlog,5,(char *) text2);
@@ -1454,31 +1454,31 @@ void display_strings(char *text1, char *text2,short str_label_1,short str_label_
 	csp(store_which_string_dlog,3,graphic_num);
 	if (sound_num >= 0)
 		play_sound(sound_num);
-	
+
 	if ((str_label_1 < 0) && (str_label_2 < 0))
 		cd_activate_item(store_which_string_dlog,2,0);
 #ifndef EXILE_BIG_GUNS
 	while (dialog_not_toast)
 		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
+#endif
 #ifdef EXILE_BIG_GUNS
 	while (dialog_not_toast)
 		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+#endif
 	//cd_kill_dialog(store_which_string_dlog,0);
 	final_process_dialog(store_which_string_dlog);
 }
 
-void give_error(char *text1, char *text2,short parent_num)
+void give_error(const char *text1, const char *text2,short parent_num)
 {
 	display_strings(text1,text2,-1,-1,-1,-1,"Error!",57,716,parent_num);
 }
 
 void display_strings_with_nums(short a1,short a2, short b1, short b2,
-	char *title,short sound_num,short graphic_num,short parent_num)
+	const char *title,short sound_num,short graphic_num,short parent_num)
 {
 	Str255 str1 = "", str2 = "";
-	
+
 	if ((a1 > 0) && (a2 > 0))
 		get_str(str1,a1,a2);
 	if ((b1 > 0) && (b2 > 0))

@@ -29,7 +29,7 @@ short dlog_pat_placed = 0;
 short current_pattern = -1;
 HPALETTE syspal = NULL;
 
-void init_palette(BYTE huge * lpDib)
+void init_palette(BYTE * lpDib)
 {
 	HDC hdc;
 	short i,red,green,blue;
@@ -48,7 +48,7 @@ void init_palette(BYTE huge * lpDib)
 	pal_ok = TRUE;
 
 	if (GetDibInfoHeaderSize(lpDib) == sizeof(BITMAPCOREHEADER)) {
-		wBitCount = ((BITMAPCOREHEADER huge *) lpDib)->bcBitCount;
+		wBitCount = ((BITMAPCOREHEADER *) lpDib)->bcBitCount;
 		if (wBitCount != 24)
 			dwNumColors = 1L << wBitCount;
 			else dwNumColors = 0;
@@ -62,9 +62,9 @@ void init_palette(BYTE huge * lpDib)
 		}
 	}
 	else {
-		wBitCount = ((BITMAPINFOHEADER huge *) lpDib)->biBitCount;
+		wBitCount = ((BITMAPINFOHEADER *) lpDib)->biBitCount;
 		if (GetDibInfoHeaderSize(lpDib) >= 36)
-			dwNumColors = ((BITMAPINFOHEADER huge *) lpDib)->biClrUsed;
+			dwNumColors = ((BITMAPINFOHEADER *) lpDib)->biClrUsed;
 		if (dwNumColors == 0) {
 			if (wBitCount != 24)
 				dwNumColors = 1L << wBitCount;
@@ -116,7 +116,7 @@ plgpl = (LOGPALETTE*) LocalLock(l);
 
 // extracts and inflicts palette from given dib. WARNING ...
 // does NOT do any deleting or cleanup
-void extract_given_palette(BYTE huge * lpDib)
+void extract_given_palette(BYTE * lpDib)
 {
 	HDC hdc;
 	short i,red,green,blue;
@@ -131,7 +131,7 @@ void extract_given_palette(BYTE huge * lpDib)
 	HBRUSH hbr;
 
 	if (GetDibInfoHeaderSize(lpDib) == sizeof(BITMAPCOREHEADER)) {
-		wBitCount = ((BITMAPCOREHEADER huge *) lpDib)->bcBitCount;
+		wBitCount = ((BITMAPCOREHEADER *) lpDib)->bcBitCount;
 		if (wBitCount != 24)
 			dwNumColors = 1L << wBitCount;
 			else dwNumColors = 0;
@@ -145,9 +145,9 @@ void extract_given_palette(BYTE huge * lpDib)
 		}
 	}
 	else {
-		wBitCount = ((BITMAPINFOHEADER huge *) lpDib)->biBitCount;
+		wBitCount = ((BITMAPINFOHEADER *) lpDib)->biBitCount;
 		if (GetDibInfoHeaderSize(lpDib) >= 36)
-			dwNumColors = ((BITMAPINFOHEADER huge *) lpDib)->biClrUsed;
+			dwNumColors = ((BITMAPINFOHEADER *) lpDib)->biClrUsed;
 		if (dwNumColors == 0) {
 			if (wBitCount != 24)
 				dwNumColors = 1L << wBitCount;
@@ -231,7 +231,8 @@ void inflict_palette()
 	SetSystemPaletteUse(main_dc,SYSPAL_NOSTATIC);
 	UnrealizeObject(hpal);
 	RealizePalette(main_dc);
-	SendMessage(HWND_BROADCAST,WM_SYSCOLORCHANGE,0,0);
+	//SendMessage(HWND_BROADCAST,WM_SYSCOLORCHANGE,0,0);
+	PostMessage(HWND_BROADCAST, WM_SYSCOLORCHANGE, 0, 0);
 /*
 	store_element_colors[0] = GetSysColor(elements[0]);
 	store_element_colors[1] = GetSysColor(elements[1]);
@@ -271,47 +272,48 @@ void reset_palette()
 	UnrealizeObject(hpal);
 	SelectPalette(main_dc,syspal,0);
 	RealizePalette(main_dc);
-	SendMessage(HWND_BROADCAST,WM_SYSCOLORCHANGE,0,0);
+	//SendMessage(HWND_BROADCAST,WM_SYSCOLORCHANGE,0,0);
+	PostMessage(HWND_BROADCAST, WM_SYSCOLORCHANGE, 0, 0);
 	SetSysColors(5,elements,store_element_colors);
 
 
 }
 
-DWORD GetDibInfoHeaderSize(BYTE huge * lpDib)
+DWORD GetDibInfoHeaderSize(BYTE * lpDib)
 {
-return ((BITMAPINFOHEADER huge *) lpDib)->biSize;
+return ((BITMAPINFOHEADER *) lpDib)->biSize;
 }
 
-WORD GetDibWidth(BYTE huge * lpDib)
+WORD GetDibWidth(BYTE * lpDib)
 {
 	if (GetDibInfoHeaderSize(lpDib) == sizeof(BITMAPCOREHEADER))
-		return (WORD) (((BITMAPCOREHEADER huge *) lpDib)->bcWidth);
-		else return (WORD) (((BITMAPINFOHEADER huge *) lpDib)->biWidth);
+		return (WORD) (((BITMAPCOREHEADER *) lpDib)->bcWidth);
+		else return (WORD) (((BITMAPINFOHEADER *) lpDib)->biWidth);
 }
 
-WORD GetDibHeight(BYTE huge * lpDib)
+WORD GetDibHeight(BYTE * lpDib)
 {
 	if (GetDibInfoHeaderSize(lpDib) == sizeof(BITMAPCOREHEADER))
-		return (WORD) (((BITMAPCOREHEADER huge *) lpDib)->bcHeight);
-		else return (WORD) (((BITMAPINFOHEADER huge *) lpDib)->biHeight);
+		return (WORD) (((BITMAPCOREHEADER *) lpDib)->bcHeight);
+		else return (WORD) (((BITMAPINFOHEADER *) lpDib)->biHeight);
 }
-BYTE huge * GetDibBitsAddr(BYTE huge * lpDib)
+BYTE * GetDibBitsAddr(BYTE * lpDib)
 {
 	DWORD dwNumColors, dwColorTableSize;
 	WORD wBitCount;
 	short i;
 
 	if (GetDibInfoHeaderSize(lpDib) == sizeof(BITMAPCOREHEADER)) {
-		wBitCount = ((BITMAPCOREHEADER huge *) lpDib)->bcBitCount;
+		wBitCount = ((BITMAPCOREHEADER *) lpDib)->bcBitCount;
 		if (wBitCount != 24)
 			dwNumColors = 1L << wBitCount;
 			else dwNumColors = 0;
 	dwColorTableSize = dwNumColors * sizeof(RGBTRIPLE);
 	}
 	else {
-		wBitCount = ((BITMAPINFOHEADER huge *) lpDib)->biBitCount;
+		wBitCount = ((BITMAPINFOHEADER *) lpDib)->biBitCount;
 		if (GetDibInfoHeaderSize(lpDib) >= 36)
-			dwNumColors = ((BITMAPINFOHEADER huge *) lpDib)->biClrUsed;
+			dwNumColors = ((BITMAPINFOHEADER *) lpDib)->biClrUsed;
 		if (dwNumColors == 0) {
 			if (wBitCount != 24)
 				dwNumColors = 1L << wBitCount;
@@ -324,13 +326,13 @@ BYTE huge * GetDibBitsAddr(BYTE huge * lpDib)
 	return lpDib + GetDibInfoHeaderSize(lpDib) + dwColorTableSize;
 	}
 
-HBITMAP ReadDib(char * name,HDC hdc) {
+HBITMAP ReadDib(const char * name,HDC hdc) {
 BITMAPFILEHEADER bmfh;
-BYTE huge * lpDib;
+BYTE * lpDib;
 DWORD dwDibSize, dwOffset, dwHeaderSize;
 int hFile;
 WORD wDibRead;
-BYTE huge * lpDibBits;
+BYTE * lpDibBits;
 HBITMAP bmap;
 OFSTRUCT store;
 char real_name[256] = "",*name_ptr;
@@ -350,7 +352,7 @@ short i,last_slash = -1;
 			//real_name -= last_slash + 1;
 			//ASB(real_name);
 			}
-	hFile = OpenFile(real_name,&store,OF_READ | OF_SEARCH | OF_SHARE_DENY_WRITE);
+	hFile = OpenFile(real_name,&store,OF_READ | /* OF_SEARCH | */ OF_SHARE_DENY_WRITE);
 
   //	hFile = _lopen(name,READ);
 	if (hFile == HFILE_ERROR)
@@ -368,7 +370,7 @@ short i,last_slash = -1;
 //		return NULL;
 //		}
 	dwDibSize = bmfh.bfSize - sizeof(BITMAPFILEHEADER);
-	lpDib = (BYTE huge *) GlobalAllocPtr(GMEM_MOVEABLE, dwDibSize);
+	lpDib = (BYTE *) GlobalAllocPtr(GMEM_MOVEABLE, dwDibSize);
 	if (lpDib == NULL){
 		_lclose(hFile);
 		return NULL;
@@ -466,10 +468,11 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 	HBITMAP transbmp;
 	COLORREF white = RGB(255,255,255),black = RGB(0,0,0),oldcolor;
 	RECT debug = {0,0,200,20};
-	HBRUSH hbrush,old_brush;
+	HBRUSH hbrush;
+	HGDIOBJ old_brush;
 	COLORREF x = RGB(17,17,17);
 	UINT c;
-	HBITMAP store,store2;
+	HGDIOBJ store,store2;
 	Boolean dlog_draw = FALSE;
 
 	if (main_win == 2) {
@@ -478,7 +481,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 		dlog_draw = TRUE;
 		hdcMem = CreateCompatibleDC(destDC);
 		SelectObject(hdcMem, src);
-		SetMapMode(hdcMem,GetMapMode(mainPtr));
+		SetMapMode(hdcMem,GetMapMode((HDC)mainPtr));
 		SelectPalette(hdcMem,hpal,0);
 		}
 		else {
@@ -511,7 +514,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 			//SelectObject(hdcMem,hbrush);
 			}
 		if (dlog_draw == FALSE)
-			SetViewportOrg(destDC,ulx,uly);
+			SetViewportOrgEx(destDC,ulx,uly, NULL);
 
 		StretchBlt(destDC,dest_rect.left,dest_rect.top,dest_rect.right - dest_rect.left,
 			dest_rect.bottom - dest_rect.top,
@@ -523,7 +526,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 					play_sound(1);
 				}
 		if (dlog_draw == FALSE)
-			SetViewportOrg(destDC,0,0);
+			SetViewportOrgEx(destDC,0,0, NULL);
 
 
 		}
@@ -532,7 +535,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 		if (main_win == 0) {
 			hdcMem3 = CreateCompatibleDC(hdcMem);
 			SelectObject(hdcMem3, dest);
-			SetMapMode(hdcMem3,GetMapMode(mainPtr));
+			SetMapMode(hdcMem3,GetMapMode((HDC)mainPtr));
 			SelectPalette(hdcMem3,hpal,0);
 			if ((src_rect.right - src_rect.left < 72) &&
 				(src_rect.bottom - src_rect.top < 72))
@@ -567,7 +570,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 		}
 		else {
 			if (dlog_draw == FALSE)
-				SetViewportOrg(destDC,ulx,uly);
+				SetViewportOrgEx(destDC,ulx,uly, NULL);
 			if ((src_rect.right - src_rect.left < 72) &&
 				(src_rect.bottom - src_rect.top < 72))
 					transbmp = bw_bitmap;
@@ -596,7 +599,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 				hdcMem,src_rect.left,src_rect.top,src_rect.right - src_rect.left,
 				src_rect.bottom - src_rect.top,SRCINVERT);
 			if (dlog_draw == FALSE)
-				SetViewportOrg(destDC,0,0);
+				SetViewportOrgEx(destDC,0,0, NULL);
 			DeleteDC(hdcMem2);
 			if (transbmp != bw_bitmap)
 				DeleteObject(transbmp);
@@ -623,7 +626,7 @@ void DisposeGWorld(HBITMAP bitmap)
 	DeleteObject(bitmap);
 }
 
-void SectRect(RECT *a, RECT *b, RECT *c) 
+void SectRect(RECT *a, RECT *b, RECT *c)
 	{
 	IntersectRect(c,a,b);
 	}

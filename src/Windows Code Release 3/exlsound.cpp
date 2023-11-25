@@ -12,9 +12,9 @@
 #define	NUM_SOUNDS	100
 
 HGLOBAL sound_handles[NUM_SOUNDS];
-char far *snds[NUM_SOUNDS];
+const char far *snds[NUM_SOUNDS];
 
-extern HANDLE store_hInstance;
+extern HINSTANCE store_hInstance;
 extern scenario_data_type far scenario;
 
 extern Boolean play_sounds,in_startup_mode;
@@ -138,7 +138,7 @@ if (err != 0) {
 		h = FindResource(store_hInstance,snd_name,"#100");
 
 		sound_handles[i] = LoadResource(store_hInstance,h);
-		snds[i] = LockResource(sound_handles[i]);
+		snds[i] = reinterpret_cast<const char *>(LockResource(sound_handles[i]));
 		}
 		}
 
@@ -212,7 +212,7 @@ void force_play_sound(short which)
 		h = FindResource(store_hInstance,snd_name,"#100");
 
 		sound_handles[which] = LoadResource(store_hInstance,h);
-		snds[which] = LockResource(sound_handles[which]);
+		snds[which] = reinterpret_cast<const char*>(LockResource(sound_handles[which]));
 
 	  //	ASB("Loaded sound:");
 	  //	print_nums(0,0,which);
@@ -345,10 +345,10 @@ void sound_pause(long len) {
 void move_sound(unsigned char ter,short step)
 {
 	short pic,spec;
-	
+
 	pic = scenario.ter_types[ter].picture;
 	spec = scenario.ter_types[ter].special;
-	
+
 						if ((monsters_going == FALSE) && (overall_mode < 10) && (party.in_boat >= 0)) {
 							if (spec == 21)
 								return;
@@ -360,7 +360,7 @@ void move_sound(unsigned char ter,short step)
 							else if ((ter >= 84) && (ter <= 89))
 								play_sound(47);
 								else if ((pic == 80) || (pic == 76)) // already played in special terrain check
-									; 
+									;
 									else if (pic == 180)
 									play_sound(55);
 									else if (step % 2 == 0)

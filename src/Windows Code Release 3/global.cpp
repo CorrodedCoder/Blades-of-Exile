@@ -5,7 +5,7 @@
 
 extern short give_delays;
 
-void alter_rect(RECT *r) 
+void alter_rect(RECT *r)
 {
 	short a;
 
@@ -44,20 +44,6 @@ short move_to_zero(short val)
 	if (val > 0)
 		return val - 1;
 	return val;
-}
-
-short max(short a,short b)
-{
-	if (a > b)
-		return a;
-		else return b;
-}
-
-short min(short a,short b)
-{
-	if (a < b)
-		return a;
-		else return b;
 }
 
 short minmax(short min,short max,short k)
@@ -105,9 +91,9 @@ void Delay(short val,long *dummy)
 void pause(short length)
 {
 	long dummy,len;
-	
+
 	len = (long) length;
-	
+
 	if (give_delays == 0)
 		Delay(len, &dummy);
 }

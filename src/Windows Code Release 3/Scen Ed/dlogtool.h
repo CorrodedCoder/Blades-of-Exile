@@ -3,7 +3,7 @@ void cd_erase_rect(short dlog_num,RECT to_fry);
 short cd_get_led_range(short dlog_num,short first_led,short last_led)    ;
 void cd_hit_led_range(short dlog_num,short first_led,short last_led,short which_to_set);
 void cd_set_led_range(short dlog_num,short first_led,short last_led,short which_to_set);
-void cd_flip_led(short dlog_num,short item_num,short item_hit);                        
+void cd_flip_led(short dlog_num,short item_num,short item_hit);
 short cd_get_led(short dlog_num,short item_num);
 void frame_di(HWND hDlg, short item_num, short val);
 void cd_kill_dc(short which_slot,HDC hdc);
@@ -22,7 +22,7 @@ void cd_attach_key(short dlog_num,short item_num,char key);
 void cd_set_pict(short dlog_num, short item_num, short pict_num);
 void cd_activate_item(short dlog_num, short item_num, short status);
 void cd_get_item_text(short dlog_num, short item_num, char *str);
-void cd_set_item_text(short dlog_num, short item_num, char *str);
+void cd_set_item_text(short dlog_num, short item_num, const char *str);
 void cd_set_item_num(short dlog_num, short item_num, short num);
 void cd_set_led(short dlog_num,short item_num,short state);
 void cd_text_frame(short dlog_num,short item_num,short frame);
@@ -47,9 +47,9 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 void showcursor(Boolean a);
 
 void cd_get_text_edit_str(short dlog_num, char *str);
-void cd_set_text_edit_str(short dlog_num, char *str);
-void cdsin(short dlog_num, short item_num, short num); 
-void csit(short dlog_num, short item_num, char *str);
+void cd_set_text_edit_str(short dlog_num, const char *str);
+void cdsin(short dlog_num, short item_num, short num);
+void csit(short dlog_num, short item_num, const char *str);
 void csp(short dlog_num, short item_num, short pict_num);
 void ModalDialog();
 
@@ -57,6 +57,6 @@ RECT calc_rect(short i, short j);
 
 void cd_retrieve_text_edit_str(short dlog_num, short item_num, char *str);
 short cd_retrieve_text_edit_num(short dlog_num, short item_num) ;
-void cd_set_text_edit_str(short dlog_num, short item_num, char *str) ;
+void cd_set_text_edit_str(short dlog_num, short item_num, const char *str) ;
 void cd_set_text_edit_num(short dlog_num, short item_num, short num);
 void InsetRect(RECT *rect,short x, short y);

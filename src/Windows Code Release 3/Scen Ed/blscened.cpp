@@ -120,7 +120,8 @@ HBITMAP bmap = NULL;
 HPALETTE hpal;
 PALETTEENTRY far ape[256];
 HDC main_dc,main_dc2,main_dc3;
-HANDLE store_hInstance,accel;
+HINSTANCE store_hInstance;
+HACCEL accel;
 BOOL event_handled;
 
 scenario_data_type far scenario;
@@ -151,10 +152,10 @@ Boolean block_erase = FALSE;
 
 
 
-long FAR PASCAL _export WndProc (HWND, UINT, UINT, LONG);
+long WndProc (HWND, UINT, UINT, LONG);
 Boolean handle_menu (short, HMENU);
 
-int PASCAL WinMain (hInstance,hPrevInstance,
+int WinMain (hInstance,hPrevInstance,
   lpszCmdParam, nCmdShow)
 HANDLE hInstance;
 HANDLE hPrevInstance;
@@ -192,7 +193,7 @@ int nCmdShow;
 		wndclass2.hbrBackground = GetStockObject(WHITE_BRUSH);
 		wndclass2.lpszMenuName = NULL;
 		wndclass2.lpszClassName = szWinName;
-		
+
 		RegisterClass(&wndclass2);
 		}
 
@@ -293,7 +294,7 @@ int nCmdShow;
 		return msg.wParam;
 }
 
-long FAR PASCAL _export WndProc (hwnd,message,wParam,lParam)
+long WndProc (hwnd,message,wParam,lParam)
 HWND hwnd;
 UINT message;
 UINT wParam;
@@ -303,7 +304,7 @@ HDC hdc;
 PAINTSTRUCT ps;
 RECT rect;
 short cxDib, cyDib;
-BYTE huge * lpDibBits;
+BYTE * lpDibBits;
 //RECT s_rect = {0,0,30,30},d_rect = {0,0,30,30},d2 = {0,0,420,216},s2 = {0,0,420,216};
 POINT press;
 short handled = 0,which_sbar,sbar_pos = 0,old_setting;
@@ -339,7 +340,8 @@ RECT r;
 			check_cd_event(hwnd,message,wParam,lParam);
 			else {
 				SetFocus(hwnd);
-				press = MAKEPOINT(lParam);
+				press.x = LOWORD(lParam);
+				press.y = HIWORD(lParam);
 
 				All_Done = handle_action(press, wParam,lParam);
 				check_game_done();
@@ -358,7 +360,8 @@ RECT r;
 			check_cd_event(hwnd,message,wParam,lParam);
 			else {
 				SetFocus(hwnd);
-				press = MAKEPOINT(lParam);
+				press.x = LOWORD(lParam);
+				press.y = HIWORD(lParam);
 
 				All_Done = handle_action(press, wParam,-2);
 				check_game_done();
@@ -416,7 +419,8 @@ RECT r;
 
 	case WM_MOUSEMOVE:
 		if ((mouse_button_held == TRUE) && (hwnd == mainPtr)) {
-			press = MAKEPOINT(lParam);
+			press.x = LOWORD(lParam);
+			press.y = HIWORD(lParam);
 			All_Done = handle_action(press, wParam,lParam);
 			}
 		//if (hwnd == mainPtr)
@@ -432,7 +436,7 @@ RECT r;
 		return 0;
 
 	case WM_VSCROLL:
-		which_sbar = GetWindowWord(HIWORD (lParam), GWW_ID);
+		which_sbar = GetWindowWord(HIWORD (lParam), /* GWW_ID */ -12);
 		switch (which_sbar) {
 			case 1:
 				sbar_pos = GetScrollPos(right_sbar,SB_CTL);
@@ -503,7 +507,7 @@ void check_game_done()
   //	through_sending();
 	if (All_Done == TRUE) {
 		discard_graphics();
-		//showcursor(TRUE);       
+		//showcursor(TRUE);
 		PostQuitMessage(0);
 		}
 }
@@ -803,11 +807,13 @@ short check_cd_event(HWND hwnd,UINT message,UINT wparam,LONG lparam)
 			break;
 
 		case WM_LBUTTONDOWN:
-			press = MAKEPOINT(lparam);
+			press.x = LOWORD(lparam);
+			press.y = HIWORD(lparam);
 			wind_hit = cd_process_click(hwnd,press, wparam, lparam,&item_hit);
 			break;
 		case WM_RBUTTONDOWN:
-			press = MAKEPOINT(lparam);
+			press.x = LOWORD(lparam);
+			press.y = HIWORD(lparam);
 			wparam = wparam | MK_CONTROL;
 			wind_hit = cd_process_click(hwnd,press, wparam, lparam,&item_hit);
 			break;

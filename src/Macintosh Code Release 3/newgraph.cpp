@@ -154,7 +154,7 @@ void apply_unseen_mask()
 	PatPtr p;
 	ConstPatternParam c;
 	Boolean need_bother = FALSE;
-	
+
 	if (PSD[306][2] > 0)
 		return;
 
@@ -162,14 +162,14 @@ void apply_unseen_mask()
 		return;
 	if (!(is_out()) && (c_town.town.lighting > 0))
 		return;
-		
+
 	for (i = 0; i < 11; i++)
-		for (j = 0; j < 11; j++) 
+		for (j = 0; j < 11; j++)
 			if (unexplored_area[i + 1][j + 1] == 1)
 				need_bother = TRUE;
 	if (need_bother == FALSE)
 		return;
-				
+
 	GetPort(&old_port);
 	SetPort((GrafPtr) terrain_screen_gworld);
 	//p = *bw_pats[3];
@@ -177,9 +177,9 @@ void apply_unseen_mask()
 	c = *bw_pats[3];
 	PenPat(c);
 	PenMode(notPatOr);
-	
+
 	for (i = 0; i < 11; i++)
-		for (j = 0; j < 11; j++) 
+		for (j = 0; j < 11; j++)
 			if (unexplored_area[i + 1][j + 1] == 1) {
 
 					to_rect = base_rect;
@@ -193,7 +193,7 @@ void apply_unseen_mask()
 								terrain_there[k][l] = -1;
 
 				}
-	
+
 	//p = *bw_pats[6];
 	//c = p;
 	c = *bw_pats[6];
@@ -201,8 +201,8 @@ void apply_unseen_mask()
 	PenMode(patCopy);
 	SetPort(old_port);
 }
- 
-void apply_light_mask() 
+
+void apply_light_mask()
 {
 	GrafPtr old_port;
 	Rect temp = {0,0,108,84},paint_rect,base_rect = {0,0,36,28};
@@ -215,7 +215,7 @@ void apply_light_mask()
 		return;
 	if (c_town.town.lighting == 0)
 		return;
-	
+
 	if (oval_region == NULL) {
 		temp_rect_rgn = NewRgn();
 		dark_mask_region = NewRgn();
@@ -224,34 +224,34 @@ void apply_light_mask()
 		FrameOval(&temp);
 		CloseRgn(oval_region);
 		}
-	
+
 	// Process the light array
 	for (i = 2; i < 11; i++)
-		for (j = 2; j < 11; j++) 
+		for (j = 2; j < 11; j++)
 			if (light_area[i][j] == 0) is_dark = TRUE;
-	if (is_dark == FALSE) { 
+	if (is_dark == FALSE) {
 		for (i = 2; i < 11; i++)
-			for (j = 2; j < 11; j++) 
+			for (j = 2; j < 11; j++)
 				last_light_mask[i][j] = 0;
 		return;
 		}
 	for (i = 1; i < 12; i++)
 		for (j = 1; j < 12; j++)
-			if ((light_area[i - 1][j - 1] >= 1) && (light_area[i + 1][j - 1] >= 1) && 
-				(light_area[i - 1][j] >= 1) && (light_area[i + 1][j] >= 1) && 
-				(light_area[i - 1][j + 1] >= 1) && (light_area[i + 1][j + 1] >= 1) && 
+			if ((light_area[i - 1][j - 1] >= 1) && (light_area[i + 1][j - 1] >= 1) &&
+				(light_area[i - 1][j] >= 1) && (light_area[i + 1][j] >= 1) &&
+				(light_area[i - 1][j + 1] >= 1) && (light_area[i + 1][j + 1] >= 1) &&
 				(light_area[i][j - 1] >= 1) && (light_area[i][j + 1] >= 1)) {
 					light_area[i][j] = 2;
 					}
 	for (i = 1; i < 12; i++)
 		for (j = 1; j < 12; j++)
-			if ((light_area[i - 1][j - 1] >= 2) && (light_area[i + 1][j - 1] >= 2) && 
-				(light_area[i - 1][j] >= 2) && (light_area[i + 1][j] >= 2) && 
-				(light_area[i - 1][j + 1] >= 2) && (light_area[i + 1][j + 1] >= 2) && 
+			if ((light_area[i - 1][j - 1] >= 2) && (light_area[i + 1][j - 1] >= 2) &&
+				(light_area[i - 1][j] >= 2) && (light_area[i + 1][j] >= 2) &&
+				(light_area[i - 1][j + 1] >= 2) && (light_area[i + 1][j + 1] >= 2) &&
 				(light_area[i][j - 1] >= 2) && (light_area[i][j + 1] >= 2)) {
 					light_area[i][j] = 3;
 					}
-		
+
 	GetPort(&old_port);
 	SetPort((GrafPtr) terrain_screen_gworld);
 
@@ -261,10 +261,10 @@ void apply_light_mask()
 				terrain_there[i - 2][j - 2] = -1;
 			}
 	for (i = 0; i < 13; i++)
-		for (j = 0; j < 13; j++) 
+		for (j = 0; j < 13; j++)
 			if (last_light_mask[i][j] != light_area[i][j])
 				same_mask = FALSE;
-	
+
 	if (same_mask == TRUE) {
 		PaintRgn(dark_mask_region);
 		SetPort(old_port);
@@ -272,16 +272,16 @@ void apply_light_mask()
 		}
 	SetRectRgn(dark_mask_region,big_to.left,big_to.top,big_to.right,big_to.bottom);
 	for (i = 0; i < 13; i++)
-		for (j = 0; j < 13; j++) 
+		for (j = 0; j < 13; j++)
 			last_light_mask[i][j] = light_area[i][j];
 	for (i = 1; i < 12; i++)
 		for (j = 1; j < 12; j++) {
 			if (light_area[i][j] == 2) {
-				
+
 				OffsetRgn(oval_region,13 + 28 * (i - 3), 13 + 36 * (j - 3));
-				
+
 				DiffRgn(dark_mask_region,oval_region,dark_mask_region);
-				
+
 				OffsetRgn(oval_region,-13 + -1 * (28 * (i - 3)),-13 + -1 * (36 * (j - 3)));
 				//PaintRect(&paint_rect);
 				}
@@ -306,7 +306,7 @@ void apply_light_mask()
 void start_missile_anim()
 {
 	short i;
-	
+
 	if (boom_anim_active == TRUE)
 		return;
 	boom_anim_active = TRUE;
@@ -314,23 +314,23 @@ void start_missile_anim()
 		store_missiles[i].missile_type = -1;
 		store_booms[i].boom_type = -1;
 		}
-	for (i = 0; i < 6; i++) 
+	for (i = 0; i < 6; i++)
 		pc_marked_damage[i] = 0;
-	for (i = 0; i < T_M; i++) 
+	for (i = 0; i < T_M; i++)
 		monst_marked_damage[i] = 0;
 	have_missile = FALSE;
 	have_boom = FALSE;
 }
 
-void end_missile_anim() 
+void end_missile_anim()
 {
 	boom_anim_active = FALSE;
 	}
-	
+
 void add_missile(location dest,short missile_type,short path_type,short x_adj,short y_adj)
 {
 	short i;
-	
+
 	if (boom_anim_active == FALSE)
 		return;
 	if (PSD[306][2] > 0)
@@ -346,7 +346,7 @@ void add_missile(location dest,short missile_type,short path_type,short x_adj,sh
 			store_missiles[i].missile_type =missile_type;
 			store_missiles[i].path_type =path_type;
 			store_missiles[i].x_adj =x_adj;
-			store_missiles[i].y_adj =y_adj;			
+			store_missiles[i].y_adj =y_adj;
 			return;
 			}
 }
@@ -373,23 +373,23 @@ void run_a_boom(location boom_where,short type,short x_adj,short y_adj)////
 	do_explosion_anim(5,0);
 	end_missile_anim();
 }
-	
+
 void mondo_boom(location l,short type)
 {
 	short i;
-	
+
 	start_missile_anim();
 	for (i = 0; i < 12; i++)
 		add_explosion(l,-1,1,type,0,0);
 	do_explosion_anim(5,0);
 
-	end_missile_anim();	
+	end_missile_anim();
 }
-		
+
 void add_explosion(location dest,short val_to_place,short place_type,short boom_type,short x_adj,short y_adj)
 {
 	short i;
-	
+
 	if (PSD[306][2] > 0)
 		return;
 	if (boom_anim_active == FALSE)
@@ -411,30 +411,30 @@ void add_explosion(location dest,short val_to_place,short place_type,short boom_
 			store_booms[i].place_type = place_type;
 			store_booms[i].boom_type =  boom_type;
 			store_booms[i].x_adj =x_adj;
-			store_booms[i].y_adj =y_adj;			
+			store_booms[i].y_adj =y_adj;
 			return;
 			}
-}		
+}
 
-void do_missile_anim(short num_steps,location missile_origin,short sound_num) 
+void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 {
 	Rect temp_rect,missile_origin_base = {1,1,17,17},active_area_rect,to_rect,from_rect;
 	short i,j,store_missile_dir;
 	Point start_point,finish_point[30];
 	location screen_ul;
-	
+
 	short x1[30],x2[30],y1[30],y2[30],t; // for path paramaterization
 	Rect missile_place_rect[30],missile_origin_rect[30],store_erase_rect[30];
-	Point current_terrain_ul; 
+	Point current_terrain_ul;
 	GWorldPtr temp_gworld;
 	GrafPtr old_port;
 	long delay_dummy;
-	
+
 	if ((have_missile == FALSE) || (boom_anim_active == FALSE)) {
 		boom_anim_active = FALSE;
 		return;
 		}
-	
+
 	for (i = 0; i < 30; i++)
 		if (store_missiles[i].missile_type >= 0)
 			i = 50;
@@ -452,17 +452,17 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 			else {
 				current_terrain_ul.h = current_terrain_ul.v = 5;
 				}
-	
+
 	// make terrain_template contain current terrain all nicely
 	draw_terrain(1);
 	to_rect = terrain_screen_gworld->portRect;
 	OffsetRect(&to_rect,current_terrain_ul.h, current_terrain_ul.v);
 	rect_draw_some_item(terrain_screen_gworld,terrain_screen_gworld->portRect,
 		terrain_screen_gworld,to_rect,0,1);
-			
-	GetPort(&old_port);	
-				
-	// create and clip temporary anim template 
+
+	GetPort(&old_port);
+
+	// create and clip temporary anim template
 	temp_rect = terrain_screen_gworld->portRect;
 	NewGWorld(&temp_gworld,  0 /*8*/,&temp_rect, NIL, NIL, 0);
 	SetPort((GrafPtr) temp_gworld);
@@ -470,8 +470,8 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 	InsetRect(&active_area_rect,13,13);
 	ClipRect(&active_area_rect);
 	SetPort(mainPtr);
-	
-	
+
+
 	// init missile paths
 	for (i = 0; i < 30; i++) {
 		SetRect(&store_erase_rect[i],0,0,0,0);
@@ -481,12 +481,12 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 	screen_ul.x = center.x - 4; screen_ul.y = center.y - 4;
 	start_point.h = 13 + 14 + 28 * (short) (missile_origin.x - screen_ul.x);
 	start_point.v = 13 + 18 + 36 * (short) (missile_origin.y - screen_ul.y);
-	for (i = 0; i < 30; i++) 
+	for (i = 0; i < 30; i++)
 		if (store_missiles[i].missile_type >= 0) {
 			finish_point[i].h = 1 + 13 + 14 + store_missiles[i].x_adj + 28 * (short) (store_missiles[i].dest.x - screen_ul.x);
 			finish_point[i].v = 1 + 13 + 18 + store_missiles[i].y_adj + 36 * (short) (store_missiles[i].dest.y - screen_ul.y);
 			// note ... +1 at beginning is put in to prevent infinite slope
-			
+
 			if (store_missiles[i].missile_type < 7) {
 				store_missile_dir = get_missile_direction(start_point,finish_point[i]);
 				missile_origin_rect[i] = missile_origin_base;
@@ -496,7 +496,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 					missile_origin_rect[i] = missile_origin_base;
 					OffsetRect(&missile_origin_rect[i],0,18 * store_missiles[i].missile_type);
 					}
-			
+
 			// x1 slope x2 start pt
 			x1[i] = finish_point[i].h - start_point.h;
 			x2[i] = start_point.h;
@@ -504,44 +504,44 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 			y2[i] = start_point.v;
 			}
 			else missile_place_rect[i].top =missile_place_rect[i].left =missile_place_rect[i].bottom =missile_place_rect[i].right = 0;
-	
+
 	play_sound(-1 * sound_num);
-	
-	
+
+
 	// Now, at last, launch missile
 	for (t = 0; t < num_steps; t++) {
-		for (i = 0; i < 30; i++) 
+		for (i = 0; i < 30; i++)
 			if (store_missiles[i].missile_type >= 0) {
 				// Where place?
 				temp_rect = missile_origin_base;
 				OffsetRect(&temp_rect,-8 + x2[i] + (x1[i] * t) / num_steps,
 					-8 + y2[i] + (y1[i] * t) / num_steps);
-				
+
 				// now adjust for different paths
 				if (store_missiles[i].path_type == 1)
 				OffsetRect(&temp_rect,0,
 					-1 * (t * (num_steps - t)) / 100);
-				
+
 				SectRect(&temp_rect,&active_area_rect,&missile_place_rect[i]);
-				
+
 				// Now put terrain in temporary;
 				rect_draw_some_item(terrain_screen_gworld,missile_place_rect[i],
 					temp_gworld,missile_place_rect[i],0,0);
 				// Now put in missile
 				from_rect = missile_origin_rect[i];
-				if (store_missiles[i].missile_type >= 7) 
+				if (store_missiles[i].missile_type >= 7)
 					OffsetRect(&from_rect,18 * (t % 8),0);
 				rect_draw_some_item(missiles_gworld,from_rect,
 					temp_gworld,temp_rect,1,0);
 				}
 		// Now draw all missiles to screen
-		for (i = 0; i < 30; i++) 
+		for (i = 0; i < 30; i++)
 			if (store_missiles[i].missile_type >= 0) {
 				to_rect = store_erase_rect[i];
 				OffsetRect(&to_rect,current_terrain_ul.h,current_terrain_ul.v);
 				rect_draw_some_item(terrain_screen_gworld,store_erase_rect[i],
 					terrain_screen_gworld,to_rect,0,1);
-				
+
 				to_rect = missile_place_rect[i];
 				store_erase_rect[i] = to_rect;
 				OffsetRect(&to_rect,current_terrain_ul.h,current_terrain_ul.v);
@@ -551,9 +551,9 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 		if ((PSD[306][6] == 3) || ((PSD[306][6] == 1) && (t % 4 == 0)) || ((PSD[306][6] == 2) && (t % 3 == 0)))
 			Delay(1,&delay_dummy);
 		}
-		
+
 	// Exit gracefully, and clean up screen
-	for (i = 0; i < 30; i++) 
+	for (i = 0; i < 30; i++)
 		store_missiles[i].missile_type = -1;
 	DisposeGWorld(temp_gworld);
 	SetPort(old_port);
@@ -572,21 +572,21 @@ short get_missile_direction(Point origin_point,Point the_point)
 	// so that origin_point is moved to (149,185) and the_point is moved in proportion
 	the_point.h +=  149 - origin_point.h;
 	the_point.v +=  185 - origin_point.v;
-	
+
 				if ((the_point.h < 135) & (the_point.v >= ((the_point.h * 34) / 10) - 293)
 					& (the_point.v <= (-1 * ((the_point.h * 34) / 10) + 663)))
 					store_dir.x--;
 				if ((the_point.h > 163) & (the_point.v <= ((the_point.h * 34) / 10) - 350)
 					& (the_point.v >= (-1 * ((the_point.h * 34) / 10) + 721)))
 					store_dir.x++;
-					
+
 				if ((the_point.v < 167) & (the_point.v <= (the_point.h / 2) + 102)
 					& (the_point.v <= (-1 * (the_point.h / 2) + 249)))
 					store_dir.y--;
 				if ((the_point.v > 203) & (the_point.v >= (the_point.h / 2) + 123)
 					& (the_point.v >= (-1 * (the_point.h / 2) + 268)))
 					store_dir.y++;
-			
+
 	switch (store_dir.y) {
 		case 0:
 			dir = 4 - 2 * (store_dir.x); break;
@@ -594,7 +594,7 @@ short get_missile_direction(Point origin_point,Point the_point)
 			dir = (store_dir.x == -1) ? 7 : store_dir.x; break;
 		case 1:
 			dir = 4 - store_dir.x; break;
-		}	
+		}
 	return dir;
 }
 
@@ -608,19 +608,19 @@ void do_explosion_anim(short sound_num,short special_draw)
 	short i,j,store_missile_dir,temp_val,temp_val2;
 	Point start_point;
 	location screen_ul;
-	
-	short t,cur_boom_type = 0; 
-	Point current_terrain_ul; 
+
+	short t,cur_boom_type = 0;
+	Point current_terrain_ul;
 	GWorldPtr temp_gworld;
 	GrafPtr old_port;
 	long delay_dummy;
 	short boom_type_sound[3] = {5,10,53};
-	
+
 	if ((have_boom == FALSE) || (boom_anim_active == FALSE)) {
 		boom_anim_active = FALSE;
 		return;
 		}
-	
+
 	for (i = 0; i < 30; i++)
 		if (store_booms[i].boom_type >= 0)
 			i = 50;
@@ -639,7 +639,7 @@ void do_explosion_anim(short sound_num,short special_draw)
 				current_terrain_ul.h = current_terrain_ul.v = 5;
 				}
 
-	
+
 	// make terrain_template contain current terrain all nicely
 	draw_terrain(1);
 	if (special_draw != 2) {
@@ -648,10 +648,10 @@ void do_explosion_anim(short sound_num,short special_draw)
 		rect_draw_some_item(terrain_screen_gworld,terrain_screen_gworld->portRect,
 			terrain_screen_gworld,to_rect,0,1);
 		}
-		
-	GetPort(&old_port);	
-				
-	// create and clip temporary anim template 
+
+	GetPort(&old_port);
+
+	// create and clip temporary anim template
 	temp_rect = terrain_screen_gworld->portRect;
 	NewGWorld(&temp_gworld,  0 /*8*/,&temp_rect, NIL, NIL, 0);
 	SetPort((GrafPtr) temp_gworld);
@@ -662,53 +662,53 @@ void do_explosion_anim(short sound_num,short special_draw)
 	InsetRect(&active_area_rect,13,13);
 	ClipRect(&active_area_rect);
 	SetPort(mainPtr);
-	
+
 	// init missile paths
 	screen_ul.x = center.x - 4; screen_ul.y = center.y - 4;
-	for (i = 0; i < 30; i++) 
+	for (i = 0; i < 30; i++)
 		if ((store_booms[i].boom_type >= 0)  && (special_draw < 2)) {
 			cur_boom_type = store_booms[i].boom_type;
 			explode_place_rect[i] = base_rect;
 			OffsetRect(&explode_place_rect[i],13 + 28 * (store_booms[i].dest.x - screen_ul.x) + store_booms[i].x_adj,
 				13 + 36 * (store_booms[i].dest.y - screen_ul.y) + store_booms[i].y_adj);
-				
+
 			if ((store_booms[i].place_type == 1) && (special_draw < 2)) {
 				temp_val = get_ran(1,0,50) - 25;
 				temp_val2 = get_ran(1,0,50) - 25;
 				OffsetRect(&explode_place_rect[i],temp_val,temp_val2);
 				}
-			
-			// eliminate stuff that's too gone. 
+
+			// eliminate stuff that's too gone.
 			SectRect(&explode_place_rect[i],&terrain_screen_gworld->portRect,&temp_rect);
 			if (EqualRect(&temp_rect,&explode_place_rect[i]) == FALSE) {
 				store_booms[i].boom_type = -1;
 				}
-			
+
 			}
 			else if (special_draw < 2)
 				explode_place_rect[i].top =explode_place_rect[i].left =explode_place_rect[i].bottom =explode_place_rect[i].right = 0;
-	
+
 	//play_sound(-1 * sound_num);
 	if (special_draw < 2)
 		play_sound(-1 * boom_type_sound[cur_boom_type]);
-	
+
 	// Now, at last, do explosion
 	for (t = (special_draw == 2) ? 6 : 0; t < ((special_draw == 1) ? 6 : 11); t++) { // t goes up to 10 to make sure screen gets cleaned up
 		// First, lay terrain in temporary graphic area;
-		for (i = 0; i < 30; i++) 
-			if (store_booms[i].boom_type >= 0) 
+		for (i = 0; i < 30; i++)
+			if (store_booms[i].boom_type >= 0)
 				rect_draw_some_item(terrain_screen_gworld,explode_place_rect[i],
 					temp_gworld,explode_place_rect[i],0,0);
 
 		// Now put in explosions
-		for (i = 0; i < 30; i++) 
+		for (i = 0; i < 30; i++)
 			if (store_booms[i].boom_type >= 0) {
 				if ((t + store_booms[i].offset >= 0) && (t + store_booms[i].offset <= 7)) {
 						from_rect = base_rect;
 						OffsetRect(&from_rect,28 * (t + store_booms[i].offset),144 + 36 * (store_booms[i].boom_type));
 						rect_draw_some_item(fields_gworld,from_rect,
 							temp_gworld,explode_place_rect[i],1,0);
-					
+
 					if (store_booms[i].val_to_place > 0) {
 						text_rect = explode_place_rect[i];
 						text_rect.top += 4;
@@ -725,7 +725,7 @@ void do_explosion_anim(short sound_num,short special_draw)
 					}
 				}
 		// Now draw all missiles to screen
-		for (i = 0; i < 30; i++) 
+		for (i = 0; i < 30; i++)
 			if (store_booms[i].boom_type >= 0) {
 				to_rect = explode_place_rect[i];
 				OffsetRect(&to_rect,current_terrain_ul.h,current_terrain_ul.v);
@@ -735,9 +735,9 @@ void do_explosion_anim(short sound_num,short special_draw)
 		//if (((PSD[306][6] == 1) && (t % 3 == 0)) || ((PSD[306][6] == 2) && (t % 2 == 0)))
 			Delay(2 * (1 + PSD[306][6]),&delay_dummy);
 		}
-		
+
 	// Exit gracefully, and clean up screen
-	for (i = 0; i < 30; i++) 
+	for (i = 0; i < 30; i++)
 		if (special_draw != 1)
 			store_booms[i].boom_type = -1;
 	DisposeGWorld(temp_gworld);
@@ -762,9 +762,9 @@ shop_type:
 12 alchemy
 */
 void click_shop_rect(Rect area_rect)
-{ 
+{
 	long dum;
-	
+
 	draw_shop_graphics(1,area_rect);
 	if (play_sounds == TRUE)
 		play_sound(37);
@@ -776,18 +776,18 @@ void draw_shop_graphics(short draw_mode,Rect clip_area_rect)
 // mode 1 - drawing dark for button press
 {
 	Rect area_rect,item_info_from = {11,42,24,56};
-	
+
 	Rect face_rect = {6,6,38,38};
 	Rect title_rect = {15,48,42,260};
 	Rect dest_rect,help_from = {85,36,101,54};
 	short faces[13] = {1,1,1,42,43, 1,1,1,1,1, 44,44,44};
-	
+
 	short i,j,what_chosen;
 	RGBColor c[7] = {{0,0,0},{0,0,32767},{0,0,14535},{0,0,26623},{0,0,59391},
 	{0,40959,0},{0,24575,0}};
 	Rect shopper_name = {44,6,56,260};
 	short current_pos;
-	
+
 	short cur_cost,what_magic_shop,what_magic_shop_item;
 	char cur_name[60];
 	char cur_info_str[60];
@@ -795,12 +795,12 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 	"Expensive","Exorbitant","Utterly Ridiculous"};
 	GrafPtr old_port;
 	item_record_type base_item;
-	
+
 	if (overall_mode != 21) {
 		return;
 		}
-	
-	
+
+
 	GetPort(&old_port);
 	SetPort((GrafPtr) talk_gworld);
 	TextFont(dungeon_font_num);
@@ -808,7 +808,7 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 	TextFace(0);
 
 	if (draw_mode > 0) {
-		ClipRect(&clip_area_rect);	
+		ClipRect(&clip_area_rect);
 		}
 
 	area_rect = talk_gworld->portRect;
@@ -817,9 +817,9 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 	FillCRect(&area_rect,bg[12]);
 
 	FrameRect(&shop_frame);
-	
+
 	// Place store icon
-	if (draw_mode == 0) { 
+	if (draw_mode == 0) {
 		SetPort(mainPtr);
 		i = faces[store_shop_type];
 		draw_dialog_graphic((GrafPtr)  talk_gworld, face_rect, 1000 + i, FALSE,1);
@@ -834,7 +834,7 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 	char_win_draw_string((GrafPtr) talk_gworld,dest_rect,store_store_name,2,18);
 	OffsetRect(&dest_rect,-1,-1);
 	RGBForeColor(&c[4]);
-	char_win_draw_string((GrafPtr) talk_gworld,dest_rect,store_store_name,2,18);	
+	char_win_draw_string((GrafPtr) talk_gworld,dest_rect,store_store_name,2,18);
 
 	TextFont(geneva_font_num);
 	TextSize(12);
@@ -849,7 +849,7 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 		case 4: sprintf(cur_name,"Buying Food.");break;
 		default:sprintf(cur_name,"Shopping for %s.",adven[current_pc].name); break;
 		}
-	char_win_draw_string((GrafPtr) talk_gworld,shopper_name,cur_name,2,18);	
+	char_win_draw_string((GrafPtr) talk_gworld,shopper_name,cur_name,2,18);
 
 	// Place help and done buttons
 	ForeColor(blackColor);
@@ -861,11 +861,11 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 	//talk_help_rect.right = talk_help_rect.left + help_from.right - help_from.left;
 	//talk_help_rect.bottom = talk_help_rect.top + help_from.bottom - help_from.top;
 	rect_draw_some_item(dlg_buttons_gworld[11][draw_mode],help_from,talk_gworld,shop_done_rect,0,0);
-	
+
 	if (draw_mode == 0)
 		ForeColor(blackColor);
 		else RGBForeColor(&c[4]);
-		
+
 	// Place all the items
 	for (i = 0; i < 8; i++) {
 		current_pos = i + GetControlValue(shop_sbar);
@@ -874,7 +874,7 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 		cur_cost = store_shop_costs[current_pos];
 		what_chosen = store_shop_items[current_pos];
 		switch (what_chosen / 100) {
-			case 0: case 1: case 2: case 3: case 4: 
+			case 0: case 1: case 2: case 3: case 4:
 				base_item = get_stored_item(what_chosen);
 				base_item.item_properties = base_item.item_properties | 1;
 				draw_dialog_graphic((GrafPtr) talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, FALSE,1);
@@ -904,7 +904,7 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 				draw_dialog_graphic((GrafPtr) talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, FALSE,1);
 
 				strcpy(cur_name,base_item.full_name);
-				sprintf(cur_info_str,"");		
+				sprintf(cur_info_str,"");
 				break;
 			case 9:
 				base_item = store_priest_spells(what_chosen - 900 - 30);
@@ -946,8 +946,8 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 	char_win_draw_string((GrafPtr) talk_gworld,bottom_help_rects[2],"Hit done button (or Esc.) to quit.",0,12);
 	if ((store_shop_type != 3) && (store_shop_type != 4))
 		char_win_draw_string((GrafPtr) talk_gworld,bottom_help_rects[3],"'I' button brings up description.",0,12);
-	
-	
+
+
 	ForeColor(blackColor);
 	area_rect = talk_gworld->portRect;
 	ClipRect(&area_rect);
@@ -962,7 +962,7 @@ void refresh_shopping()
 {
 	Rect from_rects[4] = {{0,0,62,279},{62,0,352,253},{62,269,352,279},{352,0,415,279}},to_rect;
 	short i;
-	
+
 	for (i = 0; i < 4; i++) {
 		to_rect = from_rects[i];
 		OffsetRect(&to_rect,5,5);
@@ -984,17 +984,17 @@ void click_talk_rect(char *str_to_place,char *str_to_place2,Rect c_rect)
 
 ////
 // which_s = 0 means that it returns first 4th level spell
-item_record_type store_mage_spells(short which_s) 
+item_record_type store_mage_spells(short which_s)
 {
 	item_record_type spell = {21,0, 0,0,0,0,0,0, 53,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
 
  short cost[32] = {150,200,150,1000,1200,400,300,200,
- 200,250,500,1500,300,  250,125,150, 
+ 200,250,500,1500,300,  250,125,150,
   400,450, 800,600,700,600,7500, 500,
  5000,3000,3500,4000,4000,4500,7000,5000};
 
 	Str255 str;
-	
+
 	if (which_s != minmax(0,31,which_s))
 		which_s = 0;
 	spell.item_level = which_s + 30;
@@ -1030,14 +1030,14 @@ item_record_type store_alchemy(short which_s)
 	item_record_type spell = {21,0, 0,0,0,0,0,0, 53,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
 short val[20] = {50,75,30,130,100,150, 200,200,300,250,300, 500,600,750,700,1000,10000,5000,7000,12000};
 	Str255 str;
-	
+
 	if (which_s != minmax(0,19,which_s))
 		which_s = 0;
 	spell.item_level = which_s;
 	spell.value = val[which_s];
 	get_str(str,38,which_s + 100);
 	strcpy((char *)spell.full_name,(char *)str);
-	return spell; 
+	return spell;
 }
 
 void get_item_interesting_string(item_record_type item,char *message)
@@ -1077,21 +1077,21 @@ void get_item_interesting_string(item_record_type item,char *message)
 			sprintf(message,"Poison: Does %d-%d damage.",item.item_level,item.item_level * 6);
 			break;
 		default:
-			sprintf(message,"");		
+			sprintf(message,"");
 			if (item.charges > 0)
-				sprintf(message,"Uses: %d",item.charges);		
+				sprintf(message,"Uses: %d",item.charges);
 			break;
-		}	
+		}
 	if (item.charges > 0)
-		sprintf(message,"Uses: %d",item.charges);		
+		sprintf(message,"Uses: %d",item.charges);
 }
 
 
-void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_rect)
+void place_talk_str(const char *str_to_place,const char *str_to_place2,short color,Rect c_rect)
 // color 0 - regular  1 - darker
 {
 	Rect area_rect;
-	
+
 	Rect face_rect = {6,6,38,38};
 	Rect title_rect = {19,48,42,260};
 	Rect dest_rect,help_from = {85,36,101,54};
@@ -1104,12 +1104,12 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 	short last_line_break = 0,last_word_break = 0,on_what_line = 0,last_stored_word_break = 0;
 	Boolean force_skip = FALSE;
 	short face_to_draw;
-	
+
 	RGBColor c[7] = {{0,0,0},{0,0,32767},{0,0,14535},{0,0,26623},{0,0,59391},
 	{0,40959,0},{0,24575,0}};
-	
+
 	GrafPtr old_port;
-	
+
 	GetPort(&old_port);
 	SetPort((GrafPtr) talk_gworld);
 
@@ -1117,14 +1117,14 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 	GetFNum(fn2,&dungeon_font_num);
 	if (dungeon_font_num == 0)
 		GetFNum(fn3,&dungeon_font_num);
-		
+
 	TextFont(dungeon_font_num);
 	//TextFont(geneva_font_num);
 	TextSize(18);
 	TextFace(0);
 
 	if (c_rect.right > 0) {
-		ClipRect(&c_rect);	
+		ClipRect(&c_rect);
 		}
 
 	area_rect = talk_gworld->portRect;
@@ -1137,9 +1137,9 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 	talk_help_rect.right = talk_help_rect.left + help_from.right - help_from.left;
 	talk_help_rect.bottom = talk_help_rect.top + help_from.bottom - help_from.top;
 	rect_draw_some_item(dlg_buttons_gworld[3][0],help_from,talk_gworld,talk_help_rect,0,0);
-	
+
 	// Place face of talkee
-	if ((color == 0) && (c_rect.right == 0)) { 
+	if ((color == 0) && (c_rect.right == 0)) {
 		////
 		SetPort(mainPtr);
 		face_to_draw = scenario.scen_monsters[store_monst_type].default_facial_pic;
@@ -1164,12 +1164,12 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 	OffsetRect(&dest_rect,-1,-1);
 	RGBForeColor(&c[4]);
 	char_win_draw_string((GrafPtr) talk_gworld,dest_rect,title_string,2,18);
-		
+
 	// Place buttons at bottom.
 	if (color == 0)
 		RGBForeColor(&c[5]);
 		else RGBForeColor(&c[6]);
-	for (i = 0; i < 9; i++) 
+	for (i = 0; i < 9; i++)
 		if ((talk_end_forced == false) || (i == 6) || (i == 5)) {
 			OffsetRect(&preset_words[i].word_rect,0,8);
 			char_win_draw_string((GrafPtr) talk_gworld,preset_words[i].word_rect,preset_words[i].word,2,18);
@@ -1180,14 +1180,14 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 	if (color == 0)
 		for (i = 0; i < 50; i++)
 			store_words[i].word_rect.left = store_words[i].word_rect.right = 0;
-			
+
 	str_len = (short) strlen((char *)str_to_place);
 	if (str_len == 0) {
 		sprintf((char *) str_to_place,".");
-		}	
+		}
 	strcpy((char *) str,str_to_place);
 	strcpy((char *) p_str,str_to_place);
-	c2p(p_str);	
+	c2p(p_str);
 	for (i = 0; i < 257; i++)
 		text_len[i]= 0;
 	MeasureText(256,p_str,text_len);
@@ -1195,7 +1195,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 	dest_rect = word_place_rect;
 
 	current_rect = 0;
-	
+
 	if (color == 0)
 		RGBForeColor(&c[2]);
 		else RGBForeColor(&c[1]);
@@ -1203,24 +1203,24 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 	//for (i = 0;text_len[i] != text_len[i + 1], i < str_len;i++) {
 	for (i = 0;i < str_len;i++) {
 		if (((str[i] != 39) && ((str[i] < 65) || (str[i] > 122)) && ((str[i] < 48) || (str[i] > 57))) && (color == 0)) { // New word, so set up a rect
-			if (((i - store_last_word_break >= 4) || (i >= str_len - 1)) 
+			if (((i - store_last_word_break >= 4) || (i >= str_len - 1))
 			 && (i - last_stored_word_break >= 4) && (talk_end_forced == FALSE)) {
 				store_words[current_rect].word_rect.left = dest_rect.left + (text_len[store_last_word_break] - text_len[last_line_break]) - 2;
 				store_words[current_rect].word_rect.right = dest_rect.left + (text_len[i + 1] - text_len[last_line_break]) - 1;
 				store_words[current_rect].word_rect.top = dest_rect.top + 1 + line_height * on_what_line - 5;
 				store_words[current_rect].word_rect.bottom = dest_rect.top + 1 + line_height * on_what_line + 13;
-				
-				if ((str[store_last_word_break] < 48) || (str[store_last_word_break] == 96) 
+
+				if ((str[store_last_word_break] < 48) || (str[store_last_word_break] == 96)
 					|| (str[store_last_word_break] > 122)
 					|| ((str[store_last_word_break] >= 58) && (str[store_last_word_break] <= 64)))
 						store_last_word_break++;
 
 				// adjust for if this word will be scrolled down
-				//if (((text_len[i] - text_len[last_line_break] > (dest_rect.right - dest_rect.left - 6)) 
+				//if (((text_len[i] - text_len[last_line_break] > (dest_rect.right - dest_rect.left - 6))
 		  		//	&& (last_word_break > last_line_break)) || (str[i] == '|')) {
 		  		//	OffsetRect(&store_words[current_rect].word_rect,5 + -1 * store_words[current_rect].word_rect.left,line_height);
 		  		//	}
-				
+
 				store_words[current_rect].word[0] = str[store_last_word_break];
 				store_words[current_rect].word[1] = str[store_last_word_break + 1];
 				store_words[current_rect].word[2] = str[store_last_word_break + 2];
@@ -1236,13 +1236,13 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 						start_of_last_kept_word = store_last_word_break;
 						if (current_rect < 49)
 							current_rect++;
-					
+
 						//FrameRect(&store_words[current_rect].word_rect);
 						}
 				last_stored_word_break = i + 1;
 				}
 			}
-		if (((text_len[i] - text_len[last_line_break] > (dest_rect.right - dest_rect.left - 6)) 
+		if (((text_len[i] - text_len[last_line_break] > (dest_rect.right - dest_rect.left - 6))
 		  && (last_word_break > last_line_break)) || (str[i] == '|') || (i == str_len - 1)) {
 			if (str[i] == '|') {
 				str[i] = ' ';
@@ -1267,7 +1267,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 				}
 			if ((start_of_last_kept_word >= last_line_break) && (current_rect > 0)) {
 				//SysBeep(2);
-	 			OffsetRect(&store_words[current_rect - 1].word_rect,5 + -1 * store_words[current_rect - 1].word_rect.left,line_height);				
+	 			OffsetRect(&store_words[current_rect - 1].word_rect,5 + -1 * store_words[current_rect - 1].word_rect.left,line_height);
 				}
 		}
 		if (str[i] == ' ') { // New word
@@ -1276,39 +1276,39 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 		if (on_what_line == 17)
 			i = 10000;
 		}
-		
+
 	// Now for string 2
 	str_len = (short) strlen((char *)str_to_place2);
 	start_of_last_kept_word = -1;
-	
+
 	if (str_len > 0) {
-		
+
 	strcpy((char *) str,str_to_place2);
 	strcpy((char *) p_str,str_to_place2);
-	c2p(p_str);	
+	c2p(p_str);
 	for (i = 0; i < 257; i++)
 		text_len[i]= 0;
 	MeasureText(256,p_str,text_len);
-	
+
 	last_line_break = store_last_word_break = last_word_break = last_stored_word_break = 0;
 	MoveTo(dest_rect.left + 1 , dest_rect.top + 1 + line_height * on_what_line + 9);
-	//for (i = 0;text_len[i] != text_len[i + 1], i < str_len;i++) 
+	//for (i = 0;text_len[i] != text_len[i + 1], i < str_len;i++)
 	for (i = 0;i < str_len;i++) {
 		if (((str[i] != 39) && ((str[i] < 65) || (str[i] > 122)) && ((str[i] < 48) || (str[i] > 57))) && (color == 0))  { // New word, so set up a rect
-			if (((i - store_last_word_break >= 4) || (i >= str_len - 1)) 
+			if (((i - store_last_word_break >= 4) || (i >= str_len - 1))
 			 && (i - last_stored_word_break >= 4) && (talk_end_forced == FALSE)) {
 				store_words[current_rect].word_rect.left = dest_rect.left + (text_len[store_last_word_break] - text_len[last_line_break]) - 2;
 				store_words[current_rect].word_rect.right = dest_rect.left + (text_len[i + 1] - text_len[last_line_break]) - 1;
 				store_words[current_rect].word_rect.top = dest_rect.top + 1 + line_height * on_what_line - 5;
 				store_words[current_rect].word_rect.bottom = dest_rect.top + 1 + line_height * on_what_line + 13;
-				
-				if ((str[store_last_word_break] < 48) || (str[store_last_word_break] == 96) 
+
+				if ((str[store_last_word_break] < 48) || (str[store_last_word_break] == 96)
 					|| (str[store_last_word_break] > 122)
 					|| ((str[store_last_word_break] >= 58) && (str[store_last_word_break] <= 64)))
 						store_last_word_break++;
 
 				// adjust for if this word will be scrolled down
-				//if (((text_len[i] - text_len[last_line_break] > (dest_rect.right - dest_rect.left - 6)) 
+				//if (((text_len[i] - text_len[last_line_break] > (dest_rect.right - dest_rect.left - 6))
 		  		//	&& (last_word_break > last_line_break)) || (str[i] == '|')) {
 		  		//	OffsetRect(&store_words[current_rect].word_rect,5 + -1 * store_words[current_rect].word_rect.left,line_height);
 		  		//	}
@@ -1326,13 +1326,13 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 						start_of_last_kept_word = store_last_word_break;
 						if (current_rect < 49)
 							current_rect++;
-					
+
 						//FrameRect(&store_words[current_rect].word_rect);
 						}
 				last_stored_word_break = i + 1;
 				}
 			}
-		if (((text_len[i] - text_len[last_line_break] > (dest_rect.right - dest_rect.left - 6)) 
+		if (((text_len[i] - text_len[last_line_break] > (dest_rect.right - dest_rect.left - 6))
 		  && (last_word_break > last_line_break)) || (str[i] == '|') || (i == str_len - 1)) {
 			if (str[i] == '|') {
 				str[i] = ' ';
@@ -1356,7 +1356,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 				last_word_break++;
 				}
 			if ((start_of_last_kept_word >= last_line_break) && (current_rect > 0)) {
-	 			OffsetRect(&store_words[current_rect - 1].word_rect,5 + -1 * store_words[current_rect - 1].word_rect.left,line_height);				
+	 			OffsetRect(&store_words[current_rect - 1].word_rect,5 + -1 * store_words[current_rect - 1].word_rect.left,line_height);
 				}
 		}
 		if (str[i] == ' ') { // New word
@@ -1366,17 +1366,17 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 			i = 10000;
 		}
 	}
-	
+
 	ForeColor(blackColor);
-	
+
 	area_rect = talk_gworld->portRect;
 	ClipRect(&area_rect);
-	
+
 	// Finally place processed graphics
 	SetPort(mainPtr);
 	rect_draw_some_item(talk_gworld,talk_gworld->portRect,talk_gworld,talk_area_rect,0,1);
 	SetPort(old_port);
-	
+
 	// Clean up strings
 	for (i = 0; i < 50; i++)
 		for (j = 0; j < 4; j++)
@@ -1394,14 +1394,14 @@ short scan_for_response(char *str)
 // returns -1 if no go
 {
 	short i;
-	
+
 	for (i = 0; i < 60; i++) { // 60 response in each bunch
 		if ((talking.talk_nodes[i].personality != -1) &&
 			((talking.talk_nodes[i].personality == store_personality)
-		 || (talking.talk_nodes[i].personality == -2)) && 
-			(((str[0] == talking.talk_nodes[i].link1[0]) && (str[1] == talking.talk_nodes[i].link1[1]) 
-			&& (str[2] == talking.talk_nodes[i].link1[2]) && (str[3] == talking.talk_nodes[i].link1[3])) 
-			|| ((str[0] == talking.talk_nodes[i].link2[0]) && (str[1] == talking.talk_nodes[i].link2[1]) 
+		 || (talking.talk_nodes[i].personality == -2)) &&
+			(((str[0] == talking.talk_nodes[i].link1[0]) && (str[1] == talking.talk_nodes[i].link1[1])
+			&& (str[2] == talking.talk_nodes[i].link1[2]) && (str[3] == talking.talk_nodes[i].link1[3]))
+			|| ((str[0] == talking.talk_nodes[i].link2[0]) && (str[1] == talking.talk_nodes[i].link2[1])
 			&& (str[2] == talking.talk_nodes[i].link2[2]) && (str[3] == talking.talk_nodes[i].link2[3]))))
 				return i;
 		}

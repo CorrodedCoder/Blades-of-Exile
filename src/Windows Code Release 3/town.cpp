@@ -36,7 +36,7 @@ extern unsigned char far combat_terrain[64][64];
 extern outdoor_record_type far outdoors[2][2];
 extern unsigned char far misc_i[64][64];
 extern short store_current_pc,current_ground;
-extern pascal Boolean cd_event_filter();
+extern Boolean cd_event_filter();
 extern Boolean dialog_not_toast;
 
 extern short store_pre_shop_mode,store_pre_talk_mode;
@@ -70,7 +70,7 @@ extern short special_queue[20];
 extern HPALETTE hpal;
 extern far PALETTEENTRY ape[256];
 extern HDC main_dc,main_dc2,main_dc3;
-extern HANDLE store_hInstance;
+extern HINSTANCE store_hInstance;
 extern stored_town_maps_type far town_maps,town_maps2;
 extern piles_of_stuff_dumping_type *data_store;
 extern piles_of_stuff_dumping_type2 *data_store2;
@@ -78,7 +78,7 @@ extern stored_town_maps_type far town_maps,town_maps2;
 
 extern short ulx,uly;
 
-FARPROC map_proc = NULL;
+DLGPROC map_proc = NULL;
 
 // extra devices for maps
 	HBRUSH hbrush[6] = {NULL, NULL, NULL, NULL, NULL, NULL};
@@ -119,10 +119,10 @@ unsigned char map_pats[256] = {1,1,2,2,2,7,7,7,7,7, ////
 						0,0,0,0,0,17,17,0,17,17,
 						17,17,17,17,17,17,0,0,0,0,
 						0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0, 
+						0,0,0,0,0,0,0,0,0,0,
 						0,0,0,0,0,0};// 250
 unsigned char anim_map_pats[18] = {14,0,0,0,22, 0,0,21,20,21, 20,0,0,0,0, 0,0,0};
-						
+
 long pause_dummy;
 
 location town_map_adj = {0,0};
@@ -170,8 +170,8 @@ void start_town_mode(short which_town, short entry_dir)
 	if ((town_number < 0) || (town_number >= scenario.num_towns)) {
 		give_error("The scenario tried to put you into a town that doesn't exist.","",0);
 		return;
-		}	
-		
+		}
+
 
 	// Now adjust town number as necessary.
 	for (i = 0; i < 10; i++)
@@ -181,16 +181,16 @@ void start_town_mode(short which_town, short entry_dir)
 			former_town = town_number;
 			town_number += PSD[scenario.flag_to_add_to_town[i][0]][scenario.flag_to_add_to_town[i][1]];
 			// Now update horses & boats
-			for (i = 0; i < 30; i++) 	
+			for (i = 0; i < 30; i++)
 				if ((party.horses[i].exists == TRUE) && (party.horses[i].which_town == former_town))
 					party.horses[i].which_town = town_number;
-			for (i = 0; i < 30; i++) 	
+			for (i = 0; i < 30; i++)
 				if ((party.boats[i].exists == TRUE) && (party.boats[i].which_town == former_town))
 					party.boats[i].which_town = town_number;
 		}
 
-		
-		
+
+
 	if ((town_number < 0) || (town_number >= scenario.num_towns)) {
 		give_error("The scenario tried to put you into a town that doesn't exist.","",0);
 		return;
@@ -205,7 +205,7 @@ void start_town_mode(short which_town, short entry_dir)
 		if (c_town.town.lighting > 0)
 			play_sound(95);
 			else play_sound(16);
-			
+
 		}
 
 
@@ -229,19 +229,19 @@ void start_town_mode(short which_town, short entry_dir)
 				current_ground = 2;
 			if ((scenario.ter_types[t_d.terrain[i][j]].special >= 16) &&
 				(scenario.ter_types[t_d.terrain[i][j]].special <= 19))
-					belt_present = TRUE;	
+					belt_present = TRUE;
 		}
 	c_town.hostile = 0;
 	c_town.monst.which_town = town_number;
 	c_town.monst.friendly = 0;
 
 	at_which_save_slot = party.at_which_save_slot;
-	
+
 	for (i = 0; i < 4; i++)
 		if (town_number == party.creature_save[i].which_town) {
 			c_town.monst = party.creature_save[i];
 			monsters_loaded = TRUE;
-						
+
 			for (j = 0; j < T_M; j++) {
 				if (loc_off_act_area(c_town.monst.dudes[j].m_loc) == TRUE)
 					c_town.monst.dudes[j].active = 0;
@@ -249,7 +249,7 @@ void start_town_mode(short which_town, short entry_dir)
 					c_town.monst.dudes[j].active = 1;
 				c_town.monst.dudes[j].m_loc = t_d.creatures[j].start_loc;
 				c_town.monst.dudes[j].m_d.health = c_town.monst.dudes[j].m_d.m_health;
-				c_town.monst.dudes[j].m_d.mp = c_town.monst.dudes[j].m_d.max_mp; 			
+				c_town.monst.dudes[j].m_d.mp = c_town.monst.dudes[j].m_d.max_mp;
 				c_town.monst.dudes[j].m_d.morale = c_town.monst.dudes[j].m_d.m_morale;
 				for (k = 0; k < 15; k++)
 					c_town.monst.dudes[j].m_d.status[k] = 0;
@@ -257,10 +257,10 @@ void start_town_mode(short which_town, short entry_dir)
 					c_town.monst.dudes[j].active = 0;
 				monst_target[j] = 6;
 				}
-			
+
 			// Now, travelling NPCs might have arrived. Go through and put them in.
 			// These should have protected status (i.e. spec1 >= 200, spec1 <= 204)
-			for (j = 0; j < T_M; j++) 
+			for (j = 0; j < T_M; j++)
 				if ((c_town.monst.dudes[j].monst_start.time_flag >= 4) &&
 					(c_town.monst.dudes[j].monst_start.time_flag <= 6)) {
 						if ((((short) (party.age / 1000) % 3) + 4) != c_town.monst.dudes[j].monst_start.time_flag)
@@ -274,11 +274,11 @@ void start_town_mode(short which_town, short entry_dir)
 								c_town.monst.dudes[j].m_d.health = c_town.monst.dudes[j].m_d.m_health;
 								}
 						}
-					
-			
-			
+
+
+
 			for (j = 0; j < town_size[town_type]; j++)
-				for (k = 0; k < town_size[town_type]; k++) { // now load in saved setup, 
+				for (k = 0; k < town_size[town_type]; k++) { // now load in saved setup,
 						// except that barrels and crates resotre to orig locs
 					temp = setup_save.setup[i][j][k] & 231;
 
@@ -367,9 +367,9 @@ void start_town_mode(short which_town, short entry_dir)
 	// where they cannot be
 	for (i = 0; i < T_M; i++) {
 		if (c_town.monst.dudes[i].active > 0)
-			if (((c_town.monst.dudes[i].m_d.x_width > 1) || (c_town.monst.dudes[i].m_d.y_width > 1)) && 
+			if (((c_town.monst.dudes[i].m_d.x_width > 1) || (c_town.monst.dudes[i].m_d.y_width > 1)) &&
 				(monst_can_be_there(c_town.monst.dudes[i].m_loc,i) == FALSE))
-				c_town.monst.dudes[i].active = 0;			
+				c_town.monst.dudes[i].active = 0;
 		}
 	// Thrash town?
 	if (party.m_killed[c_town.town_num] > c_town.town.max_num_monst) {
@@ -380,7 +380,7 @@ void start_town_mode(short which_town, short entry_dir)
 		if (day_reached(c_town.town.town_chop_time,c_town.town.town_chop_key) == TRUE){
 			//add_string_to_buf("Area has been abandoned.");
 			for (i = 0; i < T_M; i++)
-				if ((c_town.monst.dudes[i].active > 0) && (c_town.monst.dudes[i].active < 10) && 
+				if ((c_town.monst.dudes[i].active > 0) && (c_town.monst.dudes[i].active < 10) &&
 				(c_town.monst.dudes[i].attitude % 2 == 1))
 					c_town.monst.dudes[i].active += 10;
 			town_toast = TRUE;
@@ -390,16 +390,16 @@ void start_town_mode(short which_town, short entry_dir)
 			for (i = 0; i < T_M; i++)
 				if (c_town.monst.dudes[i].active >= 10)
 					c_town.monst.dudes[i].active -= 10;
-					else c_town.monst.dudes[i].active = 0;			
+					else c_town.monst.dudes[i].active = 0;
 		}
-	handle_town_specials(town_number, (short) town_toast,(entry_dir < 9) ? c_town.town.start_locs[entry_dir] : town_force_loc);	
+	handle_town_specials(town_number, (short) town_toast,(entry_dir < 9) ? c_town.town.start_locs[entry_dir] : town_force_loc);
 	// Flush excess doomguards and viscous goos
 	for (i = 0; i < T_M; i++)
 		if ((c_town.monst.dudes[i].m_d.spec_skill == 12) &&
 			(c_town.monst.dudes[i].number != t_d.creatures[i].number))
 				c_town.monst.dudes[i].active = 0;
-		
-		
+
+
 	quickfire = FALSE;
 	crate = FALSE;
 	barrel = FALSE;
@@ -410,7 +410,7 @@ void start_town_mode(short which_town, short entry_dir)
 			for (j = 0; j < town_size[town_type]; j++)
 				for (k = 0; k < town_size[town_type]; k++) {
 					loc.x = j; loc.y = k;
-					if (is_door(loc) == TRUE) 
+					if (is_door(loc) == TRUE)
 						misc_i[j][k] = misc_i[j][k] & 3;
 
 					// Set up field booleans
@@ -427,27 +427,27 @@ void start_town_mode(short which_town, short entry_dir)
 					if (is_quickfire(j,k) == TRUE)
 						quickfire = TRUE;
 					}
-		
+
 	// Set up items, maybe place items already there
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
 		t_i.items[i] = return_dummy_item();
-	
-							
+
+
 	for (j = 0; j < 3; j++)
 		if (scenario.store_item_towns[j] == town_number) {
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
-				t_i.items[i] = stored_items[j].items[i];		
-			}				
+				t_i.items[i] = stored_items[j].items[i];
+			}
 
 	//print_nums(party.item_taken[c_town.town_num][0],party.item_taken[c_town.town_num][1],party.item_taken[c_town.town_num][2]);
 	//print_nums(party.item_taken[c_town.town_num][3],party.item_taken[c_town.town_num][4],party.item_taken[c_town.town_num][5]);
 	//print_nums(party.item_taken[c_town.town_num][6],party.item_taken[c_town.town_num][7],999);
 	for (i = 0; i < 64; i++)
-		if ((c_town.town.preset_items[i].item_code >= 0) 
+		if ((c_town.town.preset_items[i].item_code >= 0)
 		 && (((party.item_taken[c_town.town_num][i / 8] & s_pow(2,i % 8)) == 0) ||
 		 (c_town.town.preset_items[i].always_there == TRUE))) {
-			for (j = 0; j < NUM_TOWN_ITEMS; j++) 
-			
+			for (j = 0; j < NUM_TOWN_ITEMS; j++)
+
 				// place the preset item, if party hasn't gotten it already
 				if (t_i.items[j].variety == 0) {
 					t_i.items[j] = get_stored_item(c_town.town.preset_items[i].item_code);
@@ -462,40 +462,40 @@ void start_town_mode(short which_town, short entry_dir)
 								break;
 		 					}
 		 				}
-		 				
+
 					if (c_town.town.preset_items[i].property == TRUE)
 		 				t_i.items[j].item_properties = t_i.items[j].item_properties | 2;
-		 			if (town_toast == TRUE) 
+		 			if (town_toast == TRUE)
 		 				t_i.items[j].item_properties = t_i.items[j].item_properties & 253;
 		 			if (c_town.town.preset_items[i].contained == TRUE)
 		 				t_i.items[j].item_properties = t_i.items[j].item_properties | 8;
 		 			t_i.items[j].is_special = i + 1;
-		 			
+
 					j = NUM_TOWN_ITEMS;
 					}
 		 	}
 
-							
-	for (i = 0; i < T_M; i++) 
+
+	for (i = 0; i < T_M; i++)
 		if (loc_off_act_area(c_town.monst.dudes[i].m_loc) == TRUE)
 			c_town.monst.dudes[i].active = 0;
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
 		if (loc_off_act_area(t_i.items[i].item_loc) == TRUE)
-				t_i.items[i].variety = 0;		
-				
+				t_i.items[i].variety = 0;
+
 	// Clean out unwanted monsters
-	for (i = 0; i < T_M; i++) 
+	for (i = 0; i < T_M; i++)
 		if (sd_legit(c_town.monst.dudes[i].monst_start.spec1,c_town.monst.dudes[i].monst_start.spec2) == TRUE) {
 			if (party.stuff_done[c_town.monst.dudes[i].monst_start.spec1][c_town.monst.dudes[i].monst_start.spec2] > 0)
 				c_town.monst.dudes[i].active = 0;
 			}
-		
+
 	erase_specials();
 	make_town_trim(0);
 
 	load_area_graphics();
-							
-	
+
+
 	c_town.p_loc = (entry_dir < 9) ? c_town.town.start_locs[entry_dir] : town_force_loc;
 	center = c_town.p_loc;
 	if (party.in_boat >= 0) {
@@ -506,20 +506,20 @@ void start_town_mode(short which_town, short entry_dir)
 		party.horses[party.in_horse].which_town = which_town;
 		party.horses[party.in_horse].horse_loc = c_town.p_loc;
 		}
-		
-	
+
+
 	// End flying
 	if (party.stuff_done[305][1] > 0) {
-		party.stuff_done[305][1] = 0;	
+		party.stuff_done[305][1] = 0;
 		add_string_to_buf("You land, and enter.             ");
 		}
 
 	// No hostile monsters present.
 	party.stuff_done[305][9] = 0;
-		
+
 	add_string_to_buf("Now entering:");
 	sprintf ((char *) message, "   %-30.30s ",data_store->town_strs[0]);
-	add_string_to_buf((char *) message);                       
+	add_string_to_buf((char *) message);
 
 
 	// clear entry space, and check exploration
@@ -572,7 +572,7 @@ location end_town_mode(short switching_level,location destination)  // returns n
 
 	if (is_combat())
 		combat_end = TRUE;
-	
+
 	if (overall_mode == 1) {
 			for (i = 0; i < 4; i++)
 				if (party.creature_save[i].which_town == c_town.town_num) {
@@ -588,23 +588,23 @@ location end_town_mode(short switching_level,location destination)  // returns n
 					for (k = 0; k < town_size[town_type]; k++)
 						setup_save.setup[party.at_which_save_slot][j][k] = misc_i[j][k];
 				party.at_which_save_slot = (party.at_which_save_slot == 3) ? 0 : party.at_which_save_slot + 1;
-				} 
+				}
 
-	// Store items, if necessary 
+	// Store items, if necessary
 		for (j = 0; j < 3; j++)
 			if (scenario.store_item_towns[j] == c_town.town_num) {
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
 				if ((t_i.items[i].variety != 0) && (t_i.items[i].is_special == 0) &&
 				((t_i.items[i].item_loc.x >= scenario.store_item_rects[j].left) &&
-				 (t_i.items[i].item_loc.x <= scenario.store_item_rects[j].right) && 
+				 (t_i.items[i].item_loc.x <= scenario.store_item_rects[j].right) &&
 				 (t_i.items[i].item_loc.y >= scenario.store_item_rects[j].top) &&
 				 (t_i.items[i].item_loc.y <= scenario.store_item_rects[j].bottom)) ) {
 				 	stored_items[j].items[i] = t_i.items[i];
 				 	}
-				 	else stored_items[j].items[i].variety = 0;			
+				 	else stored_items[j].items[i].variety = 0;
 				}
-				
-			
+
+
 		// Clean up special data, just in case
 		for (i = 0; i < T_M; i++) {
 			c_town.monst.dudes[i].monst_start.spec1 = 0;
@@ -622,45 +622,45 @@ location end_town_mode(short switching_level,location destination)  // returns n
 								(char) (s_pow(2,i % 8));
 					}
 
-		
+
 		to_return = party.p_loc;
 
 		for (i = 0; i < 30; i++)
 	 		if ((party.party_event_timers[i] > 0) && (party.global_or_town[i] == 1))
 				party.party_event_timers[i] = 0;
 		}
-		
-			
+
+
 				// Check for exit specials, if leaving town
 	if (switching_level == 0) {
 		to_return = party.p_loc;
 
 		if (is_town()) {
 			if (destination.x <= c_town.town.in_town_rect.left) {
-				if (c_town.town.exit_locs[1].x > 0) 
+				if (c_town.town.exit_locs[1].x > 0)
 					to_return = local_to_global(c_town.town.exit_locs[1]);
 					else to_return.x--;
 				party.p_loc = to_return; party.p_loc.x++;
 				handle_leave_town_specials(c_town.town_num, c_town.town.exit_specs[1],destination) ;
 				}
 			else if (destination.x >= c_town.town.in_town_rect.right) {
-				if (c_town.town.exit_locs[3].x > 0) 
+				if (c_town.town.exit_locs[3].x > 0)
 					to_return = local_to_global(c_town.town.exit_locs[3]);
 					else to_return.x++;
 				party.p_loc = to_return; party.p_loc.x--;
 				handle_leave_town_specials(c_town.town_num, c_town.town.exit_specs[3],destination) ;
 				}
 			else if (destination.y <= c_town.town.in_town_rect.top) {
-				if (c_town.town.exit_locs[0].x > 0) 
+				if (c_town.town.exit_locs[0].x > 0)
 					to_return = local_to_global(c_town.town.exit_locs[0]);
 					else to_return.y--;
 				party.p_loc = to_return; party.p_loc.y++;
 				handle_leave_town_specials(c_town.town_num, c_town.town.exit_specs[0],destination) ;
 				}
 			else if (destination.y >= c_town.town.in_town_rect.bottom) {
-				if (c_town.town.exit_locs[2].x > 0) 
+				if (c_town.town.exit_locs[2].x > 0)
 					to_return = local_to_global(c_town.town.exit_locs[2]);
-					else to_return.y++;			
+					else to_return.y++;
 				party.p_loc = to_return; party.p_loc.y--;
 				handle_leave_town_specials(c_town.town_num, c_town.town.exit_specs[2],destination) ;
 				}
@@ -681,7 +681,7 @@ location end_town_mode(short switching_level,location destination)  // returns n
 				for (j = 0; j < 15; j++)
 					if ((j != 2) && (j != 7) && (j != 9))
 						adven[i].status[j] = 0;
-	
+
 
 		update_explored(to_return);
 			redraw_screen(0);
@@ -689,28 +689,28 @@ location end_town_mode(short switching_level,location destination)  // returns n
 		}
 
 
-		
+
 
 	if (combat_end == FALSE)
 		clear_map();
-	
+
 	return to_return;
 }
 
 
-void handle_town_specials(short town_number, short entry_dir,location start_loc) 
+void handle_town_specials(short town_number, short entry_dir,location start_loc)
 {
 	short s1,s2,s3;
-	
+
 	if (entry_dir > 0)
 		special_queue[0] = c_town.town.spec_on_entry_if_dead;
 		else special_queue[0] = c_town.town.spec_on_entry;
 }
 
-void handle_leave_town_specials(short town_number, short which_spec,location start_loc) 
+void handle_leave_town_specials(short town_number, short which_spec,location start_loc)
 {
 	short s1,s2,s3;
-	
+
 	//run_special(6,2,which_spec,start_loc,&s1,&s2,&s3);
 	special_queue[1] = which_spec;
 }
@@ -782,7 +782,7 @@ void start_town_combat(short direction)
 short end_town_combat()
 {
 	short num_tries = 0,r1,i;
-	
+
 	r1 = get_ran(1,0,5);
 	while ((adven[r1].main_status != 1) && (num_tries++ < 1000))
 			r1 = get_ran(1,0,5);
@@ -804,7 +804,7 @@ void place_party(short direction)
 	location pos_locs[14];
 	location check_loc;
 	short x_adj,y_adj,how_many_ok = 1,where_in_a = 0,i;
-	
+
 	for (i = 0; i < 14; i++) {
 		check_loc = c_town.p_loc;
 		if (direction % 4 < 2)
@@ -820,8 +820,8 @@ void place_party(short direction)
 		if (direction % 2 == 0)
 			y_adj = ((direction > 1) && (direction < 6)) ? y_adj : -1 * y_adj;
 			else y_adj = ((direction == 3) || (direction == 1)) ? -1 * y_adj : y_adj;
-		
-		check_loc.y -= y_adj;		
+
+		check_loc.y -= y_adj;
 		pos_locs[i] = check_loc;
 		if ((loc_off_act_area(check_loc) == FALSE) &&
 			(is_blocked(check_loc) == FALSE) && (is_special(check_loc) == FALSE) && (get_obscurity(check_loc.x,check_loc.y) == 0)
@@ -850,7 +850,7 @@ void place_party(short direction)
 //							}
 						}
 			}
-		i++;	
+		i++;
 		}
 }
 
@@ -860,9 +860,9 @@ void create_town_combat_terrain()
 {
 	short id;
 	location where;
-	
+
 	for (where.x = 0; where.x < town_size[town_type]; where.x++)
-		for (where.y = 0; where.y < town_size[town_type]; where.y++) 
+		for (where.y = 0; where.y < town_size[town_type]; where.y++)
 					combat_terrain[where.x][where.y] = t_d.terrain[where.x][where.y];
 }
 
@@ -876,7 +876,7 @@ short general_types[260] = {1,1,0,0,0,1,1,1,1,1,
 1,1,1,1,1,1,1,1,2,2,
 2,2,2,2,2,2,2,2,2,2,
 2,2,2,2,2,2,2,2,2,2,
-2,2,2,2,2,2,0,0,0,0, 
+2,2,2,2,2,2,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,// 50
 0,3,3,3,3,3,3,5,5,5,
 6,6,7,7,1,1,8,9,10,11,
@@ -898,7 +898,7 @@ short general_types[260] = {1,1,0,0,0,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1};// 250
-short ter_base[14] = {2,0,36,50,71, 0,0,0,0,2, 2,2,2,0};	
+short ter_base[14] = {2,0,36,50,71, 0,0,0,0,2, 2,2,2,0};
 short ground_type[14] = {2,0,36,50,71, 0,0,0,0,2,	2,2,2,0};
 
 location special_ter_locs[15] = {{11,10},{11,14},{10,20},{11,26},{9,30},
@@ -909,19 +909,19 @@ unsigned char mntn_pillar[4][4] = {{37,29,27,36},{29,33,34,27},{31,32,35,25},{36
 unsigned char surf_lake[4][4] = {{56,55,54,3},{57,50,61,54},{58,51,59,53},{3,4,58,52}};
 unsigned char cave_lake[4][4] = {{93,96,71,71},{96,71,71,71},{71,71,71,96},{71,71,71,96}};
 location stuff_ul;
-short terrain_odds[14][10] = {{3,80,4,40,115,20,114,10,112,1}, 
-							{1,50,93,25,94,5,98,10,95,1}, 
-							{37,20,0,0,0,0,0,0,0,0}, 
-							{64,3,63,1,0,0,0,0,0,0}, 
-							{74,1,0,0,0,0,0,0,0,0}, 
-							{84,700,97,30,98,20,92,4,95,1}, 
-							{93,280,91,300,92,270,95,7,98,10}, 
-							{1,800,93,600,94,10,92,10,95,4}, 
-							{1,700,96,200,95,100,92,10,112,5}, 
-							{3,600,87,90,110,20,114,6,113,2}, 
-							{3,200,4,400,111,250,0,0,0,0}, 
-							{3,200,4,300,112,50,113,60,114,100}, 
-							{3,100,4,250,115,120,114,30,112,2}, 
+short terrain_odds[14][10] = {{3,80,4,40,115,20,114,10,112,1},
+							{1,50,93,25,94,5,98,10,95,1},
+							{37,20,0,0,0,0,0,0,0,0},
+							{64,3,63,1,0,0,0,0,0,0},
+							{74,1,0,0,0,0,0,0,0,0},
+							{84,700,97,30,98,20,92,4,95,1},
+							{93,280,91,300,92,270,95,7,98,10},
+							{1,800,93,600,94,10,92,10,95,4},
+							{1,700,96,200,95,100,92,10,112,5},
+							{3,600,87,90,110,20,114,6,113,2},
+							{3,200,4,400,111,250,0,0,0,0},
+							{3,200,4,300,112,50,113,60,114,100},
+							{3,100,4,250,115,120,114,30,112,2},
 							{1,25,84,15,98,300,97,280,0,0}}; // ter then odds then ter then odds ...
 item_record_type store_i;
 
@@ -929,7 +929,7 @@ item_record_type store_i;
 	if (ter_type > 260)
 		ter_type = 1;
 		else ter_type = general_types[ter_type];
-	
+
 	for (i = 0; i < 48; i++)
 		for (j = 0; j < 48; j++) {
 			c_town.explored[i][j] = 0;
@@ -940,13 +940,13 @@ item_record_type store_i;
 				else t_d.terrain[i][j] = ter_base[ter_type];
 			}
 	for (i = 0; i < 48; i++)
-		for (j = 0; j < 48; j++) 
+		for (j = 0; j < 48; j++)
 			for (k = 0; k < 5; k++)
 				if ((t_d.terrain[i][j] != 90) && (get_ran(1,1,1000) < terrain_odds[ter_type][k * 2 + 1]))
 					t_d.terrain[i][j] = terrain_odds[ter_type][k * 2];
-	
+
 	t_d.terrain[0][0] = ter_base[ter_type];
-	
+
 	if ((ter_type == 3) || (ter_type == 4) ) {
 		t_d.terrain[0][0] = 83;
 		for (i = 15; i < 26; i++)
@@ -1013,16 +1013,16 @@ item_record_type store_i;
 				case 3:
 					t_d.terrain[32][j] = 15;
 					break;
-			}			
+			}
 		}
 	if ((t_d.terrain[17][8] == 6) && (t_d.terrain[8][20] == 9))
 		t_d.terrain[8][8] = 21;
 	if ((t_d.terrain[32][20] == 15) && (t_d.terrain[17][35] == 12))
-		t_d.terrain[32][35] = 19;	
+		t_d.terrain[32][35] = 19;
 	if ((t_d.terrain[17][8] == 6) && (t_d.terrain[32][20] == 15))
 		t_d.terrain[32][8] = 32;
 	if ((t_d.terrain[8][20] == 9) && (t_d.terrain[17][35] == 12))
-		t_d.terrain[8][35] = 20;	
+		t_d.terrain[8][35] = 20;
 	}
 	if (ground_type[ter_type] == 36) {
 	for (i = 0; i < num_walls; i++) {
@@ -1041,22 +1041,22 @@ item_record_type store_i;
 				case 3:
 					t_d.terrain[32][j] = 30;
 					break;
-			}			
+			}
 		}
 	if ((t_d.terrain[17][8] == 6) && (t_d.terrain[8][20] == 9))
 		t_d.terrain[8][8] = 35;
 	if ((t_d.terrain[32][20] == 15) && (t_d.terrain[17][35] == 12))
-		t_d.terrain[32][35] = 33;	
+		t_d.terrain[32][35] = 33;
 	if ((t_d.terrain[17][8] == 6) && (t_d.terrain[32][20] == 15))
 		t_d.terrain[32][8] = 32;
 	if ((t_d.terrain[8][20] == 9) && (t_d.terrain[17][35] == 12))
-		t_d.terrain[8][35] = 34;	
+		t_d.terrain[8][35] = 34;
 	}
-	
+
 	for (i = 0; i < 48; i++)
-		for (j = 0; j < 48; j++) 
+		for (j = 0; j < 48; j++)
 			combat_terrain[i][j] = t_d.terrain[i][j];
-			
+
 	make_town_trim(1);
 }
 
@@ -1064,7 +1064,7 @@ item_record_type store_i;
 void elim_monst(unsigned char which,short spec_a,short spec_b)
 {
 	short i;
-	
+
 	if (party.stuff_done[spec_a][spec_b] > 0) {
 		for (i = 0; i < T_M; i++)
 			if (c_town.monst.dudes[i].number == which) {
@@ -1106,7 +1106,7 @@ void pick_lock(location where,short pc_num)
 	short r1,which_item;
 	Boolean will_break = FALSE;
 	short unlock_adjust;
-	
+
 	terrain = t_d.terrain[where.x][where.y];
 	which_item = pc_has_abil_equip(pc_num,161);
 	if (which_item == 24) {
@@ -1127,7 +1127,7 @@ void pick_lock(location where,short pc_num)
 		r1 -= 8;
 
 	if (pc_has_abil_equip(pc_num,42) < 24)
-		r1 = r1 - 12;	
+		r1 = r1 - 12;
 
 	if ((scenario.ter_types[terrain].special < 9) || (scenario.ter_types[terrain].special > 10)) {
 		add_string_to_buf("  Wrong terrain type.           ");
@@ -1141,7 +1141,7 @@ void pick_lock(location where,short pc_num)
 						remove_charge(pc_num,which_item);
 						}
 				play_sound(41);
-				} 
+				}
 				else {
 						add_string_to_buf("  Door unlocked.                ");
 						play_sound(9);
@@ -1156,7 +1156,7 @@ void bash_door(location where,short pc_num)
 
 	terrain = t_d.terrain[where.x][where.y];
 	r1 = get_ran(1,0,100) - 15 * stat_adj(pc_num,0) + c_town.difficulty * 4;
-	
+
 	if ((scenario.ter_types[terrain].special < 9) || (scenario.ter_types[terrain].special > 10)) {
 		add_string_to_buf("  Wrong terrain type.           ");
 		return;
@@ -1165,8 +1165,8 @@ void bash_door(location where,short pc_num)
 	unlock_adjust = scenario.ter_types[terrain].flag2;
 	if ((unlock_adjust >= 5) || (r1 > (unlock_adjust * 15 + 40)) || (scenario.ter_types[terrain].special != 10))  {
 					add_string_to_buf("  Didn't work.                ");
-					damage_pc(pc_num,get_ran(1,1,4),4,-1);					
-				} 
+					damage_pc(pc_num,get_ran(1,1,4),4,-1);
+				}
 				else {
 						add_string_to_buf("  Lock breaks.                ");
 						play_sound(9);
@@ -1181,7 +1181,7 @@ void erase_specials()
 	short k,sd1,sd2;
 	unsigned char floors[6] = {0,150,186,193,2,36};
 	special_node_type sn;
-	
+
 	if ((is_combat()) && (which_combat_type == 0))
 		return;
 	if ((is_town() == FALSE) && (is_combat() == FALSE))
@@ -1199,7 +1199,7 @@ void erase_specials()
 					print_nums(where.x,where.y,k);
 					c_town.town.special_locs[k].x = 0;
 					}
-				
+
 				if (where.x != 100) {
 					switch (scenario.ter_types[t_d.terrain[where.x][where.y]].picture) {
 						case 207: t_d.terrain[where.x][where.y] = 0; break;
@@ -1212,7 +1212,7 @@ void erase_specials()
 					take_special(where.x,where.y);
 					}
 				}
-			
+
 
 				}
 		}
@@ -1227,7 +1227,7 @@ void erase_out_specials()
 	special_node_type sn;
 	short sd1,sd2;
 	location where;
-	
+
 	for (k = 0; k < 2; k++)
 		for (l = 0; l < 2; l++)
 			if (quadrant_legal(k,l) == TRUE) {
@@ -1236,22 +1236,22 @@ void erase_out_specials()
 						(outdoors[k][l].exit_locs[m].x == minmax(0,47,outdoors[k][l].exit_locs[m].x)) &&
 						(outdoors[k][l].exit_locs[m].y == minmax(0,47,outdoors[k][l].exit_locs[m].y))) {
 					if (party.can_find_town[outdoors[k][l].exit_dests[m]] == 0) {
-					out[48 * k + outdoors[k][l].exit_locs[m].x][48 * l + outdoors[k][l].exit_locs[m].y] = 
+					out[48 * k + outdoors[k][l].exit_locs[m].x][48 * l + outdoors[k][l].exit_locs[m].y] =
 						scenario.ter_types[outdoors[k][l].terrain[outdoors[k][l].exit_locs[m].x][outdoors[k][l].exit_locs[m].y]].flag1;
 						//exit_g_type[out[48 * k + outdoors[k][l].exit_locs[m].x][48 * l + outdoors[k][l].exit_locs[m].y] - 217];
-					
+
 					}
 					else if (party.can_find_town[outdoors[k][l].exit_dests[m]] > 0) {
-					out[48 * k + outdoors[k][l].exit_locs[m].x][48 * l + outdoors[k][l].exit_locs[m].y] = 
+					out[48 * k + outdoors[k][l].exit_locs[m].x][48 * l + outdoors[k][l].exit_locs[m].y] =
 						outdoors[k][l].terrain[outdoors[k][l].exit_locs[m].x][outdoors[k][l].exit_locs[m].y];
-					
+
 						}
 				}
 			}
 	for (i = 0; i < 2; i++)
 		for (j = 0; j < 2; j++)
 			if (quadrant_legal(i,j) == TRUE) {
-			for (k = 0; k < 18; k++) 
+			for (k = 0; k < 18; k++)
 				if (outdoors[i][j].special_id[k] >= 0) {
 				out_num = scenario.out_width * (party.outdoor_corner.y + j) + party.outdoor_corner.x + i;
 
@@ -1266,7 +1266,7 @@ void erase_out_specials()
 							add_string_to_buf("Outdoor section corrupt. Problem fixed.");
 							outdoors[i][j].special_id[k] = -1;
 							}
-				
+
 						switch (scenario.ter_types[outdoors[i][j].terrain[where.x][where.y]].picture) {
 							case 207: out[48 * i + where.x][48 * j + where.y] = 0; break;
 							case 208: out[48 * i + where.x][48 * j + where.y] = 170; break;
@@ -1278,7 +1278,7 @@ void erase_out_specials()
 						}
 					}
 
-			
+
 				}
 		}
 }
@@ -1297,10 +1297,10 @@ short get_town_spec_id(location where)
 void clear_map()
 {
 	RECT map_world_rect = {0,0,384,384};
-	HBITMAP old_bmp;
+	HGDIOBJ old_bmp;
 	HDC hdc;
-	HBRUSH oldb;
-	HPEN oldp;
+	HGDIOBJ oldb;
+	HGDIOBJ oldp;
 
 	hdc = CreateCompatibleDC(main_dc);
 	SelectPalette(hdc,hpal,0);
@@ -1332,9 +1332,9 @@ void draw_map (HWND the_dialog, short the_item)
 //	RECT map_rect = {47,29,297,279},map_world_rect = {0,0,321,321};
 	RECT map_rect = {53,7,303,257},map_world_rect = {0,0,321,321};
 	RECT whole_map_win_rect = {0,0,400,400};
-	char *comb_mess = " Map unavailable.";
-	char *unav_mess = " Map unavailable.";
-	char *blank_mess = "";
+	const char *comb_mess = " Map unavailable.";
+	const char *unav_mess = " Map unavailable.";
+	const char *blank_mess = "";
 	location top_left,map_adj = {0,0};
 	location where;
 	location kludge;
@@ -1344,9 +1344,9 @@ void draw_map (HWND the_dialog, short the_item)
 	RECT view_rect= {0,0,48,48},tiny_rect = {0,0,32,32},
 		redraw_rect = {0,0,48,48},small_rect = {0,0,9,9},big_rect = {0,0,64,64}; // RECTangle visible in view screen
 	HDC hdc = NULL,hdc2;
-	HBITMAP old_bmp;
-	HBRUSH old_brush;
-	HPEN old_pen;
+	HGDIOBJ old_bmp;
+	HGDIOBJ old_brush;
+	HGDIOBJ old_pen;
 	short k,i,j,pic,pic2;
 	RECT area_to_draw_from,area_to_draw_on = {47,29,287,269};
 	Boolean draw_surroundings = FALSE,expl,expl2;
@@ -1430,7 +1430,7 @@ void draw_map (HWND the_dialog, short the_item)
 		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
 		((overall_mode == 21) && (store_pre_shop_mode == 0)) ||
 		(((is_town()) || (is_combat())) && (town_type != 2))) {
-			area_to_draw_from = view_rect;	
+			area_to_draw_from = view_rect;
 			area_to_draw_from.left *= 6;
 			area_to_draw_from.right *= 6;
 			area_to_draw_from.top *= 6;
@@ -1441,7 +1441,7 @@ void draw_map (HWND the_dialog, short the_item)
 				OffsetRect(&area_to_draw_from,-1 * area_to_draw_from.left,-1 * area_to_draw_from.top);
 				small_adj = 0;
 				}
-			
+
 	if (is_combat())
 		draw_pcs = FALSE;
 
@@ -1460,7 +1460,7 @@ void draw_map (HWND the_dialog, short the_item)
 	old_bmp = SelectObject(hdc, map_gworld);
 	old_brush = SelectObject(hdc,map_brush[0]);
 	old_pen = SelectObject(hdc,GetStockObject(NULL_PEN));
-	
+
 	if (the_item == 11) {
 			SelectObject(hdc,GetStockObject(WHITE_BRUSH));
 			Rectangle(hdc, map_world_rect.left,map_world_rect.top,map_world_rect.right,map_world_rect.bottom);
@@ -1471,12 +1471,12 @@ void draw_map (HWND the_dialog, short the_item)
 		SetDlgItemText(the_dialog,3,"");
 		}
 
-	if (is_out()) { // for outside map, adjust for where in outdoors is being mapped	
+	if (is_out()) { // for outside map, adjust for where in outdoors is being mapped
 	if (party.i_w_c.x == 1)
 		map_adj.x += 48;
 	if  (party.i_w_c.y == 1)
 		map_adj.y += 48;
-		}		
+		}
 
 	// Now, if doing just partial restore, crop redraw_rect to save time.
 	if (the_item == 5) {
@@ -1491,12 +1491,12 @@ void draw_map (HWND the_dialog, short the_item)
 		redraw_rect.right = min(view_rect.right,kludge.x + 5);
 		redraw_rect.top = max(0,kludge.y - 4);
 		redraw_rect.bottom = min(view_rect.bottom,kludge.y + 5);
-		} 
+		}
 
 	// Now, if shopping or talking, just don't touch anything.
 	if ((overall_mode == 21) || (overall_mode == 20))
 		redraw_rect.right = -1;
-	
+
 	if ((is_out()) ||
 		((is_combat()) && (which_combat_type == 0)) ||
 		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
@@ -1506,12 +1506,12 @@ void draw_map (HWND the_dialog, short the_item)
 
 	area_to_put_on_map_rect = redraw_rect;
 	if (the_item == 10) {
-		area_to_put_on_map_rect.top = area_to_put_on_map_rect.left = 0; 
-		area_to_put_on_map_rect.right = area_to_put_on_map_rect.bottom = total_size; 
+		area_to_put_on_map_rect.top = area_to_put_on_map_rect.left = 0;
+		area_to_put_on_map_rect.right = area_to_put_on_map_rect.bottom = total_size;
 		}
-		
-		
-		
+
+
+
 		for (where.x= area_to_put_on_map_rect.left; where.x < area_to_put_on_map_rect.right; where.x++)
 			for (where.y= area_to_put_on_map_rect.top; where.y < area_to_put_on_map_rect.bottom; where.y++)
 				if ((map_graphic_placed[where.x / 8][where.y] & (unsigned char)(s_pow(2,where.x % 8))) == 0)
@@ -1522,15 +1522,15 @@ void draw_map (HWND the_dialog, short the_item)
 					if (out_mode == TRUE)
 						what_ter = out[where.x + 48 * party.i_w_c.x][where.y + 48 * party.i_w_c.y];
 						else what_ter = t_d.terrain[where.x][where.y];
-					
+
 					ter_temp_from = orig_draw_rect;
-					
+
 					if (out_mode == TRUE)
 						expl = out_e[where.x + 48 * party.i_w_c.x][where.y + 48 * party.i_w_c.y];
 						else expl = is_explored(where.x,where.y);
-						
+
 					if (expl != 0) {
-						map_graphic_placed[where.x / 8][where.y] = 
+						map_graphic_placed[where.x / 8][where.y] =
 							map_graphic_placed[where.x / 8][where.y] | (unsigned char)(s_pow(2,where.x % 8));
 						pic = scenario.ter_types[what_ter].picture;
 						if (pic >= 1000) {
@@ -1564,14 +1564,14 @@ void draw_map (HWND the_dialog, short the_item)
 									if ((pic < 400) && (where.x < area_to_put_on_map_rect.right - 1)) {
 										if (out_mode == TRUE)
 											what_ter2 = out[(where.x + 1)+ 48 * party.i_w_c.x][where.y + 48 * party.i_w_c.y];
-											else what_ter2 = t_d.terrain[where.x + 1][where.y];	
+											else what_ter2 = t_d.terrain[where.x + 1][where.y];
 										if (out_mode == TRUE)
 											expl2 = out_e[(where.x + 1) + 48 * party.i_w_c.x][where.y + 48 * party.i_w_c.y];
-											else expl2 = is_explored(where.x + 1,where.y);									
+											else expl2 = is_explored(where.x + 1,where.y);
 										pic2 = scenario.ter_types[what_ter2].picture;
 										if ((map_pats[pic] == map_pats[pic2]) && (expl2 != 0)) {
 											draw_rect.right += 6;
-											map_graphic_placed[(where.x + 1)/ 8][where.y] = 
+											map_graphic_placed[(where.x + 1)/ 8][where.y] =
 												map_graphic_placed[(where.x + 1)/ 8][where.y] | (unsigned char)(s_pow(2,(where.x + 1)% 8));
 											}
 										}
@@ -1593,7 +1593,7 @@ void draw_map (HWND the_dialog, short the_item)
 				}
 
 		}
-	
+
 	SelectObject(hdc,old_brush);
 	SelectObject(hdc,old_pen);
 	SelectObject(hdc, old_bmp);
@@ -1610,7 +1610,7 @@ void draw_map (HWND the_dialog, short the_item)
 			//old_brush = SelectObject(hdc2,bg[0]);
 			//old_pen = SelectObject(hdc2,GetStockObject(NULL_PEN));
 			//Rectangle(hdc2,whole_map_win_rect.left, whole_map_win_rect.top,whole_map_win_rect.right,whole_map_win_rect.bottom);
-			paint_pattern(hdc2,2,whole_map_win_rect,0);
+			paint_pattern(reinterpret_cast<HBITMAP>(hdc2),2,whole_map_win_rect,0);
 			//SelectObject(hdc2,old_brush);
 			//SelectObject(hdc2,old_pen);
 			SetBkMode(hdc2,TRANSPARENT);
@@ -1627,17 +1627,17 @@ void draw_map (HWND the_dialog, short the_item)
 			InvalidateRect(GetDlgItem(the_dialog,1),&draw_rect,FALSE);
 			}
 
-		rect_draw_some_item(map_gworld,area_to_draw_from,hdc2,area_to_draw_on,0,2);
+		rect_draw_some_item(map_gworld,area_to_draw_from,reinterpret_cast<HBITMAP>(hdc2),area_to_draw_on,0,2);
 		}
 
 	// Now place PCs and monsters
 	if ((draw_pcs == TRUE) && (modeless_exists[5] == TRUE)) {
 		if ((is_town()) && (party.stuff_done[305][2] > 0))
-			for (i = 0; i < T_M; i++) 
+			for (i = 0; i < T_M; i++)
 				if (c_town.monst.dudes[i].active > 0) {
 					where = c_town.monst.dudes[i].m_loc;
-					if ((is_explored(where.x,where.y)) && 
-						((where.x >= view_rect.left) && (where.x <= view_rect.right) 
+					if ((is_explored(where.x,where.y)) &&
+						((where.x >= view_rect.left) && (where.x <= view_rect.right)
 						&& (where.y >= view_rect.top) && (where.x <= view_rect.bottom))){
 
 						draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
@@ -1649,7 +1649,7 @@ void draw_map (HWND the_dialog, short the_item)
 						draw_rect.right = draw_rect.left + 6;
 						draw_rect.bottom = draw_rect.top + 6;
 
-						map_graphic_placed[where.x / 8][where.y] = 
+						map_graphic_placed[where.x / 8][where.y] =
 							map_graphic_placed[where.x / 8][where.y] & ~((unsigned char)(s_pow(2,where.x % 8)));
 							SelectObject(hdc2,hpen[0]);
 							SelectObject(hdc2,hbrush[0]);
@@ -1683,12 +1683,12 @@ void draw_map (HWND the_dialog, short the_item)
 							SelectObject(hdc2,hbrush[3]);
 							Ellipse(hdc2, draw_rect.left,draw_rect.top,draw_rect.right,draw_rect.bottom);
 						  }
-			}	
+			}
 		}
 
 
 
-	
+
 	// Now exit gracefully
 	if (modeless_exists[5] == TRUE)
 		fry_dc(the_dialog,hdc2);
@@ -1705,8 +1705,8 @@ void draw_map (HWND the_dialog, short the_item)
 
 
 
-BOOL FAR PASCAL _export map_dialog_proc
-	(HWND hDlg, UINT message, UINT wParam, LONG lParam) {
+INT_PTR CALLBACK map_dialog_proc
+	(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
 	short i,which_d,store_which;
 	char item_str[256];
 	Boolean do_stnd = TRUE,id_dlg = TRUE;
@@ -1764,10 +1764,10 @@ void display_map()
 
 	if ( modeless_exists[5] == TRUE)
 		return;
-	
+
 	modeless_exists[5] = TRUE;
 	if (map_proc == NULL) {
-		map_proc = MakeProcInstance((FARPROC) map_dialog_proc,store_hInstance);
+		map_proc = map_dialog_proc;
 		}
 	modeless_dialogs[5] = CreateDialog(store_hInstance,
 	 MAKEINTRESOURCE(1046),mainPtr,map_proc);
@@ -1786,7 +1786,7 @@ Boolean is_door(location destination)
 	return FALSE;
 }
 
-Boolean quadrant_legal(short i, short j) 
+Boolean quadrant_legal(short i, short j)
 {
 	if (party.outdoor_corner.x + i >= scenario.out_width)
 		return FALSE;

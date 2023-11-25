@@ -77,7 +77,7 @@ short on_spell_menu[2][62];
 short on_monst_menu[256];
 Boolean belt_present = FALSE;
 
-// Cursors 
+// Cursors
 short current_cursor = 120;
 HCURSOR arrow_curs[3][3], sword_curs, key_curs, target_curs,talk_curs,look_curs;
 
@@ -116,7 +116,7 @@ Boolean modeless_exists[18] = {FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,
 								FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,
 								FALSE,FALSE,FALSE,FALSE,FALSE,FALSE};
 short modeless_key[18] = {1079,1080,1081,1082,1084, 1046,1088,1089,1090,1092, 1095,1072,0,0,0,0,0,0};
-HWND modeless_dialogs[18] = {NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	
+HWND modeless_dialogs[18] = {NULL,	NULL,	NULL,	NULL,	NULL,	NULL,
 								NULL,	NULL,	NULL,	NULL,	NULL,	NULL,
 								NULL,	NULL,	NULL,	NULL,	NULL,	NULL};
 
@@ -170,14 +170,15 @@ short store_pc_being_created;
 HWND	mainPtr;
 HWND force_dlog = NULL;
 HFONT font,fantasy_font,small_bold_font,italic_font,underline_font,bold_font,tiny_font;
-FARPROC modeless_dlogprocs[18] = {NULL,	NULL,	NULL,	NULL,	NULL,	NULL,
+DLGPROC modeless_dlogprocs[18] = {NULL,	NULL,	NULL,	NULL,	NULL,	NULL,
 								NULL,	NULL,	NULL,	NULL,	NULL,	NULL,
 								NULL,	NULL,	NULL,	NULL,	NULL,	NULL};
 HBITMAP bmap = NULL;
 HPALETTE hpal;
 PALETTEENTRY far ape[256];
 HDC main_dc,main_dc2,main_dc3;
-HANDLE store_hInstance,accel;
+HINSTANCE store_hInstance;
+HACCEL accel;
 BOOL event_handled;
 scenario_data_type far scenario;
 piles_of_stuff_dumping_type *data_store;
@@ -195,21 +196,15 @@ char file_path_name[256];
 
 Boolean block_erase = FALSE;
 
-long FAR PASCAL _export WndProc (HWND, UINT, UINT, LONG);
+LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+
 Boolean handle_menu (short, HMENU);
-
-int PASCAL WinMain (hInstance,hPrevInstance,
-  lpszCmdParam, nCmdShow)
-HANDLE hInstance;
-HANDLE hPrevInstance;
-LPSTR lpszCmdParam;
-int nCmdShow;
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpszCmdParam, int nCmdShow)
 {
-
 	MSG msg;
 	WNDCLASS wndclass,wndclass2;
 	short i,seed;
-   RECT windRECT;
+	RECT windRECT;
 	HGLOBAL temp_buffer,temp_buffer2;
 	HGLOBAL temp_buffer3,temp_buffer4;
 	HGLOBAL temp_buffer5,temp_buffer6;
@@ -222,12 +217,12 @@ int nCmdShow;
 		wndclass.hInstance = hInstance;
 		wndclass.hIcon = LoadIcon(hInstance,MAKEINTRESOURCE(10));
 		wndclass.hCursor = NULL;
-		wndclass.hbrBackground = GetStockObject(WHITE_BRUSH);
+		wndclass.hbrBackground = static_cast<HBRUSH>(GetStockObject(WHITE_BRUSH));
 		wndclass.lpszMenuName = MAKEINTRESOURCE(1);
 		wndclass.lpszClassName = szAppName;
-		
+
 		RegisterClass(&wndclass);
-	
+
 		wndclass2.style = CS_HREDRAW | CS_VREDRAW | CS_BYTEALIGNWINDOW;
 		wndclass2.lpfnWndProc = WndProc;
 		wndclass2.cbClsExtra = 0;
@@ -235,10 +230,10 @@ int nCmdShow;
 		wndclass2.hInstance = hInstance;
 		wndclass2.hIcon = LoadIcon(hInstance,MAKEINTRESOURCE(10));
 		wndclass2.hCursor = NULL;
-		wndclass2.hbrBackground = GetStockObject(WHITE_BRUSH);
+		wndclass2.hbrBackground = static_cast<HBRUSH>(GetStockObject(WHITE_BRUSH));
 		wndclass2.lpszMenuName = NULL;
 		wndclass2.lpszClassName = szWinName;
-		
+
 		RegisterClass(&wndclass2);
 		}
 
@@ -353,9 +348,9 @@ int nCmdShow;
 			mainPtr,2,store_hInstance,NULL);
 		SetScrollRange(item_sbar,SB_CTL,0,16,FALSE);
 		*/
-		shop_sbar = CreateWindow("scrollbar",NULL,
+		shop_sbar = CreateWindowA("scrollbar", NULL,
 			WS_CHILD | WS_TABSTOP | SBS_VERT, shop_sbar_rect.left,shop_sbar_rect.top,shop_sbar_rect.right,shop_sbar_rect.bottom,
-			mainPtr,3,store_hInstance,NULL);
+			mainPtr, reinterpret_cast<HMENU>(3),store_hInstance,NULL);
 		SetScrollRange(shop_sbar,SB_CTL,0,16,FALSE);
 
 		ShowWindow(mainPtr,nCmdShow);
@@ -401,26 +396,23 @@ int nCmdShow;
 		return msg.wParam;
 }
 
-long FAR PASCAL _export WndProc (hwnd,message,wParam,lParam)
-HWND hwnd;
-UINT message;
-UINT wParam;
-LONG lParam;
-{
-HDC hdc;
-PAINTSTRUCT ps;
-RECT rect;
-short cxDib, cyDib;
-BYTE huge * lpDibBits;
-RECT s_rect = {0,0,30,30},d_rect = {0,0,30,30},d2 = {0,0,420,216},s2 = {0,0,420,216};
-POINT press;
-short handled = 0;
-HMENU menu;
-RECT dlg_rect,wind_rect,draw_rect;
-short store_ulx,store_uly,sbar_pos;
-short which_sbar;
 
-short old_setting,new_setting;
+LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	HDC hdc;
+	PAINTSTRUCT ps;
+	RECT rect;
+	short cxDib, cyDib;
+	BYTE * lpDibBits;
+	RECT s_rect = {0,0,30,30},d_rect = {0,0,30,30},d2 = {0,0,420,216},s2 = {0,0,420,216};
+	POINT press;
+	short handled = 0;
+	HMENU menu;
+	RECT dlg_rect,wind_rect,draw_rect;
+	short store_ulx,store_uly,sbar_pos;
+	short which_sbar;
+
+	short old_setting,new_setting;
 	short smin,smax;
 
 // First, handle window size
@@ -483,7 +475,8 @@ short old_setting,new_setting;
 			check_cd_event(hwnd,message,wParam,lParam);
 			else {
 				SetFocus(hwnd);
-				press = MAKEPOINT(lParam);
+				press.x = LOWORD(lParam);
+				press.y = HIWORD(lParam);
 				if (in_startup_mode == FALSE)
 					All_Done = handle_action(press, wParam,lParam);
 					else All_Done = handle_startup_press(press);
@@ -499,7 +492,8 @@ short old_setting,new_setting;
 			check_cd_event(hwnd,message,wParam,lParam);
 			else {
 				SetFocus(hwnd);
-				press = MAKEPOINT(lParam);
+				press.x = LOWORD(lParam);
+				press.y = HIWORD(lParam);
 				if (in_startup_mode == FALSE)
 					All_Done = handle_action(press, wParam,-2);
 					else All_Done = handle_startup_press(press);
@@ -559,7 +553,8 @@ short old_setting,new_setting;
 		if (store_mouse != lParam)
 			cursor_stay();
 		store_mouse = lParam;
-		press = MAKEPOINT(lParam);
+		press.x = LOWORD(lParam);
+		press.y = HIWORD(lParam);
 		if (hwnd == mainPtr) {
 			change_cursor(press);
 			if ((overall_mode > 10) && (overall_mode < 20) && (party.stuff_done[181][6] == 0))
@@ -638,7 +633,7 @@ short old_setting,new_setting;
 		return 0;
 
 	case WM_VSCROLL:
-		which_sbar = GetWindowWord(HIWORD (lParam), GWW_ID);
+		which_sbar = GetWindowWord(reinterpret_cast<HWND>(lParam), /* GWW_ID */ -12);
 		switch (which_sbar) {// 1 text  2 items  3 shop
 			case 1:
 				sbar_pos = GetScrollPos(text_sbar,SB_CTL);
@@ -706,7 +701,7 @@ short old_setting,new_setting;
 		   	   		sbar_pos = smax;
 				SetScrollPos(shop_sbar,SB_CTL,sbar_pos,TRUE);
 				if (sbar_pos != old_setting)
-					draw_shop_graphics(0,shop_sbar_rect);			
+					draw_shop_graphics(0,shop_sbar_rect);
 			break;
 			}
 	    SetFocus(mainPtr);
@@ -813,7 +808,7 @@ Boolean handle_menu (short item, HMENU menu)
 			update_pc_graphics();
 			initiate_redraw();
 			break;
-			
+
 		case 24:
 			if (prime_time() == FALSE) {
 				ASB("Finish what you're doing first.");
@@ -829,8 +824,8 @@ Boolean handle_menu (short item, HMENU menu)
 					initiate_redraw();
 					}
 			break;
-			
-			
+
+
 		case 22:
 			choice = select_pc(0,0);
 			if (choice < 6)
@@ -838,8 +833,8 @@ Boolean handle_menu (short item, HMENU menu)
 			put_pc_screen();
 			put_item_screen(stat_window,0);
 			break;
-			
-			
+
+
 		case 23:
 			if (!(is_town())) {
 				add_string_to_buf("Add PC: Town mode only.");
@@ -865,8 +860,8 @@ Boolean handle_menu (short item, HMENU menu)
 			print_buf();
 			put_pc_screen();
 			put_item_screen(stat_window,0);
-			break;	
-		case 27:	
+			break;
+		case 27:
 			if (overall_mode == 20) {
 				ASB("Talking notes: Can't read while talking.");
 				print_buf();
@@ -936,12 +931,12 @@ Boolean handle_menu (short item, HMENU menu)
 			party.help_received[9] = FALSE; break;
 
 		// priest is 499
-		case 499: give_help(209,0,0); 
+		case 499: give_help(209,0,0);
 			party.help_received[9] = FALSE; break;
-		
+
 		// monsters is 599
 		case 599: give_help(212,0,0); break;
-		
+
 		case 100: // index
 			WinHelp(mainPtr,"bladhelp.hlp",HELP_CONTENTS,0L);
 			break;
@@ -1059,7 +1054,7 @@ void change_cursor(POINT where_curs)
 			set_cursor(arrow_curs[cursor_direction.x + 1][cursor_direction.y + 1]);
 			break;
 		}
-		
+
 }
 
 void check_colors()

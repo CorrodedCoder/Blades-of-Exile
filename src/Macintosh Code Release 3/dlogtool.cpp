@@ -63,7 +63,7 @@ Boolean label_taken[NL];
 
 short store_free_slot,store_dlog_num;
 
-short available_dlog_buttons[NUM_DLOG_B] = {0,63,64,65,1,4,5,8, 
+short available_dlog_buttons[NUM_DLOG_B] = {0,63,64,65,1,4,5,8,
 								128,
 								9,
 								10, // 10
@@ -123,7 +123,7 @@ char button_def_key[150] = {0,0,20,21,'k', 24,0,0,0,0,
 							'g','1','2','3','4', '5','6',0,0,0,
 							0,0,0,0,0,' ',0,22,23,0,
 							0,0,0,0,0,'1','2','3','4','5',
-							'6','7','8','9','a', 'b','c','d','e','f',  
+							'6','7','8','9','a', 'b','c','d','e','f',
 							'g',0,0,0,0,0,0,0,0,0,
 							0,0,0,0,'y','n',0,'?','r',0,
 							0,0,0,0,0,0,0,0,0, 0,
@@ -139,7 +139,7 @@ char button_def_key[150] = {0,0,20,21,'k', 24,0,0,0,0,
 							// 25-30  ctrl 1-6  31 - return\
 
 
-void beep() 
+void beep()
 {
 	SysBeep(20);
 }
@@ -183,7 +183,7 @@ short cd_create_custom_dialog(WindowPtr parent,
 	short i,j,free_slot = -1,free_item = -1,str_width,cur_but_right = 0;
 	WindowPtr dlg;
 	short total_len = 0;
-	
+
 	char item_str[256];
 	short type,flag;
 
@@ -191,7 +191,7 @@ short cd_create_custom_dialog(WindowPtr parent,
 	short but_items[3] = {-1,-1,-1};
 	Rect pic_rect = {8,8,44,44},cur_text_rect = {2,50,0,0};
 	short win_width = 100, win_height = 100;
-	
+
 	store_dlog_num = 900;
 	//store_parent = parent;
 	for (i = 0; i < ND; i++) {
@@ -206,7 +206,7 @@ short cd_create_custom_dialog(WindowPtr parent,
 		}
 	if (free_slot < 0)
 		return -2;
-		
+
 	// quick check, to make sure there's at least 1 button
 	if ((buttons[0] < 0) && (buttons[1] < 0) && (buttons[2] < 0))
 		buttons[0] = 1;
@@ -227,13 +227,13 @@ short cd_create_custom_dialog(WindowPtr parent,
 		}
 
 	dlg_parent[free_slot] = parent;
-	
+
 	//process_new_window (dlgs[free_slot]);
 	// instead of this, custom make items
 	free_item = -1;
-	
+
 	// first, do 1-3 buttons
-	for (i = 0; i < 3; i++) 
+	for (i = 0; i < 3; i++)
 		if (buttons[i] >= 0) {// buttons
 		for (j = 150; j < NI; j++)
 				if (item_dlg[j] < 0) {
@@ -281,7 +281,7 @@ short cd_create_custom_dialog(WindowPtr parent,
     cur_item++;
 
 	// finally, 0-6 text, first do preprocessing to find out how much room we need
-	for (i = 0; i < 6; i++) 
+	for (i = 0; i < 6; i++)
 		total_len += string_length((char *) strs[i]);
 	total_len = total_len * 12;
 	str_width = ex_sqrt(total_len) + 20;
@@ -290,21 +290,21 @@ short cd_create_custom_dialog(WindowPtr parent,
 		str_width = 340;
 	cur_text_rect.right = cur_text_rect.left + str_width;
 	// finally, 0-6 text, then create the items
-	for (i = 0; i < 6; i++) 
+	for (i = 0; i < 6; i++)
 		if (strlen((char *) strs[i]) > 0) {// text
 			for (j = 0; j < 10; j++)
 				if (item_dlg[j] < 0) {
 					free_item = j;
-					j = NI + 1; 
+					j = NI + 1;
 					}
 			item_dlg[free_item] = store_dlog_num;
 			item_type[free_item] = 9;
 			item_number[free_item] = cur_item;
 			item_rect[free_item] = cur_text_rect;
-			item_rect[free_item].bottom = item_rect[free_item].top + 
+			item_rect[free_item].bottom = item_rect[free_item].top +
 				((string_length((char *) strs[i]) + 60) / str_width) * 12 + 16;
 			item_rect[free_item].right += 20;
-			
+
 			//print_nums(i,string_length((char *) strs[i]),str_width);
 			cur_text_rect.top = item_rect[free_item].bottom + 8;
 			item_flag[free_item] = 0;
@@ -316,7 +316,7 @@ short cd_create_custom_dialog(WindowPtr parent,
 				(char *) strs[i]);
       		cur_item++;
        		}
-	
+
 	dlg_highest_item[free_slot] = cur_item - 1;
 
 	// finally, do button rects
@@ -335,11 +335,11 @@ short cd_create_custom_dialog(WindowPtr parent,
 				win_width = item_rect[but_items[i]].right + 6;
 				win_height = item_rect[but_items[i]].bottom + 6;
 				}
-			}	
-	
-	MoveWindow(dlgs[free_slot],(windRect.right - win_width) / 2,(windRect.bottom - win_width) / 2 + 20,FALSE);	
+			}
+
+	MoveWindow(dlgs[free_slot],(windRect.right - win_width) / 2,(windRect.bottom - win_width) / 2 + 20,FALSE);
 	SizeWindow(dlgs[free_slot],win_width,win_height,FALSE);
-					
+
 	ShowWindow(dlgs[free_slot]);
 	SetPort(dlgs[free_slot]);
 	TextFont(geneva_font_num);
@@ -393,7 +393,7 @@ short cd_create_dialog(short dlog_num,WindowPtr parent)
 //	center_window(dlgs[free_slot]);
 
 	dlg_parent[free_slot] = parent;
-	
+
 	process_new_window (dlgs[free_slot]);
 
 
@@ -461,7 +461,7 @@ void process_new_window (WindowPtr hDlg) {
 	num_items = CountDITL(hDlg);
 
 	dlg_highest_item[free_slot] = 0;
-	
+
 	// Now, give the window its items
 	for (i = 0; i < num_items; i++) {
 		str_offset = 1;
@@ -518,11 +518,11 @@ void process_new_window (WindowPtr hDlg) {
 			else {
 #ifndef EXILE_BIG_GUNS
 				sscanf((char *) item_str,"%d_%d",&type,&flag);
-#endif		
+#endif
 #ifdef EXILE_BIG_GUNS
 				sscanf((char *) item_str,"%hd_%hd",&type,&flag);
 				//type = typel; flag = flagl;
-#endif		
+#endif
 				}
 
 			free_item = -1;
@@ -536,7 +536,7 @@ void process_new_window (WindowPtr hDlg) {
 							}
 					break;
 				default:
-					if ((type == 9) || 
+					if ((type == 9) ||
 					 ((str_stored == TRUE) && (strlen((char *) item_str) > 35))) {
 						for (j = 0; j < 10; j++)
 							if (item_dlg[j] < 0) {
@@ -582,7 +582,7 @@ void process_new_window (WindowPtr hDlg) {
 							item_rect[free_item].bottom = item_rect[free_item].top + 10;
                     		item_key[free_item] = 255;
 							break;
-						case 3: case 4: case 7: case 8: case 9: case 10: case 11: 
+						case 3: case 4: case 7: case 8: case 9: case 10: case 11:
 							sprintf(((free_item < 10) ? text_long_str[free_item] : text_short_str[free_item - 10]),"");
 							if (str_stored == TRUE) {
 								if (free_item < 10)
@@ -592,7 +592,7 @@ void process_new_window (WindowPtr hDlg) {
 								sprintf(text_short_str[free_item - 10],"%-34s",
 								  (char *) (item_str + str_offset));
 								}
-							item_key[free_item] = 255; 
+							item_key[free_item] = 255;
 							if (type >= 10) {
 								store_rect = dlg_buttons_gworld[1][0]->portRect;
 								item_rect[free_item].right = item_rect[free_item].left + store_rect.right;
@@ -668,11 +668,11 @@ short cd_process_click(WindowPtr window,Point the_point, short mods,short *item)
 				&& ((item_type[item_id] < 3) || (item_type[item_id] == 8)
 				|| (item_type[item_id] == 10)|| (item_type[item_id] == 11))) {
 					*item = i;
-					if ((mods & 2048) != 0) 
+					if ((mods & 2048) != 0)
 						*item += 100;
 					if (item_type[item_id] != 8)
 						cd_press_button(dlg_num,i);
-					
+
 					return dlg_num;
 					}
 			}
@@ -702,7 +702,7 @@ short cd_process_keystroke(WindowPtr window,char char_hit,short *item)
 					return dlg_num;
 			}
 			}
-			
+
 	// kludgy. If you get an escape and is isn't processed, make it an enter
 	if (char_hit == 24) {
    	char_hit = 31;
@@ -808,7 +808,7 @@ void cd_get_item_text(short dlog_num, short item_num, char *str)
 		else sprintf(str,"%s",text_short_str[item_index - 10]);
 }
 
-void csit(short dlog_num, short item_num, char *str)
+void csit(short dlog_num, short item_num, const char *str)
 {
 cd_set_item_text( dlog_num,  item_num, str);
 }
@@ -820,7 +820,7 @@ void cd_retrieve_text_edit_str(short dlog_num, char *str)
 	Handle the_handle = NULL;
 	Rect the_rect;
 	Str255 store_ptr;
-	
+
 	sprintf(str,"");
 	if (cd_get_indices(dlog_num,3,&dlg_index,&item_index) < 0)
 		return ;
@@ -829,27 +829,27 @@ void cd_retrieve_text_edit_str(short dlog_num, char *str)
 	p2c(store_ptr);
 	strcpy(str,(char *) store_ptr);
 }
-	
+
 // NOTE!!! Expects a c string
-void cd_set_text_edit_str(short dlog_num, char *str)
+void cd_set_text_edit_str(short dlog_num, const char *str)
 {
 	short dlg_index,item_index;
 	short the_type;
 	Handle the_handle = NULL;
 	Rect the_rect;
 	Str255 store_ptr;
-	
+
 	if (cd_get_indices(dlog_num,3,&dlg_index,&item_index) < 0)
 		return ;
-		
+
 	strcpy((char *) store_ptr,str);
 	c2p(store_ptr);
 	GetDItem( dlgs[dlg_index], 2, &the_type, &the_handle, &the_rect );
-	SetIText ( the_handle, store_ptr);	
+	SetIText ( the_handle, store_ptr);
 
 }
 
-	
+
 short cd_retrieve_text_edit_num(short dlog_num, short item_num)
 {
 	short dlg_index,item_index;
@@ -858,7 +858,7 @@ short cd_retrieve_text_edit_num(short dlog_num, short item_num)
 	Rect the_rect;
 	Str255 store_ptr;
 	long num_given;
-	
+
 	if ((dlg_index = cd_get_dlg_index(dlog_num)) < 0) {
 		SysBeep(50); return 0;
 		}
@@ -866,7 +866,7 @@ short cd_retrieve_text_edit_num(short dlog_num, short item_num)
 	GetIText(the_handle,store_ptr);
 	StringToNum (store_ptr,&num_given);
 	return (short) num_given;
-}	
+}
 
 
 // NOTE!!! Expects a c string
@@ -877,18 +877,18 @@ void cd_set_text_edit_num(short dlog_num, short item_num, short num)
 	Handle the_handle = NULL;
 	Rect the_rect;
 	Str255 store_ptr;
-	
+
 	if ((dlg_index = cd_get_dlg_index(dlog_num)) < 0) {
 		SysBeep(50); return ;
 		}
-		
+
 	sprintf((char *) store_ptr,"%d",num);
 	c2p(store_ptr);
 	GetDItem( dlgs[dlg_index], item_num, &the_type, &the_handle, &the_rect );
-	SetIText ( the_handle, store_ptr);	
+	SetIText ( the_handle, store_ptr);
 }
 
-void cd_set_item_text(short dlog_num, short item_num, char *str)
+void cd_set_item_text(short dlog_num, short item_num, const char *str)
 {
 	short dlg_index,item_index;
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
@@ -903,7 +903,7 @@ void cd_set_item_text(short dlog_num, short item_num, char *str)
 	cd_draw_item( dlog_num,item_num);
 }
 
-void cdsin(short dlog_num, short item_num, short num) 
+void cdsin(short dlog_num, short item_num, short num)
 {
 	cd_set_item_num( dlog_num,  item_num,  num);
 }
@@ -981,7 +981,7 @@ void cd_text_frame(short dlog_num,short item_num,short frame)
 	cd_draw_item(dlog_num,item_num);
 }
 
-void cd_add_label(short dlog_num, short item_num, char *label, short label_flag)
+void cd_add_label(short dlog_num, short item_num, const char *label, short label_flag)
 {
 	short dlg_index,item_index,label_loc = -1;
 	short i;
@@ -1044,10 +1044,10 @@ void cd_draw_item(short dlog_num,short item_num)
 		return;
 	if (dlg_draw_ready[dlg_index] == FALSE)
 		return;
-	
+
 	GetPort(&old_port);
 	SetPort((GrafPtr) dlgs[dlg_index]);
-	
+
 	if (item_active[item_index] == 0) {
 		cd_erase_item(dlog_num,item_num);
 		cd_erase_item(dlog_num,item_num + 100);
@@ -1070,7 +1070,7 @@ void cd_draw_item(short dlog_num,short item_num)
 						}
 						else {
 							char_win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
-							 (char *) ((item_index < 10) ? text_long_str[item_index] : 
+							 (char *) ((item_index < 10) ? text_long_str[item_index] :
 							  text_short_str[item_index - 10]),1,8);
 							}
 					if (item_type[item_index] < 2)
@@ -1088,25 +1088,25 @@ void cd_draw_item(short dlog_num,short item_num)
 						}
 					break;
 
-				case 3: case 4: case 7: case 8: case 9: 
+				case 3: case 4: case 7: case 8: case 9:
 					cd_erase_item(dlog_num,item_num);
-					/*if ((item_type[item_index] == 3) || (item_type[item_index] == 9)) 
+					/*if ((item_type[item_index] == 3) || (item_type[item_index] == 9))
 						SelectObject(win_dc,small_bold_font); */
 					if (item_type[item_index] == 4)
 						TextFace(0);
 					if (item_type[item_index] == 7)
-						TextSize(12); 
+						TextSize(12);
 					if (item_flag[item_index] % 10 == 1)
 						cd_frame_item(dlog_num,item_num,2);
 					ForeColor(whiteColor);
 					if ((item_type[item_index] == 8) && (dlog_num == 989)) {
 						TextFace(0);
 						TextFont(dungeon_font_num);
-						TextSize(18); 
+						TextSize(18);
 						item_rect[item_index].right -= 4;
 						ClipRect(&item_rect[item_index]);
 						item_rect[item_index].right += 4;
-					
+
 						item_rect[item_index].bottom += 12;
 						}
 					if (item_flag[item_index] >= 10) {
@@ -1116,14 +1116,14 @@ void cd_draw_item(short dlog_num,short item_num)
 					if (item_rect[item_index].bottom - item_rect[item_index].top < 20) {
 						item_rect[item_index].left += 3;
 							char_win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
-							 (char *) ((item_index < 10) ? text_long_str[item_index] : 
+							 (char *) ((item_index < 10) ? text_long_str[item_index] :
 							  text_short_str[item_index - 10]),3,12);
 						item_rect[item_index].left -= 3;
 						}
 						else {
 							InsetRect(&item_rect[item_index],4,4);
 							char_win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
-							 (char *) ((item_index < 10) ? text_long_str[item_index] : 
+							 (char *) ((item_index < 10) ? text_long_str[item_index] :
 							  text_short_str[item_index - 10]),0,(item_type[item_index] == 7) ? 14 : 12);
 							InsetRect(&item_rect[item_index],-4,-4);
 							}
@@ -1134,7 +1134,7 @@ void cd_draw_item(short dlog_num,short item_num)
 					TextFont(geneva_font_num);
 					TextFace(0);
  					TextFace(bold);
-					TextSize(10); 
+					TextSize(10);
 					ForeColor(blackColor);
 					break;
 
@@ -1155,7 +1155,7 @@ void cd_draw_item(short dlog_num,short item_num)
 					}
 					else {
 						TextFace(0);
-						//SelectObject(win_dc,tiny_font); 
+						//SelectObject(win_dc,tiny_font);
 						}
 				to_rect = item_rect[item_index];
 				switch (store_label / 100) {
@@ -1198,7 +1198,7 @@ void cd_draw_item(short dlog_num,short item_num)
 	if ((dlog_num == 1098) && ((item_num >= 18) && (item_num <= 23))) {
 		draw_pc_effects(10 + item_num - 18);
 		}
-	
+
 	SetPort(old_port);
 	}
 
@@ -1260,7 +1260,7 @@ void cd_erase_item(short dlog_num, short item_num)
 	Boolean just_label = FALSE;
 	GrafPtr old_port;
 
-	
+
 
 	if (item_num >= 100) {
 		item_num -= 100;
@@ -1332,7 +1332,7 @@ void cd_erase_rect(short dlog_num,Rect to_fry)
 		return;
 	if (dlg_draw_ready[dlg_index] == FALSE)
 		return;
-	
+
 	GetPort(&old_port);
 	SetPort((GrafPtr) dlgs[dlg_index]);
 	FillCRect(&to_fry,bg[5]);
@@ -1354,7 +1354,7 @@ void cd_press_button(short dlog_num, short item_num)
 		play_sound(34);
 		return;
 		}
-			
+
 	GetPort(&old_port);
 	SetPort((GrafPtr) dlgs[dlg_index]);
 
@@ -1374,7 +1374,7 @@ void cd_press_button(short dlog_num, short item_num)
 		}
 		else {
 			char_win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
-			 (char *) ((item_index < 10) ? text_long_str[item_index] : 
+			 (char *) ((item_index < 10) ? text_long_str[item_index] :
 			  text_short_str[item_index - 10]),1,8);
 			}
 
@@ -1396,14 +1396,14 @@ void cd_press_button(short dlog_num, short item_num)
 		}
 		else {
 			char_win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
-			 (char *) ((item_index < 10) ? text_long_str[item_index] : 
+			 (char *) ((item_index < 10) ? text_long_str[item_index] :
 			  text_short_str[item_index - 10]),1,8);
 			}
 	TextSize(10);
 	TextFace(bold);
 	ForeColor(blackColor);
 	Delay(8,&dummy);
-	
+
 	SetPort(old_port);
 	}
 
@@ -1467,7 +1467,7 @@ Rect get_item_rect(WindowPtr hDlg, short item_num)
 	short item_hit,what_talk_field;
 
 	GetDItem( hDlg, item_num, &the_type, &the_handle, &small_rect);
-	
+
 	return small_rect;
 }
 
@@ -1479,10 +1479,10 @@ void frame_dlog_rect(GrafPtr hDlg, Rect rect, short val)
 	RGBColor lt_gray = {0,20230,40458},dk_gray = {0,20230,40458};
 	GrafPtr old_port;
 
-	
+
 	GetPort(&old_port);
 	SetPort((GrafPtr) hDlg);
-	
+
 	InsetRect(&rect,-1 * val,-1 * val);
 
 	RGBForeColor(&dk_gray);
@@ -1500,14 +1500,14 @@ void frame_dlog_rect(GrafPtr hDlg, Rect rect, short val)
 void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, Boolean do_frame,short win_or_gworld)
 // win_or_gworld: 0 - window  1 - gworld
 // 0 - 300   number of terrain graphic
-//   400 + x - monster graphic num 
+//   400 + x - monster graphic num
 // 700 + x  dlog graphic
 // 800 + x  pc graphic
 // 900 + x  B&W graphic
 // 950 null item
 // 1000 + x  Talking face
-// 1100 - item info help  
-// 1200 - pc screen help  
+// 1100 - item info help
+// 1200 - pc screen help
 // 1300 - combat ap
 // 1400-1402 - button help 1410-1412 - large scen graphics
 // 1500 - stat symbols help
@@ -1531,7 +1531,7 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, Boolean do_fram
 	Rect map_from = {0,0,240,240};
 	Rect small_monst_rect = {0,0,18,14};
 	Rect large_scen_from = {0,0,64,64};
-	
+
 	Rect pc_info_from = {127,0,157,106};
 	Rect item_info_from = {0,174,113,312};
 	Rect button_help_from = {0,0,125,320};
@@ -1542,32 +1542,32 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, Boolean do_fram
 	GWorldPtr from_gworld;
 	short draw_dest = 2;
 	short m_start_pic = 0,square_size = 32;
-	
+
 	if (win_or_gworld == 1)
 		draw_dest = 0;
-		
+
 	if (which_g < 0)
 		return;
 
 	if (which_g >= 3000)
 		do_frame = FALSE;
 	which_g = which_g % 3000;
-	
+
 	if (which_g == 950) { // Empty. Maybe clear space.
 		if (win_or_gworld == 0)
-			FillCRect(&rect,bg[5]);	
+			FillCRect(&rect,bg[5]);
 		return;
 		}
 	GetBackColor(&store_color);
-	
-	BackColor(whiteColor);	
+
+	BackColor(whiteColor);
 
 	switch (which_g / 100) {
 		case 0: case 1: case 2: // terrain
 			from_gworld = load_pict(800 + which_g / 50);
 			which_g = which_g % 50;
 			from_rect = calc_rect(which_g % 10, which_g / 10);
-			if (rect.right - rect.left > 28) 
+			if (rect.right - rect.left > 28)
 				InsetRect(&rect,4,0);
 			rect_draw_some_item(from_gworld,from_rect,(GWorldPtr) ((win_or_gworld == 1) ? (GWorldPtr) (hDlg): from_gworld)
 			  ,rect,0,draw_dest);
@@ -1584,7 +1584,7 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, Boolean do_fram
 		case 4: case 5: // monster
 			which_g -= 400;
 			m_start_pic = m_pic_index[which_g];
-			
+
 			if ((m_pic_index_x[which_g] == 1) && (m_pic_index_y[which_g] == 1)) {
 				from_gworld = load_pict(1100 + m_start_pic / 20);
 				m_start_pic = m_start_pic % 20;
@@ -1611,7 +1611,7 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, Boolean do_fram
 				(GWorldPtr) ((win_or_gworld == 1) ? (GWorldPtr) (hDlg) : from_gworld)
 				  ,small_monst_rect,1,draw_dest);
 				DisposeGWorld(from_gworld);
-				  
+
 				m_start_pic = m_pic_index[which_g] + 1;
 				from_gworld = load_pict(1100 + m_start_pic / 20);
 				m_start_pic = m_start_pic % 20;
@@ -1638,7 +1638,7 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, Boolean do_fram
 				(GWorldPtr) ((win_or_gworld == 1) ? (GWorldPtr) (hDlg) : from_gworld)
 				  ,small_monst_rect,1,draw_dest);
 				DisposeGWorld(from_gworld);
-				  
+
 				m_start_pic = m_pic_index[which_g] + 1;
 				from_gworld = load_pict(1100 + m_start_pic / 20);
 				m_start_pic = m_start_pic % 20;
@@ -1665,7 +1665,7 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, Boolean do_fram
 				(GWorldPtr) ((win_or_gworld == 1) ? (GWorldPtr) (hDlg) : from_gworld)
 				  ,small_monst_rect,1,draw_dest);
 				DisposeGWorld(from_gworld);
-				  
+
 				m_start_pic = m_pic_index[which_g] + 1;
 				from_gworld = load_pict(1100 + m_start_pic / 20);
 				m_start_pic = m_start_pic % 20;
@@ -1677,7 +1677,7 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, Boolean do_fram
 				(GWorldPtr) ((win_or_gworld == 1) ? (GWorldPtr) (hDlg) : from_gworld)
 				  ,small_monst_rect,1,draw_dest);
 				DisposeGWorld(from_gworld);
-				  
+
 				m_start_pic = m_pic_index[which_g] + 2;
 				from_gworld = load_pict(1100 + m_start_pic / 20);
 				m_start_pic = m_start_pic % 20;
@@ -1760,14 +1760,14 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, Boolean do_fram
 				else rect_draw_some_item(from_gworld,from_rect,from_gworld,rect,0,draw_dest);
 			DisposeGWorld(from_gworld);
 			break;
-		case 11: // item info help  
+		case 11: // item info help
 			from_rect = item_info_from;
 			rect.right = rect.left + from_rect.right - from_rect.left;
 			rect.bottom = rect.top + from_rect.bottom - from_rect.top;
 			rect_draw_some_item(mixed_gworld,from_rect,(GWorldPtr) ((win_or_gworld == 1) ? (GWorldPtr)hDlg: mixed_gworld)
 			  ,rect,0,draw_dest);
 			break;
-		case 12: // item info help  
+		case 12: // item info help
 			from_rect = pc_info_from;
 			rect.right = rect.left + pc_info_from.right - pc_info_from.left;
 			rect.bottom = rect.top + pc_info_from.bottom - pc_info_from.top;
@@ -1793,7 +1793,7 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, Boolean do_fram
 			  ,rect,0,draw_dest);
 			DisposeGWorld(from_gworld);
 			break;
-		case 13: // combat ap help  
+		case 13: // combat ap help
 			from_gworld = load_pict(1402);
 			from_rect = combat_ap_from;
 			rect.right = rect.left + from_rect.right;
@@ -1802,7 +1802,7 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, Boolean do_fram
 			  ,rect,0,draw_dest);
 			DisposeGWorld(from_gworld);
 			break;
-		case 15: // stat symbols help  
+		case 15: // stat symbols help
 			from_gworld = load_pict(1400);
 			from_rect = stat_symbols_from;
 			rect.right = rect.left + from_rect.right;
@@ -1877,7 +1877,7 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, Boolean do_fram
 Rect calc_rect(short i, short j)
 {
 	Rect base_rect = {0,0,36,28};
-	
+
 	OffsetRect(&base_rect,i * 28, j * 36);
 	return base_rect;
 }
