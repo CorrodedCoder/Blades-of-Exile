@@ -191,7 +191,7 @@ Boolean fry_startup = FALSE;
 //	Main body of program Exile
 //
 #ifdef EXILE_BIG_GUNS
-pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit);
+Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit);
 ControlActionUPP text_sbar_UPP;
 ControlActionUPP item_sbar_UPP;
 ControlActionUPP shop_sbar_UPP;
@@ -571,7 +571,7 @@ void Handle_Update()
 	SetPort(old_port);
 }
 
-pascal void sbar_action(ControlHandle bar, short part)
+void sbar_action(ControlHandle bar, short part)
 {
 	short old_setting,new_setting,max;
 	
@@ -594,7 +594,7 @@ pascal void sbar_action(ControlHandle bar, short part)
 		print_buf();
 }
 
-pascal void item_sbar_action(ControlHandle bar, short part)
+void item_sbar_action(ControlHandle bar, short part)
 {
 	short old_setting,new_setting;
 	short max;
@@ -617,7 +617,7 @@ pascal void item_sbar_action(ControlHandle bar, short part)
 	if (new_setting != old_setting)
 		put_item_screen(stat_window,1);
 }
-pascal void shop_sbar_action(ControlHandle bar, short part)
+void shop_sbar_action(ControlHandle bar, short part)
 {
 	short old_setting,new_setting;
 	short max;
@@ -1288,7 +1288,7 @@ void check_sys_7()
 		else sys_7_avail = FALSE;
 }
 
-pascal OSErr handle_open_app(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon)
+OSErr handle_open_app(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon)
 //AppleEvent *theAppleEvent,*reply;
 //long handlerRefcon;
 {
@@ -1296,7 +1296,7 @@ pascal OSErr handle_open_app(AppleEvent *theAppleEvent,AppleEvent *reply,long ha
 	return noErr;
 }
 
-pascal OSErr handle_open_doc(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon)
+OSErr handle_open_doc(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon)
 //AppleEvent *theAppleEvent,*reply;
 //long handlerRefcon;
 {
@@ -1332,7 +1332,7 @@ pascal OSErr handle_open_doc(AppleEvent *theAppleEvent,AppleEvent *reply,long ha
 	return noErr;
 }
 
-pascal OSErr handle_quit(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon)
+OSErr handle_quit(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon)
 {
 	short choice;
 	
@@ -1407,7 +1407,7 @@ void set_up_apple_events()
 
 }
 
-pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit)
+Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit)
 {	
 	char chr,chr2;
 	short the_type,wind_hit,item_hit;

@@ -23,7 +23,7 @@ extern HWND mainPtr;
 extern HPALETTE hpal;
 extern HDC main_dc;
 extern HANDLE store_hInstance;
-long FAR PASCAL _export WndProc (HWND, UINT, UINT, LONG);
+long FAR PASCAL WndProc (HWND, UINT, UINT, LONG);
 
 
 extern short far terrain_pic[256];
@@ -141,9 +141,9 @@ short button_ul_y[15] = {0,0,132,23,46, 69,46,69,36,36, 36,23,92,92,0};
 short button_width[15] = {23,63,102,16,63, 63,63,63,6,14, 14,63,63,63,30};
 short button_height[15] = {23,23,23,13,23, 23,23,23,6,10,10,23,40,40,30};
 
-BOOL FAR PASCAL _export dummy_dialog_proc
+BOOL FAR PASCAL dummy_dialog_proc
 	(HWND hDlg, UINT message, UINT wParam, LONG lParam);
-long FAR PASCAL _export fresh_edit_proc(HWND hwnd, UINT message, UINT wParam, LONG lParam);
+long FAR PASCAL fresh_edit_proc(HWND hwnd, UINT message, UINT wParam, LONG lParam);
 
 
 	FARPROC d_proc;
@@ -177,7 +177,7 @@ void cd_init_dialogs()
 		edit_proc = MakeProcInstance ((FARPROC) fresh_edit_proc,store_hInstance);
 }
 
-long FAR PASCAL _export fresh_edit_proc(HWND hwnd, UINT message, UINT wParam, LONG lParam)
+long FAR PASCAL fresh_edit_proc(HWND hwnd, UINT message, UINT wParam, LONG lParam)
 {
 	short i,cur_box = -1,cur_item_num,item_for_focus = -1,first_edit_box = -1;
 
@@ -348,7 +348,7 @@ short cd_create_dialog(short dlog_num,HWND parent)
 	return 0;
 }
 
-BOOL FAR PASCAL _export dummy_dialog_proc
+BOOL FAR PASCAL dummy_dialog_proc
 	(HWND hDlg, UINT message, UINT wParam, LONG lParam) {
 	short i,j,k,l,free_slot = -1,free_item = -1,type,flag;
 	char item_str[256];

@@ -37,7 +37,7 @@ extern short far mage_range[66];
 extern short far priest_range[66];
 extern short spell_cost[2][62];
 extern Boolean in_startup_mode,give_intro_hint;
-extern pascal Boolean cd_event_filter();
+extern Boolean cd_event_filter();
 extern Boolean dialog_not_toast;
 extern HWND mainPtr;
 extern short on_monst_menu[256],cur_town_talk_loaded;

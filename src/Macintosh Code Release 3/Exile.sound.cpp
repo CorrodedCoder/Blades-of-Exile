@@ -78,7 +78,7 @@ short sound_delay[100] = {0,0,0,0,0,0,0,0,0,0,
 //channel in line.  You can have up to 4 sounds playing at once.
 
 short snd_played[4] = {-1,-1,-1,-1};
-pascal void snd_channel_callback(SndChannelPtr theChannel,SndCommand theCommand);
+void snd_channel_callback(SndChannelPtr theChannel,SndCommand theCommand);
 
 
 SndChannelPtr chan[4];
@@ -94,7 +94,7 @@ Boolean sound_going(short which_s) {
 	return FALSE;
 	}
 
-pascal void snd_channel_callback(SndChannelPtr theChannel,SndCommand theCommand) {
+void snd_channel_callback(SndChannelPtr theChannel,SndCommand theCommand) {
 	long theA5;
 	short channel = -1,i,which_sound;
 	

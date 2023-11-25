@@ -44,7 +44,7 @@ extern short town_size[3];
 extern short town_type;
 	extern FARPROC modeless_dlogprocs[18];
 extern short dialog_answer;
-extern pascal Boolean cd_event_filter();
+extern Boolean cd_event_filter();
 extern Boolean dialog_not_toast;
 extern HBITMAP pcs_gworld;
 extern HDC main_dc,main_dc2,main_dc3;
@@ -1238,7 +1238,7 @@ short get_num_of_items(short max_num)
 	return dialog_answer;
 }
 
-BOOL FAR PASCAL _export choice_dialog_proc
+BOOL FAR PASCAL choice_dialog_proc
 	(HWND hDlg, UINT message, UINT wParam, LONG lParam) {
 	RECT to_rect = {8,8,44,44};
 	short i;
@@ -1286,7 +1286,7 @@ short choice_dialog(short pic,short num)
 }
 
 
-BOOL FAR PASCAL _export modeless_dialog_proc
+BOOL FAR PASCAL modeless_dialog_proc
 	(HWND hDlg, UINT message, UINT wParam, LONG lParam) {
 	short i,which_d,store_which;
 	char item_str[256];

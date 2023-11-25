@@ -26,7 +26,7 @@ extern special_node_type null_spec_node;
 extern talking_node_type null_talk_node;
 extern piles_of_stuff_dumping_type *data_store;
 extern outdoor_record_type current_terrain;
-extern pascal Boolean cd_event_filter();
+extern Boolean cd_event_filter();
 
 extern short dialog_answer;
 short store_which_string_dlog;

@@ -210,7 +210,7 @@ effect_pat_type far open_square = {{{0,0,0,0,0,0,0,0,0},
 						{0,0,0,0,0,0,0,0,0},
 						{0,0,0,0,0,0,0,0,0},
 						{0,0,0,0,0,0,0,0,0}}};
-effect_pat_type far rad2 = {{{0,0,0,0,0,0,0,0,0},
+effect_pat_type far rad_pat2 = {{{0,0,0,0,0,0,0,0,0},
 						{0,0,0,0,0,0,0,0,0},
 						{0,0,0,1,1,1,0,0,0},
 						{0,0,1,1,1,1,1,0,0},
@@ -219,7 +219,7 @@ effect_pat_type far rad2 = {{{0,0,0,0,0,0,0,0,0},
 						{0,0,0,1,1,1,0,0,0},
 						{0,0,0,0,0,0,0,0,0},
 						{0,0,0,0,0,0,0,0,0}}};
-effect_pat_type far rad3 = {{{0,0,0,0,0,0,0,0,0},
+effect_pat_type far rad_pat3 = {{{0,0,0,0,0,0,0,0,0},
 						{0,0,0,1,1,1,0,0,0},
 						{0,0,1,1,1,1,1,0,0},
 						{0,1,1,1,1,1,1,1,0},
@@ -1057,7 +1057,7 @@ void do_combat_cast(location target)
 					add_missile(target,9,1,0,0);
 					store_sound = 11;
 					r1 = min(18,(level * 7) / 10 + 2 * bonus);
-					place_spell_pattern(rad2,target,130 + r1,TRUE,current_pc);
+					place_spell_pattern(rad_pat2,target,130 + r1,TRUE,current_pc);
 					ashes_loc = target;
 					break;
 
@@ -1112,7 +1112,7 @@ void do_combat_cast(location target)
 					r1 = min(12,1 + (level * 2) / 3 + bonus) + 2;
 					if (r1 > 20)
 						r1 = (r1 * 8) / 10; 
-					place_spell_pattern(rad2,target,50 + r1,TRUE,current_pc);
+					place_spell_pattern(rad_pat2,target,50 + r1,TRUE,current_pc);
 					ashes_loc = target;
 					break;
 				case 48:  // kill
@@ -1517,7 +1517,7 @@ void fire_missile(location target)
 		start_missile_anim();
 		add_missile(target,2,1, 0, 0);
 		do_missile_anim(100,pc_pos[current_pc], 5);
-		place_spell_pattern(rad2,target,
+		place_spell_pattern(rad_pat2,target,
 			50 + adven[current_pc].items[ammo_inv_slot].ability_strength * 2,TRUE,current_pc);
 		do_explosion_anim(5,0);
 		end_missile_anim();
@@ -2586,7 +2586,7 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 		ASB("Creature breathes.");
 		run_a_missile(source,targ_space,0,0,44,
 			0,0,100);
-		place_spell_pattern(rad2,targ_space,12,FALSE,7);		
+		place_spell_pattern(rad_pat2,targ_space,12,FALSE,7);		
 		}
 	else if (level == 14) { // vapors
 			//play_sound(44);
@@ -3018,7 +3018,7 @@ Boolean monst_cast_mage(creature_data_type *caster,short targ)
 				break;
 			case 11: // conflagration
 				run_a_missile(l,target,13,1,25,0,0,80);
-				place_spell_pattern(rad2,target,5,FALSE,7);
+				place_spell_pattern(rad_pat2,target,5,FALSE,7);
 				break;
 			case 12: // fireball
 				r1 = 1 + (caster->m_d.level * 3) / 4;
@@ -3059,7 +3059,7 @@ Boolean monst_cast_mage(creature_data_type *caster,short targ)
 				break;
 			case 14: // web
 				play_sound(25);
-				place_spell_pattern(rad2,target,1,FALSE,7);
+				place_spell_pattern(rad_pat2,target,1,FALSE,7);
 				break;
 			case 15: // poison
 				run_a_missile(l,vict_loc,11,0,25,0,0,80);
@@ -3104,7 +3104,7 @@ Boolean monst_cast_mage(creature_data_type *caster,short targ)
 				r1 = 1 + (caster->m_d.level * 3) / 4 + 3;
 				if (r1 > 29) r1 = 29;
 				start_missile_anim();
-				place_spell_pattern(rad2,target,50 + r1,TRUE,7);
+				place_spell_pattern(rad_pat2,target,50 + r1,TRUE,7);
 				ashes_loc = target;
 				break;
 
@@ -3113,7 +3113,7 @@ Boolean monst_cast_mage(creature_data_type *caster,short targ)
 
 			case 21: // shockstorm
 				run_a_missile(l,target,6,1,11,0,0,80);
-				place_spell_pattern(rad2,target,4,FALSE,7);
+				place_spell_pattern(rad_pat2,target,4,FALSE,7);
 				break;
 			case 22: // m. poison
 				run_a_missile(l,vict_loc,11,1,11,0,0,80);
@@ -3442,7 +3442,7 @@ Boolean monst_cast_priest(creature_data_type *caster,short targ)
 				r1 = (caster->m_d.level * 3) / 4 + 5;
 				if (r1 > 29) r1 = 29;
 				start_missile_anim();
-				place_spell_pattern(rad2,target,130 + r1,TRUE,7 );
+				place_spell_pattern(rad_pat2,target,130 + r1,TRUE,7 );
 				ashes_loc = target;
 				break;
 			}
@@ -4458,10 +4458,10 @@ void start_spell_targeting(short num)
 			current_pat = square;
 			break;
 		case 17: case 40: case 44: case 28: case 51: case 157: case 145: case 64: case 67:
-			current_pat = rad2;
+			current_pat = rad_pat2;
 			break;
 		case 153: case 65: case 66:
-			current_pat = rad3;
+			current_pat = rad_pat3;
 			break;
 		case 25: case 37: case 159:
 			add_string_to_buf("  (Hit space to rotate.)");

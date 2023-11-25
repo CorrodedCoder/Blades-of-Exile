@@ -94,11 +94,11 @@ void handle_outdoor_menu(int item_hit);
 void handle_item_menu(int item_hit);
 void handle_monst_menu(int item_hit);
 void handle_help_menu(int item_hit);
-pascal void right_sbar_action(ControlHandle bar, short part);
+void right_sbar_action(ControlHandle bar, short part);
 void Mouse_Pressed();
 void close_program();
- void ding();
- pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit);
+void ding();
+Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit);
 void set_pixel_depth();
 void restore_depth();
 void find_quickdraw() ;
@@ -633,7 +633,7 @@ void handle_monst_menu(int item_hit)
 
 
 
-pascal void right_sbar_action(ControlHandle bar, short part)
+void right_sbar_action(ControlHandle bar, short part)
 {
 	short old_setting,new_setting,max,i;
 	
@@ -721,7 +721,7 @@ void close_program()
  	SysBeep(1);
  }
  
- pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit)
+Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit)
 {	
 	char chr,chr2;
 	short the_type,wind_hit,item_hit;

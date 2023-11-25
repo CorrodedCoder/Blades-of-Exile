@@ -41,7 +41,7 @@ extern short town_size[3];
 extern short town_type;
 
 extern short dialog_answer;
-extern pascal Boolean cd_event_filter();
+extern Boolean cd_event_filter();
 extern Boolean dialog_not_toast;
 extern GWorldPtr pcs_gworld;
 extern ModalFilterUPP main_dialog_UPP;
@@ -1341,7 +1341,7 @@ short choice_dialog(short pic,short num)
 
 }
 
-pascal void frame_box(DialogPtr the_dialog,short the_item)
+void frame_box(DialogPtr the_dialog,short the_item)
 {
 	short the_type;
 	Handle the_handle = NULL;

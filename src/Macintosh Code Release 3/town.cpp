@@ -33,7 +33,7 @@ extern unsigned char combat_terrain[64][64];
 extern outdoor_record_type outdoors[2][2];
 extern unsigned char misc_i[64][64];
 extern short store_current_pc,current_ground;
-extern pascal Boolean cd_event_filter();
+extern Boolean cd_event_filter();
 extern Boolean dialog_not_toast;
 extern short dungeon_font_num,geneva_font_num;
 extern short store_pre_shop_mode,store_pre_talk_mode;
@@ -1299,7 +1299,7 @@ void clear_map()
 }
 
 
-pascal void draw_map (DialogPtr the_dialog, short the_item)
+void draw_map (DialogPtr the_dialog, short the_item)
 //the_item; // Being sneaky - if this gets value of 5, this is not a full restore -
 				// just update near party, if it gets 11, blank out middle and leave
 				// No redrawing in gworld

@@ -151,17 +151,11 @@ Boolean block_erase = FALSE;
 
 
 
-long FAR PASCAL _export WndProc (HWND, UINT, UINT, LONG);
+long FAR PASCAL WndProc (HWND, UINT, UINT, LONG);
 Boolean handle_menu (short, HMENU);
 
-int PASCAL WinMain (hInstance,hPrevInstance,
-  lpszCmdParam, nCmdShow)
-HANDLE hInstance;
-HANDLE hPrevInstance;
-LPSTR lpszCmdParam;
-int nCmdShow;
+int PASCAL WinMain(HANDLE hInstance, HANDLE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow)
 {
-
 	MSG msg;
 	WNDCLASS wndclass,wndclass2;
 	short i,seed;
@@ -293,17 +287,13 @@ int nCmdShow;
 		return msg.wParam;
 }
 
-long FAR PASCAL _export WndProc (hwnd,message,wParam,lParam)
-HWND hwnd;
-UINT message;
-UINT wParam;
-LONG lParam;
+long FAR PASCAL WndProc(HWND hwnd, UINT message, UINT wParam, LONG lParam)
 {
 HDC hdc;
 PAINTSTRUCT ps;
 RECT rect;
 short cxDib, cyDib;
-BYTE huge * lpDibBits;
+BYTE * lpDibBits;
 //RECT s_rect = {0,0,30,30},d_rect = {0,0,30,30},d2 = {0,0,420,216},s2 = {0,0,420,216};
 POINT press;
 short handled = 0,which_sbar,sbar_pos = 0,old_setting;

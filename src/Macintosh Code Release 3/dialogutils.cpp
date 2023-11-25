@@ -46,7 +46,7 @@ extern Boolean modeless_exists[18];
 extern DialogPtr modeless_dialogs[18] ;
 extern town_item_list	t_i;
 
-extern pascal Boolean cd_event_filter();
+extern Boolean cd_event_filter();
 extern Boolean dialog_not_toast;
 
 extern Boolean game_run_before;

@@ -24,7 +24,7 @@ extern setup_save_type far setup_save;
 extern stored_items_list_type far stored_items[3];
 extern stored_town_maps_type far maps;
 extern stored_outdoor_maps_type far o_maps;
-extern pascal Boolean cd_event_filter();
+extern Boolean cd_event_filter();
 
 extern Boolean dialog_not_toast,ed_reg;
 extern long ed_flag,ed_key;

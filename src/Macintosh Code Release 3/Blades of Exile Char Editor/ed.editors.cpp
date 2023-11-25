@@ -19,7 +19,7 @@ extern unsigned char out[96][96],out_e[96][96];
 extern setup_save_type setup_save;
 extern stored_items_list_type stored_items[3];
 
-extern pascal Boolean cd_event_filter();
+extern Boolean cd_event_filter();
 extern short dialog_answer;
 
 extern short store_flags[3];

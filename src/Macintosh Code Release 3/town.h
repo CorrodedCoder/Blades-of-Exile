@@ -23,7 +23,7 @@ void erase_specials();
 void erase_out_specials();
 short get_town_spec_id(location where);
 void clear_map();
-pascal void draw_map (DialogPtr the_dialog, short the_item);
+void draw_map (DialogPtr the_dialog, short the_item);
 Boolean is_door(location destination);
 void display_map();
 void check_done();

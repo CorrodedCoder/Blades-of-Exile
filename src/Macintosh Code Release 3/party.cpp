@@ -119,7 +119,7 @@ extern short store_mage, store_priest;
 extern short store_mage_lev, store_priest_lev;
 extern short store_spell_target,pc_casting,stat_screen_mode;
 extern short pc_last_cast[2][6];
-extern effect_pat_type null_pat,single,t,square,rad2,rad3;
+extern effect_pat_type null_pat,single,t,square,rad_pat2,rad_pat3;
 extern effect_pat_type current_pat;
 extern short current_spell_range;
 extern short hit_chance[21],pc_parry[6],pc_moves[6],combat_active_pc;
@@ -132,7 +132,7 @@ extern stored_town_maps_type maps;
 extern stored_outdoor_maps_type o_maps;
 extern short current_ground,dialog_answer;
 extern short on_spell_menu[2][62];
-extern pascal Boolean cd_event_filter();
+extern Boolean cd_event_filter();
 extern Boolean dialog_not_toast;
 extern short mage_need_select[62];
 extern short priest_need_select[62];
@@ -1709,7 +1709,7 @@ void do_mage_spell(short pc_num,short spell_num)
 		case 51: // antimagic
 			add_string_to_buf("  Target spell.               ");
 			overall_mode = 3;
-			current_pat = rad2;
+			current_pat = rad_pat2;
 			set_town_spell(spell_num,pc_num);
 			break;		
 
@@ -1850,7 +1850,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 
 		case 45: // dispelling fields
 			add_string_to_buf("  Target spell.               ");
-			current_pat = (spell_num == 19) ? single : rad2;
+			current_pat = (spell_num == 19) ? single : rad_pat2;
 			overall_mode = 3;
 			set_town_spell(100 + spell_num,pc_num);		
 			break;

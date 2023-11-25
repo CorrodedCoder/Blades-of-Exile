@@ -41,7 +41,7 @@ extern talking_node_type null_talk_node;
 extern piles_of_stuff_dumping_type *data_store;
 extern outdoor_record_type current_terrain;
 extern unsigned char borders[4][50];
-extern pascal Boolean cd_event_filter();
+extern Boolean cd_event_filter();
 extern location cur_out;
 extern talking_record_type talking;
 

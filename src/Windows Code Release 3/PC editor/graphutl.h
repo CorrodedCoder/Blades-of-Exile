@@ -1,11 +1,11 @@
-void init_palette(BYTE huge * lpDib);
-void extract_given_palette(BYTE huge * lpDib);
+void init_palette(BYTE * lpDib);
+void extract_given_palette(BYTE * lpDib);
 void inflict_palette();
 void reset_palette();
-DWORD GetDibInfoHeaderSize(BYTE huge * lpDib);
-WORD GetDibWidth(BYTE huge * lpDib);
-WORD GetDibHeight(BYTE huge * lpDib);
-BYTE huge * GetDibBitsAddr(BYTE huge * lpDib);
+DWORD GetDibInfoHeaderSize(BYTE * lpDib);
+WORD GetDibWidth(BYTE * lpDib);
+WORD GetDibHeight(BYTE * lpDib);
+BYTE * GetDibBitsAddr(BYTE * lpDib);
 HBITMAP ReadDib(char * name,HDC hdc) ;
 HBITMAP load_pict(short pict_num,HDC model_hdc);
 void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,

@@ -1,13 +1,13 @@
 extern void inflict_palette();
 extern void reset_palette();
-extern void init_palette(BYTE huge * lpDib);
-extern DWORD GetDibInfoHeaderSize(BYTE huge * lpDib);
+extern void init_palette(BYTE * lpDib);
+extern DWORD GetDibInfoHeaderSize(BYTE * lpDib);
 
-extern WORD GetDibHeight(BYTE huge * lpDib);
-extern BYTE huge * GetDibBitsAddr(BYTE huge * lpDib);
+extern WORD GetDibHeight(BYTE * lpDib);
+extern BYTE * GetDibBitsAddr(BYTE * lpDib);
 extern HBITMAP ReadDib(char * name,HDC hdc);
 
-extern WORD GetDibWidth(BYTE huge *);
+extern WORD GetDibWidth(BYTE *);
 HBITMAP load_pict(short pict_num);
 extern void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 	short trans, short main_win);
