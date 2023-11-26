@@ -22,7 +22,7 @@ extern special_node_type null_spec_node;
 extern talking_node_type null_talk_node;
 extern piles_of_stuff_dumping_type *data_store;
 extern outdoor_record_type far current_terrain;
-extern HANDLE store_hInstance;
+extern HINSTANCE store_hInstance;
 
 extern char far scen_strs[160][256];
 extern char far scen_strs2[110][256];

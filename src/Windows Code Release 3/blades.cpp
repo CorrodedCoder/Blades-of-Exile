@@ -170,14 +170,15 @@ short store_pc_being_created;
 HWND	mainPtr;
 HWND force_dlog = NULL;
 HFONT font,fantasy_font,small_bold_font,italic_font,underline_font,bold_font,tiny_font;
-FARPROC modeless_dlogprocs[18] = {NULL,	NULL,	NULL,	NULL,	NULL,	NULL,
+DLGPROC modeless_dlogprocs[18] = {NULL,	NULL,	NULL,	NULL,	NULL,	NULL,
 								NULL,	NULL,	NULL,	NULL,	NULL,	NULL,
 								NULL,	NULL,	NULL,	NULL,	NULL,	NULL};
 HBITMAP bmap = NULL;
 HPALETTE hpal;
 PALETTEENTRY far ape[256];
 HDC main_dc,main_dc2,main_dc3;
-HANDLE store_hInstance,accel;
+HINSTANCE store_hInstance;
+HACCEL accel;
 BOOL event_handled;
 scenario_data_type far scenario;
 piles_of_stuff_dumping_type *data_store;
@@ -194,11 +195,11 @@ char szAppName[] = "Blades of Exile";
 char file_path_name[256];
 
 Boolean block_erase = FALSE;
+LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
-long FAR PASCAL WndProc (HWND, UINT, UINT, LONG);
 Boolean handle_menu (short, HMENU);
 
-int PASCAL WinMain(HANDLE hInstance, HANDLE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow)
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpszCmdParam, int nCmdShow)
 {
 
 	MSG msg;
@@ -396,7 +397,7 @@ int PASCAL WinMain(HANDLE hInstance, HANDLE hPrevInstance, LPSTR lpszCmdParam, i
 		return msg.wParam;
 }
 
-long FAR PASCAL WndProc(HWND hwnd, UINT message, UINT wParam, LONG lParam)
+LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 HDC hdc;
 PAINTSTRUCT ps;

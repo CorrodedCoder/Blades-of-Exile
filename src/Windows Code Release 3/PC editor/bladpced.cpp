@@ -156,7 +156,8 @@ HBITMAP bmap = NULL;
 HPALETTE hpal;
 PALETTEENTRY far ape[256];
 HDC main_dc,main_dc2,main_dc3;
-HANDLE store_hInstance,accel;
+HINSTANCE store_hInstance;
+HACCEL accel;
 BOOL event_handled;
 
 char szWinName[] = "Blades of Exile dialogs";
@@ -168,10 +169,10 @@ Boolean block_erase = FALSE;
 #include "itemdata.h"
 
 
-long FAR PASCAL WndProc (HWND, UINT, UINT, LONG);
+LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 Boolean handle_menu (short, HMENU);
 
-int PASCAL WinMain(HANDLE hInstance, HANDLE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow)
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpszCmdParam, int nCmdShow)
 {
 
 	MSG msg;
@@ -277,7 +278,7 @@ int PASCAL WinMain(HANDLE hInstance, HANDLE hPrevInstance, LPSTR lpszCmdParam, i
 		return msg.wParam;
 }
 
-long FAR PASCAL WndProc(HWND hwnd, UINT message, UINT wParam, LONG lParam)
+LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 HDC hdc;
 PAINTSTRUCT ps;

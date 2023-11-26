@@ -29,7 +29,7 @@ extern current_town_type far c_town;
 extern town_item_list far 	t_i;
 extern HWND mainPtr;
 extern Boolean in_startup_mode,boom_anim_active;
-  extern HANDLE store_hInstance;
+extern HINSTANCE store_hInstance;
 
 extern pc_record_type far adven[6];
 extern big_tr_type far  t_d;
@@ -41,7 +41,7 @@ extern short modeless_key[18];
 extern HWND modeless_dialogs[18];
 extern short town_size[3];
 extern short town_type;
-	extern FARPROC modeless_dlogprocs[18];
+extern DLGPROC modeless_dlogprocs[18];
 extern short dialog_answer;
 extern Boolean cd_event_filter();
 extern Boolean dialog_not_toast;
@@ -71,7 +71,7 @@ short store_dnum;
 
 HWND test_dlog3;
 HWND store_focus;
-FARPROC dlog_proc1;
+DLGPROC dlog_proc1;
 
 short being_created;
 short procinst_exists[18] = {0,0,0,0,0, 0,0,0,0,0 ,0,0,0,0,0, 0,0,0};
@@ -1237,8 +1237,7 @@ short get_num_of_items(short max_num)
 	return dialog_answer;
 }
 
-BOOL FAR PASCAL choice_dialog_proc
-	(HWND hDlg, UINT message, UINT wParam, LONG lParam) {
+INT_PTR CALLBACK choice_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
 	RECT to_rect = {8,8,44,44};
 	short i;
 	Boolean do_stnd = TRUE;
@@ -1271,7 +1270,7 @@ short choice_dialog(short pic,short num)
 	char dlog_name[10];
 
 	store_focus = GetFocus();
-	dlog_proc1 = MakeProcInstance((FARPROC) choice_dialog_proc,store_hInstance);
+	dlog_proc1 = choice_dialog_proc;
 	if (dlog_proc1 == NULL) {
 		add_string_to_buf("Dialog error, number...");
 		print_nums(0,0,num);
@@ -1285,8 +1284,7 @@ short choice_dialog(short pic,short num)
 }
 
 
-BOOL FAR PASCAL modeless_dialog_proc
-	(HWND hDlg, UINT message, UINT wParam, LONG lParam) {
+INT_PTR CALLBACK modeless_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
 	short i,which_d,store_which;
 	char item_str[256];
 	Boolean do_stnd = TRUE,id_dlg = TRUE;
@@ -1332,7 +1330,6 @@ BOOL FAR PASCAL modeless_dialog_proc
 void create_modeless_dialog(short which_dlog)
 {
 	short i,which_d;
-	FARPROC d_proc;
 
 	for (i = 0; i < 18; i++)
 		if (which_dlog == modeless_key[i]) {
@@ -1351,7 +1348,7 @@ void create_modeless_dialog(short which_dlog)
 	modeless_exists[which_d] = TRUE;
 	if (procinst_exists[which_d] == 0) {
 		procinst_exists[which_d] = 1;
-		modeless_dlogprocs[which_d] = MakeProcInstance((FARPROC) modeless_dialog_proc,store_hInstance);
+		modeless_dlogprocs[which_d] = modeless_dialog_proc;
 		}
 	modeless_dialogs[which_d] = CreateDialog(store_hInstance,
 	 MAKEINTRESOURCE(which_dlog),mainPtr,modeless_dlogprocs[which_d]);

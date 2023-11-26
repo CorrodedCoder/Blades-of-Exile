@@ -24,8 +24,7 @@ extern HFONT fantasy_font,font,italic_font,underline_font,bold_font,tiny_font,sm
 extern HWND mainPtr;
 extern HPALETTE hpal;
 extern HDC main_dc;
-extern HANDLE store_hInstance;
-long FAR PASCAL WndProc (HWND, UINT, UINT, LONG);
+extern HINSTANCE store_hInstance;
 extern HBRUSH bg[14];
 
 // Necessary evil
@@ -39,7 +38,7 @@ extern HBITMAP startmsc_gworld;
 extern short far terrain_pic[256];
 extern short ulx,uly;
 
-extern HANDLE accel;
+extern HACCEL accel;
 extern unsigned char m_pic_index_x[200];
 extern unsigned char m_pic_index_y[200];
 extern unsigned char m_pic_index[200];
@@ -69,7 +68,7 @@ Boolean far label_taken[NL];
 
 HWND edit_box = NULL;
 HWND store_edit_parent; // kludgy
-FARPROC edit_proc,old_edit_proc;
+WNDPROC edit_proc,old_edit_proc;
 
 HDC dlg_force_dc = NULL; // save HDCs when dealing with dlogs
 
@@ -156,12 +155,10 @@ short button_ul_y[15] = {0,0,132,23,46, 69,46,69,36,36, 36,23,92,92,0};
 short button_width[15] = {23,63,102,16,63, 63,63,63,6,14, 14,63,63,63,30};
 short button_height[15] = {23,23,23,13,23, 23,23,23,6,10,10,23,40,40,30};
 
-BOOL FAR PASCAL dummy_dialog_proc
-	(HWND hDlg, UINT message, UINT wParam, LONG lParam);
-long FAR PASCAL fresh_edit_proc(HWND hwnd, UINT message, UINT wParam, LONG lParam);
+INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK fresh_edit_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-
-	FARPROC d_proc;
+DLGPROC d_proc;
 
 extern char szAppName[];
 extern char szWinName[];
@@ -182,11 +179,11 @@ void cd_init_dialogs()
 	for (i = 0; i < NL; i++) {
 		label_taken[i] = FALSE;
 		}
-	d_proc = MakeProcInstance((FARPROC) dummy_dialog_proc,store_hInstance);
-	edit_proc = MakeProcInstance ((FARPROC) fresh_edit_proc,store_hInstance);
+	d_proc = dummy_dialog_proc;
+	edit_proc = fresh_edit_proc;
 }
 
-long FAR PASCAL fresh_edit_proc(HWND hwnd, UINT message, UINT wParam, LONG lParam)
+LRESULT CALLBACK fresh_edit_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 
 	switch (message) {
@@ -527,8 +524,8 @@ short cd_create_dialog(short dlog_num,HWND parent)
 	return 0;
 }
 
-BOOL FAR PASCAL dummy_dialog_proc
-	(HWND hDlg, UINT message, UINT wParam, LONG lParam) {
+INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
 	short i,j,k,free_slot = -1,free_item = -1,type,flag;
 	char item_str[256];
 	Boolean str_stored = FALSE;
@@ -721,7 +718,7 @@ BOOL FAR PASCAL dummy_dialog_proc
 								max(22,item_rect[free_item].bottom - item_rect[free_item].top),
 								dlgs[free_slot],150,store_hInstance,NULL);
 							store_edit_parent =  dlgs[free_slot];
-							old_edit_proc = (FARPROC) GetWindowLongPtr(edit_box,GWLP_WNDPROC);
+							old_edit_proc = reinterpret_cast<WNDPROC>(GetWindowLongPtr(edit_box,GWLP_WNDPROC));
 							SetWindowLongPtr(edit_box,GWLP_WNDPROC,reinterpret_cast<LONG_PTR>(edit_proc));
 
 							break;

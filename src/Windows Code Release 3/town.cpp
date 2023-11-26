@@ -72,7 +72,7 @@ extern short special_queue[20];
 extern HPALETTE hpal;
 extern far PALETTEENTRY ape[256];
 extern HDC main_dc,main_dc2,main_dc3;
-extern HANDLE store_hInstance;
+extern HINSTANCE store_hInstance;
 extern stored_town_maps_type far town_maps,town_maps2;
 extern piles_of_stuff_dumping_type *data_store;
 extern piles_of_stuff_dumping_type2 *data_store2;
@@ -80,7 +80,7 @@ extern stored_town_maps_type far town_maps,town_maps2;
 
 extern short ulx,uly;
 
-FARPROC map_proc = NULL;
+DLGPROC map_proc = NULL;
 
 // extra devices for maps
 	HBRUSH hbrush[6] = {NULL, NULL, NULL, NULL, NULL, NULL};
@@ -1706,8 +1706,7 @@ void draw_map (HWND the_dialog, short the_item)
 
 
 
-BOOL FAR PASCAL map_dialog_proc
-	(HWND hDlg, UINT message, UINT wParam, LONG lParam) {
+INT_PTR CALLBACK map_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
 	short i,which_d,store_which;
 	char item_str[256];
 	Boolean do_stnd = TRUE,id_dlg = TRUE;
@@ -1768,7 +1767,7 @@ void display_map()
 	
 	modeless_exists[5] = TRUE;
 	if (map_proc == NULL) {
-		map_proc = MakeProcInstance((FARPROC) map_dialog_proc,store_hInstance);
+		map_proc = map_dialog_proc;
 		}
 	modeless_dialogs[5] = CreateDialog(store_hInstance,
 	 MAKEINTRESOURCE(1046),mainPtr,map_proc);

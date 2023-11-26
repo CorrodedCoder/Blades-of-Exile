@@ -59,7 +59,7 @@ extern RECT pc_status_rect[10];
 extern RECT traits_rect;
 extern RECT pc_traits_rect[16]; 
 extern RECT edit_rect[5][2]; 
-extern HANDLE store_hInstance;
+extern HINSTANCE store_hInstance;
 
 short store_str1a;
 short store_str1b;
