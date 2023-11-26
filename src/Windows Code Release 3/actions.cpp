@@ -1570,7 +1570,7 @@ void flash_rect(RECT to_flash)
 	HDC hdc;
 
 	hdc = GetDC(mainPtr);
-	SetViewportOrg(  hdc,ulx,uly);
+	SetViewportOrgEx(hdc,ulx,uly,nullptr);
 	InvertRect (hdc,&to_flash);
 	play_sound(37);
 	Delay(5,&dummy);
@@ -1602,7 +1602,7 @@ void button_flash_rect(RECT to_flash)
 	HDC hdc;
 
 	hdc = GetDC(mainPtr);
-	SetViewportOrg(  hdc,ulx,uly);
+	SetViewportOrgEx(hdc, ulx, uly, nullptr);
 	InvertRect (hdc,&to_flash);
 	play_sound(37);
 	Delay(5,&dummy);

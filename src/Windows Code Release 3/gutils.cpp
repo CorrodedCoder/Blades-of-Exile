@@ -1109,7 +1109,7 @@ void frame_space(location where,short mode,short width,short height)
 	to_frame.right = 46 + where_put.x * 28 + 28 * (width - 1);
 
 	hdc = GetDC(mainPtr);
-	SetViewportOrg(hdc,ulx,uly);
+	SetViewportOrgEx(hdc,ulx,uly,nullptr);
 	SelectPalette(hdc,hpal,0);
 	c = GetNearestPaletteIndex(hpal,x[mode]);
 //	hbrush = CreateSolidBrush(PALETTEINDEX(c));//59));
