@@ -21,6 +21,7 @@ Blades of Exile Game/Scenario Editor/Character Editor
 // Blades of Exile Scenario Editor for Windoze
 
 #include <windows.h>
+#include <cassert>
 
 #include "stdlib.h"
 #include "string.h"
@@ -425,7 +426,7 @@ RECT r;
 		return 0;
 
 	case WM_VSCROLL:
-		which_sbar = GetWindowWord(HIWORD (lParam), GWW_ID);
+		which_sbar = GetWindowLong(reinterpret_cast<HWND>(lParam), GWL_ID);
 		switch (which_sbar) {
 			case 1:
 				sbar_pos = GetScrollPos(right_sbar,SB_CTL);
@@ -450,6 +451,9 @@ RECT r;
 				SetScrollPos(right_sbar,SB_CTL,sbar_pos,TRUE);
 				if (sbar_pos != old_setting)
 					draw_rb();
+				break;
+			default:
+				assert(false);
 				break;
 			}
 	    SetFocus(mainPtr);
