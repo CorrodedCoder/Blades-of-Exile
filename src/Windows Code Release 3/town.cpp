@@ -20,8 +20,10 @@
 #include "fields.h"
 #include "locutils.h"
 #include "dlogtool.h"
+#include "dlogtool_helpers.hpp"
 #include "infodlgs.h"
 #include "graphutl.h"
+#include "graphutl_helpers.hpp"
 
 extern HBITMAP mixed_gworld,spec_scen_g;
 extern current_town_type far c_town;
@@ -1541,7 +1543,7 @@ void draw_map (HWND the_dialog, short the_item)
 								custom_from = coord_to_rect(pic % 10, pic / 10);
 								OffsetRect(&custom_from,-13,-13);
 								SelectObject(hdc,old_bmp);
-								rect_draw_some_item(spec_scen_g,custom_from,map_gworld,draw_rect,0,0);
+								rect_draw_some_item_bmp(spec_scen_g,custom_from,map_gworld,draw_rect,0,0);
  								SelectObject(hdc,map_gworld);
 								}
 							}
@@ -1553,7 +1555,7 @@ void draw_map (HWND the_dialog, short the_item)
 									else OffsetRect(&ter_temp_from,
 										24 * ((terrain_pic[what_ter] - 400) / 5) + 312,6 * ((terrain_pic[what_ter] - 400) % 5) + 163);
 								SelectObject(hdc,old_bmp);
-								rect_draw_some_item(mixed_gworld,ter_temp_from,
+								rect_draw_some_item_bmp(mixed_gworld,ter_temp_from,
 									map_gworld,draw_rect,0,0);
 								SelectObject(hdc,map_gworld);
 								break;
@@ -1584,7 +1586,7 @@ void draw_map (HWND the_dialog, short the_item)
 									138 + 6 * ((map_pats[what_ter] - 30) % 5));
 								//OffsetRect(&ter_temp_from,0,115);
 								SelectObject(hdc,old_bmp);
-								rect_draw_some_item(mixed_gworld,ter_temp_from,
+								rect_draw_some_item_bmp(mixed_gworld,ter_temp_from,
 									map_gworld,draw_rect,0,0);
 								SelectObject(hdc,map_gworld);
 								break;
@@ -1627,7 +1629,7 @@ void draw_map (HWND the_dialog, short the_item)
 			InvalidateRect(GetDlgItem(the_dialog,1),&draw_rect,FALSE);
 			}
 
-		rect_draw_some_item(map_gworld,area_to_draw_from,hdc2,area_to_draw_on,0,2);
+		rect_draw_some_item_dc(map_gworld,area_to_draw_from,hdc2,area_to_draw_on,0,2);
 		}
 
 	// Now place PCs and monsters

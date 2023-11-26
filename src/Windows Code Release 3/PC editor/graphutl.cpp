@@ -665,7 +665,7 @@ void paint_pattern(HBITMAP dest,short which_mode,RECT dest_rect,short which_patt
 				for (j = 0; j < 4; j++) {
 					pat_dest = pat_dest_orig;
 					OffsetRect(&pat_dest,64 * i, 64 * j);
-					rect_draw_some_item(mixed_gworld,pattern_source,
+					rect_draw_some_item_bmp(mixed_gworld,pattern_source,
 						dialog_pattern_gworld,pat_dest,0,0);
 					}
 			}
@@ -680,7 +680,7 @@ void paint_pattern(HBITMAP dest,short which_mode,RECT dest_rect,short which_patt
 					for (j = 0; j < 4; j++) {
 						pat_dest = pat_dest_orig;
 						OffsetRect(&pat_dest,64 * i, 64 * j);
-						rect_draw_some_item(mixed_gworld,pattern_source,
+						rect_draw_some_item_bmp(mixed_gworld,pattern_source,
 							pattern_gworld,pat_dest,0,0);
 						}
 				}
@@ -701,13 +701,13 @@ void paint_pattern(HBITMAP dest,short which_mode,RECT dest_rect,short which_patt
 				OffsetRect(&draw_from, -192 * i, -256 * j);
 				switch (which_mode) {
 					case 0:
-						rect_draw_some_item(source_pat,draw_from,
+						rect_draw_some_item_bmp(source_pat,draw_from,
 							dest,draw_to,0,0); break;
 					case 1:
-						rect_draw_some_item(source_pat,draw_from,
+						rect_draw_some_item_bmp(source_pat,draw_from,
 							source_pat,draw_to,0,1); break;
 					case 2:
-						rect_draw_some_item(source_pat,draw_from,
+						rect_draw_some_item_bmp(source_pat,draw_from,
 							dest,draw_to,0,2); break;
 					}
 				}

@@ -13,6 +13,7 @@
 #include "exlsound.h"
 #include "graphutl.h"
 #include "stdio.h"
+#include "graphutl_helpers.hpp"
 
 extern HWND	mainPtr;
 extern RECT	windRect;
@@ -245,8 +246,8 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw,short dest)
 			}
 
 	if (dest == 0)
-		rect_draw_some_item(source_gworld, source_rect, terrain_screen_gworld, where_draw, (unsigned char) 0, 0);
-		else rect_draw_some_item(source_gworld, source_rect, terrain_screen_gworld, where_draw, (unsigned char) 0, 1);
+		rect_draw_some_item_bmp(source_gworld, source_rect, terrain_screen_gworld, where_draw, (unsigned char) 0, 0);
+		else rect_draw_some_item_bmp(source_gworld, source_rect, terrain_screen_gworld, where_draw, (unsigned char) 0, 1);
 }
 
 void draw_monsters()
@@ -289,28 +290,28 @@ void draw_monsters()
 								source_rect = get_custom_rect(picture_wanted % 1000 +
 								  ((party.out_c[i].direction < 4) ? 0 : (width * height)) + k);
 								to_rect = monst_rects[(width - 1) * 2 + height - 1][k];
-								rect_draw_some_item(spec_scen_g, source_rect, small_temp_gworld,to_rect, 0, 0); 			
+								rect_draw_some_item_bmp(spec_scen_g, source_rect, small_temp_gworld,to_rect, 0, 0);
 								source_rect = to_rect;
 								OffsetRect(&to_rect,13 + 28 * where_draw.x,13 + 36 * where_draw.y);
-								rect_draw_some_item(small_temp_gworld, source_rect, terrain_screen_gworld,to_rect, 1, 0);
+								rect_draw_some_item_bmp(small_temp_gworld, source_rect, terrain_screen_gworld,to_rect, 1, 0);
 								}
 							//source_rect = to_rect = monst_rects[0][0];
 							//OffsetRect(&to_rect,13 + 28 * where_draw.x,13 + 36 * where_draw.y);
-							//rect_draw_some_item(small_temp_gworld, source_rect, terrain_screen_gworld,to_rect, 1, 0);
+							//rect_draw_some_item_bmp(small_temp_gworld, source_rect, terrain_screen_gworld,to_rect, 1, 0);
 							}
 						if (picture_wanted < 1000) {
 							for (k = 0; k < width * height; k++) {
 								source_rect = get_monster_template_rect(party.out_c[i].what_monst.monst[j],
 								  (party.out_c[i].direction < 4) ? 0 : 1,k);
 								to_rect = monst_rects[(width - 1) * 2 + height - 1][k];
-								rect_draw_some_item(storage_gworld, source_rect, small_temp_gworld,to_rect, 0, 0); 			
+								rect_draw_some_item_bmp(storage_gworld, source_rect, small_temp_gworld,to_rect, 0, 0);
 								source_rect = to_rect;
 								OffsetRect(&to_rect,13 + 28 * where_draw.x,13 + 36 * where_draw.y);
-								rect_draw_some_item(small_temp_gworld, source_rect, terrain_screen_gworld,to_rect, 1, 0);
+								rect_draw_some_item_bmp(small_temp_gworld, source_rect, terrain_screen_gworld,to_rect, 1, 0);
 								}
 							//source_rect = to_rect = monst_rects[0][0];
 							//OffsetRect(&to_rect,13 + 28 * where_draw.x,13 + 36 * where_draw.y);
-							//rect_draw_some_item(small_temp_gworld, source_rect, terrain_screen_gworld,to_rect, 1, 0);
+							//rect_draw_some_item_bmp(small_temp_gworld, source_rect, terrain_screen_gworld,to_rect, 1, 0);
 							}
 					}
 				}
@@ -475,7 +476,7 @@ void draw_items()
 						dest_rect = coord_to_rect(where_draw.x,where_draw.y);
 						terrain_there[where_draw.x][where_draw.y] = -1;
 
-						rect_draw_some_item(spec_scen_g,
+						rect_draw_some_item_bmp(spec_scen_g,
 						 source_rect, terrain_screen_gworld, dest_rect, 1, 0); 
 						}
 						else {
@@ -488,7 +489,7 @@ void draw_items()
 								dest_rect.left += 5;
 								dest_rect.right -= 5;
 								}
-							rect_draw_some_item((t_i.items[i].graphic_num < 45) ? items_gworld : tiny_obj_gworld,
+							rect_draw_some_item_bmp((t_i.items[i].graphic_num < 45) ? items_gworld : tiny_obj_gworld,
 							 source_rect, terrain_screen_gworld, dest_rect, 1, 0); 
 					 		}
 					}

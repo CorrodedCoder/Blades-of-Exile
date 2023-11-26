@@ -7,6 +7,7 @@
 #include "gutils.h"
 #include "monster.h"
 #include "dlogtool.h"
+#include "dlogtool_helpers.hpp"
 #include "newgraph.h"
 #include "fileio.h"
 #include "itemdata.h"
@@ -15,6 +16,7 @@
 #include "text.h"
 #include "exlsound.h"
 #include "graphutl.h"
+#include "graphutl_helpers.hpp"
 
 short far monsters_faces[190] = {0,1,2,3,4,5,6,7,8,9,
 							10,0,12,11,11,12,13,13,2,11,
@@ -301,7 +303,7 @@ void apply_light_mask()
 				}
 			}
 
-	//rect_draw_some_item(light_mask_gworld,big_from,terrain_screen_gworld,big_to,0,0);
+	//rect_draw_some_item_bmp(light_mask_gworld,big_from,terrain_screen_gworld,big_to,0,0);
 	PaintRgn(hdc,dark_mask_region);
 	SelectObject(hdc,store_bmp);
 	DeleteObject(hdc);
@@ -473,7 +475,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 	draw_terrain(1);
 	to_rect = ter_scrn_rect;
 	OffsetRect(&to_rect,current_terrain_ul.x, current_terrain_ul.y);
-	rect_draw_some_item(terrain_screen_gworld,ter_scrn_rect,
+	rect_draw_some_item_bmp(terrain_screen_gworld,ter_scrn_rect,
 		terrain_screen_gworld,to_rect,0,1);
 							
 	// create and clip temporary anim template 
@@ -538,13 +540,13 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 				SectRect(&temp_rect,&active_area_rect,&missile_place_rect[i]);
 
 				// Now put terrain in temporary;
-				rect_draw_some_item(terrain_screen_gworld,missile_place_rect[i],
+				rect_draw_some_item_bmp(terrain_screen_gworld,missile_place_rect[i],
 					temp_gworld,missile_place_rect[i],0,0);
 				// Now put in missile
 				from_rect = missile_origin_rect[i];
 				if (store_missiles[i].missile_type >= 7)
 					OffsetRect(&from_rect,18 * (t % 8),0);
-				rect_draw_some_item(missiles_gworld,from_rect,
+				rect_draw_some_item_bmp(missiles_gworld,from_rect,
 					temp_gworld,temp_rect,1,0);
 				}
 
@@ -553,13 +555,13 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 			if (store_missiles[i].missile_type >= 0) {
 				to_rect = store_erase_rect[i];
 				OffsetRect(&to_rect,current_terrain_ul.x,current_terrain_ul.y);
-				rect_draw_some_item(terrain_screen_gworld,store_erase_rect[i],
+				rect_draw_some_item_bmp(terrain_screen_gworld,store_erase_rect[i],
 					terrain_screen_gworld,to_rect,0,1);
 
 				to_rect = missile_place_rect[i];
 				store_erase_rect[i] = to_rect;
 				OffsetRect(&to_rect,current_terrain_ul.x,current_terrain_ul.y);
-				rect_draw_some_item(temp_gworld,missile_place_rect[i],
+				rect_draw_some_item_bmp(temp_gworld,missile_place_rect[i],
 					temp_gworld,to_rect,0,1);
 				}
 		if ((PSD[306][6] == 3) || ((PSD[306][6] == 1) && (t % 4 == 0)) || ((PSD[306][6] == 2) && (t % 3 == 0)))
@@ -575,7 +577,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 
 	to_rect = ter_scrn_rect;
 	OffsetRect(&to_rect,current_terrain_ul.x,current_terrain_ul.y);
-	rect_draw_some_item(terrain_screen_gworld,ter_scrn_rect,
+	rect_draw_some_item_bmp(terrain_screen_gworld,ter_scrn_rect,
 		terrain_screen_gworld,to_rect,0,1);
 
 		while (t2 - t1 < pause_len + 40) {
@@ -673,7 +675,7 @@ void do_explosion_anim(short sound_num,short special_draw)
 	if (special_draw != 2) {
 		to_rect = ter_scrn_rect;
 		OffsetRect(&to_rect,current_terrain_ul.x, current_terrain_ul.y);
-		rect_draw_some_item(terrain_screen_gworld,ter_scrn_rect,
+		rect_draw_some_item_bmp(terrain_screen_gworld,ter_scrn_rect,
 			terrain_screen_gworld,to_rect,0,1);
 		}
 		
@@ -724,7 +726,7 @@ void do_explosion_anim(short sound_num,short special_draw)
 		// First, lay terrain in temporary graphic area;
 		for (i = 0; i < 30; i++) 
 			if (store_booms[i].boom_type >= 0) 
-				rect_draw_some_item(terrain_screen_gworld,explode_place_rect[i],
+				rect_draw_some_item_bmp(terrain_screen_gworld,explode_place_rect[i],
 					temp_gworld,explode_place_rect[i],0,0);
 
 		// Now put in explosions
@@ -733,7 +735,7 @@ void do_explosion_anim(short sound_num,short special_draw)
 				if ((t + store_booms[i].offset >= 0) && (t + store_booms[i].offset <= 7)) {
 						from_rect = base_rect;
 						OffsetRect(&from_rect,28 * (t + store_booms[i].offset),144 + 36 * (store_booms[i].boom_type));
-						rect_draw_some_item(fields_gworld,from_rect,
+						rect_draw_some_item_bmp(fields_gworld,from_rect,
 							temp_gworld,explode_place_rect[i],1,0);
 					
 					if (store_booms[i].val_to_place > 0) {
@@ -754,7 +756,7 @@ void do_explosion_anim(short sound_num,short special_draw)
 			if (store_booms[i].boom_type >= 0) {
 				to_rect = explode_place_rect[i];
 				OffsetRect(&to_rect,current_terrain_ul.x,current_terrain_ul.y);
-				rect_draw_some_item(temp_gworld,explode_place_rect[i],
+				rect_draw_some_item_bmp(temp_gworld,explode_place_rect[i],
 					temp_gworld,to_rect,0,1);
 				}
 					//if (((PSD[306][6] == 1) && (t % 3 == 0)) || ((PSD[306][6] == 2) && (t % 2 == 0)))
@@ -779,7 +781,7 @@ void do_explosion_anim(short sound_num,short special_draw)
 		}
 	//to_rect = terrain_screen_gworld->portRect;
 	//OffsetRect(&to_rect,current_terrain_ul.h,current_terrain_ul.v);
-	//rect_draw_some_item(terrain_screen_gworld,terrain_screen_gworld->portRect,
+	//rect_draw_some_item_bmp(terrain_screen_gworld,terrain_screen_gworld->portRect,
 	//	terrain_screen_gworld,to_rect,0,1);
 }
 
@@ -904,10 +906,10 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 	SelectObject(hdc,store_bmp);
 	talk_help_rect.right = talk_help_rect.left + help_from.right - help_from.left;
 	talk_help_rect.bottom = talk_help_rect.top + help_from.bottom - help_from.top;
-	rect_draw_some_item(dlg_buttons_gworld,help_from,talk_gworld,talk_help_rect,0,0);
+	rect_draw_some_item_bmp(dlg_buttons_gworld,help_from,talk_gworld,talk_help_rect,0,0);
 	//talk_help_rect.right = talk_help_rect.left + help_from.right - help_from.left;
 	//talk_help_rect.bottom = talk_help_rect.top + help_from.bottom - help_from.top;
-	rect_draw_some_item(dlg_buttons_gworld,done_from,talk_gworld,shop_done_rect,0,0);
+	rect_draw_some_item_bmp(dlg_buttons_gworld,done_from,talk_gworld,shop_done_rect,0,0);
 	SelectObject(hdc,talk_gworld);
 	if (draw_mode == 0)
 		SetTextColor(hdc,PALETTEINDEX(c[0]));
@@ -978,7 +980,7 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 		shopping_rects[i][6].bottom = shopping_rects[i][6].top +
 			(from_rect.bottom - from_rect.top);
 		if ((store_shop_type != 3) && (store_shop_type != 4))
-			rect_draw_some_item(mixed_gworld,item_info_from,talk_gworld,shopping_rects[i][6],1,0);
+			rect_draw_some_item_bmp(mixed_gworld,item_info_from,talk_gworld,shopping_rects[i][6],1,0);
 		SelectObject(hdc,talk_gworld);
 		// Now draw item shopping_rects[i][7]
 		// 0 - whole area, 1 - active area 2 - graphic 3 - item name
@@ -1018,7 +1020,7 @@ void refresh_shopping()
 	for (i = 0; i < 4; i++) {
 		to_rect = from_rects[i];
 		OffsetRect(&to_rect,5,5);
-		rect_draw_some_item(talk_gworld,from_rects[i],talk_gworld,to_rect,0,1);
+		rect_draw_some_item_bmp(talk_gworld,from_rects[i],talk_gworld,to_rect,0,1);
 		}
 }
 
@@ -1203,7 +1205,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_re
 	// Put help button
 	talk_help_rect.right = talk_help_rect.left + help_from.right - help_from.left;
 	talk_help_rect.bottom = talk_help_rect.top + help_from.bottom - help_from.top;
-	rect_draw_some_item(dlg_buttons_gworld,help_from,talk_gworld,talk_help_rect,0,0);
+	rect_draw_some_item_bmp(dlg_buttons_gworld,help_from,talk_gworld,talk_help_rect,0,0);
 
 	// Place face of talkee
 	if ((color == 0) && (c_rect.right == 0)) {
@@ -1451,7 +1453,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_re
 void refresh_talking()
 {
 	RECT from = {0,0,279,415};
-	rect_draw_some_item(talk_gworld,from,talk_gworld,talk_area_rect,0,1);
+	rect_draw_some_item_bmp(talk_gworld,from,talk_gworld,talk_area_rect,0,1);
 }
 
 short scan_for_response(char *str)
