@@ -177,7 +177,7 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw,short dest)
 	short anim_type = 0;
 	location l;
 	HDC hdc;
-	HBITMAP store_bmp;
+	HGDIOBJ store_bmp;
 
 	source_gworld = storage_gworld;
 
@@ -1092,7 +1092,8 @@ void frame_space(location where,short mode,short width,short height)
 	HDC hdc;
  //	DWORD color[3] = {RGB(255,0,0),RGB(0,255,0),RGB(0,0,255)};
 	DWORD color[3] = {PALETTEINDEX(43),PALETTEINDEX(2),PALETTEINDEX(22)};
-	HPEN hpen,old_pen;
+	HPEN hpen;
+	HGDIOBJ old_pen;
 	COLORREF x[3] = {RGB(200,0,0),RGB(102,255,0),RGB(200,0,200)};//RGB(204,204,204);
 	UINT c;
 

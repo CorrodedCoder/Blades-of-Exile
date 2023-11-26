@@ -144,7 +144,7 @@ void put_pc_screen()
 	HDC hdc;
 	COLORREF colors[6] = {RGB(0,0,0),RGB(255,0,0),RGB(128,0,0),RGB(0,160,0),RGB(0,0,255),RGB(255,255,255)};
 	UINT c[6];
-	HBITMAP store_bmp;
+	HGDIOBJ store_bmp;
 	Boolean right_buttons_same = TRUE;
 
 	for (i = 0; i < 6; i++)
@@ -333,7 +333,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 	HDC hdc;
 	COLORREF colors[6] = {RGB(0,0,0),RGB(255,0,0),RGB(128,0,0),RGB(0,160,0),RGB(0,0,255),RGB(255,255,255)};
 	UINT c[6];
-	HBITMAP store_bmp;
+	HGDIOBJ store_bmp;
 
 	// First refresh gworld with the pc info
 	//rect_draw_some_item_bmp(orig_pc_info_screen_gworld, erase_rect, pc_info_screen_gworld, erase_rect, 0, 0);
@@ -523,7 +523,7 @@ void place_buy_button(short position,short pc_num,short item_num,HDC hdc)
 	RECT button_sources[3] = {{0,24,30,36},{30,24,60,36},{0,36,30,48}}; /**/
 	short val_to_place;
 	short aug_cost[10] = {4,7,10,8, 15,15,10, 0,0,0};
-	HBITMAP store_bmp;
+	HGDIOBJ store_bmp;
 
 	if (adven[pc_num].items[item_num].variety == 0)
 		return;
@@ -1418,7 +1418,7 @@ void print_buf ()
 	RECT store_text_rect = {0,0,256,138},dest_rect,erase_rect = {1,1,255,137}; /**/
 	RECT from_rect,to_rect;
 	HDC hdc;
-	HBITMAP store_bmp;
+	HGDIOBJ store_bmp;
 
 
 	if (string_added == TRUE) {

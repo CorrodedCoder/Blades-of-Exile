@@ -1299,10 +1299,10 @@ short get_town_spec_id(location where)
 void clear_map()
 {
 	RECT map_world_rect = {0,0,384,384};
-	HBITMAP old_bmp;
+	HGDIOBJ old_bmp;
 	HDC hdc;
-	HBRUSH oldb;
-	HPEN oldp;
+	HGDIOBJ oldb;
+	HGDIOBJ oldp;
 
 	hdc = CreateCompatibleDC(main_dc);
 	SelectPalette(hdc,hpal,0);
@@ -1346,9 +1346,9 @@ void draw_map (HWND the_dialog, short the_item)
 	RECT view_rect= {0,0,48,48},tiny_rect = {0,0,32,32},
 		redraw_rect = {0,0,48,48},small_rect = {0,0,9,9},big_rect = {0,0,64,64}; // RECTangle visible in view screen
 	HDC hdc = NULL,hdc2;
-	HBITMAP old_bmp;
-	HBRUSH old_brush;
-	HPEN old_pen;
+	HGDIOBJ old_bmp;
+	HGDIOBJ old_brush;
+	HGDIOBJ old_pen;
 	short k,i,j,pic,pic2;
 	RECT area_to_draw_from,area_to_draw_on = {47,29,287,269};
 	Boolean draw_surroundings = FALSE,expl,expl2;

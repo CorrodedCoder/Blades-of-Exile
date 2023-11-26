@@ -217,7 +217,7 @@ int PASCAL WinMain(HANDLE hInstance, HANDLE hPrevInstance, LPSTR lpszCmdParam, i
 		wndclass.hInstance = hInstance;
 		wndclass.hIcon = LoadIcon(hInstance,MAKEINTRESOURCE(10));
 		wndclass.hCursor = NULL;
-		wndclass.hbrBackground = GetStockObject(WHITE_BRUSH);
+		wndclass.hbrBackground = static_cast<HBRUSH>(GetStockObject(WHITE_BRUSH));
 		wndclass.lpszMenuName = MAKEINTRESOURCE(1);
 		wndclass.lpszClassName = szAppName;
 		
@@ -230,7 +230,7 @@ int PASCAL WinMain(HANDLE hInstance, HANDLE hPrevInstance, LPSTR lpszCmdParam, i
 		wndclass2.hInstance = hInstance;
 		wndclass2.hIcon = LoadIcon(hInstance,MAKEINTRESOURCE(10));
 		wndclass2.hCursor = NULL;
-		wndclass2.hbrBackground = GetStockObject(WHITE_BRUSH);
+		wndclass2.hbrBackground = static_cast<HBRUSH>(GetStockObject(WHITE_BRUSH));
 		wndclass2.lpszMenuName = NULL;
 		wndclass2.lpszClassName = szWinName;
 		
