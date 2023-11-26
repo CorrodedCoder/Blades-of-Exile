@@ -111,7 +111,7 @@ extern location ok_space[4];
 extern HFONT font,italic_font,underline_font,bold_font,small_bold_font;
 extern HPALETTE hpal;
 extern HDC main_dc;
-extern HANDLE store_hInstance;
+extern HINSTANCE store_hInstance;
 extern piles_of_stuff_dumping_type5 *data_store5;
 
 short current_item_button[6] = {-1,-1,-1,-1,-1,-1};

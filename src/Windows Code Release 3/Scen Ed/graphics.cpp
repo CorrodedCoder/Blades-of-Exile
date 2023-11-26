@@ -52,7 +52,8 @@ extern unsigned char m_pic_index[200];
 extern char *button_strs[140];
 extern location cur_out;
 extern short ulx,uly;
-extern  HANDLE store_hInstance,accel;
+extern HINSTANCE store_hInstance;
+extern HACCEL accel;
 
 short num_ir[3] = {12,10,4};
 

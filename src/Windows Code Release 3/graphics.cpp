@@ -66,7 +66,7 @@ extern HDC main_dc,main_dc2,main_dc3;
 extern HFONT fantasy_font,font,small_bold_font,italic_font,underline_font,bold_font;
 extern HCURSOR arrow_curs[3][3], sword_curs, key_curs, target_curs,talk_curs,look_curs;
 
-extern HANDLE store_hInstance;
+extern HINSTANCE store_hInstance;
 extern Boolean modeless_exists[18],diff_depth_ok;
 extern short modeless_key[18];
 extern HWND modeless_dialogs[18];

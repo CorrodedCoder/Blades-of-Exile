@@ -45,11 +45,11 @@ extern short store_trait_mode;
 pc_record_type *store_pc;
 HBITMAP button_num_gworld;
 
-FARPROC dlog_proc1;
+DLGPROC dlog_proc1;
 HWND test_dlog3;
 short answer_given;
 HWND store_focus;
-extern HANDLE store_hInstance;
+extern HINSTANCE store_hInstance;
 
 void combine_things(short pc_num)
 {
@@ -240,8 +240,7 @@ short select_pc(short active_only,short free_inv_only)
 }
 
 
-BOOL FAR PASCAL choice_dialog_proc
-	(HWND hDlg, UINT message, UINT wParam, LONG lParam) {
+INT_PTR CALLBACK choice_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
 	RECT to_rect = {8,8,44,44};
 	short i;
 	Boolean do_stnd = TRUE;
@@ -274,7 +273,7 @@ short choice_dialog(short pic,short num)
 	char dlog_name[10];
 
 	store_focus = GetFocus();
-	dlog_proc1 = MakeProcInstance((FARPROC) choice_dialog_proc,store_hInstance);
+	dlog_proc1 = choice_dialog_proc;
 	if (dlog_proc1 == NULL) {
 		add_string_to_buf("Dialog error, number...");
 		//print_nums(0,0,num);

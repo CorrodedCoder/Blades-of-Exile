@@ -14,7 +14,7 @@
 HGLOBAL sound_handles[NUM_SOUNDS];
 char far *snds[NUM_SOUNDS];
 
-extern HANDLE store_hInstance;
+extern HINSTANCE store_hInstance;
 extern scenario_data_type far scenario;
 
 extern Boolean play_sounds,in_startup_mode;
