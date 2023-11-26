@@ -10,7 +10,6 @@
 #include "fields.h"
 #include "locutils.h"
 #include "newgraph.h"
-#include "dlogtool.h"
 #include "itemdata.h"
 #include "infodlgs.h"
 #include "exlsound.h"
