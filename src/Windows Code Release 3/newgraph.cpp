@@ -154,9 +154,9 @@ void apply_unseen_mask()
 	short i,j,k,l;
 	Boolean need_bother = FALSE;
 	HDC hdc;
-	HBITMAP store_bmp;
-	HBRUSH old_brush;
-	HPEN old_pen;
+	HGDIOBJ store_bmp;
+	HGDIOBJ old_brush;
+	HGDIOBJ old_pen;
 
 	if (PSD[306][2] > 0)
 		return;
@@ -210,8 +210,8 @@ void apply_light_mask()
 	Boolean is_dark = FALSE,same_mask = TRUE;
 	
 	HDC hdc;
-	HBITMAP store_bmp;
-	HBRUSH old_brush;
+	HGDIOBJ store_bmp;
+	HGDIOBJ old_brush;
 	
 	if (PSD[306][2] > 0)
 		return;
@@ -640,7 +640,7 @@ void do_explosion_anim(short sound_num,short special_draw)
 	HDC hdc;
 	COLORREF colors[5] = {RGB(0,0,0),RGB(255,0,0),RGB(128,0,0),RGB(0,160,0),RGB(255,255,255)};
 	UINT c[5];
-	HBITMAP store_bmp;
+	HGDIOBJ store_bmp;
 	long t1,t2;
 	long snd_len[3] = {1500,1410,1100};
 
@@ -832,8 +832,8 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 	COLORREF colors[7] = {RGB(0,0,0),RGB(255,0,130),RGB(128,0,70),RGB(0,0,100),RGB(0,0,220),
 		RGB(0,220,0),RGB(255,110,255)};
 	UINT c[7];
-	HBITMAP store_bmp;
-	HBRUSH old_brush;
+	HGDIOBJ store_bmp;
+	HGDIOBJ old_brush;
 	
 	hdc = CreateCompatibleDC(main_dc);
 	SelectPalette(hdc,hpal,0);
@@ -1170,9 +1170,9 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_re
 	COLORREF colors[7] = {RGB(0,0,0),RGB(0,0,204),RGB(0,0,102),RGB(0,0,100),RGB(0,0,220),
 		RGB(51,153,51),RGB(0,204,0)};
 	UINT c[7];
-	HBITMAP store_bmp;
-	HBRUSH old_brush;
-	HFONT store_font;
+	HGDIOBJ store_bmp;
+	HGDIOBJ old_brush;
+	HGDIOBJ store_font;
 
 	hdc = CreateCompatibleDC(main_dc);
 	SelectPalette(hdc,hpal,0);

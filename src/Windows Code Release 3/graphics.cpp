@@ -204,7 +204,7 @@ void plop_fancy_startup()
 
 	RECT screen_rect = {0,0,613,448},from_rect = {0,0,350,350},to_rect,whole_window;
 	POINT graphic_ul;
-	HBRUSH old_brush;
+	HGDIOBJ old_brush;
 	long cur_time;
 	RECT big_pic_from = {2,48,641,434};
 
@@ -1133,7 +1133,7 @@ void put_text_bar(char *str)
 	char status_str[256];
 	short xpos = 205;
 	HDC hdc;
-	HBITMAP store_bmp;
+	HGDIOBJ store_bmp;
 	RECT text_rect = {5,3,279,21};
 	COLORREF x = RGB(0,0,0),y = RGB(255,255,255);
 	UINT c;
@@ -2434,7 +2434,8 @@ void draw_targeting_line(POINT where_curs)
 	location from_loc;
 	RECT on_screen_terrain_area = {18, 18, 269,341};
 	char dam_str[20];
-	HPEN white_pen,store_pen;
+	HPEN white_pen;
+	HGDIOBJ store_pen;
 	static LOGPEN white_pen_data = {PS_SOLID,2,2,RGB(255,255,255)};
 	COLORREF colors[2] = {RGB(0,0,0),RGB(255,255,255)},storec;
 	UINT c[2];
