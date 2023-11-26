@@ -12,7 +12,7 @@
 #define	NUM_SOUNDS	100
 
 HGLOBAL sound_handles[NUM_SOUNDS];
-char far *snds[NUM_SOUNDS];
+LPCSTR snds[NUM_SOUNDS];
 
 extern HINSTANCE store_hInstance;
 extern scenario_data_type far scenario;
@@ -138,7 +138,7 @@ if (err != 0) {
 		h = FindResource(store_hInstance,snd_name,"#100");
 
 		sound_handles[i] = LoadResource(store_hInstance,h);
-		snds[i] = LockResource(sound_handles[i]);
+		snds[i] = reinterpret_cast<LPCSTR>(LockResource(sound_handles[i]));
 		}
 		}
 
@@ -212,7 +212,7 @@ void force_play_sound(short which)
 		h = FindResource(store_hInstance,snd_name,"#100");
 
 		sound_handles[which] = LoadResource(store_hInstance,h);
-		snds[which] = LockResource(sound_handles[which]);
+		snds[which] = reinterpret_cast<LPCSTR>(LockResource(sound_handles[which]));
 
 	  //	ASB("Loaded sound:");
 	  //	print_nums(0,0,which);
