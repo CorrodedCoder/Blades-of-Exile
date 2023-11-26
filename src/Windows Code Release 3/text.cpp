@@ -11,7 +11,7 @@
 #include "fields.h"
 #include "exlsound.h"
 #include "graphutl.h"
-	
+#include "graphutl_helpers.hpp"
 
 char far *m_mage_sp[] = {"Spark","Minor Haste","Strength","Flame Cloud","Flame",
 						"Minor Poison","Slow","Dumbfound","Stinking Cloud","Summon Beast",
@@ -153,7 +153,7 @@ void put_pc_screen()
 				right_buttons_same = FALSE;
 
 	// First refresh gworld with the pc info
-	//rect_draw_some_item (orig_pc_info_screen_gworld, erase_rect, pc_info_screen_gworld, erase_rect, 0, 0);
+	//rect_draw_some_item_bmp(orig_pc_info_screen_gworld, erase_rect, pc_info_screen_gworld, erase_rect, 0, 0);
 	// First clean up gworld with pretty patterns
 	// Will rewrite later
 	//FillCRECT(&erase_rect,bg[6]);
@@ -162,21 +162,21 @@ void put_pc_screen()
 	//	erase_rect.right -= 15;
 	from_rect = erase_rect;
 	OffsetRect(&from_rect,-1 * from_rect.left,-1 * from_rect.top);
-	rect_draw_some_item(status_pattern_gworld,from_rect,
+	rect_draw_some_item_bmp(status_pattern_gworld,from_rect,
 		pc_stats_gworld,erase_rect,0,0);
 	//if (right_buttons_same == FALSE) {
 		erase_rect.left = erase_rect.right;
 		erase_rect.right += 13;
 		from_rect = erase_rect;
 		OffsetRect(&from_rect,-1 * from_rect.left,-1 * from_rect.top);
-		rect_draw_some_item(status_pattern_gworld,from_rect,
+		rect_draw_some_item_bmp(status_pattern_gworld,from_rect,
 			pc_stats_gworld,erase_rect,0,0);
 	//	}
 	for (i = 0; i < 3; i++) {
 		//	FillCRECT(&small_erase_rects[i],bg[7]);
 		from_rect = small_erase_rects[i];
 		OffsetRect(&from_rect,-1 * from_rect.left + 208,-1 * from_rect.top + 136);
-		rect_draw_some_item(mixed_gworld,from_rect,
+		rect_draw_some_item_bmp(mixed_gworld,from_rect,
 			pc_stats_gworld,small_erase_rects[i],0,0);
 		}
 
@@ -272,8 +272,8 @@ void put_pc_screen()
 				 to_draw,0,10);
 
 			// Now put trade and info buttons
-			//rect_draw_some_item(mixed_gworld,info_from,pc_stats_gworld,pc_buttons[i][3],1,0);
-			//rect_draw_some_item(mixed_gworld,switch_from,pc_stats_gworld,pc_buttons[i][4],1,0);
+			//rect_draw_some_item_bmp(mixed_gworld,info_from,pc_stats_gworld,pc_buttons[i][3],1,0);
+			//rect_draw_some_item_bmp(mixed_gworld,switch_from,pc_stats_gworld,pc_buttons[i][4],1,0);
 			// do faster!
 			to_draw_rect = pc_buttons[i][3];
 			to_draw_rect.right = pc_buttons[i][4].right + 1;
@@ -282,7 +282,7 @@ void put_pc_screen()
 
 				pc_button_state[i] = 1;
 				SelectObject(hdc,store_bmp);
-				rect_draw_some_item(mixed_gworld,from_rect,pc_stats_gworld,to_draw_rect,1,0);
+				rect_draw_some_item_bmp(mixed_gworld,from_rect,pc_stats_gworld,to_draw_rect,1,0);
 				SelectObject(hdc,pc_stats_gworld);
 				
 			}
@@ -299,7 +299,7 @@ void put_pc_screen()
 
 	// Now put text on window.
 	OffsetRect(&final_to_draw_rect,PC_WIN_UL_X,PC_WIN_UL_Y);
-	rect_draw_some_item (pc_stats_gworld, final_from_draw_rect, pc_stats_gworld, final_to_draw_rect, 0, 1);
+	rect_draw_some_item_bmp(pc_stats_gworld, final_from_draw_rect, pc_stats_gworld, final_to_draw_rect, 0, 1);
 
 	// Sometimes this gets called when character is slain. when that happens, if items for
 	// that PC are up, switch item page.
@@ -336,13 +336,13 @@ void put_item_screen(short screen_num,short suppress_buttons)
 	HBITMAP store_bmp;
 
 	// First refresh gworld with the pc info
-	//rect_draw_some_item (orig_pc_info_screen_gworld, erase_rect, pc_info_screen_gworld, erase_rect, 0, 0);
+	//rect_draw_some_item_bmp(orig_pc_info_screen_gworld, erase_rect, pc_info_screen_gworld, erase_rect, 0, 0);
 	// First clean up gworld with pretty patterns
 	// Will rewrite later
 	//FillCRECT(&erase_rect,bg[6]);
 	from_rect = erase_rect;
 	OffsetRect(&from_rect,-1 * from_rect.left,-1 * from_rect.top);
-	rect_draw_some_item(status_pattern_gworld,from_rect,
+	rect_draw_some_item_bmp(status_pattern_gworld,from_rect,
 		item_stats_gworld,erase_rect,0,0);
 	if (suppress_buttons == 0)
 		for (i = 0; i < 6; i++)
@@ -351,7 +351,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 			//FillCRECT(&item_screen_button_rects[i],bg[7]);
 			from_rect = item_screen_button_rects[i];
 			OffsetRect(&from_rect,-1 * from_rect.left + 208,-1 * from_rect.top + 136);
-			rect_draw_some_item(mixed_gworld,from_rect,
+			rect_draw_some_item_bmp(mixed_gworld,from_rect,
 				item_stats_gworld,item_screen_button_rects[i],0,0);
 			}
 	//FillCRECT(&upper_frame_rect,bg[7]);
@@ -359,12 +359,12 @@ void put_item_screen(short screen_num,short suppress_buttons)
 	to_rect.right = to_rect.left + 96;
 	from_rect = to_rect;
 	OffsetRect(&from_rect,-1 * from_rect.left + 208,-1 * from_rect.top + 136);
-	rect_draw_some_item(mixed_gworld,from_rect,
+	rect_draw_some_item_bmp(mixed_gworld,from_rect,
 		item_stats_gworld,to_rect,0,0);
 	OffsetRect(&to_rect,96,0);
 	from_rect = to_rect;
 	OffsetRect(&from_rect,-1 * from_rect.left + 208,-1 * from_rect.top + 136);
-	rect_draw_some_item(mixed_gworld,from_rect,
+	rect_draw_some_item_bmp(mixed_gworld,from_rect,
 		item_stats_gworld,to_rect,0,0);
 
 
@@ -512,7 +512,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 	for (i = 0; i < 3; i++) {
 		dest_rect = parts_of_area_to_draw[i];
 		OffsetRect(&dest_rect,ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
-		rect_draw_some_item (item_stats_gworld, parts_of_area_to_draw[i],
+		rect_draw_some_item_bmp(item_stats_gworld, parts_of_area_to_draw[i],
 		  item_stats_gworld, dest_rect, 0, 1);
 		}
 }
@@ -585,7 +585,7 @@ void place_buy_button(short position,short pc_num,short item_num,HDC hdc)
 		store_selling_values[position] = val_to_place;
 		dest_rect = item_buttons[position][5];
 		dest_rect.right = dest_rect.left + 30;
-		rect_draw_some_item (mixed_gworld, source_rect,
+		rect_draw_some_item_bmp(mixed_gworld, source_rect,
 		  item_stats_gworld, dest_rect, 1, 0);
 		sprintf((char *) store_string,"        %d",val_to_place);
 		//if (val_to_place >= 10000)
@@ -616,18 +616,18 @@ void place_item_button(short which_button_to_put,short which_slot,short which_bu
 		InsetRect(&from_rect,2,2);
 		if (extra_val >= 150) {
 			from_rect = get_custom_rect(extra_val - 150);
-			rect_draw_some_item (spec_scen_g, from_rect,
+			rect_draw_some_item_bmp(spec_scen_g, from_rect,
 			  item_stats_gworld, to_rect, 0, 0);
 			}
 			else {
-				rect_draw_some_item (tiny_obj_gworld, from_rect,
+			rect_draw_some_item_bmp(tiny_obj_gworld, from_rect,
 			  item_stats_gworld, to_rect, 1, 0);
 				}
 		 return;
 		}
 	if (which_button_to_put < 4) { // this means put a regular item button
 		item_area_button_active[which_slot][which_button_position] = TRUE;
-		rect_draw_some_item (mixed_gworld, item_buttons_from[which_button_to_put],
+		rect_draw_some_item_bmp(mixed_gworld, item_buttons_from[which_button_to_put],
 		  item_stats_gworld, item_buttons[which_slot][which_button_position], 1, 0);
 		}
 	if (which_button_to_put == 10) { // this means put all 4
@@ -638,7 +638,7 @@ void place_item_button(short which_button_to_put,short which_slot,short which_bu
 		from_rect = item_buttons_from[0]; from_rect.right = item_buttons_from[3].right;
 		to_rect = item_buttons[which_slot][1];
 		to_rect.right = to_rect.left + from_rect.right - from_rect.left;
-		rect_draw_some_item (mixed_gworld, from_rect,
+		rect_draw_some_item_bmp(mixed_gworld, from_rect,
 		  item_stats_gworld, to_rect, 1, 0);
 		}
 	if (which_button_to_put == 11) { // this means put right 3
@@ -648,7 +648,7 @@ void place_item_button(short which_button_to_put,short which_slot,short which_bu
 		from_rect = item_buttons_from[1]; from_rect.right = item_buttons_from[3].right;
 		to_rect = item_buttons[which_slot][2];
 		to_rect.right = to_rect.left + from_rect.right - from_rect.left;
-		rect_draw_some_item (mixed_gworld, from_rect,
+		rect_draw_some_item_bmp(mixed_gworld, from_rect,
 		  item_stats_gworld, to_rect, 1, 0);
 		}
 }
@@ -672,10 +672,10 @@ void place_item_bottom_buttons()
 			to_rect = item_screen_button_rects[i];
 			//if (current_item_button[i] != adven[i].which_graphic) {
 				current_item_button[i] = adven[i].which_graphic;
-				rect_draw_some_item (mixed_gworld, but_from_rect, item_stats_gworld, to_rect, 0, 0);
+				rect_draw_some_item_bmp(mixed_gworld, but_from_rect, item_stats_gworld, to_rect, 0, 0);
 				pc_from_rect = get_party_template_rect(i,0);
 				InsetRect(&to_rect,2,2);
-				rect_draw_some_item (party_template_gworld, pc_from_rect, item_stats_gworld, to_rect, 0, 0);
+				rect_draw_some_item_bmp(party_template_gworld, pc_from_rect, item_stats_gworld, to_rect, 0, 0);
 			//	}
 
 			}
@@ -749,16 +749,16 @@ void refresh_stat_areas(short mode)
 	x = mode * 10;
 	dest_rect = pc_stats_from;
 	OffsetRect(&dest_rect,PC_WIN_UL_X,PC_WIN_UL_Y);
-	rect_draw_some_item (pc_stats_gworld, pc_stats_from, pc_stats_gworld, dest_rect, x, 1);
+	rect_draw_some_item_bmp(pc_stats_gworld, pc_stats_from, pc_stats_gworld, dest_rect, x, 1);
 	for (i = 0; i < 3; i++) {
 		dest_rect = parts_of_area_to_draw[i];
 		OffsetRect(&dest_rect,ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
-		rect_draw_some_item (item_stats_gworld, parts_of_area_to_draw[i], 
+		rect_draw_some_item_bmp(item_stats_gworld, parts_of_area_to_draw[i],
 		  item_stats_gworld, dest_rect, x, 1);
 		}
 	dest_rect = text_area_from;
 	OffsetRect(&dest_rect,TEXT_WIN_UL_X,TEXT_WIN_UL_Y);
-	rect_draw_some_item (text_area_gworld, text_area_from, text_area_gworld, dest_rect, x, 1);
+	rect_draw_some_item_bmp(text_area_gworld, text_area_from, text_area_gworld, dest_rect, x, 1);
 
 }
 
@@ -839,82 +839,82 @@ void draw_pc_effects(short pc,HDC dest_dc)
 		return;
 			
 	if ((adven[pc].status[0] > 0) && (dest_rect.right < right_limit)) { 
-		rect_draw_some_item (mixed_gworld,source_rects[4],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item_bmp(mixed_gworld,source_rects[4],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if (adven[pc].status[1] > 0) { 
-		rect_draw_some_item (mixed_gworld,source_rects[2],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item_bmp(mixed_gworld,source_rects[2],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if (adven[pc].status[1] < 0) { 
-		rect_draw_some_item (mixed_gworld,source_rects[3],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item_bmp(mixed_gworld,source_rects[3],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if (adven[pc].status[2] > 0) { 
-		rect_draw_some_item (mixed_gworld,source_rects[(adven[pc].status[2] > 4) ? 1 : 0],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item_bmp(mixed_gworld,source_rects[(adven[pc].status[2] > 4) ? 1 : 0],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if (adven[pc].status[4] > 0) { 
-		rect_draw_some_item (mixed_gworld,source_rects[5],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item_bmp(mixed_gworld,source_rects[5],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if (adven[pc].status[3] > 0) { 
-		rect_draw_some_item (mixed_gworld,source_rects[6],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item_bmp(mixed_gworld,source_rects[6],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if (adven[pc].status[3] < 0) { 
-		rect_draw_some_item (mixed_gworld,source_rects[8],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item_bmp(mixed_gworld,source_rects[8],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if ((adven[pc].status[5] > 0) && (dest_rect.right < right_limit)) { 
-		rect_draw_some_item (mixed_gworld,source_rects[9],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item_bmp(mixed_gworld,source_rects[9],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if ((adven[pc].status[6] > 0) && (dest_rect.right < right_limit)) { 
-		rect_draw_some_item (mixed_gworld,source_rects[10],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item_bmp(mixed_gworld,source_rects[10],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if ((adven[pc].status[7] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item (mixed_gworld,source_rects[11],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item_bmp(mixed_gworld,source_rects[11],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if ((adven[pc].status[8] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item (mixed_gworld,source_rects[12],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item_bmp(mixed_gworld,source_rects[12],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if ((adven[pc].status[9] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item (mixed_gworld,source_rects[13],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item_bmp(mixed_gworld,source_rects[13],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
 	if ((adven[pc].status[10] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item (mixed_gworld,source_rects[14],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item_bmp(mixed_gworld,source_rects[14],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
 	if ((adven[pc].status[11] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item (mixed_gworld,source_rects[15],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item_bmp(mixed_gworld,source_rects[15],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
 	if ((adven[pc].status[12] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item (mixed_gworld,source_rects[16],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item_bmp(mixed_gworld,source_rects[16],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
 	if ((adven[pc].status[13] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item (mixed_gworld,source_rects[17],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item_bmp(mixed_gworld,source_rects[17],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
@@ -1431,13 +1431,13 @@ void print_buf ()
 	to_rect.bottom = to_rect.top + 128;
 	from_rect = to_rect;
 	OffsetRect(&from_rect,-1 * from_rect.left,-1 * from_rect.top);
-	rect_draw_some_item(status_pattern_gworld,from_rect,
+	rect_draw_some_item_bmp(status_pattern_gworld,from_rect,
 		text_area_gworld,to_rect,0,0);
 	to_rect = erase_rect;
 	to_rect.top = to_rect.bottom - 8;
 	from_rect = to_rect;
 	OffsetRect(&from_rect,-1 * from_rect.left,-1 * from_rect.top);
-	rect_draw_some_item(status_pattern_gworld,from_rect,
+	rect_draw_some_item_bmp(status_pattern_gworld,from_rect,
 		text_area_gworld,to_rect,0,0);
 
 
@@ -1484,7 +1484,7 @@ void print_buf ()
 
 	OffsetRect(&dest_rect,TEXT_WIN_UL_X,TEXT_WIN_UL_Y);
  	// Now put text on window.
-	rect_draw_some_item (text_area_gworld, store_text_rect, text_area_gworld, dest_rect, 0, 1);
+	rect_draw_some_item_bmp(text_area_gworld, store_text_rect, text_area_gworld, dest_rect, 0, 1);
 	string_added = FALSE;	
 }
 
@@ -1543,7 +1543,7 @@ RECT	destrec = {0,0,28,36};
 	terrain_there[target.x][target.y] = -1;
 	
 	destrec = coord_to_rect(target.x,target.y);
-	rect_draw_some_item ( src_gworld,  src_rect,   targ_gworld, 
+	rect_draw_some_item_bmp(src_gworld,  src_rect,   targ_gworld,
 		destrec,   masked,  main_win);
 
 }

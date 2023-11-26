@@ -13,7 +13,6 @@
 #include "fields.h"
 #include "loc_utils.h"
 #include "newgraph.h"
-#include "dlogtool.h"
 #include "item_data.h"
 #include "info.dialogs.h"
 #include "Exile.sound.h"

@@ -1198,7 +1198,7 @@ void cd_draw_item(short dlog_num,short item_num)
 					from_rect.left = button_ul_x[button_type[item_flag[item_index]]];
 					from_rect.bottom = from_rect.top + button_height[button_type[item_flag[item_index]]];
 					from_rect.right = from_rect.left + button_width[button_type[item_flag[item_index]]];
-					rect_draw_some_item(dlg_buttons_gworld,from_rect,win_dc,item_rect[item_index],0,2);
+					rect_draw_some_item_dc(dlg_buttons_gworld,from_rect,win_dc,item_rect[item_index],0,2);
 
 					SelectObject(win_dc,bold_font);
 					SetTextColor(win_dc,PALETTEINDEX(c[2]));
@@ -1227,7 +1227,7 @@ void cd_draw_item(short dlog_num,short item_num)
 						}
 					from_rect.right = from_rect.left + 14;
 					from_rect.bottom = from_rect.top + 10;
-					rect_draw_some_item( dlg_buttons_gworld,from_rect, win_dc,item_rect[item_index],0,2); break;
+					rect_draw_some_item_dc( dlg_buttons_gworld,from_rect, win_dc,item_rect[item_index],0,2); break;
 					break;
 
 				case 3: case 4: case 7: case 8: case 9:
@@ -1264,8 +1264,8 @@ void cd_draw_item(short dlog_num,short item_num)
 				case 5:
 					if (item_flag[item_index] == -1)
 						cd_erase_item(dlog_num,item_num);
-						else draw_dialog_graphic(dlgs[dlg_index], item_rect[item_index],
-							item_flag[item_index],(item_flag[item_index] >= 2000) ? FALSE : TRUE,0);
+						else draw_dialog_graphic_wnd(dlgs[dlg_index], item_rect[item_index],
+							item_flag[item_index],(item_flag[item_index] >= 2000) ? FALSE : TRUE);
 					break;
 				}
 			}
@@ -1437,7 +1437,7 @@ void cd_erase_item(short dlog_num, short item_num)
 	Rectangle(win_dc,to_fry.left, to_fry.top,to_fry.right,to_fry.bottom);
 	SelectObject(win_dc,old_brush);
 	SelectObject(win_dc,old_pen);  */
-	paint_pattern(win_dc,2,to_fry,0);
+	paint_pattern_dc(win_dc,to_fry,0);
 	cd_kill_dc(dlg_index,win_dc);  
 
 
@@ -1462,7 +1462,7 @@ void cd_erase_rect(short dlog_num,RECT to_fry)
 	Rectangle(win_dc,to_fry.left, to_fry.top,to_fry.right,to_fry.bottom);
 	SelectObject(win_dc,old_brush);
 	SelectObject(win_dc,old_pen);  */
-	paint_pattern(win_dc,2,to_fry,0);
+	paint_pattern_dc(win_dc,to_fry,0);
 	cd_kill_dc(dlg_index,win_dc);
 
 	//	paint_pattern(dlgs[dlg_index],2,to_fry,0);
@@ -1494,7 +1494,7 @@ void cd_press_button(short dlog_num, short item_num)
 					from_rect.bottom = from_rect.top + button_height[item_flag[item_index]];
 					from_rect.right = from_rect.left + button_width[item_flag[item_index]];
 	OffsetRect(&from_rect,button_width[item_flag[item_index]],0);
-	rect_draw_some_item(dlgbtns_gworld,from_rect,win_dc,item_rect[item_index],0,2);
+	rect_draw_some_item_dc(dlgbtns_gworld,from_rect,win_dc,item_rect[item_index],0,2);
 
 	if (play_sounds == TRUE) {
 		play_sound(37);
@@ -1503,7 +1503,7 @@ void cd_press_button(short dlog_num, short item_num)
 		else Delay(14,&dummy);
 
 	OffsetRect(&from_rect,-1 * button_width[item_flag[item_index]],0);
-	rect_draw_some_item(dlgbtns_gworld,from_rect,win_dc,item_rect[item_index],0,2);
+	rect_draw_some_item_dc(dlgbtns_gworld,from_rect,win_dc,item_rect[item_index],0,2);
 	*/
 	
 	from_rect.top = button_ul_y[button_type[item_flag[item_index]]];
@@ -1512,7 +1512,7 @@ void cd_press_button(short dlog_num, short item_num)
 	from_rect.right = from_rect.left + button_width[button_type[item_flag[item_index]]];
 	OffsetRect(&from_rect,button_width[button_type[item_flag[item_index]]],0);
 	
-	rect_draw_some_item(dlg_buttons_gworld,from_rect,win_dc,item_rect[item_index],0,2);
+	rect_draw_some_item_dc(dlg_buttons_gworld,from_rect,win_dc,item_rect[item_index],0,2);
 
 	SelectObject(win_dc,bold_font);
 	SetTextColor(win_dc,PALETTEINDEX(c[2]));
@@ -1537,7 +1537,7 @@ void cd_press_button(short dlog_num, short item_num)
 		else Delay(10,&dummy);
 
 	OffsetRect(&from_rect,-1 * button_width[button_type[item_flag[item_index]]],0);
-	rect_draw_some_item(dlg_buttons_gworld,from_rect,win_dc,item_rect[item_index],0,2);
+	rect_draw_some_item_dc(dlg_buttons_gworld,from_rect,win_dc,item_rect[item_index],0,2);
 
 	SelectObject(win_dc,bold_font);
 	SetTextColor(win_dc,PALETTEINDEX(c[1]));
@@ -1765,7 +1765,7 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 		}
 	if (which_g == 950) { // Empty. Maybe clear space.
 		if (win_or_gworld == 0) {
-			paint_pattern(hdc,2,rect,0);
+			paint_pattern_dc(hdc,rect,0);
 
 			//old_brush = SelectObject(hdc,bg[5]);
 			//Rectangle(hdc,rect.left,rect.top,rect.right,rect.bottom);
@@ -1783,21 +1783,21 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 				which_g -= 700;
 			from_gworld = dlogpics_gworld;
 			OffsetRect(&from2,36 * (which_g % 4),36 * (which_g / 4));
-			rect_draw_some_item(from_gworld,from2,(HBITMAP) ((win_or_gworld == 1) ? (HBITMAP)hDlg: hdc)
+			rect_draw_some_item_either(from_gworld,from2,win_or_gworld,hDlg,hdc
 			  ,rect,0,draw_dest);
 			break;
 		case 11: // item info help
 			from_rect = item_info_from;
 			rect.right = rect.left + from_rect.right - from_rect.left;
 			rect.bottom = rect.top + from_rect.bottom - from_rect.top;
-			rect_draw_some_item(mixed_gworld,from_rect,(HBITMAP) ((win_or_gworld == 1) ? (HBITMAP)hDlg: hdc)
+			rect_draw_some_item_either(mixed_gworld,from_rect,win_or_gworld,hDlg,hdc
 			  ,rect,0,draw_dest);
 			break;
 		case 12: // item info help
 			from_rect = pc_info_from;
 			rect.right = rect.left + pc_info_from.right - pc_info_from.left;
 			rect.bottom = rect.top + pc_info_from.bottom - pc_info_from.top;
-			rect_draw_some_item(mixed_gworld,from_rect,(HBITMAP) ((win_or_gworld == 1) ? (HBITMAP)hDlg: hdc)
+			rect_draw_some_item_either(mixed_gworld,from_rect,win_or_gworld,hDlg,hdc
 			  ,rect,0,draw_dest);
 			break;
 		case 14: // button help
@@ -1806,7 +1806,7 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 				from_gworld = load_pict(900 + which_g,hdc);
 				from_rect = large_scen_from;
 				OffsetRect(&from_rect,64 * (which_g % 10),0);
-				rect_draw_some_item(from_gworld,from_rect,(HBITMAP) ((win_or_gworld == 1) ? (HBITMAP)hDlg: hdc)
+				rect_draw_some_item_either(from_gworld,from_rect,win_or_gworld,hDlg,hdc
 				  ,rect,0,draw_dest);
 				DeleteObject(from_gworld);
 				break;
@@ -1817,7 +1817,7 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 			rect.right = rect.left + from_rect.right;
 			rect.bottom = rect.top + from_rect.bottom;
 			OffsetRect(&from_rect,0,100 * which_g);
-			rect_draw_some_item(from_gworld,from_rect,(HBITMAP) ((win_or_gworld == 1) ? (HBITMAP)hDlg: hdc)
+			rect_draw_some_item_either(from_gworld,from_rect,win_or_gworld,hDlg,hdc
 			  ,rect,0,draw_dest);
 			DeleteObject(from_gworld);
 			break;
@@ -1831,7 +1831,7 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 			OffsetRect(&from_rect,32 * (which_g % 5),32 * (which_g / 5));
 			rect.right = rect.left + 32;
 			rect.bottom = rect.top + 32;
-			rect_draw_some_item(from_gworld,from_rect,(HBITMAP) ((win_or_gworld == 1) ? (HBITMAP) (hDlg): hdc)
+			rect_draw_some_item_either(from_gworld,from_rect,win_or_gworld,hDlg,hdc
 			  ,rect,0,draw_dest);
 			DeleteObject(from_gworld);
 			break;

@@ -320,6 +320,7 @@ void draw_main_screen()
 	RECT top_pic_from = {3,16,41,54};
 
 
+	// TODO: Oddity: should probably be changed to 1, but currently benign
 	paint_pattern(NULL,3,whole_win_rect,3);
 
 	dest_rec = source_rect = title_from;
@@ -412,8 +413,8 @@ void draw_items(short clear_first)
 
 	if (clear_first == 1) {
 		for (i = 0; i < 24; i++)
-			paint_pattern(NULL,1,item_string_rects[i][0],3);
-		paint_pattern(NULL,1,dest_rect,3);
+			paint_pattern_main(item_string_rects[i][0],3);
+		paint_pattern_main(dest_rect,3);
 		}
 	
 	// frame_dlog_rect(mainPtr,frame_rect,0);
@@ -442,8 +443,8 @@ void draw_items(short clear_first)
 			char_win_draw_string(main_dc,item_string_rects[i][0],(char *) to_draw,0,10);
 
 			//Draw id/drop buttons
-			rect_draw_some_item(mixed_gworld,d_from,mixed_gworld,item_string_rects[i][1],1,1);
-			rect_draw_some_item(mixed_gworld,i_from,mixed_gworld,item_string_rects[i][2],1,1);
+			rect_draw_some_item_bmp(mixed_gworld,d_from,mixed_gworld,item_string_rects[i][1],1,1);
+			rect_draw_some_item_bmp(mixed_gworld,i_from,mixed_gworld,item_string_rects[i][2],1,1);
 			}
 	frame_dlog_rect(mainPtr,pc_info_rect,0); // re draw entire frame
 	frame_dlog_rect(mainPtr,name_rect,0); // draw the frame
@@ -473,10 +474,10 @@ void display_party(short mode,short clear_first)
 	c[3] = GetNearestPaletteIndex(hpal,colors[3]);
 	if (clear_first == 1) { // first erase what's already there
 		for (i = 0; i < 6; i++)
-			paint_pattern(NULL,1,pc_area_buttons[i][0],3);
-		paint_pattern(NULL,1,name_rect,3);
-		paint_pattern(NULL,1,pc_race_rect,3);
-		paint_pattern(NULL,1,info_area_rect,3);
+			paint_pattern_main(pc_area_buttons[i][0],3);
+		paint_pattern_main(name_rect,3);
+		paint_pattern_main(pc_race_rect,3);
+		paint_pattern_main(info_area_rect,3);
 		frame_dlog_rect(mainPtr,pc_info_rect,0); // re-draw the frame
 	}
 
@@ -506,7 +507,7 @@ void display_party(short mode,short clear_first)
 				from_rect = (current_pressed_button == i) ? ed_buttons_from[1] : ed_buttons_from[0];
 
 				if ((current_pressed_button < 0) || (current_pressed_button == i))
-					rect_draw_some_item(buttons_gworld,from_rect,buttons_gworld,pc_area_buttons[i][0],0,1);
+					rect_draw_some_item_bmp(buttons_gworld,from_rect,buttons_gworld,pc_area_buttons[i][0],0,1);
 				SetTextColor(main_dc,PALETTEINDEX(c[0]));
 				
 				// pc_record_type adven[6] is the records that contains chaarcters
@@ -515,7 +516,7 @@ void display_party(short mode,short clear_first)
 					from_rect = from_base;
 					// draw PC graphic
 					OffsetRect(&from_rect,56 * (adven[i].which_graphic / 8),36 * (adven[i].which_graphic % 8));
-					rect_draw_some_item(pc_gworld,from_rect,pc_gworld,pc_area_buttons[i][1],0,1);
+					rect_draw_some_item_bmp(pc_gworld,from_rect,pc_gworld,pc_area_buttons[i][1],0,1);
 					frame_dlog_rect(mainPtr,pc_area_buttons[i][1],0); // re-draw the frame
 
 					//frame_dlog_rect((GrafPtr) mainPtr,pc_area_buttons[i][1],0); 
@@ -818,12 +819,12 @@ void display_party(short mode,short clear_first)
 		for(i = 0; i < 5; i++) 
 			if ((current_pressed_button < 0) || (current_pressed_button == i + 10)) {	
 			if (clear_first == 1) { // first erase what's already there
-				paint_pattern(NULL,1,edit_rect[i][0],3);
+				paint_pattern_main(edit_rect[i][0],3);
 				}		
 			//frame_dlog_rect((GrafPtr) mainPtr,edit_rect[i][0],0);
 			//frame_dlog_rect((GrafPtr) mainPtr,edit_rect[i][1],0);
 			from_rect = (current_pressed_button == i + 10) ? ed_buttons_from[1] : ed_buttons_from[0];
-			rect_draw_some_item(buttons_gworld,from_rect,buttons_gworld,edit_rect[i][0],0,1);
+			rect_draw_some_item_bmp(buttons_gworld,from_rect,buttons_gworld,edit_rect[i][0],0,1);
 			SetTextColor(main_dc,PALETTEINDEX(c[3]));
 			switch(i) {
 				case 0:
