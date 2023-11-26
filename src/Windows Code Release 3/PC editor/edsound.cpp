@@ -10,7 +10,7 @@
 #define	NUM_SOUNDS	100
 
 HGLOBAL sound_handles[NUM_SOUNDS];
-char far *snds[NUM_SOUNDS];
+LPCSTR snds[NUM_SOUNDS];
 
 extern HINSTANCE store_hInstance;
 

@@ -1586,7 +1586,7 @@ void build_scen_headers()
 		scen_headers[i].flag1 = 0;
 	listbox = CreateWindow("listbox", NULL,
 		WS_CHILDWINDOW, 0,0,0,0,
-		mainPtr, 1, GetWindowLongPtr(mainPtr, GWLP_HINSTANCE), NULL);
+		mainPtr, reinterpret_cast<HMENU>(1), reinterpret_cast<HINSTANCE>(GetWindowLongPtr(mainPtr, GWLP_HINSTANCE)), NULL);
 	SendMessage(listbox,LB_DIR,0x0,(LONG) (LPSTR) "BLADSCEN/*.EXS");
 	count = (WORD) SendMessage(listbox,LB_GETCOUNT,0,0L);
 
@@ -2129,7 +2129,11 @@ short FSRead(HFILE file,long *len,char *buffer)
 
 short FSClose(HFILE file)
 {
-	_lclose(file);
+	if (_lclose(file) == HFILE_ERROR)
+	{
+		return -1;
+	}
+	return 0;
 }
 
 short SetFPos(HFILE file, short mode, long len)

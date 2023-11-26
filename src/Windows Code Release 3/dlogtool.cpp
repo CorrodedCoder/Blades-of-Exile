@@ -725,7 +725,7 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 								item_rect[free_item].left,item_rect[free_item].top,
 								item_rect[free_item].right - item_rect[free_item].left,
 								item_rect[free_item].bottom - item_rect[free_item].top,
-								dlgs[free_slot],150,store_hInstance,NULL);
+								dlgs[free_slot], reinterpret_cast<HMENU>(150),store_hInstance,NULL);
 							store_edit_parent =  dlgs[free_slot];
 							old_edit_proc = reinterpret_cast<WNDPROC>(GetWindowLongPtr(edit_box,GWLP_WNDPROC));
 							SetWindowLongPtr(edit_box,GWLP_WNDPROC,reinterpret_cast<LONG_PTR>(edit_proc));
