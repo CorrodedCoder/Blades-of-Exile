@@ -111,7 +111,11 @@ plgpl = (LOGPALETTE*) LocalLock(l);
 	LocalFree(l);
 
 	fry_dc(mainPtr,hdc);
-	SendMessage(HWND_BROADCAST,WM_SYSCOLORCHANGE,0,0);
+#ifdef REENABLE_SENDMESSAGE_CALLS
+	SendMessage(HWND_BROADCAST, WM_SYSCOLORCHANGE, 0, 0);
+#else
+	PostMessage(HWND_BROADCAST, WM_SYSCOLORCHANGE, 0, 0);
+#endif
 }
 
 // extracts and inflicts palette from given dib. WARNING ...
@@ -231,8 +235,12 @@ void inflict_palette()
 	SetSystemPaletteUse(main_dc,SYSPAL_NOSTATIC);
 	UnrealizeObject(hpal);
 	RealizePalette(main_dc);
+#ifdef REENABLE_SENDMESSAGE_CALLS
 	SendMessage(HWND_BROADCAST,WM_SYSCOLORCHANGE,0,0);
-/*
+#else
+	PostMessage(HWND_BROADCAST, WM_SYSCOLORCHANGE, 0, 0);
+#endif
+	/*
 	store_element_colors[0] = GetSysColor(elements[0]);
 	store_element_colors[1] = GetSysColor(elements[1]);
 	store_element_colors[2] = GetSysColor(elements[2]);
@@ -271,7 +279,11 @@ void reset_palette()
 	UnrealizeObject(hpal);
 	SelectPalette(main_dc,syspal,0);
 	RealizePalette(main_dc);
-	SendMessage(HWND_BROADCAST,WM_SYSCOLORCHANGE,0,0);
+#ifdef REENABLE_SENDMESSAGE_CALLS
+	SendMessage(HWND_BROADCAST, WM_SYSCOLORCHANGE, 0, 0);
+#else
+	PostMessage(HWND_BROADCAST, WM_SYSCOLORCHANGE, 0, 0);
+#endif
 	SetSysColors(5,elements,store_element_colors);
 
 
@@ -478,7 +490,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 		dlog_draw = TRUE;
 		hdcMem = CreateCompatibleDC(destDC);
 		SelectObject(hdcMem, src);
-		SetMapMode(hdcMem,GetMapMode(mainPtr));
+		SetMapMode(hdcMem,GetMapMode(GetDC(mainPtr)));
 		SelectPalette(hdcMem,hpal,0);
 		}
 		else {
@@ -532,7 +544,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 		if (main_win == 0) {
 			hdcMem3 = CreateCompatibleDC(hdcMem);
 			SelectObject(hdcMem3, dest);
-			SetMapMode(hdcMem3,GetMapMode(mainPtr));
+			SetMapMode(hdcMem3,GetMapMode(GetDC(mainPtr)));
 			SelectPalette(hdcMem3,hpal,0);
 			if ((src_rect.right - src_rect.left < 72) &&
 				(src_rect.bottom - src_rect.top < 72))
