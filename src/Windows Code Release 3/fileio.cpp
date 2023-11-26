@@ -775,7 +775,7 @@ void load_town(short town_num,short mode,short extra,char *str)
 
 	//HGetVol((StringPtr) start_name,&start_volume,&start_dir);
 	build_scen_file_name(file_name);
-	file_id = OpenFile(file_name,&store_str,OF_READ | OF_SEARCH);
+	file_id = OpenFile(file_name,&store_str,OF_READ /* | OF_SEARCH */);
 	if (file_id == HFILE_ERROR) {
 		FCD(949,0);
 		return;
@@ -1289,7 +1289,7 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 			}
 
 	build_scen_file_name(file_name);
-	file_id = OpenFile(file_name,&store_str,OF_READ | OF_SEARCH);
+	file_id = OpenFile(file_name,&store_str,OF_READ /* | OF_SEARCH */);
 	if (file_id == HFILE_ERROR) {
 		outdoor_alert();
 		PostQuitMessage(0);
@@ -1349,12 +1349,12 @@ void get_reg_data()
 	long *val_store,vals[10],len = 4;
 	OFSTRUCT store;
 
-	f = OpenFile("bladmisc.dat",&store,OF_READ | OF_SEARCH);
+	f = OpenFile("bladmisc.dat",&store,OF_READ /* | OF_SEARCH */);
 
 	if (f == HFILE_ERROR) {
 		game_run_before = FALSE;
 		build_data_file(1);
-		f = OpenFile("bladmisc.dat",&store,OF_READ | OF_SEARCH);
+		f = OpenFile("bladmisc.dat",&store,OF_READ /* | OF_SEARCH */);
 
 		if (f == HFILE_ERROR) {
 			reg_alert();
@@ -1408,9 +1408,9 @@ void build_data_file(short mode)
 	HFILE f;
 	char debug_str[60];
 
-	f = OpenFile("bladmisc.dat",&store,OF_READWRITE | OF_SEARCH);
+	f = OpenFile("bladmisc.dat",&store,OF_READWRITE /* | OF_SEARCH */);
 	if (f == HFILE_ERROR)
-		f = OpenFile("bladmisc.dat",&store,OF_WRITE | OF_CREATE | OF_SEARCH);
+		f = OpenFile("bladmisc.dat",&store,OF_WRITE | OF_CREATE /* | OF_SEARCH */);
 		else {
 			_llseek(f,0,0);
 			for (i = 0; i < 10; i++)
@@ -1495,7 +1495,7 @@ Boolean load_scenario()
 
 	build_scen_file_name(file_name);
 	
-	file_id = OpenFile(file_name,&store,OF_READ | OF_SEARCH);
+	file_id = OpenFile(file_name,&store,OF_READ /* | OF_SEARCH */);
 	if (file_id == HFILE_ERROR) {
 		oops_error(10000);
 		SysBeep(2);	return FALSE;
@@ -1622,7 +1622,7 @@ Boolean load_scenario_header(char *filename,short header_entry)
 	OFSTRUCT store_str;
 	short error;
 
-	file_id = OpenFile(filename,&store_str,OF_READ | OF_SEARCH);
+	file_id = OpenFile(filename,&store_str,OF_READ /* | OF_SEARCH */);
 	if (file_id == HFILE_ERROR) {
 		ASB(filename);
 		return FALSE;
@@ -2158,7 +2158,7 @@ Boolean load_blades_data()
 
 	build_scen_ed_name(file_name);
 
-	file_id = OpenFile(file_name,&store,OF_READ | OF_SEARCH);
+	file_id = OpenFile(file_name,&store,OF_READ /* | OF_SEARCH */);
 	if (file_id == HFILE_ERROR) {
 		return FALSE;
 		}
