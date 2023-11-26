@@ -2,6 +2,7 @@
 #define	TEXT_BUF_LEN	70
 
 #include <windows.h>
+#include <cassert>
 
 #include "global.h"
 #include "stdio.h"
@@ -1682,7 +1683,7 @@ void WinDrawString(char *string,short x,short y)
 
 	hdc = GetDC(mainPtr);
 	SelectPalette(hdc,hpal,0);
- 	SetViewportOrg(hdc,ulx,uly);
+ 	SetViewportOrgEx(hdc,ulx,uly,nullptr);
 	SelectObject(hdc,small_bold_font);
 	SetBkMode(hdc,TRANSPARENT);
 	SetTextColor(hdc,PALETTEINDEX(c[1]));
@@ -1696,7 +1697,7 @@ void WinBlackDrawString(char *string,short x,short y)
 
 	hdc = GetDC(mainPtr);
 	SelectPalette(hdc,hpal,0);
- 	SetViewportOrg(hdc,ulx,uly);
+ 	SetViewportOrgEx(hdc,ulx,uly,nullptr);
 	SelectObject(hdc,small_bold_font);
 	SetBkMode(hdc,TRANSPARENT);
 	DrawString(string,x,y,hdc);
@@ -1815,6 +1816,18 @@ void force_reprint()
 	string_added = TRUE;
 }
 
+// Adapted from Wine source: https://github.com/reactos/wine/blob/master/dlls/gdi.exe16/gdi.c
+static DWORD GetTextExtent16(HDC hdc, LPCSTR str, INT16 count)
+{
+	SIZE size;
+	if (!GetTextExtentPoint32A(hdc, str, count, &size))
+	{
+		assert(false);
+		return 0;
+	}
+	return MAKELONG(size.cx, size.cy);
+}
+
 // Note ... this expects a str len of at most 256 and
 // len_array pointing to a 256 long array of shorts
 void MeasureText(short str_len,char *str, short *len_array,HDC hdc)
@@ -1833,7 +1846,7 @@ void MeasureText(short str_len,char *str, short *len_array,HDC hdc)
 	for (i = 1; i < str_len; i++) {
 		strncpy(p_str,str,i);
 		p_str[i] = 0;
-		val_returned = GetTextExtent(hdc,p_str,i);
+		val_returned = GetTextExtent16(hdc,p_str,i);
 		text_len[i] = LOWORD(val_returned);
 		}
 	for (i = 0; i < 256; i++) {

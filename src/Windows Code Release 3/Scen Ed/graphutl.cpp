@@ -361,7 +361,7 @@ short i,last_slash = -1;
 			}
 		}
 		else  strcpy(real_name,name);
-	hFile = OpenFile(real_name,&store,OF_READ | OF_SEARCH | OF_SHARE_DENY_WRITE);
+	hFile = OpenFile(real_name,&store,OF_READ | OF_SHARE_DENY_WRITE /* | OF_SEARCH */ );
 
 	if (hFile == HFILE_ERROR)
 		return NULL;

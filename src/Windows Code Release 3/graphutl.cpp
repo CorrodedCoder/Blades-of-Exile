@@ -350,7 +350,7 @@ short i,last_slash = -1;
 			//real_name -= last_slash + 1;
 			//ASB(real_name);
 			}
-	hFile = OpenFile(real_name,&store,OF_READ | OF_SEARCH | OF_SHARE_DENY_WRITE);
+	hFile = OpenFile(real_name,&store,OF_READ | OF_SHARE_DENY_WRITE /* | OF_SEARCH */ );
 
   //	hFile = _lopen(name,READ);
 	if (hFile == HFILE_ERROR)
@@ -511,7 +511,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 			//SelectObject(hdcMem,hbrush);
 			}
 		if (dlog_draw == FALSE)
-			SetViewportOrg(destDC,ulx,uly);
+			SetViewportOrgEx(destDC,ulx,uly,nullptr);
 
 		StretchBlt(destDC,dest_rect.left,dest_rect.top,dest_rect.right - dest_rect.left,
 			dest_rect.bottom - dest_rect.top,
@@ -523,7 +523,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 					play_sound(1);
 				}
 		if (dlog_draw == FALSE)
-			SetViewportOrg(destDC,0,0);
+			SetViewportOrgEx(destDC,0,0,nullptr);
 
 
 		}
@@ -567,7 +567,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 		}
 		else {
 			if (dlog_draw == FALSE)
-				SetViewportOrg(destDC,ulx,uly);
+				SetViewportOrgEx(destDC,ulx,uly,nullptr);
 			if ((src_rect.right - src_rect.left < 72) &&
 				(src_rect.bottom - src_rect.top < 72))
 					transbmp = bw_bitmap;
@@ -596,7 +596,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 				hdcMem,src_rect.left,src_rect.top,src_rect.right - src_rect.left,
 				src_rect.bottom - src_rect.top,SRCINVERT);
 			if (dlog_draw == FALSE)
-				SetViewportOrg(destDC,0,0);
+				SetViewportOrgEx(destDC,0,0,nullptr);
 			DeleteDC(hdcMem2);
 			if (transbmp != bw_bitmap)
 				DeleteObject(transbmp);

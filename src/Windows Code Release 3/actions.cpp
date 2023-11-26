@@ -1508,11 +1508,13 @@ void check_cd_event(HWND hwnd,UINT message,UINT wparam,LONG lparam)
 			break;
 
 		case WM_LBUTTONDOWN:
-			press = MAKEPOINT(lparam);
+			press.x = LOWORD(lparam);
+			press.y = HIWORD(lparam);
 			wind_hit = cd_process_click(hwnd,press, wparam, lparam,&item_hit);
 			break;
 		case WM_RBUTTONDOWN:
-			press = MAKEPOINT(lparam);
+			press.x = LOWORD(lparam);
+			press.y = HIWORD(lparam);
 			wparam = wparam | MK_CONTROL;
 			wind_hit = cd_process_click(hwnd,press, wparam, lparam,&item_hit);
 			break;
@@ -1568,7 +1570,7 @@ void flash_rect(RECT to_flash)
 	HDC hdc;
 
 	hdc = GetDC(mainPtr);
-	SetViewportOrg(  hdc,ulx,uly);
+	SetViewportOrgEx(hdc,ulx,uly,nullptr);
 	InvertRect (hdc,&to_flash);
 	play_sound(37);
 	Delay(5,&dummy);
@@ -1600,7 +1602,7 @@ void button_flash_rect(RECT to_flash)
 	HDC hdc;
 
 	hdc = GetDC(mainPtr);
-	SetViewportOrg(  hdc,ulx,uly);
+	SetViewportOrgEx(hdc, ulx, uly, nullptr);
 	InvertRect (hdc,&to_flash);
 	play_sound(37);
 	Delay(5,&dummy);
@@ -1826,10 +1828,10 @@ Boolean handle_keystroke(UINT wParam,LONG lParam)
 			ASB("Num 2: % of user resources left");
 			ASB("Num 3: % of graphics resources left");
 			s1 = GetFreeSpace(0);
-			s2 = GetFreeSystemResources(GFSR_USERRESOURCES);
+			s2 = 0; // GetFreeSystemResources(GFSR_USERRESOURCES);
 			i = (short) (s1 / 1000);
 			j = (short) s2;
-			s2 = GetFreeSystemResources(GFSR_GDIRESOURCES);
+			s2 = 0; // GetFreeSystemResources(GFSR_GDIRESOURCES);
 			k = (short) s2;
 			print_nums(i,j,k);
 

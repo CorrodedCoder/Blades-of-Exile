@@ -21,6 +21,7 @@ Blades of Exile Game/Scenario Editor/Character Editor
 // Blades of Exile Scenario Editor for Windoze
 
 #include <windows.h>
+#include <cassert>
 
 #include "stdlib.h"
 #include "string.h"
@@ -329,7 +330,8 @@ RECT r;
 			check_cd_event(hwnd,message,wParam,lParam);
 			else {
 				SetFocus(hwnd);
-				press = MAKEPOINT(lParam);
+				press.x = LOWORD(lParam);
+				press.y = HIWORD(lParam);
 
 				All_Done = handle_action(press, wParam,lParam);
 				check_game_done();
@@ -348,7 +350,8 @@ RECT r;
 			check_cd_event(hwnd,message,wParam,lParam);
 			else {
 				SetFocus(hwnd);
-				press = MAKEPOINT(lParam);
+				press.x = LOWORD(lParam);
+				press.y = HIWORD(lParam);
 
 				All_Done = handle_action(press, wParam,-2);
 				check_game_done();
@@ -406,7 +409,8 @@ RECT r;
 
 	case WM_MOUSEMOVE:
 		if ((mouse_button_held == TRUE) && (hwnd == mainPtr)) {
-			press = MAKEPOINT(lParam);
+			press.x = LOWORD(lParam);
+			press.y = HIWORD(lParam);
 			All_Done = handle_action(press, wParam,lParam);
 			}
 		//if (hwnd == mainPtr)
@@ -422,7 +426,7 @@ RECT r;
 		return 0;
 
 	case WM_VSCROLL:
-		which_sbar = GetWindowWord(HIWORD (lParam), GWW_ID);
+		which_sbar = GetWindowLong(reinterpret_cast<HWND>(lParam), GWL_ID);
 		switch (which_sbar) {
 			case 1:
 				sbar_pos = GetScrollPos(right_sbar,SB_CTL);
@@ -447,6 +451,9 @@ RECT r;
 				SetScrollPos(right_sbar,SB_CTL,sbar_pos,TRUE);
 				if (sbar_pos != old_setting)
 					draw_rb();
+				break;
+			default:
+				assert(false);
 				break;
 			}
 	    SetFocus(mainPtr);
@@ -793,11 +800,13 @@ short check_cd_event(HWND hwnd,UINT message,UINT wparam,LONG lparam)
 			break;
 
 		case WM_LBUTTONDOWN:
-			press = MAKEPOINT(lparam);
+			press.x = LOWORD(lparam);
+			press.y = HIWORD(lparam);
 			wind_hit = cd_process_click(hwnd,press, wparam, lparam,&item_hit);
 			break;
 		case WM_RBUTTONDOWN:
-			press = MAKEPOINT(lparam);
+			press.x = LOWORD(lparam);
+			press.y = HIWORD(lparam);
 			wparam = wparam | MK_CONTROL;
 			wind_hit = cd_process_click(hwnd,press, wparam, lparam,&item_hit);
 			break;

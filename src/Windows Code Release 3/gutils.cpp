@@ -1109,7 +1109,7 @@ void frame_space(location where,short mode,short width,short height)
 	to_frame.right = 46 + where_put.x * 28 + 28 * (width - 1);
 
 	hdc = GetDC(mainPtr);
-	SetViewportOrg(hdc,ulx,uly);
+	SetViewportOrgEx(hdc,ulx,uly,nullptr);
 	SelectPalette(hdc,hpal,0);
 	c = GetNearestPaletteIndex(hpal,x[mode]);
 //	hbrush = CreateSolidBrush(PALETTEINDEX(c));//59));
@@ -1118,7 +1118,7 @@ void frame_space(location where,short mode,short width,short height)
 	old_pen = SelectObject(hdc,hpen);
 //	RoundRect(hdc,to_frame.left,to_frame.top,
 //		to_frame.right,to_frame.bottom, 5,5);
-	MoveTo(hdc,to_frame.left,to_frame.top);
+	MoveToEx(hdc,to_frame.left,to_frame.top, NULL);
 	LineTo(hdc,to_frame.right,to_frame.top);
 	LineTo(hdc,to_frame.right,to_frame.bottom);
 	LineTo(hdc,to_frame.left,to_frame.bottom);

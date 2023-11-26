@@ -784,7 +784,7 @@ void import_town(short which_town)
 			which_town = 0;
 			}
 
-	file_id = _lopen(szFileName3,OF_READ | OF_SEARCH | OF_SHARE_DENY_WRITE);
+	file_id = _lopen(szFileName3,OF_READ | OF_SHARE_DENY_WRITE /* | OF_SEARCH */ );
 	if (file_id == HFILE_ERROR) {
 		oops_error(42); beep();
 		return;
@@ -946,7 +946,7 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 
 	// Step 1 - load scenario file from scenario base. It contains all the monsters and
 	// items done up properly!
-	if (HFILE_ERROR == (file_id = _lopen("BLADBASE.EXS", OF_READ | OF_SEARCH | OF_SHARE_EXCLUSIVE))) {
+	if (HFILE_ERROR == (file_id = _lopen("BLADBASE.EXS", OF_READ | OF_SHARE_EXCLUSIVE /* | OF_SEARCH */ ))) {
 		//give_error("Could not find the file 'Blades of Exile Base', which needs to be in the Scenario Editor folder. If you no longer have it, you need to redownload Blades of Exile.","",0);
 			give_error("The Blades Editor is having trouble finding the file 'bladbase.exs'. It needs to be in the BLSCENED folder.",
 				"If it is in that folder, select Open from the file menu, open 'bladbase.exs', and then try making a new scenario again.",0);

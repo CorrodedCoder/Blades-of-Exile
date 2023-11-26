@@ -22,7 +22,7 @@ Blades of Exile Game/Scenario Editor/Character Editor
 // Will this horror never end?
 
 #include <windows.h>
-
+#include <cassert>
 #include "stdlib.h"
 #include "math.h"
 
@@ -474,7 +474,8 @@ short old_setting,new_setting;
 			check_cd_event(hwnd,message,wParam,lParam);
 			else {
 				SetFocus(hwnd);
-				press = MAKEPOINT(lParam);
+				press.x = LOWORD(lParam);
+				press.y = HIWORD(lParam);
 				if (in_startup_mode == FALSE)
 					All_Done = handle_action(press, wParam,lParam);
 					else All_Done = handle_startup_press(press);
@@ -490,7 +491,8 @@ short old_setting,new_setting;
 			check_cd_event(hwnd,message,wParam,lParam);
 			else {
 				SetFocus(hwnd);
-				press = MAKEPOINT(lParam);
+				press.x = LOWORD(lParam);
+				press.y = HIWORD(lParam);
 				if (in_startup_mode == FALSE)
 					All_Done = handle_action(press, wParam,-2);
 					else All_Done = handle_startup_press(press);
@@ -550,7 +552,8 @@ short old_setting,new_setting;
 		if (store_mouse != lParam)
 			cursor_stay();
 		store_mouse = lParam;
-		press = MAKEPOINT(lParam);
+		press.x = LOWORD(lParam);
+		press.y = HIWORD(lParam);
 		if (hwnd == mainPtr) {
 			change_cursor(press);
 			if ((overall_mode > 10) && (overall_mode < 20) && (party.stuff_done[181][6] == 0))
@@ -629,7 +632,7 @@ short old_setting,new_setting;
 		return 0;
 
 	case WM_VSCROLL:
-		which_sbar = GetWindowWord(HIWORD (lParam), GWW_ID);
+		which_sbar = GetWindowLong(reinterpret_cast<HWND>(lParam), GWL_ID);
 		switch (which_sbar) {// 1 text  2 items  3 shop
 			case 1:
 				sbar_pos = GetScrollPos(text_sbar,SB_CTL);
@@ -699,6 +702,9 @@ short old_setting,new_setting;
 				if (sbar_pos != old_setting)
 					draw_shop_graphics(0,shop_sbar_rect);			
 			break;
+			default:
+				assert(false);
+				break;
 			}
 	    SetFocus(mainPtr);
 		return 0;

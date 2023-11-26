@@ -730,8 +730,8 @@ BOOL FAR PASCAL dummy_dialog_proc
 								item_rect[free_item].bottom - item_rect[free_item].top,
 								dlgs[free_slot],150,store_hInstance,NULL);
 							store_edit_parent =  dlgs[free_slot];
-							old_edit_proc = (FARPROC) GetWindowLong(edit_box,GWL_WNDPROC);
-							SetWindowLong(edit_box,GWL_WNDPROC,(LONG) edit_proc);
+							old_edit_proc = (FARPROC) GetWindowLongPtr(edit_box,GWLP_WNDPROC);
+							SetWindowLongPtr(edit_box,GWLP_WNDPROC,reinterpret_cast<LONG_PTR>(edit_proc));
 
 							break;
 						}
@@ -1706,7 +1706,7 @@ void frame_dlog_rect(HWND hDlg, RECT rect, short val)
 	c = GetNearestPaletteIndex(hpal,y);
 	dpen = CreatePen(PS_SOLID,1,PALETTEINDEX(c));
 	old_pen = SelectObject(hdc,dpen);
-	MoveTo(hdc,rect.left,rect.top);
+	MoveToEx(hdc,rect.left,rect.top, NULL);
 	LineTo(hdc,rect.right,rect.top);
 	SelectObject(hdc,lpen);
 	LineTo(hdc,rect.right,rect.bottom);

@@ -355,7 +355,7 @@ short i,next_to_last_slash = -1,last_slash = -1;
 			//real_name -= last_slash + 1;
 			//ASB(real_name);
 			}
-	hFile = OpenFile(real_name,&store,OF_READ | OF_SEARCH | OF_SHARE_DENY_WRITE);
+	hFile = OpenFile(real_name,&store,OF_READ | OF_SHARE_DENY_WRITE /* | OF_SEARCH */ );
 	if (hFile == HFILE_ERROR)
 		return NULL;
 //	if (-1 == (hFile = _lopen(name,OF_READ|OF_SHARE_DENY_WRITE)))

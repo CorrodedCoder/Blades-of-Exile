@@ -604,11 +604,11 @@ void get_reg_data()
 	OFSTRUCT store;
 
 	return;
-	f = OpenFile("ex3misc.dat",&store,OF_READ | OF_SEARCH);
+	f = OpenFile("ex3misc.dat",&store,OF_READ /* | OF_SEARCH */ );
 
 	if (f == HFILE_ERROR) {
 		build_data_file(1);
-		f = OpenFile("ex3misc.dat",&store,OF_READ | OF_SEARCH);
+		f = OpenFile("ex3misc.dat",&store,OF_READ /* | OF_SEARCH */ );
 
 		if (f == HFILE_ERROR) {
 			reg_alert();
@@ -662,9 +662,9 @@ void build_data_file(short mode)
 	char debug_str[60];
 
 	return;
-	f = OpenFile("ex3misc.dat",&store,OF_READWRITE | OF_SEARCH);
+	f = OpenFile("ex3misc.dat",&store,OF_READWRITE /* | OF_SEARCH */ );
 	if (f == HFILE_ERROR)
-		f = OpenFile("ex3misc.dat",&store,OF_WRITE | OF_CREATE | OF_SEARCH);
+		f = OpenFile("ex3misc.dat",&store,OF_WRITE | OF_CREATE /* | OF_SEARCH */ );
 		else {
 			_llseek(f,0,0);
 			for (i = 0; i < 10; i++)

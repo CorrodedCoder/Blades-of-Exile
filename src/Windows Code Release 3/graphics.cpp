@@ -2469,7 +2469,7 @@ void draw_targeting_line(POINT where_curs)
 			if ((loc_off_act_area(which_space) == FALSE) && 
 				(can_see(from_loc,which_space,0) < 5)
 			 && (dist(from_loc,which_space) <= current_spell_range)) {
-				SetViewportOrg(  main_dc,ulx,uly);
+				SetViewportOrgEx(main_dc,ulx,uly,nullptr);
 				white_pen = CreatePenIndirect(&white_pen_data);
 				store_pen = SelectObject(main_dc,white_pen);
 
@@ -2477,7 +2477,7 @@ void draw_targeting_line(POINT where_curs)
 				//OffsetRect(&terrain_rect,5 + ulx,5 + uly);
 				OffsetRect(&on_screen_terrain_area,-1 * ulx,-1 * uly);
 				ClipRect(&on_screen_terrain_area);
-				MoveTo(main_dc,where_curs.x - ulx,where_curs.y - uly);
+				MoveToEx(main_dc,where_curs.x - ulx,where_curs.y - uly, NULL);
 				LineTo(main_dc,k,l);
 
 				redraw_rect.left = min(where_curs.x,k) - 4;
@@ -2501,7 +2501,7 @@ void draw_targeting_line(POINT where_curs)
 								target_rect.top = 13 + BITMAP_HEIGHT * j + 5;// + uly;
 								target_rect.bottom = target_rect.top + BITMAP_HEIGHT;
 
-								MoveTo(main_dc,target_rect.left,target_rect.top);
+								MoveToEx(main_dc,target_rect.left,target_rect.top, NULL);
 								LineTo(main_dc,target_rect.right,target_rect.top);
 								LineTo(main_dc,target_rect.right,target_rect.bottom);
 								LineTo(main_dc,target_rect.left,target_rect.bottom);
