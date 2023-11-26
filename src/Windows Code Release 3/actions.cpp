@@ -1826,10 +1826,10 @@ Boolean handle_keystroke(UINT wParam,LONG lParam)
 			ASB("Num 2: % of user resources left");
 			ASB("Num 3: % of graphics resources left");
 			s1 = GetFreeSpace(0);
-			s2 = GetFreeSystemResources(GFSR_USERRESOURCES);
+			s2 = 0; // GetFreeSystemResources(GFSR_USERRESOURCES);
 			i = (short) (s1 / 1000);
 			j = (short) s2;
-			s2 = GetFreeSystemResources(GFSR_GDIRESOURCES);
+			s2 = 0; // GetFreeSystemResources(GFSR_GDIRESOURCES);
 			k = (short) s2;
 			print_nums(i,j,k);
 
