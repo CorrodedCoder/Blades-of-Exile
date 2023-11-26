@@ -2129,7 +2129,11 @@ short FSRead(HFILE file,long *len,char *buffer)
 
 short FSClose(HFILE file)
 {
-	_lclose(file);
+	if (_lclose(file) == HFILE_ERROR)
+	{
+		return -1;
+	}
+	return 0;
 }
 
 short SetFPos(HFILE file, short mode, long len)
