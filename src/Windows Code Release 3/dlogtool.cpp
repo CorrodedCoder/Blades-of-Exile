@@ -730,8 +730,8 @@ BOOL FAR PASCAL dummy_dialog_proc
 								item_rect[free_item].bottom - item_rect[free_item].top,
 								dlgs[free_slot],150,store_hInstance,NULL);
 							store_edit_parent =  dlgs[free_slot];
-							old_edit_proc = (FARPROC) GetWindowLong(edit_box,GWL_WNDPROC);
-							SetWindowLong(edit_box,GWL_WNDPROC,(LONG) edit_proc);
+							old_edit_proc = (FARPROC) GetWindowLongPtr(edit_box,GWLP_WNDPROC);
+							SetWindowLongPtr(edit_box,GWLP_WNDPROC,reinterpret_cast<LONG_PTR>(edit_proc));
 
 							break;
 						}

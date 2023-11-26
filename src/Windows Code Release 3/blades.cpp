@@ -22,7 +22,7 @@ Blades of Exile Game/Scenario Editor/Character Editor
 // Will this horror never end?
 
 #include <windows.h>
-
+#include <cassert>
 #include "stdlib.h"
 #include "math.h"
 
@@ -629,7 +629,7 @@ short old_setting,new_setting;
 		return 0;
 
 	case WM_VSCROLL:
-		which_sbar = GetWindowWord(HIWORD (lParam), GWW_ID);
+		which_sbar = GetWindowLong(reinterpret_cast<HWND>(lParam), GWL_ID);
 		switch (which_sbar) {// 1 text  2 items  3 shop
 			case 1:
 				sbar_pos = GetScrollPos(text_sbar,SB_CTL);
@@ -699,6 +699,9 @@ short old_setting,new_setting;
 				if (sbar_pos != old_setting)
 					draw_shop_graphics(0,shop_sbar_rect);			
 			break;
+			default:
+				assert(false);
+				break;
 			}
 	    SetFocus(mainPtr);
 		return 0;
