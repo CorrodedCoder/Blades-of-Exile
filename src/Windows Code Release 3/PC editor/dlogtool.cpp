@@ -1264,8 +1264,8 @@ void cd_draw_item(short dlog_num,short item_num)
 				case 5:
 					if (item_flag[item_index] == -1)
 						cd_erase_item(dlog_num,item_num);
-						else draw_dialog_graphic(dlgs[dlg_index], item_rect[item_index],
-							item_flag[item_index],(item_flag[item_index] >= 2000) ? FALSE : TRUE,0);
+						else draw_dialog_graphic_wnd(dlgs[dlg_index], item_rect[item_index],
+							item_flag[item_index],(item_flag[item_index] >= 2000) ? FALSE : TRUE);
 					break;
 				}
 			}

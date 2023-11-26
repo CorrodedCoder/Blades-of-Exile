@@ -39,7 +39,13 @@ short cd_get_item_id(short dlg_num, short item_num);
 void center_window(HWND window);
 RECT get_item_rect(HWND hDlg, short item_num);
 void frame_dlog_rect(HWND hDlg, RECT rect, short val);
-void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,short win_or_gworld)   ;
+void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,short win_or_gworld);
+
+inline void draw_dialog_graphic_wnd(HWND hDlg, RECT rect, short which_g, Boolean do_frame)
+{
+	draw_dialog_graphic(hDlg, rect, which_g, do_frame, 0);
+}
+
 void showcursor(Boolean a);
 
 void cd_get_text_edit_str(short dlog_num, char *str);

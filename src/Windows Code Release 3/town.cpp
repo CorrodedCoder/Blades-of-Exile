@@ -1697,8 +1697,7 @@ void draw_map (HWND the_dialog, short the_item)
 
 		// graphics goes here
 		if ((draw_surroundings == TRUE) || (the_item != 5)) { // redraw much stuff
-			draw_dialog_graphic(the_dialog, dlogpicrect,
-				721, FALSE,0); // draw the map graphic
+			draw_dialog_graphic_wnd(the_dialog, dlogpicrect, 721, FALSE); // draw the map graphic
 			}
 		}
 }

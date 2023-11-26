@@ -871,7 +871,7 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 	// Place store icon
 	if (draw_mode == 0) {
 		i = faces[store_shop_type];
-		draw_dialog_graphic((HWND) talk_gworld, face_rect, 1000 + i, FALSE,1);
+		draw_dialog_graphic_bmp(talk_gworld, face_rect, 1000 + i, FALSE);
 		}
 	SelectObject(hdc,talk_gworld);
 
@@ -927,38 +927,38 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 			case 0: case 1: case 2: case 3: case 4:
 				base_item = get_stored_item(what_chosen);
 				base_item.item_properties = base_item.item_properties | 1;
-				draw_dialog_graphic((HWND) talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, FALSE,1);
+				draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, FALSE);
 				strcpy(cur_name,base_item.full_name);
 				get_item_interesting_string(base_item,cur_info_str);
 				break;
 			case 5:
 				base_item = store_alchemy(what_chosen - 500);
-				draw_dialog_graphic((HWND) talk_gworld, shopping_rects[i][2],1853, FALSE,1);//// all graphic nums
+				draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1853, FALSE);//// all graphic nums
 				strcpy(cur_name,base_item.full_name);
 				sprintf(cur_info_str,"");
 				break;
 			case 6:
 				//base_item = food_types[what_chosen - 600];
-				//draw_dialog_graphic( talk_gworld, shopping_rects[i][2],633, FALSE,1);
+				//draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],633, FALSE);
 				//strcpy(cur_name,base_item.full_name);
 				//get_item_interesting_string(base_item,cur_info_str);
 				break;
 			case 7:
 				what_chosen -= 700;
-				draw_dialog_graphic(talk_gworld, shopping_rects[i][2],1879, FALSE,1);
+				draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1879, FALSE);
 				strcpy(cur_name,heal_types[what_chosen]);
 				sprintf(cur_info_str,"");
 				break;
 			case 8:
 				base_item = store_mage_spells(what_chosen - 800 - 30);
-				draw_dialog_graphic(talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, FALSE,1);
+				draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, FALSE);
 
 				strcpy(cur_name,base_item.full_name);
 				sprintf(cur_info_str,"");
 				break;
 			case 9:
 				base_item = store_priest_spells(what_chosen - 900 - 30);
-				draw_dialog_graphic(talk_gworld, shopping_rects[i][2],1853, FALSE,1);
+				draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1853, FALSE);
 				strcpy(cur_name,base_item.full_name);
 				sprintf(cur_info_str,"");
 				break;
@@ -967,7 +967,7 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 				what_magic_shop_item = what_chosen % 1000;
 				base_item = party.magic_store_items[what_magic_shop][what_magic_shop_item];
 				base_item.item_properties = base_item.item_properties | 1;
-				draw_dialog_graphic(talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, FALSE,1);
+				draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, FALSE);
 				strcpy(cur_name,base_item.full_name);
 				get_item_interesting_string(base_item,cur_info_str);
 				break;
@@ -1211,14 +1211,14 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_re
 		if (store_talk_face_pic >= 0)
 			face_to_draw = store_talk_face_pic;
 		if (store_talk_face_pic >= 1000) {
-			draw_dialog_graphic((HWND)  talk_gworld, face_rect, 2400 + store_talk_face_pic - 1000, FALSE,1);
+			draw_dialog_graphic_bmp(talk_gworld, face_rect, 2400 + store_talk_face_pic - 1000, FALSE);
 			}
 			else {
 				i = get_monst_picnum(store_monst_type);
 
 				if (face_to_draw <= 0)
-					draw_dialog_graphic((HWND)  talk_gworld, face_rect, 400 + i, FALSE,1);
-					else draw_dialog_graphic((HWND)  talk_gworld, face_rect, 1000 + face_to_draw, FALSE,1);
+					draw_dialog_graphic_bmp(talk_gworld, face_rect, 400 + i, FALSE);
+					else draw_dialog_graphic_bmp(talk_gworld, face_rect, 1000 + face_to_draw, FALSE);
 				}
 		}
 	SelectObject(hdc,talk_gworld);
