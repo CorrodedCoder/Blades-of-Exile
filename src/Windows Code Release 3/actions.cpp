@@ -1508,11 +1508,13 @@ void check_cd_event(HWND hwnd,UINT message,UINT wparam,LONG lparam)
 			break;
 
 		case WM_LBUTTONDOWN:
-			press = MAKEPOINT(lparam);
+			press.x = LOWORD(lparam);
+			press.y = HIWORD(lparam);
 			wind_hit = cd_process_click(hwnd,press, wparam, lparam,&item_hit);
 			break;
 		case WM_RBUTTONDOWN:
-			press = MAKEPOINT(lparam);
+			press.x = LOWORD(lparam);
+			press.y = HIWORD(lparam);
 			wparam = wparam | MK_CONTROL;
 			wind_hit = cd_process_click(hwnd,press, wparam, lparam,&item_hit);
 			break;
