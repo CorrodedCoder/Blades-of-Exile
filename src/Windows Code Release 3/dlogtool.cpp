@@ -1706,7 +1706,7 @@ void frame_dlog_rect(HWND hDlg, RECT rect, short val)
 	c = GetNearestPaletteIndex(hpal,y);
 	dpen = CreatePen(PS_SOLID,1,PALETTEINDEX(c));
 	old_pen = SelectObject(hdc,dpen);
-	MoveTo(hdc,rect.left,rect.top);
+	MoveToEx(hdc,rect.left,rect.top, NULL);
 	LineTo(hdc,rect.right,rect.top);
 	SelectObject(hdc,lpen);
 	LineTo(hdc,rect.right,rect.bottom);
