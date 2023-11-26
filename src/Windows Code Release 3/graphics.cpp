@@ -845,11 +845,11 @@ void redraw_screen(short mode)
 	if (text_sbar == NULL) {
 		text_sbar = CreateWindow("scrollbar",NULL,
 			WS_CHILD | WS_TABSTOP | SBS_VERT | WS_VISIBLE, sbar_rect.left,sbar_rect.top,sbar_rect.right,sbar_rect.bottom,
-			mainPtr,1,store_hInstance,NULL);
+			mainPtr, reinterpret_cast<HMENU>(1),store_hInstance,NULL);
 		SetScrollRange(text_sbar,SB_CTL,0,58,FALSE);
 		item_sbar = CreateWindow("scrollbar",NULL,
 			WS_CHILD | WS_TABSTOP | SBS_VERT | WS_VISIBLE, item_sbar_rect.left,item_sbar_rect.top,item_sbar_rect.right,item_sbar_rect.bottom,
-			mainPtr,2,store_hInstance,NULL);
+			mainPtr, reinterpret_cast<HMENU>(2),store_hInstance,NULL);
 		SetScrollRange(item_sbar,SB_CTL,0,16,FALSE);
  		ShowScrollBar(text_sbar,SB_CTL,TRUE);
 		ShowScrollBar(item_sbar,SB_CTL,TRUE);
@@ -913,11 +913,11 @@ void draw_main_screen()
 	if (text_sbar == NULL) {
 		text_sbar = CreateWindow("scrollbar",NULL,
 			WS_CHILD | WS_TABSTOP | SBS_VERT | WS_VISIBLE, sbar_rect.left,sbar_rect.top,sbar_rect.right,sbar_rect.bottom,
-			mainPtr,1,store_hInstance,NULL);
+			mainPtr, reinterpret_cast<HMENU>(1),store_hInstance,NULL);
 		SetScrollRange(text_sbar,SB_CTL,0,58,FALSE);
 		item_sbar = CreateWindow("scrollbar",NULL,
 			WS_CHILD | WS_TABSTOP | SBS_VERT | WS_VISIBLE, item_sbar_rect.left,item_sbar_rect.top,item_sbar_rect.right,item_sbar_rect.bottom,
-			mainPtr,2,store_hInstance,NULL);
+			mainPtr, reinterpret_cast<HMENU>(2),store_hInstance,NULL);
 		SetScrollRange(item_sbar,SB_CTL,0,16,FALSE);
 		ShowScrollBar(text_sbar,SB_CTL,TRUE);
 		ShowScrollBar(item_sbar,SB_CTL,TRUE);

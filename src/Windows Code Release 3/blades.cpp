@@ -351,7 +351,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpszCmdPar
 		*/
 		shop_sbar = CreateWindow("scrollbar",NULL,
 			WS_CHILD | WS_TABSTOP | SBS_VERT, shop_sbar_rect.left,shop_sbar_rect.top,shop_sbar_rect.right,shop_sbar_rect.bottom,
-			mainPtr,3,store_hInstance,NULL);
+			mainPtr,reinterpret_cast<HMENU>(3),store_hInstance,NULL);
 		SetScrollRange(shop_sbar,SB_CTL,0,16,FALSE);
 
 		ShowWindow(mainPtr,nCmdShow);
