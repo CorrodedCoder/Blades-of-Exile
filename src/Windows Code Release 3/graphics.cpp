@@ -346,13 +346,13 @@ void draw_startup(short but_type)
 		return;
 
 	r1.bottom = uly + 5;
-	paint_pattern(NULL,1,r1,0);
+	paint_pattern_main(r1,0);
 	r2.right = ulx + 5;
-	paint_pattern(NULL,1,r2,0);
+	paint_pattern_main(r2,0);
 	r3.top += uly + 5;
-	paint_pattern(NULL,1,r3,0);
+	paint_pattern_main(r3,0);
 	r4.left += ulx + 5;
-	paint_pattern(NULL,1,r4,0);
+	paint_pattern_main(r4,0);
 	to_rect = startup_from[0];
 	OffsetRect(&to_rect,5,5);
 	rect_draw_some_item_bmp(startup_gworld,startup_from[0],startup_gworld,to_rect,0,1);
@@ -986,7 +986,7 @@ void put_background()
 
 	SelectClipRgn(main_dc,clip_region);
 	GetClientRect(mainPtr,&r);
-	paint_pattern(mainPtr, 1,r,wp);
+	paint_pattern_wnd(mainPtr,r,wp);
 	undo_clip();
 
 	//ShowScrollBar(text_sbar,SB_CTL,TRUE);
@@ -1016,7 +1016,7 @@ void flood_bg()
 		}
 
 	GetWindowRect(mainPtr,&r);
-	paint_pattern(NULL, 1,r,wp);
+	paint_pattern_main(r,wp);
 }
 
 void draw_buttons(short mode)

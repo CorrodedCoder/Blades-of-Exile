@@ -320,6 +320,7 @@ void draw_main_screen()
 	RECT top_pic_from = {3,16,41,54};
 
 
+	// TODO: Oddity: should probably be changed to 1, but currently benign
 	paint_pattern(NULL,3,whole_win_rect,3);
 
 	dest_rec = source_rect = title_from;
@@ -412,8 +413,8 @@ void draw_items(short clear_first)
 
 	if (clear_first == 1) {
 		for (i = 0; i < 24; i++)
-			paint_pattern(NULL,1,item_string_rects[i][0],3);
-		paint_pattern(NULL,1,dest_rect,3);
+			paint_pattern_main(item_string_rects[i][0],3);
+		paint_pattern_main(dest_rect,3);
 		}
 	
 	// frame_dlog_rect(mainPtr,frame_rect,0);
@@ -473,10 +474,10 @@ void display_party(short mode,short clear_first)
 	c[3] = GetNearestPaletteIndex(hpal,colors[3]);
 	if (clear_first == 1) { // first erase what's already there
 		for (i = 0; i < 6; i++)
-			paint_pattern(NULL,1,pc_area_buttons[i][0],3);
-		paint_pattern(NULL,1,name_rect,3);
-		paint_pattern(NULL,1,pc_race_rect,3);
-		paint_pattern(NULL,1,info_area_rect,3);
+			paint_pattern_main(pc_area_buttons[i][0],3);
+		paint_pattern_main(name_rect,3);
+		paint_pattern_main(pc_race_rect,3);
+		paint_pattern_main(info_area_rect,3);
 		frame_dlog_rect(mainPtr,pc_info_rect,0); // re-draw the frame
 	}
 
@@ -818,7 +819,7 @@ void display_party(short mode,short clear_first)
 		for(i = 0; i < 5; i++) 
 			if ((current_pressed_button < 0) || (current_pressed_button == i + 10)) {	
 			if (clear_first == 1) { // first erase what's already there
-				paint_pattern(NULL,1,edit_rect[i][0],3);
+				paint_pattern_main(edit_rect[i][0],3);
 				}		
 			//frame_dlog_rect((GrafPtr) mainPtr,edit_rect[i][0],0);
 			//frame_dlog_rect((GrafPtr) mainPtr,edit_rect[i][1],0);

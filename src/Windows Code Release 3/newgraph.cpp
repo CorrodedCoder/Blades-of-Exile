@@ -856,9 +856,9 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 	InflateRect(&area_rect,-1,-1);
 	SelectObject(hdc,store_bmp);
 	if (draw_mode > 0) {
-		paint_pattern(talk_gworld,0,clip_area_rect,3);
+		paint_pattern_bmp(talk_gworld,clip_area_rect,3);
 		}
-		else paint_pattern(talk_gworld,0,area_rect,3);
+		else paint_pattern_bmp(talk_gworld,area_rect,3);
 
 	SelectObject(hdc,talk_gworld);
 	//old_brush = SelectObject(hdc,bg[1]);
@@ -1198,9 +1198,9 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_re
 	//SelectObject(hdc,old_brush);
 	SelectObject(hdc,store_bmp);
 	if (c_rect.right > 0) {
-		paint_pattern(talk_gworld,0,c_rect,3);
+		paint_pattern_bmp(talk_gworld,c_rect,3);
 		}
-		else paint_pattern(talk_gworld,0,area_rect,3);
+		else paint_pattern_bmp(talk_gworld,area_rect,3);
 
 	// Put help button
 	talk_help_rect.right = talk_help_rect.left + help_from.right - help_from.left;

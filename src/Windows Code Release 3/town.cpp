@@ -1612,7 +1612,7 @@ void draw_map (HWND the_dialog, short the_item)
 			//old_brush = SelectObject(hdc2,bg[0]);
 			//old_pen = SelectObject(hdc2,GetStockObject(NULL_PEN));
 			//Rectangle(hdc2,whole_map_win_rect.left, whole_map_win_rect.top,whole_map_win_rect.right,whole_map_win_rect.bottom);
-			paint_pattern(hdc2,2,whole_map_win_rect,0);
+			paint_pattern_dc(hdc2,whole_map_win_rect,0);
 			//SelectObject(hdc2,old_brush);
 			//SelectObject(hdc2,old_pen);
 			SetBkMode(hdc2,TRANSPARENT);

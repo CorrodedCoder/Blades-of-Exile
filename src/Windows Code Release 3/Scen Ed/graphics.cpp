@@ -169,7 +169,7 @@ void run_startup_g()
 
 	pat_rect = windRect;
 	InflateRect(&pat_rect,500,500);
-//	paint_pattern(NULL,1,pat_rect,3);
+//	paint_pattern_main(pat_rect,3);
 	old_brush = SelectObject(main_dc,GetStockObject(BLACK_BRUSH));
 	Rectangle(main_dc, pat_rect.left,pat_rect.top,
 		pat_rect.right,pat_rect.bottom);
@@ -243,7 +243,7 @@ void redraw_screen()
 
 	pat_rect = windRect;
 	InflateRect(&pat_rect,500,500);
-	paint_pattern(NULL,1,pat_rect,3);
+	paint_pattern_main(pat_rect,3);
 	draw_main_screen();
 	if (overall_mode < 60);
 		draw_terrain();
@@ -281,7 +281,7 @@ void draw_main_screen()
 
 		InsetRect(&draw_rect,1,1);
 		OffsetRect(&draw_rect,-1 * ulx,-1 * uly);
-		paint_pattern(NULL,1,draw_rect,3);
+		paint_pattern_main(draw_rect,3);
 
 		draw_rb();
 
@@ -308,7 +308,7 @@ void draw_lb()
 	temp_rect = windRect;
 	temp_rect.right = RIGHT_AREA_UL_X - 2;
 	//FillCRECT(&temp_rect,bg[12]);
-	paint_pattern(NULL,1,temp_rect,3);
+	paint_pattern_main(temp_rect,3);
 	for (i = 0; i < NLS; i++)
 		draw_lb_slot(i,0);
 }
@@ -324,7 +324,7 @@ void draw_lb_slot (short which,short mode)
 	c2 = GetNearestPaletteIndex(hpal,colors2);
  	//FillCRECT(&left_buttons[which][0],bg[12]);
 	
-	paint_pattern(NULL,1,left_buttons[which][0],3);
+	paint_pattern_main(left_buttons[which][0],3);
 	if (left_button_status[which] == 0)
 		return;
 	text_rect = left_buttons[which][0];
@@ -380,7 +380,7 @@ void draw_rb_slot (short which,short mode)
 	text_rect = right_buttons[which - pos];
 	text_rect.right += 2;
    text_rect.bottom += 2;
-	paint_pattern(NULL,1,text_rect,1);
+	paint_pattern_main(text_rect,1);
 	text_rect.bottom -= 2;
 	if (right_button_status[which] == 0)
 		return;
@@ -404,7 +404,7 @@ void set_up_terrain_buttons()
 	UINT c;
 	HBRUSH new_brush;
 			
-	paint_pattern(terrain_buttons_gworld,0,terrain_buttons_rect,1);
+	paint_pattern_bmp(terrain_buttons_gworld,terrain_buttons_rect,1);
 	
 	hdc = CreateCompatibleDC(main_dc);
 	//store_text_hdc = hdc;
@@ -517,7 +517,7 @@ void draw_terrain()
 		return;
 
 	if (cur_viewing_mode == 0) {
-		paint_pattern(ter_draw_gworld,0,terrain_rect,1);
+		paint_pattern_bmp(ter_draw_gworld,terrain_rect,1);
 		}
 	hdc = CreateCompatibleDC(main_dc);
 	//store_text_hdc = hdc;
@@ -736,7 +736,7 @@ void draw_terrain()
 	if (cur_viewing_mode == 1) {
 		if (small_any_drawn == FALSE) {
 			InsetRect(&terrain_rect,1,1);
-			paint_pattern(ter_draw_gworld,0,terrain_rect,1);
+			paint_pattern_bmp(ter_draw_gworld,terrain_rect,1);
 			InsetRect(&terrain_rect,-1,-1);
 			//FrameRect(&terrain_rect);
 			}
@@ -1121,12 +1121,12 @@ void place_location()
 	erase_rect.right = RIGHT_AREA_WIDTH - 1;
 	erase_rect.top = terrain_rects[255].top + 12 - 10;
 	erase_rect.bottom = erase_rect.top + 12;
-	paint_pattern(terrain_buttons_gworld,0,erase_rect,1);
+	paint_pattern_bmp(terrain_buttons_gworld,erase_rect,1);
 	erase_rect.left = 2;
 	erase_rect.right = RIGHT_AREA_WIDTH - 1;
 	erase_rect.top = terrain_rects[255].bottom + 117;
 	erase_rect.bottom = RIGHT_AREA_HEIGHT + 6;
-	paint_pattern(terrain_buttons_gworld,0,erase_rect,1);
+	paint_pattern_bmp(terrain_buttons_gworld,erase_rect,1);
 
 	hdc = CreateCompatibleDC(main_dc);
 	//store_text_hdc = hdc;
@@ -1219,7 +1219,7 @@ void place_just_location()
 	erase_rect.right = RIGHT_AREA_WIDTH - 1;
 	erase_rect.top = terrain_rects[255].top + 12 - 9;
 	erase_rect.bottom = erase_rect.top + 12;
-	paint_pattern(terrain_buttons_gworld,0,erase_rect,1);
+	paint_pattern_bmp(terrain_buttons_gworld,erase_rect,1);
 
 	hdc = CreateCompatibleDC(main_dc);
 	//store_text_hdc = hdc;

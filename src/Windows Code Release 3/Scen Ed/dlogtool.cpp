@@ -1387,7 +1387,7 @@ void cd_erase_item(short dlog_num, short item_num)
 	Rectangle(win_dc,to_fry.left, to_fry.top,to_fry.right,to_fry.bottom);
 	SelectObject(win_dc,old_brush);
 	SelectObject(win_dc,old_pen);  */
-	paint_pattern(win_dc,2,to_fry,0);
+	paint_pattern_dc(win_dc,to_fry,0);
 	cd_kill_dc(dlg_index,win_dc);  
 
 
@@ -1412,7 +1412,7 @@ void cd_erase_rect(short dlog_num,RECT to_fry)
 	Rectangle(win_dc,to_fry.left, to_fry.top,to_fry.right,to_fry.bottom);
 	SelectObject(win_dc,old_brush);
 	SelectObject(win_dc,old_pen);  */
-	paint_pattern(win_dc,2,to_fry,0);
+	paint_pattern_dc(win_dc,to_fry,0);
 	cd_kill_dc(dlg_index,win_dc);
 
 	//	paint_pattern(dlgs[dlg_index],2,to_fry,0);
@@ -1716,7 +1716,7 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 			rect.top -= 3;
 			rect.right += 3;
 			rect.bottom += 4;
-			paint_pattern(hdc,2,rect,0);
+			paint_pattern_dc(hdc,rect,0);
 
 			//old_brush = SelectObject(hdc,bg[5]);
 			//Rectangle(hdc,rect.left,rect.top,rect.right,rect.bottom);
