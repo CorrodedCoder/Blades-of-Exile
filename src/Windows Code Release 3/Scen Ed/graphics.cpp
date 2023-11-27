@@ -1145,7 +1145,7 @@ void place_location()
 		else {
 			draw_rect.left = 5;
 			draw_rect.top = terrain_rects[255].top + 28;
-			sprintf((char *) draw_str,"Click terrain to edit. ",cen_x,cen_y);
+			sprintf((char *) draw_str,"Click terrain to edit. ");
 			}
 
 	draw_rect.bottom = draw_rect.top + 14;
@@ -1238,7 +1238,7 @@ void place_just_location()
 		else {
 			draw_rect.left = 5;
 			draw_rect.top = terrain_rects[255].top + 28;
-			sprintf((char *) draw_str,"Click terrain to edit. ",cen_x,cen_y);
+			sprintf((char *) draw_str,"Click terrain to edit. ");
 			}
 
 	draw_rect.bottom = draw_rect.top + 14;

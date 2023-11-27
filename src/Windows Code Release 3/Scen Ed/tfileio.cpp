@@ -1549,7 +1549,7 @@ void scen_text_dump()
 	len = (long) (strlen((char *)get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
 
-	sprintf((char *)get_text,"Scenario Text:\n",scen_strs[0]);
+	sprintf((char *)get_text,"Scenario Text:\n");
 	len = (long) (strlen((char *)get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
 	sprintf((char *)get_text,"\n");
@@ -1567,7 +1567,7 @@ void scen_text_dump()
 		sprintf((char *)get_text,"\n");
 		len = (long) (strlen((char *)get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
-	sprintf((char *)get_text,"Outdoor Sections Text:\n",scen_strs[0]);
+	sprintf((char *)get_text,"Outdoor Sections Text:\n");
 	len = (long) (strlen((char *)get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
 	sprintf((char *)get_text,"\n");
@@ -1595,7 +1595,7 @@ void scen_text_dump()
 		}
 	augment_terrain(out_sec);
 
-	sprintf((char *)get_text,"Town Text:\n",scen_strs[0]);
+	sprintf((char *)get_text,"Town Text:\n");
 	len = (long) (strlen((char *)get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
 	sprintf((char *)get_text,"\n");
@@ -1610,7 +1610,7 @@ void scen_text_dump()
 		sprintf((char *)get_text,"\n");
 		len = (long) (strlen((char *)get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
-		sprintf((char *)get_text,"  Town Messages:",town_strs[j]);
+		sprintf((char *)get_text,"  Town Messages:");
 		len = (long) (strlen((char *)get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
 		sprintf((char *)get_text,"\n");
@@ -1624,7 +1624,7 @@ void scen_text_dump()
 					FSWrite(data_dump_file_id, &len, (char *) get_text);
 					}
 
-		sprintf((char *)get_text,"  Town Dialogue:",town_strs[j]);
+		sprintf((char *)get_text,"  Town Dialogue:");
 		len = (long) (strlen((char *)get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
 		sprintf((char *)get_text,"\n");

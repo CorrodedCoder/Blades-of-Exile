@@ -426,7 +426,7 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 				//	flag = 2;
 				str_stored = TRUE;
 				}
-			else sscanf(item_str,"%d_%d",&type,&flag);
+			else sscanf(item_str,"%hd_%hd",&type,&flag);
 
 			free_item = -1;
 			// find free item
@@ -865,7 +865,7 @@ short cd_retrieve_text_edit_num(short dlog_num, short item_num)
 		if ((store_edit_parent_num[i] == dlog_num) && (store_edit_item[i] == item_num)
 			&& (edit_box[i] != NULL)) {
 				GetWindowText(edit_box[i],str,255);
-				sscanf(str,"%d",&num_given);
+				sscanf(str,"%hd",&num_given);
 				return (short) num_given;
 				}
 	return -1;

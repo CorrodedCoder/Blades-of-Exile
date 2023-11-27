@@ -53,7 +53,6 @@ if (MSVC)
 		)
 		# Warnings which either should be addressed ASAP or are trivial to address
 		add_compile_options(
-			-Wno-format
 			-Wno-empty-body
 			-Wno-unused-value
 			-Wno-comment

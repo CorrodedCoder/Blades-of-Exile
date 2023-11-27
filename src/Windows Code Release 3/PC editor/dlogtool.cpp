@@ -603,7 +603,7 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 				//	flag = 2;
 				str_stored = TRUE;
 				}
-			else sscanf(item_str,"%d_%d",&type,&flag);
+			else sscanf(item_str,"%hd_%hd",&type,&flag);
 
 			free_item = -1;
 			// find free item

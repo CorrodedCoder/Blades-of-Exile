@@ -1162,7 +1162,7 @@ void do_registration_event_filter (short item_hit)
 	
 	cd_get_text_edit_str(1075,(char *) get_text);
 	dialog_answer = 0;
-	sscanf((char *) get_text,"%d",&dialog_answer);
+	sscanf((char *) get_text,"%hd",&dialog_answer);
 	dialog_not_toast = FALSE;
 }
 
