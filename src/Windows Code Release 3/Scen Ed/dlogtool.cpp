@@ -9,6 +9,7 @@
 
 #include "global.h"
 #include "graphutl.h"
+#include "../graphutl_helpers.hpp"
 #include "stdio.h"
 #include "graphics.h"
 #include "edsound.h"

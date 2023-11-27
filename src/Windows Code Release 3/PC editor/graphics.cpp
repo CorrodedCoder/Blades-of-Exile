@@ -7,6 +7,7 @@
 #include "edsound.h"
 #include "dlogtool.h"
 #include "graphutl.h"
+#include "../graphutl_helpers.hpp"
 
 
 extern short store_size;

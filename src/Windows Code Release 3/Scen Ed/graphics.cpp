@@ -8,6 +8,7 @@
 #include "dlogtool.h"
 #include "edsound.h"
 #include "graphutl.h"
+#include "../graphutl_helpers.hpp"
 #include "keydlgs.h"
 
 extern char far scen_strs[160][256];
