@@ -7,6 +7,7 @@ produced by Borland Resource Workshop
 
 
 *****************************************************************************/
+#include <WinUser.h>
 
 #define DIALOG_3	3
 #define CURSOR_1	1
@@ -122,11 +123,11 @@ ACCELERATORS_1 ACCELERATORS
 10 ICON "../bladexil.ico"
 
 
-1 WAVE "../bladpced/snd0.wav"
-2 WAVE "../bladpced/snd1.wav"
-4 WAVE "../bladpced/snd3.wav"
-35 WAVE "../bladpced/snd34.wav"
-38 WAVE "../bladpced/snd37.wav"
+1 WAVE "snd0.wav"
+2 WAVE "snd1.wav"
+4 WAVE "snd3.wav"
+35 WAVE "snd34.wav"
+38 WAVE "snd37.wav"
 
 STRINGTABLE 
 {
