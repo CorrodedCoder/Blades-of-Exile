@@ -266,10 +266,10 @@ void Set_up_win ()
 		SelectObject(main_dc,font);
 		SetBkMode(main_dc,TRANSPARENT);
 		main_dc2 = CreateCompatibleDC(main_dc);
-		SetMapMode(main_dc2,GetMapMode(mainPtr));
+		SetMapMode(main_dc2,GetMapMode(main_dc));
 		SelectPalette(main_dc2,hpal,0);
 		main_dc3 = CreateCompatibleDC(main_dc);
-		SetMapMode(main_dc3,GetMapMode(mainPtr));
+		SetMapMode(main_dc3,GetMapMode(main_dc));
 		SelectPalette(main_dc3,hpal,0);
 
 		mixed_gworld = load_pict(903,main_dc);

@@ -488,10 +488,10 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 	Boolean dlog_draw = FALSE;
 
 	main_dc2 = CreateCompatibleDC(main_dc);
-	SetMapMode(main_dc2,GetMapMode(mainPtr));
+	SetMapMode(main_dc2,GetMapMode(main_dc));
 	SelectPalette(main_dc2,hpal,0);
 	main_dc3 = CreateCompatibleDC(main_dc);
-	SetMapMode(main_dc3,GetMapMode(mainPtr));
+	SetMapMode(main_dc3,GetMapMode(main_dc));
 	SelectPalette(main_dc3,hpal,0);
 	SetStretchBltMode(main_dc2,STRETCH_DELETESCANS);
 	SetStretchBltMode(main_dc3,STRETCH_DELETESCANS);
@@ -502,7 +502,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 		dlog_draw = TRUE;
 		hdcMem = CreateCompatibleDC(destDC);
 		SelectObject(hdcMem, src);
-		SetMapMode(hdcMem,GetMapMode(mainPtr));
+		SetMapMode(hdcMem,GetMapMode(GetDC(mainPtr)));
 		SelectPalette(hdcMem,hpal,0);
 		SetStretchBltMode(hdcMem,STRETCH_DELETESCANS);
 		}
@@ -565,7 +565,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 		if (main_win == 0) {
 			hdcMem3 = CreateCompatibleDC(hdcMem);
 			SelectObject(hdcMem3, dest);
-			SetMapMode(hdcMem3,GetMapMode(mainPtr));
+			SetMapMode(hdcMem3,GetMapMode(GetDC(mainPtr)));
 			SelectPalette(hdcMem3,hpal,0);
 			transbmp = CreateBitmap(src_rect.right - src_rect.left,
 						src_rect.bottom - src_rect.top,1,1,NULL);
