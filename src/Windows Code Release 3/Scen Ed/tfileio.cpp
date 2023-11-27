@@ -134,7 +134,7 @@ void save_scenario()
 		_lclose(scen_f); _lclose(dummy_f); oops_error(14);
 		return;
 		}
-	buffer = GlobalLock(temp_buffer);
+	buffer = reinterpret_cast<char*>(GlobalLock(temp_buffer));
 	if (buffer == NULL) {
 		_lclose(scen_f); _lclose(dummy_f); oops_error(14);
 		return;
@@ -795,7 +795,7 @@ void import_town(short which_town)
 		_lclose(file_id); oops_error(41);
 		return;
 		}
-	buffer = GlobalLock(temp_buffer);
+	buffer = reinterpret_cast<char*>(GlobalLock(temp_buffer));
 	if (buffer == NULL) {
 		_lclose(file_id); oops_error(41);
 		return;
@@ -960,7 +960,7 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 		_lclose(file_id); oops_error(114);
 		return;
 		}
-	buffer = GlobalLock(temp_buffer);
+	buffer = reinterpret_cast<char*>(GlobalLock(temp_buffer));
 	if (buffer == NULL) {
 		_lclose(file_id); oops_error(114);
 		return;
