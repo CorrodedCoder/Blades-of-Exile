@@ -54,7 +54,6 @@ if (MSVC)
 		# Warnings which either should be addressed ASAP or are trivial to address
 		add_compile_options(
 			-Wno-empty-body
-			-Wno-unused-value
 			-Wno-parentheses
 			-Wno-missing-braces
 			-Wno-tautological-overlap-compare

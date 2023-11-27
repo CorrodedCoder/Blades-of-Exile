@@ -271,7 +271,6 @@ void force_play_sound(short which)
 	if ((load_when_play[which] == TRUE) && (asyn == FALSE)) {
 		// deleted a seemingly extraneous LoadResource here
 		//ASB("Dumped a sound.");
-		UnlockResource(sound_handles[which]);
 		FreeResource(sound_handles[which]);
 		sound_handles[which] = NULL;
 		}
@@ -280,7 +279,6 @@ void force_play_sound(short which)
 		if ((load_when_play[which] == TRUE) && (sound_handles[which] != NULL)
 			&& (a_sound_did_get_played == TRUE) && (i != which)){
 		// deleted a seemingly extraneous LoadResource here
-		UnlockResource(sound_handles[i]);
 		FreeResource(sound_handles[i]);
 		sound_handles[i] = NULL;
 		//ASB("Kept sound dumped:");

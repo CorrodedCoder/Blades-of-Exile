@@ -1266,7 +1266,6 @@ short choice_dialog(short pic,short num)
 		return 1;
 		}
 	DialogBox(store_hInstance, MAKEINTRESOURCE(num), store_focus, dlog_proc1);
-	FreeProcInstance(dlog_proc1);
 	DestroyWindow(test_dlog3);
 	SetFocus(store_focus);
 	return answer_given;
