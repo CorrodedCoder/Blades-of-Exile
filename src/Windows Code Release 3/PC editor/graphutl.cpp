@@ -512,7 +512,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 			//SelectObject(hdcMem,hbrush);
 			}
 		if (dlog_draw == FALSE)
-			SetViewportOrg(destDC,ulx,uly);
+			SetViewportOrgEx(destDC,ulx,uly,nullptr);
 
 		StretchBlt(destDC,dest_rect.left,dest_rect.top,dest_rect.right - dest_rect.left,
 			dest_rect.bottom - dest_rect.top,
@@ -524,7 +524,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 					play_sound(1);
 				}
 		if (dlog_draw == FALSE)
-			SetViewportOrg(destDC,0,0);
+			SetViewportOrgEx(destDC,0,0,nullptr);
 
 
 		}
@@ -565,7 +565,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 		}
 		else {
 			if (dlog_draw == FALSE)
-				SetViewportOrg(destDC,ulx,uly);
+				SetViewportOrgEx(destDC,ulx,uly,nullptr);
 			transbmp = CreateBitmap(src_rect.right - src_rect.left,
 						src_rect.bottom - src_rect.top,1,1,NULL);
 			hdcMem2 = CreateCompatibleDC(destDC);
@@ -591,7 +591,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 				hdcMem,src_rect.left,src_rect.top,src_rect.right - src_rect.left,
 				src_rect.bottom - src_rect.top,SRCINVERT);
 			if (dlog_draw == FALSE)
-				SetViewportOrg(destDC,0,0);
+				SetViewportOrgEx(destDC,0,0,nullptr);
 			DeleteDC(hdcMem2);
 
 				DeleteObject(transbmp);
