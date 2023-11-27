@@ -1,5 +1,6 @@
 
 #include <windows.h>
+#include <cassert>
 
 #define ND	15
 #define	NI	500
@@ -619,7 +620,9 @@ short cd_kill_dialog(short dlog_num,short parent_message)
 		SetFocus(dlg_parent[which_dlg]);
 		SetWindowPos(dlg_parent[which_dlg],HWND_TOP,0,0,100,100,
 			SWP_NOMOVE | SWP_NOSIZE | SWP_NOREDRAW);
-		cd_set_edit_focus(dlg_parent[which_dlg]);
+		// Original code was: cd_set_edit_focus(dlg_parent[which_dlg]);
+		assert(false);
+		cd_set_edit_focus(which_dlg);
 		}
 
 	if (parent_message > 0)
