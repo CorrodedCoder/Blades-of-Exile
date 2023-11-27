@@ -1,5 +1,6 @@
 
 #include <windows.h>
+#include <cassert>
 
 #define ND	15
 #define	NI	500
@@ -9,6 +10,7 @@
 
 #include "global.h"
 #include "graphutl.h"
+#include "../graphutl_helpers.hpp"
 #include "stdio.h"
 #include "graphics.h"
 #include "edsound.h"
@@ -537,12 +539,12 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 										item_rect[free_item].left,item_rect[free_item].top,
 										item_rect[free_item].right - item_rect[free_item].left,
 										max(22,item_rect[free_item].bottom - item_rect[free_item].top),
-										dlgs[free_slot],150,store_hInstance,NULL);
+										dlgs[free_slot], reinterpret_cast<HMENU>(150),store_hInstance,NULL);
 									else edit_box[l] = CreateWindow("edit",NULL,WS_CHILD | WS_BORDER | WS_VISIBLE | ES_MULTILINE | ES_AUTOVSCROLL,
 										item_rect[free_item].left,item_rect[free_item].top,
 										item_rect[free_item].right - item_rect[free_item].left,
 										max(22,item_rect[free_item].bottom - item_rect[free_item].top),
-										dlgs[free_slot],150,store_hInstance,NULL);
+										dlgs[free_slot], reinterpret_cast<HMENU>(150),store_hInstance,NULL);
 								  /*	else edit_box[l] = CreateWindow("edit",NULL,WS_CHILD | WS_BORDER | WS_VISIBLE | ES_MULTILINE,
 										item_rect[free_item].left,item_rect[free_item].top,
 										item_rect[free_item].right - item_rect[free_item].left,
@@ -553,7 +555,7 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
  									store_edit_parent_num[l] = store_dlog_num;
 									store_edit_item[l] = i;
 									old_edit_proc[l] = reinterpret_cast<WNDPROC>(GetWindowLongPtr(edit_box[l],GWLP_WNDPROC));
-									SetWindowLongPtr(edit_box[l],GWL_WNDPROC,reinterpret_cast<LONG_PTR>(edit_proc));
+									SetWindowLongPtr(edit_box[l],GWLP_WNDPROC,reinterpret_cast<LONG_PTR>(edit_proc));
 									if (focus_set == FALSE) {
 										SetFocus(edit_box[l]);
 										focus_set = TRUE;
@@ -618,7 +620,9 @@ short cd_kill_dialog(short dlog_num,short parent_message)
 		SetFocus(dlg_parent[which_dlg]);
 		SetWindowPos(dlg_parent[which_dlg],HWND_TOP,0,0,100,100,
 			SWP_NOMOVE | SWP_NOSIZE | SWP_NOREDRAW);
-		cd_set_edit_focus(dlg_parent[which_dlg]);
+		// Original code was: cd_set_edit_focus(dlg_parent[which_dlg]);
+		assert(false);
+		cd_set_edit_focus(which_dlg);
 		}
 
 	if (parent_message > 0)
@@ -1107,7 +1111,7 @@ void cd_draw_item(short dlog_num,short item_num)
 	COLORREF colors[4] = {RGB(0,0,0),RGB(255,0,0),RGB(0,0,112),RGB(255,255,255)};
 	UINT c[4];
 	RECT from_rect,to_rect;
-	HFONT old_font;
+	HGDIOBJ old_font;
 
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
 		return;
@@ -1610,7 +1614,8 @@ RECT get_item_rect(HWND hDlg, short item_num)
 void frame_dlog_rect(HWND hDlg, RECT rect, short val)
 {
 	HDC hdc;
-	HPEN dpen,lpen,old_pen;
+	HPEN dpen,lpen;
+	HGDIOBJ old_pen;
 	COLORREF x = RGB(0,204,255),y = RGB(0,204,255);//y = RGB(119,119,119);
 	UINT c;
 	Boolean keep_dc = FALSE;
@@ -1637,7 +1642,7 @@ void frame_dlog_rect(HWND hDlg, RECT rect, short val)
 		c = GetNearestPaletteIndex(hpal,x);
 	lpen = CreatePen(PS_SOLID,1,PALETTEINDEX(c));
 	old_pen = SelectObject(hdc,dpen);
-	MoveTo(hdc,rect.left,rect.top);
+	MoveToEx(hdc,rect.left,rect.top,nullptr);
 	LineTo(hdc,rect.right,rect.top);
 	SelectObject(hdc,lpen);
 	LineTo(hdc,rect.right,rect.bottom);
@@ -1689,7 +1694,7 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 	HBITMAP from_gworld;
 	short draw_dest = 2,m_start_pic;
 	HDC hdc;
-	HBRUSH old_brush;
+	HGDIOBJ old_brush;
 	RECT small_monst_rect = {0,0,14,18};
 
 	if (win_or_gworld == 1)

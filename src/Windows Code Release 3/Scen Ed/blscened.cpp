@@ -172,7 +172,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpszCmdPar
 		wndclass.hInstance = hInstance;
 		wndclass.hIcon = LoadIcon(hInstance,MAKEINTRESOURCE(10));
 		wndclass.hCursor = NULL;
-		wndclass.hbrBackground = GetStockObject(WHITE_BRUSH);
+		wndclass.hbrBackground = static_cast<HBRUSH>(GetStockObject(WHITE_BRUSH));
 		wndclass.lpszMenuName = MAKEINTRESOURCE(1);
 		wndclass.lpszClassName = szAppName;
 
@@ -185,7 +185,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpszCmdPar
 		wndclass2.hInstance = hInstance;
 		wndclass2.hIcon = LoadIcon(hInstance,MAKEINTRESOURCE(10));
 		wndclass2.hCursor = NULL;
-		wndclass2.hbrBackground = GetStockObject(WHITE_BRUSH);
+		wndclass2.hbrBackground = static_cast<HBRUSH>(GetStockObject(WHITE_BRUSH));
 		wndclass2.lpszMenuName = NULL;
 		wndclass2.lpszClassName = szWinName;
 		
@@ -257,7 +257,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpszCmdPar
 			WS_CHILD | WS_TABSTOP | SBS_VERT, right_sbar_rect.left + ulx,right_sbar_rect.top + uly,
 			right_sbar_rect.right - right_sbar_rect.left,
 			right_sbar_rect.bottom - right_sbar_rect.top,
-			mainPtr,1,store_hInstance,NULL);
+			mainPtr,reinterpret_cast<HMENU>(1),store_hInstance,NULL);
 
 //		ShowWindow(mainPtr,nCmdShow);
 

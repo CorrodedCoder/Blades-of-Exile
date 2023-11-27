@@ -10,7 +10,8 @@ void cd_kill_dc(short which_slot,HDC hdc);
 HDC cd_get_dlog_dc(short which_slot);
 short cd_get_active(short dlog_num, short item_num);
 short cd_create_dialog_parent_num(short dlog_num,short parent);
-void cd_set_edit_focus();
+// Original code passed no parameter to cd_set_edit_focus
+void cd_set_edit_focus(short which_dlg);
 void cd_init_dialogs();
 short cd_create_dialog(short dlog_num,HWND parent) ;
 short cd_kill_dialog(short dlog_num,short parent_message);

@@ -1,4 +1,5 @@
 #include <Windows.h>
+#include <cassert>
 
 #include "stdio.h"
 #include "string.h"
@@ -8,6 +9,7 @@
 #include "dlogtool.h"
 #include "edsound.h"
 #include "graphutl.h"
+#include "../graphutl_helpers.hpp"
 #include "keydlgs.h"
 
 extern char far scen_strs[160][256];
@@ -166,7 +168,7 @@ void run_startup_g()
 	//PicHandle	pict_to_draw;
 	HBITMAP start_g;
 	RECT pat_rect;
-	HBRUSH old_brush;
+	HGDIOBJ old_brush;
 
 	pat_rect = windRect;
 	InflateRect(&pat_rect,500,500);
@@ -400,7 +402,7 @@ void set_up_terrain_buttons()
 	RECT tiny_from,tiny_to; 
 	HDC hdc;
 	RECT palette_from = {0,0,0,0},palette_to;
-	HBITMAP store_bmp;
+	HGDIOBJ store_bmp;
 	COLORREF y = RGB(128,128,128);//y = RGB(119,119,119);
 	UINT c;
 	HBRUSH new_brush;
@@ -505,14 +507,14 @@ void draw_terrain()
 	RECT draw_rect,clipping_rect = {8,8,260,332};	
 	unsigned char t_to_draw;
 	RECT tiny_to,tiny_to_base = {29,37,36,44},tiny_from,from_rect,to_rect;
-	HBITMAP store_bmp;
+	HGDIOBJ store_bmp;
 	COLORREF gray = RGB(128,128,128);
 	COLORREF red = RGB(255,0,0);
 	COLORREF white = RGB(255,255,255);
 	UINT c;
 	HBRUSH new_brush;
 	HDC hdc;
-	HPEN old_pen;
+	HGDIOBJ old_pen;
 
 	if (overall_mode >= 60)
 		return;
@@ -923,8 +925,8 @@ void draw_one_tiny_terrain_spot (short i,short j,unsigned char terrain_to_draw,H
 	RECT source_rect,dest_rect = {0,0,5,5},from_rect = {0,0,4,4},orig_draw_rect = {0,0,4,4};
 	short picture_wanted,k;
 	GWorldPtr source_gworld;
-	HBITMAP store_bmp;
-	HBRUSH old_brush;
+	HGDIOBJ store_bmp;
+	HGDIOBJ old_brush;
 
 	picture_wanted = scenario.ter_types[terrain_to_draw].picture;
 	if (picture_wanted >= 1000)
@@ -1112,7 +1114,7 @@ void place_location()
 	char draw_str[256];
 	RECT from_rect,draw_rect,source_rect,erase_rect;
 	short picture_wanted;
-	HBITMAP store_bmp;
+	HGDIOBJ store_bmp;
 	COLORREF y = RGB(128,128,128),red = RGB(255,0,0),white = RGB(255,255,255);//y = RGB(119,119,119);
 	UINT c;
 	HBRUSH new_brush;
@@ -1210,7 +1212,7 @@ void place_just_location()
 	char draw_str[256];
 	RECT from_rect,draw_rect,source_rect,erase_rect;
 	short picture_wanted;
-	HBITMAP store_bmp;
+	HGDIOBJ store_bmp;
 	COLORREF y = RGB(128,128,128),red = RGB(255,0,0),white = RGB(255,255,255);//y = RGB(119,119,119);
 	UINT c;
 	HBRUSH new_brush;
@@ -1532,6 +1534,18 @@ short string_length(char *str,HDC hdc)
 	return total_width;
 }
 
+// Adapted from Wine source: https://github.com/reactos/wine/blob/master/dlls/gdi.exe16/gdi.c
+static DWORD GetTextExtent16(HDC hdc, LPCSTR str, INT16 count)
+{
+	SIZE size;
+	if (!GetTextExtentPoint32A(hdc, str, count, &size))
+	{
+		assert(false);
+		return 0;
+	}
+	return MAKELONG(size.cx, size.cy);
+}
+
 // Note ... this expects a str len of at most 256 and
 // len_array pointing to a 256 long array of shorts
 void MeasureText(short str_len,char *str, short *len_array,HDC hdc)
@@ -1550,7 +1564,7 @@ void MeasureText(short str_len,char *str, short *len_array,HDC hdc)
 	for (i = 1; i < str_len; i++) {
 		strncpy(p_str,str,i);
 		p_str[i] = 0;
-		val_returned = GetTextExtent(hdc,p_str,i);
+		val_returned = GetTextExtent16(hdc,p_str,i);
 		text_len[i] = LOWORD(val_returned);
 		}
 	for (i = 0; i < 256; i++) {

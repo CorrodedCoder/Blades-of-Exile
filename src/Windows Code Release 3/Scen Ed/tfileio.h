@@ -6,8 +6,7 @@ void load_outdoors(location which_out,short mode);
 void load_town(short which_town);
 void import_town(short which_town);
 void create_basic_scenario();
-void make_new_scenario(Str255 file_name,short out_width,short out_height,short making_warriors_grove,
-	short use_grass);
+void make_new_scenario(char* file_name, short out_width, short out_height, short making_warriors_grove, short use_grass, char* title);
 
 void oops_error(short error);
 short init_data(short flag);
@@ -33,9 +32,13 @@ void port_item_list();
 void port_out(outdoor_record_type *out);
 void flip_spec_node(special_node_type *spec);
 void flip_short(short *s);
-void flip_rect(Rect *s);
+void flip_rect(RECT *s);
 void port_dummy_talk_nodes();
 void port_dummy_t_d(short size,char *buffer);
 void port_dummy_town();
 void load_spec_graphics();
+void file_initialize();
 
+short FSWrite(HFILE file, long* len, char* buffer);
+short FSRead(HFILE file, long* len, char* buffer);
+short SetFPos(HFILE file, short mode, long len);
