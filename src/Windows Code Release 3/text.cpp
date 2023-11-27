@@ -133,12 +133,10 @@ short text_pc_has_abil_equip(short pc_num,short abil)
 void put_pc_screen()
 {
 	char to_draw[256];
-	short dummy,i_num;
-	short i = 0,j,pc,weap1 = 16, weap2 = 16,skill_item,hit_adj,dam_adj;
+	short i = 0,j,weap1 = 16, weap2 = 16;
 	RECT erase_rect = {2,17,270,99},to_draw_rect,from_rect;
 	RECT final_from_draw_rect = {0,0,271,116},final_to_draw_rect = {0,0,271,116};
 	RECT small_erase_rects[3] = {{34,101,76,114},{106,101,147,114},{174,101,201,114}};
-	Boolean has_type;
 	RECT pc_screen_help_button = {251,101,266,113};
 	RECT info_from = {1,0,13,12},switch_from = {12,0,25,12}; /**/
 
@@ -324,11 +322,10 @@ void put_item_screen(short screen_num,short suppress_buttons)
 {
 	char pstats[256] = "Party stats:";
 	char to_draw[256];
-	short dummy,i_num,item_offset;
+	short i_num,item_offset;
 	short i = 0,j,pc;
 	RECT erase_rect = {2,17,255,123},dest_rect,from_rect,to_rect;
 	RECT upper_frame_rect = {3,3,268,16};
-	Boolean has_type;
 	RECT parts_of_area_to_draw[3] = {{0,0,271,17},{0,16,256,123},{0,123,271,144}}; /**/
 
 	HDC hdc;
@@ -1160,8 +1157,6 @@ void notify_out_combat_began(out_wandering_type encounter,short *nums)
 
 void get_m_name(char *str,unsigned char num)
 {
-	char store_name[256];
-	
 	strcpy((char *) str,(char *) data_store2->scen_item_list.monst_names[num]);
 }
 void get_ter_name(char *str,unsigned char num)
@@ -1510,8 +1505,6 @@ void through_sending()
 
 void Display_String(char *str)
 {
-	char str2[256];
-
 //	//c2pstr((char *) str);
 // 	sprintf((char *)str2," %s",str);
 //	str2[0] = (char) strlen((char *)str);
@@ -1752,7 +1745,6 @@ void undo_clip()
 void ClipRect(RECT *rect)
 {
 	HRGN rgn;
-	HDC hdc;
 	RECT rect2;
 
 	rect2 = *rect;
@@ -1833,7 +1825,7 @@ static DWORD GetTextExtent16(HDC hdc, LPCSTR str, INT16 count)
 void MeasureText(short str_len,char *str, short *len_array,HDC hdc)
 {
 	short text_len[257];
-	short total_width = 0,i,len;
+	short total_width = 0,i;
 	char p_str[257];
 	DWORD val_returned;
 	char *store_array;

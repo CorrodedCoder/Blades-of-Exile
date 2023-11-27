@@ -177,8 +177,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpszCmdPar
 
 	MSG msg;
 	WNDCLASS wndclass,wndclass2;
-	short i,seed;
-   RECT windRECT;
+	short seed;
 
 	if (!hPrevInstance) {
 		wndclass.style = CS_HREDRAW | CS_VREDRAW | CS_BYTEALIGNWINDOW;
@@ -282,14 +281,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 HDC hdc;
 PAINTSTRUCT ps;
-RECT rect;
-short cxDib, cyDib;
-BYTE * lpDibBits;
 //RECT s_rect = {0,0,30,30},d_rect = {0,0,30,30},d2 = {0,0,420,216},s2 = {0,0,420,216};
 POINT press;
 short handled = 0;
 HMENU menu;
-RECT dlg_rect,wind_rect;
 
 	//ed_reg = FALSE;
 
@@ -611,7 +606,6 @@ Boolean handle_menu (short item, HMENU menu)
 
 void load_cursors()
 {
-	short i,j;
 	sword_curs = LoadCursor(store_hInstance,MAKEINTRESOURCE(120));
 	
 	set_cursor(sword_curs);

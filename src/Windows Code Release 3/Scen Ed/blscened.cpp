@@ -160,7 +160,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpszCmdPar
 {
 	MSG msg;
 	WNDCLASS wndclass,wndclass2;
-	short i,seed;
+	short seed;
 	HGLOBAL temp_buffer;
 
 
@@ -293,15 +293,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 HDC hdc;
 PAINTSTRUCT ps;
-RECT rect;
-short cxDib, cyDib;
-BYTE * lpDibBits;
 //RECT s_rect = {0,0,30,30},d_rect = {0,0,30,30},d2 = {0,0,420,216},s2 = {0,0,420,216};
 POINT press;
 short handled = 0,which_sbar,sbar_pos = 0,old_setting;
 int min = 0, max = 0;
 HMENU menu;
-RECT dlg_rect,wind_rect;
 POINT p;
 RECT r;
 
@@ -508,7 +504,7 @@ void check_game_done()
 
 Boolean handle_menu (short item, HMENU menu)
 {
-	short choice,i,j;
+	short i;
 	Boolean to_return = FALSE;
 	short item_hit;
 

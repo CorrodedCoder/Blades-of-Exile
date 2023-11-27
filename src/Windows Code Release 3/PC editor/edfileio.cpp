@@ -88,26 +88,20 @@ void load_file()
 
 	long file_size;
 	HFILE file_id;
-	short i,j,k;
+	short i;
 	Boolean town_restore = FALSE;
 	Boolean maps_there = FALSE;
 	Boolean map_doh = FALSE;
 	Boolean in_scen = FALSE;
 
-	flag_type fred;
-	flag_type *store;
 	char flag_data[8];
 
-	town_item_list *item_ptr;
 	long len;
 	UINT store_len,count,error;
-	out_info_type *explored_ptr;
 	char *party_ptr;
 	char *pc_ptr;
 	flag_type flag;
 	flag_type *flag_ptr;
-	stored_items_list_type *items_ptr;
-
 
 	short flags[3][2] = {{5790,1342}, // slot 0 ... 5790 - out  1342 - town
 					{100,200}, // slot 1 100  in scenario, 200 not in
@@ -309,12 +303,10 @@ void load_file()
 void save_file(short mode)
 //short mode;  // 0 - normal  1 - save as
 {
-
-	long file_size;
 	HFILE file_id;
 	UINT error;
 
-	short i,j;
+	short i;
 
 	long len,store_len,count;
 	flag_type flag;
@@ -323,7 +315,6 @@ void save_file(short mode)
 	setup_save_type	*setup_ptr;
 	pc_record_type *pc_ptr;
 //	out_info_type store_explored;
-	out_info_type *explored_ptr;
 	current_town_type *town_ptr;
 	big_tr_type *town_data_ptr;
 	town_item_list *item_ptr;
@@ -332,8 +323,7 @@ void save_file(short mode)
 	stored_outdoor_maps_type *o_maps_ptr;
 
 	char *party_encryptor;
-	char debug[60];
-		Boolean got_error = FALSE,town_save = FALSE,in_scen = FALSE,save_maps = FALSE;
+	Boolean got_error = FALSE,town_save = FALSE,in_scen = FALSE,save_maps = FALSE;
 
       mode = 1;
 	if (file_in_mem == FALSE)
@@ -599,8 +589,8 @@ long init_data(long flag)
 void get_reg_data()
 {
 	HFILE f;
-	short i,choice;
-	long *val_store,vals[10],len = 4;
+	short i;
+	long vals[10],len = 4;
 	OFSTRUCT store;
 
 	return;
@@ -655,11 +645,10 @@ void get_reg_data()
 void build_data_file(short mode)
 //mode; // 0 - make first time file  1 - customize  2 - new write
 {
-	short i,j,k,file_id;
+	short i;
 	long val_store,to_return = 0,len = 4,s_vals[10] = {0,0,0,0,0, 0,0,0,0,0};
 	OFSTRUCT store;
 	HFILE f;
-	char debug_str[60];
 
 	return;
 	f = OpenFile("ex3misc.dat",&store,OF_READWRITE /* | OF_SEARCH */ );

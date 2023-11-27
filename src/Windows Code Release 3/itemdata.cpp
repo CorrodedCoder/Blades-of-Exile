@@ -25,7 +25,6 @@ item_record_type	return_dummy_item()
 
 item_record_type get_stored_item(short which)
 {
-	short_item_record_type item;
 	item_record_type s_item;
 
 	if ((which >= 400) || (which < 0)) {
@@ -81,7 +80,6 @@ item_record_type pull_item_of_type(short loot_max,short min_val,short max_val,sh
 
 item_record_type	get_weapon(short loot,short level)
 {
-	short r1,i;
 	item_record_type weapon;
 
 	if (loot == 0)
@@ -108,8 +106,6 @@ item_record_type	get_armor(short loot,short level)
 
 item_record_type get_helm(short loot)
 {
-	short r1;
-
 	return  pull_item_of_type(loot,loot_min[loot],loot_max[loot],14,-1,-1); 
 }
 
@@ -171,8 +167,5 @@ item_record_type get_ring(short loot)
 
 item_record_type get_necklace(short loot)
 {
-item_record_type necklace;
-
 	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],19,-1,-1); 
-
 } 

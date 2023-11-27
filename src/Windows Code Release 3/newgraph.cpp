@@ -428,7 +428,7 @@ void add_explosion(location dest,short val_to_place,short place_type,short boom_
 void do_missile_anim(short num_steps,location missile_origin,short sound_num) 
 {
 	RECT temp_rect,missile_origin_base = {1,1,17,17},active_area_rect,to_rect,from_rect;
-	short i,j,store_missile_dir;
+	short i,store_missile_dir;
 	POINT start_point,finish_point[30];
 	location screen_ul;
 	
@@ -624,11 +624,10 @@ void do_explosion_anim(short sound_num,short special_draw)
 // sound_num currently ignored
 // special_draw - 0 normal 1 - first half 2 - second half
 {
-	RECT temp_rect,missile_origin_base = {1,1,17,17},active_area_rect,to_rect,from_rect;
+	RECT temp_rect,missile_origin_base = {1,1,17,17},to_rect,from_rect;
 	RECT base_rect = {0,0,28,36},text_rect;
 	char str[256];
-	short i,j,store_missile_dir,temp_val,temp_val2;
-	POINT start_point;
+	short i,temp_val,temp_val2;
 	location screen_ul;
 	
 	short t,cur_boom_type = 0; 
@@ -818,7 +817,7 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 	RECT dest_rect,help_from = {126,23,142,36},done_from = {0,23,63,46}; /**/
 	short faces[13] = {1,1,1,42,43, 1,1,1,1,1, 44,44,44};
 	
-	short i,j,what_chosen;
+	short i,what_chosen;
 	RECT shopper_name = {6,44,260,56};
 	short current_pos;
 	

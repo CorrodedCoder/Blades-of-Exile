@@ -418,7 +418,7 @@ void save_scenario()
 
 void load_scenario()
 {
-	short i,j,k,l;
+	short i;
 	Boolean file_ok = FALSE;
 	HFILE file_id;
 	short error;
@@ -511,7 +511,7 @@ void load_scenario()
 //extern GWorldPtr spec_scen_g;
 void load_spec_graphics()
 {
-	short i,file_num;
+	short i;
 	char file_name[256];
 
 	if (spec_scen_g != NULL) {
@@ -571,7 +571,7 @@ void augment_terrain(location to_create)
 //mode -> 0 - primary load  1 - add to top  2 - right  3 - bottom  4 - left
 void load_outdoors(location which_out,short mode)
 {
-	short i,j,k,file_id;
+	short i,j,file_id;
 	long len,len_to_jump,store;
 	short out_sec_num;
 	outdoor_record_type store_out;
@@ -647,7 +647,7 @@ void load_outdoors(location which_out,short mode)
 
 void load_town(short which_town)
 {
-	short i,j,k,file_id;
+	short i,j,file_id;
 	long len,len_to_jump = 0,store;
 	short error;
 	
@@ -759,7 +759,7 @@ void load_town(short which_town)
 // if which_town is -1, load town from base
 void import_town(short which_town)
 {
-	short i,j,k,l;
+	short i,j;
 	HFILE file_id;
 	Boolean file_ok = FALSE;
 	short error;
@@ -937,7 +937,6 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 	HFILE dummy_f,file_id;
 	DWORD buf_len = 100000;
 	short error;
-	short out_num;
 	long len,scen_ptr_move = 0,save_town_size = 0,save_out_size = 0;
 	location loc;
 	short x,y;
@@ -1448,15 +1447,10 @@ void reset_pwd()
 void start_data_dump()
 {
 	short i;
-	short j,k;
-	long val_store,to_return = 0;
-	short the_type;
-	RECT the_rect;
-	char the_string[256],store_name[256];
+	long to_return = 0;
 	char get_text[280];
 	HFILE data_dump_file_id;
-	short error;
-	long len,empty_len;
+	long len;
 
 	if (HFILE_ERROR == (data_dump_file_id = _lcreat("SCENDATA.TXT", 0))) {
 			SysBeep(50);
@@ -1520,15 +1514,11 @@ void start_data_dump()
 void scen_text_dump()
 {
 	short i;
-	short j,k;
-	long val_store,to_return = 0;
-	short the_type;
+	short j;
+	long to_return = 0;
 	HFILE data_dump_file_id;
-	RECT the_rect;
-	char the_string[256],store_name[256];
 	char get_text[300];
-	short error;
-	long len,empty_len;
+	long len;
 	location out_sec;
 	
 	if (HFILE_ERROR == (data_dump_file_id = _lcreat("SCENTEXT.TXT", 0))) {
@@ -1667,7 +1657,7 @@ void scen_text_dump()
 }
 void port_talk_nodes()
 {
-	short i,j,k,l;
+	short i;
 
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -1683,7 +1673,7 @@ void port_talk_nodes()
 
 void port_town()
 {
-	short i,j,k,l;
+	short i;
 
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -1715,7 +1705,7 @@ void port_town()
 
 void port_dummy_town()
 {
-	short i,j,k,l;
+	short i;
 
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -1747,7 +1737,7 @@ void port_dummy_town()
 
 void port_dummy_t_d(short size,char *buffer)
 {
-	short i,j,k,l;
+	short i;
 	big_tr_type *d1;
 	ave_tr_type *d2;
 	tiny_tr_type *d3;
@@ -1800,7 +1790,7 @@ void port_dummy_t_d(short size,char *buffer)
 
 void port_dummy_talk_nodes()
 {
-	short i,j,k,l;
+	short i;
 
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -1816,7 +1806,7 @@ void port_dummy_talk_nodes()
 
 void port_t_d()
 {
-	short i,j,k,l;
+	short i;
 	if (cur_scen_is_win == TRUE)
 		return;
 
@@ -1835,7 +1825,7 @@ void port_t_d()
 
 void port_scenario()
 {
-	short i,j,k,l;
+	short i,j;
 
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -1918,7 +1908,7 @@ void port_scenario()
 
 void port_item_list()
 {
-	short i,j,k,l;
+	short i;
 
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -1932,7 +1922,7 @@ void port_item_list()
 
 void port_out(outdoor_record_type *out)
 {
-	short i,j,k,l;
+	short i;
 
 	if (cur_scen_is_win == TRUE)
 		return;

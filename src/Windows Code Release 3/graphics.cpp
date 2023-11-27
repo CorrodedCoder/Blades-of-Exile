@@ -180,8 +180,6 @@ location ok_space[4] = {{0,0},{0,0},{0,0},{0,0}};
 
 void adjust_window_mode()
 {
-	RECT windRECT;
-
 	create_clip_region();
 	undo_clip();
 	if (overall_mode != 45) {
@@ -199,8 +197,7 @@ void adjust_window_mode()
 void plop_fancy_startup()
 {
 	HBITMAP pict_to_draw = NULL;
-	long dummy;
-	short i,j,sx,sy;
+	short i,j;
 
 	RECT screen_rect = {0,0,613,448},from_rect = {0,0,350,350},to_rect,whole_window;
 	POINT graphic_ul;
@@ -307,9 +304,7 @@ void plop_fancy_startup()
 
 void fancy_startup_delay()
 {
-	long dummy;
-	RECT region_rect,old_rect = {0,0,0,0};
-	short i;
+	RECT old_rect = {0,0,0,0};
 
 	//play_sound(-9);
 	 // insert gray out window here
@@ -336,11 +331,10 @@ void init_startup()
 
 void draw_startup(short but_type)
 {
-	RECT to_rect,write_rect;
+	RECT to_rect;
 	RECT r1 = {-1000,-1000,1000,5},r2 = {-1000,-1000,5,1000},r3 = {-1000,418,1000,2000},
 		r4 = {579,-1000,2500,1000};
 	short i;
-	char str[256];
 
 	if (startup_loaded == FALSE)
 		return;
@@ -615,7 +609,7 @@ void end_startup()
 // This loads the graphics at the top of the game.
 void Set_up_win ()
 {
-	RECT temp_rect = {0,0,280,0},map_world_rect;
+	RECT temp_rect = {0,0,280,0};
 	RECT map_rect = {0,0,384,384};
 	RECT pc_rect = {0,0,113,216};
 	HBITMAP temp_gworld;
@@ -963,8 +957,6 @@ void refresh_screen(short mode)
 
 void put_background()
 {
-	HBRUSH bg_pict,old_b;
-	HDC hdc;
 	short wp;
 	RECT r;
 
@@ -1025,7 +1017,7 @@ void draw_buttons(short mode)
 	RECT	source_rect = {0,0,258,37}, dest_rec; /**/
 	HBITMAP	buttons_to_draw;
 	Boolean spec_draw = FALSE;
-	RECT bg_rect,base_rect = {0,0,40,40};
+	RECT base_rect = {0,0,40,40};
 	short i = 0,j = 0;
 
 	if (mode == 1) {
@@ -1465,7 +1457,7 @@ void load_town_graphics() // Setting up town monsters takes some finess, due to 
 					// of the situation
 // This can be used for town or beginning out outdoor combat
 {
-	short i,j,pict;
+	short i,j;
 	
 	for (i = 0; i < town_size[town_type]; i++)
 		for (j = 0; j < town_size[town_type]; j++) 
@@ -1485,7 +1477,7 @@ void load_town_graphics() // Setting up town monsters takes some finess, due to 
 
 void update_pc_graphics()
 {
-	short i,j;
+	short i;
 	HBITMAP temp_gworld;
 	RECT template_rect = {0,0,28,36}; /**/
 	RECT	source_rect;
@@ -1526,7 +1518,7 @@ void update_pc_graphics()
 void put_graphics_in_template()
 {
 	HBITMAP temp_gworld;
-	short picture_number,i,j,which_position,offset;
+	short i,j,which_position,offset;
 	Boolean this_graphic_needed = FALSE;
 	RECT from_rect,to_rect;
 	
@@ -1692,19 +1684,13 @@ void draw_terrain(short	mode)
 // if 2, only redraw over active monst
 {
 	char q,r;
-	RECT target,str_rect;
 	location where_draw;
 	location sector_p_in,view_loc;
 	char can_draw;
 	unsigned char spec_terrain;
 	Boolean off_terrain = FALSE,draw_trim = TRUE;
 	short i,j,short_spec_terrain;
-	HDC hdc;
 	COLORREF colors[5] = {RGB(0,0,0),RGB(255,0,0),RGB(128,0,0),RGB(0,160,0),RGB(255,255,255)};
-	UINT c[5];
-	HBITMAP store_bmp;
-	long dummy;
-
 
 	if (mode == 2) {
 		if (current_working_monster < 0) return;
@@ -2229,13 +2215,10 @@ void pre_boom_space(location where,short mode,short type,short damage,short soun
 	// 8 - acid  9 - claw  10 - bite  11 - slime  12 - zap  13 - missile hit
 {
 	location where_draw = {4,4};
-	RECT source_rect = {0,0,28,36},text_rect,dest_rect = {13,13,41,49},big_to = {13,13,265,337},store_rect;
+	RECT source_rect = {0,0,28,36},dest_rect = {13,13,41,49},big_to = {13,13,265,337};
 	/**/
-	RECT terrain_from;
-	long dummy;
-	short del_len,r1,sound_key;
-	char dam_str[20];
-	short x_adj = 0,y_adj = 0,which_m;
+	short sound_key;
+	short x_adj = 0,y_adj = 0;
 	short sound_to_play[20] = {97,69,70,71,72, 73,55,75,42,86,
 			87,88,89,98,0, 0,0,0,0,0};
 	RECT mixed_square = {353,169,381,205};
@@ -2289,7 +2272,7 @@ void pre_boom_space(location where,short mode,short type,short damage,short soun
 	/**/
 	RECT terrain_from;
 	long dummy;
-	short del_len,r1,sound_key;
+	short del_len,sound_key;
 	char dam_str[20];
 	short x_adj = 0,y_adj = 0,which_m;
 	RECT mixed_square = {353,169,381,205};

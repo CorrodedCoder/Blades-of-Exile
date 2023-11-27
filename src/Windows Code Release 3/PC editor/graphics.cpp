@@ -75,10 +75,10 @@ short current_pressed_button = -1;
 void init_main_buttons()
 {
 
-	short i,j;
+	short i;
 	RECT start_rect = {0,0,28,36};
 	short indent = 0, indent2 = 0;
-	RECT mask_rect = {0,0,308,396},r,base_rect;
+	RECT mask_rect = {0,0,308,396},base_rect;
 	RECT active_area_rect = {0,0,590,440};
 
 
@@ -256,8 +256,6 @@ void init_main_buttons()
 
 void Set_up_win ()
 {
-	short i,j;
-
 	main_dc = GetDC(mainPtr);
 
 	dlg_buttons_gworld = load_pict(2000,main_dc);
@@ -403,7 +401,7 @@ void draw_items(short clear_first)
 {
 	short i;
 	char to_draw[256];
-	RECT d_from = {28,12,42,24},i_from = {42,12,56,24},dest_rect,dest_rect2;
+	RECT d_from = {28,12,42,24},i_from = {42,12,56,24},dest_rect;
 
 	if (file_in_mem == FALSE)
 		return;
@@ -461,12 +459,12 @@ void display_party(short mode,short clear_first)
 	short i;
 	char to_draw[256],skill_value[256];
 	short start_v = 115, start_h = 80;
-	RECT to_rect,from_base = {0,0,28,36},from_rect;
+	RECT from_base = {0,0,28,36},from_rect;
 	COLORREF colors[4] = {RGB(0,0,0),RGB(255,0,0),RGB(0,0,102),RGB(255,255,255)};
 	UINT c[4];
 	RECT pc_black_from = {521,228,549,264},mixed_to = {355,234,383,270};
 
-	short j,k,string_num, cur_rect=0, flag;
+	short k,string_num, cur_rect=0;
 	RECT no_party_rect,temp_rect;
 
 	c[0] = GetNearestPaletteIndex(hpal,colors[0]);
@@ -869,7 +867,6 @@ void add_string_to_buf(char *str) {
 
 void display_strings_event_filter (short item_hit)
 {
-	short i;
 	Boolean had1 = FALSE, had2 = FALSE;
 	
 	switch (item_hit) {
@@ -882,10 +879,7 @@ void display_strings_event_filter (short item_hit)
 void display_strings(short str1a,short str1b,short str2a,short str2b,
 	char *title,short sound_num,short graphic_num,short parent_num)
 {
-
-	short item_hit;
 	char sign_text[256];
-	location view_loc;
 	Boolean sound_done = FALSE;
 
 	make_cursor_sword();
@@ -1020,7 +1014,7 @@ static DWORD GetTextExtent16(HDC hdc, LPCSTR str, INT16 count)
 void MeasureText(short str_len,char *str, short *len_array,HDC hdc)
 {
 	short text_len[257];
-	short total_width = 0,i,len;
+	short total_width = 0,i;
 	char p_str[257];
 	DWORD val_returned;
 	char *store_array;

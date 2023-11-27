@@ -204,11 +204,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpszCmdPar
 
 	MSG msg;
 	WNDCLASS wndclass,wndclass2;
-	short i,seed;
+	short seed;
    RECT windRECT;
 	HGLOBAL temp_buffer,temp_buffer2;
 	HGLOBAL temp_buffer3,temp_buffer4;
-	HGLOBAL temp_buffer5,temp_buffer6;
+	HGLOBAL temp_buffer5;
 
 	if (!hPrevInstance) {
 		wndclass.style = CS_HREDRAW | CS_VREDRAW | CS_BYTEALIGNWINDOW;
@@ -401,18 +401,15 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 HDC hdc;
 PAINTSTRUCT ps;
-RECT rect;
-short cxDib, cyDib;
-BYTE * lpDibBits;
 RECT s_rect = {0,0,30,30},d_rect = {0,0,30,30},d2 = {0,0,420,216},s2 = {0,0,420,216};
 POINT press;
 short handled = 0;
 HMENU menu;
-RECT dlg_rect,wind_rect,draw_rect;
+RECT dlg_rect,wind_rect;
 short store_ulx,store_uly,sbar_pos;
 short which_sbar;
 
-short old_setting,new_setting;
+short old_setting;
 	short smin,smax;
 
 // First, handle window size

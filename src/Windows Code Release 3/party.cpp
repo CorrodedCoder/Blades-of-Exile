@@ -197,7 +197,6 @@ void put_pick_spell_graphics();
 void init_party(short mode)
 {
 	short i,j,k,l;
-	Boolean item_check;
 
 	boat_record_type null_boat = {{0,0},{0,0},{0,0},200,FALSE};
 	horse_record_type null_horse = {{0,0},{0,0},{0,0},200,FALSE};
@@ -440,7 +439,7 @@ void init_party_scen_data()
 // party record already contains scen name
 void put_party_in_scen()
 {
-	short i,j,k;
+	short i,j;
 	char strs[6][256] = {"","","","","",""};
 	short buttons[3] = {-1,-1,-1};
 	Boolean item_took = FALSE;
@@ -708,7 +707,6 @@ Boolean create_pc(short spot,short parent_num)
 //spot; // if spot is 6, find one
 {
 	Boolean still_ok = TRUE;
-	short i;
 
 	if (spot == 6) {
 		for (spot = 0; spot < 6; spot++)
@@ -1151,8 +1149,6 @@ void draw_xp_skills()
 void do_xp_draw()
 
 {
-
-	short item_hit,what_talk_field;
 	char get_text[256];
 	short mode,pc_num;
 
@@ -1182,8 +1178,7 @@ void do_xp_draw()
 
 Boolean spend_xp_event_filter (short item_hit)
 {
-	short what_talk_field,i,j,mode,pc_num;
-	char get_text[256];
+	short i,j,mode,pc_num;
 	Boolean talk_done = FALSE;
 
 	mode = store_train_mode;
@@ -1386,7 +1381,6 @@ Boolean spend_xp(short pc_num, short mode, short parent)
 // returns 1 if cancelled
 {
 	char get_text[256],text2[256];
-	short item_hit;
 
 	store_train_pc = pc_num;
 	store_train_mode = mode;
@@ -1491,7 +1485,6 @@ void cast_spell(short type,short situation)
 //short situation; // 0 - out  1 - town
 {
 	short spell;
-	location loc;
 	
 	if ((is_town()) && (is_antimagic(c_town.p_loc.x,c_town.p_loc.y))) {
 		add_string_to_buf("  Not in antimagic field.");
@@ -1767,7 +1760,7 @@ void do_mage_spell(short pc_num,short spell_num)
 
 void do_priest_spell(short pc_num,short spell_num)
 {
-	short r1,r2, target, i,j,item,store,adj,x,y;
+	short r1,r2, target, i,item,store,adj,x,y;
 	location loc;
 	location where,dest = {27,1};
 	
@@ -2158,7 +2151,7 @@ void do_priest_spell(short pc_num,short spell_num)
 
 void cast_town_spell(location where)
 {
-	short adjust,r1,i,j,targ,store;
+	short adjust,r1,targ,store;
 	location loc;
 	unsigned char ter;
 	
@@ -2294,7 +2287,7 @@ void cast_town_spell(location where)
 
 void sanctify_space(location where)
 {
-	short r1,i,j,s1,s2,s3;
+	short i,s1,s2,s3;
 	location l = {25,13};
 
 		for (i = 0; i < 50; i++)
@@ -2310,7 +2303,6 @@ void sanctify_space(location where)
 void crumble_wall(location where)
 {
 	unsigned char ter,blastable[9] = {111,112,113,128,129, 130,143,144,145};
-	short i;
 	
 	if (loc_off_act_area(where) == TRUE)
 		return;
@@ -2497,9 +2489,6 @@ void draw_caster_buttons()
 
 void draw_spell_info()
 {
-
-	char string[256];				
-
 	if (((store_situation == 0) && (store_mage == 70)) ||
 		((store_situation == 1) && (store_priest == 70))) {	 // No spell selected
 			for (i = 0; i < 6; i++) {
@@ -2541,7 +2530,6 @@ void draw_spell_info()
 void draw_spell_pc_info()
 {
 	short i;
-	char string[256];
 
 	for (i = 0; i < 6; i++) {
 		if (adven[i].main_status != 0) {
@@ -2562,7 +2550,7 @@ void draw_spell_pc_info()
 void put_pc_caster_buttons()
 {
 
-	short item_hit,what_talk_field,i;
+	short i;
 
 	for (i = 0; i < 6; i++) 
 		if (cd_get_active(1098,i + 4) > 0) {
@@ -2573,8 +2561,6 @@ void put_pc_caster_buttons()
 }
 void put_pc_target_buttons()
 {
-	short item_hit,what_talk_field,i;
-
 	if (store_spell_target < 6) {
 		cd_text_frame(1098,24 + store_spell_target,11);
 		cd_text_frame(1098,30 + store_spell_target,11);
@@ -2588,7 +2574,7 @@ void put_pc_target_buttons()
 
 void put_spell_led_buttons()
 {
-	short item_hit,what_talk_field,i,spell_for_this_button;
+	short i,spell_for_this_button;
 
 	for (i = 0; i < 38; i++) {
 		spell_for_this_button = (on_which_spell_page == 0) ? i : spell_index[i];
@@ -2612,7 +2598,7 @@ void put_spell_led_buttons()
 void put_spell_list()
 {
 
-	short item_hit,what_talk_field,i,j;
+	short i;
 	char add_text[256];
 
 	if (on_which_spell_page == 0) {
@@ -2837,8 +2823,6 @@ short pick_spell(short pc_num,short type,short situation)  // 70 - no spell OW s
 //short type; // 0 - mage   1 - priest
 //short situation; // 0 - out  1 - town  2 - combat
 {
-	short item_hit;
-	
 	store_mage_store = store_mage;
 	store_priest_store = store_priest;
 	store_store_target = store_spell_target;
@@ -3088,7 +3072,7 @@ void alch_choice_event_filter (short item_hit)
 short alch_choice(short pc_num)
 {
 	short difficulty[20] = {1,1,1,3,3, 4,5,5,7,9, 9,10,12,12,9, 14,19,10,16,20};
-	short i,item_hit,store_alchemy_pc;
+	short i,store_alchemy_pc;
 	char get_text[256];
 
 	make_cursor_sword();
@@ -3155,7 +3139,6 @@ void pc_graphic_event_filter (short item_hit)
 Boolean pick_pc_graphic(short pc_num,short mode,short parent_num)
 // mode ... 0 - create  1 - created
 {
-	short i,item_hit;
 	Boolean munch_pc_graphic = FALSE;
 	
 	store_graphic_pc_num = pc_num;
@@ -3206,11 +3189,6 @@ Boolean pick_pc_name(short pc_num,short parent_num)
 //town_num; // Will be 0 - 200 for town, 200 - 290 for outdoors
 //short sign_type; // terrain type
 {
-
-	short item_hit;
-	char sign_text[256];
-	location view_loc;
-
 	store_train_pc = pc_num;
 
 	make_cursor_sword();
@@ -3234,7 +3212,7 @@ void pick_trapped_monst_event_filter (short item_hit)
 unsigned char pick_trapped_monst()  
 // ignore parent in Mac version
 {
-	short item_hit,i;
+	short i;
 	char sp[256];
 	monster_record_type get_monst;
 	

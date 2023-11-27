@@ -85,7 +85,6 @@ void combine_things(short pc_num)
 Boolean give_to_pc(short pc_num,item_record_type  item, short print_result)
 {
 	short free_space;
-	char announce_string[60];
 
 	if (item.variety == 0)
 		return TRUE;
@@ -101,7 +100,7 @@ Boolean give_to_pc(short pc_num,item_record_type  item, short print_result)
 
 Boolean give_to_party(item_record_type item,short print_result)
 {
-	short free_space, i = 0;
+	short i = 0;
 	
 	while (i < 6) {
 		if (give_to_pc(i,item,print_result) == TRUE)
@@ -170,8 +169,7 @@ void fancy_choice_dialog_event_filter (short item_hit)
 short fancy_choice_dialog(short which_dlog,short parent)
 // ignore parent in Mac version
 {
-	short item_hit,i,store_dialog_answer;
-	char temp_str[256];
+	short i,store_dialog_answer;
 	
 	store_dialog_answer = dialog_answer;
 	make_cursor_sword();
@@ -201,7 +199,7 @@ void select_pc_event_filter (short item_hit)
 short char_select_pc(short active_only,short free_inv_only,char *title)
 //active_only;  // 0 - no  1 - yes   2 - disarm trap   
 {
-	short item_hit,i;
+	short i;
 
 	make_cursor_sword();
 	
@@ -242,9 +240,7 @@ short select_pc(short active_only,short free_inv_only)
 
 INT_PTR CALLBACK choice_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
 	RECT to_rect = {8,8,44,44};
-	short i;
 	Boolean do_stnd = TRUE;
-	char item_str[256];
 	RECT r1 = {16,90,44,126},r2 = {16,139,44,175};
 
 	test_dlog3 = hDlg;
@@ -270,8 +266,6 @@ INT_PTR CALLBACK choice_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPAR
 
 short choice_dialog(short pic,short num)
 {
-	char dlog_name[10];
-
 	store_focus = GetFocus();
 	dlog_proc1 = choice_dialog_proc;
 	if (dlog_proc1 == NULL) {
@@ -370,7 +364,6 @@ void pick_race_abil(pc_record_type *pc,short mode,short parent_num)
 {
 	char *start_str1 = "Click on advantage button for description.";
 	char *start_str2 = "Click on advantage button to add/lose.";
-	short item_hit;
 	
 	mode = 0;
 	store_trait_mode = mode;

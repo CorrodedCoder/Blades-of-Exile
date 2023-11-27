@@ -31,7 +31,7 @@ if (MSVC)
 	# For now also disable the following which generate hundreds of warnings:
 	# * 4101: local variable is never used.
 	# * 4244: 'conversion' conversion from 'type1' to 'type2', possible loss of data
-    add_compile_options(/W3 /permissive /wd4101 /wd4244)
+    add_compile_options(/W3 /permissive /wd4244)
 	# The code defines it's own min and max functions so disable VC's versions for now.
 	# Also disable complaints about not using MS's "secure" versions of CRT functions,
 	# largely because they aren't portable and in any case we'll be migrating such

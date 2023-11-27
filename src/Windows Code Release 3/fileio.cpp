@@ -145,19 +145,14 @@ void load_file()
 	Boolean maps_there = FALSE;
 	Boolean map_doh = FALSE;
 	
-	flag_type fred;
-	flag_type *store;
 	char flag_data[8];
 
-	town_item_list *item_ptr;	
 	long len;
 	UINT store_len,count,error;
-	out_info_type *explored_ptr;	
 	char *party_ptr;
 	char *pc_ptr;
 	flag_type flag;
 	flag_type *flag_ptr;
-	stored_items_list_type *items_ptr;
 	Boolean in_scen = FALSE;
 
 	short flags[3][2] = {{5790,1342}, // slot 0 ... 5790 - out  1342 - town
@@ -440,12 +435,11 @@ sleep_field = TRUE;
 void save_file(short mode)
 //mode;  // 0 - normal  1 - save as
 {
-	long file_size;
 	HFILE file_id;
 	Boolean got_error = FALSE,town_save = FALSE;
 	UINT error;
 
-	short i,j;
+	short i;
 
 	long len,store_len,count;
 	flag_type flag;
@@ -454,7 +448,6 @@ void save_file(short mode)
 	setup_save_type	*setup_ptr;
 	pc_record_type *pc_ptr;
 //	out_info_type store_explored;
-	out_info_type *explored_ptr;
 	current_town_type *town_ptr;
 	big_tr_type *town_data_ptr;
 	town_item_list *item_ptr;
@@ -463,7 +456,6 @@ void save_file(short mode)
 	stored_outdoor_maps_type *o_maps_ptr; 
 		
 	char *party_encryptor;	
-	char debug[60];
 
 	if ((in_startup_mode == FALSE) && (is_town()))
 		town_save = TRUE;
@@ -753,18 +745,14 @@ void load_town(short town_num,short mode,short extra,char *str)
 {
 
 	HFILE file_id;
-	short i,j,k;
-	long int num_records_to_offset;
-	unsigned char to_put;
-	short start_volume;
+	short i,j;
 	long store;
-	long start_dir;
 	long len;
 	OFSTRUCT store_str;
-	UINT l,error;
+	UINT error;
 	long len_to_jump = 0;
 	short which_town;
-	char start_name[256],file_name[256];
+	char file_name[256];
 
 	if (town_num != minmax(0,scenario.num_towns - 1,town_num)) {
 		give_error("The scenario tried to place you into a non-existant town.","",0);
@@ -944,7 +932,6 @@ void load_town(short town_num,short mode,short extra,char *str)
 void shift_universe_left()
 {
 	short i,j;
-	char create_line[60];
 	
 	make_cursor_watch();
 	
@@ -1126,7 +1113,7 @@ void position_party(short out_x,short out_y,short pc_pos_x,short pc_pos_y)
 
 void build_outdoors()
 {
-	short i,j,k,l,m;
+	short i,j;
 	unsigned char exit_g_type[12] = {0,0,2,2,2, 28,26,6,30,2, 2,0};
 		for (i = 0; i < 48; i++)
 			for (j = 0; j < 48; j++) {
@@ -1267,14 +1254,11 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 {
 	HFILE file_id;
 	short error;
-	short i,j,k,out_sec_num;
-	long int num_records_to_offset;
-	char to_put;
-	char store_name[256],file_name[256];
+	short i,j,out_sec_num;
+	char file_name[256];
 	OFSTRUCT store_str;
 	long len;
-	LONG l;
-	long store_dir,len_to_jump = 0,store = 0;
+	long len_to_jump = 0,store = 0;
 
 	if ((to_create_x != minmax(0,scenario.out_width - 1,to_create_x)) ||
 		(to_create_y != minmax(0,scenario.out_height - 1,to_create_y))) { // not exist
@@ -1345,8 +1329,8 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 void get_reg_data()
 {
 	HFILE f;
-	short i,choice;
-	long *val_store,vals[10],len = 4;
+	short i;
+	long vals[10],len = 4;
 	OFSTRUCT store;
 
 	f = OpenFile("bladmisc.dat",&store,OF_READ /* | OF_SEARCH */);
@@ -1402,11 +1386,10 @@ void get_reg_data()
 void build_data_file(short mode)
 //mode; // 0 - make first time file  1 - customize  2 - new write
 {
-	short i,j,k,file_id;
+	short i;
 	long val_store,to_return = 0,len = 4,s_vals[10] = {0,0,0,0,0, 0,0,0,0,0};
 	OFSTRUCT store;
 	HFILE f;
-	char debug_str[60];
 
 	f = OpenFile("bladmisc.dat",&store,OF_READWRITE /* | OF_SEARCH */);
 	if (f == HFILE_ERROR)
@@ -1486,7 +1469,7 @@ void build_data_file(short mode)
 Boolean load_scenario()
 {
 
-	short i,j,k,l,error;
+	short i,error;
 	HFILE file_id;
 	Boolean file_ok = FALSE;
 	long len;
@@ -1612,7 +1595,7 @@ void build_scen_headers()
 Boolean load_scenario_header(char *filename,short header_entry)
 {
 
-	short i,j,k,l;
+	short i;
 	HFILE file_id;
 	short store;
 	Boolean file_ok = FALSE;
@@ -1684,7 +1667,7 @@ Boolean load_scenario_header(char *filename,short header_entry)
 //extern GWorldPtr spec_scen_g;
 void load_spec_graphics()
 {
-	short i,file_num;
+	short i;
 	char file_name[256];
 	
 	if (spec_scen_g != NULL) {
@@ -1881,7 +1864,7 @@ void reg_alert()
 
 void port_talk_nodes()
 {
-	short i,j,k,l;
+	short i;
 
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -1897,7 +1880,7 @@ void port_talk_nodes()
 
 void port_town()
 {
-	short i,j,k,l;
+	short i;
 
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -1930,7 +1913,7 @@ void port_town()
 
 void port_t_d()
 {
-	short i,j,k,l;
+	short i;
 	if (cur_scen_is_win == TRUE)
 		return;
 
@@ -1949,7 +1932,7 @@ void port_t_d()
 
 void port_scenario()
 {
-	short i,j,k,l;
+	short i, j;
 
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -2032,7 +2015,7 @@ void port_scenario()
 
 void port_item_list()
 {
-	short i,j,k,l;
+	short i;
 
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -2046,7 +2029,7 @@ void port_item_list()
 
 void port_out(outdoor_record_type *out)
 {
-	short i,j,k,l;
+	short i;
 
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -2153,10 +2136,8 @@ short SetFPos(HFILE file, short mode, long len)
 
 Boolean load_blades_data()
 {
-	short i,j,k,l,error;
 	HFILE file_id;
 	Boolean file_ok = FALSE;
-	long len;
 	char file_name[256];
 	 OFSTRUCT store;
 

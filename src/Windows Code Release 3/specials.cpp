@@ -93,7 +93,7 @@ Boolean town_specials(short which,short t_num)
 //short which; // number, 0 - 39, of special
 {
 	Boolean can_enter = TRUE;
-	short choice,spec_id,str_resource;
+	short spec_id;
 	location l;
 	
 	
@@ -113,8 +113,6 @@ Boolean handle_wandering_specials (short which,short mode)
 //short mode; // 0 - pre  1 - end by victory  2 - end by flight
 // wanderin spec 99 -> generic spec
 {
-
-	short choice,i,j;
 	short s1 = 0,s2 = 0,s3 = 0;
 	location null_loc = {0,0};
 	
@@ -139,7 +137,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 //short mode; // 0 - out 1 - town 2 - combat
 {
 	unsigned char ter;
-	short r1,i,choice,door_pc,x,ter_special,ter_flag1,ter_flag2,dam_type = 0,pic_type = 0,ter_pic = 0;
+	short r1,i,choice,door_pc,ter_special,ter_flag1,ter_flag2,dam_type = 0,pic_type = 0,ter_pic = 0;
 	Boolean can_enter = TRUE;
 	location out_where,from_loc,to_loc;
 	short s1 = 0,s2 = 0,s3 = 0;
@@ -390,7 +388,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 void check_fields(location where_check,short mode,short which_pc)
 //mode; // 0 - out 1 - town 2 - combat
 {
-	short r1,i,choice,door_pc;
+	short r1,i;
 	
 	if (is_out())
 		return;
@@ -486,7 +484,7 @@ void check_fields(location where_check,short mode,short which_pc)
 void use_item(short pc,short item)
 {
 	Boolean take_charge = TRUE,inept_ok = FALSE;
-	short abil,level,i,j,item_use_code,store,str,type,amt,which_stat,r1;
+	short abil,level,i,j,item_use_code,str,type,which_stat,r1;
 	char to_draw[60];
 	location user_loc;
 creature_data_type *which_m;
@@ -896,10 +894,9 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 Boolean use_space(location where)
 {
 	unsigned char ter;
-	char debug[60];
-	short r1,i,choice,door_pc,spec_num;
+	short i;
 	Boolean can_enter = TRUE;
-	location out_where,from_loc,to_loc;
+	location from_loc,to_loc;
 	
 
 	ter = t_d.terrain[where.x][where.y];
@@ -968,7 +965,7 @@ Boolean adj_town_look(location where)
 {
 	char terrain;
 	Boolean can_open = TRUE,item_there = FALSE,got_special = FALSE;
-	short i = 0,trap_pc,s1 = 0, s2 = 0, s3 = 0;
+	short i = 0,s1 = 0, s2 = 0, s3 = 0;
 
 	for (i = 0; i < NUM_TOWN_ITEMS; i++) 
 		if ((t_i.items[i].variety > 0) && (is_contained(t_i.items[i]) == TRUE) &&
@@ -1692,7 +1689,7 @@ void general_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 {
 	Boolean check_mess = FALSE;
 	char str1[256] = "",str2[256] = "";
-	short store_val = 0,i,j;
+	short store_val = 0,i;
 	special_node_type spec;
 	short mess_adj[3] = {160,10,20};
 	
@@ -2045,7 +2042,7 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 {
 	Boolean check_mess = TRUE;
 	char str1[256] = "",str2[256] = "";
-	short store_val = 0,i,j,pc,r1;
+	short store_val = 0,i,pc,r1;
 	special_node_type spec;
 	
 	spec = cur_node;
@@ -2450,7 +2447,7 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 {
 	Boolean check_mess = TRUE;
 	char str1[256] = "",str2[256] = "",strs[6][256] = {"","","","","",""};
-	short store_val = 0,i,j,buttons[3] = {-1,-1,-1},r1;
+	short store_val = 0,i,buttons[3] = {-1,-1,-1},r1;
 	special_node_type spec;
 	location l;
 	unsigned char ter;
@@ -2771,7 +2768,7 @@ void rect_spec(short which_mode,special_node_type cur_node,short cur_spec_type,
 {
 	Boolean check_mess = TRUE;
 	char str1[256] = "",str2[256] = "";
-	short store_val = 0,i,j,k;
+	short store_val = 0,i,j;
 	special_node_type spec;
 	location l;
 	unsigned char ter;
@@ -2851,7 +2848,7 @@ void outdoor_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 {
 	Boolean check_mess = FALSE;
 	char str1[256] = "",str2[256] = "";
-	short store_val = 0,i,j;
+	short store_val = 0;
 	special_node_type spec;
 	location l;
 	

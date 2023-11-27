@@ -156,7 +156,7 @@ Boolean give_to_pc(short pc_num,item_record_type  item,short  print_result)
 
 Boolean give_to_party(item_record_type item,short print_result)
 {
-	short free_space, i = 0;
+	short i = 0;
 	
 	while (i < 6) {
 		if (give_to_pc(i,item,print_result) == TRUE)
@@ -641,7 +641,7 @@ Boolean place_item(item_record_type item,location where,Boolean forced)
 void destroy_an_item()
 {
 ////
-	short i,j;
+	short i;
 	ASB("Too many items. Some item destroyed.");
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
 		if (t_i.items[i].type_flag == 15) {
@@ -769,8 +769,7 @@ void set_item_flag(item_record_type *item)
 short get_item(location place,short pc_num,Boolean check_container)
 //short pc_num; // if 6, any   
 {
-	short i,taken = 0,who_take,choice;
-	char message[60];
+	short i,taken = 0;
 	Boolean item_near = FALSE,gold_sound = FALSE,food_sound = FALSE;
 	short mass_get = 1;
 	
@@ -855,7 +854,6 @@ void make_town_hostile()
 void put_item_graphics()
 {
 	short i,storage;
-	short item_hit,what_talk_field;
 	item_record_type item;
 	char message[256];
 
@@ -935,7 +933,7 @@ void put_item_graphics()
 void display_item_event_filter (short item_hit)
 {
 	item_record_type item;
-	short i,store_dlog_ans;
+	short i;
 	
 		switch (item_hit) {
 			case 1:
@@ -1017,8 +1015,7 @@ short display_item(location from_loc,short pc_num,short mode, Boolean check_cont
 //pc_num;  // < 6 - this pc only  6 - any pc
 //short mode; // 0 - adjacent  1 - all in sight
 {
-	short item_hit,i,array_position = 0;
-	char message[256];
+	short i,array_position = 0;
 	
 	make_cursor_sword();
 	
@@ -1085,8 +1082,7 @@ short display_item(location from_loc,short pc_num,short mode, Boolean check_cont
 short custom_choice_dialog(char *strs,short pic_num,short buttons[3]) ////
 {
 
-	short item_hit,i,store_dialog_answer;
-	char temp_str[256];
+	short i,store_dialog_answer;
 
 	store_dialog_answer = dialog_answer;
 	make_cursor_sword();
@@ -1117,7 +1113,7 @@ void fancy_choice_dialog_event_filter (short item_hit)
 short fancy_choice_dialog(short which_dlog,short parent)
 // ignore parent in Mac version
 {
-	short item_hit,i,store_dialog_answer;
+	short i,store_dialog_answer;
 	char temp_str[256];
 	
 	store_dialog_answer = dialog_answer;
@@ -1157,7 +1153,7 @@ void select_pc_event_filter (short item_hit)
 short char_select_pc(short active_only,short free_inv_only,char *title)
 //active_only;  // 0 - no  1 - yes   2 - disarm trap   
 {
-	short item_hit,i;
+	short i;
 
 	make_cursor_sword();
 	
@@ -1201,7 +1197,6 @@ short select_pc(short active_only,short free_inv_only)
 void get_num_of_items_event_filter (short item_hit)
 {
 	char get_text[256];
-	long dummy;
 	
 	cd_get_text_edit_str(1012,(char *) get_text);
 	dialog_answer = 0;
@@ -1214,9 +1209,7 @@ short get_num_of_items(short max_num)
 //short sign_type; // terrain type
 {
 
-	short item_hit;
 	char sign_text[256];
-	location view_loc;
 
 	make_cursor_sword();
 	
@@ -1239,9 +1232,7 @@ short get_num_of_items(short max_num)
 
 INT_PTR CALLBACK choice_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
 	RECT to_rect = {8,8,44,44};
-	short i;
 	Boolean do_stnd = TRUE;
-	char item_str[256];
 	RECT r1 = {16,90,44,126},r2 = {16,139,44,175};
 
 	test_dlog3 = hDlg;
@@ -1267,8 +1258,6 @@ INT_PTR CALLBACK choice_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPAR
 
 short choice_dialog(short pic,short num)
 {
-	char dlog_name[10];
-
 	store_focus = GetFocus();
 	dlog_proc1 = choice_dialog_proc;
 	if (dlog_proc1 == NULL) {
@@ -1286,9 +1275,8 @@ short choice_dialog(short pic,short num)
 
 INT_PTR CALLBACK modeless_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
 	short i,which_d,store_which;
-	char item_str[256];
 	Boolean do_stnd = TRUE,id_dlg = TRUE;
-	RECT to_rect = {6,6,42,42},r1,r2;
+	RECT to_rect = {6,6,42,42};
 
 	for (i = 0; i < 18; i++)
 		if ((modeless_exists[i] == TRUE) &&
@@ -1363,7 +1351,6 @@ void make_cursor_watch()
 
 void place_glands(location where,unsigned char m_type)
 {
-	short r1;
 	item_record_type store_i;
 	monster_record_type monst;
 	
@@ -1579,8 +1566,6 @@ void refresh_store_items()
 
 void get_text_response_event_filter (short item_hit)
 {
-	char get_text[256];
-	
 	cd_get_text_edit_str(store_dnum,(char *) store_str);
 	dialog_not_toast = FALSE;
 }
@@ -1588,9 +1573,7 @@ void get_text_response_event_filter (short item_hit)
 void get_text_response(short dlg,char *str,short parent_num)
 {
 
-	short item_hit,i;
-	char sign_text[256];
-	location view_loc;
+	short i;
 
 	make_cursor_sword();
 	

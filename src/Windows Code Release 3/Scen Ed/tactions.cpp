@@ -84,7 +84,6 @@ short special_to_paste = -1;
 
 void init_current_terrain()
 {	
-	short i,j;
 	location d_loc = {0,0};
 	RECT d_rect = {0,0,0,0};
 	wandering_type d_wan = {0,0,0,0};
@@ -96,7 +95,7 @@ void init_current_terrain()
 
 void init_screen_locs()
 {
-	int i,j,q,r;
+	int i;
 	
 	for (i = 0; i < 4; i++)
 		border_rect[i] = world_screen;
@@ -114,11 +113,9 @@ void init_screen_locs()
 
 Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 {
-	short i,j, x, y;
+	short i,j, x;
 	Boolean are_done = FALSE;
-	char str[256],s2[256];
-	
-	RECT targ_rect;	
+	char s2[256];
 	Boolean need_redraw = FALSE,option_hit = FALSE;
 	location spot_hit;
 	POINT cur_point,cur_point2;
@@ -1176,7 +1173,6 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 
 void flash_rect(RECT to_flash)
 {
-	int i;
 	long dummy;
 	HDC hdc;
 
@@ -1271,12 +1267,8 @@ Boolean handle_keystroke(UINT wParam,LONG lParam)
 {
 	Boolean are_done = FALSE;
 	POINT pass_point;
-	short i,j,k,l,dum;
-	long i2,j2,k2,l2,dum2;
-	long dummy;
-	short the_type,store_ter;
-	DWORD s1;
-	UINT s2,s3;
+	short i,j;
+	short store_ter;
 
 	Boolean dialog_grabbed_key = FALSE;
 	char chr;
@@ -1433,7 +1425,6 @@ void set_up_lights()
 
 	short i,j,rad;
 	location where,l;
-location light_locs[40];
 short num_lights = 0;
 Boolean where_lit[64][64];
 
@@ -1475,7 +1466,7 @@ Boolean is_wall(short i,short j)
 
 	unsigned char ter,walls[3] = {77,77,224};
 	Boolean answer = FALSE;
-	short k,pic;
+	short pic;
 	
 	ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
 	pic = scenario.ter_types[ter].picture;
@@ -1525,7 +1516,7 @@ Boolean is_mountain(short i,short j)
 {
 
 	Boolean answer = FALSE;
-	short k,pic;
+	short pic;
 	unsigned char ter;
 	
 	ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
@@ -1549,7 +1540,7 @@ Boolean is_hill(short i,short j)
 {
 
 	Boolean answer = FALSE;
-	short k,pic;
+	short pic;
 	unsigned char ter;
 	
 	ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
@@ -1581,7 +1572,7 @@ Boolean is_erasable_water(short i,short j)
 {
 
 	Boolean answer = FALSE;
-	short k,pic;
+	short pic;
 	unsigned char ter;
 	
 	ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
@@ -1600,7 +1591,7 @@ Boolean is_water(short i,short j)
 {
 
 	Boolean answer = FALSE;
-	short k,pic;
+	short pic;
 	unsigned char ter;
 	
 	ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
@@ -1618,7 +1609,7 @@ Boolean is_water(short i,short j)
 Boolean is_correctable_water(short i,short j)
 {
 	Boolean answer = FALSE;
-	short k,pic;
+	short pic;
 	unsigned char ter;
 	
 	ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
@@ -3323,9 +3314,6 @@ void shut_down_menus(short mode)
 
 void start_terrain_editing()
 {
-	short i;
-	char str[256];
-	
 	ShowScrollBar(right_sbar,SB_CTL,FALSE);
 	overall_mode = 62;
 	set_up_terrain_buttons();
@@ -3373,8 +3361,6 @@ void start_monster_editing(short just_redo_text)
 
 Boolean monst_on_space(location loc,short m_num)
 {
-	short i,j;
-	
 	if (editing_town == FALSE)
 		return FALSE;
 	if (t_d.creatures[m_num].number == 0)

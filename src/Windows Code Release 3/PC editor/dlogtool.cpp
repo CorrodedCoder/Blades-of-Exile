@@ -430,12 +430,8 @@ short cd_create_custom_dialog(HWND parent,
 
 short cd_create_dialog(short dlog_num,HWND parent)
 {
-	short i,j,free_slot = -1,free_item = -1;
+	short i,free_slot = -1,free_item = -1;
 	HWND dlg;
-
-	char item_str[256];
-	short type,flag;
-	HDC win_dc;
 
 	if (parent != NULL) {
 		if (IsWindowEnabled(parent) == 0)
@@ -1372,8 +1368,6 @@ void cd_erase_item(short dlog_num, short item_num)
 	short i,dlg_index,item_index,store_label;
 	RECT to_fry;
 	HDC win_dc;
-	HBRUSH old_brush;
-	HPEN old_pen;
 	Boolean just_label = FALSE;
 
 	if (item_num >= 100) {
@@ -1444,10 +1438,8 @@ void cd_erase_item(short dlog_num, short item_num)
 
 void cd_erase_rect(short dlog_num,RECT to_fry)
 {
-	short i,dlg_index,item_index,store_label;
+	short dlg_index;
 	HDC win_dc;
-	HBRUSH old_brush;
-	HPEN old_pen;
 
 	if ((dlg_index = cd_get_dlg_index(dlog_num)) < 0)
 		return;
@@ -1471,7 +1463,7 @@ void cd_press_button(short dlog_num, short item_num)
 	short dlg_index,item_index;
 	long dummy;
 	HDC win_dc;
-	RECT from_rect,to_rect;
+	RECT from_rect;
 	COLORREF colors[3] = {RGB(0,0,0),RGB(0,0,112),RGB(0,255,255)};
 	UINT c[3];
 
@@ -1722,7 +1714,6 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 // 1600 + x - B&W maps
 // 1700 + x - anim graphic
 {
-	short picnum;
 	RECT from1 = {0,0,36,28},from2 = {0,0,36,36},from3 = {0,0,72,72},tiny_obj_rect = {0,0,18,18};
 	RECT from_rect = {0,0,28, 36};
 	RECT face_from = {0,0,32,32};
@@ -1743,7 +1734,6 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 	HBITMAP from_gworld;
 	short draw_dest = 2;
 	HDC hdc;
-	HBRUSH old_brush;
 	short m_start_pic = 0,square_size = 32;
 
 	if (win_or_gworld == 1)

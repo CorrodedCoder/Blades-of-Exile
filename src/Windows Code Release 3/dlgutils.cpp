@@ -205,7 +205,7 @@ void end_shop_mode()
 
 void handle_shop_event(POINT p,Boolean right_button)
 {
-	short i,j,get_pc,store_what_picked;
+	short i,store_what_picked;
 
 	p.x -= 5;
 	p.y -= 5;
@@ -239,7 +239,7 @@ void handle_shop_event(POINT p,Boolean right_button)
 void handle_sale(short what_chosen,short cost)
 {
 	item_record_type base_item;
-	short what_magic_shop,what_magic_shop_item,i,j;
+	short what_magic_shop,what_magic_shop_item,i;
 	RECT dummy_rect = {0,0,0,0};
 
 	switch (what_chosen / 100) {
@@ -519,7 +519,6 @@ void start_talk_mode(short m_num,short personality,unsigned char monst_type,shor
 	RECT area_rect;
 	char place_string1[256] = "";
 	char place_string2[256] = "";
-	short i,cash;
 
 	store_personality = personality;
 		
@@ -588,10 +587,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 	char place_string1[256] = "";
 	char place_string2[256] = "";
 
-	short a,b,c,d,per1,per2,ttype,which_talk_entry = -1;
-	char stra[10],strb[10];
-
-	long per1l,ttypel,al,bl,cl,dl,per2l;
+	short a,b,c,d,ttype,which_talk_entry = -1;
 
 	p.x -= 5;
 	p.y -= 5;
@@ -1062,8 +1058,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 
 void handle_talk_spec(short ttype,char *place_string1,char *place_string2) ////
 {
-	short s1 = 1, s2 = 0,num_horns = 0, num_items = 0,i,j;
-	item_record_type store_i;
+	short s1 = 1, s2 = 0,num_horns = 0, num_items = 0;
 	
 	strnum1 = 1000 + s1;
 	get_str(place_string1,15,s1);
@@ -1091,8 +1086,6 @@ void do_sign(short town_num, short which_sign, short sign_type,location sign_loc
 //town_num; // Will be 0 - 200 for town, 200 - 290 for outdoors
 //short sign_type; // terrain type
 {
-
-	short item_hit;
 	char sign_text[256];
 	location view_loc;
 
@@ -1125,9 +1118,6 @@ void do_sign(short town_num, short which_sign, short sign_type,location sign_loc
 
 void give_reg_info_event_filter (short item_hit)
 {
-	short i;
-	char place_str[256];
-	
 			switch (item_hit) {
 				case 1: 
 					dialog_not_toast = FALSE;
@@ -1137,12 +1127,6 @@ void give_reg_info_event_filter (short item_hit)
 
 void give_reg_info()
 {
-	long val_for_text;
-
-	short i,item_hit;
-	char place_str[256];
-	
-
 	make_cursor_sword();
 
 	cd_create_dialog_parent_num(1073,0);
@@ -1158,7 +1142,6 @@ void give_reg_info()
 void do_registration_event_filter (short item_hit)
 {
 	char get_text[256];
-	long dummy;
 	
 	cd_get_text_edit_str(1075,(char *) get_text);
 	dialog_answer = 0;
@@ -1168,11 +1151,6 @@ void do_registration_event_filter (short item_hit)
 
 void do_registration()
 {
-
-	short item_hit;
-	char sign_text[256];
-	location view_loc;
-
 	make_cursor_sword();
 	
 	cd_create_dialog(1075,mainPtr);
@@ -1290,8 +1268,6 @@ Boolean prefs_event_filter (short item_hit)
 
 void pick_preferences()
 {
-	short item_hit;
-
 	cur_display_mode = display_mode;
 
 	make_cursor_sword();
@@ -1330,8 +1306,6 @@ void pick_preferences()
 void put_party_stats()
 {
 	short i;
-	char pc_str[256];
-
 
 	for (i = 0; i < 6; i++) {
 		if (adven[i].main_status > 0) {
@@ -1420,7 +1394,6 @@ void edit_party_event_filter (short item_hit)
 
 void edit_party(short can_create,short can_cancel)
 {
-	short item_hit;
 	Boolean munch_pc_graphic = FALSE;
 	
 	make_cursor_sword();
@@ -1454,7 +1427,6 @@ void edit_party(short can_create,short can_cancel)
 
 void tip_of_day_event_filter (short item_hit)
 {
-	short i;
 	char place_str[256];
 	
 			switch (item_hit) {
@@ -1480,9 +1452,6 @@ void tip_of_day_event_filter (short item_hit)
 
 void tip_of_day()
 {
-	long val_for_text;
-
-	short i,item_hit;
 	char place_str[256];
 	
 	store_tip_page_on = get_ran(1,0,NUM_HINTS - 1);
@@ -1552,9 +1521,6 @@ void put_scen_info()
 
 void pick_a_scen_event_filter (short item_hit)
 {
-	short i;
-	char place_str[256];
-	
 			switch (item_hit) {
 				case 1: 
 					dialog_answer = -1;
@@ -1585,10 +1551,7 @@ void pick_a_scen_event_filter (short item_hit)
 
 short pick_a_scen()
 {
-	long val_for_text;
-
-	short i,item_hit;
-	char place_str[256];
+	short i;
 	
 	build_scen_headers();
 	
@@ -1621,9 +1584,6 @@ short pick_a_scen()
 
 void pick_prefab_scen_event_filter (short item_hit)
 {
-	short i;
-	char place_str[256];
-	
 			switch (item_hit) {
 				case 1: 
 					dialog_answer = -1;
@@ -1640,11 +1600,6 @@ void pick_prefab_scen_event_filter (short item_hit)
 
 short pick_prefab_scen()
 {
-	long val_for_text;
-
-	short i,item_hit;
-	char place_str[256];
-	
 	make_cursor_sword();
 
 	cd_create_dialog_parent_num(869,0);
@@ -1658,9 +1613,6 @@ short pick_prefab_scen()
 
 void give_password_filter (short item_hit)
 {
-	char str[256];
-	short i;
-	
 	switch (item_hit) {
 		default:
 
@@ -1673,8 +1625,8 @@ void give_password_filter (short item_hit)
 Boolean enter_password()
 // ignore parent in Mac version
 {
-	short town_strs_hit,i,store_dialog_answer;
-	char temp_str[256],str2[256];
+	short i;
+	char temp_str[256];
 		
 	cd_create_dialog_parent_num(823,0);
 	

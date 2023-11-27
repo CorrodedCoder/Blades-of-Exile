@@ -190,7 +190,7 @@ void run_startup_g()
 void load_main_screen()
 {
 
-	short i,j;	
+	short i;	
  	RECT map_from_orig = {372,0,380,8},map_from,brush_to = {0,0,8,8};
 
 	main_dc = GetDC(mainPtr);
@@ -254,9 +254,8 @@ void redraw_screen()
 
 void draw_main_screen()
 {
-	short i;
 	RECT draw_rect,big_rect = {-1,-1,582,414};
-	HBRUSH old_brush,new_brush;
+	HBRUSH new_brush;
 	COLORREF y = RGB(128,128,128);//y = RGB(119,119,119);
 	UINT c;
 
@@ -398,7 +397,7 @@ void draw_rb_slot (short which,short mode)
 void set_up_terrain_buttons()
 {
 	short i,pic,small_i;
-	RECT ter_from,ter_to,ter_from_base = {0,0,28,36};
+	RECT ter_from,ter_from_base = {0,0,28,36};
 	RECT tiny_from,tiny_to; 
 	HDC hdc;
 	RECT palette_from = {0,0,0,0},palette_to;
@@ -502,7 +501,7 @@ void set_up_terrain_buttons()
 
 void draw_terrain()
 {
-	short q,r,x,y,i,small_i;
+	short q,r,x,i,small_i;
 	location which_pt,where_draw;
 	RECT draw_rect,clipping_rect = {8,8,260,332};	
 	unsigned char t_to_draw;
@@ -769,12 +768,9 @@ void draw_monsts(HDC hdc)
 {
 	short i,k,width,height,m_start_pic;
 	GWorldPtr from_gworld;
-	RECT source_rect,draw_rect;
+	RECT source_rect;
 	location where_draw,store_loc;
 	COLORREF y = RGB(128,128,128),red = RGB(255,0,0),white = RGB(255,255,255);//y = RGB(119,119,119);
-	HBITMAP store_bmp;
-	UINT c;
-	HBRUSH new_brush;
 	
 		for (i = 0; i < 60; i++)
 		if (t_d.creatures[i].number != 0) {
@@ -835,9 +831,6 @@ void draw_items(HDC hdc)
 	location where_draw;
 	short pic_num;
 	COLORREF y = RGB(128,128,128),red = RGB(255,0,0),blue = RGB(0,0,255);//y = RGB(119,119,119);
-	HBITMAP store_bmp;
-	UINT c;
-	HBRUSH new_brush;
 	
 	for (i = 0; i < 64; i++) {
 		if (town.preset_items[i].item_code >= 0) {
@@ -922,8 +915,8 @@ void draw_one_tiny_terrain_spot (short i,short j,unsigned char terrain_to_draw,H
 {
 
 	location where_draw;
-	RECT source_rect,dest_rect = {0,0,5,5},from_rect = {0,0,4,4},orig_draw_rect = {0,0,4,4};
-	short picture_wanted,k;
+	RECT dest_rect = {0,0,5,5},from_rect = {0,0,4,4},orig_draw_rect = {0,0,4,4};
+	short picture_wanted;
 	GWorldPtr source_gworld;
 	HGDIOBJ store_bmp;
 	HGDIOBJ old_brush;
@@ -1092,7 +1085,6 @@ desired pixmap, or RECT to darkness if desired map not present */
 RECT get_template_rect (unsigned char type_wanted)
 {
 	RECT store_rect;
-	short i,j;
 	short picture_wanted;
 	
 	picture_wanted = scenario.ter_types[type_wanted].picture;
@@ -1112,12 +1104,10 @@ void place_location()
 {
 	RECT text_rect = {367,290,384,510};
 	char draw_str[256];
-	RECT from_rect,draw_rect,source_rect,erase_rect;
+	RECT draw_rect,source_rect,erase_rect;
 	short picture_wanted;
 	HGDIOBJ store_bmp;
 	COLORREF y = RGB(128,128,128),red = RGB(255,0,0),white = RGB(255,255,255);//y = RGB(119,119,119);
-	UINT c;
-	HBRUSH new_brush;
 	HDC hdc;
 
 	erase_rect.left = terrain_rects[255].left + 17;
@@ -1210,12 +1200,9 @@ void place_just_location()
 {
 	RECT text_rect = {367,290,384,510};
 	char draw_str[256];
-	RECT from_rect,draw_rect,source_rect,erase_rect;
-	short picture_wanted;
+	RECT from_rect,draw_rect,erase_rect;
 	HGDIOBJ store_bmp;
 	COLORREF y = RGB(128,128,128),red = RGB(255,0,0),white = RGB(255,255,255);//y = RGB(119,119,119);
-	UINT c;
-	HBRUSH new_brush;
 	HDC hdc;
 
 	erase_rect.left = terrain_rects[255].left + 17;
@@ -1455,9 +1442,6 @@ void take_quickfire(short i,short j)
 
 Boolean container_there(location l)
 {
-	
-	unsigned char ter;
-	
 	if (editing_town == FALSE)
 		return FALSE;
 	if (scenario.ter_types[t_d.terrain[l.x][l.y]].special == 14)
@@ -1551,7 +1535,7 @@ static DWORD GetTextExtent16(HDC hdc, LPCSTR str, INT16 count)
 void MeasureText(short str_len,char *str, short *len_array,HDC hdc)
 {
 	short text_len[257];
-	short total_width = 0,i,len;
+	short total_width = 0,i;
 	char p_str[257];
 	DWORD val_returned;
 	char *store_array;
