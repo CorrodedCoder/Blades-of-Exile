@@ -6,12 +6,12 @@
 #define	NI	500
 #define	NL	100
 
-#include "string.h"
+#include <cstring>
 
 #include "global.h"
 #include "graphutl.h"
 #include "../graphutl_helpers.hpp"
-#include "stdio.h"
+#include <cstdio>
 #include "graphics.h"
 #include "edsound.h"
 #include "dlogtool.h"
@@ -135,7 +135,7 @@ char button_def_key[140] = {0,0,20,21,'k', 24,0,0,0,0,
 							0,0,0,0,0,0,0,0,0,0
 							};
 							// specials ... 20 - <-  21 - ->  22 up  23 down  24 esc
-							// 25-30  ctrl 1-6  31 - return\
+							// 25-30  ctrl 1-6  31 - return
 
 short button_ul_x[15] = {0,46,0,126,0, 0,126,126,126,138, 166,0,0,126,172};
 short button_ul_y[15] = {0,0,132,23,46, 69,46,69,36,36, 36,23,92,92,0};
@@ -245,12 +245,8 @@ short cd_create_dialog_parent_num(short dlog_num,short parent)
 
 short cd_create_dialog(short dlog_num,HWND parent)
 {
-	short i,j,free_slot = -1,free_item = -1;
+	short i,free_slot = -1,free_item = -1;
 	HWND dlg;
-
-	char item_str[256];
-	short type,flag;
-	HDC win_dc;
 
 	if (parent != NULL) {
 		if (IsWindowEnabled(parent) == 0)
@@ -426,7 +422,7 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 				//	flag = 2;
 				str_stored = TRUE;
 				}
-			else sscanf(item_str,"%d_%d",&type,&flag);
+			else sscanf(item_str,"%hd_%hd",&type,&flag);
 
 			free_item = -1;
 			// find free item
@@ -842,9 +838,7 @@ void cd_get_item_text(short dlog_num, short item_num, char *str)
 
 void cd_retrieve_text_edit_str(short dlog_num, short item_num, char *str)
 {
-	short dlg_index,item_index,i;
-	short the_type;
-	RECT the_rect;
+	short i;
 	
 	for (i = 0; i < 80; i++)
 		if ((store_edit_parent_num[i] == dlog_num) && (store_edit_item[i] == item_num)
@@ -856,16 +850,15 @@ void cd_retrieve_text_edit_str(short dlog_num, short item_num, char *str)
 	
 short cd_retrieve_text_edit_num(short dlog_num, short item_num)
 {
-	short dlg_index,item_index,i;
-	short the_type,num_given;
-	RECT the_rect;
+	short i;
+	short num_given;
 	char str[256];
 	
 	for (i = 0; i < 80; i++)
 		if ((store_edit_parent_num[i] == dlog_num) && (store_edit_item[i] == item_num)
 			&& (edit_box[i] != NULL)) {
 				GetWindowText(edit_box[i],str,255);
-				sscanf(str,"%d",&num_given);
+				sscanf(str,"%hd",&num_given);
 				return (short) num_given;
 				}
 	return -1;
@@ -877,9 +870,7 @@ short cd_retrieve_text_edit_num(short dlog_num, short item_num)
 // NOTE!!! Expects a c string
 void cd_set_text_edit_str(short dlog_num, short item_num, char *str)
 {
-	short dlg_index,item_index,i;
-	short the_type;
-	RECT the_rect;
+	short i;
 		for (i = 0; i < 80; i++)
 			if ((store_edit_parent_num[i] == dlog_num) && (store_edit_item[i] == item_num)
 				&& (edit_box[i] != NULL))
@@ -889,9 +880,7 @@ void cd_set_text_edit_str(short dlog_num, short item_num, char *str)
 // NOTE!!! Expects a c string
 void cd_set_text_edit_num(short dlog_num, short item_num, short num)
 {
-	short dlg_index,item_index,i;
-	short the_type;
-	RECT the_rect;
+	short i;
 	char store_ptr[256];
 	
 		sprintf(store_ptr,"%d",num);
@@ -1326,8 +1315,6 @@ void cd_erase_item(short dlog_num, short item_num)
 	short i,dlg_index,item_index,store_label;
 	RECT to_fry;
 	HDC win_dc;
-	HBRUSH old_brush;
-	HPEN old_pen;
 	Boolean just_label = FALSE;
 
 	if (item_num >= 100) {
@@ -1398,10 +1385,8 @@ void cd_erase_item(short dlog_num, short item_num)
 
 void cd_erase_rect(short dlog_num,RECT to_fry)
 {
-	short i,dlg_index,item_index,store_label;
+	short dlg_index;
 	HDC win_dc;
-	HBRUSH old_brush;
-	HPEN old_pen;
 
 	if ((dlg_index = cd_get_dlg_index(dlog_num)) < 0)
 		return;
@@ -1425,7 +1410,7 @@ void cd_press_button(short dlog_num, short item_num)
 	short dlg_index,item_index;
 	long dummy;
 	HDC win_dc;
-	RECT from_rect,to_rect;
+	RECT from_rect;
 	COLORREF colors[3] = {RGB(0,0,0),RGB(0,0,112),RGB(0,255,255)};
 	UINT c[3];
 
@@ -1675,7 +1660,6 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 // 1600 + x - B&W maps
 // 1700 + x - anim graphic
 {
-	short picnum;
 	RECT from1 = {0,0,36,28},from2 = {0,0,36,36},from3 = {0,0,72,72},tiny_obj_rect = {0,0,18,18};
 	RECT from_rect = {0,0,28, 36};
 	RECT face_from = {0,0,32,32};

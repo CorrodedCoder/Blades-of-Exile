@@ -17,7 +17,7 @@
 #include "item_data.h"
 #include "info.dialogs.h"
 #include "items.h"
-#include "string.h"
+#include <cstring>
 #include "party.h"
 #include "monster.h"
 #include "dlogtool.h"

@@ -9,7 +9,7 @@
 #include <Resources.h>
 #include <QDOffscreen.h>
 
-#include <string.h>
+#include <cstring>
 #include "global.h"
 #include "stdio.h"
 #include "blxfileio.h"

@@ -347,7 +347,5 @@ short get_ran (short times,short  min,short  max);
 short s_pow(short x,short y);
 short dist(location p1,location p2);
 
-short max(short a,short b);
-short min(short a,short b);
 short minmax(short min,short max,short k);
 short abs(short x);

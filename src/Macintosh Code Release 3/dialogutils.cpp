@@ -5,7 +5,7 @@
 #include <Quickdraw.h>
 #include <QDOffScreen.h>
 #include <Folders.h>
-#include "string.h"
+#include <cstring>
 #include "global.h"
 
 #include "dialogutils.h"

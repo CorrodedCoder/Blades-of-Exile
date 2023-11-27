@@ -11,7 +11,7 @@
 #include "blxgraphics.h"
 #include "newgraph.h"
 #include "items.h"
-#include "string.h"
+#include <cstring>
 #include "monster.h"
 #include "dlogtool.h"
 #include "party.h"

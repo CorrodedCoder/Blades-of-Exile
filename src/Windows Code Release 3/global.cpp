@@ -1,7 +1,7 @@
 #include <Windows.h>
 #include "global.h"
-#include "math.h"
-#include <stdlib.h>
+#include <cmath>
+#include <cstdlib>
 
 extern short give_delays;
 
@@ -44,20 +44,6 @@ short move_to_zero(short val)
 	if (val > 0)
 		return val - 1;
 	return val;
-}
-
-short max(short a,short b)
-{
-	if (a > b)
-		return a;
-		else return b;
-}
-
-short min(short a,short b)
-{
-	if (a < b)
-		return a;
-		else return b;
 }
 
 short minmax(short min,short max,short k)

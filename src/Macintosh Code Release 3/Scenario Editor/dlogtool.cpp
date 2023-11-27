@@ -9,7 +9,7 @@
 #define	NL	100
 
 #include "stdio.h"
-#include "string.h"
+#include <cstring>
 #include "dlogtool.h"
 #include "sound.h"
 #include "global.h"

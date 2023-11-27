@@ -16,7 +16,7 @@
 #include "loc_utils.h"
 #include "fields.h"
 #include "town.h"
-#include "math.h"
+#include <cmath>
 #include "text.h"
 #include "party.h"
 #include "monster.h"

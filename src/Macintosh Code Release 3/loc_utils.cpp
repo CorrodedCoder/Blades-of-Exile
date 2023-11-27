@@ -1,5 +1,5 @@
 #include <QDOffscreen.h>
-#include "math.h"
+#include <cmath>
 #include "global.h"
 #include "loc_utils.h"
 #include "text.h"

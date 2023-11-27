@@ -31,12 +31,12 @@ if (MSVC)
 	# For now also disable the following which generate hundreds of warnings:
 	# * 4101: local variable is never used.
 	# * 4244: 'conversion' conversion from 'type1' to 'type2', possible loss of data
-    add_compile_options(/W3 /permissive /wd4101 /wd4244)
+    add_compile_options(/W3 /permissive /wd4244)
 	# The code defines it's own min and max functions so disable VC's versions for now.
 	# Also disable complaints about not using MS's "secure" versions of CRT functions,
 	# largely because they aren't portable and in any case we'll be migrating such
 	# functionality to leverage the C++ STL in good time.
-	add_definitions(-DNOMINMAX -D_CRT_SECURE_NO_WARNINGS)
+	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 
 	if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 		# Warnings which are going to be more involved to address either because of
@@ -53,16 +53,13 @@ if (MSVC)
 		)
 		# Warnings which either should be addressed ASAP or are trivial to address
 		add_compile_options(
-			-Wno-format
 			-Wno-empty-body
 			-Wno-unused-value
-			-Wno-comment
 			-Wno-parentheses
 			-Wno-missing-braces
 			-Wno-tautological-overlap-compare
 			-Wno-tautological-constant-compare
 			-Wno-pointer-to-int-cast
-			-Wno-nonportable-include-path
 		)
 	endif()
 endif()

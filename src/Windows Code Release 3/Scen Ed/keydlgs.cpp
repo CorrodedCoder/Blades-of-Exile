@@ -1,7 +1,7 @@
 #include <Windows.h>
-#include "string.h"
-#include "stdio.h"
-#include "Global.h"
+#include <cstring>
+#include <cstdio>
+#include "global.h"
 #include "graphics.h"
 #include "dlogtool.h"
 #include "keydlgs.h"
@@ -175,8 +175,7 @@ void fancy_choice_dialog_event_filter (short item_hit)
 short fancy_choice_dialog(short which_dlog,short parent)
 // ignore parent in Mac version
 {
-	short item_hit,i,store_dialog_answer;
-	char temp_str[256];
+	short i,store_dialog_answer;
 	
 	store_dialog_answer = dialog_answer;
 	//make_cursor_sword();
@@ -215,7 +214,6 @@ void give_error(char *text1, char *text2,short parent_num)
 
 void display_strings_event_filter (short item_hit)
 {
-	short i;
 	Boolean had1 = FALSE, had2 = FALSE;
 	
 	switch (item_hit) {
@@ -229,10 +227,6 @@ void display_strings_event_filter (short item_hit)
 void display_strings(char *text1, char *text2,
 	char *title,short sound_num,short graphic_num,short parent_num)
 {
-
-	short item_hit;
-	char sign_text[256];
-	location view_loc;
 	Boolean sound_done = FALSE;
 
 	//make_cursor_sword();
@@ -301,7 +295,7 @@ void choose_graphic_event_filter (short item_hit)
 
 void put_choice_pics()
 {
-	short item_hit,i;
+	short i;
 	
 	for (i = 0; i < 36; i++) {
 		if (store_first_g + which_page * 36 + i > store_last_g) {
@@ -321,9 +315,6 @@ void put_choice_pics()
 
 short choose_graphic(short first_g,short last_g,short cur_choice,short parent_num)
 {
-
-	short item_hit;
-	location view_loc;
 	Boolean sound_done = FALSE;
 
 	//make_cursor_sword();
@@ -389,7 +380,7 @@ void choose_text_res_event_filter (short item_hit)
 
 void put_text_res()
 {
-	short item_hit,i;
+	short i;
 	char str[256];
 	
 	for (i = 0; i < 40; i++) {
@@ -411,10 +402,6 @@ void put_text_res()
 
 short choose_text_res(short res_list,short first_t,short last_t,short cur_choice,short parent_num,char *title)
 {
-
-	short item_hit;
-	char sign_text[256];
-	location view_loc;
 	Boolean sound_done = FALSE;
 
 	//make_cursor_sword();
@@ -445,8 +432,6 @@ short choose_text_res(short res_list,short first_t,short last_t,short cur_choice
 
 void edit_text_event_filter (short item_hit)
 {
-	char str[256];
-	short i;
 	short num_strs[3] = {260,108,140};
 	
 			if (store_str_mode == 0)
@@ -484,9 +469,6 @@ void edit_text_event_filter (short item_hit)
 void edit_text_str(short which_str,short mode)
 // ignore parent in Mac version
 {
-	short text_hit,i,store_dialog_answer,item_hit;
-	char temp_str[256];
-	
 	store_which_str = which_str;
 	store_str_mode = mode;
 	
@@ -511,7 +493,6 @@ void edit_text_str(short which_str,short mode)
 void edit_area_rect_event_filter (short item_hit)
 {
 	char str[256];
-	short i;
 	
 	switch (item_hit) {
 		case 6:
@@ -534,9 +515,6 @@ void edit_area_rect_event_filter (short item_hit)
 Boolean edit_area_rect_str(short which_str,short mode)
 // ignore parent in Mac version
 {
-	short area_rect_hit,i,store_dialog_answer,item_hit;
-	char temp_str[256];
-	
 	store_which_str = which_str;
 	store_str_mode = mode;
 	
@@ -556,9 +534,6 @@ Boolean edit_area_rect_str(short which_str,short mode)
 
 Boolean save_spec_enc()
 {
-	char str[256];
-	short i;
-	
 	store_spec_node.sd1 = CDGN(822,2);
 	store_spec_node.sd2 = CDGN(822,3);
 	store_spec_node.m1 = CDGN(822,4);
@@ -688,7 +663,6 @@ void put_spec_enc_in_dlog()
 
 void edit_spec_enc_event_filter (short item_hit)
 {
-	char str[256];
 	short i,node_to_change_to = -1,spec;
 	
 	switch (item_hit) {
@@ -900,8 +874,7 @@ void edit_spec_enc_event_filter (short item_hit)
 void edit_spec_enc(short which_node,short mode,short parent_num)
 // ignore parent in Mac version
 {
-	short spec_enc_hit,i,store_dialog_answer;
-	char temp_str[256];
+	short i;
 	
 	store_which_mode = mode;
 	store_which_node = which_node;
@@ -1059,8 +1032,6 @@ void edit_spec_text_event_filter (short item_hit)
 // mode 0 - scen 1 - out 2 - town
 void edit_spec_text(short mode,short *str1,short *str2,short parent)
 {
-	short text_hit,i,store_dialog_answer,item_hit;
-	char temp_str[256];
 	short num_s_strs[3] = {100,90,100};
 	
 	store_str1 = str1;
@@ -1129,8 +1100,7 @@ void edit_dialog_text_event_filter (short item_hit)
 // mode 0 - scen 1 - out 2 - town
 void edit_dialog_text(short mode,short *str1,short parent)
 {
-	short text_hit,i,j,store_dialog_answer,item_hit;
-	char temp_str[256];
+	short i,j;
 	short num_s_strs[3] = {100,90,100};
 	
 	store_str1 = str1;
@@ -1220,7 +1190,6 @@ void edit_dialog_text(short mode,short *str1,short parent)
 
 void edit_special_num_event_filter (short item_hit)
 {
-	char str[256];
 	short i;
 	
 	switch (item_hit) {
@@ -1243,9 +1212,6 @@ void edit_special_num_event_filter (short item_hit)
 
 short edit_special_num(short mode,short what_start)
 {
-	short text_hit,i,j,store_dialog_answer,item_hit;
-	char temp_str[256];
-	
 	store_spec_mode = mode;
 		
 	cd_create_dialog_parent_num(825,0);
@@ -1262,7 +1228,6 @@ short edit_special_num(short mode,short what_start)
 
 void edit_scen_intro_event_filter (short item_hit)
 {
-	char str[256];
 	short i;
 	
 	switch (item_hit) {
@@ -1293,8 +1258,7 @@ void edit_scen_intro_event_filter (short item_hit)
 
 void edit_scen_intro()
 {
-	short text_hit,i,j,store_dialog_answer,item_hit;
-	char temp_str[256];
+	short i;
 	short num_s_strs[3] = {100,90,100};
 	
 		

@@ -1,7 +1,7 @@
 
 
 #include <Windows.h>
-#include "stdio.h"
+#include <cstdio>
 
 #include "global.h"
 
@@ -150,7 +150,6 @@ void start_town_mode(short which_town, short entry_dir)
 //short entry_dir; // if 9, go to forced
 {
 	short i,m,n;
-	long number_given;
 	char message[60];
 	short j,k,town_number;
 	short at_which_save_slot,former_town;
@@ -569,7 +568,7 @@ void start_town_mode(short which_town, short entry_dir)
 location end_town_mode(short switching_level,location destination)  // returns new party location
 {
 	location to_return;
-	short i,j,k,exit_code;
+	short i,j,k;
 	Boolean data_saved = FALSE,combat_end = FALSE;
 
 	if (is_combat())
@@ -702,8 +701,6 @@ location end_town_mode(short switching_level,location destination)  // returns n
 
 void handle_town_specials(short town_number, short entry_dir,location start_loc) 
 {
-	short s1,s2,s3;
-	
 	if (entry_dir > 0)
 		special_queue[0] = c_town.town.spec_on_entry_if_dead;
 		else special_queue[0] = c_town.town.spec_on_entry;
@@ -711,8 +708,6 @@ void handle_town_specials(short town_number, short entry_dir,location start_loc)
 
 void handle_leave_town_specials(short town_number, short which_spec,location start_loc) 
 {
-	short s1,s2,s3;
-	
 	//run_special(6,2,which_spec,start_loc,&s1,&s2,&s3);
 	special_queue[1] = which_spec;
 }
@@ -738,7 +733,7 @@ Boolean abil_exists(short abil) // use when outdoors
 
 void start_town_combat(short direction)
 {
-	short i,j,r1,r2,how_many,num_tries = 0;
+	short i,num_tries = 0;
 
 	create_town_combat_terrain();
 
@@ -860,7 +855,6 @@ void place_party(short direction)
 
 void create_town_combat_terrain()
 {
-	short id;
 	location where;
 	
 	for (where.x = 0; where.x < town_size[town_type]; where.x++)
@@ -871,7 +865,7 @@ void create_town_combat_terrain()
 void create_out_combat_terrain(short type,short num_walls,short spec_code)
 // spec_code is encounter's spec_code
 {
-	short i,j,k,l,r1,r2,ter_type;
+	short i,j,k,r1,ter_type;
 // 0 grass 1 cave 2 mntn 3 bridge 4 cave bridge 5 rubble cave 6 cave tree 7 cave mush
 // 8 cave swamp 9 surfac eorcks 10 surf swamp 11 surface woods 12 s. shrub 13 stalags
 short general_types[260] = {1,1,0,0,0,1,1,1,1,1,
@@ -925,7 +919,6 @@ short terrain_odds[14][10] = {{3,80,4,40,115,20,114,10,112,1},
 							{3,200,4,300,112,50,113,60,114,100}, 
 							{3,100,4,250,115,120,114,30,112,2}, 
 							{1,25,84,15,98,300,97,280,0,0}}; // ter then odds then ter then odds ...
-item_record_type store_i;
 
 	ter_type = scenario.ter_types[type].picture;
 	if (ter_type > 260)
@@ -1224,7 +1217,7 @@ void erase_out_specials()
 {
 
 	short i,j,k,l,m,out_num;
-	unsigned char floors[6] = {0,150,186,193,2,36},store;
+	unsigned char floors[6] = {0,150,186,193,2,36};
 	unsigned char exit_g_type[12] = {0,0,2,2,2, 28,26,6,30,2, 2,0};
 	special_node_type sn;
 	short sd1,sd2;
@@ -1337,11 +1330,11 @@ void draw_map (HWND the_dialog, short the_item)
 	char *comb_mess = " Map unavailable.";
 	char *unav_mess = " Map unavailable.";
 	char *blank_mess = "";
-	location top_left,map_adj = {0,0};
+	location map_adj = {0,0};
 	location where;
 	location kludge;
 	RECT draw_rect;
-	RECT source_rect,ter_temp_from,dlogpicrect = {6,6,42,42},orig_draw_rect = {0,0,6,6};
+	RECT ter_temp_from,dlogpicrect = {6,6,42,42},orig_draw_rect = {0,0,6,6};
 	Boolean draw_pcs = TRUE;
 	RECT view_rect= {0,0,48,48},tiny_rect = {0,0,32,32},
 		redraw_rect = {0,0,48,48},small_rect = {0,0,9,9},big_rect = {0,0,64,64}; // RECTangle visible in view screen
@@ -1349,7 +1342,7 @@ void draw_map (HWND the_dialog, short the_item)
 	HGDIOBJ old_bmp;
 	HGDIOBJ old_brush;
 	HGDIOBJ old_pen;
-	short k,i,j,pic,pic2;
+	short i,j,pic,pic2;
 	RECT area_to_draw_from,area_to_draw_on = {47,29,287,269};
 	Boolean draw_surroundings = FALSE,expl,expl2;
 	short total_size = 48; // if full redraw, use this to figure out everything
@@ -1707,11 +1700,8 @@ void draw_map (HWND the_dialog, short the_item)
 
 
 INT_PTR CALLBACK map_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
-	short i,which_d,store_which;
-	char item_str[256];
 	Boolean do_stnd = TRUE,id_dlg = TRUE;
 	RECT to_rect = {10,11,46,47},d_rect = {0,0,240,240};
-	HDC hdc;
 
 	switch (message) {
 		case WM_INITDIALOG:
@@ -1760,8 +1750,6 @@ INT_PTR CALLBACK map_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM 
 
 void display_map()
 {
-	short i,which_d;
-
 	if ( modeless_exists[5] == TRUE)
 		return;
 	
@@ -1777,8 +1765,6 @@ void display_map()
 
 Boolean is_door(location destination)
 {
-	short i;
-
 	if ((scenario.ter_types[t_d.terrain[destination.x][destination.y]].special == 9) ||
 		(scenario.ter_types[t_d.terrain[destination.x][destination.y]].special == 1) ||
 		(scenario.ter_types[t_d.terrain[destination.x][destination.y]].special == 10))

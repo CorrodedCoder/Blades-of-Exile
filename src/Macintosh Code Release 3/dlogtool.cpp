@@ -11,7 +11,7 @@
 
 #include "global.h"
 #include "stdio.h"
-#include "string.h"
+#include <cstring>
 #include "Exile.sound.h"
 #include "dlogtool.h"
 #include "text.h"

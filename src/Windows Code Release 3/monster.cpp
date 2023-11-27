@@ -1,5 +1,5 @@
 #include <windows.h>
-#include "stdio.h"
+#include <cstdio>
 
 #include "global.h"
 #include "locutils.h"
@@ -277,9 +277,8 @@ void set_up_monst(short mode,unsigned char m_num)
 void do_monsters()
 {
 	short i,j,r1,target;
-	location dest,l1,l2, dummy_loc = {0,0},store_loc;
+	location l1,l2, dummy_loc = {0,0};
 	Boolean acted_yet = FALSE;
-	char debug[60];
 	
 	if (overall_mode == 1) 
 		for (i = 0; i < T_M; i++) 
@@ -407,7 +406,7 @@ Boolean monst_hate_spot(short which_m,location *good_loc)
 short monst_pick_target(short which_m)
 {
 	creature_data_type *cur_monst;
-	short r1,targ_pc,targ_m,a,b;
+	short targ_pc,targ_m;
 
 	cur_monst = &c_town.monst.dudes[which_m];
 
@@ -774,9 +773,6 @@ Boolean try_move(short i,location start,short x,short y)
 
 Boolean combat_move_monster(short which,location destination)
 {	
-	short r1;
-
-
 	if (monst_can_be_there(destination,which) == FALSE)
 		return FALSE;
 		else if (monst_check_special_terrain(destination,2,which) == FALSE)
@@ -977,11 +973,10 @@ void monst_inflict_fields(short which_monst)
 Boolean monst_check_special_terrain(location where_check,short mode,short which_monst)
 //mode; // 1 - town 2 - combat
 {
-	char debug[60];
 	unsigned char ter;
-	short r1,i,j,choice,door_pc,guts = 0;
+	short r1,i,guts = 0;
 	Boolean can_enter = TRUE,mage = FALSE;
-	location out_where,from_loc,to_loc;
+	location from_loc,to_loc;
 	Boolean do_look = FALSE; // If becomes true, terrain changed, so need to update what party sees
 	creature_data_type *which_m;
 	short ter_abil;
@@ -1347,7 +1342,7 @@ void record_monst(creature_data_type *which_m)
 // returns 90 is no placement, OW returns # of spot
 short place_monster(unsigned char which,location where)
 {
-	short i = 0,x,y,j;
+	short i = 0;
 	
 	while ((i < T_M) && ((c_town.monst.dudes[i].active != 0) ||
 			(c_town.monst.dudes[i].monst_start.spec_enc_code > 0))) {
@@ -1435,7 +1430,7 @@ Boolean summon_monster(unsigned char which,location where,short duration,short g
 
 void activate_monsters(short code,short attitude)
 {
-	short i,pict; 
+	short i; 
 	unsigned char which;
 	
 	if (code == 0)

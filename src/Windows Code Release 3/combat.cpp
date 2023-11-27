@@ -1,5 +1,5 @@
 #include <Windows.h>
-#include "stdio.h"
+#include <cstdio>
 #include "global.h"
 #include "monster.h"
 #include "graphics.h"
@@ -317,7 +317,7 @@ Boolean center_on_monst;
 
 void start_outdoor_combat(outdoor_creature_type encounter,unsigned char in_which_terrain,short num_walls)
 {
-	short i,j,r1,r2,how_many,num_tries = 0;
+	short i,j,how_many,num_tries = 0;
 	short low[10] = {15,7,3,3,1,1,1,7,2,1};
 	short high[10] = {30,10,5,5,3,2,1,10,4,1};
 	RECT town_rect = {0,0,47,47};
@@ -568,7 +568,6 @@ void char_stand_ready()
 void pc_attack(short who_att,short target)
 {
 	short r1,r2,what_skill1 = 1, what_skill2 = 1, weap1 = 24, weap2 = 24,i,store_hp,skill_item;
-	Boolean dummy;
 	creature_data_type *which_m;	
 	short hit_adj, dam_adj, spec_dam = 0,poison_amt;
 
@@ -1678,8 +1677,7 @@ Boolean pick_next_pc()
 
 void combat_run_monst()
 {
-	short i,j,k,num_monst,item,item_level;
-	creature_data_type *monst;
+	short i,item,item_level;
 	Boolean update_stat = FALSE;
 
 
@@ -1766,10 +1764,9 @@ void do_monster_turn()
 {
 	Boolean acted_yet, had_monst = FALSE,printed_poison = FALSE,printed_disease = FALSE,printed_acid = FALSE;
 	Boolean redraw_not_yet_done = TRUE;
-	location monst_loc,targ_space = {0,0},move_targ,l;
+	location targ_space = {0,0},move_targ,l;
 	short i,j,k,num_monst,num_tries = 0, target,r1,move_target;
 	creature_data_type *cur_monst;
-	long dummy;
 	Boolean pc_adj[6];
 	short abil_range[40] = {0,6,8,8,10, 10,10,8,6,8, 6,0,0,0,6, 0,0,0,0,4, 10,0,0,6,0,
 							0,0,0,0,0, 0,0,8,6,9, 0,0,0,0,0};
@@ -2852,7 +2849,7 @@ Boolean monst_breathe(creature_data_type *caster,location targ_space,short dam_t
 
 Boolean monst_cast_mage(creature_data_type *caster,short targ)
 {
-	short r1,r2,j,spell,i,level,target_levels,friend_levels_near,x;
+	short r1,j,spell,i,level,target_levels,friend_levels_near,x;
 	Boolean acted = FALSE;
 	location target,vict_loc,ashes_loc = {0,0},l;
 	creature_data_type *affected;
@@ -3475,7 +3472,7 @@ location find_fireball_loc(location where,short radius,short mode,short *m)
 //short mode; // 0 - hostile casting  1 - friendly casting
 {
 	location check_loc,cast_loc = {120,0};
-	short i,j,k,cur_lev,level_max = 10;
+	short cur_lev,level_max = 10;
 	
 	for (check_loc.x = 1; check_loc.x < town_size[town_type] - 1; check_loc.x ++)
 		for (check_loc.y = 1; check_loc.y < town_size[town_type] - 1; check_loc.y ++)
@@ -3579,7 +3576,7 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,Boolean 
 	short i,j,r1,k,store = 0;
 	unsigned char effect;
 	location spot_hit;
-	location s_loc,loc;
+	location s_loc;
 	RECT active;
 	creature_data_type *which_m;
 	Boolean monster_hit = FALSE;
@@ -4032,7 +4029,6 @@ Boolean no_pcs_left()
 Boolean hit_end_c_button()
 {
 	Boolean end_ok = TRUE;
-	short i;
 	
 	if (which_combat_type == 0) {
 		end_ok = out_monst_all_dead();
@@ -4543,7 +4539,7 @@ void spell_cast_hit_return()
 
 void process_fields()
 {
-	short i,j,k,l,m,r1;
+	short i,j,k,r1;
 	location loc;
 	char qf[64][64];
 	RECT r;
@@ -4706,7 +4702,6 @@ void process_fields()
 void scloud_space(short m,short n)
 {
 	location target;
-	creature_data_type *which_m;
 	short i;
 	
 	target.x = (char) m;
@@ -4731,7 +4726,6 @@ void scloud_space(short m,short n)
 void web_space(short m,short n)
 {
 	location target;
-	creature_data_type *which_m;
 	short i; 
 	
 	target.x = (char) m;
@@ -4754,7 +4748,6 @@ void web_space(short m,short n)
 void sleep_cloud_space(short m,short n)
 {
 	location target;
-	creature_data_type *which_m;
 	short i; 
 	
 	target.x = (char) m;
@@ -4788,7 +4781,7 @@ void add_new_action(short pc_num)
 }
 
 short get_monst_sound(creature_data_type *attacker,short which_att) {
-	short type,strength,i;
+	short type,strength;
 	
 	type = (which_att == 0) ? attacker->m_d.a1_type :  attacker->m_d.a23_type;
 	strength = attacker->m_d.a[which_att];

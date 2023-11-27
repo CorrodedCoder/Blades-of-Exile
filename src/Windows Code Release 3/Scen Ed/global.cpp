@@ -1,8 +1,8 @@
 
 #include <Windows.h>
 #include "global.h"
-#include "math.h"
-#include <stdlib.h>
+#include <cmath>
+#include <cstdlib>
 
 extern char far scen_strs[160][256];
 extern char far scen_strs2[110][256];
@@ -33,20 +33,6 @@ short dist(location p1,location p2)
 {
 	return (short) sqrt((double)((p1.x - p2.x) * (p1.x - p2.x) +
 							(p1.y - p2.y) * (p1.y - p2.y)));
-}
-
-short max(short a,short b)
-{
-	if (a > b)
-		return a;
-		else return b;
-}
-
-short min(short a,short b)
-{
-	if (a < b)
-		return a;
-		else return b;
 }
 
 short minmax(short min,short max,short k)

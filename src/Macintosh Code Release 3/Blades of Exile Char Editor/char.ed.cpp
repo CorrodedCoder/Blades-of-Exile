@@ -38,7 +38,7 @@ Blades of Exile Game/Scenario Editor/Character Editor
 #include <StandardFile.h>
 #include <QDOffscreen.h>
 
-#include "string.h"
+#include <cstring>
 #include "ed.global.h"
 #include "ed.graphics.h" 
 #include "ed.editors.h" 

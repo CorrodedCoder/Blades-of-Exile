@@ -12,10 +12,10 @@
 #include <QDOffscreen.h>
 
 #include "stdio.h"
-#include "string.h"
+#include <cstring>
 #include "global.h"
 #include "tGraphics.h"
-#include "math.h"
+#include <cmath>
 #include "dlogtool.h"
 #include "keydlgs.h"
 #include "sound.h"

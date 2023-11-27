@@ -1,6 +1,6 @@
 
 #include <Windows.h>
-#include <stdio.h>
+#include <cstdio>
 
 #include "global.h"
 #include "actions.h"
@@ -12,7 +12,7 @@
 #include "locutils.h"
 #include "fields.h"
 #include "town.h"
-#include "math.h"
+#include <cmath>
 #include "text.h"
 #include "party.h"
 #include "monster.h"
@@ -310,16 +310,13 @@ Boolean prime_time()
 
 Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 {
-	short i,j,k, store_dest,i_num,item_hit,which_t,s1,s2,s3;
+	short i,j,k, item_hit,which_t,s1,s2,s3;
 	Boolean are_done = FALSE;
-	RECT targ_rect;	
 	Boolean need_redraw = FALSE, did_something = FALSE, need_reprint = FALSE;
 	Boolean town_move_done = FALSE,pc_delayed = FALSE;
 	location destination,cur_loc,sector = {0,0},loc_in_sec,cur_direction = {0,0};
-	char *store_str;
 	unsigned char storage;
 	short find_direction_from,ter_looked_at,button_hit = 12,store_cur_pc;
-	long dummy;
 	short store_sp[6];
 
 	char str[60];	
@@ -1565,7 +1562,6 @@ void check_cd_event(HWND hwnd,UINT message,UINT wparam,LONG lparam)
 
 void flash_rect(RECT to_flash)
 {
-	int i;
 	long dummy;
 	HDC hdc;
 
@@ -1581,7 +1577,6 @@ void flash_rect(RECT to_flash)
 
 void button_flash_rect(RECT to_flash)
 {
-	int i;
 	long dummy;
 	HDC hdc;
 
@@ -1597,7 +1592,6 @@ void button_flash_rect(RECT to_flash)
 
  void flash_round_rect(RECT to_flash,short radius)
 {
-	int i;
 	long dummy;
 	HDC hdc;
 
@@ -1639,8 +1633,7 @@ void button_flash_rect(RECT to_flash)
 
  void initiate_outdoor_combat(short i)
 {
-	long dummy;
-	short m,n,store_lev;
+	short m,n;
 	location to_place;
 
 	initiate_redraw();
@@ -1756,12 +1749,9 @@ Boolean handle_keystroke(UINT wParam,LONG lParam)
 {
 	Boolean are_done = FALSE;
 	POINT pass_point;
-	short i,j,k,l,dum;
-	long i2,j2,k2,l2,dum2;
-	long dummy;
-	short the_type;
+	short i,j,k;
 	DWORD s1;
-	UINT s2,s3;
+	UINT s2;
 
 	char keypad[10] = {82,83,84,85,86,87,88,89,91,92};
 	POINT terrain_click[10] = {{150,185},{120,215},{150,215},{180,215},
@@ -2110,7 +2100,6 @@ void menu_activate( short type)
 // type;  // 0 - save off alter off 1 - not all off
 {
 	HMENU menu;
-	short i;
 
 	menu = GetMenu(mainPtr);
 
@@ -2229,7 +2218,7 @@ void do_save(short mode)
 			
 void increase_age()
 {
-	short i,j,k,item,how_many_short = 0,r1,store_day;
+	short i,j,item,how_many_short = 0,r1,store_day;
 	Boolean update_stat = FALSE;
 
 			
@@ -2583,7 +2572,7 @@ void handle_death()
 
 void start_new_game()
 {
-	short which,i,r1; // 0 - make party   1 - sample party
+	short i; // 0 - make party   1 - sample party
 	short num_pcs = 0,choice;
 	Boolean creation_done = FALSE;
 	location in_town_loc = {59,6};
@@ -2671,7 +2660,7 @@ location get_cur_direction(POINT the_point)
 Boolean outd_move_party(location destination,Boolean forced)
 {
 	char create_line[60];
-	short i,boat_num,horse_num,spec_num;
+	short boat_num,horse_num,spec_num;
 	location real_dest, sector_p_in;
 	Boolean keep_going = TRUE,check_f;
 	location store_corner,store_iwc;
@@ -2890,7 +2879,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 Boolean town_move_party(location destination,short forced)
 {
 	char create_line[60],keep_going = TRUE;
-	short boat_there,horse_there,spec_num,i;
+	short boat_there,horse_there,spec_num;
 	unsigned char ter;
 	Boolean check_f = FALSE;
 		
@@ -3040,7 +3029,6 @@ Boolean someone_poisoned()
 short nearest_monster()
 {
 	short i = 100,j,s;
-	char debug[60];
 
 	for (j = 0; j < 10; j++)
 		if (party.out_c[j].exists == TRUE) {
@@ -3083,7 +3071,6 @@ short count_walls(location loc)
 Boolean is_sign(unsigned char ter)
 {
 	unsigned char signs[6] = {110,127,142,213,214,252};
-	short i;
 	
 	if (scenario.ter_types[ter].special == 11)
 		return TRUE;

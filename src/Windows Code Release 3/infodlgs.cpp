@@ -1,14 +1,14 @@
 
 
 #include <Windows.h>
-#include "stdio.h"
+#include <cstdio>
 
 #include "global.h"
 
 #include "graphics.h"
 #include "newgraph.h"
 #include "items.h"
-#include "string.h"
+#include <cstring>
 #include "monster.h"
 #include "dlogtool.h"
 #include "party.h"
@@ -130,9 +130,6 @@ void display_spells(short mode,short force_spell,short parent_num)
 //short mode; // 0 - mage  1 - priest
 //short force_spell; // if 100, ignore
 {
-	short buy_val,i,store,item_hit;
-	char get_text[256];
-
 	store_display_mode = mode;
 	if (force_spell < 100) {
 		if (mode == 0)
@@ -198,10 +195,6 @@ Boolean display_skills_event_filter (short item_hit)
 
 void display_skills(short force_skill,short parent)
 {
-	long val_for_text;
-
-	short buy_val,i,store,item_hit;
-
 	if (force_skill < 100)
 		skill_pos = force_skill;
 	if (skill_pos < 0)
@@ -219,7 +212,7 @@ void display_skills(short force_skill,short parent)
 
 void put_pc_graphics()
 {
-	short item_hit,what_talk_field,i;
+	short i;
 
 	for (i = 3; i < 65; i++) {
 		if (((store_trait_mode == 0) && (adven[which_pc_displayed].mage_spells[i - 3] == TRUE)) ||
@@ -264,7 +257,7 @@ Boolean display_pc_event_filter (short item_hit)
 
 void display_pc(short pc_num,short mode,short parent)
 {
-	short i,item_hit;
+	short i;
 	char label_str[256];
 	
 	if (adven[pc_num].main_status == 0) {
@@ -294,7 +287,7 @@ void put_item_info(short pc,short item)
 {
 	char store_text[256];
 	char desc_str[256];
-	short pos,i;	
+	short i;	
 	item_record_type s_i;
 	char *item_types[] = {"","1-Handed weapon","2-Handed weapon","","Bow","Arrows","Thrown missile",
 			"Potion/Magic Item","Scroll/Magic Item","Wand","Tool","","Shield","Armor","Helm",
@@ -421,8 +414,6 @@ Boolean display_pc_item_event_filter (short item_hit)
 
 void display_pc_item(short pc_num,short item,item_record_type si,short parent)
 {
-	short item_hit;
-
 		store_item_pc = pc_num;
 		if (pc_num == 6)
 			store_i = si;
@@ -555,9 +546,6 @@ void display_monst(short array_pos,creature_data_type *which_m,short mode)
 //creature_data_type *which_m; // if NULL, show full roster
 //short mode; // if 1, full roster, else use monster from storwhich_me_m
 {
-	
-	short item_hit;
-	
 	position = array_pos;
 	full_roster = FALSE;
 	if (mode == 1) {
@@ -634,7 +622,6 @@ void display_help(short mode,short parent)
 {
 	char get_text[256];
    long get_val;
-   short item_hit;
 	
 	store_help_mode = mode;
 	cur_entry = 3;
@@ -671,7 +658,7 @@ Boolean display_alchemy_event_filter (short item_hit)
 
 void display_alchemy()
 {
-	short i,item_hit;
+	short i;
 	char *alch_names[] = {"Weak Curing Potion (1)","Weak Healing Potion (1)","Weak Poison (1)",
 	"Weak Speed Potion (3)","Medium Poison (3)",
 		"Medium Heal Potion (4)","Strong Curing (5)","Medium Speed Potion (5)",
@@ -703,7 +690,6 @@ void display_alchemy()
 void display_traits_graphics()
 {
 	short i,store;
-	char str[256];
 
 	for (i = 0; i < 3; i++) {
 		cd_set_led(1013,4 + i,(store_pc->race == i) ? 1 : 0);
@@ -761,7 +747,6 @@ void pick_race_abil(pc_record_type *pc,short mode,short parent_num)
 {
 	char *start_str1 = "Click on button by name for description.";
 	char *start_str2 = "Click on advantage button to add/remove.";
-	short item_hit;
 	
 	store_trait_mode = mode;
 	store_pc = pc;
@@ -880,7 +865,6 @@ void display_pc_info()
 
 void give_pc_info_event_filter(short item_hit)
 {
-	char abil_str[256];
 	short pc;
 
 	pc = store_pc_num;
@@ -918,7 +902,7 @@ void give_pc_info_event_filter(short item_hit)
 
 void give_pc_info(short pc_num)
 {
-	short item_hit ,i;
+	short i;
 	char str[256];
 	
 	store_pc_num = pc_num;
@@ -1011,9 +995,7 @@ void adventure_notes_event_filter (short item_hit)
 
 void adventure_notes()
 {
-	long val_for_text;
-
-	short i,item_hit;
+	short i;
 	char place_str[256];
 
 	store_num_i = 0;
@@ -1119,8 +1101,6 @@ void put_talk()
 
 void talk_notes_event_filter (short item_hit)
 {
-	short i;
-	char place_str[256];
 			switch (item_hit) {
 				case 1: 
 					dialog_not_toast = FALSE;
@@ -1148,10 +1128,7 @@ void talk_notes_event_filter (short item_hit)
 
 void talk_notes()
 {
-	long val_for_text;
-
-	short i,item_hit;
-	char place_str[256];
+	short i;
 	
 	store_num_i = 0;
 	for (i = 0; i < 120; i++)
@@ -1217,8 +1194,6 @@ void give_help(short help1,short help2,short parent_num)
 
 void put_spec_item_info (short which_i)
 {
-	char item_name[256];
-	
 	display_strings(data_store5->scen_strs[60 + 1 + which_i * 2],"",
 	-1,-1,-1,-1,
 	data_store5->scen_strs[60 + which_i * 2],57,1600 + scenario.intro_pic,0);
@@ -1275,10 +1250,6 @@ void display_strings(char *text1, char *text2,short str_label_1,short str_label_
 	short str_label_2b,
 	char *title,short sound_num,short graphic_num,short parent_num)
 {
-
-	short item_hit;
-	char sign_text[256];
-	location view_loc;
 	Boolean sound_done = FALSE;
 
 	make_cursor_sword();

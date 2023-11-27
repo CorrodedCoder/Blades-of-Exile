@@ -1,6 +1,6 @@
 #include <Windows.h>
 
-#include "stdio.h"
+#include <cstdio>
 
 #include "graphics.h"
 #include "global.h"
@@ -71,9 +71,8 @@ pc_record_type *store_xp_pc;
 Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 //short mode; // ignore,
 {
-	short i,j,button_hit = 100,first_existing_pc = 0;
+	short i,button_hit = 100,first_existing_pc = 0;
 	
-	char debug_line[60];	
 	short choice = 4,for_pc = 6;
 	
 	Boolean to_return = FALSE;
@@ -148,7 +147,6 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 
 void flash_rect(RECT to_flash)
 {
-	int i;
 	long dummy;
 	HDC hdc;
 
@@ -164,21 +162,17 @@ void flash_rect(RECT to_flash)
 void edit_gold_or_food_event_filter (short item_hit)
 {
 	char get_text[256];
-	long dummy;
 	
 	cd_get_text_edit_str((store_which_to_edit == 0) ? 1012 : 947,(char *) get_text);
 	dialog_answer = 0;
-	sscanf((char *) get_text,"%d",&dialog_answer);
+	sscanf((char *) get_text,"%hd",&dialog_answer);
 	dialog_not_toast = FALSE;
 }
 
 void edit_gold_or_food(short which_to_edit)
 //0 - gold 1 - food
 {
-
-	short item_hit;
 	char sign_text[256];
-	location view_loc;
 
 	store_which_to_edit = which_to_edit;
 
@@ -210,21 +204,16 @@ void edit_gold_or_food(short which_to_edit)
 void edit_day_event_filter (short item_hit)
 {
 	char get_text[256];
-	long dummy;
 	
 	cd_get_text_edit_str(917,(char *) get_text);
 	dialog_answer = 0;
-	sscanf((char *) get_text,"%d",&dialog_answer);
+	sscanf((char *) get_text,"%hd",&dialog_answer);
 	dialog_not_toast = FALSE;
 }
 
 void edit_day()
 {
-
-	short item_hit;
 	char sign_text[256];
-	location view_loc;
-
 
 	make_cursor_sword();
 	
@@ -248,7 +237,7 @@ void edit_day()
 
 void put_pc_graphics()
 {
-	short item_hit,what_talk_field,i;
+	short i;
 
 	for (i = 3; i < 65; i++) {
 		if (((store_trait_mode == 0) && (adven[which_pc_displayed].mage_spells[i - 3] == TRUE)) ||
@@ -299,7 +288,7 @@ Boolean display_pc_event_filter (short item_hit)
 
 void display_pc(short pc_num,short mode,short parent)
 {
-	short i,item_hit;
+	short i;
 	char label_str[256];
 	
 	if (adven[pc_num].main_status == 0) {
@@ -351,7 +340,7 @@ Boolean display_alchemy_event_filter (short item_hit)
 
 void display_alchemy()
 {
-	short i,item_hit;
+	short i;
 	char *alch_names[] = {"Weak Curing Potion (1)","Weak Healing Potion (1)","Weak Poison (1)",
 	"Weak Speed Potion (3)","Medium Poison (3)",
 		"Medium Heal Potion (4)","Strong Curing (5)","Medium Speed Potion (5)",
@@ -414,10 +403,7 @@ void draw_xp_skills()
 
 
 void do_xp_draw()
-
 {
-
-	short item_hit,what_talk_field;
 	char get_text[256];
 	short pc_num;
 
@@ -442,8 +428,7 @@ void do_xp_draw()
 
 Boolean spend_xp_event_filter (short item_hit)
 {
-	short what_talk_field,i,j,pc_num,mode = 1;
-	char get_text[256];
+	short pc_num,mode = 1;
 	Boolean talk_done = FALSE;
 
 	pc_num = store_train_pc;
@@ -592,7 +577,6 @@ Boolean spend_xp(short pc_num, short mode, short parent)
 // returns 1 if cancelled
 {
 	char get_text[256],text2[256];
-	short item_hit;
 
 	store_train_pc = pc_num;
 
@@ -624,9 +608,6 @@ Boolean spend_xp(short pc_num, short mode, short parent)
 
 void give_reg_info_event_filter (short item_hit)
 {
-	short i;
-	char place_str[256];
-	
 			switch (item_hit) {
 				case 1: 
 					dialog_not_toast = FALSE;
@@ -636,12 +617,6 @@ void give_reg_info_event_filter (short item_hit)
 
 void give_reg_info()
 {
-	long val_for_text;
-
-	short i,item_hit;
-	char place_str[256];
-	
-
 	make_cursor_sword();
 
 	cd_create_dialog_parent_num(1073,0);
@@ -659,22 +634,16 @@ void give_reg_info()
 void do_registration_event_filter (short item_hit)
 {
 	char get_text[256];
-	long dummy;
 	
 	cd_get_text_edit_str(1075,(char *) get_text);
 	dialog_answer = 0;
-	sscanf((char *) get_text,"%d",&dialog_answer);
+	sscanf((char *) get_text,"%hd",&dialog_answer);
 		
 	dialog_not_toast = FALSE;
 }
 
 void do_registration()
 {
-
-	short item_hit;
-	char sign_text[256];
-	location view_loc;
-
 	make_cursor_sword();
 	
 	cd_create_dialog(1075,mainPtr);
@@ -708,11 +677,10 @@ void do_registration()
 void edit_xp_event_filter (short item_hit)
 {
 	char get_text[256];
-	long dummy;
 	
 	cd_get_text_edit_str(1024,(char *) get_text);
 	dialog_answer = 0;
-	sscanf((char *) get_text,"%d",&dialog_answer);
+	sscanf((char *) get_text,"%hd",&dialog_answer);
 
 	dialog_not_toast = FALSE;
 }
@@ -722,7 +690,6 @@ void edit_xp(pc_record_type *pc)
 
 	short item_hit;
 	char sign_text[256];
-	location view_loc;
 
 	store_xp_pc = pc;
 

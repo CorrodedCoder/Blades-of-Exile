@@ -3,9 +3,9 @@
 #include <windows.h>
 #include <windowsx.h>
 #include <commdlg.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
 #include "global.h"
 
 
@@ -41,7 +41,7 @@ HPALETTE syspal = NULL;
 void init_palette(BYTE * lpDib)
 {
 	HDC hdc;
-	short i,red,green,blue;
+	short i;
 	LOGPALETTE *plgpl = NULL;
 	LOCALHANDLE l;
 
@@ -50,9 +50,7 @@ void init_palette(BYTE * lpDib)
 	RGBTRIPLE store_c[256];
 	DWORD dwNumColors, dwColorTableSize;
 	WORD wBitCount;
-  char debug[80];
- HBRUSH hbr;
-	if (pal_ok == TRUE)
+ 	if (pal_ok == TRUE)
 		return;
 	pal_ok = TRUE;
 
@@ -128,7 +126,7 @@ plgpl = (LOGPALETTE*) LocalLock(l);
 void extract_given_palette(BYTE * lpDib)
 {
 	HDC hdc;
-	short i,red,green,blue;
+	short i;
 	LOGPALETTE *plgpl = NULL;
 	LOCALHANDLE l;
 
@@ -137,7 +135,6 @@ void extract_given_palette(BYTE * lpDib)
 	RGBTRIPLE store_c[256];
 	DWORD dwNumColors, dwColorTableSize;
 	WORD wBitCount;
-	HBRUSH hbr;
 
 	if (GetDibInfoHeaderSize(lpDib) == sizeof(BITMAPCOREHEADER)) {
 		wBitCount = ((BITMAPCOREHEADER *) lpDib)->bcBitCount;
@@ -308,7 +305,6 @@ BYTE * GetDibBitsAddr(BYTE * lpDib)
 {
 	DWORD dwNumColors, dwColorTableSize;
 	WORD wBitCount;
-	short i;
 
 	if (GetDibInfoHeaderSize(lpDib) == sizeof(BITMAPCOREHEADER)) {
 		wBitCount = ((BITMAPCOREHEADER *) lpDib)->bcBitCount;
@@ -476,7 +472,7 @@ HBITMAP load_pict(short pict_num)
 
 void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 	short trans, short main_win) {
-	HDC hdcMem,hdcMem2,hdcMem3,destDC,storeDC;
+	HDC hdcMem,hdcMem2,hdcMem3,destDC;
 	HBITMAP transbmp;
 	COLORREF white = RGB(255,255,255),black = RGB(0,0,0),oldcolor;
 	RECT debug = {0,0,200,20};

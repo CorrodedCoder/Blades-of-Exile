@@ -1,5 +1,5 @@
 #include <Windows.h>
-#include "math.h"
+#include <cmath>
 #include "global.h"
 #include "locutils.h"
 #include "text.h"
@@ -354,7 +354,6 @@ unsigned char coord_to_ter(short x,short y)
 Boolean is_container(location loc)
 {
 	unsigned char ter;
-	short i;
 	
 	if ((is_barrel(loc.x,loc.y)) || (is_crate(loc.x,loc.y)))
 		return TRUE;
@@ -367,10 +366,8 @@ Boolean is_container(location loc)
 void update_explored(location dest)
 {
 	shortloc shortdest,look;
-	shortloc see1,see2;
 
 	location look2;
-	short see_val;
 
 	shortdest.x = (short) dest.x;
 	shortdest.y = (short) dest.y;
@@ -407,7 +404,6 @@ void update_explored(location dest)
 Boolean is_blocked(location to_check)
 {
 	short i,gr;
-	location check_loc;
 	unsigned char ter;
 
 	if (is_out()) {
@@ -462,8 +458,6 @@ Boolean is_blocked(location to_check)
 
 Boolean monst_on_space(location loc,short m_num)
 {
-	short i,j;
-	
 	if (c_town.monst.dudes[m_num].active == 0)
 		return FALSE;
 	if ((loc.x - c_town.monst.dudes[m_num].m_loc.x >= 0) && 
@@ -651,8 +645,6 @@ short light_radius()
 
 Boolean pt_in_light(location from_where,location to_where) // Assumes, of course, in town or combat
 {
-	short i,dummy;
-
 	if (c_town.town.lighting == 0)
 		return TRUE;
 	if ((to_where.x < 0) || (to_where.x >= town_size[town_type])
@@ -669,7 +661,7 @@ Boolean pt_in_light(location from_where,location to_where) // Assumes, of course
 
 Boolean combat_pt_in_light(location to_where)
 {
-	short i,dummy,rad;
+	short i,rad;
 
 	if ((c_town.town.lighting == 0) || (which_combat_type == 0))
 		return TRUE;

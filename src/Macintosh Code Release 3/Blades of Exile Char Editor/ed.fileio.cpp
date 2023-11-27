@@ -8,7 +8,7 @@
 #include <StandardFile.h>
 #include <Resources.h>
 #include <QDOffscreen.h>
-#include <string.h>
+#include <cstring>
 #include "stdio.h"
 
 #include "ed.global.h"

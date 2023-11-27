@@ -12,7 +12,7 @@
 #include "dlogtool.h"
 #include "exlsound.h"
 #include "graphutl.h"
-#include "stdio.h"
+#include <cstdio>
 #include "graphutl_helpers.hpp"
 
 extern HWND	mainPtr;
@@ -173,7 +173,7 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw,short dest)
 	RECT where_draw;
 	RECT source_rect;
 	RECT anim_rects[4] = {{0,0,28,36},{28,0,56,36},{56,0,84,36},{84,0,112,36}}; /**/
-	HBITMAP ter_source_gworld,source_gworld;
+	HBITMAP source_gworld;
 	short anim_type = 0;
 	location l;
 	HDC hdc;
@@ -252,11 +252,10 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw,short dest)
 
 void draw_monsters()
 {
-	short i,j = 0,k,l;
+	short i,j = 0,k;
 	short width,height;
 	RECT source_rect,to_rect;
 	location where_draw,store_loc;
-	char debug[60];
 	short picture_wanted;
 	unsigned char ter;
 	RECT monst_rects[4][4] = {{{0,0,28,36},{0,0,0,0},{0,0,0,0},{0,0,0,0}},
@@ -397,7 +396,7 @@ void draw_pcs(location center,short mode)
 //short mode; // 0 - put pcs in gworld  1 - only rectangle around active pc
 {
 	short i;
-	RECT source_rect,active_pc_rect;
+	RECT source_rect;
 	location where_draw;
 	
 	if (party_toast() == TRUE)
@@ -735,8 +734,6 @@ void draw_party_symbol(short mode,location center)
 desired pixmap, or Rect to darkness if desired map not present */
 RECT get_terrain_template_rect (unsigned char type_wanted)
 {
-	RECT store_rect;
-	short i,j;
 	short picture_wanted;
 
 	picture_wanted = terrain_pic[type_wanted];
@@ -797,7 +794,6 @@ RECT get_monster_template_rect (unsigned char type_wanted,short mode,short which
 //mode; // 0 - left  1 - right  +10 - combat mode
 {
 	RECT store_rect = {0,0,28,36};
-	short i,j;
 	short picture_wanted;
 	short adj = 0;
 	
@@ -956,7 +952,7 @@ void make_out_trim()
 char add_trim_to_array(location where,unsigned char ter_type)
 {
 	Boolean at_top = FALSE,at_bot = FALSE,at_left = FALSE,at_right = FALSE;
-	unsigned char store,store2,store3,store1;
+	unsigned char store;
 	char to_return = 0;
 	
 	if (where.x == 0)
@@ -1050,7 +1046,7 @@ void check_if_monst_seen(unsigned char m_num)
 // item 600 + i will mean monster i.
 void adjust_monst_menu()
 {
-	short i,j,monst_pos = 0;
+	short i,monst_pos = 0;
 	char monst_name[256];
 	HMENU menu,big_menu;
 	short total_added = 0;

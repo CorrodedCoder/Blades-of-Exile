@@ -1,7 +1,7 @@
 #include <Windows.h>
-#include <stdio.h>
-#include "string.h"
-#include "Global.h"
+#include <cstdio>
+#include <cstring>
+#include "global.h"
 #include "graphics.h"
 #include "scenario.h"
 #include "dlogtool.h"
@@ -1111,7 +1111,7 @@ void edit_ter_type_event_filter (short item_hit)
 short edit_ter_type(short which_ter)
 // ignore parent in Mac version
 {
-	short item_hit,i,store_dialog_answer;
+	short i;
 	char temp_str[256];
 	char *blocked_strs[6] = {"Clear","Walk through, Opaque","Clear, Special","Clear, Blocked","Blocked, Obstructed",
 		"Blocked, Opaque"};
@@ -1252,7 +1252,6 @@ Boolean save_monst_info()
 
 void edit_monst_type_event_filter (short item_hit)
 {
-	char str[256];
 	short i;
 	monster_record_type temp_monst;
 	
@@ -1342,8 +1341,7 @@ void edit_monst_type_event_filter (short item_hit)
 short edit_monst_type(short which_monst)
 // ignore parent in Mac version
 {
-	short item_hit,i,store_dialog_answer;
-	char temp_str[256];
+	short i;
 	char *attitude[4] = {"Friendly, Docile","Hostile, Type A","Friendly, Will Fight","Hostile, Type B"};
 	
 	store_which_monst = which_monst;
@@ -1402,9 +1400,6 @@ void put_monst_abils_in_dlog()
 
 Boolean save_monst_abils()
 {
-	char str[256];
-	short i;
-	
  	store_monst2.poison = CDGN(815,2);
  	if (cre(store_monst2.poison,0,8,"Poison must be from 0 to 8.","",815) > 0) return FALSE;
 	store_monst2.breath = CDGN(815,3);
@@ -1435,7 +1430,6 @@ Boolean save_monst_abils()
 
 void edit_monst_abil_event_filter (short item_hit)
 {
-	char str[256];
 	short i;
 	
 	switch (item_hit) {
@@ -1474,9 +1468,6 @@ void edit_monst_abil_event_filter (short item_hit)
 monster_record_type edit_monst_abil(monster_record_type starting_record,short parent_num)
 // ignore parent in Mac version
 {
-	short item_hit,i,store_dialog_answer;
-	char temp_str[256];
-	
 	//store_which_monst = which_monst;
 	store_monst2 = starting_record;
 	//make_cursor_sword();
@@ -1512,8 +1503,6 @@ monster_record_type edit_monst_abil(monster_record_type starting_record,short pa
 
 void put_item_info_in_dlog()
 {
-	char str[256];
-
 	cdsin(818,52,store_which_item);
 	CDST(818,2,store_item.full_name);
 	CDST(818,3,store_item.name);
@@ -1538,7 +1527,6 @@ void put_item_info_in_dlog()
 Boolean save_item_info()
 {
 	char str[256];
-	short i;
 	
 	CDGT(818,2,(char *) str);
 	str[24] = 0;
@@ -1592,7 +1580,6 @@ Boolean save_item_info()
 
 void edit_item_type_event_filter (short item_hit)
 {
-	char str[256];
 	short i;
 	item_record_type temp_item;
 	
@@ -1654,8 +1641,7 @@ void edit_item_type_event_filter (short item_hit)
 short edit_item_type(short which_item)
 // ignore parent in Mac version
 {
-	short item_hit,i,store_dialog_answer;
-	char temp_str[256];
+	short i;
 				
 	store_which_item = which_item;
 	store_item = scen_item_list.scen_items[store_which_item];
@@ -1682,7 +1668,6 @@ short edit_item_type(short which_item)
 void put_item_abils_in_dlog()
 {
 	char str[256];
-	short i;
 	
 	cdsin(824,16,store_which_item);
 	csit(824,32,store_item2.full_name);
@@ -1709,9 +1694,6 @@ void put_item_abils_in_dlog()
 
 Boolean save_item_abils()
 {
-	char str[256];
-	short i;
-	
 	store_item2.magic_use_type = cd_get_led_range(824,5,8);
 	store_item2.treas_class = cd_get_led_range(824,26,30);
 	store_item2.ability_strength = CDGN(824,2);
@@ -1729,7 +1711,6 @@ Boolean save_item_abils()
 
 void edit_item_abil_event_filter (short item_hit)
 {
-	char str[256];
 	short i;
 	
 	switch (item_hit) {
@@ -1820,9 +1801,6 @@ void edit_item_abil_event_filter (short item_hit)
 item_record_type edit_item_abil(item_record_type starting_record,short parent_num)
 // ignore parent in Mac version
 {
-	short item_hit,i,store_dialog_answer;
-	char temp_str[256];
-	
 	//store_which_item = which_item;
 	store_item2 = starting_record;
 	//make_cursor_sword();
@@ -1857,9 +1835,6 @@ item_record_type edit_item_abil(item_record_type starting_record,short parent_nu
 
 void put_spec_item_in_dlog()
 {
-	char str[256];
-	short i;
-	
 	cdsin(806,19,store_which_spec_item);
 	CDST(806,2,scen_strs[60 + store_which_spec_item * 2]);
 	CDST(806,3,scen_strs[60 + store_which_spec_item * 2 + 1]);
@@ -1873,7 +1848,6 @@ void put_spec_item_in_dlog()
 Boolean save_spec_item()
 {
 	char str[256];
-	short i;
 	
 	CDGT(806,2,(char *) str);
 	str[25] = 0;
@@ -1893,8 +1867,7 @@ Boolean save_spec_item()
 
 void edit_spec_item_event_filter (short spec_item_hit)
 {
-	char str[256];
-	short i,spec;
+	short spec;
 	
 	switch (spec_item_hit) {
 		case 11: 
@@ -1948,9 +1921,6 @@ void edit_spec_item_event_filter (short spec_item_hit)
 void edit_spec_item(short which_item)
 // ignore parent in Mac version
 {
-	short spec_item_hit,i,store_dialog_answer;
-	char temp_str[256];
-	
 	//store_which_spec_item = which_spec_item;
 	store_which_spec_item = which_item;
 	spec_item_spec = scenario.special_item_special[store_which_spec_item];
@@ -1970,7 +1940,6 @@ void edit_spec_item(short which_item)
 
 void put_save_rects_in_dlog()
 {
-	char str[256];
 	short i;
 	
 	for (i = 0; i < 3; i++) {
@@ -1986,7 +1955,6 @@ void put_save_rects_in_dlog()
 
 Boolean save_save_rects()
 {
-	char str[256];
 	short i;
 	
 	for (i = 0; i < 3; i++) {
@@ -2017,9 +1985,6 @@ Boolean save_save_rects()
 
 void edit_save_rects_event_filter (short save_rects_hit)
 {
-	char str[256];
-	short i;
-	
 	switch (save_rects_hit) {
 		case 18: 
 			dialog_not_toast = FALSE; break;	
@@ -2034,9 +1999,6 @@ void edit_save_rects_event_filter (short save_rects_hit)
 void edit_save_rects()
 // ignore parent in Mac version
 {
-	short save_rects_hit,i,store_dialog_answer;
-	char temp_str[256];
-	
 	cd_create_dialog_parent_num(807,0);
 	
 	put_save_rects_in_dlog();
@@ -2049,7 +2011,6 @@ void edit_save_rects()
 
 Boolean save_horses()
 {
-	char str[256];
 	short i;
 	
 	for (i = 0; i < 6; i++) {
@@ -2069,7 +2030,6 @@ Boolean save_horses()
 
 void put_horses_in_dlog()
 {
-	char str[256];
 	short i;
 	
 	for (i = 0; i < 6; i++) {
@@ -2084,7 +2044,6 @@ void put_horses_in_dlog()
 
 void edit_horses_event_filter (short item_hit)
 {
-	char str[256];
 	short i;
 	
 	switch (item_hit) {
@@ -2114,9 +2073,6 @@ void edit_horses_event_filter (short item_hit)
 void edit_horses()
 // ignore parent in Mac version
 {
-	short horses_hit,i,store_dialog_answer;
-	char temp_str[256];
-	
 	store_horse_page = 0;
 	
 	cd_create_dialog_parent_num(808,0);
@@ -2131,7 +2087,6 @@ void edit_horses()
 
 Boolean save_boats()
 {
-	char str[256];
 	short i;
 	
 	for (i = 0; i < 6; i++) {
@@ -2151,7 +2106,6 @@ Boolean save_boats()
 
 void put_boats_in_dlog()
 {
-	char str[256];
 	short i;
 	
 	for (i = 0; i < 6; i++) {
@@ -2166,7 +2120,6 @@ void put_boats_in_dlog()
 
 void edit_boats_event_filter (short item_hit)
 {
-	char str[256];
 	short i;
 	
 	switch (item_hit) {
@@ -2196,9 +2149,6 @@ void edit_boats_event_filter (short item_hit)
 void edit_boats()
 // ignore parent in Mac version
 {
-	short boats_hit,i,store_dialog_answer;
-	char temp_str[256];
-	
 	store_boat_page = 0;
 	
 	cd_create_dialog_parent_num(809,0);
@@ -2213,7 +2163,6 @@ void edit_boats()
 
 Boolean save_add_town()
 {
-	char str[256];
 	short i;
 	
 	for (i = 0; i < 10; i++) {
@@ -2232,7 +2181,6 @@ Boolean save_add_town()
 
 void put_add_town_in_dlog()
 {
-	char str[256];
 	short i;
 	
 	for (i = 0; i < 10; i++) {
@@ -2245,9 +2193,6 @@ void put_add_town_in_dlog()
 
 void edit_add_town_event_filter (short item_hit)
 {
-	char str[256];
-	short i;
-	
 	switch (item_hit) {
 		case 32:
 			if (save_add_town() == TRUE)
@@ -2260,9 +2205,6 @@ void edit_add_town_event_filter (short item_hit)
 void edit_add_town()
 // ignore parent in Mac version
 {
-	short add_town_hit,i,store_dialog_answer;
-	char temp_str[256];
-		
 	cd_create_dialog_parent_num(810,0);
 	
 	put_add_town_in_dlog();
@@ -2275,7 +2217,6 @@ void edit_add_town()
 
 Boolean save_item_placement()
 {
-	char str[256];
 	short i;
 	
 	store_storage.property = cd_get_led(812,38);
@@ -2297,7 +2238,6 @@ Boolean save_item_placement()
 
 void put_item_placement_in_dlog()
 {
-	char str[256];
 	short i;
 	
 	cdsin(812,27,cur_shortcut);
@@ -2312,7 +2252,6 @@ void put_item_placement_in_dlog()
 
 void edit_item_placement_event_filter (short item_hit)
 {
-	char str[256];
 	short i;
 	
 	switch (item_hit) {
@@ -2359,9 +2298,6 @@ void edit_item_placement_event_filter (short item_hit)
 void edit_item_placement()
 // ignore parent in Mac version
 {
-	short item_placement_hit,i,store_dialog_answer;
-	char temp_str[256];
-	
 	store_storage = scenario.storage_shortcuts[0];
 	cur_shortcut = 0;
 	
@@ -2401,9 +2337,6 @@ Boolean save_scen_details()
 
 void put_scen_details_in_dlog()
 {
-	char str[256];
-	short i;
-	
 	cd_set_led_range(803,30,33,scenario.difficulty);
 	cd_set_led_range(803,21,24,scenario.rating);
 	CDSN(803,2,scenario.ver[0]);
@@ -2416,9 +2349,6 @@ void put_scen_details_in_dlog()
 
 void edit_scen_details_event_filter (short item_hit)
 {
-	char str[256];
-	short i;
-	
 	switch (item_hit) {
 		case 8:
 			if (save_scen_details() == TRUE)
@@ -2434,9 +2364,6 @@ void edit_scen_details_event_filter (short item_hit)
 void edit_scen_details()
 // ignore parent in Mac version
 {
-	short scen_details_hit,i,store_dialog_answer;
-	char temp_str[256];
-	
 	cd_create_dialog_parent_num(803,0);
 	
 	put_scen_details_in_dlog();
@@ -2451,8 +2378,6 @@ void edit_scen_details()
 
 void put_make_scen_1_in_dlog()
 {
-	short i;
-	
 	CDST(800,2,"Scenario name");
 	CDST(800,3,"filename");
 }
@@ -2495,9 +2420,6 @@ void edit_make_scen_1_event_filter (short item_hit)
 short edit_make_scen_1(char *filename,char *title,short *grass)
 // ignore parent in Mac version
 {
-	short make_scen_1_hit,i,store_dialog_answer;
-	char temp_str[256];
-	
 	cd_create_dialog_parent_num(800,0);
 	
 	put_make_scen_1_in_dlog();
@@ -2515,9 +2437,6 @@ short edit_make_scen_1(char *filename,char *title,short *grass)
 
 void put_make_scen_2_in_dlog()
 {
-	char str[256];
-	short i;
-	
 	CDSN(801,2,1);
 	CDSN(801,3,1);
 	CDSN(801,4,0);
@@ -2527,7 +2446,6 @@ void put_make_scen_2_in_dlog()
 
 void edit_make_scen_2_event_filter (short item_hit)
 {
-	char str[256];
 	short i,j,k;
 	
 	switch (item_hit) {
@@ -2567,8 +2485,7 @@ void edit_make_scen_2_event_filter (short item_hit)
 short edit_make_scen_2(short *val_array)
 // ignore parent in Mac version
 {
-	short make_scen_2_hit,i,store_dialog_answer;//array[6];
-	char temp_str[256];
+	short i;//array[6];
 	
 	//array = val_array;
 	cd_create_dialog_parent_num(801,0);
@@ -2589,9 +2506,8 @@ void build_scenario()
 {
 	short two_flags[6]; // width, height, large, med, small, default_town
 	char f_name[256],f_name2[256],title[256];
-	short grass,password,which_town;
+	short grass,which_town;
 	short i,j;
-	long dummy;
 	
 	if (edit_make_scen_1((char *) f_name,(char *) title,&grass) == FALSE)
 		return;
@@ -2673,7 +2589,6 @@ void build_scenario()
 
 void user_password_filter (short item_hit)
 {
-	char str[256];
 	short i;
 	
 	switch (item_hit) {
@@ -2692,8 +2607,8 @@ void user_password_filter (short item_hit)
 short get_password()
 // ignore parent in Mac version
 {
-	short town_strs_hit,i,store_dialog_answer;
-	char temp_str[256],str2[256];
+	short i;
+	char temp_str[256];
 		
 	cd_create_dialog_parent_num(802,0);
 	
@@ -2744,9 +2659,6 @@ void set_starting_loc_filter (short item_hit)
 void set_starting_loc()
 // ignore parent in Mac version
 {
-	short town_strs_hit,i,store_dialog_answer;
-	char temp_str[256],str2[256];
-		
 	cd_create_dialog_parent_num(805,0);
 	
 	CDSN(805,2,scenario.which_town_start);
@@ -2763,7 +2675,6 @@ void set_starting_loc()
 
 Boolean save_scenario_events()
 {
-	char str[256];
 	short i;
 	
 	for (i = 0; i < 10; i++) {
@@ -2782,7 +2693,6 @@ Boolean save_scenario_events()
 
 void put_scenario_events_in_dlog()
 {
-	char str[256];
 	short i;
 	
 	for (i = 0; i < 10; i++) {
@@ -2794,8 +2704,7 @@ void put_scenario_events_in_dlog()
 
 void edit_scenario_events_event_filter (short item_hit)
 {
-	char str[256];
-	short i,spec;
+	short spec;
 	
 	switch (item_hit) {
 		case 22:
@@ -2827,10 +2736,6 @@ void edit_scenario_events_event_filter (short item_hit)
 void edit_scenario_events()
 // ignore parent in Mac version
 {
-	short advanced_town_hit,i,store_dialog_answer;
-	char temp_str[256];
-	
-	
 	cd_create_dialog_parent_num(811,0);
 	
 	put_scenario_events_in_dlog();
@@ -2843,9 +2748,6 @@ void edit_scenario_events()
 
 void give_password_filter (short item_hit)
 {
-	char str[256];
-	short i;
-	
 	switch (item_hit) {
 		default:
 
@@ -2858,8 +2760,8 @@ void give_password_filter (short item_hit)
 short enter_password()
 // ignore parent in Mac version
 {
-	short town_strs_hit,i,store_dialog_answer;
-	char temp_str[256],str2[256];
+	short i;
+	char temp_str[256];
 		
 	cd_create_dialog_parent_num(823,0);
 	

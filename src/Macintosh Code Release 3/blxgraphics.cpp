@@ -16,7 +16,7 @@
 #include <Palettes.h>
 #include <PictUtils.h>
 
-#include "string.h"
+#include <cstring>
 #include "stdio.h"
 #include "global.h"
 #include "blxgraphics.h"
