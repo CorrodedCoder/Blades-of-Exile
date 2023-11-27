@@ -554,7 +554,7 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
  									store_edit_parent_num[l] = store_dlog_num;
 									store_edit_item[l] = i;
 									old_edit_proc[l] = reinterpret_cast<WNDPROC>(GetWindowLongPtr(edit_box[l],GWLP_WNDPROC));
-									SetWindowLongPtr(edit_box[l],GWL_WNDPROC,reinterpret_cast<LONG_PTR>(edit_proc));
+									SetWindowLongPtr(edit_box[l],GWLP_WNDPROC,reinterpret_cast<LONG_PTR>(edit_proc));
 									if (focus_set == FALSE) {
 										SetFocus(edit_box[l]);
 										focus_set = TRUE;
