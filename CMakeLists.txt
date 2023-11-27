@@ -36,7 +36,7 @@ if (MSVC)
 	# Also disable complaints about not using MS's "secure" versions of CRT functions,
 	# largely because they aren't portable and in any case we'll be migrating such
 	# functionality to leverage the C++ STL in good time.
-	add_definitions(-DNOMINMAX -D_CRT_SECURE_NO_WARNINGS)
+	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 
 	if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 		# Warnings which are going to be more involved to address either because of

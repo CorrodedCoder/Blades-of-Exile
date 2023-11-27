@@ -441,6 +441,4 @@ short get_ran (short times,short  min,short  max);
 Boolean same_point(location p1,location p2);
 void pause(short length);
 short minmax(short min,short max,short k);
-short min(short a,short b);
-short max(short a,short b);
 short move_to_zero(short val);
