@@ -196,7 +196,7 @@ void select_pc_event_filter (short item_hit)
 		else dialog_answer = item_hit - 3;
 }
 
-short char_select_pc(short active_only,short free_inv_only,char *title)
+short char_select_pc(short active_only,short free_inv_only, const char * title)
 //active_only;  // 0 - no  1 - yes   2 - disarm trap   
 {
 	short i;
@@ -358,12 +358,13 @@ void pick_race_abil_event_filter(short item_hit)
 
 }
 
+static const char c_start_str1[]{"Click on advantage button for description."};
+static const char c_start_str2[]{"Click on advantage button to add/lose."};
+
+
 void pick_race_abil(pc_record_type *pc,short mode,short parent_num)
 //mode; // 0 - edit  1 - just display  2 - can't change race
 {
-	char *start_str1 = "Click on advantage button for description.";
-	char *start_str2 = "Click on advantage button to add/lose.";
-	
 	mode = 0;
 	store_trait_mode = mode;
 	store_pc = pc;
@@ -373,8 +374,8 @@ void pick_race_abil(pc_record_type *pc,short mode,short parent_num)
 
 	display_traits_graphics();
 	if (mode == 1)
-		csit(1013,19,start_str1);
-		else csit(1013,19,start_str2);
+		csit(1013,19,c_start_str1);
+		else csit(1013,19,c_start_str2);
 
 	while (dialog_not_toast)
 		ModalDialog();	

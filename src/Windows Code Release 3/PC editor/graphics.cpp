@@ -859,7 +859,7 @@ void undo_clip()
 //	ClipRect(&whole_win_rect);
 }
 
-void add_string_to_buf(char *str) {
+void add_string_to_buf(const char * str) {
 
 	}
 	

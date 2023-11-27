@@ -894,9 +894,9 @@ void cdsin(short dlog_num, short item_num, short num)
 {
 	cd_set_item_num( dlog_num,  item_num,  num);
 }
-void csit(short dlog_num, short item_num, char *str)
+void csit(short dlog_num, short item_num, const char * str)
 {
-cd_set_item_text( dlog_num,  item_num, str);
+	cd_set_item_text( dlog_num,  item_num, str);
 }
 void csp(short dlog_num, short item_num, short pict_num)
 {
@@ -904,7 +904,7 @@ void csp(short dlog_num, short item_num, short pict_num)
 }
 
 
-void cd_set_item_text(short dlog_num, short item_num, char *str)
+void cd_set_item_text(short dlog_num, short item_num, const char * str)
 {
 	short dlg_index,item_index,i;
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)

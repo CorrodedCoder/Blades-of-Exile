@@ -33,7 +33,7 @@ void monst_damaged_mes(short which_m,short how_much,short how_much_spec);
 void monst_killed_mes(short which_m);
 void print_nums(short a,short b,short c);
 short print_terrain(location space);
-void add_string_to_buf(char *string);
+void add_string_to_buf(const char *string);
 void init_buf();
 void print_buf () ;
 void restart_printing();
