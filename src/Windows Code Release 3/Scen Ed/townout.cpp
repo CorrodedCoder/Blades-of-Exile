@@ -1,3 +1,4 @@
+#if 0
 WARNING! WARNING!
 
 The original windows version of townout.c was lost. This is the Macintosh version.
@@ -1878,3 +1879,5 @@ short pick_import_town(short which_dlog,short def)
 	cd_kill_dialog(store_whigh_dlog,0);
 	return dialog_answer;
 }
+
+#endif

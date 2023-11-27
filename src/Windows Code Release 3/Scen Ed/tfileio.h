@@ -6,8 +6,7 @@ void load_outdoors(location which_out,short mode);
 void load_town(short which_town);
 void import_town(short which_town);
 void create_basic_scenario();
-void make_new_scenario(Str255 file_name,short out_width,short out_height,short making_warriors_grove,
-	short use_grass);
+void make_new_scenario(char * file_name,short out_width,short out_height,short making_warriors_grove,short use_grass);
 
 void oops_error(short error);
 short init_data(short flag);
