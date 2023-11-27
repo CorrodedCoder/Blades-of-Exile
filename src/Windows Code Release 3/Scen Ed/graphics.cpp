@@ -167,7 +167,7 @@ void run_startup_g()
 	//PicHandle	pict_to_draw;
 	HBITMAP start_g;
 	RECT pat_rect;
-	HBRUSH old_brush;
+	HGDIOBJ old_brush;
 
 	pat_rect = windRect;
 	InflateRect(&pat_rect,500,500);
@@ -401,7 +401,7 @@ void set_up_terrain_buttons()
 	RECT tiny_from,tiny_to; 
 	HDC hdc;
 	RECT palette_from = {0,0,0,0},palette_to;
-	HBITMAP store_bmp;
+	HGDIOBJ store_bmp;
 	COLORREF y = RGB(128,128,128);//y = RGB(119,119,119);
 	UINT c;
 	HBRUSH new_brush;
@@ -506,14 +506,14 @@ void draw_terrain()
 	RECT draw_rect,clipping_rect = {8,8,260,332};	
 	unsigned char t_to_draw;
 	RECT tiny_to,tiny_to_base = {29,37,36,44},tiny_from,from_rect,to_rect;
-	HBITMAP store_bmp;
+	HGDIOBJ store_bmp;
 	COLORREF gray = RGB(128,128,128);
 	COLORREF red = RGB(255,0,0);
 	COLORREF white = RGB(255,255,255);
 	UINT c;
 	HBRUSH new_brush;
 	HDC hdc;
-	HPEN old_pen;
+	HGDIOBJ old_pen;
 
 	if (overall_mode >= 60)
 		return;
@@ -924,8 +924,8 @@ void draw_one_tiny_terrain_spot (short i,short j,unsigned char terrain_to_draw,H
 	RECT source_rect,dest_rect = {0,0,5,5},from_rect = {0,0,4,4},orig_draw_rect = {0,0,4,4};
 	short picture_wanted,k;
 	GWorldPtr source_gworld;
-	HBITMAP store_bmp;
-	HBRUSH old_brush;
+	HGDIOBJ store_bmp;
+	HGDIOBJ old_brush;
 
 	picture_wanted = scenario.ter_types[terrain_to_draw].picture;
 	if (picture_wanted >= 1000)
@@ -1113,7 +1113,7 @@ void place_location()
 	char draw_str[256];
 	RECT from_rect,draw_rect,source_rect,erase_rect;
 	short picture_wanted;
-	HBITMAP store_bmp;
+	HGDIOBJ store_bmp;
 	COLORREF y = RGB(128,128,128),red = RGB(255,0,0),white = RGB(255,255,255);//y = RGB(119,119,119);
 	UINT c;
 	HBRUSH new_brush;
@@ -1211,7 +1211,7 @@ void place_just_location()
 	char draw_str[256];
 	RECT from_rect,draw_rect,source_rect,erase_rect;
 	short picture_wanted;
-	HBITMAP store_bmp;
+	HGDIOBJ store_bmp;
 	COLORREF y = RGB(128,128,128),red = RGB(255,0,0),white = RGB(255,255,255);//y = RGB(119,119,119);
 	UINT c;
 	HBRUSH new_brush;

@@ -1168,7 +1168,7 @@ void cd_draw_item(short dlog_num,short item_num)
 	COLORREF colors[4] = {RGB(0,0,0),RGB(255,0,0),RGB(0,0,102),RGB(255,255,255)};
 	UINT c[4];
 	RECT from_rect,to_rect;
-	HFONT old_font;
+	HGDIOBJ old_font;
 
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
 		return;
@@ -1661,7 +1661,8 @@ RECT get_item_rect(HWND hDlg, short item_num)
 void frame_dlog_rect(HWND hDlg, RECT rect, short val)
 {
 	HDC hdc;
-	HPEN dpen,lpen,old_pen;
+	HPEN dpen,lpen;
+	HGDIOBJ old_pen;
 	COLORREF x = RGB(0,204,255),y = RGB(0,204,255);//y = RGB(119,119,119);
 	UINT c;
 	Boolean keep_dc = FALSE;

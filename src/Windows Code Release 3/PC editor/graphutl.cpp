@@ -468,10 +468,11 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 	HBITMAP transbmp;
 	COLORREF white = RGB(255,255,255),black = RGB(0,0,0),oldcolor;
 	RECT debug = {0,0,200,20};
-	HBRUSH hbrush,old_brush;
+	HBRUSH hbrush;
+	HGDIOBJ old_brush;
 	COLORREF x = RGB(17,17,17);
 	UINT c;
-	HBITMAP store,store2;
+	HGDIOBJ store,store2;
 	Boolean dlog_draw = FALSE;
 
 	if (main_win == 2) {
