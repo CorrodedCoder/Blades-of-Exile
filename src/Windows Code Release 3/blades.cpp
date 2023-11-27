@@ -23,8 +23,8 @@ Blades of Exile Game/Scenario Editor/Character Editor
 
 #include <windows.h>
 #include <cassert>
-#include "stdlib.h"
-#include "math.h"
+#include <cstdlib>
+#include <cmath>
 
 #include "global.h"
 #include "graphics.h"

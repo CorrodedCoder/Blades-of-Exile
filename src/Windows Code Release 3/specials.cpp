@@ -1,8 +1,8 @@
 
 
 #include <Windows.h>
-#include "stdio.h"
-#include "string.h"
+#include <cstdio>
+#include <cstring>
 
 #include "global.h"
 #include "party.h"

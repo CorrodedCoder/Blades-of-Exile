@@ -1,7 +1,7 @@
 
 #include <Windows.h>
 #include <cassert>
-#include "stdio.h"
+#include <cstdio>
 
 #include "global.h"
 
@@ -13,7 +13,7 @@
 #include "itemdata.h"
 #include "infodlgs.h"
 #include "items.h"
-#include "string.h"
+#include <cstring>
 #include "party.h"
 #include "monster.h"
 #include "dlogtool.h"

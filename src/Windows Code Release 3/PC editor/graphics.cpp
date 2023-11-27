@@ -1,7 +1,7 @@
 #include <Windows.h>
 #include <cassert>
-#include "stdio.h"
-#include "string.h"
+#include <cstdio>
+#include <cstring>
 #include "global.h"
 #include "graphics.h"
 #include "edsound.h"

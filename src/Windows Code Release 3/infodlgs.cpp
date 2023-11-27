@@ -1,14 +1,14 @@
 
 
 #include <Windows.h>
-#include "stdio.h"
+#include <cstdio>
 
 #include "global.h"
 
 #include "graphics.h"
 #include "newgraph.h"
 #include "items.h"
-#include "string.h"
+#include <cstring>
 #include "monster.h"
 #include "dlogtool.h"
 #include "party.h"

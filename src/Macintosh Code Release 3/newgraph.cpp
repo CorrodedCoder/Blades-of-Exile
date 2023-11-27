@@ -14,7 +14,7 @@
 #include <Fonts.h>
 #include <QDOffscreen.h>
 
-#include "string.h"
+#include <cstring>
 #include "stdio.h"
 #include "global.h"
 #include "blxgraphics.h"

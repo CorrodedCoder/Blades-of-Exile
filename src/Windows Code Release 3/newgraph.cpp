@@ -1,7 +1,7 @@
 #include <Windows.h>
 
-#include "string.h"
-#include "stdio.h"
+#include <cstring>
+#include <cstdio>
 #include "global.h"
 #include "graphics.h"
 #include "gutils.h"

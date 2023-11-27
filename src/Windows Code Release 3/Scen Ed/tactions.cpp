@@ -1,8 +1,8 @@
 #include <Windows.h>
 #include <cassert>
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
+#include <cmath>
+#include <cstdio>
+#include <cstring>
 #include "global.h"
 #include "graphics.h"
 #include "tactions.h"

@@ -13,8 +13,8 @@
 #include "itemdata.h"
 #include "infodlgs.h"
 #include "exlsound.h"
-#include "stdio.h"
-#include "string.h"
+#include <cstdio>
+#include <cstring>
 #include "graphutl.h"
 #include "monster.h"
 

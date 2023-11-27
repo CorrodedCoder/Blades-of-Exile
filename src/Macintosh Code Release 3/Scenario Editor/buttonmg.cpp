@@ -11,12 +11,12 @@
 #include <OSUtils.h>
 #include <TextUtils.h>
 #include <QDOffscreen.h>
-#include "string.h"
+#include <cstring>
 #include "stdio.h"
 
 #include "global.h"
 #include "tGraphics.h"
-#include "math.h"
+#include <cmath>
 #include "buttonmg.h"
 
 extern piles_of_stuff_dumping_type *data_store;

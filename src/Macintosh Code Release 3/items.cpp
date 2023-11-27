@@ -17,7 +17,7 @@
 #include "info.dialogs.h"
 #include "Exile.sound.h"
 #include "stdio.h"
-#include "string.h"
+#include <cstring>
 #include "monster.h"
 
 extern short stat_window,overall_mode,current_cursor,which_combat_type,current_pc;

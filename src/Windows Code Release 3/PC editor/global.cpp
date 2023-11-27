@@ -1,7 +1,7 @@
 #include <Windows.h>
 #include "global.h"
-#include "math.h"
-#include <stdlib.h>
+#include <cmath>
+#include <cstdlib>
 
 extern short give_delays;
 

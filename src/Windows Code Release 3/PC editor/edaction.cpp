@@ -1,6 +1,6 @@
 #include <Windows.h>
 
-#include "stdio.h"
+#include <cstdio>
 
 #include "graphics.h"
 #include "global.h"

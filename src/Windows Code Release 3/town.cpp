@@ -1,7 +1,7 @@
 
 
 #include <Windows.h>
-#include "stdio.h"
+#include <cstdio>
 
 #include "global.h"
 

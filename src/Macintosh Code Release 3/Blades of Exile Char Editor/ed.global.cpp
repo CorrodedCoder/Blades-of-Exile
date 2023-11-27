@@ -1,6 +1,6 @@
 #include <OSUtils.h>
 #include "ed.global.h"
-#include "math.h"
+#include <cmath>
 
 extern short give_delays;
 

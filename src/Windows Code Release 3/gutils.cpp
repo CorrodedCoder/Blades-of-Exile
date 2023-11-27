@@ -12,7 +12,7 @@
 #include "dlogtool.h"
 #include "exlsound.h"
 #include "graphutl.h"
-#include "stdio.h"
+#include <cstdio>
 #include "graphutl_helpers.hpp"
 
 extern HWND	mainPtr;

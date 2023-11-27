@@ -1,7 +1,7 @@
 
 #include <OSUtils.h>
 #include "global.h"
-#include "math.h"
+#include <cmath>
 
 short get_ran (short times,short  min,short  max)
 {

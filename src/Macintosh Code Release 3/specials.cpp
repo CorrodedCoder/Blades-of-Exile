@@ -2,7 +2,7 @@
 #include <TextUtils.h>
 #include <QDOffscreen.h>
 #include "stdio.h"
-#include "string.h"
+#include <cstring>
 
 #include "global.h"
 #include "party.h"

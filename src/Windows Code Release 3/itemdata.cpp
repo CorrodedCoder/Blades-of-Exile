@@ -3,8 +3,8 @@
 
 #include "global.h"
 #include "itemdata.h"
-#include "stdio.h"
-#include "string.h"
+#include <cstdio>
+#include <cstring>
 
 
 item_record_type convert_item (short_item_record_type s_item);

@@ -1,8 +1,8 @@
 
 #include <Windows.h>
 #include "global.h"
-#include "math.h"
-#include <stdlib.h>
+#include <cmath>
+#include <cstdlib>
 
 extern char far scen_strs[160][256];
 extern char far scen_strs2[110][256];

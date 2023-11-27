@@ -1,10 +1,10 @@
 #include <Windows.h>
-#include "string.h"
-#include "stdio.h"
+#include <cstring>
+#include <cstdio>
 
 #include "global.h"
 #include "graphics.h"
-#include "math.h"
+#include <cmath>
 #include "buttonmg.h"
 
 extern piles_of_stuff_dumping_type *data_store;

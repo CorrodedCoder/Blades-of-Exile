@@ -5,9 +5,9 @@
 #include <cassert>
 
 #include "global.h"
-#include "stdio.h"
+#include <cstdio>
 #include "text.h"
-#include "string.h"
+#include <cstring>
 #include "locutils.h"
 #include "fields.h"
 #include "exlsound.h"

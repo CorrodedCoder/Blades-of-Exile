@@ -6,12 +6,12 @@
 #define	NL	100
 #define	NUM_DLOG_B		53
 
-#include "string.h"
+#include <cstring>
 
 #include "global.h"
 #include "graphutl.h"
 #include "graphutl_helpers.hpp"
-#include "stdio.h"
+#include <cstdio>
 #include "exlsound.h"
 #include "dlogtool.h"
 #include "dlogtool_helpers.hpp"

@@ -2,9 +2,9 @@
 #include <Windows.h>
 #include <commdlg.h>
 
-#include <string.h>
+#include <cstring>
 #include "global.h"
-#include "stdio.h"
+#include <cstdio>
 #include "fileio.h"
 #include "text.h"
 #include "town.h"

@@ -1,7 +1,7 @@
 
 
 #include <Windows.h>
-#include "string.h"
+#include <cstring>
 #include "global.h"
 
 #include "dlgutils.h"
@@ -17,7 +17,7 @@
 #include "townspec.h"
 #include "items.h"
 #include "exlsound.h"
-#include "stdio.h"
+#include <cstdio>
 #include "dlogtool.h"
 #include "newgraph.h"
 #include "infodlgs.h"

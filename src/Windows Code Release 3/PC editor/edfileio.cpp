@@ -1,8 +1,8 @@
 #include <Windows.h>
 #include <commdlg.h>
 
-#include <string.h>
-#include "stdio.h"
+#include <cstring>
+#include <cstdio>
 
 #include "global.h"
 #include "edfileio.h"

@@ -6,12 +6,12 @@
 #define	NI	500
 #define	NL	100
 
-#include "string.h"
+#include <cstring>
 
 #include "global.h"
 #include "graphutl.h"
 #include "../graphutl_helpers.hpp"
-#include "stdio.h"
+#include <cstdio>
 #include "graphics.h"
 #include "edsound.h"
 #include "dlogtool.h"

@@ -10,7 +10,7 @@
 #include <ToolUtils.h>
 #include <TextUtils.h>
 #include <QDOffscreen.h>
-#include "string.h"
+#include <cstring>
 #include "Global.h"
 #include "stdio.h"
 #include "tfileio.h"

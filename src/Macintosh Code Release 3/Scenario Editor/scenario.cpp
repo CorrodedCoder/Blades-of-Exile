@@ -4,7 +4,7 @@
 #include <TextUtils.h>
 #include <OSUtils.h>
 #include <stdio.h>
-#include "string.h"
+#include <cstring>
 #include "Global.h"
 #include "tGraphics.h"
 #include "dialogutils.h"

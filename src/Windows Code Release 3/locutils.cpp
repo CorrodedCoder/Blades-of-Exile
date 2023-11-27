@@ -1,5 +1,5 @@
 #include <Windows.h>
-#include "math.h"
+#include <cmath>
 #include "global.h"
 #include "locutils.h"
 #include "text.h"

@@ -3,11 +3,11 @@
 #include <windows.h>
 #include <windowsx.h>
 #include <commdlg.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 #include "global.h"
 #include "text.h"
-#include "string.h"
+#include <cstring>
 #include "exlsound.h"
 #include "graphutl.h"
 #include "graphutl_helpers.hpp"

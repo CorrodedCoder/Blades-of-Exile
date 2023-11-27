@@ -1,5 +1,5 @@
 #include <Windows.h>
-#include "stdio.h"
+#include <cstdio>
 #include "global.h"
 #include "monster.h"
 #include "graphics.h"

@@ -24,10 +24,10 @@ Blades of Exile Game/Scenario Editor/Character Editor
 
 #include <windows.h>
 
-#include "stdlib.h"
-#include "string.h"
-#include "stdio.h"
-#include "math.h"
+#include <cstdlib>
+#include <cstring>
+#include <cstdio>
+#include <cmath>
 
 #include "global.h"
 #include "graphics.h" 

@@ -1,8 +1,8 @@
-#include "math.h"
+#include <cmath>
 #include <windows.h>
 #include <mmsystem.h>
 
-#include "stdio.h"
+#include <cstdio>
 
 #include "global.h"
 #include "exlsound.h"

@@ -8,7 +8,7 @@
 #include "global.h"
 #include "stdio.h"
 #include "text.h"
-#include "string.h"
+#include <cstring>
 #include "loc_utils.h"
 #include "fields.h"
 #include "Exile.sound.h"

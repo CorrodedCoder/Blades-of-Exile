@@ -1,8 +1,8 @@
 #include <Windows.h>
 #include <commdlg.h>
-#include "string.h"
+#include <cstring>
 #include "global.h"
-#include "stdio.h"
+#include <cstdio>
 #include "tfileio.h"
 #include "keydlgs.h"
 #include "graphics.h"
