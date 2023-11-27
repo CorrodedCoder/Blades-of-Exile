@@ -19,7 +19,7 @@ You shoul dbe able to find there a link to an already ported townout.c file I ho
 #include <OSUtils.h>
 #include <stdio.h>
 #include <string.h>
-#include "Global.h"
+#include "global.h"
 #include "tGraphics.h"
 #include "dialogutils.h"
 #include "dlogtool.h"

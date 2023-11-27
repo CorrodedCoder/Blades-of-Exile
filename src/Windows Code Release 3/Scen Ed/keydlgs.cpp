@@ -1,7 +1,7 @@
 #include <Windows.h>
 #include "string.h"
 #include "stdio.h"
-#include "Global.h"
+#include "global.h"
 #include "graphics.h"
 #include "dlogtool.h"
 #include "keydlgs.h"

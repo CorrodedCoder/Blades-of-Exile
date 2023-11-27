@@ -1,7 +1,7 @@
 #include <Windows.h>
 #include <stdio.h>
 #include "string.h"
-#include "Global.h"
+#include "global.h"
 #include "graphics.h"
 #include "scenario.h"
 #include "dlogtool.h"

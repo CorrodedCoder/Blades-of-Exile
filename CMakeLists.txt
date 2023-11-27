@@ -62,7 +62,6 @@ if (MSVC)
 			-Wno-tautological-overlap-compare
 			-Wno-tautological-constant-compare
 			-Wno-pointer-to-int-cast
-			-Wno-nonportable-include-path
 		)
 	endif()
 endif()
