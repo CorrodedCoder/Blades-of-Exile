@@ -8,7 +8,7 @@ extern char far scen_strs[160][256];
 extern char far scen_strs2[110][256];
 extern char far talk_strs[170][256];
 extern char far town_strs[180][256];
-extern Boolean give_delays;
+extern short give_delays;
 
 short get_ran (short times,short  min,short  max)
 {

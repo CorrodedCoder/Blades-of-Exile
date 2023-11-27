@@ -10,7 +10,7 @@ void cd_kill_dc(short which_slot,HDC hdc);
 HDC cd_get_dlog_dc(short which_slot);
 short cd_get_active(short dlog_num, short item_num);
 short cd_create_dialog_parent_num(short dlog_num,short parent);
-void cd_set_edit_focus();
+void cd_set_edit_focus(short which_win);
 void cd_init_dialogs();
 short cd_create_dialog(short dlog_num,HWND parent) ;
 short cd_kill_dialog(short dlog_num,short parent_message);
@@ -44,11 +44,6 @@ void center_window(HWND window);
 RECT get_item_rect(HWND hDlg, short item_num);
 void frame_dlog_rect(HWND hDlg, RECT rect, short val);
 void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,short win_or_gworld);
-
-inline void draw_dialog_graphic_wnd(HWND hDlg, RECT rect, short which_g, Boolean do_frame)
-{
-	draw_dialog_graphic(hDlg, rect, which_g, do_frame, 0);
-}
 
 void showcursor(Boolean a);
 

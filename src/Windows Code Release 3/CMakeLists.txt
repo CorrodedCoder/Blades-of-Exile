@@ -1,6 +1,4 @@
 
-
-# Add source to this project's executable.
 add_executable (Blades-of-Exile WIN32
 	blades.cpp
 	graphics.cpp
@@ -31,4 +29,5 @@ add_executable (Blades-of-Exile WIN32
 
 target_link_libraries(Blades-of-Exile Winmm.lib)
 
-# TODO: Add tests and install targets if needed.
+add_subdirectory("PC Editor")
+add_subdirectory("Scen Ed")

@@ -9,10 +9,12 @@
 
 #include "global.h"
 #include "graphutl.h"
+#include "../graphutl_helpers.hpp"
 #include "stdio.h"
 #include "edsound.h"
 #include "dlogtool.h"
- #include "graphics.h"
+#include "../dlogtool_helpers.hpp"
+#include "graphics.h"
 
 extern Boolean play_sounds,cursor_shown,dialog_not_toast,block_erase;
 extern HBITMAP mixed_gworld, pc_stats_gworld, item_stats_gworld, text_area_gworld;
@@ -602,7 +604,7 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 				//	flag = 2;
 				str_stored = TRUE;
 				}
-			else sscanf(item_str,"%d_%d",&type,&flag);
+			else sscanf(item_str,"%hd_%hd",&type,&flag);
 
 			free_item = -1;
 			// find free item
@@ -716,7 +718,7 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 								item_rect[free_item].left,item_rect[free_item].top,
 								item_rect[free_item].right - item_rect[free_item].left,
 								max(22,item_rect[free_item].bottom - item_rect[free_item].top),
-								dlgs[free_slot],150,store_hInstance,NULL);
+								dlgs[free_slot],reinterpret_cast<HMENU>(150),store_hInstance,NULL);
 							store_edit_parent =  dlgs[free_slot];
 							old_edit_proc = reinterpret_cast<WNDPROC>(GetWindowLongPtr(edit_box,GWLP_WNDPROC));
 							SetWindowLongPtr(edit_box,GWLP_WNDPROC,reinterpret_cast<LONG_PTR>(edit_proc));
@@ -1167,7 +1169,7 @@ void cd_draw_item(short dlog_num,short item_num)
 	COLORREF colors[4] = {RGB(0,0,0),RGB(255,0,0),RGB(0,0,102),RGB(255,255,255)};
 	UINT c[4];
 	RECT from_rect,to_rect;
-	HFONT old_font;
+	HGDIOBJ old_font;
 
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
 		return;
@@ -1660,7 +1662,8 @@ RECT get_item_rect(HWND hDlg, short item_num)
 void frame_dlog_rect(HWND hDlg, RECT rect, short val)
 {
 	HDC hdc;
-	HPEN dpen,lpen,old_pen;
+	HPEN dpen, lpen;
+	HGDIOBJ old_pen;
 	COLORREF x = RGB(0,204,255),y = RGB(0,204,255);//y = RGB(119,119,119);
 	UINT c;
 	Boolean keep_dc = FALSE;
@@ -1687,7 +1690,7 @@ void frame_dlog_rect(HWND hDlg, RECT rect, short val)
 	c = GetNearestPaletteIndex(hpal,y);
 	dpen = CreatePen(PS_SOLID,1,PALETTEINDEX(c));
 	old_pen = SelectObject(hdc,dpen);
-	MoveTo(hdc,rect.left,rect.top);
+	MoveToEx(hdc,rect.left,rect.top, NULL);
 	LineTo(hdc,rect.right,rect.top);
 	SelectObject(hdc,lpen);
 	LineTo(hdc,rect.right,rect.bottom);

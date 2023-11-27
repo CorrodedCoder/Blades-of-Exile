@@ -12,6 +12,7 @@
 #include "edsound.h"
 
 #include "graphutl.h"
+#include "../graphutl_helpers.hpp"
 
 extern HWND mainPtr;
 extern HPALETTE hpal;
@@ -119,7 +120,11 @@ plgpl = (LOGPALETTE*) LocalLock(l);
 	LocalFree(l);
 
 	fry_dc(mainPtr,hdc);
-	SendMessage(HWND_BROADCAST,WM_SYSCOLORCHANGE,0,0);
+#ifdef REENABLE_SENDMESSAGE_CALLS
+	SendMessage(HWND_BROADCAST, WM_SYSCOLORCHANGE, 0, 0);
+#else
+	PostMessage(HWND_BROADCAST, WM_SYSCOLORCHANGE, 0, 0);
+#endif
 }
 
 // extracts and inflicts palette from given dib. WARNING ...
@@ -239,7 +244,11 @@ void inflict_palette()
 	SetSystemPaletteUse(main_dc,SYSPAL_NOSTATIC);
 	UnrealizeObject(hpal);
 	RealizePalette(main_dc);
-	SendMessage(HWND_BROADCAST,WM_SYSCOLORCHANGE,0,0);
+#ifdef REENABLE_SENDMESSAGE_CALLS
+	SendMessage(HWND_BROADCAST, WM_SYSCOLORCHANGE, 0, 0);
+#else
+	PostMessage(HWND_BROADCAST, WM_SYSCOLORCHANGE, 0, 0);
+#endif
 /*
 	store_element_colors[0] = GetSysColor(elements[0]);
 	store_element_colors[1] = GetSysColor(elements[1]);
@@ -279,7 +288,11 @@ void reset_palette()
 	UnrealizeObject(hpal);
 	SelectPalette(main_dc,syspal,0);
 	RealizePalette(main_dc);
-	SendMessage(HWND_BROADCAST,WM_SYSCOLORCHANGE,0,0);
+#ifdef REENABLE_SENDMESSAGE_CALLS
+	SendMessage(HWND_BROADCAST, WM_SYSCOLORCHANGE, 0, 0);
+#else
+	PostMessage(HWND_BROADCAST, WM_SYSCOLORCHANGE, 0, 0);
+#endif
 	SetSysColors(5,elements,store_element_colors);
 
 
@@ -479,17 +492,18 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 	HBITMAP transbmp;
 	COLORREF white = RGB(255,255,255),black = RGB(0,0,0),oldcolor;
 	RECT debug = {0,0,200,20};
-	HBRUSH hbrush,old_brush;
+	HBRUSH hbrush;
+	HGDIOBJ old_brush;
 	COLORREF x = RGB(17,17,17);
 	UINT c;
-	HBITMAP store,store2;
+	HGDIOBJ store,store2;
 	Boolean dlog_draw = FALSE;
 
 	main_dc2 = CreateCompatibleDC(main_dc);
-	SetMapMode(main_dc2,GetMapMode(mainPtr));
+	SetMapMode(main_dc2,GetMapMode(main_dc));
 	SelectPalette(main_dc2,hpal,0);
 	main_dc3 = CreateCompatibleDC(main_dc);
-	SetMapMode(main_dc3,GetMapMode(mainPtr));
+	SetMapMode(main_dc3,GetMapMode(main_dc));
 	SelectPalette(main_dc3,hpal,0);
 	SetStretchBltMode(main_dc2,STRETCH_DELETESCANS);
 	SetStretchBltMode(main_dc3,STRETCH_DELETESCANS);
@@ -500,7 +514,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 		dlog_draw = TRUE;
 		hdcMem = CreateCompatibleDC(destDC);
 		SelectObject(hdcMem, src);
-		SetMapMode(hdcMem,GetMapMode(mainPtr));
+		SetMapMode(hdcMem,GetMapMode(GetDC(mainPtr)));
 		SelectPalette(hdcMem,hpal,0);
 		SetStretchBltMode(hdcMem,STRETCH_DELETESCANS);
 		}
@@ -540,7 +554,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 			//SelectObject(hdcMem,hbrush);
 			}
 		if (dlog_draw == FALSE)
-			SetViewportOrg(destDC,ulx,uly);
+			SetViewportOrgEx(destDC,ulx,uly,nullptr);
 
 		SetStretchBltMode(destDC,STRETCH_DELETESCANS);
 		SetStretchBltMode(hdcMem,STRETCH_DELETESCANS);
@@ -554,7 +568,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 					play_sound(1);
 				}
 		if (dlog_draw == FALSE)
-			SetViewportOrg(destDC,0,0);
+			SetViewportOrgEx(destDC,0,0,nullptr);
 
 
 		}
@@ -563,7 +577,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 		if (main_win == 0) {
 			hdcMem3 = CreateCompatibleDC(hdcMem);
 			SelectObject(hdcMem3, dest);
-			SetMapMode(hdcMem3,GetMapMode(mainPtr));
+			SetMapMode(hdcMem3,GetMapMode(GetDC(mainPtr)));
 			SelectPalette(hdcMem3,hpal,0);
 			transbmp = CreateBitmap(src_rect.right - src_rect.left,
 						src_rect.bottom - src_rect.top,1,1,NULL);
@@ -595,7 +609,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 		}
 		else {
 			if (dlog_draw == FALSE)
-				SetViewportOrg(destDC,ulx,uly);
+				SetViewportOrgEx(destDC,ulx,uly,nullptr);
 			transbmp = CreateBitmap(src_rect.right - src_rect.left,
 						src_rect.bottom - src_rect.top,1,1,NULL);
 			hdcMem2 = CreateCompatibleDC(destDC);
@@ -621,7 +635,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 				hdcMem,src_rect.left,src_rect.top,src_rect.right - src_rect.left,
 				src_rect.bottom - src_rect.top,SRCINVERT);
 			if (dlog_draw == FALSE)
-				SetViewportOrg(destDC,0,0);
+				SetViewportOrgEx(destDC,0,0,nullptr);
 			DeleteDC(hdcMem2);
 
 				DeleteObject(transbmp);
