@@ -38,3 +38,6 @@ void port_dummy_t_d(short size,char *buffer);
 void port_dummy_town();
 void load_spec_graphics();
 
+short FSWrite(HFILE file, long* len, char* buffer);
+short FSRead(HFILE file, long* len, char* buffer);
+short SetFPos(HFILE file, short mode, long len);
