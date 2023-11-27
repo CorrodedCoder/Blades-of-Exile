@@ -1,4 +1,5 @@
 #include <Windows.h>
+#include <cassert>
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
@@ -1351,6 +1352,9 @@ Boolean handle_keystroke(UINT wParam,LONG lParam)
 	if (store_ter != current_terrain_type)
 		draw_terrain();
 	mouse_button_held = FALSE;
+	// This function expects to return a value, but nothing is being returned
+	assert(false);
+	return FALSE;
 }
 
 
