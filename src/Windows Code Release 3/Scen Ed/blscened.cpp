@@ -257,7 +257,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpszCmdPar
 			WS_CHILD | WS_TABSTOP | SBS_VERT, right_sbar_rect.left + ulx,right_sbar_rect.top + uly,
 			right_sbar_rect.right - right_sbar_rect.left,
 			right_sbar_rect.bottom - right_sbar_rect.top,
-			mainPtr,1,store_hInstance,NULL);
+			mainPtr,reinterpret_cast<HMENU>(1),store_hInstance,NULL);
 
 //		ShowWindow(mainPtr,nCmdShow);
 
