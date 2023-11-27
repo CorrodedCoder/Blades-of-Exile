@@ -1,4 +1,5 @@
 #include <Windows.h>
+#include <cassert>
 
 #include "stdio.h"
 #include "string.h"
