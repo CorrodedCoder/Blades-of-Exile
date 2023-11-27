@@ -1,5 +1,6 @@
 
 #include <Windows.h>
+#include <cassert>
 #include "stdio.h"
 
 #include "global.h"
@@ -3598,7 +3599,10 @@ void kill_pc(short which_pc,short type)
 		current_pc = first_active_pc();
 	if (current_pc > 5) {
 		for (i = 0; i < 6; i++)
-			if (adven[i].status > 0)
+			// Original line read: if (adven[i].status > 0)
+			// But status is an array of shorts, so lets assume they meant main_status and check later
+			assert(false);
+			if (adven[i].main_status > 0)
 				current_pc = i;
 		}
 	put_pc_screen();

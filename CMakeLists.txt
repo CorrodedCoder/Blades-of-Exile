@@ -37,6 +37,34 @@ if (MSVC)
 	# largely because they aren't portable and in any case we'll be migrating such
 	# functionality to leverage the C++ STL in good time.
 	add_definitions(-DNOMINMAX -D_CRT_SECURE_NO_WARNINGS)
+
+	if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+		# Warnings which are going to be more involved to address either because of
+		# the complexity, or the number of places it touches.
+		add_compile_options(
+			-Wno-writable-strings
+			-Wno-extern-initializer
+			-Wno-unused-variable
+			-Wno-char-subscripts
+			-Wno-misleading-indentation
+			-Wno-unused-but-set-variable
+			-Wno-constant-conversion
+			-Wno-sometimes-uninitialized
+		)
+		# Warnings which either should be addressed ASAP or are trivial to address
+		add_compile_options(
+			-Wno-format
+			-Wno-empty-body
+			-Wno-unused-value
+			-Wno-comment
+			-Wno-parentheses
+			-Wno-missing-braces
+			-Wno-tautological-overlap-compare
+			-Wno-tautological-constant-compare
+			-Wno-pointer-to-int-cast
+			-Wno-nonportable-include-path
+		)
+	endif()
 endif()
 
 add_subdirectory(src)
