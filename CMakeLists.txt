@@ -55,7 +55,6 @@ if (MSVC)
 		add_compile_options(
 			-Wno-empty-body
 			-Wno-unused-value
-			-Wno-comment
 			-Wno-parentheses
 			-Wno-missing-braces
 			-Wno-tautological-overlap-compare
