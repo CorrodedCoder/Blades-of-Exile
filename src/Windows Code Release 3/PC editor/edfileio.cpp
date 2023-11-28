@@ -125,7 +125,7 @@ void load_file()
 	len = sizeof(flag_type);
 
 //	sprintf(debug, "  Len %d               ", (short) len);
-//	add_string_to_buf((char *) debug);
+//	add_string_to_buf( debug);
 
 	for (i = 0; i < 3; i++) {
 		if ((error = _lread(file_id, (char *) flag_data, len)) == HFILE_ERROR) {

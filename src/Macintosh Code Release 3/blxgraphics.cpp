@@ -1631,7 +1631,7 @@ GWorldPtr load_pict(short picture_to_get)
     	}
 	if (current_pic_handle == NIL)  {
 		sprintf(d_s, "Stuck on %d  ",(short) picture_to_get);
-		add_string_to_buf((char *)d_s);
+		add_string_to_buf(d_s);
 		Alert(1076,NIL);
 		return NULL;
 		}
@@ -1648,7 +1648,7 @@ GWorldPtr load_pict(short picture_to_get)
    			return NULL;
    			}
 		sprintf(d_s, "Stuck on %d  error %d ",(short) picture_to_get,check_error);
-		add_string_to_buf((char *)d_s);
+		add_string_to_buf(d_s);
 		print_buf(); 
 		Alert(1076,NIL);
 		return NULL;

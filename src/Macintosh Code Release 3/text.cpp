@@ -809,17 +809,17 @@ void draw_pc_effects(short pc)
 void print_party_stats() {
 	add_string_to_buf("PARTY STATS:");
 	sprintf(store_string, "  Number of kills: %ld                   ", party.total_m_killed);
-	add_string_to_buf((char *) store_string);
+	add_string_to_buf( store_string);
 	if ((is_town()) || ((is_combat()) && (which_combat_type == 1))) {
 		sprintf(store_string, "  Kills in this town: %d                   ", party.m_killed[c_town.town_num]);
-		add_string_to_buf((char *) store_string);
+		add_string_to_buf( store_string);
 		}
 	sprintf(store_string, "  Total experience: %ld                   ", party.total_xp_gained);
-	add_string_to_buf((char *) store_string);
+	add_string_to_buf( store_string);
 	sprintf(store_string, "  Total damage done: %ld                   ", party.total_dam_done);
-	add_string_to_buf((char *) store_string);
+	add_string_to_buf( store_string);
 	sprintf(store_string, "  Total damage taken: %ld                   ", party.total_dam_taken);
-	add_string_to_buf((char *) store_string);
+	add_string_to_buf( store_string);
 	print_buf();
 }
 
@@ -841,7 +841,7 @@ short do_look(location space)
 			if ((same_point(space,pc_pos[i]) == TRUE) && (adven[i].main_status == 1)
 				&& (is_lit == TRUE) && (can_see(pc_pos[current_pc],space,0) < 5)) {
 				sprintf(store_string, "    %s", (char *) adven[i].name);
-				add_string_to_buf((char *) store_string);					
+				add_string_to_buf( store_string);					
 				}
 		
 	if ((overall_mode == 36) || (overall_mode == 37)) {
@@ -864,7 +864,7 @@ short do_look(location space)
 						else sprintf(store_string, "    %s (F)", (char *) store_string2);
 					}
 				
-				add_string_to_buf((char *) store_string);					
+				add_string_to_buf( store_string);					
 
 				}
 		}
@@ -876,7 +876,7 @@ short do_look(location space)
 						if (party.out_c[i].what_monst.monst[j] != 0) {
 							get_m_name(store_string2,party.out_c[i].what_monst.monst[j]);
 							sprintf(store_string, "    %s", store_string2);
-							add_string_to_buf((char *) store_string);		
+							add_string_to_buf( store_string);		
 							j = 7;
 						
 							}
@@ -960,7 +960,7 @@ short do_look(location space)
 					if (is_ident(t_i.items[i]) == TRUE)
 						sprintf(store_string, "    %s",t_i.items[i].full_name); 
 						else sprintf(store_string, "    %s",t_i.items[i].name);				
-					add_string_to_buf((char *) store_string);
+					add_string_to_buf( store_string);
 					}
 				}
 		}
@@ -1021,7 +1021,7 @@ void notify_out_combat_began(out_wandering_type encounter,short *nums)
 	short i;
 
 	sprintf(store_string, "COMBAT!                 ");				
-	add_string_to_buf((char *) store_string);	
+	add_string_to_buf( store_string);	
 
 	for (i = 0; i < 6; i++)
 		if (encounter.monst[i] != 0) {
@@ -1033,12 +1033,12 @@ void notify_out_combat_began(out_wandering_type encounter,short *nums)
 				sprintf(store_string, "  %d x %s        ",nums[i],store_string2);
 				break;		
 			}				
-			add_string_to_buf((char *) store_string);	
+			add_string_to_buf( store_string);	
 			}
 	if (encounter.monst[6] != 0) {
 			get_m_name(store_string2,encounter.monst[6]);
 			sprintf(store_string, "  %s        ",store_string2);
-			add_string_to_buf((char *) store_string);		
+			add_string_to_buf( store_string);		
 		}
 }
 
@@ -1066,7 +1066,7 @@ void print_monst_name(unsigned char m_type)
 {
 	get_m_name(store_string2,m_type);
 	sprintf(store_string, "%s:",store_string2);
-	add_string_to_buf((char *) store_string);
+	add_string_to_buf( store_string);
 }
 
 void print_monst_attacks(unsigned char m_type,short target)
@@ -1083,7 +1083,7 @@ void print_monst_attacks(unsigned char m_type,short target)
 			sprintf(store_string, "%s attacks %s",
 			store_string2,store_string3);
 			}
-	add_string_to_buf((char *) store_string);
+	add_string_to_buf( store_string);
 }
 
 ////
@@ -1094,7 +1094,7 @@ void damaged_message(short damage,short type)
 	get_str(str,20,130 + type);
 	sprintf(store_string, "  %s for %d",
 			(char *) str,damage);
-	add_string_to_buf((char *) store_string);	
+	add_string_to_buf( store_string);	
 }
 
 // This prepares the monster's string for the text bar
@@ -1197,7 +1197,7 @@ void monst_spell_note(unsigned char number,short which_mess)
 		}
 
 	if (which_mess > 0)
-		add_string_to_buf((char *) store_string);
+		add_string_to_buf( store_string);
 }
 
 void monst_cast_spell_note(unsigned char number,short spell,short type)
@@ -1206,10 +1206,10 @@ void monst_cast_spell_note(unsigned char number,short spell,short type)
 	get_m_name(store_string2,number);
 	sprintf(store_string, "%s casts:",
 			(char *) store_string2);
-	add_string_to_buf((char *) store_string);
+	add_string_to_buf( store_string);
 	sprintf(store_string, "  %s",
 			(type == 1) ? (char *) m_priest_sp[spell - 1] : (char *) m_mage_sp[spell - 1]);
-	add_string_to_buf((char *) store_string);
+	add_string_to_buf( store_string);
 }
 
 void monst_breathe_note(unsigned char number)
@@ -1217,7 +1217,7 @@ void monst_breathe_note(unsigned char number)
 	get_m_name(store_string2,number);
 	sprintf(store_string, "%s breathes.",
 			(char *) store_string2);
-	add_string_to_buf((char *) store_string);
+	add_string_to_buf( store_string);
 
 }
 
@@ -1230,7 +1230,7 @@ void monst_damaged_mes(short which_m,short how_much,short how_much_spec)
 		else sprintf(store_string, "  %s takes %d",
 			store_string2, how_much);
  
-	add_string_to_buf((char *) store_string);
+	add_string_to_buf( store_string);
 }
 
 void monst_killed_mes(short which_m)
@@ -1238,13 +1238,13 @@ void monst_killed_mes(short which_m)
 	get_m_name(store_string2,c_town.monst.dudes[which_m].number);
 	sprintf(store_string, "  %s dies.",
 		(char *) store_string2);
-	add_string_to_buf((char *) store_string);
+	add_string_to_buf( store_string);
 }
 
 void print_nums(short a,short b,short c)
 {
 	sprintf(store_string, "debug: %d %d %d", a,b,c);
-	add_string_to_buf((char *) store_string);
+	add_string_to_buf( store_string);
 
 }
 
@@ -1263,7 +1263,7 @@ short print_terrain(location space)
 		}
 	get_ter_name(store_string2,which_terrain);
 	sprintf(store_string, "    %s", store_string2);
-	add_string_to_buf((char *) store_string);
+	add_string_to_buf( store_string);
 
 	return (short) which_terrain;
 }

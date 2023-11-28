@@ -135,7 +135,7 @@ Boolean give_to_pc(short pc_num,item_record_type  item,short  print_result)
 					sprintf(announce_string,"  %s gets %s.",adven[pc_num].name,item.name);
 					else sprintf(announce_string,"  %s gets %s.",adven[pc_num].name,item.full_name);
 				if (print_result == TRUE)
-					add_string_to_buf((char *)announce_string);
+					add_string_to_buf(announce_string);
 				}
 
 			combine_things(pc_num);
@@ -177,7 +177,7 @@ Boolean forced_give(short item_num,short abil) ////
 				if (is_ident(item) == 0)
 					sprintf(announce_string,"  %s gets %s.",adven[i].name,item.name);
 					else sprintf(announce_string,"  %s gets %s.",adven[i].name,item.full_name);
-				add_string_to_buf((char *)announce_string);
+				add_string_to_buf(announce_string);
 				combine_things(i);
 				sort_pc_items(i);
 				return TRUE;

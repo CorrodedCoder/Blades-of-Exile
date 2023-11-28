@@ -544,7 +544,7 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 		if (is_ident(adven[pc].items[item]) == FALSE)
 			sprintf(to_draw, "Use: %s",adven[pc].items[item].name);
 			else sprintf(to_draw, "Use: %s",adven[pc].items[item].full_name);
-		add_string_to_buf((char *) to_draw);
+		add_string_to_buf( to_draw);
 
 		if ((adven[pc].items[item].variety == 7) &&
 		      (adven[pc].items[item].graphic_num >= 50) && (adven[pc].items[item].graphic_num <= 52))
@@ -1250,7 +1250,7 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 			play_sound(2);
 			}
 //		sprintf(create_line, "  No damage.              ");
-//		add_string_to_buf((char *) create_line);		
+//		add_string_to_buf( create_line);		
 		return FALSE;	
 		}
 
