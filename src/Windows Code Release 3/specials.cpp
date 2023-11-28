@@ -2962,14 +2962,14 @@ void get_strs(char *str1,char *str2,short cur_type,short which_str1,short which_
 		case 0:
 			if (which_str1 >= 0) {
 				if (which_str1 < 160)
-					strcpy((char *) str1,data_store5->scen_strs[which_str1]);
-					else strcpy((char *) str1,scen_strs2[which_str1 - 160]);
+					strcpy(str1,data_store5->scen_strs[which_str1]);
+					else strcpy(str1,scen_strs2[which_str1 - 160]);
 				
 				}
 			if (which_str2 >= 0){
 				if (which_str2 < 160)
-					strcpy((char *) str2,data_store5->scen_strs[which_str2]);
-					else strcpy((char *) str2,scen_strs2[which_str2 - 160]);				
+					strcpy(str2,data_store5->scen_strs[which_str2]);
+					else strcpy(str2,scen_strs2[which_str2 - 160]);				
 				}
 			break;
 		case 1:
@@ -2984,9 +2984,9 @@ void get_strs(char *str1,char *str2,short cur_type,short which_str1,short which_
 			break;
 		case 2:
 			if (which_str1 >= 0)
-				strcpy((char *) str1,data_store->town_strs[which_str1]);
+				strcpy(str1,data_store->town_strs[which_str1]);
 			if (which_str2 >= 0)
-				strcpy((char *) str2,data_store->town_strs[which_str2]);
+				strcpy(str2,data_store->town_strs[which_str2]);
 			break;
 		}
 

@@ -966,13 +966,13 @@ void edit_spec_text_event_filter (short item_hit)
 				if (*store_str1 >= 0) {
 					switch (store_spec_str_mode) {
 						case 0:
-							strcpy(scen_strs2[*store_str1],(char *) str);
+							strcpy(scen_strs2[*store_str1], str);
 							break;				
 						case 1:
-							strcpy(data_store->out_strs[*store_str1 + 10],(char *) str);
+							strcpy(data_store->out_strs[*store_str1 + 10], str);
 							break;				
 						case 2:
-							strcpy(town_strs[*store_str1 + 20],(char *) str);
+							strcpy(town_strs[*store_str1 + 20], str);
 							break;				
 						}
 					}
@@ -1013,13 +1013,13 @@ void edit_spec_text_event_filter (short item_hit)
 				if (*store_str2 >= 0) {
 					switch (store_spec_str_mode) {
 						case 0:
-							strcpy(scen_strs2[*store_str2],(char *) str);
+							strcpy(scen_strs2[*store_str2], str);
 							break;				
 						case 1:
-							strcpy(data_store->out_strs[*store_str2 + 10],(char *) str);
+							strcpy(data_store->out_strs[*store_str2 + 10], str);
 							break;				
 						case 2:
-							strcpy(town_strs[*store_str2 + 20],(char *) str);
+							strcpy(town_strs[*store_str2 + 20], str);
 							break;				
 						}
 					}
@@ -1082,13 +1082,13 @@ void edit_dialog_text_event_filter (short item_hit)
 				CDGT(842,2 + i,(char *) str);
 				switch (store_spec_str_mode) {
 					case 0:
-						strcpy(scen_strs2[*store_str1 + i],(char *) str);
+						strcpy(scen_strs2[*store_str1 + i], str);
 						break;				
 					case 1:
-						strcpy(data_store->out_strs[*store_str1 + 10 + i],(char *) str);
+						strcpy(data_store->out_strs[*store_str1 + 10 + i], str);
 						break;				
 					case 2:
-						strcpy(town_strs[*store_str1 + 20 + i],(char *) str);
+						strcpy(town_strs[*store_str1 + 20 + i], str);
 						break;				
 					}
 				}

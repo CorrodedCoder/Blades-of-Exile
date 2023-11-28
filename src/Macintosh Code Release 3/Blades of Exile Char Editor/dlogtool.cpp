@@ -627,7 +627,7 @@ void cd_set_text_edit_str(short dlog_num, char *str)
 		return ;
 		}
 		
-	strcpy((char *) store_ptr,str);
+	strcpy(store_ptr,str);
 	c2p(store_ptr);
 	GetDItem( dlgs[dlg_index], 2, &the_type, &the_handle, &the_rect );
 	SetIText ( the_handle, store_ptr);	

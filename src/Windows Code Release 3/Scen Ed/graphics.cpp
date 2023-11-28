@@ -1246,13 +1246,13 @@ void place_just_location()
 
 void set_string(const char * string, const char * string2)
 {
-	strcpy((char *)current_string,string);
+	strcpy(current_string,string);
 	c2p(current_string);
 //	if (strlen(string2) == 0)
 //		current_string2[0] = 0;
 //		else 
 //	sprintf((char *)current_string2,"Bob");
-	strcpy((char *)current_string2,string2);
+	strcpy(current_string2, string2);
 	c2p(current_string2);
 
 	place_location();
@@ -1458,7 +1458,7 @@ void char_win_draw_string(HDC dest_window,RECT dest_rect, const char * str,short
 {
 	char store_s[256];
 	
-	strcpy((char *) store_s,str);
+	strcpy(store_s,str);
 	win_draw_string( dest_window, dest_rect,store_s, mode, line_height);
 
 }
@@ -1506,7 +1506,7 @@ short string_length(char *str,HDC hdc)
 	for (i = 0; i < 257; i++)
 		text_len[i]= 0;
 	
-	strcpy((char *) p_str,str);
+	strcpy(p_str,str);
 	MeasureText(256,p_str,text_len,hdc);
 	len = strlen((char *)str);
 
@@ -1590,19 +1590,19 @@ void p2c(char *str)
 void get_str(char *str,short i, short j)
 {
 	if (i == -1) {
-		strcpy((char *) str,scen_item_list.monst_names[j]);
+		strcpy(str,scen_item_list.monst_names[j]);
 		return;
 		}
 	if (i == -2) {
-		strcpy((char *) str,scen_item_list.scen_items[j].full_name);
+		strcpy(str,scen_item_list.scen_items[j].full_name);
 		return;
 		}
 	if (i == -3) {
-		strcpy((char *) str,get_button_str(available_dlog_buttons[j]));
+		strcpy(str,get_button_str(available_dlog_buttons[j]));
 		return;
 		}
 	if (i == -4) {
-		strcpy((char *) str,scen_item_list.ter_names[j]);
+		strcpy(str,scen_item_list.ter_names[j]);
 		return;
 		}
 	if (i == -5) {
@@ -1622,7 +1622,7 @@ short string_length(char *str)
 	for (i = 0; i < 257; i++)
 		text_len[i]= 0;
 	
-	strcpy((char *) p_str,str);
+	strcpy(p_str,str);
 	c2p(p_str);
 	MeasureText(256,p_str,text_len,main_dc);
 	len = strlen((char *)str);

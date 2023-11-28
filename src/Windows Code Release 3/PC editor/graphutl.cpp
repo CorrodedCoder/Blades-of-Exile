@@ -342,7 +342,7 @@ short i,next_to_last_slash = -1,last_slash = -1;
 			last_slash = i;
 			}
 	if (next_to_last_slash < 0) {
-		strcpy((char *) real_name,name);
+		strcpy(real_name,name);
 		}
 		else {
 			strcpy(real_name,file_path_name);

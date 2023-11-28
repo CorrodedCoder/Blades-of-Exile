@@ -1583,7 +1583,7 @@ void build_scen_headers()
 		if (load_scenario_header(filename,cur_entry) == TRUE) {
 			// now we need to store the file name, first stripping any path that occurs
 			// before it
-			strcpy((char *) data_store2->scen_names[cur_entry],(char *) filename2);
+			strcpy(data_store2->scen_names[cur_entry], filename2);
 			cur_entry++;
 			}
 		}
@@ -1657,7 +1657,7 @@ Boolean load_scenario_header(char *filename,short header_entry)
 		if (i == 0)
 			load_str[29] = 0;
 			else load_str[59] = 0;
-		strcpy(data_store2->scen_header_strs[header_entry][i],(char *) load_str);
+		strcpy(data_store2->scen_header_strs[header_entry][i], load_str);
 		}
 	
 	FSClose(file_id);

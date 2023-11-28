@@ -149,7 +149,7 @@ void start_shop_mode(short shop_type,short shop_min,short shop_max,short cost_ad
 	store_shop_max = shop_max;
 		
 	area_rect = talk_area_rect;
-	strcpy((char *) store_store_name,store_name);
+	strcpy(store_store_name,store_name);
 
 	OffsetRect(&area_rect, -1 * area_rect.left,-1 * area_rect.top);
 	if (talk_gworld == NULL)
@@ -548,10 +548,10 @@ void start_talk_mode(short m_num,short personality,unsigned char monst_type,shor
 	sprintf(place_string1,"%s",data_store3->talk_strs[personality % 10 + 10]);
 	strnum1 = personality % 10 + 10;
 	strnum2 = 0;
-	strcpy((char *) old_str1,(char *) place_string1);
-	strcpy((char *) old_str2,(char *) place_string2);
-	strcpy((char *) one_back1,(char *) place_string1);
-	strcpy((char *) one_back2,(char *) place_string2);
+	strcpy(old_str1, place_string1);
+	strcpy(old_str2, place_string2);
+	strcpy(one_back1, place_string1);
+	strcpy(one_back2, place_string2);
 	place_talk_str((char *) place_string1,(char *) place_string2,0,dummy_rect);
 	
 	put_item_screen(stat_window,0);
@@ -692,10 +692,10 @@ void handle_talk_event(POINT p,Boolean right_button)
 				oldstrnum1 = strnum1; oldstrnum2 = strnum2;
 				strnum1 =  store_personality % 10 + 10 * force_special;
 				strnum2 = 0;
-				strcpy((char *) one_back1,(char *) old_str1);
-				strcpy((char *) one_back2,(char *) old_str2);
-				strcpy((char *) old_str1,(char *) place_string1);
-				strcpy((char *) old_str2,(char *) place_string2);
+				strcpy(one_back1, old_str1);
+				strcpy(one_back2, old_str2);
+				strcpy(old_str1, place_string1);
+				strcpy(old_str2, place_string2);
 				place_talk_str((char *) place_string1,(char *) place_string2,0,dummy_rect);
 				return;
 				break;
@@ -723,12 +723,12 @@ void handle_talk_event(POINT p,Boolean right_button)
 				break;
 			case 8: // back 1
 				strnum1 = oldstrnum1; strnum2 = oldstrnum2;
-				strcpy((char *) place_string1,(char *) one_back1);
-				strcpy((char *) place_string2,(char *) one_back2);
-				strcpy((char *) one_back1,(char *) old_str1);
-				strcpy((char *) one_back2,(char *) old_str2);
-				strcpy((char *) old_str1,(char *) place_string1);
-				strcpy((char *) old_str2,(char *) place_string2);
+				strcpy(place_string1, one_back1);
+				strcpy(place_string2, one_back2);
+				strcpy(one_back1, old_str1);
+				strcpy(one_back2, old_str2);
+				strcpy(old_str1, place_string1);
+				strcpy(old_str2, place_string2);
 				place_talk_str((char *) place_string1,(char *) place_string2,0,dummy_rect);
 				return;
 				break;
@@ -737,8 +737,8 @@ void handle_talk_event(POINT p,Boolean right_button)
 	
 	which_talk_entry = scan_for_response(asked);
 	if ((which_talk_entry < 0) || (which_talk_entry > 59)) {
-		strcpy((char *) one_back1,(char *) old_str1);
-		strcpy((char *) one_back2,(char *) old_str2);
+		strcpy(one_back1, old_str1);
+		strcpy(one_back2, old_str2);
 		sprintf(old_str2,"");
 		sprintf(old_str1,"%s",data_store3->talk_strs[store_personality % 10 + 160]);
 		if (strlen((char *) old_str1) < 2)
@@ -766,7 +766,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 		case 1:
 			if (PSD[a][b] > c) {
 				strnum1 = strnum2;
-				strcpy((char *) place_string1,(char *) place_string2);
+				strcpy(place_string1, place_string2);
 				}
 			sprintf(place_string2,"");					
 			strnum2 = 0;
@@ -777,7 +777,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 		case 3:
 			if (party.gold < a) {
 				strnum1 = strnum2;
-				strcpy((char *) place_string1,(char *) place_string2);
+				strcpy(place_string1, place_string2);
 				}
 				else {
 					talk_end_forced = TRUE;
@@ -796,7 +796,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 		case 4:
 			if (day_reached((unsigned char) a,0) == TRUE) {
 				strnum1 = strnum2;
-				strcpy((char *) place_string1,(char *) place_string2);
+				strcpy(place_string1, place_string2);
 				}
 			sprintf(place_string2,"");					
 			strnum2 = 0;
@@ -804,7 +804,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 		case 5:
 			if (day_reached((unsigned char) a,(unsigned char) b) == TRUE) {
 				strnum1 = strnum2;
-				strcpy((char *) place_string1,(char *) place_string2);
+				strcpy(place_string1, place_string2);
 				}
 			sprintf(place_string2,"");					
 			strnum2 = 0;
@@ -812,7 +812,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 		case 6:
 			if (c_town.town_num != a) {
 				strnum1 = strnum2;
-				strcpy((char *) place_string1,(char *) place_string2);
+				strcpy(place_string1, place_string2);
 				}
 			sprintf(place_string2,"");					
 			strnum2 = 0;
@@ -871,7 +871,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 		case 18:
 			if (party.gold < a) {
 				strnum1 = strnum2;
-				strcpy((char *) place_string1,(char *) place_string2);
+				strcpy(place_string1, place_string2);
 				}
 				else {
 					party.gold -= a;
@@ -888,7 +888,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 				}
 			else if (party.gold < a) {
 				strnum1 = strnum2;
-				strcpy((char *) place_string1,(char *) place_string2);
+				strcpy(place_string1, place_string2);
 				}
 				else {
 					party.gold -= a;
@@ -904,7 +904,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 			if (party.gold < a) {
 				strnum1 = strnum2;
 				strnum2 = 0;
-				strcpy((char *) place_string1,(char *) place_string2);
+				strcpy(place_string1, place_string2);
 				sprintf(place_string2,"");					
 				break;
 				}
@@ -930,7 +930,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 			if (party.gold < a) {
 				strnum1 = strnum2;
 				strnum2 = 0;
-				strcpy((char *) place_string1,(char *) place_string2);
+				strcpy(place_string1, place_string2);
 				sprintf(place_string2,"");					
 				break;
 				}
@@ -958,7 +958,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 				strnum1 = -1;
 				}
 			else if (party.gold < b) {
-				strcpy((char *) place_string1,(char *) place_string2);
+				strcpy(place_string1, place_string2);
 				strnum1 = strnum2;
 				}
 				else {
@@ -979,7 +979,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 				}
 				else if (party.gold < a) {
 					strnum1 = strnum2;
-					strcpy((char *) place_string1,(char *) place_string2);
+					strcpy(place_string1, place_string2);
 					}
 					else {
 						party.gold -= a;
@@ -1047,10 +1047,10 @@ void handle_talk_event(POINT p,Boolean right_button)
 			
 		}
 
-	strcpy((char *) one_back1,(char *) old_str1);
-	strcpy((char *) one_back2,(char *) old_str2);
-	strcpy((char *) old_str1,(char *) place_string1);
-	strcpy((char *) old_str2,(char *) place_string2);
+	strcpy(one_back1, old_str1);
+	strcpy(one_back2, old_str2);
+	strcpy(old_str1, place_string1);
+	strcpy(old_str2, place_string2);
 	place_talk_str((char *) old_str1,(char *) old_str2,0,dummy_rect);
 	
 }

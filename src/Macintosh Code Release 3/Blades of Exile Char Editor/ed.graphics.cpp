@@ -968,7 +968,7 @@ short string_length(char *str)
 	for (i = 0; i < 257; i++)
 		text_len[i]= 0;
 	
-	strcpy((char *) p_str,str);
+	strcpy(p_str,str);
 	c2p(p_str);
 	MeasureText(256,p_str,text_len);
 	len = strlen((char *)str);
@@ -983,7 +983,7 @@ void char_win_draw_string(GrafPtr dest_window,Rect dest_rect,char *str,short mod
 {
 	Str255 store_s;
 	
-	strcpy((char *) store_s,str);
+	strcpy(store_s,str);
 	win_draw_string( dest_window, dest_rect,store_s, mode, line_height);
 
 }
@@ -1006,8 +1006,8 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 	RgnHandle current_clip;
 	short adjust_x = 0,adjust_y = 0;
 	
-	strcpy((char *) p_str,(char *) str);
-	strcpy((char *) c_str,(char *) str);
+	strcpy(p_str,(char *) str);
+	strcpy(c_str,(char *) str);
 	c2p(p_str);	
 	for (i = 0; i < 257; i++)
 		text_len[i]= 0;
@@ -1171,7 +1171,7 @@ void c2p(Str255 str)
 	short len;
 	
 	len = strlen((char *) str);
-	strcpy((char *) str2,(char *) str);
+	strcpy(str2,(char *) str);
 	str[0] = (unsigned char) len;
 	strncpy((char *) (str + 1), (char *) str2,len);
 }
@@ -1184,7 +1184,7 @@ void p2c(Str255 str)
 	len = (short) str[0];
 	strncpy((char *) str2,(char *) (str + 1), len);
 	str2[len] = 0;
-	strcpy((char *) str,(char *) str2);
+	strcpy(str,(char *) str2);
 }
 
 void get_str(Str255 str,short i, short j)

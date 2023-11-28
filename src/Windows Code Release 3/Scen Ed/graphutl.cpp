@@ -346,7 +346,7 @@ short i,last_slash = -1;
 		if ((file_path_name[i] == 92) || (file_path_name[i] == '/'))
 			last_slash = i;
 	if (last_slash < 0) {
-		strcpy((char *) real_name,name);
+		strcpy(real_name,name);
 		}
 		else {
 			strcpy(real_name,file_path_name);

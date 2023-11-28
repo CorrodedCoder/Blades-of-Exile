@@ -1792,7 +1792,7 @@ Boolean new_town(short which_town)
 	cur_town = which_town;
 	scenario.last_town_edited = cur_town;
 	init_town(size);
-	strcpy(data_store->town_strs[0],(char *) temp_str);
+	strcpy(data_store->town_strs[0], temp_str);
 	town_type = size;
 	
 	for (i = 0; i < max_dim[size]; i++)

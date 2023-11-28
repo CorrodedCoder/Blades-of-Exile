@@ -690,8 +690,8 @@ item_record_type convert_item (short_item_record_type s_item) {
 	i.weight = s_item.weight;
 	i.special_class = 0;
 	i.item_loc = l;
-	strcpy((char *)i.full_name,(char *)s_item.full_name);
-	strcpy((char *)i.name,(char *)s_item.name);
+	strcpy(i.full_name, s_item.full_name);
+	strcpy(i.name, s_item.name);
 
 	if (i.charges > 0)
 		temp_val = i.value * i.charges;

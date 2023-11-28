@@ -519,7 +519,7 @@ void put_party_in_scen()
 	for (j = 0; j < 6; j++)
 		if (strlen(data_store5->scen_strs[4 + j]) > 0) {
 			for (i = 0; i < 6; i++)
-				strcpy((char *) strs[i],data_store5->scen_strs[4 + i]);
+				strcpy(strs[i],data_store5->scen_strs[4 + i]);
 			custom_choice_dialog((char *) strs,-1 * (1600 + scenario.intro_pic),buttons) ;
 			j = 6;
 		}
@@ -3747,7 +3747,7 @@ void adjust_spell_menus()
 		for (i = 0; i < 62; i++)
 			if (pc_can_cast_spell(current_pc,1,i) == TRUE) {
 				//spell_name[0] = strlen((char *) priest_s_name[on_spell_menu[1][i]]);
-				//strcpy((char *) (spell_name + 1),priest_s_name[on_spell_menu[1][i]]);
+				//strcpy((spell_name + 1),priest_s_name[on_spell_menu[1][i]]);
 				if (spell_cost[1][i] > 0)
 					sprintf((char *)spell_name," L%d - %s, C %d",spell_level[i],
 						(char *) priest_s_name[i],spell_cost[1][i]);

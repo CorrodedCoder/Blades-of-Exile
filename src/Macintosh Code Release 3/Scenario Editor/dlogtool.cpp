@@ -673,7 +673,7 @@ void cd_set_text_edit_str(short dlog_num, short item_num, char *str)
 	if ((dlg_index = cd_get_dlg_index(dlog_num)) < 0) {
 		SysBeep(50); return ;
 		}
-	strcpy((char *) store_ptr,str);
+	strcpy(store_ptr,str);
 	c2p(store_ptr);
 	GetDItem( dlgs[dlg_index], item_num, &the_type, &the_handle, &the_rect );
 	SetIText ( the_handle, store_ptr);	

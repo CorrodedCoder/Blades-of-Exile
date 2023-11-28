@@ -1021,7 +1021,7 @@ void adventure_notes_event_filter (short item_hit)
 	for (i = 0; i < 3; i++) {
 		if (party.special_notes_str[i][0] > 0) {
 			switch (party.special_notes_str[i][0] / 1000) {
-				case 0: strcpy((char *) place_str,data_store->scen_strs[party.special_notes_str[i][0] % 1000]); break;
+				case 0: strcpy(place_str,data_store->scen_strs[party.special_notes_str[i][0] % 1000]); break;
 				case 1:
 					 load_outdoors(party.special_notes_str[i][1] % scenario.out_width,
 					 	party.special_notes_str[i][1] / scenario.out_width, 
@@ -1039,7 +1039,7 @@ void adventure_notes_event_filter (short item_hit)
 	for (i = store_page_on * 3; i < (store_page_on * 3) + 3; i++) {
 		if (party.special_notes_str[i][0] > 0) {
 			switch (party.special_notes_str[i][0] / 1000) {
-				case 0: strcpy((char *) place_str,data_store->scen_strs[party.special_notes_str[i][0] % 1000]); break;
+				case 0: strcpy(place_str,data_store->scen_strs[party.special_notes_str[i][0] % 1000]); break;
 				case 1:
 					 load_outdoors(party.special_notes_str[i][1] % scenario.out_width,
 					 	party.special_notes_str[i][1] / scenario.out_width, 
@@ -1084,7 +1084,7 @@ void adventure_notes()
 	for (i = 0; i < 3; i++) {
 		if (party.special_notes_str[i][0] > 0) {
 			switch (party.special_notes_str[i][0] / 1000) {
-				case 0: strcpy((char *) place_str,data_store->scen_strs[party.special_notes_str[i][0] % 1000]); break;
+				case 0: strcpy(place_str,data_store->scen_strs[party.special_notes_str[i][0] % 1000]); break;
 				case 1:
 					 load_outdoors(party.special_notes_str[i][1] % scenario.out_width,
 					 	party.special_notes_str[i][1] / scenario.out_width, 

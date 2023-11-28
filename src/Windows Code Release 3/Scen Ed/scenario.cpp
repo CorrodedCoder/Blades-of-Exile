@@ -818,8 +818,8 @@ item_record_type convert_item (short_item_record_type s_item) {
 	i.weight = s_item.weight;
 	i.special_class = 0;
 	i.item_loc = l;
-	strcpy((char *)i.full_name,(char *)s_item.full_name);
-	strcpy((char *)i.name,(char *)s_item.name);
+	strcpy(i.full_name, s_item.full_name);
+	strcpy(i.name, s_item.name);
 
 	if (i.charges > 0)
 		temp_val = i.value * i.charges;
@@ -2329,10 +2329,10 @@ Boolean save_scen_details()
 			0,9,"The digits in the version number must be in the 0 to 9 range.","",803) == TRUE) return FALSE;
 	CDGT(803,5,(char *) str);
 	str[59] = 0;
-	strcpy(scen_strs[1],(char *) str);
+	strcpy(scen_strs[1], str);
 	CDGT(803,6,(char *) str);
 	str[59] = 0;
-	strcpy(scen_strs[2],(char *) str);
+	strcpy(scen_strs[2], str);
 	CDGT(803,7,scen_strs[3]);
 	
 	return TRUE;
@@ -2523,7 +2523,7 @@ void build_scenario()
 		
 	init_out();
 	init_scenario();
-	strcpy((char *) scen_strs[0],(char *) title);
+	strcpy(scen_strs[0], title);
 	if (two_flags[5] == 0) {
 		init_town(1);
 		if (grass == 0)
@@ -2538,7 +2538,7 @@ void build_scenario()
 		two_flags[3]--;
 	
 	make_new_scenario(f_name2,two_flags[0],two_flags[1],two_flags[5],grass,title);
-	//strcpy((char *) scen_strs[0],(char *) title);
+	//strcpy(scen_strs[0], title);
 	//scenario.scen_str_len[0] = strlen(scen_strs[0]);
 	// now make sure correct outdoors is in memory, because we're going to be saving scenarios
 	// for a while

@@ -1055,7 +1055,7 @@ item_record_type store_mage_spells(short which_s)
 	spell.item_level = which_s + 30;
 	spell.value = cost[which_s];
 	get_str(str,38,which_s + 1);
-	strcpy((char *)spell.full_name,(char *)str);
+	strcpy(spell.full_name, str);
 	return spell;
 }
 
@@ -1077,7 +1077,7 @@ short cost[32] = {100,150,75,400,200, 100,80,250,
 	spell.item_level = which_s + 30;
 	spell.value = cost[which_s];
 	get_str(str,38,which_s + 50);
-	strcpy((char *)spell.full_name,(char *)str);
+	strcpy(spell.full_name, str);
 	return spell;
 }
 item_record_type store_alchemy(short which_s)
@@ -1091,7 +1091,7 @@ short val[20] = {50,75,30,130,100,150, 200,200,300,250,300, 500,600,750,700,1000
 	spell.item_level = which_s;
 	spell.value = val[which_s];
 	get_str(str,38,which_s + 100);
-	strcpy((char *)spell.full_name,(char *)str);
+	strcpy(spell.full_name, str);
 	return spell; 
 }
 
@@ -1257,8 +1257,8 @@ void place_talk_str(char *str_to_place,const char *str_to_place2,short color,REC
 	if (str_len == 0) {
 		sprintf(str_to_place,".");
 		}
-	strcpy((char *) str,str_to_place);
-	strcpy((char *) p_str,str_to_place);
+	strcpy(str,str_to_place);
+	strcpy(p_str,str_to_place);
 	c2p(p_str);
 	for (i = 0; i < 257; i++)
 		text_len[i]= 0;
@@ -1355,8 +1355,8 @@ void place_talk_str(char *str_to_place,const char *str_to_place2,short color,REC
 
 	if (str_len > 0) {
 
-	strcpy((char *) str,str_to_place2);
-	strcpy((char *) p_str,str_to_place2);
+	strcpy(str,str_to_place2);
+	strcpy(p_str,str_to_place2);
 	c2p(p_str);
 	for (i = 0; i < 257; i++)
 		text_len[i]= 0;

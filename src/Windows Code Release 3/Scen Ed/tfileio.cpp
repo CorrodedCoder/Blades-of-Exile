@@ -951,7 +951,7 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 			file_name[0] = 0;
 			return;
 			}
-	strcpy((char *) szFileName,file_name);
+	strcpy(szFileName,file_name);
 
 	temp_buffer = GlobalAlloc(GMEM_FIXED,buf_len);
 	if (temp_buffer == NULL) {
@@ -984,7 +984,7 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 				scen_strs2[i - 160][len] = 0;
 				}
 		}
-	strcpy((char *) scen_strs[0],(char *) title);
+	strcpy(scen_strs[0], title);
 	scenario.scen_str_len[0] = strlen(title);
 	scen_strs[0][scenario.scen_str_len[0]] = 0;
 	_lclose(file_id);

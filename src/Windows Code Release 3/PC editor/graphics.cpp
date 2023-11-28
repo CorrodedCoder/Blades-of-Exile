@@ -937,7 +937,7 @@ void char_win_draw_string(HDC dest_window,RECT dest_rect, const char * str,short
 {
 	char store_s[256];
 	
-	strcpy((char *) store_s,str);
+	strcpy(store_s,str);
 	win_draw_string( dest_window, dest_rect,store_s, mode, line_height);
 
 }
@@ -985,7 +985,7 @@ short string_length(char *str,HDC hdc)
 	for (i = 0; i < 257; i++)
 		text_len[i]= 0;
 	
-	strcpy((char *) p_str,str);
+	strcpy(p_str,str);
 	MeasureText(256,p_str,text_len,hdc);
 	len = strlen((char *)str);
 

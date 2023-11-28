@@ -2598,7 +2598,7 @@ void build_scenario()
 		
 	init_out();
 	init_scenario();
-	strcpy((char *) data_store->scen_strs[0],(char *) title);
+	strcpy(data_store->scen_strs[0],(char *) title);
 	if (two_flags[5] == 0) {
 		init_town(1);
 		if (grass == 0)

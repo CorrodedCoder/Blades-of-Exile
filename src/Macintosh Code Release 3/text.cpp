@@ -308,7 +308,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 				i_num = i + item_offset;
 				if (spec_item_array[i_num] >= 0) { 
 					// 2nd condition above is quite kludgy, in case it gets here with array all 0's
-					strcpy((char *) to_draw,data_store->scen_strs[60 + spec_item_array[i_num] * 2]);
+					strcpy(to_draw,data_store->scen_strs[60 + spec_item_array[i_num] * 2]);
 					win_draw_string((GrafPtr) item_stats_gworld,item_buttons[i][0],to_draw,0,10);
 					
 					place_item_button(3,i,4,0);
@@ -1047,7 +1047,7 @@ void get_m_name(char *str,unsigned char num)
 	Str255 store_name;
 	
 	////
-	strcpy((char *) str,(char *) data_store->scen_item_list.monst_names[num]);
+	strcpy(str,(char *) data_store->scen_item_list.monst_names[num]);
 }
 void get_ter_name(char *str,unsigned char num)
 {
@@ -1057,9 +1057,9 @@ void get_ter_name(char *str,unsigned char num)
 	if ((num == 90) && ((is_out()) || (is_town()) || ((is_combat()) && (which_combat_type == 1))))
 		sprintf(store_name,"Pit");
 		else {
-			strcpy((char *) store_name,(char *) data_store->scen_item_list.ter_names[num]);
+			strcpy(store_name,(char *) data_store->scen_item_list.ter_names[num]);
 			}
-	strcpy((char *) str,(char *) store_name);
+	strcpy(str,(char *) store_name);
 }
 
 void print_monst_name(unsigned char m_type)
@@ -1542,7 +1542,7 @@ void c2p(Str255 str)
 	short len;
 	
 	len = strlen((char *) str);
-	strcpy((char *) str2,(char *) str);
+	strcpy(str2,(char *) str);
 	str[0] = (unsigned char) len;
 	strncpy((char *) (str + 1), (char *) str2,len);
 }
@@ -1555,7 +1555,7 @@ void p2c(Str255 str)
 	len = (short) str[0];
 	strncpy((char *) str2,(char *) (str + 1), len);
 	str2[len] = 0;
-	strcpy((char *) str,(char *) str2);
+	strcpy(str,(char *) str2);
 }
 
 void get_str(Str255 str,short i, short j)
@@ -1573,7 +1573,7 @@ short string_length(char *str)
 	for (i = 0; i < 257; i++)
 		text_len[i]= 0;
 	
-	strcpy((char *) p_str,str);
+	strcpy(p_str,str);
 	c2p(p_str);
 	MeasureText(256,p_str,text_len);
 	len = strlen((char *)str);
@@ -1588,7 +1588,7 @@ void char_win_draw_string(GrafPtr dest_window,Rect dest_rect,char *str,short mod
 {
 	Str255 store_s;
 	
-	strcpy((char *) store_s,str);
+	strcpy(store_s,str);
 	win_draw_string( dest_window, dest_rect,store_s, mode, line_height);
 
 }
@@ -1614,8 +1614,8 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 	if (dest_window == mainPtr) {
 		adjust_x = ul.h; adjust_y = ul.v;
 		}
-	strcpy((char *) p_str,(char *) str);
-	strcpy((char *) c_str,(char *) str);
+	strcpy(p_str,(char *) str);
+	strcpy(c_str,(char *) str);
 	c2p(p_str);	
 	for (i = 0; i < 257; i++)
 		text_len[i]= 0;

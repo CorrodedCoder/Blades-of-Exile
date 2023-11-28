@@ -1185,8 +1185,8 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 	if (str_len == 0) {
 		sprintf(str_to_place,".");
 		}	
-	strcpy((char *) str,str_to_place);
-	strcpy((char *) p_str,str_to_place);
+	strcpy(str,str_to_place);
+	strcpy(p_str,str_to_place);
 	c2p(p_str);	
 	for (i = 0; i < 257; i++)
 		text_len[i]= 0;
@@ -1283,8 +1283,8 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 	
 	if (str_len > 0) {
 		
-	strcpy((char *) str,str_to_place2);
-	strcpy((char *) p_str,str_to_place2);
+	strcpy(str,str_to_place2);
+	strcpy(p_str,str_to_place2);
 	c2p(p_str);	
 	for (i = 0; i < 257; i++)
 		text_len[i]= 0;

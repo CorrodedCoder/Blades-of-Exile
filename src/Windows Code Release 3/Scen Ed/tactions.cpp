@@ -316,8 +316,8 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 						if (option_hit == TRUE) {
 							get_str(s2,35,j + 1);
 							if (j < 160)
-								strcpy(scen_strs[j],(char *) s2);
-								else strcpy(scen_strs2[j - 160],(char *) s2);
+								strcpy(scen_strs[j], s2);
+								else strcpy(scen_strs2[j - 160], s2);
 							} 
 							else edit_text_str(j,0);
 						//sprintf(str,"%d - %-30.30s",j,(char *)scen_strs[j]);
@@ -328,7 +328,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 					case 8:
 						if (option_hit == TRUE) {
 							get_str(s2,37,j + 1);
-							strcpy(data_store->out_strs[j],(char *) s2);
+							strcpy(data_store->out_strs[j], s2);
 							} 
 							else edit_text_str(j,1);
 						//sprintf(str,"%d - %-30.30s",j,(char *) data_store->out_strs[j]);
@@ -338,7 +338,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 					case 9:
 						if (option_hit == TRUE) {
 							get_str(s2,36,j + 1);
-							strcpy(town_strs[j],(char *) s2);
+							strcpy(town_strs[j], s2);
 							} 
 							else edit_text_str(j,2);
 						//sprintf(str,"%d - %-30.30s",j,(char *) town_strs[j]);

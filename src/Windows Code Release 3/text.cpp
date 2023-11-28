@@ -403,7 +403,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 			for (i = 0; i < 8; i++) {
 				i_num = i + item_offset;
 				if (spec_item_array[i_num] >= 0){
-					strcpy((char *) to_draw,data_store5->scen_strs[60 + spec_item_array[i_num] * 2]);
+					strcpy(to_draw,data_store5->scen_strs[60 + spec_item_array[i_num] * 2]);
 					win_draw_string(hdc,item_buttons[i][0],to_draw,0,10);
 
 					SelectObject(hdc,store_bmp);
@@ -1158,7 +1158,7 @@ void notify_out_combat_began(out_wandering_type encounter,short *nums)
 
 void get_m_name(char *str,unsigned char num)
 {
-	strcpy((char *) str,(char *) data_store2->scen_item_list.monst_names[num]);
+	strcpy(str, data_store2->scen_item_list.monst_names[num]);
 }
 void get_ter_name(char *str,unsigned char num)
 {
@@ -1168,9 +1168,9 @@ void get_ter_name(char *str,unsigned char num)
 	if ((num == 90) && ((is_out()) || (is_town()) || ((is_combat()) && (which_combat_type == 1))))
 		sprintf(store_name,"Pit");
 		else {
-			strcpy((char *) store_name,(char *) data_store2->scen_item_list.ter_names[num]);
+			strcpy(store_name, data_store2->scen_item_list.ter_names[num]);
 			}
-	strcpy((char *) str,(char *) store_name);
+	strcpy(str, store_name);
 }
 
 void print_monst_name(unsigned char m_type)
@@ -1579,7 +1579,7 @@ short string_length(char *str,HDC hdc)
 	for (i = 0; i < 257; i++)
 		text_len[i]= 0;
 	
-	strcpy((char *) p_str,str);
+	strcpy(p_str,str);
 	MeasureText(256,p_str,text_len,hdc);
 	len = strlen((char *)str);
 
@@ -1596,7 +1596,7 @@ void char_win_draw_string(HDC dest_window,RECT dest_rect, const char * str,short
 {
 	char store_s[256];
 	
-	strcpy((char *) store_s,str);
+	strcpy(store_s,str);
 	win_draw_string( dest_window, dest_rect,store_s, mode, line_height);
 
 }
