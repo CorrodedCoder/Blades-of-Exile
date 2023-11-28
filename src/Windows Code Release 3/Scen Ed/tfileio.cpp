@@ -1,4 +1,5 @@
 #include <Windows.h>
+#include <array>
 #include <commdlg.h>
 #include <cstring>
 #include "global.h"
@@ -59,15 +60,13 @@ Boolean suppress_load_file_name = FALSE;
 
 void print_write_position ();
 
-void file_initialize()
-{
-
-static char *szFilter[] = {"Blades of Exile Scenarios (*.EXS)","*.exs",
+static const std::array szFilter{ "Blades of Exile Scenarios (*.EXS)","*.exs",
 		"Text Files (*.TXT)","*.txt",
 		"All Files (*.*)","*.*",
-		""};
+		"" };
 
-
+void file_initialize()
+{
 		ofn.lStructSize = sizeof(OPENFILENAME);
 		ofn.hwndOwner = mainPtr;
 		ofn.hInstance = NULL;

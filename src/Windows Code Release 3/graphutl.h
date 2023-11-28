@@ -5,7 +5,7 @@ extern DWORD GetDibInfoHeaderSize(BYTE * lpDib);
 
 extern WORD GetDibHeight(BYTE * lpDib);
 extern BYTE * GetDibBitsAddr(BYTE * lpDib);
-extern HBITMAP ReadDib(char * name,HDC hdc);
+extern HBITMAP ReadDib(const char * name,HDC hdc);
 
 extern WORD GetDibWidth(BYTE *);
 

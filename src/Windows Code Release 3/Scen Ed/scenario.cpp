@@ -1,4 +1,5 @@
 #include <Windows.h>
+#include <array>
 #include <cstdio>
 #include <cstring>
 #include "global.h"
@@ -43,7 +44,7 @@ short spec_item_spec,store_horse_page,store_boat_page ;
 item_storage_shortcut_type store_storage;
 short cur_shortcut;
 
-	char *item_types[] = {"No Item","1-Handed weapon","2-Handed weapon","Gold","Bow","Arrows","Thrown missile",
+static const std::array item_types{"No Item","1-Handed weapon","2-Handed weapon","Gold","Bow","Arrows","Thrown missile",
 			"Potion/Magic Item","Scroll/Magic Item","Wand","Tool","Food","Shield","Armor","Helm",
 			"Gloves","Shield","Boots","Ring","Necklace",
 			"Weapon Poison","Non-Use Object","Pants","Crossbow","Bolts","Missile (no ammo)","Unused","Unused"};
@@ -1108,14 +1109,15 @@ void edit_ter_type_event_filter (short item_hit)
 		}
 }
 
+static const std::array blocked_strs{"Clear","Walk through, Opaque","Clear, Special","Clear, Blocked","Blocked, Obstructed",
+	"Blocked, Opaque" };
+static const std::array sound_strs{ "Footstep","Squish","Crunch","Silence" };
+
 short edit_ter_type(short which_ter)
 // ignore parent in Mac version
 {
 	short i;
 	char temp_str[256];
-	char *blocked_strs[6] = {"Clear","Walk through, Opaque","Clear, Special","Clear, Blocked","Blocked, Obstructed",
-		"Blocked, Opaque"};
-	char *sound_strs[4] = {"Footstep","Squish","Crunch","Silence"};
 	
 	store_which_ter = which_ter;
 	store_ter = scenario.ter_types[which_ter];
@@ -1338,11 +1340,12 @@ void edit_monst_type_event_filter (short item_hit)
 		}
 }
 
+static const std::array attitude{ "Friendly, Docile","Hostile, Type A","Friendly, Will Fight","Hostile, Type B" };
+
 short edit_monst_type(short which_monst)
 // ignore parent in Mac version
 {
 	short i;
-	char *attitude[4] = {"Friendly, Docile","Hostile, Type A","Friendly, Will Fight","Hostile, Type B"};
 	
 	store_which_monst = which_monst;
 	store_monst = scenario.scen_monsters[which_monst];

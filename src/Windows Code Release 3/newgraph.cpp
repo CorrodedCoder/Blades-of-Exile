@@ -1,5 +1,5 @@
 #include <Windows.h>
-
+#include <array>
 #include <cstring>
 #include <cstdio>
 #include "global.h"
@@ -17,6 +17,9 @@
 #include "exlsound.h"
 #include "graphutl.h"
 #include "graphutl_helpers.hpp"
+
+static const std::array heal_types{"Heal Damage","Cure Poison","Cure Disease","Cure Paralysis",
+		"Uncurse Items","Cure Stoned Character","Raise Dead","Resurrection","Cure Dumbfounding"};
 
 short far monsters_faces[190] = {0,1,2,3,4,5,6,7,8,9,
 							10,0,12,11,11,12,13,13,2,11,
@@ -98,7 +101,6 @@ extern RECT shop_name_str;
 extern RECT shop_frame ;
 extern RECT shop_done_rect;
 extern item_record_type far food_types[15];
-extern char *heal_types[];
 extern short heal_costs[8];
 extern short terrain_there[9][9];
 
@@ -807,6 +809,10 @@ void click_shop_rect(RECT area_rect)
 	draw_shop_graphics(0,area_rect);
 
 }
+
+static const std::array cost_strs{ "Extremely Cheap","Very Reasonable","Pretty Average","Somewhat Pricey",
+	"Expensive","Exorbitant","Utterly Ridiculous" };
+
 void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 // mode 1 - drawing dark for button press
 {
@@ -824,8 +830,6 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 	short cur_cost,what_magic_shop,what_magic_shop_item;
 	char cur_name[256];
 	char cur_info_str[256];
-char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somewhat Pricey",
-	"Expensive","Exorbitant","Utterly Ridiculous"};
 	item_record_type base_item;
 	HDC hdc;
 	COLORREF colors[7] = {RGB(0,0,0),RGB(255,0,130),RGB(128,0,70),RGB(0,0,100),RGB(0,0,220),
@@ -1138,7 +1142,7 @@ void get_item_interesting_string(item_record_type item,char *message)
 		}
 
 
-void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_rect)
+void place_talk_str(char *str_to_place,const char *str_to_place2,short color,RECT c_rect)
 // color 0 - regular  1 - darker
 {
 	RECT area_rect;

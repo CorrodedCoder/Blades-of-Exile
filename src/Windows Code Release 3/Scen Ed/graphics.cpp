@@ -1,4 +1,5 @@
 #include <Windows.h>
+#include <array>
 #include <cassert>
 
 #include <cstdio>
@@ -51,7 +52,6 @@ extern Boolean left_buttons_active,right_buttons_active;
 extern short left_button_status[NLS]; // 0 - clear, 1 - text, 2 - title text, +10 - button
 extern short right_button_status[NRS]; 
 extern unsigned char m_pic_index[200];
-extern char *button_strs[140];
 extern location cur_out;
 extern short ulx,uly;
 extern HINSTANCE store_hInstance;
@@ -1244,7 +1244,7 @@ void place_just_location()
 	DeleteObject(hdc);
 }
 
-void set_string(char *string,char *string2)
+void set_string(const char * string, const char * string2)
 {
 	strcpy((char *)current_string,string);
 	c2p(current_string);
@@ -1454,7 +1454,7 @@ Boolean container_there(location l)
 }
 
 
-void char_win_draw_string(HDC dest_window,RECT dest_rect,char *str,short mode,short line_height)
+void char_win_draw_string(HDC dest_window,RECT dest_rect, const char * str,short mode,short line_height)
 {
 	char store_s[256];
 	
@@ -1598,7 +1598,7 @@ void get_str(char *str,short i, short j)
 		return;
 		}
 	if (i == -3) {
-		strcpy((char *) str,button_strs[available_dlog_buttons[j]]);
+		strcpy((char *) str,get_button_str(available_dlog_buttons[j]));
 		return;
 		}
 	if (i == -4) {

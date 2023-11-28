@@ -1,4 +1,5 @@
 #include <Windows.h>
+#include <array>
 #include <cstdio>
 #include "global.h"
 #include "monster.h"
@@ -111,7 +112,7 @@ short monst_priest_area_effect[26] = {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,1,0,0
 
 extern short boom_gr[8];								
 
-char *d_string[] = {"North", "NorthEast", "East", "SouthEast", "South", "SouthWest", "West", "NorthWest"};
+static const std::array d_string{"North", "NorthEast", "East", "SouthEast", "South", "SouthWest", "West", "NorthWest"};
 
 short pc_marked_damage[6];
 short monst_marked_damage[T_M];

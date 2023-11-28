@@ -39,9 +39,8 @@ void put_spec_item_info (short which_i);
 void put_spec_item_info (short which_i);
 void display_strings_event_filter (short item_hit);
 void display_strings_event_filter (short item_hit);
-void display_strings(char *text1, char *text2,short str_label_1,short str_label_2,short str_label_1b,
+void display_strings(const char *text1, const char *text2,short str_label_1,short str_label_2,short str_label_1b,
 	short str_label_2b,
-	char *title,short sound_num,short graphic_num,short parent_num);
-void give_error(char *text1, char *text2,short parent_num);
-void display_strings_with_nums(short a1,short a2, short b1, short b2,
-	char *title,short sound_num,short graphic_num,short parent_num);
+	const char *title,short sound_num,short graphic_num,short parent_num);
+void give_error(const char *text1, const char *text2,short parent_num);
+void display_strings_with_nums(short a1,short a2, short b1, short b2, const char * title,short sound_num,short graphic_num,short parent_num);

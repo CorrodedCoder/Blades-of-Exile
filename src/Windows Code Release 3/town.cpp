@@ -1314,6 +1314,10 @@ void clear_map()
 
 }
 
+static const char comb_mess[]{" Map unavailable."};
+static const char unav_mess[]{" Map unavailable."};
+static const char blank_mess[]{""};
+
 
 void draw_map (HWND the_dialog, short the_item)
 //short the_item; // Being sneaky - if this gets value of 5, this is not a full restore -
@@ -1327,9 +1331,6 @@ void draw_map (HWND the_dialog, short the_item)
 //	RECT map_rect = {47,29,297,279},map_world_rect = {0,0,321,321};
 	RECT map_rect = {53,7,303,257},map_world_rect = {0,0,321,321};
 	RECT whole_map_win_rect = {0,0,400,400};
-	char *comb_mess = " Map unavailable.";
-	char *unav_mess = " Map unavailable.";
-	char *blank_mess = "";
 	location map_adj = {0,0};
 	location where;
 	location kludge;

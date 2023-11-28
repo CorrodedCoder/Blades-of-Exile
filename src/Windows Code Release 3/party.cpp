@@ -1,5 +1,6 @@
 
 #include <Windows.h>
+#include <array>
 #include <cassert>
 #include <cstdio>
 
@@ -39,7 +40,7 @@ short spell_cost[2][62] = {{1,1,1,1,1,2,50,2,1,3, 2,3,2,2,2,2,4,4,2,6, 3,3,5,3,3
 							4,5,4,8,30,-1,8,6, 5,8,8,6,9,10,6,6, 7,6,8,7,12,10,12,20, 12,8,20,10,14,10,50,10},
 							{1,1,1,2,1,1,3,5,50,1, 2,2,2,2,3,5,8,6,4,2, 3,4,3,3,3,10,5,3,4,6,
 							 5,5,5,15,6,5,5,8, 6,7,25,8,10,12,12,6, 8,7,8,8,14,17,8,7, 10,10,35,10,12,12,30,10}};
-char *mage_s_name[] = {"Light","Spark","Minor Haste","Strength","Scare",
+static const std::array mage_s_name{"Light","Spark","Minor Haste","Strength","Scare",
 							"Flame Cloud","Identify","Scry Monster","Goo","True Sight",
 						"Minor Poison","Flame","Slow","Dumbfound","Envenom",
 							"Stinking Cloud","Summon Beast","Conflagration","Dispel Field","Sleep Cloud",
@@ -53,7 +54,7 @@ char *mage_s_name[] = {"Light","Spark","Minor Haste","Strength","Scare",
 							"Daemon","Antimagic Cloud","MindDuel","Flight",
 						"Shockwave","M. Blessing","Mass Paralysis","Protection",
 							"Major Summon","Force Barrier","Quickfire","Death Arrows"};
-char *priest_s_name[] = {"Minor Bless","Minor Heal","Weaken Poison","Turn Undead","Location",
+static const std::array priest_s_name{"Minor Bless","Minor Heal","Weaken Poison","Turn Undead","Location",
 							"Sanctuary","Symbiosis","Minor Manna","Ritual - Sanctify","Stumble",
 						"Bless","Cure Poison","Curse","Light","Wound",
 							"Summon Spirit","Move Mountains","Charm Foe","Disease","Awaken",
@@ -67,7 +68,7 @@ char *priest_s_name[] = {"Minor Bless","Minor Heal","Weaken Poison","Turn Undead
 							"Guardian","Mass Charm","Protective Circle","Pestilence",
 						"Revive All","Ravage Spirit","Resurrect","Divine Thud",
 							"Avatar","Wall of Blades","Word of Recall","Major Cleansing"};
-	char *alch_names[] = {"Weak Curing Potion (1)","Weak Healing Potion (1)","Weak Poison (1)",
+static const std::array alch_names{"Weak Curing Potion (1)","Weak Healing Potion (1)","Weak Poison (1)",
 	"Weak Speed Potion (3)","Medium Poison (3)",
 		"Medium Heal Potion (4)","Strong Curing (5)","Medium Speed Potion (5)",
 		"Graymold Salve (7)","Weak Energy Potion (9)",
@@ -75,7 +76,7 @@ char *priest_s_name[] = {"Minor Bless","Minor Heal","Weaken Poison","Turn Undead
 		"Resurrection Balm (9)","Medium Energy Ptn. (14)","Knowledge Brew (19)"	,
 		"Strong Strength (10)","Bliss (16)","Strong Power (20)"
 		};
-	char *alch_names_short[] = {"Weak Curing Potion","Weak Healing Potion","Weak Poison",
+static const std::array alch_names_short{"Weak Curing Potion","Weak Healing Potion","Weak Poison",
 	"Weak Speed Potion","Medium Poison",
 		"Medium Heal Potion","Strong Curing","Medium Speed Potion",
 		"Graymold Salve","Weak Energy Potion",
@@ -2657,13 +2658,14 @@ void put_pick_spell_graphics()
 			cd_draw_item(1098,18 + i); // draws effects graphics
 }
 
+static const char choose_target[]	{" Now pick a target."};
+static const char no_target[]		{" No target needed."};
+static const char bad_target[]		{" Can't cast on him/her."};
+static const char got_target[]		{" Target selected."};
+static const char bad_spell[]		{" Spell not available."};
+
 void pick_spell_event_filter (short item_hit)
 {
-	char *choose_target = " Now pick a target.";
-	char *no_target = " No target needed.";
-	char *bad_target = " Can't cast on him/her.";
-	char *got_target = " Target selected.";
-	char *bad_spell = " Spell not available.";
 	Boolean spell_toast = FALSE,dialog_done = FALSE;
 	
 		switch (item_hit) {

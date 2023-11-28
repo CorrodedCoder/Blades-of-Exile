@@ -1,5 +1,6 @@
 
 #include <Windows.h>
+#include <array>
 #include <commdlg.h>
 
 #include <cstring>
@@ -102,13 +103,13 @@ town_record_type  far dummy_town;
 short jl;
 extern char file_path_name[256];
 
+static const std::array szFilter{ "Blades of Exile Save Files (*.SAV)","*.sav",
+	"Text Files (*.TXT)","*.txt",
+	"All Files (*.*)","*.*",
+	"" };
+
 void file_initialize()
 {
-static char *szFilter[] = {"Blades of Exile Save Files (*.SAV)","*.sav",
-		"Text Files (*.TXT)","*.txt",
-		"All Files (*.*)","*.*",
-		""};
-
 		OpenFile("outdoor.dat",&save_dir,OF_PARSE);
 		OpenFile("town.dat",&save_dir2,OF_PARSE);
 

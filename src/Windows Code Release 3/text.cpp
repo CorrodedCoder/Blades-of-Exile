@@ -2,6 +2,7 @@
 #define	TEXT_BUF_LEN	70
 
 #include <windows.h>
+#include <array>
 #include <cassert>
 
 #include "global.h"
@@ -14,13 +15,13 @@
 #include "graphutl.h"
 #include "graphutl_helpers.hpp"
 
-char far *m_mage_sp[] = {"Spark","Minor Haste","Strength","Flame Cloud","Flame",
+static const std::array m_mage_sp{"Spark","Minor Haste","Strength","Flame Cloud","Flame",
 						"Minor Poison","Slow","Dumbfound","Stinking Cloud","Summon Beast",
 						"Conflagration","Fireball","Weak Summoning","Web","Poison",
 						"Ice Bolt","Slow Group","Major Haste","Firestorm","Summoning",
 						"Shockstorm","Major Poison","Kill","Daemon","Major Blessing",
 						"Major Summoning","Shockwave"};
-char far *m_priest_sp[] = {"Minor Bless","Light Heal","Wrack","Stumble","Bless",
+static const std::array m_priest_sp{"Minor Bless","Light Heal","Wrack","Stumble","Bless",
 						"Curse","Wound","Summon Spirit","Disease","Heal",
 						"Holy Scourge","Smite","Curse All","Sticks to Snakes","Martyr's Shield",
 						"Bless All","Major Heal","Flamestrike","Summon Host","Heal All",
@@ -1591,7 +1592,7 @@ short string_length(char *str,HDC hdc)
 }
 
 
-void char_win_draw_string(HDC dest_window,RECT dest_rect,char *str,short mode,short line_height)
+void char_win_draw_string(HDC dest_window,RECT dest_rect, const char * str,short mode,short line_height)
 {
 	char store_s[256];
 	

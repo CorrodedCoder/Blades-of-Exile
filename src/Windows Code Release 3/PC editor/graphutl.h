@@ -6,7 +6,7 @@ DWORD GetDibInfoHeaderSize(BYTE * lpDib);
 WORD GetDibWidth(BYTE * lpDib);
 WORD GetDibHeight(BYTE * lpDib);
 BYTE * GetDibBitsAddr(BYTE * lpDib);
-HBITMAP ReadDib(char * name,HDC hdc) ;
+HBITMAP ReadDib(const char * name,HDC hdc) ;
 HBITMAP load_pict(short pict_num,HDC model_hdc);
 void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 	short trans, short main_win) ;

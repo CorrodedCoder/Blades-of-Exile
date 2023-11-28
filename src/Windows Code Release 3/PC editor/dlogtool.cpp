@@ -1,4 +1,5 @@
 #include <windows.h>
+#include <array>
 
 #define ND	15
 #define	NI	500
@@ -101,7 +102,7 @@ short button_type[150] = {1,1,4,5,1,1,0,0,1,1,
 						 2,2,2,2,2,2,2,2,1,1,
 						 1,1,1,1,1,1,1,1,0,0,
 						 0,0,0,0,0,0,0,0,0,0};
-char *button_strs[150] = {"Done ","Ask"," "," ","Keep", "Cancel","+","-","Buy","Leave",
+static const std::array button_strs{"Done ","Ask"," "," ","Keep", "Cancel","+","-","Buy","Leave",
 						"Get","1","2","3","4","5","6","Cast"," "," ",
 						" "," "," ","Buy","Sell","Other Spells","Buy x10"," "," ","Save",
 						"Race","Train","Items","Spells","Heal Party","1","2","3","4","5",
@@ -989,7 +990,7 @@ void cd_get_text_edit_str(short dlog_num, char *str)
 			else str[0] = 0;
 }
 // NOTE!!! Expects a c string
-void cd_set_text_edit_str(short dlog_num, char *str)
+void cd_set_text_edit_str(short dlog_num, const char * str)
 {
 		if (edit_box != NULL)
 			SetWindowText(edit_box,str);
@@ -1107,7 +1108,7 @@ void cd_text_frame(short dlog_num,short item_num,short frame)
 	cd_draw_item(dlog_num,item_num);
 }
 
-void cd_add_label(short dlog_num, short item_num, char *label, short label_flag)
+void cd_add_label(short dlog_num, short item_num, const char *label, short label_flag)
 {
 	short dlg_index,item_index,label_loc = -1;
 	short i;

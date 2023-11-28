@@ -1,5 +1,6 @@
 
 #include <Windows.h>
+#include <array>
 #include <cstdio>
 
 #include "global.h"
@@ -131,7 +132,7 @@ extern short shop_identify_cost;
 extern Boolean fry_startup;
 
 
-char *dir_string[] = {"North", "NorthEast", "East", "SouthEast", "South", "SouthWest", "West", "NorthWest"};
+static const std::array dir_string{"North", "NorthEast", "East", "SouthEast", "South", "SouthWest", "West", "NorthWest"};
 char get_new_terrain();
 creature_start_type	save_monster_type;
 

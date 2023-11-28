@@ -1,6 +1,7 @@
 
 
 #include <Windows.h>
+#include <array>
 #include <cstdio>
 
 #include "global.h"
@@ -283,17 +284,17 @@ void display_pc(short pc_num,short mode,short parent)
 		ModalDialog();	cd_kill_dialog(991,0);
 }
 
+static const std::array item_types{ "","1-Handed weapon","2-Handed weapon","","Bow","Arrows","Thrown missile",
+		"Potion/Magic Item","Scroll/Magic Item","Wand","Tool","","Shield","Armor","Helm",
+		"Gloves","Shield","Boots","Ring","Necklace",
+		"Weapon Poison","Gem, Stone, Etc.","Pants","Crossbow","Bolts","Missile Weapon" };
+
 void put_item_info(short pc,short item)
 {
 	char store_text[256];
 	char desc_str[256];
 	short i;	
 	item_record_type s_i;
-	char *item_types[] = {"","1-Handed weapon","2-Handed weapon","","Bow","Arrows","Thrown missile",
-			"Potion/Magic Item","Scroll/Magic Item","Wand","Tool","","Shield","Armor","Helm",
-			"Gloves","Shield","Boots","Ring","Necklace",
-			"Weapon Poison","Gem, Stone, Etc.","Pants","Crossbow","Bolts","Missile Weapon"};
-
 		
 	s_i = store_i;
 	
@@ -656,17 +657,18 @@ Boolean display_alchemy_event_filter (short item_hit)
 					return FALSE;
 }
 
+static const std::array alch_names{ "Weak Curing Potion (1)","Weak Healing Potion (1)","Weak Poison (1)",
+"Weak Speed Potion (3)","Medium Poison (3)",
+	"Medium Heal Potion (4)","Strong Curing (5)","Medium Speed Potion (5)",
+	"Graymold Salve (7)","Weak Energy Potion (9)",
+	"Potion of Clarity (9)","Strong Poison (10)","Strong Heal Potion (12)","Killer Poison (12)",
+	"Resurrection Balm (9)","Medium Energy Ptn. (14)","Knowledge Brew (19)",
+	"Strong Strength (10)","Bliss (16)","Strong Power (20)"
+};
+
 void display_alchemy()
 {
 	short i;
-	char *alch_names[] = {"Weak Curing Potion (1)","Weak Healing Potion (1)","Weak Poison (1)",
-	"Weak Speed Potion (3)","Medium Poison (3)",
-		"Medium Heal Potion (4)","Strong Curing (5)","Medium Speed Potion (5)",
-		"Graymold Salve (7)","Weak Energy Potion (9)",
-		"Potion of Clarity (9)","Strong Poison (10)","Strong Heal Potion (12)","Killer Poison (12)",
-		"Resurrection Balm (9)","Medium Energy Ptn. (14)","Knowledge Brew (19)",
-		"Strong Strength (10)","Bliss (16)","Strong Power (20)"		
-		};
 
 	make_cursor_sword();
 
@@ -742,12 +744,12 @@ void pick_race_abil_event_filter(short item_hit)
 
 }
 
+static const char start_str1[]{"Click on button by name for description."};
+static const char start_str2[]{"Click on advantage button to add/remove."};
+
 void pick_race_abil(pc_record_type *pc,short mode,short parent_num)
 //mode; // 0 - edit  1 - just display  2 - can't change race
 {
-	char *start_str1 = "Click on button by name for description.";
-	char *start_str2 = "Click on advantage button to add/remove.";
-	
 	store_trait_mode = mode;
 	store_pc = pc;
 	make_cursor_sword();
@@ -1246,9 +1248,9 @@ void display_strings_event_filter (short item_hit)
 
 // str_label_1 & str_label_2 uysed for saving button for journal
 // 1000 + x scen 2000 + x out 3000 + x town
-void display_strings(char *text1, char *text2,short str_label_1,short str_label_2,short str_label_1b,
+void display_strings(const char *text1, const char *text2,short str_label_1,short str_label_2,short str_label_1b,
 	short str_label_2b,
-	char *title,short sound_num,short graphic_num,short parent_num)
+	const char *title,short sound_num,short graphic_num,short parent_num)
 {
 	Boolean sound_done = FALSE;
 
@@ -1285,13 +1287,12 @@ void display_strings(char *text1, char *text2,short str_label_1,short str_label_
 	final_process_dialog(store_which_string_dlog);
 }
 
-void give_error(char *text1, char *text2,short parent_num)
+void give_error(const char *text1, const char *text2,short parent_num)
 {
 	display_strings(text1,text2,-1,-1,-1,-1,"Error!",57,716,parent_num);
 }
 
-void display_strings_with_nums(short a1,short a2, short b1, short b2,
-	char *title,short sound_num,short graphic_num,short parent_num)
+void display_strings_with_nums(short a1,short a2, short b1, short b2, const char * title,short sound_num,short graphic_num,short parent_num)
 {
 	char str1[256] = "", str2[256] = "";
 	

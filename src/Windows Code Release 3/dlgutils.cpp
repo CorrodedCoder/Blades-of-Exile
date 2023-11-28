@@ -1,6 +1,7 @@
 
 
 #include <Windows.h>
+#include <array>
 #include <cstring>
 #include "global.h"
 
@@ -112,8 +113,6 @@ RECT shop_done_rect = {212,388,275,411}; /**/
 
 extern short store_shop_type;
 
-char far *heal_types[] = {"Heal Damage","Cure Poison","Cure Disease","Cure Paralysis",
-		"Uncurse Items","Cure Stoned Character","Raise Dead","Resurrection","Cure Dumbfounding"};
 short heal_costs[9] = {50,30,80,100,250,500,1000,3000,100};
 long cost_mult[7] = {5,7,10,13,16,20,25};
 short cur_display_mode;
@@ -1489,12 +1488,13 @@ void max_window(HWND window)
 
 }
 
+static const std::array ratings{ "G","PG","R","NC-17" };
+static const std::array difficulty{ "Low","Medium","High","Very High" };
+
 void put_scen_info()
 {
 	short i;
 	char place_str[256];
-	char *ratings[] = {"G","PG","R","NC-17"};
-	char *difficulty[] = {"Low","Medium","High","Very High"};
 
 	for (i = 0; i < 3; i++)
 		if (scen_headers[store_scen_page_on * 3 + i].flag1 != 0) {

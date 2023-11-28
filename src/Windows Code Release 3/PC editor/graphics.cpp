@@ -877,7 +877,7 @@ void display_strings_event_filter (short item_hit)
 }
 
 void display_strings(short str1a,short str1b,short str2a,short str2b,
-	char *title,short sound_num,short graphic_num,short parent_num)
+	const char *title,short sound_num,short graphic_num,short parent_num)
 {
 	char sign_text[256];
 	Boolean sound_done = FALSE;
@@ -933,7 +933,7 @@ void get_str(char *str,short i, short j)
 }
 
 
-void char_win_draw_string(HDC dest_window,RECT dest_rect,char *str,short mode,short line_height)
+void char_win_draw_string(HDC dest_window,RECT dest_rect, const char * str,short mode,short line_height)
 {
 	char store_s[256];
 	

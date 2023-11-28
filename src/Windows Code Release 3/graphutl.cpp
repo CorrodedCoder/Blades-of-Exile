@@ -333,7 +333,7 @@ BYTE * GetDibBitsAddr(BYTE * lpDib)
 	return lpDib + GetDibInfoHeaderSize(lpDib) + dwColorTableSize;
 	}
 
-HBITMAP ReadDib(char * name,HDC hdc) {
+HBITMAP ReadDib(const char * name,HDC hdc) {
 BITMAPFILEHEADER bmfh;
 BYTE * lpDib;
 DWORD dwDibSize, dwOffset, dwHeaderSize;

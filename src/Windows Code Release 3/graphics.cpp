@@ -1,5 +1,5 @@
 #include <Windows.h>
-
+#include <array>
 #include <cstring>
 #include <cstdio>
 #include "global.h"
@@ -481,11 +481,12 @@ void draw_startup_anim()
 	rect_draw_some_item_bmp(startup_button_g,anim_size,startup_button_g,startup_button[5],0,1);
 }
 
+static const std::array button_labels{ "Load Game","Make New Party","How To Order",
+	"Start Scenario","Custom Scenario","Quit" };
+
 void draw_start_button(short which_position,short which_button)
 {
 	RECT from_rect,to_rect;
-	char *button_labels[] = {"Load Game","Make New Party","How To Order",
-		"Start Scenario","Custom Scenario","Quit"};
 	RECT button_from = {172,0,202,30};
 	COLORREF colors[5] = {RGB(0,0,0),RGB(255,0,0),RGB(255,255,255),RGB(0,255,255),RGB(0,0,255)};
 	UINT c[5];

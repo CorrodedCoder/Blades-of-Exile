@@ -1,4 +1,5 @@
 #include <Windows.h>
+#include <array>
 #include <commdlg.h>
 
 #include <cstring>
@@ -53,14 +54,13 @@ short give_intro_hint = 1;
 short display_mode = 0;
  short store_size;
 
+ static const std::array szFilter{ "Blades of Exile Save Files (*.SAV)","*.sav",
+	 "Text Files (*.TXT)","*.txt",
+	 "All Files (*.*)","*.*",
+	 "" };
+
 void file_initialize()
 {
-static char *szFilter[] = {"Blades of Exile Save Files (*.SAV)","*.sav",
-		"Text Files (*.TXT)","*.txt",
-		"All Files (*.*)","*.*",
-		""};
-
-
 		ofn.lStructSize = sizeof(OPENFILENAME);
 		ofn.hwndOwner = mainPtr;
 		ofn.hInstance = NULL;

@@ -58,7 +58,7 @@ void reset_lb() {
 
 // is slot >= 0, force that slot
 // if -1, use 1st free slot
-void set_lb(short slot, short mode, char *label, short do_draw) 
+void set_lb(short slot, short mode, const char * label, short do_draw) 
 {
 	short i;
 	
