@@ -177,7 +177,7 @@ void load_file()
 
 	len = sizeof(flag_type);
 
-//	sprintf((char *) debug, "  Len %d               ", (short) len);
+//	sprintf(debug, "  Len %d               ", (short) len);
 //	add_string_to_buf((char *) debug);
 
 	for (i = 0; i < 3; i++) {
@@ -715,12 +715,12 @@ void build_scen_file_name (char *file_n)
 		if ((file_path_name[i] == 92) || (file_path_name[i] == '/'))
 			last_slash = i;
 	if (last_slash < 0) {
-		sprintf((char *) file_n,"BLADSCEN/%s",party.scen_name);
+		sprintf(file_n,"BLADSCEN/%s",party.scen_name);
 		return;
 		}
 	strcpy(file_n,file_path_name);
 	file_n += last_slash + 1;
-	sprintf((char *) file_n,"BLADSCEN/%s",party.scen_name);
+	sprintf(file_n,"BLADSCEN/%s",party.scen_name);
 }
 
 void build_scen_ed_name (char *file_n)
@@ -731,12 +731,12 @@ void build_scen_ed_name (char *file_n)
 		if ((file_path_name[i] == 92) || (file_path_name[i] == '/'))
 			last_slash = i;
 	if (last_slash < 0) {
-		sprintf((char *) file_n,"BLSCENED/bladdata.bld");
+		sprintf(file_n,"BLSCENED/bladdata.bld");
 		return;
 		}
 	strcpy(file_n,file_path_name);
 	file_n += last_slash + 1;
-	sprintf((char *) file_n,"BLSCENED/bladdata.bld");
+	sprintf(file_n,"BLSCENED/bladdata.bld");
 }
 
 // mode 0 want town and talking, 1 talking only, 2 want a string only, and extra is string num
@@ -1545,7 +1545,7 @@ void oops_error(short error)
 		SysBeep(50);
 		SysBeep(50);
 		SysBeep(50);
-	sprintf((char *) error_str,"Giving the scenario editor more memory might also help. Be sure to back your scenario up often. Error number: %d.",error);
+	sprintf(error_str,"Giving the scenario editor more memory might also help. Be sure to back your scenario up often. Error number: %d.",error);
 	give_error("The program encountered an error while loading/saving/creating the scenario. To prevent future problems, the program will now terminate. Trying again may solve the problem.",(char *) error_str,0);
 	//ExitToShell();
 }
@@ -1578,7 +1578,7 @@ void build_scen_headers()
 
 	for (i = 0; i < count; i++) {
 		SendMessage(listbox,LB_GETTEXT,i,(LONG) (LPSTR) filename2);
-		sprintf((char *) filename,"BLADSCEN/%s",filename2);
+		sprintf(filename,"BLADSCEN/%s",filename2);
 
 		if (load_scenario_header(filename,cur_entry) == TRUE) {
 			// now we need to store the file name, first stripping any path that occurs

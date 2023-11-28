@@ -127,7 +127,7 @@ void init_town(short size)
 		
 	for (i = 0; i < 16; i++) {
 		t_d.room_rect[i] = d_rect;
-		//sprintf((char *) t_d.room_string[i], "");	
+		//sprintf(t_d.room_string[i], "");	
 		}	
 	for (i = 0; i < 64; i++)
 		for (j = 0; j < 64; j++) {
@@ -397,7 +397,7 @@ creature_start_type edit_placed_monst_adv(creature_start_type monst_record)
 		cd_add_label(838,22 + i,time_labels[i],57);
 	cd_add_label(838,30,"None",18);
 	for (i = 0; i < 10; i++) {
-		sprintf((char *) temp_str,"%d",i + 1);
+		sprintf(temp_str,"%d",i + 1);
 		cd_add_label(838,31 + i,(char *) temp_str,18);
 		}
 		
@@ -414,7 +414,7 @@ void put_placed_item_in_dlog()
 	short i;
 	
 	cdsin(836,17,store_which_placed_item);
-	sprintf((char *) str,"X = %d, Y = %d",store_placed_item.item_loc.x,store_placed_item.item_loc.y);
+	sprintf(str,"X = %d, Y = %d",store_placed_item.item_loc.x,store_placed_item.item_loc.y);
 	csit(836,22,(char *) str);
 	csit(836,15,data_store->scen_item_list.scen_items[store_placed_item.item_code].full_name);
 	CDSN(836,2,store_placed_item.ability);
@@ -591,10 +591,10 @@ void put_out_strs_in_dlog()
 	
 	for (i = 0; i < 8; i++) {
 		if ((current_terrain.info_rect[i].right == 0) || (str_do_delete[i] > 0)) {
-			sprintf((char *) str,"Not yet placed.");
+			sprintf(str,"Not yet placed.");
 			cd_activate_item(850,25 + i,0);
 			}
-			else sprintf((char *) str,"X = %d, Y = %d",current_terrain.info_rect[i].left,
+			else sprintf(str,"X = %d, Y = %d",current_terrain.info_rect[i].left,
 				current_terrain.info_rect[i].top);
 		csit(850,13 + i,(char *) str);
 		CDST(850,2 + i,data_store->out_strs[i + 1]);
@@ -667,10 +667,10 @@ void put_town_strs_in_dlog()
 	
 	for (i = 0; i < 16; i++) {
 		if ((t_d.room_rect[i].right == 0) || (str_do_delete[i] > 0)) {
-			sprintf((char *) str,"Not yet placed.");
+			sprintf(str,"Not yet placed.");
 			cd_activate_item(839,41 + i,0);
 			}
-			else sprintf((char *) str,"X = %d, Y = %d",t_d.room_rect[i].left,
+			else sprintf(str,"X = %d, Y = %d",t_d.room_rect[i].left,
 				t_d.room_rect[i].top);
 		csit(839,21 + i,(char *) str);
 		CDST(839,2 + i,data_store->town_strs[i + 1]);
@@ -757,7 +757,7 @@ short pick_town_num(short which_dlog,short def)
 	
 	CDSN(store_whigh_dlog,2,def);
 	cd_get_item_text(which_dlog,7,(char *) temp_str);
-	sprintf((char *) str2,"%s (0 - %d)",(char *) temp_str,scenario.num_towns - 1);
+	sprintf(str2,"%s (0 - %d)",(char *) temp_str,scenario.num_towns - 1);
 	csit(which_dlog,7,(char *) str2);
 	
 	while (dialog_not_toast)
@@ -844,7 +844,7 @@ void outdoor_details()
 	cd_create_dialog_parent_num(851,0);
 	
 	CDST(851,2,data_store->out_strs[0]);
-	sprintf((char *) temp_str,"X = %d, Y = %d",cur_out.x,cur_out.y);
+	sprintf(temp_str,"X = %d, Y = %d",cur_out.x,cur_out.y);
 	csit(851,8,(char *) temp_str);
 	
 	while (dialog_not_toast)
@@ -1390,7 +1390,7 @@ Boolean save_talk_node()
 	store_talk_node.personality = CDGN(817,2);
 	if ((store_talk_node.personality >= 0) &&
 		((store_talk_node.personality < cur_town * 10) || (store_talk_node.personality >= (cur_town + 1) * 10))) {
-			sprintf((char *) str,"The legal range for personalities in this town is from %d to %d.",
+			sprintf(str,"The legal range for personalities in this town is from %d to %d.",
 				cur_town * 10,cur_town * 10 + 9,817);
 			give_error("Personalities in talk nodes must be -1 (for unused node), -2 (all personalities use) or in the legal range of personalities in this town.",
 				(char *) str,817);
@@ -1693,9 +1693,9 @@ void pick_out_event_filter (short item_hit)
 				else store_cur_loc.y++;
 			break;
 		}
-	sprintf((char *) temp_str,"X = %d",store_cur_loc.x);
+	sprintf(temp_str,"X = %d",store_cur_loc.x);
 	csit(854,8,(char *) temp_str);
-	sprintf((char *) temp_str,"Y = %d",store_cur_loc.y);
+	sprintf(temp_str,"Y = %d",store_cur_loc.y);
 	csit(854,11,(char *) temp_str);
 }
 
@@ -1711,9 +1711,9 @@ short pick_out(location default_loc)
 	
 	cdsin(854,7,scenario.out_width);	
 	cdsin(854,10,scenario.out_height);
-	sprintf((char *) temp_str,"X = %d",store_cur_loc.x);
+	sprintf(temp_str,"X = %d",store_cur_loc.x);
 	csit(854,8,(char *) temp_str);
-	sprintf((char *) temp_str,"Y = %d",store_cur_loc.y);
+	sprintf(temp_str,"Y = %d",store_cur_loc.y);
 	csit(854,11,(char *) temp_str);
 
 	while (dialog_not_toast)
@@ -1758,7 +1758,7 @@ Boolean new_town(short which_town)
 	cdsin(830,22,which_town);
 	cd_set_led(830,12,1);
 	cd_set_led(830,18,1);
-	sprintf((char *) temp_str,"Town name");
+	sprintf(temp_str,"Town name");
 	CDST(830,2,(char *) temp_str);
 	
 	while (dialog_not_toast)

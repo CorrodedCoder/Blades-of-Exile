@@ -558,8 +558,8 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 		}
 	if (take_charge == TRUE) {
 		if (is_ident(adven[pc].items[item]) == FALSE)
-			sprintf((char *) to_draw, "Use: %s",adven[pc].items[item].name);
-			else sprintf((char *) to_draw, "Use: %s",adven[pc].items[item].full_name);
+			sprintf(to_draw, "Use: %s",adven[pc].items[item].name);
+			else sprintf(to_draw, "Use: %s",adven[pc].items[item].full_name);
 		add_string_to_buf((char *) to_draw);
 
 		if ((adven[pc].items[item].variety == 7) &&
@@ -1266,7 +1266,7 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 			draw_terrain(2);
 			play_sound(2);
 			}
-//		sprintf ((char *) create_line, "  No damage.              ");
+//		sprintf(create_line, "  No damage.              ");
 //		add_string_to_buf((char *) create_line);		
 		return FALSE;	
 		}

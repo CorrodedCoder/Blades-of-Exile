@@ -56,7 +56,7 @@ void init_lb() {
 	short i;
 	for (i = 0; i < NLS; i++) {
 		left_button_status[i] = 0;
-		sprintf((char *) data_store->strings_ls[i], "");
+		sprintf(data_store->strings_ls[i], "");
 		}
 }
 
@@ -102,7 +102,7 @@ void init_rb()
 	SetControlValue(right_sbar,0);
 	for (i = 0; i < NRS; i++) {
 		right_button_status[i] = 0;
-		sprintf((char *) data_store->strings_rs[i], "");
+		sprintf(data_store->strings_rs[i], "");
 		}
 }
 

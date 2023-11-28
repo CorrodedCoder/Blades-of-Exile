@@ -284,7 +284,7 @@ void process_new_window (WindowPtr hDlg) {
 			dlg_highest_item[free_slot]++;
 			str_stored = FALSE;
 			if (strlen((char *)item_str) == 0) {
-				sprintf((char *) item_str, "+");
+				sprintf(item_str, "+");
 				type = 3;
 				flag = 1;
 	            str_stored = TRUE;
@@ -691,7 +691,7 @@ void cd_set_text_edit_num(short dlog_num, short item_num, short num)
 		SysBeep(50); return ;
 		}
 		
-	sprintf((char *) store_ptr,"%d",num);
+	sprintf(store_ptr,"%d",num);
 	c2p(store_ptr);
 	GetDItem( dlgs[dlg_index], item_num, &the_type, &the_handle, &the_rect );
 	SetIText ( the_handle, store_ptr);	
@@ -861,7 +861,7 @@ void cd_add_label(short dlog_num, short item_num, char *label, short label_flag)
 		}
       else cd_erase_item(dlog_num,item_num + 100);
 	label_loc = item_label_loc[item_index];
-	sprintf((char *) labels[label_loc],"%-24s",label);
+	sprintf(labels[label_loc],"%-24s",label);
 	if (item_active[item_index] > 0)
 		cd_draw_item(dlog_num,item_num);
 }
@@ -882,7 +882,7 @@ void cd_key_label(short dlog_num, short item_num,short loc)
 	char str[10];
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
 		return;
-	sprintf((char *) str,"  ");
+	sprintf(str,"  ");
 	str[0] = item_key[item_index];
 	cd_add_label(dlog_num,item_num, str, 7 + loc * 100);
 }

@@ -355,7 +355,7 @@ short i,last_slash = -1;
 			strcpy(real_name,file_path_name);
 			name_ptr = (char *) real_name;
 			name_ptr += last_slash + 1;
-			sprintf((char *) name_ptr,"%s",name);
+			sprintf(name_ptr,"%s",name);
 			//real_name -= last_slash + 1;
 			//ASB(real_name);
 			}

@@ -87,8 +87,8 @@ void put_spell_info()
 	cd_set_item_text(1096,4,(char *) store_text);
 
 	if (spell_cost[store_display_mode][pos] > 0)
-		sprintf((char *) store_text, "%d/%d",spell_level[pos],spell_cost[store_display_mode][pos]);
-		else sprintf((char *) store_text, "%d/?",spell_level[pos]);
+		sprintf(store_text, "%d/%d",spell_level[pos],spell_cost[store_display_mode][pos]);
+		else sprintf(store_text, "%d/?",spell_level[pos]);
 	cd_set_item_text(1096,5,(char *) store_text);
 
 	if (ran == 0) {
@@ -371,11 +371,11 @@ void put_item_info(short pc,short item)////
 			cd_set_item_num(998,7,s_i.bonus);
 		
 			switch (s_i.type) {
-				case 1:sprintf((char *) store_text, "Edged weapon");
+				case 1:sprintf(store_text, "Edged weapon");
 					break;
-				case 2:sprintf((char *) store_text, "Bashing weapon");
+				case 2:sprintf(store_text, "Bashing weapon");
 					break;
-				case 3:sprintf((char *) store_text, "Pole weapon");
+				case 3:sprintf(store_text, "Pole weapon");
 					break;
 				}
 			if (s_i.ability == 0)
@@ -516,7 +516,7 @@ void put_monst_info()////
 	
 	for (i = 0; i < 3; i++)
 		if (store_m->m_d.a[i] > 0) {
-			sprintf((char *) store_text," %dd%d              ",
+			sprintf(store_text," %dd%d              ",
 				store_m->m_d.a[i] / 100 + 1, store_m->m_d.a[i] % 100);
 
 			cd_set_item_text(999,13 + i,store_text);
@@ -844,13 +844,13 @@ void display_pc_info()
 	
 	store = pc_carry_weight(pc);
 	i = amount_pc_can_carry(pc);
-	sprintf ((char *) to_draw, "%s is carrying %d stones out of %d.",adven[pc].name,store,i);
+	sprintf(to_draw, "%s is carrying %d stones out of %d.",adven[pc].name,store,i);
 	csit(1019,69,(char *) to_draw);
 
-	sprintf((char *) str,"%d out of %d.",
+	sprintf(str,"%d out of %d.",
 			adven[pc].cur_health,adven[pc].max_health);
 	csit(1019,65,(char *) str);
-	sprintf((char *) str,"%d out of %d.",
+	sprintf(str,"%d out of %d.",
 			adven[pc].cur_sp,adven[pc].max_sp);
 	csit(1019,67,(char *) str);
 

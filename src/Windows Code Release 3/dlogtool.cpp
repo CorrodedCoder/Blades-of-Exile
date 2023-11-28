@@ -562,7 +562,7 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 			dlg_highest_item[free_slot] = i;
 			str_stored = FALSE;
 			if (strlen((char *)item_str) == 0) {
-				sprintf((char *) item_str, "+");
+				sprintf(item_str, "+");
 				type = 3;
 				flag = 0;
 	            str_stored = TRUE;
@@ -1140,7 +1140,7 @@ void cd_add_label(short dlog_num, short item_num, const char *label, short label
 		}
       else cd_erase_item(dlog_num,item_num + 100);
 	label_loc = item_label_loc[item_index];
-	sprintf((char *) labels[label_loc],"%-24s",label);
+	sprintf(labels[label_loc],"%-24s",label);
 	if (item_active[item_index] > 0)
 		cd_draw_item(dlog_num,item_num);
 }
@@ -1161,7 +1161,7 @@ void cd_key_label(short dlog_num, short item_num,short loc)
 	char str[10];
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
 		return;
-	sprintf((char *) str," ");
+	sprintf(str," ");
 	str[0] = item_key[item_index];
 	cd_add_label(dlog_num,item_num, str, 7 + loc * 100);
 }

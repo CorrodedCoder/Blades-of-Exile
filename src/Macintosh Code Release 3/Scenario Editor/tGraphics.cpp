@@ -1108,10 +1108,10 @@ void place_location()
 	
 	MoveTo(terrain_rects[255].left + 20 ,terrain_rects[255].top + 12);
 	if (overall_mode < 60)
-		sprintf((char *) draw_str,"Center: x = %d, y = %d  ",cen_x,cen_y);
+		sprintf(draw_str,"Center: x = %d, y = %d  ",cen_x,cen_y);
 		else {
 			MoveTo(5 ,terrain_rects[255].top + 28);		
-			sprintf((char *) draw_str,"Click terrain to edit. ",cen_x,cen_y);
+			sprintf(draw_str,"Click terrain to edit. ",cen_x,cen_y);
 			}
 	c2p(draw_str);
 	DrawString(draw_str);
@@ -1184,10 +1184,10 @@ void place_just_location()
 	
 	MoveTo(terrain_rects[255].left + 20 ,terrain_rects[255].top + 12);
 	if (overall_mode < 60)
-		sprintf((char *) draw_str,"Center: x = %d, y = %d  ",cen_x,cen_y);
+		sprintf(draw_str,"Center: x = %d, y = %d  ",cen_x,cen_y);
 		else {
 			MoveTo(5 ,terrain_rects[255].top + 28);		
-			sprintf((char *) draw_str,"Click terrain to edit. ",cen_x,cen_y);
+			sprintf(draw_str,"Click terrain to edit. ",cen_x,cen_y);
 			}
 	c2p(draw_str);
 	DrawString(draw_str);

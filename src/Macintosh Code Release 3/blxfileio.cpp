@@ -216,7 +216,7 @@ void load_file()
 
 	len = sizeof(flag_type);
 
-//	sprintf((char *) debug, "  Len %d               ", (short) len);
+//	sprintf(debug, "  Len %d               ", (short) len);
 //	add_string_to_buf((char *) debug);
 
 	for (i = 0; i < 3; i++) {
@@ -765,7 +765,7 @@ void change_val (unsigned char *val,short a,short b)
 
 void build_scen_file_name (Str255 file_n)
 {
-	sprintf((char *) file_n,":Blades of Exile Scenarios:%s",party.scen_name);
+	sprintf(file_n,":Blades of Exile Scenarios:%s",party.scen_name);
 	c2p(file_n);
 }
 
@@ -1519,7 +1519,7 @@ void oops_error(short error)
 		SysBeep(50);
 		SysBeep(50);
 		SysBeep(50);
-	sprintf((char *) error_str,"Giving the scenario editor more memory might also help. Be sure to back your scenario up often. Error number: %d.",error);
+	sprintf(error_str,"Giving the scenario editor more memory might also help. Be sure to back your scenario up often. Error number: %d.",error);
 	give_error("The program encountered an error while loading/saving/creating the scenario. To prevent future problems, the program will now terminate. Trying again may solve the problem.",(char *) error_str,0);
 	//ExitToShell();
 }

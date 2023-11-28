@@ -1153,9 +1153,9 @@ void put_monst_info_in_dlog()
 	cdsin(814,33,store_which_monst);
 	CDST(814,2,scen_item_list.monst_names[store_which_monst]);
 	CDSN(814,3,store_monst.picture_num);
-	sprintf((char *) str,"Width = %d",store_monst.x_width);
+	sprintf(str,"Width = %d",store_monst.x_width);
 	csit(814,40,(char *) str);
-	sprintf((char *) str,"Height = %d",store_monst.y_width);
+	sprintf(str,"Height = %d",store_monst.y_width);
 	csit(814,41,(char *) str);
 	CDSN(814,4,store_monst.level);
 	CDSN(814,5,store_monst.health);
@@ -2514,7 +2514,7 @@ void build_scenario()
 	
 	if (edit_make_scen_1((char *) f_name,(char *) title,&grass) == FALSE)
 		return;
-	sprintf((char *) f_name2,"%s.exs",f_name);
+	sprintf(f_name2,"%s.exs",f_name);
 	if (edit_make_scen_2((short *) two_flags) == FALSE)
 		return;
 	user_given_password = given_password = get_password();
@@ -2639,7 +2639,7 @@ void set_starting_loc_filter (short item_hit)
 			j = CDGN(805,3);
 			k = CDGN(805,4);
 			if ((i < 0) || (i >= scenario.num_towns)) {
-				sprintf((char *) str,"The starting town must be from 0 to %d.",scenario.num_towns - 1);
+				sprintf(str,"The starting town must be from 0 to %d.",scenario.num_towns - 1);
 				give_error((char *) str,"",805);
 				break;
 				}

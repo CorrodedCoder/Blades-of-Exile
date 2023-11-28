@@ -402,7 +402,7 @@ GWorldPtr load_pict(short picture_to_get)
 				NULL, NULL, 0);
 	if (check_error != noErr)  {
 		SysBeep(50); 
-//		sprintf((char *) debug, "Stuck on %d          ",(short) picture_to_get);
+//		sprintf(debug, "Stuck on %d          ",(short) picture_to_get);
 //		add_string_to_buf((char *)debug);
 //		print_buf(); 
 //		ExitToShell();
@@ -462,18 +462,18 @@ void draw_items(short clear_first)
 	}
 	for (i = 0; i < 24; i++) // Loop through items and draw each
 		if (adven[current_active_pc].items[i].variety > 0) { // i.e. does item exist
-			sprintf((char *) to_draw, "");
+			sprintf(to_draw, "");
 			if (adven[current_active_pc].items[i].item_properties & 1 == 0)
-				sprintf((char *) to_draw, "%d. %s  ",i + 1,adven[current_active_pc].items[i].name);
+				sprintf(to_draw, "%d. %s  ",i + 1,adven[current_active_pc].items[i].name);
 				else if (adven[current_active_pc].items[i].charges > 0)
-					sprintf((char *) to_draw, "%d. %s (%d)",i + 1,adven[current_active_pc].items[i].full_name,
+					sprintf(to_draw, "%d. %s (%d)",i + 1,adven[current_active_pc].items[i].full_name,
 					adven[current_active_pc].items[i].charges);
-				else sprintf((char *) to_draw, "%d. %s ",i + 1,adven[current_active_pc].items[i].full_name);			
+				else sprintf(to_draw, "%d. %s ",i + 1,adven[current_active_pc].items[i].full_name);			
 
 			//if (i % 2 == 0)
-			//	sprintf((char *) to_draw, "%d %d %d %d",
+			//	sprintf(to_draw, "%d %d %d %d",
 			//	pc_info_rect.left,pc_info_rect.right,pc_info_rect.top,pc_info_rect.bottom);
-			//	else sprintf((char *) to_draw, "%d %d %d %d",
+			//	else sprintf(to_draw, "%d %d %d %d",
 			//	name_rect.left,name_rect.right,name_rect.top,name_rect.bottom);
 
 			char_win_draw_string(mainPtr,item_string_rects[i][0],(char *) to_draw,0,10);
@@ -551,11 +551,11 @@ void display_party(short mode,short clear_first)
 					TextSize(9);
 					if( (strlen(adven[i].name)) >= 10) {
 						TextFace(0);
-						sprintf((char *) to_draw, "%-s  ", (char *) adven[i].name);	
+						sprintf(to_draw, "%-s  ", (char *) adven[i].name);	
 						TextSize(6);
 						}
 					else {
-						sprintf((char *) to_draw, "%-s ", (char *) adven[i].name);	
+						sprintf(to_draw, "%-s ", (char *) adven[i].name);	
 						}
 
 					ForeColor(whiteColor);
@@ -564,7 +564,7 @@ void display_party(short mode,short clear_first)
 					TextSize(10);
 					
 					if (i == current_active_pc){
-						sprintf((char *) to_draw, "%-.18s  ", (char *) adven[i].name);
+						sprintf(to_draw, "%-.18s  ", (char *) adven[i].name);
 						if( (strlen(adven[i].name)) > 12)
 							TextSize(8);
 						ForeColor(blackColor);
@@ -585,9 +585,9 @@ void display_party(short mode,short clear_first)
 									char_win_draw_string(mainPtr,pc_race_rect,"Slithzerikai  ",1,10);
 								// Draw in skills	
 								
-								sprintf((char *) to_draw, "Skills:");
+								sprintf(to_draw, "Skills:");
 								win_draw_string(mainPtr,skill_rect,to_draw,0,10);
-								sprintf((char *) to_draw, "Hp: %d/%d  Sp: %d/%d",adven[i].cur_health,adven[i].max_health,adven[i].cur_sp,
+								sprintf(to_draw, "Hp: %d/%d  Sp: %d/%d",adven[i].cur_health,adven[i].max_health,adven[i].cur_sp,
 							 		adven[i].max_sp);
 								win_draw_string(mainPtr,hp_sp_rect,to_draw,0,10);
 								
@@ -603,7 +603,7 @@ void display_party(short mode,short clear_first)
 									get_str(to_draw,9,string_num);
 									win_draw_string(mainPtr,pc_skills_rect[k],to_draw,0,9);
 									
-									sprintf((char *) skill_value,"%d",adven[i].skills[k]);
+									sprintf(skill_value,"%d",adven[i].skills[k]);
 									win_draw_string(mainPtr,temp_rect,skill_value,0,9);	
 									//frame_dlog_rect((GrafPtr) mainPtr,pc_skills_rect[k],0);
 									string_num+=2;
@@ -613,7 +613,7 @@ void display_party(short mode,short clear_first)
 								//Write in pc Status
 								TextSize(10);
 								TextFace(bold);	
-								sprintf((char *) to_draw, "Status:");
+								sprintf(to_draw, "Status:");
 								win_draw_string(mainPtr,status_rect,to_draw,0,10);
 								
 								TextSize(9);
@@ -705,7 +705,7 @@ void display_party(short mode,short clear_first)
 								//Write in Traits
 								TextSize(10);
 								TextFace(bold);	
-								sprintf((char *) to_draw, "Traits:");
+								sprintf(to_draw, "Traits:");
 								win_draw_string(mainPtr,traits_rect,to_draw,0,10);
 								//for(k = 0 ; k < 16; k++)
 									//frame_dlog_rect((GrafPtr) mainPtr,pc_traits_rect[k],0);
@@ -889,7 +889,7 @@ void display_party(short mode,short clear_first)
 			 
 		}
 //			MoveTo(start_h + 10, start_v + 127);	
-//			sprintf((char *) to_draw, " Gold: %d       Food: %d ",(short) party.gold, (short) party.food);
+//			sprintf(to_draw, " Gold: %d       Food: %d ",(short) party.gold, (short) party.food);
 //			DrawString(to_draw);
 	}
 		

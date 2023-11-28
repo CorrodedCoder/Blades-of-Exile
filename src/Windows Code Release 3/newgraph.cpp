@@ -1255,7 +1255,7 @@ void place_talk_str(char *str_to_place,const char *str_to_place2,short color,REC
 
 	str_len = (short) strlen((char *)str_to_place);
 	if (str_len == 0) {
-		sprintf((char *) str_to_place,".");
+		sprintf(str_to_place,".");
 		}
 	strcpy((char *) str,str_to_place);
 	strcpy((char *) p_str,str_to_place);

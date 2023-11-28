@@ -141,8 +141,8 @@ Boolean give_to_pc(short pc_num,item_record_type  item,short  print_result)
 			}
 			if (in_startup_mode == FALSE) {
 				if (is_ident(item) == 0)
-					sprintf((char *) announce_string,"  %s gets %s.",adven[pc_num].name,item.name);
-					else sprintf((char *) announce_string,"  %s gets %s.",adven[pc_num].name,item.full_name);
+					sprintf(announce_string,"  %s gets %s.",adven[pc_num].name,item.name);
+					else sprintf(announce_string,"  %s gets %s.",adven[pc_num].name,item.full_name);
 				if (print_result == TRUE)
 					add_string_to_buf((char *)announce_string);
 				}
@@ -184,8 +184,8 @@ Boolean forced_give(short item_num,short abil)
 				adven[i].items[j] = item;
 
 				if (is_ident(item) == 0)
-					sprintf((char *) announce_string,"  %s gets %s.",adven[i].name,item.name);
-					else sprintf((char *) announce_string,"  %s gets %s.",adven[i].name,item.full_name);
+					sprintf(announce_string,"  %s gets %s.",adven[i].name,item.name);
+					else sprintf(announce_string,"  %s gets %s.",adven[i].name,item.full_name);
 				add_string_to_buf((char *)announce_string);
 				combine_things(i);
 				sort_pc_items(i);
@@ -895,7 +895,7 @@ void put_item_graphics()
 		if (item_array[i + first_item_shown] != 200) { // display an item in window
 			item = t_i.items[item_array[i + first_item_shown]]; 
 
-					sprintf ((char *) message, "%s",
+					sprintf(message, "%s",
 					 (is_ident(item) == TRUE) ? (char *) item.full_name : (char *) item.name);
 					csit(987,21 + i * 4,(char *) message);
 					if (item.graphic_num >= 150)
@@ -904,12 +904,12 @@ void put_item_graphics()
 					get_item_interesting_string(item,(char *) message);
 					csit(987,22 + i * 4,(char *) message);
 					storage = item_weight(item);
-					sprintf ((char *) message, "Weight: %d",storage);
+					sprintf(message, "Weight: %d",storage);
 					csit(987,53 + i,(char *) message);
 
 		  			}
 			else { // erase the spot
-				sprintf ((char *) message, "");
+				sprintf(message, "");
 				csit(987,21 + i * 4,(char *) message);
 				csit(987,22 + i * 4,(char *) message);
 				csit(987,53 + i,(char *) message);
@@ -919,7 +919,7 @@ void put_item_graphics()
 	if (current_getting_pc < 6) {
 		i = amount_pc_can_carry(current_getting_pc);
 		storage = pc_carry_weight(current_getting_pc);
-		sprintf ((char *) message, "%s is carrying %d out of %d.",adven[current_getting_pc].name,storage,i);
+		sprintf(message, "%s is carrying %d out of %d.",adven[current_getting_pc].name,storage,i);
 		csit(987,52,(char *) message);
 		}
 		
@@ -1215,9 +1215,9 @@ short get_num_of_items(short max_num)
 	
 	cd_create_dialog(1012,mainPtr);
 		
-	sprintf((char *) sign_text,"How many? (0-%d) ",max_num);
+	sprintf(sign_text,"How many? (0-%d) ",max_num);
 	csit(1012,4,(char *)sign_text);	
-	sprintf((char *) sign_text,"%d",max_num);
+	sprintf(sign_text,"%d",max_num);
 	cd_set_text_edit_str(1012,(char *) sign_text);
 	cd_set_edit_focus();
 		

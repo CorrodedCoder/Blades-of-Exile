@@ -725,7 +725,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 					add_string_to_buf("Pause.");
 					for (k = 0; k < 6; k++)
 						if ((adven[k].main_status == 1) && (adven[k].status[6] > 0)) {
-							sprintf((char *) str,"%s cleans webs.",adven[k].name);
+							sprintf(str,"%s cleans webs.",adven[k].name);
 							add_string_to_buf((char *) str);
 							adven[k].status[6] = move_to_zero(adven[k].status[6]);
 							adven[k].status[6] = move_to_zero(adven[k].status[6]);
@@ -1080,19 +1080,19 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 									current_pc = i;
 									set_stat_window (i);
 									if (overall_mode == 21)
-										sprintf((char *) str,"Now shopping: %s",adven[i].name);
-										else sprintf((char *) str,"Now active: %s",adven[i].name);
+										sprintf(str,"Now shopping: %s",adven[i].name);
+										else sprintf(str,"Now active: %s",adven[i].name);
 									add_string_to_buf((char *)str);
 									adjust_spell_menus();
 									}
 							break;
 						case 1:
-							sprintf((char *) str,"%s has %d health out of %d.",adven[i].name,
+							sprintf(str,"%s has %d health out of %d.",adven[i].name,
 								adven[i].cur_health,adven[i].max_health);
 							add_string_to_buf((char *)str);
 							break;
 						case 2:
-							sprintf((char *) str,"%s has %d spell pts. out of %d.",adven[i].name,
+							sprintf(str,"%s has %d spell pts. out of %d.",adven[i].name,
 								adven[i].cur_sp,adven[i].max_sp);
 							add_string_to_buf((char *)str);
 							break;
@@ -1145,7 +1145,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 										add_string_to_buf("Set active: PC must be here & active.");
 										else {
 											current_pc = i;
-											sprintf((char *) str,"Now active: %s",adven[i].name);
+											sprintf(str,"Now active: %s",adven[i].name);
 											add_string_to_buf((char *)str);
 											adjust_spell_menus();
 											}
@@ -2821,7 +2821,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 		party.i_w_c.x = (party.p_loc.x > 47) ? 1 : 0;
 		party.i_w_c.y = (party.p_loc.y > 47) ? 1 : 0;
 		party.loc_in_sec = global_to_local(party.p_loc);
-		//sprintf ((char *) create_line, "Moved: %s",dir_string[party.direction]);//, party.p_loc.x, party.p_loc.y, party.loc_in_sec.x, party.loc_in_sec.y);
+		//sprintf(create_line, "Moved: %s",dir_string[party.direction]);//, party.p_loc.x, party.p_loc.y, party.loc_in_sec.x, party.loc_in_sec.y);
 		//add_string_to_buf((char *) create_line);
 		move_sound(out[real_dest.x][real_dest.y],num_out_moves);
 		num_out_moves++;
@@ -2867,7 +2867,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 		return TRUE;
 		}
 		else {
-			sprintf ((char *) create_line, "Blocked: %s",dir_string[set_direction(party.p_loc, destination)]);		
+			sprintf(create_line, "Blocked: %s",dir_string[set_direction(party.p_loc, destination)]);		
 			add_string_to_buf((char *) create_line);	
 			return FALSE;
 			}
@@ -2987,7 +2987,7 @@ Boolean town_move_party(location destination,short forced)
 				}
 			party.direction = set_direction(c_town.p_loc, destination);
 			c_town.p_loc = destination;
-			//sprintf ((char *) create_line, "Moved: %s",dir_string[party.direction]);
+			//sprintf(create_line, "Moved: %s",dir_string[party.direction]);
 			//add_string_to_buf((char *) create_line);
 //			place_treasure(destination,5,3);
 
@@ -3006,8 +3006,8 @@ Boolean town_move_party(location destination,short forced)
 			}
 		else {
 			if (is_door(destination) == TRUE)
-				sprintf ((char *) create_line, "Door locked: %s               ",dir_string[set_direction(c_town.p_loc, destination)]);		
-				else sprintf ((char *) create_line, "Blocked: %s               ",dir_string[set_direction(c_town.p_loc, destination)]);		
+				sprintf(create_line, "Door locked: %s               ",dir_string[set_direction(c_town.p_loc, destination)]);		
+				else sprintf(create_line, "Blocked: %s               ",dir_string[set_direction(c_town.p_loc, destination)]);		
 			add_string_to_buf((char *) create_line);
 			return FALSE;
 			}

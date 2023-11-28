@@ -1050,7 +1050,7 @@ void adjust_monst_menu()
 	for (i = 0; i < 256; i++) 	
 		if (on_monst_menu[i] >= 0) {
 			//GetIndString(monst_name, 2,on_monst_menu[i]);
-			sprintf((char *) monst_name,"%s",data_store->scen_item_list.monst_names[on_monst_menu[i]]);
+			sprintf(monst_name,"%s",data_store->scen_item_list.monst_names[on_monst_menu[i]]);
 			c2p(monst_name);
 			AppendMenu(monst_menu,monst_name);
 			}

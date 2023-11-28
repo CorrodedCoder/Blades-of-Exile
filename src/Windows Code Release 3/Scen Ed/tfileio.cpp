@@ -779,7 +779,7 @@ void import_town(short which_town)
 			return;
 		}
 		else {
-			sprintf((char *) szFileName3,"BLADBASE.EXS");
+			sprintf(szFileName3,"BLADBASE.EXS");
 			which_town = 0;
 			}
 
@@ -1229,7 +1229,7 @@ void oops_error(short error)
 		SysBeep(50);
 		SysBeep(50);
 		SysBeep(50);
-	sprintf((char *) error_str,"You may need more memory ... run the editor with no other programs running. Be sure to back your scenario up often. Error number: %d.",error);
+	sprintf(error_str,"You may need more memory ... run the editor with no other programs running. Be sure to back your scenario up often. Error number: %d.",error);
 	give_error("The program encountered an error while loading/saving/creating the scenario. To prevent future problems, the program will now terminate. Trying again may solve the problem.",(char *) error_str,0);
 	PostQuitMessage(0);
 }
