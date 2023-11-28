@@ -1280,7 +1280,7 @@ void add_string_to_buf(char *string)
 		print_buf();
 		through_sending();
 		}
-	sprintf((char *)text_buffer[buf_pointer].line, "%-49.49s", string);
+	sprintf(text_buffer[buf_pointer].line, "%-49.49s", string);
 //	c2pstr((char *)text_buffer[buf_pointer].line);
 	if (buf_pointer == (TEXT_BUF_LEN - 1))
 		buf_pointer = 0;
@@ -1372,8 +1372,8 @@ void Display_String(Str255 str)
 	Str255 str2;
 	
 	//c2pstr((char *) str);
-	sprintf((char *)str2," %s",str);
-	str2[0] = (char) strlen((char *)str);
+	sprintf(str2," %s",str);
+	str2[0] = (char) strlen(str);
 	DrawString(str2);
 }
 
@@ -1541,7 +1541,7 @@ void c2p(Str255 str)
 	Str255 str2;
 	short len;
 	
-	len = strlen((char *) str);
+	len = strlen(str);
 	strcpy(str2,(char *) str);
 	str[0] = (unsigned char) len;
 	strncpy((char *) (str + 1), (char *) str2,len);
@@ -1576,7 +1576,7 @@ short string_length(char *str)
 	strcpy(p_str,str);
 	c2p(p_str);
 	MeasureText(256,p_str,text_len);
-	len = strlen((char *)str);
+	len = strlen(str);
 	
 	for (i = 0; i < 257; i++)
 		if ((text_len[i] > total_width) && (i <= len))
@@ -1620,7 +1620,7 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 	for (i = 0; i < 257; i++)
 		text_len[i]= 0;
 	MeasureText(256,p_str,text_len);
-	str_len = (short) strlen((char *)str);
+	str_len = (short) strlen(str);
 	if (str_len == 0) {
 		return;
 		}
@@ -1659,10 +1659,10 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 				  		force_skip = TRUE;
 				  		last_word_break = i + 1;
 				  		}
-					sprintf((char *)str_to_draw,"%s",(char *)null_s);
+					sprintf(str_to_draw,"%s",(char *)null_s);
 					strncpy ((char *) str_to_draw,(char *) c_str + last_line_break,(size_t) (last_word_break - last_line_break - 1));
-					sprintf((char *)str_to_draw2," %s",str_to_draw);
-					str_to_draw2[0] = (char) strlen((char *)str_to_draw);
+					sprintf(str_to_draw2," %s",str_to_draw);
+					str_to_draw2[0] = (char) strlen(str_to_draw);
 					DrawString(str_to_draw2);
 					on_what_line++;
 					MoveTo(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + line_height * on_what_line + adjust_y + 9);
@@ -1683,9 +1683,9 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 			if (i - last_line_break > 1) {
 				strcpy((char *)str_to_draw,(char *)null_s);
 				strncpy ((char *) str_to_draw,(char *) c_str + last_line_break,(size_t) (i - last_line_break));
-				sprintf((char *)str_to_draw2," %s",str_to_draw);
-				if (strlen((char *) str_to_draw2) > 3) {
-					str_to_draw2[0] = (char) strlen((char *)str_to_draw);
+				sprintf(str_to_draw2," %s",str_to_draw);
+				if (strlen(str_to_draw2) > 3) {
+					str_to_draw2[0] = (char) strlen(str_to_draw);
 					DrawString(str_to_draw2);
 					}
 				}	

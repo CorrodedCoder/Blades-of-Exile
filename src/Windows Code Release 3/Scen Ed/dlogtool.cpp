@@ -379,7 +379,7 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
       	str_offset = 1;
 			dlg_highest_item[free_slot] = i;
 			str_stored = FALSE;
-			if (strlen((char *)item_str) == 0) {
+			if (strlen(item_str) == 0) {
 				sprintf(item_str, "+");
 				type = 3;
 				flag = 0;
@@ -437,7 +437,7 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 					break;
 				default:
 					if ((type == 9) ||
-					 ((str_stored == TRUE) && (strlen((char *) item_str) > 35))) {
+					 ((str_stored == TRUE) && (strlen(item_str) > 35))) {
 						for (j = 0; j < 10; j++)
 							if (item_dlg[j] < 0) {
 								free_item = j;
@@ -492,7 +492,7 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 							if (str_stored == TRUE) {
 								if (free_item < 10) {
 									sprintf(text_long_str[free_item],"%s",
-									  (char *) (item_str + str_offset));
+									  item_str + str_offset);
 									for (k = 0; k < 256; k++) {
 										if (text_long_str[free_item][k] == '|')
 											 text_long_str[free_item][k] = 13;
@@ -505,7 +505,7 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 									}
 								else {
 									sprintf(text_short_str[free_item - 10],"%-34s",
-									  (char *) (item_str + str_offset));
+									  item_str + str_offset);
 									for (k = 0; k < 35; k++) {
 										if (text_short_str[free_item][k] == '|')
 											 text_short_str[free_item][k] = 13;

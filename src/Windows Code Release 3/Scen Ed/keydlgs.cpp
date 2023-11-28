@@ -500,8 +500,8 @@ void edit_area_rect_event_filter (short item_hit)
 			dialog_not_toast = FALSE; 
 			CDGT(840,2,(char *) str);
 			if (store_str_mode == 0)
-				sprintf(data_store->out_strs[store_which_str + 1],"%-29.29s",(char *) str);
-				else sprintf(town_strs[store_which_str + 1],"%-29.29s",(char *) str);
+				sprintf(data_store->out_strs[store_which_str + 1],"%-29.29s", str);
+				else sprintf(town_strs[store_which_str + 1],"%-29.29s", str);
 			break;
 
 		case 3:
@@ -931,7 +931,7 @@ void edit_spec_text_event_filter (short item_hit)
 
 		case 6:
 			CDGT(826,2,(char *) str);
-			if (strlen((char *) str) > 0) {
+			if (strlen(str) > 0) {
 				if (*store_str1 < 0) {
 					switch (store_spec_str_mode) {
 						case 0:
@@ -978,7 +978,7 @@ void edit_spec_text_event_filter (short item_hit)
 					}
 				}
 			CDGT(826,3,(char *) str);
-			if (strlen((char *) str) > 0) {
+			if (strlen(str) > 0) {
 				if (*store_str2 < 0) {
 					switch (store_spec_str_mode) {
 						case 0:

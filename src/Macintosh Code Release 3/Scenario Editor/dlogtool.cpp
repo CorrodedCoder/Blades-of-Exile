@@ -283,7 +283,7 @@ void process_new_window (WindowPtr hDlg) {
 			p2c(item_str);
 			dlg_highest_item[free_slot]++;
 			str_stored = FALSE;
-			if (strlen((char *)item_str) == 0) {
+			if (strlen(item_str) == 0) {
 				sprintf(item_str, "+");
 				type = 3;
 				flag = 1;
@@ -349,7 +349,7 @@ void process_new_window (WindowPtr hDlg) {
 					break;
 				default:
 					if ((type == 9) || 
-					 ((str_stored == TRUE) && (strlen((char *) item_str) > 35))) {
+					 ((str_stored == TRUE) && (strlen(item_str) > 35))) {
 						for (j = 0; j < 10; j++)
 							if (item_dlg[j] < 0) {
 								free_item = j;

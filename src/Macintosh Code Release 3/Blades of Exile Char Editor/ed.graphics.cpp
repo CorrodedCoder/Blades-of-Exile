@@ -324,7 +324,7 @@ void draw_main_screen()
 	
 	frame_dlog_rect((GrafPtr) mainPtr,pc_info_rect,0); // draw the frame
 	//i = pc_info_rect.left-pc_info_rect.right;
-	//sprintf((char *)temp_str,"Width of pc_info_rect %d ",
+	//sprintf(temp_str,"Width of pc_info_rect %d ",
 				//(short) i);
 	//win_draw_string(mainPtr,pc_info_rect,temp_str,0,12);
 
@@ -359,7 +359,7 @@ void draw_main_screen()
 	
 
 	if (ed_reg == FALSE) {
-		sprintf((char *)temp_str,"Unregistered Copy |To find out how to order, |select How To Order from File Menu.");
+		sprintf(temp_str,"Unregistered Copy |To find out how to order, |select How To Order from File Menu.");
 		win_draw_string(mainPtr,reg_rect,temp_str,0,12);
 		}
 }
@@ -447,7 +447,7 @@ void draw_items(short clear_first)
 		}
 	
 	// First, draw "Fred's Items:"
-	//sprintf((char *)to_draw,"%s items:",adven[current_active_pc].name);
+	//sprintf(to_draw,"%s items:",adven[current_active_pc].name);
 	//TextSize(12);
 	//ClipRect(&dest_rect);
 	//win_draw_string(mainPtr,item_string_rects[0][0],to_draw,0,12);
@@ -971,7 +971,7 @@ short string_length(char *str)
 	strcpy(p_str,str);
 	c2p(p_str);
 	MeasureText(256,p_str,text_len);
-	len = strlen((char *)str);
+	len = strlen(str);
 	
 	for (i = 0; i < 257; i++)
 		if ((text_len[i] > total_width) && (i <= len))
@@ -1012,7 +1012,7 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 	for (i = 0; i < 257; i++)
 		text_len[i]= 0;
 	MeasureText(256,p_str,text_len);
-	str_len = (short) strlen((char *)str);
+	str_len = (short) strlen(str);
 	if (str_len == 0) {
 		return;
 		}
@@ -1050,10 +1050,10 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 				  		c_str[i] = ' ';
 				  		force_skip = TRUE;
 				  		}
-					sprintf((char *)str_to_draw,"%s",(char *)null_s);
+					sprintf(str_to_draw,"%s",(char *)null_s);
 					strncpy ((char *) str_to_draw,(char *) c_str + last_line_break,(size_t) (last_word_break - last_line_break - 1));
-					sprintf((char *)str_to_draw2," %s",str_to_draw);
-					str_to_draw2[0] = (char) strlen((char *)str_to_draw);
+					sprintf(str_to_draw2," %s",str_to_draw);
+					str_to_draw2[0] = (char) strlen(str_to_draw);
 					DrawString(str_to_draw2);
 					on_what_line++;
 					MoveTo(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + line_height * on_what_line + adjust_y + 9);
@@ -1074,9 +1074,9 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 			if (i - last_line_break > 1) {
 				strcpy((char *)str_to_draw,(char *)null_s);
 				strncpy ((char *) str_to_draw,(char *) c_str + last_line_break,(size_t) (i - last_line_break));
-				sprintf((char *)str_to_draw2," %s",str_to_draw);
-				if (strlen((char *) str_to_draw2) > 3) {
-					str_to_draw2[0] = (char) strlen((char *)str_to_draw);
+				sprintf(str_to_draw2," %s",str_to_draw);
+				if (strlen(str_to_draw2) > 3) {
+					str_to_draw2[0] = (char) strlen(str_to_draw);
 					DrawString(str_to_draw2);
 					}
 				}	
@@ -1170,7 +1170,7 @@ void c2p(Str255 str)
 	Str255 str2;
 	short len;
 	
-	len = strlen((char *) str);
+	len = strlen(str);
 	strcpy(str2,(char *) str);
 	str[0] = (unsigned char) len;
 	strncpy((char *) (str + 1), (char *) str2,len);

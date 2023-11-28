@@ -1181,7 +1181,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 		for (i = 0; i < 50; i++)
 			store_words[i].word_rect.left = store_words[i].word_rect.right = 0;
 			
-	str_len = (short) strlen((char *)str_to_place);
+	str_len = (short) strlen(str_to_place);
 	if (str_len == 0) {
 		sprintf(str_to_place,".");
 		}	
@@ -1251,10 +1251,10 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 	 		store_last_word_break = last_word_break;
 	 		if (i == str_len - 1)
 	 			last_word_break = i + 2;
-			sprintf((char *)str_to_draw,"                                                         ");
+			sprintf(str_to_draw,"                                                         ");
 			strncpy ((char *) str_to_draw,(char *) str + last_line_break,(size_t) (last_word_break - last_line_break - 1));
-			sprintf((char *)str_to_draw2," %s",str_to_draw);
-			str_to_draw2[0] = (char) strlen((char *)str_to_draw);
+			sprintf(str_to_draw2," %s",str_to_draw);
+			str_to_draw2[0] = (char) strlen(str_to_draw);
 			DrawString(str_to_draw2);
 			on_what_line++;
 			MoveTo(dest_rect.left + 1 , dest_rect.top + 1 + line_height * on_what_line + 9);
@@ -1278,7 +1278,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 		}
 		
 	// Now for string 2
-	str_len = (short) strlen((char *)str_to_place2);
+	str_len = (short) strlen(str_to_place2);
 	start_of_last_kept_word = -1;
 	
 	if (str_len > 0) {
@@ -1341,10 +1341,10 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 	 		store_last_word_break = last_word_break;
 	 		if (i == str_len - 1)
 	 			last_word_break = i + 2;
-			sprintf((char *)str_to_draw,"                                                         ");
+			sprintf(str_to_draw,"                                                         ");
 			strncpy ((char *) str_to_draw,(char *) str + last_line_break,(size_t) (last_word_break - last_line_break - 1));
-			sprintf((char *)str_to_draw2," %s",str_to_draw);
-			str_to_draw2[0] = (char) strlen((char *)str_to_draw);
+			sprintf(str_to_draw2," %s",str_to_draw);
+			str_to_draw2[0] = (char) strlen(str_to_draw);
 			DrawString(str_to_draw2);
 			on_what_line++;
 			MoveTo(dest_rect.left + 1 , dest_rect.top + 1 + line_height * on_what_line + 9);

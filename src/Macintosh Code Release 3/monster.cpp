@@ -298,7 +298,7 @@ void do_monsters()
 						target = 6;	
 					}
 			monst_target[i] = target;
-//			sprintf((char *)debug,"  t: %d targets %d.",i,monst_target[i]);
+//			sprintf(debug,"  t: %d targets %d.",i,monst_target[i]);
 //			add_string_to_buf((char *) debug);			
 
 			if ((c_town.monst.dudes[i].active == 2)
@@ -1308,7 +1308,7 @@ void record_monst(creature_data_type *which_m)
 					party.imprisoned_monst[r1] = which_m->number;
 					}
 			ASB("Capture Soul: Success!");
-			sprintf((char *)str,"  Caught in slot %d.",r1 + 1);
+			sprintf(str,"  Caught in slot %d.",r1 + 1);
 			add_string_to_buf((char *)str);
 			play_sound(53);
 			}

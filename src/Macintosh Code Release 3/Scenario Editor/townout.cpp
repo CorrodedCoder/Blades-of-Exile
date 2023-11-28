@@ -118,8 +118,8 @@ void init_town(short size)
 	town.difficulty = 0;
 	for (i = 0; i < 180; i++) {
 		get_str(temp_str,36,i + 1);
-		sprintf((char *)data_store->town_strs[i], "%s", temp_str);
-		town.strlens[i] = strlen((char *) data_store->town_strs[i]);
+		sprintf(data_store->town_strs[i], "%s", temp_str);
+		town.strlens[i] = strlen(data_store->town_strs[i]);
 		}
 		
 		
@@ -196,8 +196,8 @@ void init_out()
 		
 	for (i = 0; i < 120; i++) {
 		get_str(temp_str,37,i + 1);
-		sprintf((char *)data_store->out_strs[i], "%s", temp_str);
-		current_terrain.strlens[i] = strlen((char *) data_store->out_strs[i]);
+		sprintf(data_store->out_strs[i], "%s", temp_str);
+		current_terrain.strlens[i] = strlen(data_store->out_strs[i]);
 		}
 	for (i = 0; i < 60; i++) {
 		current_terrain.specials[i] = null_spec_node;
@@ -577,7 +577,7 @@ Boolean save_out_strs()
 	
 	for (i = 0; i < 8; i++) {
 		CDGT(850,2 + i,(char *) str);
-		sprintf((char *)data_store->out_strs[i + 1],"%-29.29s",str);
+		sprintf(data_store->out_strs[i + 1],"%-29.29s",str);
 		if (str_do_delete[i] > 0)
 			current_terrain.info_rect[i].right = 0;
 		}
@@ -617,7 +617,7 @@ void edit_out_strs_event_filter (short item_hit)
 			break;
 		default:
 			if ((item_hit >= 25) && (item_hit <= 32)) {
-				//sprintf((char *)data_store->out_strs[item_hit - 25 + 1],"");
+				//sprintf(data_store->out_strs[item_hit - 25 + 1],"");
 				CDST(850,2 + item_hit - 25,"");
 				str_do_delete[item_hit - 25] = 1;
 				put_out_strs_in_dlog();
@@ -653,7 +653,7 @@ Boolean save_town_strs()
 	
 	for (i = 0; i < 16; i++) {
 		CDGT(839,2 + i,(char *) str);
-		sprintf((char *)data_store->town_strs[i + 1],"%-29.29s",str);
+		sprintf(data_store->town_strs[i + 1],"%-29.29s",str);
 		if (str_do_delete[i] > 0)
 			t_d.room_rect[i].right = 0;
 		}
@@ -693,7 +693,7 @@ void edit_town_strs_event_filter (short item_hit)
 			break;
 		default:
 			if ((item_hit >= 41) && (item_hit <= 56)) {
-				//sprintf((char *)data_store->town_strs[item_hit - 41 + 1],"");
+				//sprintf(data_store->town_strs[item_hit - 41 + 1],"");
 				CDST(839,2 + item_hit - 41,"");
 				str_do_delete[item_hit - 41] = 1;
 				put_town_strs_in_dlog();

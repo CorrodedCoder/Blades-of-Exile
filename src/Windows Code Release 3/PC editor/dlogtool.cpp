@@ -358,7 +358,7 @@ short cd_create_custom_dialog(HWND parent,
 	cur_text_rect.right = cur_text_rect.left + str_width;
 	// finally, 0-6 text, then create the items
 	for (i = 0; i < 6; i++)
-		if (strlen((char *) strs[i]) > 0) {// text
+		if (strlen(strs[i]) > 0) {// text
 			for (j = 0; j < 10; j++)
 				if (item_dlg[j] < 0) {
 					free_item = j;
@@ -370,7 +370,7 @@ short cd_create_custom_dialog(HWND parent,
 			item_rect[free_item] = cur_text_rect;
 			measure_rect.top = 0; measure_rect.bottom = 0;
 			measure_rect.left = 0; measure_rect.right = 340;
-			DrawText(main_dc, (char *) strs[i],strlen((char *) strs[i]),
+			DrawText(main_dc, (char *) strs[i],strlen(strs[i]),
 				&measure_rect,DT_CALCRECT | DT_WORDBREAK);
 			item_rect[free_item].bottom = item_rect[free_item].top +
 				(measure_rect.bottom - measure_rect.top) + 16;
@@ -384,8 +384,7 @@ short cd_create_custom_dialog(HWND parent,
 			item_label[free_item] = 0;
            	item_label_loc[free_item] = -1;
             item_key[free_item] = 0;
- 			sprintf(text_long_str[free_item],"%s",
-				(char *) strs[i]);
+ 			sprintf(text_long_str[free_item],"%s", strs[i]);
       		cur_item++;
        		}
 	
@@ -556,7 +555,7 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
       	str_offset = 1;
 			dlg_highest_item[free_slot] = i;
 			str_stored = FALSE;
-			if (strlen((char *)item_str) == 0) {
+			if (strlen(item_str) == 0) {
 				sprintf(item_str, "+");
 				type = 3;
 				flag = 0;
@@ -614,7 +613,7 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 					break;
 				default:
 					if ((type == 9) ||
-					 ((str_stored == TRUE) && (strlen((char *) item_str) > 35))) {
+					 ((str_stored == TRUE) && (strlen(item_str) > 35))) {
 						for (j = 0; j < 10; j++)
 							if (item_dlg[j] < 0) {
 								free_item = j;
@@ -676,7 +675,7 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 							if (str_stored == TRUE) {
 								if (free_item < 10) {
 									sprintf(text_long_str[free_item],"%s",
-									  (char *) (item_str + str_offset));
+									  item_str + str_offset);
 									for (k = 0; k < 256; k++) {
 										if (text_long_str[free_item][k] == '|')
 											 text_long_str[free_item][k] = 13;
@@ -689,7 +688,7 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 									}
 								else {
 									sprintf(text_short_str[free_item - 10],"%-34s",
-									  (char *) (item_str + str_offset));
+									  item_str + str_offset);
 									for (k = 0; k < 35; k++) {
 										if (text_short_str[free_item][k] == '|')
 											 text_short_str[free_item][k] = 13;

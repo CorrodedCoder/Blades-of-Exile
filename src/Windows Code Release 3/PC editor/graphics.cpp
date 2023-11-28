@@ -376,7 +376,7 @@ void draw_main_screen()
 	
 
 	if (ed_reg == FALSE) {
-		sprintf((char *)temp_str,"Unregistered Copy |To find out how to order, |select How To Order from File Menu.");
+		sprintf(temp_str,"Unregistered Copy |To find out how to order, |select How To Order from File Menu.");
 		win_draw_string(main_dc,reg_rect,temp_str,0,12);
 		}
 }
@@ -524,11 +524,11 @@ void display_party(short mode,short clear_first)
 					if( (strlen(adven[i].name)) >= 0) {
 						//TextFace(0);
 						SelectObject(main_dc,font);
-						sprintf(to_draw, "%-s", (char *) adven[i].name);
+						sprintf(to_draw, "%-s", adven[i].name);
 						//TextSize(6);
 						}
 					else {
-						sprintf(to_draw, "%-s", (char *) adven[i].name);
+						sprintf(to_draw, "%-s", adven[i].name);
 						}
 
 					if (i == current_active_pc)
@@ -540,7 +540,7 @@ void display_party(short mode,short clear_first)
 					//TextSize(10);
 
 					if (i == current_active_pc){
-						sprintf(to_draw, "%-.18s  ", (char *) adven[i].name);
+						sprintf(to_draw, "%-.18s  ", adven[i].name);
 						if( (strlen(adven[i].name)) > 12)
 							SelectObject(main_dc,font);
 						SetTextColor(main_dc,PALETTEINDEX(c[0]));
@@ -962,14 +962,14 @@ void win_draw_string(HDC dest_hdc,RECT dest_rect,char *str,short mode,short line
 	switch (mode) {
 		case 0:
          dest_rect.bottom += 6;
-			DrawText(dest_hdc,str,strlen((char *)str),&dest_rect,DT_LEFT | DT_WORDBREAK); break;
+			DrawText(dest_hdc,str,strlen(str),&dest_rect,DT_LEFT | DT_WORDBREAK); break;
 		case 1:
 			dest_rect.bottom += 6; dest_rect.top -= 6;
-			DrawText(dest_hdc,str,strlen((char *)str),&dest_rect,
+			DrawText(dest_hdc,str,strlen(str),&dest_rect,
 			DT_CENTER | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE); break;
 		case 2: case 3:
 			dest_rect.bottom += 6; dest_rect.top -= 6;
-			DrawText(dest_hdc,str,strlen((char *)str),&dest_rect,
+			DrawText(dest_hdc,str,strlen(str),&dest_rect,
 			DT_LEFT | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE); break;
 		}
 	// not yet done adjusts for 1, 2, 3
@@ -987,7 +987,7 @@ short string_length(char *str,HDC hdc)
 	
 	strcpy(p_str,str);
 	MeasureText(256,p_str,text_len,hdc);
-	len = strlen((char *)str);
+	len = strlen(str);
 
 	//print_nums(text_len[1],text_len[2],text_len[3]);
    //print_nums(text_len[10],text_len[20],text_len[30]);

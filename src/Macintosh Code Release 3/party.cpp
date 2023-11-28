@@ -2327,7 +2327,7 @@ void do_mindduel(short pc_num,creature_data_type *monst)
 		r1 += 5 * balance;
 		r2 = get_ran(1,1,6);
 		if (r1 < 30) {
-			sprintf((char *)c_line, "  %s is drained %d.",adven[pc_num].name,r2);
+			sprintf(c_line, "  %s is drained %d.",adven[pc_num].name,r2);
 			add_string_to_buf((char *) c_line);
 			monst->m_d.mp += r2;
 			balance++;
@@ -2347,7 +2347,7 @@ void do_mindduel(short pc_num,creature_data_type *monst)
 					}
 			}
 		if (r1 > 70) {
-			sprintf((char *)c_line, "  %s drains %d.",adven[pc_num].name,r2);
+			sprintf(c_line, "  %s drains %d.",adven[pc_num].name,r2);
 			add_string_to_buf((char *) c_line);
 			adven[pc_num].cur_sp += r2;
 			balance--;
@@ -3728,11 +3728,11 @@ void adjust_spell_menus()
 		for (i = 0; i < 62; i++) 
 			if (on_spell_menu[0][i] >= 0) {
 				if (spell_cost[0][on_spell_menu[0][i]] > 0)
-					sprintf((char *)spell_name," L%d - %s, C %d",spell_level[on_spell_menu[0][i]],
+					sprintf(spell_name," L%d - %s, C %d",spell_level[on_spell_menu[0][i]],
 						(char *) mage_s_name[on_spell_menu[0][i]],spell_cost[0][on_spell_menu[0][i]]);
-					else sprintf((char *)spell_name," L%d - %s, C ?",spell_level[on_spell_menu[0][i]],
+					else sprintf(spell_name," L%d - %s, C ?",spell_level[on_spell_menu[0][i]],
 						(char *) mage_s_name[on_spell_menu[0][i]]);
-				spell_name[0] = strlen((char *) spell_name);
+				spell_name[0] = strlen(spell_name);
 				//strcpy((spell_name + 1),mage_s_name[on_spell_menu[0][i]]);
 				AppendMenu(spell_menu,spell_name);
 				}
@@ -3760,14 +3760,14 @@ void adjust_spell_menus()
 			}
 		for (i = 0; i < 62; i++) 
 			if (on_spell_menu[1][i] >= 0) {
-				//spell_name[0] = strlen((char *) priest_s_name[on_spell_menu[1][i]]);
+				//spell_name[0] = strlen(priest_s_name[on_spell_menu[1][i]]);
 				//strcpy((spell_name + 1),priest_s_name[on_spell_menu[1][i]]);
 				if (spell_cost[1][on_spell_menu[1][i]] > 0)
-					sprintf((char *)spell_name," L%d - %s, C %d",spell_level[on_spell_menu[1][i]],
+					sprintf(spell_name," L%d - %s, C %d",spell_level[on_spell_menu[1][i]],
 						(char *) priest_s_name[on_spell_menu[1][i]],spell_cost[1][on_spell_menu[1][i]]);
-					else sprintf((char *)spell_name," L%d - %s, C ?",spell_level[i],
+					else sprintf(spell_name," L%d - %s, C ?",spell_level[i],
 						(char *) mage_s_name[on_spell_menu[1][i]]);
-				spell_name[0] = strlen((char *) spell_name);
+				spell_name[0] = strlen(spell_name);
 				AppendMenu(spell_menu,spell_name);
 				}
 		}

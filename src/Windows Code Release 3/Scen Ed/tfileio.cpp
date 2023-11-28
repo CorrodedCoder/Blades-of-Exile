@@ -1458,51 +1458,51 @@ void start_data_dump()
 
 	SetFPos (data_dump_file_id, 2, 0);
 
-	sprintf((char *)get_text,"Scenario data for %s:\n",scen_strs[0]);
-	len = (long) (strlen((char *)get_text));
+	sprintf(get_text,"Scenario data for %s:\n",scen_strs[0]);
+	len = (long) (strlen(get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	sprintf((char *)get_text,"\n");
-	len = (long) (strlen((char *)get_text));
+	sprintf(get_text,"\n");
+	len = (long) (strlen(get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
 
-	sprintf((char *)get_text,"Terrain types for %s:\n",scen_strs[0]);
-	len = (long) (strlen((char *)get_text));
+	sprintf(get_text,"Terrain types for %s:\n",scen_strs[0]);
+	len = (long) (strlen(get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
 
 
 	for (i = 0; i < 256; i++) {
-		sprintf((char *)get_text,"  Terrain type %d: %s\n",i,scen_item_list.ter_names[i]);
-		len = (long) (strlen((char *)get_text));
+		sprintf(get_text,"  Terrain type %d: %s\n",i,scen_item_list.ter_names[i]);
+		len = (long) (strlen(get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
 
 		}
 
-	sprintf((char *)get_text,"\n");
-	len = (long) (strlen((char *)get_text));
+	sprintf(get_text,"\n");
+	len = (long) (strlen(get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
 
-	sprintf((char *)get_text,"Monster types for %s:\n",scen_strs[0]);
-	len = (long) (strlen((char *)get_text));
+	sprintf(get_text,"Monster types for %s:\n",scen_strs[0]);
+	len = (long) (strlen(get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
 
 	for (i = 0; i < 256; i++) {
-		sprintf((char *)get_text,"  Monster type %d: %s\n",i,scen_item_list.monst_names[i]);
-		len = (long) (strlen((char *)get_text));
+		sprintf(get_text,"  Monster type %d: %s\n",i,scen_item_list.monst_names[i]);
+		len = (long) (strlen(get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
 
 		}
 
-	sprintf((char *)get_text,"\n");
-	len = (long) (strlen((char *)get_text));
+	sprintf(get_text,"\n");
+	len = (long) (strlen(get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
 
-	sprintf((char *)get_text,"Item types for %s:\n",scen_strs[0]);
-	len = (long) (strlen((char *)get_text));
+	sprintf(get_text,"Item types for %s:\n",scen_strs[0]);
+	len = (long) (strlen(get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
 
 	for (i = 0; i < 400; i++) {
-		sprintf((char *)get_text,"  Item type %d: %s\n",i,scen_item_list.scen_items[i].full_name);
-		len = (long) (strlen((char *)get_text));
+		sprintf(get_text,"  Item type %d: %s\n",i,scen_item_list.scen_items[i].full_name);
+		len = (long) (strlen(get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
 
 		}
@@ -1526,127 +1526,127 @@ void scen_text_dump()
 			}
 
 
-//	sprintf((char *)empty_line,"\r");
-//	empty_len = (long) (strlen((char *)empty_line));
+//	sprintf(empty_line,"\r");
+//	empty_len = (long) (strlen(empty_line));
 
 	SetFPos (data_dump_file_id, 2, 0);
 
-	sprintf((char *)get_text,"Scenario text for %s:\n",scen_strs[0]);
-	len = (long) (strlen((char *)get_text));
+	sprintf(get_text,"Scenario text for %s:\n",scen_strs[0]);
+	len = (long) (strlen(get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	sprintf((char *)get_text,"\n");
-	len = (long) (strlen((char *)get_text));
+	sprintf(get_text,"\n");
+	len = (long) (strlen(get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
 
-	sprintf((char *)get_text,"Scenario Text:\n");
-	len = (long) (strlen((char *)get_text));
+	sprintf(get_text,"Scenario Text:\n");
+	len = (long) (strlen(get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	sprintf((char *)get_text,"\n");
-	len = (long) (strlen((char *)get_text));
+	sprintf(get_text,"\n");
+	len = (long) (strlen(get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
 	for (i = 0; i < 260; i++)
 		if (((i < 160) ? scen_strs[i][0] : scen_strs2[i - 160][0]) != '*') {
 			if (i < 160)
-				sprintf((char *)get_text,"  Message %d: %s\n",i,scen_strs[i]);
-				else sprintf((char *)get_text,"  Message %d: %s\n",i,scen_strs2[i - 160]);
-			len = (long) (strlen((char *)get_text));
+				sprintf(get_text,"  Message %d: %s\n",i,scen_strs[i]);
+				else sprintf(get_text,"  Message %d: %s\n",i,scen_strs2[i - 160]);
+			len = (long) (strlen(get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			}
 
-		sprintf((char *)get_text,"\n");
-		len = (long) (strlen((char *)get_text));
+		sprintf(get_text,"\n");
+		len = (long) (strlen(get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
-	sprintf((char *)get_text,"Outdoor Sections Text:\n");
-	len = (long) (strlen((char *)get_text));
+	sprintf(get_text,"Outdoor Sections Text:\n");
+	len = (long) (strlen(get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	sprintf((char *)get_text,"\n");
-	len = (long) (strlen((char *)get_text));
+	sprintf(get_text,"\n");
+	len = (long) (strlen(get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
 	for (out_sec.x = 0; out_sec.x < scenario.out_width ; out_sec.x++)
 		for (out_sec.y = 0; out_sec.y < scenario.out_height ; out_sec.y++) {
-			sprintf((char *)get_text,"  Section X = %d, Y = %d:\n",(short) out_sec.x,(short) out_sec.y);
-			len = (long) (strlen((char *)get_text));
+			sprintf(get_text,"  Section X = %d, Y = %d:\n",(short) out_sec.x,(short) out_sec.y);
+			len = (long) (strlen(get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
-			sprintf((char *)get_text,"\n");
-			len = (long) (strlen((char *)get_text));
+			sprintf(get_text,"\n");
+			len = (long) (strlen(get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 
 			load_outdoors(out_sec,0);
 			for (i = 0; i < 108; i++)
 				if (data_store->out_strs[i][0] != '*') {
-					sprintf((char *)get_text,"  Message %d: %s\n",i,data_store->out_strs[i]);
-					len = (long) (strlen((char *)get_text));
+					sprintf(get_text,"  Message %d: %s\n",i,data_store->out_strs[i]);
+					len = (long) (strlen(get_text));
 					FSWrite(data_dump_file_id, &len, (char *) get_text);
 					}
-			sprintf((char *)get_text,"\n");
-			len = (long) (strlen((char *)get_text));
+			sprintf(get_text,"\n");
+			len = (long) (strlen(get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 		}
 	augment_terrain(out_sec);
 
-	sprintf((char *)get_text,"Town Text:\n");
-	len = (long) (strlen((char *)get_text));
+	sprintf(get_text,"Town Text:\n");
+	len = (long) (strlen(get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	sprintf((char *)get_text,"\n");
-	len = (long) (strlen((char *)get_text));
+	sprintf(get_text,"\n");
+	len = (long) (strlen(get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
 	for (j = 0; j < scenario.num_towns; j++) {
 		load_town(j);
 
-		sprintf((char *)get_text,"  Town: %s\n",town_strs[0]);
-		len = (long) (strlen((char *)get_text));
+		sprintf(get_text,"  Town: %s\n",town_strs[0]);
+		len = (long) (strlen(get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
-		sprintf((char *)get_text,"\n");
-		len = (long) (strlen((char *)get_text));
+		sprintf(get_text,"\n");
+		len = (long) (strlen(get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
-		sprintf((char *)get_text,"  Town Messages:");
-		len = (long) (strlen((char *)get_text));
+		sprintf(get_text,"  Town Messages:");
+		len = (long) (strlen(get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
-		sprintf((char *)get_text,"\n");
-		len = (long) (strlen((char *)get_text));
+		sprintf(get_text,"\n");
+		len = (long) (strlen(get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
 
 			for (i = 0; i < 135; i++)
 				if (town_strs[i][0] != '*') {
-					sprintf((char *)get_text,"  Message %d: %s\n",i,town_strs[i]);
-					len = (long) (strlen((char *)get_text));
+					sprintf(get_text,"  Message %d: %s\n",i,town_strs[i]);
+					len = (long) (strlen(get_text));
 					FSWrite(data_dump_file_id, &len, (char *) get_text);
 					}
 
-		sprintf((char *)get_text,"  Town Dialogue:");
-		len = (long) (strlen((char *)get_text));
+		sprintf(get_text,"  Town Dialogue:");
+		len = (long) (strlen(get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
-		sprintf((char *)get_text,"\n");
-		len = (long) (strlen((char *)get_text));
+		sprintf(get_text,"\n");
+		len = (long) (strlen(get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
 
 		for (i = 0; i < 10; i++) {
-			sprintf((char *)get_text,"  Personality %d name: %s\n",j * 10 + i,talk_strs[i]);
-			len = (long) (strlen((char *)get_text));
+			sprintf(get_text,"  Personality %d name: %s\n",j * 10 + i,talk_strs[i]);
+			len = (long) (strlen(get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
-			sprintf((char *)get_text,"  Personality %d look: %s\n",j * 10 + i,talk_strs[i + 10]);
-			len = (long) (strlen((char *)get_text));
+			sprintf(get_text,"  Personality %d look: %s\n",j * 10 + i,talk_strs[i + 10]);
+			len = (long) (strlen(get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
-			sprintf((char *)get_text,"  Personality %d ask name: %s\n",j * 10 + i,talk_strs[i + 20]);
-			len = (long) (strlen((char *)get_text));
+			sprintf(get_text,"  Personality %d ask name: %s\n",j * 10 + i,talk_strs[i + 20]);
+			len = (long) (strlen(get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
-			sprintf((char *)get_text,"  Personality %d ask job: %s\n",j * 10 + i,talk_strs[i + 30]);
-			len = (long) (strlen((char *)get_text));
+			sprintf(get_text,"  Personality %d ask job: %s\n",j * 10 + i,talk_strs[i + 30]);
+			len = (long) (strlen(get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
-			sprintf((char *)get_text,"  Personality %d confused: %s\n",j * 10 + i,talk_strs[i + 160]);
-			len = (long) (strlen((char *)get_text));
+			sprintf(get_text,"  Personality %d confused: %s\n",j * 10 + i,talk_strs[i + 160]);
+			len = (long) (strlen(get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			}
 
 			for (i = 40; i < 160; i++)
-				if (strlen((char *) (talk_strs[i])) > 0) {
-					sprintf((char *)get_text,"  Node %d: %s\n",(i - 40) / 2,talk_strs[i]);
-					len = (long) (strlen((char *)get_text));
+				if (strlen((talk_strs[i])) > 0) {
+					sprintf(get_text,"  Node %d: %s\n",(i - 40) / 2,talk_strs[i]);
+					len = (long) (strlen(get_text));
 					FSWrite(data_dump_file_id, &len, (char *) get_text);
 					}
 
-			sprintf((char *)get_text,"\n");
-			len = (long) (strlen((char *)get_text));
+			sprintf(get_text,"\n");
+			len = (long) (strlen(get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 
 		}

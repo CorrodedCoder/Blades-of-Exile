@@ -272,14 +272,14 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 						edit_monst_type(j); 
 						update_item_menu();
 						start_monster_editing(1);
-						//sprintf(str,"%d - %s",j,(char *) scen_item_list.monst_names[j]);
+						//sprintf(str,"%d - %s",j, scen_item_list.monst_names[j]);
 						//set_rb(j - 1,2000 + j,(char *) str,0);
 						break;
 					case 3: 
 						edit_item_type(j);
 						update_item_menu();
 						start_item_editing(1);
-						//sprintf(str,"%d - %s",j,(char *) scen_item_list.scen_items[j].full_name);
+						//sprintf(str,"%d - %s",j, scen_item_list.scen_items[j].full_name);
 						//set_rb(j,3000 + j,(char *) str,0);
 						break;
 					case 4:
@@ -288,7 +288,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 							} 
 							else edit_spec_enc(j,0,0); 
 						//get_str(s2,22,scenario.scen_specials[j].type + 1);
-						//sprintf(str,"%d - %-30.30s",j,(char *) s2);
+						//sprintf(str,"%d - %-30.30s",j, s2);
 						//set_rb(j,4000 + j,(char *) str,0);
 						start_special_editing(0,1);
 						break;
@@ -298,7 +298,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 							} 
 							else edit_spec_enc(j,1,0); 
 						//get_str(s2,22,current_terrain.specials[j].type + 1);
-						//sprintf(str,"%d - %-30.30s",j,(char *) s2);
+						//sprintf(str,"%d - %-30.30s",j, s2);
 						//set_rb(j,5000 + j,(char *) str,0);
 						start_special_editing(1,1);
 						break;
@@ -308,7 +308,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 							} 
 							else edit_spec_enc(j,2,0); 
 						//get_str(s2,22,town.specials[j].type + 1);
-						//sprintf(str,"%d - %-30.30s",j,(char *) s2);
+						//sprintf(str,"%d - %-30.30s",j, s2);
 						//set_rb(j,6000 + j,(char *) str,0);
 						start_special_editing(2,1);
 						break;
@@ -320,7 +320,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 								else strcpy(scen_strs2[j - 160], s2);
 							} 
 							else edit_text_str(j,0);
-						//sprintf(str,"%d - %-30.30s",j,(char *)scen_strs[j]);
+						//sprintf(str,"%d - %-30.30s",j,scen_strs[j]);
 						//set_rb(j,7000 + j,(char *) str,0);
 						start_string_editing(0,1);
 						break;
@@ -331,7 +331,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 							strcpy(data_store->out_strs[j], s2);
 							} 
 							else edit_text_str(j,1);
-						//sprintf(str,"%d - %-30.30s",j,(char *) data_store->out_strs[j]);
+						//sprintf(str,"%d - %-30.30s",j, data_store->out_strs[j]);
 						//set_rb(j,8000 + j,(char *) str,0);
 						start_string_editing(1,1);
 						break;
@@ -341,13 +341,13 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 							strcpy(town_strs[j], s2);
 							} 
 							else edit_text_str(j,2);
-						//sprintf(str,"%d - %-30.30s",j,(char *) town_strs[j]);
+						//sprintf(str,"%d - %-30.30s",j, town_strs[j]);
 						//set_rb(j,9000 + j,(char *) str,0);
 						start_string_editing(2,1);
 						break;
 					case 10:
 						edit_spec_item(j);
-						//sprintf(str,"%d - %s",j,(char *) scen_strs[60 + j * 2]);
+						//sprintf(str,"%d - %s",j, scen_strs[60 + j * 2]);
 						//set_rb(j,10000 + j,(char *) str,0);
 						start_special_item_editing();
 					break;
@@ -3325,7 +3325,7 @@ void start_terrain_editing()
 	reset_rb();
 	SetControlMaximum(right_sbar,256 - NRSONPAGE);
 	for (i = 0; i < 256; i++) {
-		sprintf(str,"%d - %s",i,(char *) scen_item_list.ter_names[i]);
+		sprintf(str,"%d - %s",i, scen_item_list.ter_names[i]);
 		set_rb(i,1000 + i,(char *) str,0);
 		}
 	for (i = 0; i < NRSONPAGE; i++)
@@ -3349,7 +3349,7 @@ void start_monster_editing(short just_redo_text)
 		SetScrollRange(right_sbar,SB_CTL,0,255 - NRSONPAGE,TRUE);
 		}
 	for (i = 1; i < 256; i++) {
-		sprintf(str,"%d - %s",i,(char *) scen_item_list.monst_names[i]);
+		sprintf(str,"%d - %s",i, scen_item_list.monst_names[i]);
 		set_rb(i - 1,2000 + i,(char *) str,0);
 		}
 	if (draw_full == TRUE)
@@ -3393,7 +3393,7 @@ void start_item_editing(short just_redo_text)
 		SetScrollRange(right_sbar,SB_CTL,0,400 - NRSONPAGE,TRUE);
 		}
 	for (i = 0; i < 400; i++) {
-		sprintf(str,"%d - %s",i,(char *) scen_item_list.scen_items[i].full_name);
+		sprintf(str,"%d - %s",i, scen_item_list.scen_items[i].full_name);
 		set_rb(i,3000 + i,(char *) str,0);
 		}
 	if (draw_full == TRUE)
@@ -3419,7 +3419,7 @@ void start_special_item_editing()
 		SetScrollRange(right_sbar,SB_CTL,0,50 - NRSONPAGE,TRUE);
 		reset_rb();
 	for (i = 0; i < 50; i++) {
-		sprintf(str,"%d - %s",i,(char *) scen_strs[60 + i * 2]);
+		sprintf(str,"%d - %s",i, scen_strs[60 + i * 2]);
 		set_rb(i,10000 + i,(char *) str,0);
 		}
 	if (draw_full == TRUE)
@@ -3455,16 +3455,16 @@ void start_string_editing(short mode,short just_redo_text)
 		switch (mode) {
 			case 0:
 				if (i < 160)
-					sprintf(str,"%d - %-30.30s",i,(char *) scen_strs[i]);
-					else sprintf(str,"%d - %-30.30s",i,(char *) scen_strs2[i - 160]);
+					sprintf(str,"%d - %-30.30s",i, scen_strs[i]);
+					else sprintf(str,"%d - %-30.30s",i, scen_strs2[i - 160]);
 				set_rb(i,7000 + i,(char *) str,0);
 				break;
 			case 1:
-				sprintf(str,"%d - %-30.30s",i,(char *) data_store->out_strs[i]);
+				sprintf(str,"%d - %-30.30s",i, data_store->out_strs[i]);
 				set_rb(i,8000 + i,(char *) str,0);
 				break;
 			case 2:
-				sprintf(str,"%d - %-30.30s",i,(char *) town_strs[i]);
+				sprintf(str,"%d - %-30.30s",i, town_strs[i]);
 				set_rb(i,9000 + i,(char *) str,0);
 				break;
 			}
@@ -3504,17 +3504,17 @@ void start_special_editing(short mode,short just_redo_text)
 		switch (mode) {
 			case 0:
 				get_str(s2,22,scenario.scen_specials[i].type + 1);
-				sprintf(str,"%d - %-30.30s",i,(char *) s2);
+				sprintf(str,"%d - %-30.30s",i, s2);
 				set_rb(i,4000 + i,(char *) str,0);
 				break;
 			case 1:
 				get_str(s2,22,current_terrain.specials[i].type + 1);
-				sprintf(str,"%d - %-30.30s",i,(char *) s2);
+				sprintf(str,"%d - %-30.30s",i, s2);
 				set_rb(i,5000 + i,(char *) str,0);
 				break;
 			case 2:
 				get_str(s2,22,town.specials[i].type + 1);
-				sprintf(str,"%d - %-30.30s",i,(char *) s2);
+				sprintf(str,"%d - %-30.30s",i, s2);
 				set_rb(i,6000 + i,(char *) str,0);
 				break;
 			}
@@ -3548,7 +3548,7 @@ void start_dialogue_editing(short restoring)
 		}
 	for (i = 0; i < 10; i++) {
 		sprintf(str,"Personality %d - %s",i + cur_town * 10,
-			(char *) talk_strs[i]);
+			 talk_strs[i]);
 		set_rb(i,13000 + i,(char *) str,0);
 		}
 	for (i = 0; i < 60; i++) {

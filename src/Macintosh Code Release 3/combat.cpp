@@ -1590,7 +1590,7 @@ Boolean combat_next_step()
 	center = pc_pos[current_pc];		*/
 
 	if ((combat_active_pc == 6) && (current_pc != store_pc)) {
-			sprintf((char *)create_line, "Active:  %s (#%d, %d ap.)                     ",
+			sprintf(create_line, "Active:  %s (#%d, %d ap.)                     ",
 				adven[current_pc].name,current_pc + 1,pc_moves[current_pc]);         
 			add_string_to_buf((char *)create_line);
 			print_buf();
@@ -1861,7 +1861,7 @@ void do_monster_turn()
 									targ_space = c_town.monst.dudes[monst_target[i] - 100].m_loc;	
 						}
 						
-		//			sprintf((char *)create_line,"  %d targets %d.",i,target);
+		//			sprintf(create_line,"  %d targets %d.",i,target);
 		//			add_string_to_buf((char *) create_line);
 
 					if ((monst_target[i] < 0) || ((monst_target[i] > 5) && (monst_target[i] < 100)))
@@ -1932,7 +1932,7 @@ void do_monster_turn()
 					 && (monst_can_see(i,targ_space) == TRUE)
 					 && (can_see_monst(targ_space,i) == TRUE)) { // Begin spec. attacks
 
-//	sprintf((char *)create_line,"%d: %d  %d  %d",i,cur_monst->m_d.breath,cur_monst->m_d.mu,cur_monst->m_d.cl);
+//	sprintf(create_line,"%d: %d  %d  %d",i,cur_monst->m_d.breath,cur_monst->m_d.mu,cur_monst->m_d.cl);
 //	add_string_to_buf((char *)create_line);
 
 					// Breathe (fire)
@@ -2909,7 +2909,7 @@ Boolean monst_cast_mage(creature_data_type *caster,short targ)////
 	if ((spell == 27) && (caster->attitude % 2 == 1) && (count_levels(caster->m_loc,10) < 45))
 		spell = 26;
 
-//	sprintf((char *)create_line,"m att %d trg %d trg2 x%dy%d spl %d mp %d tl:%d ",caster->attitude,targ,
+//	sprintf(create_line,"m att %d trg %d trg2 x%dy%d spl %d mp %d tl:%d ",caster->attitude,targ,
 //		(short)target.x,(short)target.y,spell,caster->m_d.mp,target_levels);
 //	add_string_to_buf((char *) create_line);
 	
@@ -3204,7 +3204,7 @@ Boolean monst_cast_priest(creature_data_type *caster,short targ)
 		return FALSE;
 
 	
-//	sprintf((char *)create_line,"p att %d trg %d trg2 x%dy%d spl %d mp %d",caster->attitude,targ,
+//	sprintf(create_line,"p att %d trg %d trg2 x%dy%d spl %d mp %d",caster->attitude,targ,
 //		(short)target.x,(short)target.y,spell,caster->m_d.mp);
 //	add_string_to_buf((char *) create_line);
 

@@ -909,10 +909,10 @@ void init_scenario()
 		scenario.scen_monsters[i] = return_monster_template(i);
 		get_str(temp_str,2,i);
 		if ((i > 187) || (i == 0))
-			sprintf((char *)data_store->scen_item_list.monst_names[i], "Unused");
-			else sprintf((char *)data_store->scen_item_list.monst_names[i], "%s", temp_str);
+			sprintf(data_store->scen_item_list.monst_names[i], "Unused");
+			else sprintf(data_store->scen_item_list.monst_names[i], "%s", temp_str);
 		if (i == 0)
-			sprintf((char *)data_store->scen_item_list.monst_names[i], "Empty");
+			sprintf(data_store->scen_item_list.monst_names[i], "Empty");
 		}
 	for (i = 0; i < 30; i++) {
 		scenario.scen_boats[i] = null_boat;
@@ -923,7 +923,7 @@ void init_scenario()
 		scenario.ter_types[i].blockage = ter_block[i];
 		scenario.ter_types[i].special = ter_traits[i];
 		get_str(temp_str,1,i + 1);
-		sprintf((char *)data_store->scen_item_list.ter_names[i], "%s", temp_str);
+		sprintf(data_store->scen_item_list.ter_names[i], "%s", temp_str);
 		
 		scenario.scen_specials[i] = null_spec_node;
 		}
@@ -947,8 +947,8 @@ void init_scenario()
 		}
 	for (i = 0; i < 270; i++) {
 		get_str(temp_str,35,i + 1);
-		sprintf((char *)data_store->scen_strs[i], "%s", temp_str);
-		scenario.scen_str_len[i] = strlen((char *) data_store->scen_strs[i]);
+		sprintf(data_store->scen_strs[i], "%s", temp_str);
+		scenario.scen_str_len[i] = strlen(data_store->scen_strs[i]);
 		}
 }	
 void put_ter_info_in_dlog()
@@ -2459,7 +2459,7 @@ void edit_make_scen_1_event_filter (short item_hit)
 	switch (item_hit) {
 		case 4:
 			CDGT(800,3,(char *) str);
-			j = strlen((char *) str);
+			j = strlen(str);
 			if (j == 0) {
 				give_error("You've left the file name empty.","",800);
 				break;

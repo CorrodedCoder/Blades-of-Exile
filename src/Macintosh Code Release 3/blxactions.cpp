@@ -2348,7 +2348,7 @@ void handle_cave_lore()////
 	for (i = 0; i < 6; i++)
 		if ((adven[i].main_status == 1) && (adven[i].traits[4] > 0) && (get_ran(1,0,12) == 5)
 			&& (((pic >= 0) && (pic <= 1)) || ((pic >= 70) && (pic <= 76))) ) {
-			sprintf((char *)str,"%s hunts.",adven[i].name);
+			sprintf(str,"%s hunts.",adven[i].name);
 			party.food += get_ran(2,1,6);
 			add_string_to_buf((char *)str);
 			put_pc_screen();
@@ -2357,7 +2357,7 @@ void handle_cave_lore()////
 		if (
 		(adven[i].main_status == 1) && (adven[i].traits[5] > 0) && (get_ran(1,0,12) == 5)
 			&& (((pic >= 2) && (pic <= 4)) || ((pic >= 79) && (pic <= 84)))) {
-			sprintf((char *)str,"%s hunts.",adven[i].name);
+			sprintf(str,"%s hunts.",adven[i].name);
 			party.food += get_ran(2,1,6);
 			add_string_to_buf((char *)str);
 			put_pc_screen();

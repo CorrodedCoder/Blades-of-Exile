@@ -167,10 +167,10 @@ void end_shop_mode()
 	
 	HideControl(shop_sbar);
 	if (store_pre_shop_mode == 20) {
-		sprintf((char *)old_str1,"You conclude your business.");
-		sprintf((char *)old_str2,"");
-		sprintf((char *)one_back1,"You conclude your business.");
-		sprintf((char *)one_back2,"");
+		sprintf(old_str1,"You conclude your business.");
+		sprintf(old_str2,"");
+		sprintf(one_back1,"You conclude your business.");
+		sprintf(one_back2,"");
 
 		strnum1 = strnum2 = oldstrnum1 = oldstrnum2 = 0;
 		place_talk_str((char *)old_str1,"",0,dummy_rect);
@@ -746,7 +746,7 @@ void handle_talk_event(Point p)
 		strcpy(one_back2,(char *) old_str2);
 		sprintf(old_str2,"");
 		sprintf(old_str1,"%s",data_store->talk_strs[store_personality % 10 + 160]);
-		if (strlen((char *) old_str1) < 2)
+		if (strlen(old_str1) < 2)
 			sprintf(old_str1,"You get no response.");
 		place_talk_str((char *) old_str1,(char *) old_str2,0,dummy_rect);
 		strnum1 = -1;

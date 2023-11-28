@@ -1257,7 +1257,7 @@ void journal_event_filter (short item_hit)
 		if (party.journal_str[i + (store_page_on * 3)] > 0) {
 			////get_str(place_str,17,party.journal_str[i + (store_page_on * 3)]);
 			csit(962,3 + i,data_store->scen_strs[party.journal_str[i] + 10]);
-			sprintf((char *)place_str,"Day: %d",party.journal_day[i + (store_page_on * 3)]);
+			sprintf(place_str,"Day: %d",party.journal_day[i + (store_page_on * 3)]);
 			csit(962,9 + i,(char *)place_str);
 			}
 			else {csit(962,3 + i,"");csit(962,9 + i,"");}
@@ -1286,7 +1286,7 @@ void journal()
 		if (party.journal_str[i] > 0) {
 			////get_str(place_str,17,party.journal_str[i]);
 			csit(962,3 + i,data_store->scen_strs[party.journal_str[i] + 10]);
-			sprintf((char *)place_str,"Day: %d",party.journal_day[i]);
+			sprintf(place_str,"Day: %d",party.journal_day[i]);
 			csit(962,9 + i,(char *)place_str);
 			}
 		}

@@ -536,7 +536,7 @@ pc_record_type return_dummy_pc()
 	short i;
 
 	dummy_pc.main_status = 0;
-	sprintf	((char *) dummy_pc.name, "\n");
+	sprintf(dummy_pc.name, "\n");
 	
 	for (i = 0; i < 30; i++)
 		dummy_pc.skills[i] = (i < 3) ? 1 : 0;
@@ -579,17 +579,17 @@ pc_record_type create_debug_pc(short num)
 	
 	dummy_pc.main_status = 1;
 	switch (num) {
-		case 0:	strncpy	((char *) dummy_pc.name, "Gunther", (size_t) 20);
+		case 0:	strncpy(dummy_pc.name, "Gunther", (size_t) 20);
 				break;
-		case 1:	strncpy	((char *) dummy_pc.name, "Yanni", (size_t) 20);
+		case 1:	strncpy(dummy_pc.name, "Yanni", (size_t) 20);
 				break;
-		case 2:	strncpy	((char *) dummy_pc.name, "Mandolin", (size_t) 20);
+		case 2:	strncpy(dummy_pc.name, "Mandolin", (size_t) 20);
 				break;
-		case 3:	strncpy	((char *) dummy_pc.name, "Pete", (size_t) 20);
+		case 3:	strncpy(dummy_pc.name, "Pete", (size_t) 20);
 				break;
-		case 4:	strncpy	((char *) dummy_pc.name, "Vraiment", (size_t) 20);
+		case 4:	strncpy(dummy_pc.name, "Vraiment", (size_t) 20);
 				break;
-		case 5:	strncpy	((char *) dummy_pc.name, "Goo", (size_t) 20);
+		case 5:	strncpy(dummy_pc.name, "Goo", (size_t) 20);
 				break;
 		
 		}
@@ -655,17 +655,17 @@ pc_record_type create_prefab_pc(short num)
 							
 	dummy_pc.main_status = 1;
 	switch (num) {
-		case 0:	strncpy	((char *) dummy_pc.name, "Jenneke", (size_t) 20);
+		case 0:	strncpy(dummy_pc.name, "Jenneke", (size_t) 20);
 				break;
-		case 1:	strncpy	((char *) dummy_pc.name, "Thissa", (size_t) 20);
+		case 1:	strncpy(dummy_pc.name, "Thissa", (size_t) 20);
 				break;
-		case 2:	strncpy	((char *) dummy_pc.name, "Frrrrrr", (size_t) 20);
+		case 2:	strncpy(dummy_pc.name, "Frrrrrr", (size_t) 20);
 				break;
-		case 3:	strncpy	((char *) dummy_pc.name, "Adrianna", (size_t) 20);
+		case 3:	strncpy(dummy_pc.name, "Adrianna", (size_t) 20);
 				break;
-		case 4:	strncpy	((char *) dummy_pc.name, "Feodoric", (size_t) 20);
+		case 4:	strncpy(dummy_pc.name, "Feodoric", (size_t) 20);
 				break;
-		case 5:	strncpy	((char *) dummy_pc.name, "Michael", (size_t) 20);
+		case 5:	strncpy(dummy_pc.name, "Michael", (size_t) 20);
 				break;
 		
 		}
@@ -819,7 +819,7 @@ void curse_pc(short which_pc,short how_much)
 		return;
 	if (adven[which_pc].main_status == 1) {
 		adven[which_pc].status[1] = max(adven[which_pc].status[1] - how_much,-8);
-		sprintf(c_line, "  %s cursed.",(char *) adven[which_pc].name);
+		sprintf(c_line, "  %s cursed.", adven[which_pc].name);
 		add_string_to_buf((char *) c_line);
 		}
 	put_pc_screen();
@@ -840,13 +840,13 @@ void dumbfound_pc(short which_pc,short how_much)
 	if (r1 < adven[which_pc].level)
 		how_much -= 2;
 	if (how_much <= 0) {
-		sprintf(c_line, "  %s saved.",(char *) adven[which_pc].name);
+		sprintf(c_line, "  %s saved.", adven[which_pc].name);
 		add_string_to_buf((char *) c_line);
 		return;
 		}
 	if (adven[which_pc].main_status == 1) {
 		adven[which_pc].status[9] = min(adven[which_pc].status[9] + how_much,8);
-		sprintf(c_line, "  %s dumbfounded.",(char *) adven[which_pc].name);
+		sprintf(c_line, "  %s dumbfounded.", adven[which_pc].name);
 		add_string_to_buf((char *) c_line);
 		}
 	one_sound(67);
@@ -864,7 +864,7 @@ void disease_pc(short which_pc,short how_much)
 	if (r1 < adven[which_pc].level * 2)
 		how_much -= 2;
 	if (how_much <= 0) {
-		sprintf(c_line, "  %s saved.",(char *) adven[which_pc].name);
+		sprintf(c_line, "  %s saved.", adven[which_pc].name);
 		add_string_to_buf((char *) c_line);
 		return;
 		}
@@ -878,7 +878,7 @@ void disease_pc(short which_pc,short how_much)
 			how_much++;
 	if (adven[which_pc].main_status == 1) {
 		adven[which_pc].status[7] = min(adven[which_pc].status[7] + how_much,8);
-		sprintf(c_line, "  %s diseased.",(char *) adven[which_pc].name);
+		sprintf(c_line, "  %s diseased.", adven[which_pc].name);
 		add_string_to_buf((char *) c_line);
 		}
 	one_sound(66);
@@ -907,15 +907,15 @@ void sleep_pc(short which_pc,short how_much,short what_type,short adjust)
 	if ((what_type == 11) && ((adven[which_pc].traits[7] > 0) || (adven[which_pc].status[11] < 0)))
 		how_much = -1;
 	if (how_much <= 0) {
-		sprintf(c_line, "  %s resisted.",(char *) adven[which_pc].name);
+		sprintf(c_line, "  %s resisted.", adven[which_pc].name);
 		add_string_to_buf((char *) c_line);
 		return;
 		}
 	if (adven[which_pc].main_status == 1) {
 		adven[which_pc].status[what_type] = how_much;
 		if (what_type == 11)
-			sprintf(c_line, "  %s falls asleep.",(char *) adven[which_pc].name);
-			else sprintf(c_line, "  %s paralyzed.",(char *) adven[which_pc].name);
+			sprintf(c_line, "  %s falls asleep.", adven[which_pc].name);
+			else sprintf(c_line, "  %s paralyzed.", adven[which_pc].name);
 		if (what_type == 11)
 			play_sound(96);
 			else play_sound(90);
@@ -937,8 +937,8 @@ void slow_pc(short which_pc,short how_much)
 
 		adven[which_pc].status[3] = minmax(-8,8,adven[which_pc].status[3] - how_much);
 		if (how_much < 0)
-			sprintf(c_line, "  %s hasted.",(char *) adven[which_pc].name);
-			else sprintf(c_line, "  %s slowed.",(char *) adven[which_pc].name);
+			sprintf(c_line, "  %s hasted.", adven[which_pc].name);
+			else sprintf(c_line, "  %s slowed.", adven[which_pc].name);
 		add_string_to_buf((char *) c_line);
 		}
 	put_pc_screen();
@@ -952,7 +952,7 @@ void web_pc(short which_pc,short how_much)
 		return;
 	if (adven[which_pc].main_status == 1) {
 		adven[which_pc].status[6] = min(adven[which_pc].status[6] + how_much,8);
-		sprintf(c_line, "  %s webbed.",(char *) adven[which_pc].name);
+		sprintf(c_line, "  %s webbed.", adven[which_pc].name);
 		add_string_to_buf((char *) c_line);
 		one_sound(17);
 		}
@@ -965,13 +965,13 @@ void acid_pc(short which_pc,short how_much)
 	if (adven[which_pc].main_status != 1)
 		return;
 	if (pc_has_abil_equip(which_pc,122) < 24) {
-		sprintf(c_line, "  %s resists acid.",(char *) adven[which_pc].name);
+		sprintf(c_line, "  %s resists acid.", adven[which_pc].name);
 		add_string_to_buf((char *) c_line);
 		return;
 		}
 	if (adven[which_pc].main_status == 1) {
 		adven[which_pc].status[13] += how_much;
-		sprintf(c_line, "  %s covered with acid!",(char *) adven[which_pc].name);
+		sprintf(c_line, "  %s covered with acid!", adven[which_pc].name);
 		add_string_to_buf((char *) c_line);
 		one_sound(42);
 		}
@@ -1083,7 +1083,7 @@ void award_xp(short pc_num,short amt)
 	while (adven[pc_num].experience >= (adven[pc_num].level * (get_tnl(&adven[pc_num])))) {
 			play_sound(7);
 			adven[pc_num].level++;
-			sprintf(c_line, "  %s is level %d!  ",(char *) adven[pc_num].name,adven[pc_num].level);
+			sprintf(c_line, "  %s is level %d!  ", adven[pc_num].name,adven[pc_num].level);
 			add_string_to_buf((char *) c_line);		
 			adven[pc_num].skill_pts += (adven[pc_num].level < 20) ? 5 : 4;
 			add_hp = (adven[pc_num].level < 26) ? get_ran(1,2,6) + skill_bonus[adven[pc_num].skills[0]]
@@ -1105,7 +1105,7 @@ void drain_pc(short which_pc,short how_much)
 {
 	if (adven[which_pc].main_status == 1) {
 		adven[which_pc].experience = max(adven[which_pc].experience - how_much,0);
-		sprintf(c_line, "  %s drained.",(char *) adven[which_pc].name);
+		sprintf(c_line, "  %s drained.", adven[which_pc].name);
 		add_string_to_buf((char *) c_line);
 		}
 }
@@ -1157,10 +1157,10 @@ void do_xp_draw()
 	pc_num = store_train_pc;
 	if (mode == 0) {
 		if (adven[pc_num].main_status == 1)
-			sprintf(get_text, "%s",(char *) adven[pc_num].name);
+			sprintf(get_text, "%s", adven[pc_num].name);
 			else sprintf(get_text, "New PC");
 		}
-		else sprintf(get_text, "%s",(char *) adven[pc_num].name);
+		else sprintf(get_text, "%s", adven[pc_num].name);
 
 	cd_set_item_text (1010, 51,get_text);
 
@@ -1920,14 +1920,14 @@ void do_priest_spell(short pc_num,short spell_num)
 					case 1: case 20: case 39:		
 						r1 = get_ran(2 + 2 * (spell_num / 6), 1, 4);
 						sprintf(c_line, "  %s healed %d.   ",
-						(char *) adven[target].name,r1);
+						 adven[target].name,r1);
 						heal_pc(target,r1);
 					one_sound(52);
 					break;
 
 					case 2: case 11:
 						sprintf(c_line, "  %s cured.    "
-							,(char *) adven[target].name);
+							, adven[target].name);
 						r1 = ((spell_num == 2) ? 1 : 3) + get_ran(1,0,2) + stat_adj(pc_num,2) / 2;
 						cure_pc(target,r1);
 					break;
@@ -1935,41 +1935,41 @@ void do_priest_spell(short pc_num,short spell_num)
 					case 19: // awaken
 						if (adven[target].status[11] <= 0) {
 							sprintf(c_line, "  %s is already awake!    "
-								,(char *) adven[target].name);
+								, adven[target].name);
 							break;
 							}
 						sprintf(c_line, "  %s wakes up.    "
-							,(char *) adven[target].name);
+							, adven[target].name);
 						adven[target].status[11] = 0;
 					break;
 					case 24: // cure paralysis
 						if (adven[target].status[12] <= 0) {
 							sprintf(c_line, "  %s isn't paralyzed!    "
-								,(char *) adven[target].name);
+								, adven[target].name);
 							break;
 							}
 						sprintf(c_line, "  %s can move now.    "
-							,(char *) adven[target].name);
+							, adven[target].name);
 						adven[target].status[12] = 0;
 					break;
 
 					case 27:
 						sprintf(c_line, "  %s recovers.      "
-							,(char *) adven[target].name);
+							, adven[target].name);
 						r1 = 2 + get_ran(1,0,2) + stat_adj(pc_num,2) / 2;
 						adven[target].status[7] = max(0,adven[target].status[7] - r1);
 						break;
 
 					case 28:
 						sprintf(c_line, "  %s restored.      "
-							,(char *) adven[target].name);
+							, adven[target].name);
 						r1 = 1 + get_ran(1,0,2) + stat_adj(pc_num,2) / 2;
 						adven[target].status[9] = max(0,adven[target].status[9] - r1);
 						break;
 						
 					case 36:
 						sprintf(c_line, "  %s cleansed.      "
-							,(char *) adven[target].name);
+							, adven[target].name);
 						adven[target].status[7] = 0;
 						adven[target].status[6] = 0;					
 						break;
@@ -1991,13 +1991,13 @@ void do_priest_spell(short pc_num,short spell_num)
 				adven[pc_num].cur_sp -= spell_cost[1][spell_num]; 
 				if (spell_num == 35) { // martyr's shield
 						sprintf(c_line, "  %s shielded.         ",
-							(char *) adven[target].name);
+							 adven[target].name);
 						r1 = max(1,get_ran((adven[pc_num].level + 5) / 5,1,3) + adj);
 						adven[target].status[10] += r1;
 					}
 				if (spell_num == 5) { // sanctuary
 						sprintf(c_line, "  %s hidden.         ",
-							(char *) adven[target].name);
+							 adven[target].name);
 						r1 = max(0,get_ran(0,1,3) + adven[pc_num].level / 4 + adj);
 						adven[target].status[8] += r1;
 					}
@@ -2015,15 +2015,15 @@ void do_priest_spell(short pc_num,short spell_num)
 						targ_damaged = adven[target].max_health - adven[target].cur_health;
 						}
 					add_string_to_buf("  You absorb damage.");
-					sprintf(c_line, "  %s healed %d.         ", (char *) adven[target].name,
+					sprintf(c_line, "  %s healed %d.         ", adven[target].name,
 						adven[target].cur_health - store_victim_health);
 					add_string_to_buf ((char *) c_line);
-					sprintf(c_line, "  %s takes %d.         ", (char *) adven[pc_num].name,
+					sprintf(c_line, "  %s takes %d.         ", adven[pc_num].name,
 						store_caster_health - adven[pc_num].cur_health);
 					}
 				if (spell_num == 47) {
 						sprintf(c_line, "  %s healed.         ",
-							(char *) adven[target].name);
+							adven[target].name);
 						heal_pc(target,250);
 						adven[target].status[2] = 0;
 						one_sound(-53); one_sound(52);
@@ -2032,7 +2032,7 @@ void do_priest_spell(short pc_num,short spell_num)
 						if (adven[target].main_status == 4) {
 							adven[target].main_status = 1;
 							sprintf(c_line, "  %s destoned.                                  ",
-									(char *) adven[target].name);							
+									adven[target].name);							
 							play_sound(53);
 							}
 							else sprintf(c_line,"  Wasn't stoned.              ");				
@@ -2060,7 +2060,7 @@ void do_priest_spell(short pc_num,short spell_num)
 						if (adven[target].main_status == 2) 
 								if (get_ran(1,1,adven[pc_num].level / 2) == 1) {
 										sprintf(c_line, "  %s now dust.                          ",
-											(char *) adven[target].name);									
+											adven[target].name);									
 										play_sound(5);
 										adven[target].main_status = 3;								
 									}
@@ -2071,7 +2071,7 @@ void do_priest_spell(short pc_num,short spell_num)
 											adven[target].skills[i] -= (adven[target].skills[i] > 1) ? 1 : 0;
 									adven[target].cur_health = 1;
 									sprintf(c_line, "  %s raised.                          ",
-											(char *) adven[target].name);					
+											adven[target].name);					
 									play_sound(52);
 									}						
 							else sprintf(c_line,"  Didn't work.              ");					
@@ -2085,7 +2085,7 @@ void do_priest_spell(short pc_num,short spell_num)
 									adven[target].skills[i] -= (adven[target].skills[i] > 1) ? 1 : 0;
 							adven[target].cur_health = 1;
 							sprintf(c_line, "  %s raised.",
-									(char *) adven[target].name);							
+									adven[target].name);							
 							play_sound(52);					
 							}
 							else sprintf(c_line,"  Was OK.              ");				
@@ -2335,7 +2335,7 @@ void do_mindduel(short pc_num,creature_data_type *monst)
 		r1 += 5 * balance;
 		r2 = get_ran(1,1,6);
 		if (r1 < 30) {
-			sprintf((char *)c_line, "  %s is drained %d.",adven[pc_num].name,r2);
+			sprintf(c_line, "  %s is drained %d.",adven[pc_num].name,r2);
 			add_string_to_buf((char *) c_line);
 			monst->m_d.mp += r2;
 			balance++;
@@ -2355,7 +2355,7 @@ void do_mindduel(short pc_num,creature_data_type *monst)
 					}
 			}
 		if (r1 > 70) {
-			sprintf((char *)c_line, "  %s drains %d.",adven[pc_num].name,r2);
+			sprintf(c_line, "  %s drains %d.",adven[pc_num].name,r2);
 			add_string_to_buf((char *) c_line);
 			adven[pc_num].cur_sp += r2;
 			balance--;
@@ -2953,7 +2953,7 @@ void print_spell_cast(short spell_num,short which)
 //short which; // 0 - mage  1 - priest
 {
 	sprintf(c_line, "Spell: %s                  ",
-		(which == 0) ? (char *) mage_s_name[spell_num] : (char *) priest_s_name[spell_num]);
+		(which == 0) ? mage_s_name[spell_num] : priest_s_name[spell_num]);
 	add_string_to_buf((char *) c_line);		
 }
 
@@ -3181,7 +3181,7 @@ void pc_name_event_filter (short item_hit)
 		csit(1051,6,"Must begin with a letter.");
 		}
 		else {
-			sprintf(adven[store_train_pc].name,"%.18s",(char *) get_text);
+			sprintf(adven[store_train_pc].name,"%.18s", get_text);
 			dialog_not_toast = FALSE;
 			}
 
@@ -3269,7 +3269,7 @@ void poison_pc(short which_pc,short how_much)
 			if (how_much > 0) {
 				adven[which_pc].status[2] = min(adven[which_pc].status[2] + how_much,8);
 				sprintf(c_line, "  %s poisoned.",
-					(char *) adven[which_pc].name);
+					 adven[which_pc].name);
 				add_string_to_buf((char *) c_line);
 				one_sound(17);
 				give_help(33,0,0);
@@ -3469,7 +3469,7 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 		if (is_town())
 			add_explosion(c_town.p_loc,how_much,0,(damage_type > 2) ? 2 : 0,0,0);
 			else add_explosion(pc_pos[which_pc],how_much,0,(damage_type > 2) ? 2 : 0,0,0);
-	//	sprintf(c_line, "  %s takes %d. ",(char *) adven[which_pc].name, how_much);
+	//	sprintf(c_line, "  %s takes %d. ", adven[which_pc].name, how_much);
 	//	if (do_print == TRUE)
 	//		add_string_to_buf((char *) c_line);
 		if (how_much == 0)
@@ -3488,7 +3488,7 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 			if (adven[which_pc].status[11] > 0)
 				adven[which_pc].status[11]--;
 			
-			sprintf(c_line, "  %s takes %d. ",(char *) adven[which_pc].name, how_much);
+			sprintf(c_line, "  %s takes %d. ", adven[which_pc].name, how_much);
 			if (do_print == TRUE)
 				add_string_to_buf((char *) c_line);
 			if (damage_type != 10) {
@@ -3511,12 +3511,12 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 			adven[which_pc].cur_health = 0;
 			else // Check if PC can die
 			 if (how_much > 25) {
-				sprintf(c_line, "  %s is obliterated.  ",(char *) adven[which_pc].name);
+				sprintf(c_line, "  %s is obliterated.  ", adven[which_pc].name);
 				add_string_to_buf((char *) c_line);					
 				kill_pc(which_pc, 3);
 				}
 				else {
-				sprintf(c_line, "  %s is killed.",(char *) adven[which_pc].name);
+				sprintf(c_line, "  %s is killed.", adven[which_pc].name);
 				add_string_to_buf((char *) c_line);					
 				kill_pc(which_pc,2);
 				}
@@ -3707,10 +3707,10 @@ void adjust_spell_menus()
 		for (i = 0; i < 62; i++)
 			if (pc_can_cast_spell(current_pc,0,i) == TRUE) {
 				if (spell_cost[0][i] > 0)
-					sprintf((char *)spell_name,"L%d - %s, C %d",spell_level[i],
-						(char *) mage_s_name[i],spell_cost[0][i]);
-					else sprintf((char *)spell_name,"L%d - %s, C ?",spell_level[i],
-						(char *) mage_s_name[i]);
+					sprintf(spell_name,"L%d - %s, C %d",spell_level[i],
+						mage_s_name[i],spell_cost[0][i]);
+					else sprintf(spell_name,"L%d - %s, C ?",spell_level[i],
+						 mage_s_name[i]);
 				total_added++;
 				if (total_added % 24 == 0)
 					InsertMenu(menu,399,MF_MENUBREAK | MF_BYCOMMAND | MF_ENABLED | MF_STRING, 400 + i, spell_name);
@@ -3746,13 +3746,13 @@ void adjust_spell_menus()
 			}
 		for (i = 0; i < 62; i++)
 			if (pc_can_cast_spell(current_pc,1,i) == TRUE) {
-				//spell_name[0] = strlen((char *) priest_s_name[on_spell_menu[1][i]]);
+				//spell_name[0] = strlen(priest_s_name[on_spell_menu[1][i]]);
 				//strcpy((spell_name + 1),priest_s_name[on_spell_menu[1][i]]);
 				if (spell_cost[1][i] > 0)
-					sprintf((char *)spell_name," L%d - %s, C %d",spell_level[i],
-						(char *) priest_s_name[i],spell_cost[1][i]);
-					else sprintf((char *)spell_name," L%d - %s, C ?",spell_level[i],
-						(char *) priest_s_name[i]);
+					sprintf(spell_name," L%d - %s, C %d",spell_level[i],
+						 priest_s_name[i],spell_cost[1][i]);
+					else sprintf(spell_name," L%d - %s, C ?",spell_level[i],
+						priest_s_name[i]);
 				total_added++;
 				if (total_added % 24 == 0)
 					InsertMenu(menu,499,MF_MENUBREAK | MF_BYCOMMAND | MF_ENABLED | MF_STRING, 500 + i, spell_name);

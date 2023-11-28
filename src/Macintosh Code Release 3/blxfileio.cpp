@@ -1394,33 +1394,33 @@ void start_data_dump()
 
 	SetFPos (data_dump_file_id, 2, 0);
 
-	sprintf((char *)get_text,"Begin data dump:\r");
-	len = (long) (strlen((char *)get_text));
+	sprintf(get_text,"Begin data dump:\r");
+	len = (long) (strlen(get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	sprintf((char *)get_text,"  Overall mode  %d\r",overall_mode);
-	len = (long) (strlen((char *)get_text));
+	sprintf(get_text,"  Overall mode  %d\r",overall_mode);
+	len = (long) (strlen(get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	sprintf((char *)get_text,"  Outdoor loc  %d %d  Ploc %d %d\r",party.outdoor_corner.x,party.outdoor_corner.y,
+	sprintf(get_text,"  Outdoor loc  %d %d  Ploc %d %d\r",party.outdoor_corner.x,party.outdoor_corner.y,
 		party.p_loc.x,party.p_loc.y);
-	len = (long) (strlen((char *)get_text));
+	len = (long) (strlen(get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
 	if ((is_town()) || (is_combat())) {
-		sprintf((char *)get_text,"  Town num %d  Town loc  %d %d \r",c_town.town_num,
+		sprintf(get_text,"  Town num %d  Town loc  %d %d \r",c_town.town_num,
 			c_town.p_loc.x,c_town.p_loc.y);
-		len = (long) (strlen((char *)get_text));
+		len = (long) (strlen(get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
 		if (is_combat()) {
-			sprintf((char *)get_text,"  Combat type %d \r",which_combat_type);
-			len = (long) (strlen((char *)get_text));
+			sprintf(get_text,"  Combat type %d \r",which_combat_type);
+			len = (long) (strlen(get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			}
 
 		for (i = 0; i < T_M; i++) {
-			sprintf((char *)get_text,"  Monster %d   Status %d  Loc %d %d  Number %d  Att %d  Tf %d\r",
+			sprintf(get_text,"  Monster %d   Status %d  Loc %d %d  Number %d  Att %d  Tf %d\r",
 				(short) i,(short) c_town.monst.dudes[i].active,(short) c_town.monst.dudes[i].m_loc.x,
 				(short) c_town.monst.dudes[i].m_loc.y,(short) c_town.monst.dudes[i].number,
 				(short) c_town.monst.dudes[i].attitude,(short) c_town.monst.dudes[i].monst_start.time_flag);
-			len = (long) (strlen((char *)get_text));
+			len = (long) (strlen(get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);	
 			}
 		}
@@ -1560,12 +1560,12 @@ void build_scen_headers()
 						// before it
 						last_colon = -1;
 						p2c(scen_name);
-						for (i = 0; i < strlen((char *) scen_name); i++)
+						for (i = 0; i < strlen(scen_name); i++)
 							if (scen_name[i] == ':')
 								last_colon = i;
-						for (i = last_colon + 1; i < strlen((char *) scen_name); i++)
+						for (i = last_colon + 1; i < strlen(scen_name); i++)
 							data_store->scen_names[cur_entry][i - last_colon - 1] = scen_name[i];
-						data_store->scen_names[cur_entry][strlen((char *) scen_name) - last_colon - 1] = 0;
+						data_store->scen_names[cur_entry][strlen(scen_name) - last_colon - 1] = 0;
 						cur_entry++;
 						}
 					}

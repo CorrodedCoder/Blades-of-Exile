@@ -452,39 +452,39 @@ void enchant_weapon(short pc_num,short item_hit,short enchant_type,short new_val
 	adven[pc_num].items[item_hit].item_properties |= 4;
 	switch (enchant_type) {
 		case 0:
-			sprintf((char *)store_name,"%s (+1)",adven[pc_num].items[item_hit].full_name);
+			sprintf(store_name,"%s (+1)",adven[pc_num].items[item_hit].full_name);
 			adven[pc_num].items[item_hit].bonus++;
 			adven[pc_num].items[item_hit].value = new_val;
 			break;
 		case 1:
-			sprintf((char *)store_name,"%s (+2)",adven[pc_num].items[item_hit].full_name);
+			sprintf(store_name,"%s (+2)",adven[pc_num].items[item_hit].full_name);
 			adven[pc_num].items[item_hit].bonus += 2;
 			adven[pc_num].items[item_hit].value = new_val;
 			break;
 		case 2:
-			sprintf((char *)store_name,"%s (+3)",adven[pc_num].items[item_hit].full_name);
+			sprintf(store_name,"%s (+3)",adven[pc_num].items[item_hit].full_name);
 			adven[pc_num].items[item_hit].bonus += 3;
 			adven[pc_num].items[item_hit].value = new_val;
 			break;
 		case 3:
-			sprintf((char *)store_name,"%s (F)",adven[pc_num].items[item_hit].full_name);
+			sprintf(store_name,"%s (F)",adven[pc_num].items[item_hit].full_name);
 			adven[pc_num].items[item_hit].ability = 110;
 			adven[pc_num].items[item_hit].ability_strength = 5;
 			adven[pc_num].items[item_hit].charges = 8;
 			break;
 		case 4:
-			sprintf((char *)store_name,"%s (F!)",adven[pc_num].items[item_hit].full_name);
+			sprintf(store_name,"%s (F!)",adven[pc_num].items[item_hit].full_name);
 			adven[pc_num].items[item_hit].value = new_val;
 			adven[pc_num].items[item_hit].ability = 1;
 			adven[pc_num].items[item_hit].ability_strength = 5;
 			break;
 		case 5:
-			sprintf((char *)store_name,"%s (+5)",adven[pc_num].items[item_hit].full_name);
+			sprintf(store_name,"%s (+5)",adven[pc_num].items[item_hit].full_name);
 			adven[pc_num].items[item_hit].value = new_val;
 			adven[pc_num].items[item_hit].bonus += 5;
 			break;
 		case 6:
-			sprintf((char *)store_name,"%s (B)",adven[pc_num].items[item_hit].full_name);
+			sprintf(store_name,"%s (B)",adven[pc_num].items[item_hit].full_name);
 			adven[pc_num].items[item_hit].bonus++;
 			adven[pc_num].items[item_hit].ability = 71;
 			adven[pc_num].items[item_hit].ability_strength = 5;

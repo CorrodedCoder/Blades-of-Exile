@@ -1251,7 +1251,7 @@ void set_string(const char * string, const char * string2)
 //	if (strlen(string2) == 0)
 //		current_string2[0] = 0;
 //		else 
-//	sprintf((char *)current_string2,"Bob");
+//	sprintf(current_string2,"Bob");
 	strcpy(current_string2, string2);
 	c2p(current_string2);
 
@@ -1483,14 +1483,14 @@ void win_draw_string(HDC dest_hdc,RECT dest_rect,char *str,short mode,short line
 	switch (mode) {
 		case 0:
          dest_rect.bottom += 6;
-			DrawText(dest_hdc,str,strlen((char *)str),&dest_rect,DT_LEFT | DT_WORDBREAK); break;
+			DrawText(dest_hdc,str,strlen(str),&dest_rect,DT_LEFT | DT_WORDBREAK); break;
 		case 1:
 			dest_rect.bottom += 6; dest_rect.top -= 6;
-			DrawText(dest_hdc,str,strlen((char *)str),&dest_rect,
+			DrawText(dest_hdc,str,strlen(str),&dest_rect,
 			DT_CENTER | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE); break;
 		case 2: case 3:
 			dest_rect.bottom += 6; dest_rect.top -= 6;
-			DrawText(dest_hdc,str,strlen((char *)str),&dest_rect,
+			DrawText(dest_hdc,str,strlen(str),&dest_rect,
 			DT_LEFT | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE); break;
 		}
 	// not yet done adjusts for 1, 2, 3
@@ -1508,7 +1508,7 @@ short string_length(char *str,HDC hdc)
 	
 	strcpy(p_str,str);
 	MeasureText(256,p_str,text_len,hdc);
-	len = strlen((char *)str);
+	len = strlen(str);
 
 	//print_nums(text_len[1],text_len[2],text_len[3]);
    //print_nums(text_len[10],text_len[20],text_len[30]);
@@ -1625,7 +1625,7 @@ short string_length(char *str)
 	strcpy(p_str,str);
 	c2p(p_str);
 	MeasureText(256,p_str,text_len,main_dc);
-	len = strlen((char *)str);
+	len = strlen(str);
 	
 	for (i = 0; i < 257; i++)
 		if ((text_len[i] > total_width) && (i <= len))

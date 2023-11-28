@@ -216,7 +216,7 @@ void put_pc_screen()
 				SetTextColor(hdc,PALETTEINDEX(c[4]));
 				}
 
-			sprintf(to_draw, "%d. %-20s             ", i + 1, (char *) adven[i].name);
+			sprintf(to_draw, "%d. %-20s             ", i + 1, adven[i].name);
 			win_draw_string(hdc,pc_buttons[i][0],
 			 to_draw,0,10);
 			//TextFace(bold);
@@ -421,7 +421,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 		default: // on an items page
 			pc = screen_num;
 			sprintf(to_draw, "%s inventory:",
-				(char *) adven[pc].name);
+				adven[pc].name);
 			win_draw_string(hdc,upper_frame_rect,
 			  to_draw,0,10);
 
@@ -954,7 +954,7 @@ short do_look(location space)
 		for (i = 0; i < 6; i++)
 			if ((same_point(space,pc_pos[i]) == TRUE) && (adven[i].main_status == 1)
 				&& (is_lit == TRUE) && (can_see(pc_pos[current_pc],space,0) < 5)) {
-				sprintf(store_string, "    %s", (char *) adven[i].name);
+				sprintf(store_string, "    %s", adven[i].name);
 				add_string_to_buf((char *) store_string);
 				}
 
@@ -974,8 +974,8 @@ short do_look(location space)
 					}
 				else {
 					if (c_town.monst.dudes[i].attitude % 2 == 1)
-						sprintf(store_string, "    %s (H)", (char *) store_string2);
-						else sprintf(store_string, "    %s (F)", (char *) store_string2);
+						sprintf(store_string, "    %s (H)", store_string2);
+						else sprintf(store_string, "    %s (F)", store_string2);
 					}
 
 				add_string_to_buf((char *) store_string);
@@ -1188,7 +1188,7 @@ void print_monst_attacks(unsigned char m_type,short target)
 	get_m_name(store_string2,m_type);
 	if (target < 100)
 		sprintf(store_string, "%s attacks %s",
-			store_string2,(char *) adven[target].name);
+			store_string2, adven[target].name);
 		else {
 			get_m_name(store_string3,c_town.monst.dudes[target - 100].number);
 			sprintf(store_string, "%s attacks %s",
@@ -1203,7 +1203,7 @@ void damaged_message(short damage,short type)
 	
 	get_str(str,20,130 + type);
 	sprintf(store_string, "  %s for %d",
-			(char *) str,damage);
+			str,damage);
 	add_string_to_buf((char *) store_string);	
 }
 
@@ -1313,10 +1313,10 @@ void monst_cast_spell_note(unsigned char number,short spell,short type)
 {
 	get_m_name(store_string2,number);
 	sprintf(store_string, "%s casts:",
-			(char *) store_string2);
+			store_string2);
 	add_string_to_buf((char *) store_string);
 	sprintf(store_string, "  %s",
-			(type == 1) ? (char *) m_priest_sp[spell - 1] : (char *) m_mage_sp[spell - 1]);
+			(type == 1) ? m_priest_sp[spell - 1] : m_mage_sp[spell - 1]);
 	add_string_to_buf((char *) store_string);
 }
 
@@ -1324,7 +1324,7 @@ void monst_breathe_note(unsigned char number)
 {
 	get_m_name(store_string2,number);
 	sprintf(store_string, "%s breathes.",
-			(char *) store_string2);
+			store_string2);
 	add_string_to_buf((char *) store_string);
 
 }
@@ -1345,7 +1345,7 @@ void monst_killed_mes(short which_m)
 {
 	get_m_name(store_string2,c_town.monst.dudes[which_m].number);
 	sprintf(store_string, "  %s dies.",
-		(char *) store_string2);
+		store_string2);
 	add_string_to_buf((char *) store_string);
 }
 
@@ -1387,7 +1387,7 @@ void add_string_to_buf(const char * str)
 		print_buf();
 		through_sending();
 		}
-	sprintf((char *)text_buffer[buf_pointer].line, "%-49.49s", str);
+	sprintf(text_buffer[buf_pointer].line, "%-49.49s", str);
    text_buffer[buf_pointer].line[49] = 0;
 //	c2pstr((char *)text_buffer[buf_pointer].line);
 	if (buf_pointer == (TEXT_BUF_LEN - 1))
@@ -1507,8 +1507,8 @@ void through_sending()
 void Display_String(char *str)
 {
 //	//c2pstr((char *) str);
-// 	sprintf((char *)str2," %s",str);
-//	str2[0] = (char) strlen((char *)str);
+// 	sprintf(str2," %s",str);
+//	str2[0] = (char) strlen(str);
 //	DrawString(str2);
 }
 
@@ -1581,7 +1581,7 @@ short string_length(char *str,HDC hdc)
 	
 	strcpy(p_str,str);
 	MeasureText(256,p_str,text_len,hdc);
-	len = strlen((char *)str);
+	len = strlen(str);
 
 	//print_nums(text_len[1],text_len[2],text_len[3]);
    //print_nums(text_len[10],text_len[20],text_len[30]);
@@ -1626,14 +1626,14 @@ void win_draw_string(HDC dest_hdc,RECT dest_rect,char *str,short mode,short line
 	switch (mode) {
 		case 0:
          dest_rect.bottom += 6;
-			DrawText(dest_hdc,str,strlen((char *)str),&dest_rect,DT_LEFT | DT_NOPREFIX | DT_WORDBREAK); break;
+			DrawText(dest_hdc,str,strlen(str),&dest_rect,DT_LEFT | DT_NOPREFIX | DT_WORDBREAK); break;
 		case 1:
 			dest_rect.bottom += 6; dest_rect.top -= 6;
-			DrawText(dest_hdc,str,strlen((char *)str),&dest_rect,
+			DrawText(dest_hdc,str,strlen(str),&dest_rect,
 			DT_CENTER | DT_NOPREFIX | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE); break;
 		case 2: case 3:
 			dest_rect.bottom += 6; dest_rect.top -= 6;
-			DrawText(dest_hdc,str,strlen((char *)str),&dest_rect,
+			DrawText(dest_hdc,str,strlen(str),&dest_rect,
 			DT_LEFT | DT_NOPREFIX | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE); break;
 		}
 	// not yet done adjusts for 1, 2, 3
