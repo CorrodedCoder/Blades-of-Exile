@@ -52,7 +52,7 @@ extern Boolean sleep_field;
 extern Boolean fast_bang;
 extern unsigned char far misc_i[64][64],sfx[64][64];
 extern short store_current_pc;
-extern short refer_mage[62],refer_priest[62];
+extern const short refer_mage[62],refer_priest[62];
 extern location monster_targs[T_M];
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
 

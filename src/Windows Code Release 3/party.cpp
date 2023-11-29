@@ -26,17 +26,17 @@
 #include "exlsound.h"
 #include "graphutl.h"
 
-short skill_cost[20] = {3,3,3,2,2,2, 1,2,2,6,
+extern const short skill_cost[20] = {3,3,3,2,2,2, 1,2,2,6,
 						5, 1,2,4,2,1, 4,2,5,0};
 extern short skill_max[20];
-short skill_g_cost[20] = {50,50,50,40,40,40,30,50,40,250,
+extern const short skill_g_cost[20] = {50,50,50,40,40,40,30,50,40,250,
 						250,25,100,200,30,20,100,80,0,0};
-short skill_bonus[21] = {-3,-3,-2,-1,0,0,1,1,1,2,
-							2,2,3,3,3,3,4,4,4,5,5};
+static constinit const auto skill_bonus(std::to_array<short>({-3,-3,-2,-1,0,0,1,1,1,2,
+							2,2,3,3,3,3,4,4,4,5,5}));
 
-short spell_level[62] = {1,1,1,1,1,1,1,1,1,1, 2,2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3,3,3,3,
+extern const short spell_level[62] = {1,1,1,1,1,1,1,1,1,1, 2,2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3,3,3,3,
 						4,4,4,4,4,4,4,4, 5,5,5,5,5,5,5,5, 6,6,6,6,6,6,6,6, 7,7,7,7,7,7,7,7};
-short spell_cost[2][62] = {{1,1,1,1,1,2,50,2,1,3, 2,3,2,2,2,2,4,4,2,6, 3,3,5,3,3,5,6,4,6,4,
+extern const short spell_cost[2][62] = {{1,1,1,1,1,2,50,2,1,3, 2,3,2,2,2,2,4,4,2,6, 3,3,5,3,3,5,6,4,6,4,
 							4,5,4,8,30,-1,8,6, 5,8,8,6,9,10,6,6, 7,6,8,7,12,10,12,20, 12,8,20,10,14,10,50,10},
 							{1,1,1,2,1,1,3,5,50,1, 2,2,2,2,3,5,8,6,4,2, 3,4,3,3,3,10,5,3,4,6,
 							 5,5,5,15,6,5,5,8, 6,7,25,8,10,12,12,6, 8,7,8,8,14,17,8,7, 10,10,35,10,12,12,30,10}};
@@ -89,10 +89,8 @@ short spell_w_cast[2][62] = {{0,1,1,1,1,1,3,4,1,2, 1,1,1,1,1,1,4,1,4,1, 2,1,1,0,
 							{1,0,0,1,3,1,1,3,2,1, 1,0,1,0,1,4,2,1,1,0, 0,0,1,2,0,3,1,0,0,1,
 							0,1,1,3,4,1,0,0, 1,0,3,1,1,4,2,4, 0,0,0,3,4,1,1,1, 0,1,3,1,4,1,5,0}};
 // 0 - everywhere 1 - combat only 2 - town only 3 - town & outdoor only 4 - town & combat only  5 - outdoor only
-Boolean get_mage[30] = {1,1,1,1,1,1,0,1,1,0, 1,1,1,1,1,1,0,0,1,1, 1,1,1,1,1,0,0,0,1,1};
-Boolean get_priest[30] = {1,1,1,1,1,1,0,0,0,1, 1,1,1,1,1,0,0,0,1,1, 1,0,1,1,0,0,0,1,0,0};
-short combat_percent[20] = {150,120,100,90,80,80,80,70,70,70,
-								70,70,67,62,57,52,47,42,40,40};
+static constinit const std::array combat_percent(std::to_array<short>({150,120,100,90,80,80,80,70,70,70,
+								70,70,67,62,57,52,47,42,40,40}));
 
 
 short town_spell,who_cast,which_pc_displayed;
@@ -137,8 +135,8 @@ extern short current_ground,dialog_answer;
 extern short on_spell_menu[2][62];
 extern Boolean cd_event_filter();
 extern Boolean dialog_not_toast;
-extern short far mage_need_select[62];
-extern short far priest_need_select[62];
+extern const short far mage_need_select[62];
+extern const short far priest_need_select[62];
 extern short pc_marked_damage[6];
 extern short monst_marked_damage[T_M];
 extern town_item_list far  t_i;
@@ -148,7 +146,7 @@ extern stored_town_maps_type far town_maps,town_maps2;
  extern scenario_data_type far scenario;
  extern piles_of_stuff_dumping_type *data_store;
 extern piles_of_stuff_dumping_type2 *data_store2;
-extern item_record_type start_items[6];
+extern const item_record_type start_items[6];
 extern piles_of_stuff_dumping_type5 *data_store5;
 
 char c_line[60];

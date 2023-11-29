@@ -79,6 +79,7 @@ if (MSVC)
 				# as it should know it's irrelevant to anyone specifying
 				# a later C++ standard.
 				-Wno-c++98-compat-pedantic
+				-Wno-c++20-compat
 
 				# Disable selective warnings from -Wall
 				-Wno-missing-variable-declarations

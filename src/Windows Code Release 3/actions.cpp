@@ -27,17 +27,17 @@
 #include "dlogtool.h"
 #include "graphutl.h"
 
-RECT bottom_buttons[7];
-RECT town_buttons[10];
-RECT combat_buttons[9];
-RECT world_screen = {23, 23, 274,346};
-RECT item_screen_button_rects[9] = {{11,126,28,140},{40,126,57,140},{69,126,86,140},{98,126,115,140},
-{127,126,144,140},{156,126,173,140},{176,126,211,141},{213,126,248,141},{251,127,267,139}};
-	
-RECT border_rect[4] = {{5, 5, 283, 15}, {5, 5, 15, 355},
-						{5, 345, 283, 355}, {273, 5, 283, 355}};
-RECT medium_buttons[4] = {{190, 383,225,401}, {190, 402, 225, 420},
-							{227, 383, 263, 401}, {227, 402, 263,420}}; ;
+static RECT bottom_buttons[7];
+static RECT town_buttons[10];
+static RECT combat_buttons[9];
+static const RECT world_screen = { 23, 23, 274,346 };
+RECT item_screen_button_rects[9] = { {11,126,28,140},{40,126,57,140},{69,126,86,140},{98,126,115,140},
+{127,126,144,140},{156,126,173,140},{176,126,211,141},{213,126,248,141},{251,127,267,139} };
+
+static const RECT border_rect[4] = { {5, 5, 283, 15}, {5, 5, 15, 355},
+						{5, 345, 283, 355}, {273, 5, 283, 355} };
+static const RECT medium_buttons[4] = { {190, 383,225,401}, {190, 402, 225, 420},
+							{227, 383, 263, 401}, {227, 402, 263,420} }; ;
 
 RECT item_buttons[8][6];
  // name, use, give, drip, info, sell/id
@@ -51,18 +51,18 @@ Boolean end_scenario = FALSE;
 extern RECT startup_button[6];
 
 // For menu spell casting, some info needs to be stored up here.
-short far refer_mage[62] = {0,2,1,1,2,2,0,2,2,0, 2,2,2,2,1,2,2,2,2,2, 0,1,2,0,2,2,3,3,2,1,
+extern const short refer_mage[62] = {0,2,1,1,2,2,0,2,2,0, 2,2,2,2,1,2,2,2,2,2, 0,1,2,0,2,2,3,3,2,1,
 							2,2,1,0,2,2,3,2, 0,1,2,0,2,3,2,3, 2,1,2,3,2,2,2,0, 1,1,1,0,3,2,2,3};
-short far refer_priest[62] = {1,0,0,2,0,0,0,0,0,2, 1,0,2,0,2,2,0,2,3,0, 0,0,2,0,0,0,2,0,0,3,
+extern const short refer_priest[62] = {1,0,0,2,0,0,0,0,0,2, 1,0,2,0,2,2,0,2,3,0, 0,0,2,0,0,0,2,0,0,3,
 							0,1,2,0,3,0,0,0, 1,0,0,2,0,3,0,2, 0,0,0,0,2,1,1,1, 0,2,0,2,1,2,0,0};
 	// 0 - refer  1 - do in combat immed.  2 - need targeting  3 - need fancy targeting
-short far mage_need_select[62] = {0,0,1,1,0,0,0,0,0,0, 0,0,0,0,1,0,0,0,0,0, 0,1,0,0,0,0,0,0,0,1,
+extern const short mage_need_select[62] = {0,0,1,1,0,0,0,0,0,0, 0,0,0,0,1,0,0,0,0,0, 0,1,0,0,0,0,0,0,0,1,
 						0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,1,0,0,0,0};
-short far priest_need_select[62] = {1,1,1,0,0,1,1,0,0,0, 1,1,0,0,0,0,0,0,0,1, 1,0,0,0,1,0,0,1,1,0,
+extern const short priest_need_select[62] = {1,1,1,0,0,1,1,0,0,0, 1,1,0,0,0,0,0,0,0,1, 1,0,0,0,1,0,0,1,1,0,
 						0,0,0,1,0,1,1,0, 0,1,2,0,0,0,0,0, 0,1,0,2,0,0,0,0, 0,0,2,0,0,0,0,0};
 // 0 - no select  1 - active only  2 - any existing
 
-word_rect_type far preset_words[9] = {{"Look",{4,366,54,389}},{"Name",{70,366,130,389}},{"Job",{136,366,186,389}},
+extern word_rect_type preset_words[9] = {{"Look",{4,366,54,389}},{"Name",{70,366,130,389}},{"Job",{136,366,186,389}},
 								{"Buy",{4,389,54,412}},{"Sell",{70,389,120,412}},{"Record",{121,389,186,412}},
 								{"Done",{210,389,270,412}},{"Go Back",{190,366,270,389}},
 								{"Ask About...",{4,343,134,366}}};
@@ -140,7 +140,7 @@ short wand_loc_count = 0;
 short monst_place_count = 0; // 1 - standard place	2 - place last
 Boolean unreg_party_in_scen_not_check = FALSE;
 
-item_record_type start_items[6] =
+extern const item_record_type start_items[6] =
 {
 {1,4, 0,1,0,0,1,0, 45,0,0,0,0,0, 2, 7,0, {0,0},"Bronze Knife","Knife",0,1,0,0},
 {12,1,1,0,0,0,0,0, 65,0,0,0,0,0, 2, 20,0, {0,0},"Crude Buckler","Buckler",0,1,0,0},
