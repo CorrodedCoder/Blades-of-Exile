@@ -26,7 +26,6 @@
 
 #include "Exile.sound.h"
 
-#define	DONE_BUTTON_ITEM	1
 #define IN_FRONT	(WindowPtr)-1L
 #define	NIL		0L
 

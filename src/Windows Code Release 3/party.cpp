@@ -198,9 +198,8 @@ void put_pick_spell_graphics();
 void init_party(short mode)
 {
 	short i,j,k,l;
-
-	boat_record_type null_boat = {{0,0},{0,0},{0,0},200,FALSE};
-	horse_record_type null_horse = {{0,0},{0,0},{0,0},200,FALSE};
+	const boat_record_type null_boat{};
+	const horse_record_type null_horse{};
 	
 	party.age = 0;
 	party.gold = 200;
@@ -1568,7 +1567,7 @@ void give_party_spell(short which)
 				if (adven[i].main_status == 1)
 					sprintf(str,"%s learns spell.",adven[i].name);
 				give_help(41,0,0);
-				if (sound_done == FALSE) {sound_done = TRUE; play_sound(62);};
+				if (sound_done == FALSE) {sound_done = TRUE; play_sound(62);}
 				}
 	if (which >= 100)
 		for (i = 0; i < 6; i++)
@@ -1577,7 +1576,7 @@ void give_party_spell(short which)
 				if (adven[i].main_status == 1)
 					sprintf(str,"%s learns spell.",adven[i].name);
 				give_help(41,0,0);
-				if (sound_done == FALSE) {sound_done = TRUE; play_sound(62);};
+				if (sound_done == FALSE) {sound_done = TRUE; play_sound(62);}
 				}
 }
 

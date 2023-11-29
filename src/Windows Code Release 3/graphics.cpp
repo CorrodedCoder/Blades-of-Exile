@@ -407,7 +407,7 @@ void draw_startup_stats()
 			if (adven[i].main_status > 0) {
 				from_rect = party_from;
 				OffsetRect(&from_rect,56 * (i / 3),36 * (i % 3));
-				to_rect = party_from,
+				to_rect = party_from;
 				OffsetRect(&to_rect,pc_rect.left,pc_rect.top + 2);
 				rect_draw_some_item_bmp(party_template_gworld,from_rect,
 					party_template_gworld,to_rect,0,1);
@@ -519,20 +519,20 @@ void draw_start_button(short which_position,short which_button)
 	SetTextColor(main_dc,PALETTEINDEX(c[0]));
 	OffsetRect(&to_rect,0,1);
 	char_win_draw_string(main_dc,to_rect,
-		(char *) button_labels[which_position],1,18);
+		button_labels[which_position],1,18);
 	OffsetRect(&to_rect,0,-2);
 	char_win_draw_string(main_dc,to_rect,
-		(char *) button_labels[which_position],1,18);
+		button_labels[which_position],1,18);
 	OffsetRect(&to_rect,1,1);
 	char_win_draw_string(main_dc,to_rect,
-		(char *) button_labels[which_position],1,18);
+		button_labels[which_position],1,18);
 	OffsetRect(&to_rect,-2,0);
 	char_win_draw_string(main_dc,to_rect,
-		(char *) button_labels[which_position],1,18);
+		button_labels[which_position],1,18);
 	OffsetRect(&to_rect,1,0);
 	SetTextColor(main_dc,PALETTEINDEX(c[2]));
 	char_win_draw_string(main_dc,to_rect,
-		(char *) button_labels[which_position],1,18);
+		button_labels[which_position],1,18);
 	SelectObject(main_dc,font);
 	SetTextColor(main_dc,PALETTEINDEX(c[0]));
 	//ForeColor(blackColor);
@@ -2406,7 +2406,7 @@ void draw_targeting_line(POINT where_curs)
 	char dam_str[20];
 	HPEN white_pen;
 	HGDIOBJ store_pen;
-	static LOGPEN white_pen_data = {PS_SOLID,2,2,RGB(255,255,255)};
+	static LOGPEN white_pen_data = { PS_SOLID,{2,2},RGB(255,255,255) };
 	COLORREF colors[2] = {RGB(0,0,0),RGB(255,255,255)},storec;
 	UINT c[2];
 

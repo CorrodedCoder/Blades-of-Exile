@@ -1268,9 +1268,9 @@ void display_strings(const char *text1, const char *text2,short str_label_1,shor
 	
 	csp(store_which_string_dlog,store_which_string_dlog,graphic_num);
 	
-	csit(store_which_string_dlog,4,(char *) text1);
+	csit(store_which_string_dlog,4, text1);
 	if (text2 != NULL) {
-		csit(store_which_string_dlog,5,(char *) text2);
+		csit(store_which_string_dlog,5, text2);
 		}
 	if (strlen(title) > 0)
 		csit(store_which_string_dlog,6,title);
@@ -1298,6 +1298,6 @@ void display_strings_with_nums(short a1,short a2, short b1, short b2, const char
 		get_str(str1,a1,a2);
 	if ((b1 > 0) && (b2 > 0))
 		get_str(str2,b1,b2);
-	display_strings((char *) str1,(char *) str2,-1,-1,-1,-1,
+	display_strings(str1, str2,-1,-1,-1,-1,
 		title, sound_num, graphic_num, parent_num);
 }

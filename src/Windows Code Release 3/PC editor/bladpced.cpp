@@ -22,7 +22,7 @@ Blades of Exile Game/Scenario Editor/Character Editor
 // Blades of Exile Editor
 // May God have mercy on all our souls.
 
-#include <windows.h>
+#include <Windows.h>
 
 #include <cstdlib>
 #include <cstring>

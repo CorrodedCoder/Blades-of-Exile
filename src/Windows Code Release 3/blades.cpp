@@ -21,7 +21,7 @@ Blades of Exile Game/Scenario Editor/Character Editor
 // Blades of Exile for Windows
 // Will this horror never end?
 
-#include <windows.h>
+#include <Windows.h>
 #include <cassert>
 #include <cstdlib>
 #include <cmath>
@@ -399,17 +399,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpszCmdPar
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-HDC hdc;
-PAINTSTRUCT ps;
-POINT press;
-short handled = 0;
-HMENU menu;
-RECT dlg_rect,wind_rect;
-short store_ulx,store_uly,sbar_pos;
-short which_sbar;
-
-short old_setting;
-	short smin,smax;
+	HDC hdc;
+	PAINTSTRUCT ps;
+	POINT press;
+	short handled = 0;
+	HMENU menu;
+	RECT dlg_rect,wind_rect;
+	short store_ulx,store_uly,sbar_pos;
+	short which_sbar;
+	short old_setting;
+	short smax = 0;
+	int scrollbar_min = 0;
+	int scrollbar_max = 0;
 
 // First, handle window size
 	GetWindowRect(mainPtr,&wind_rect);
@@ -655,7 +656,9 @@ short old_setting;
 			break;
 			case 2:
 				old_setting = sbar_pos = GetScrollPos(item_sbar,SB_CTL);
-				GetScrollRange(item_sbar,SB_CTL,(int *) &smin,(int *) &smax);
+				GetScrollRange(item_sbar, SB_CTL, &scrollbar_min, &scrollbar_max);
+				assert(std::in_range<short>(scrollbar_max));
+				smax = static_cast<short>(scrollbar_max);
 				switch (wParam ) {
 					case SB_PAGEDOWN: sbar_pos += (stat_window == 7) ? 2 : 8; break;
 					case SB_LINEDOWN: sbar_pos++; break;
@@ -678,7 +681,9 @@ short old_setting;
 			break;
 			case 3:
 				old_setting = sbar_pos = GetScrollPos(shop_sbar,SB_CTL);
-				GetScrollRange(shop_sbar,SB_CTL,(int *) &smin,(int *) &smax);
+				GetScrollRange(shop_sbar,SB_CTL, &scrollbar_min, &scrollbar_max);
+				assert(std::in_range<short>(scrollbar_max));
+				smax = static_cast<short>(scrollbar_max);
 				switch (wParam ) {
 					case SB_PAGEDOWN: sbar_pos += 8; break;
 					case SB_LINEDOWN: sbar_pos++; break;

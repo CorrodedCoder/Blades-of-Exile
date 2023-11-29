@@ -75,34 +75,33 @@ if (MSVC)
 				# Warnings as errors
 				-Werror
 
-				# Disable selective warnings from -Wall
+				# It seems required to disable this warning, but not sure why
+				# as it should know it's irrelevant to anyone specifying
+				# a later C++ standard.
 				-Wno-c++98-compat-pedantic
-				-Wno-newline-eof
+
+				# Disable selective warnings from -Wall
 				-Wno-missing-variable-declarations
 				-Wno-unused-parameter
-				-Wno-nonportable-system-include-path
 				-Wno-old-style-cast
 				-Wno-cast-align
 				-Wno-missing-prototypes
 				-Wno-unreachable-code-break
 				-Wno-implicit-int-conversion
-				-Wno-unused-macros
 				-Wno-sign-conversion
 				-Wno-unused-but-set-variable
 				-Wno-conditional-uninitialized
 				-Wno-shadow
 				-Wno-tautological-unsigned-zero-compare
-				-Wno-cast-qual
-				-Wno-missing-field-initializers
 				-Wno-sign-compare
 				-Wno-unreachable-code
 				-Wno-shorten-64-to-32
 				-Wno-tautological-value-range-compare
 				-Wno-unsafe-buffer-usage
-				-Wno-zero-as-null-pointer-constant
-				-Wno-extra-semi-stmt
-				-Wno-comma
 				-Wno-implicit-fallthrough
+
+				# Replace NULL with nullptr and we can remove the following item
+				-Wno-zero-as-null-pointer-constant
 
 				# Disable warnings that come out even without -Wall
 				-Wno-extern-initializer
@@ -112,10 +111,8 @@ if (MSVC)
 				-Wno-sometimes-uninitialized
 				-Wno-empty-body
 				-Wno-parentheses
-				-Wno-missing-braces
 				-Wno-tautological-overlap-compare
 				-Wno-tautological-constant-compare
-				-Wno-pointer-to-int-cast
 			)
 		endif()
 	endif()

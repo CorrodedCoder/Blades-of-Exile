@@ -1,5 +1,5 @@
 
-#include <windows.h>
+#include <Windows.h>
 #include <array>
 
 #define ND	15
@@ -351,7 +351,7 @@ short cd_create_custom_dialog(HWND parent,
 
 	// finally, 0-6 text, first do preprocessing to find out how much room we need
 	for (i = 0; i < 6; i++)
-		total_len += string_length((char *) strs[i],main_dc);
+		total_len += string_length(strs[i],main_dc);
 	total_len = total_len * 12;
 	str_width = 100 + 20;
 	//print_nums(0,total_len,str_width);
@@ -372,14 +372,14 @@ short cd_create_custom_dialog(HWND parent,
 			item_rect[free_item] = cur_text_rect;
 			measure_rect.top = 0; measure_rect.bottom = 0;
 			measure_rect.left = 0; measure_rect.right = 340;
-			DrawText(main_dc, (char *) strs[i],strlen(strs[i]),
+			DrawText(main_dc, strs[i],strlen(strs[i]),
 				&measure_rect,DT_CALCRECT | DT_WORDBREAK);
 			item_rect[free_item].bottom = item_rect[free_item].top +
 				(measure_rect.bottom - measure_rect.top) + 16;
-				//((string_length((char *) strs[i],main_dc) + 60) / str_width) * 12 + 16;
+				//((string_length(strs[i],main_dc) + 60) / str_width) * 12 + 16;
 			//item_rect[free_item].right += 20;
 
-			//print_nums(i,string_length((char *) strs[i]),str_width);
+			//print_nums(i,string_length(strs[i]),str_width);
 			cur_text_rect.top = item_rect[free_item].bottom + 8;
 			item_flag[free_item] = 0;
 			item_active[free_item] = 1;
@@ -600,7 +600,7 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 			else if ((item_str[0] == '^') || (item_str[0] == '&')) {
 				type = (item_str[0] == '^') ? 10 : 11;
 				flag = 1;
-				//if (string_length((char *) item_str) > 55)
+				//if (string_length(item_str) > 55)
 				//	flag = 2;
 				str_stored = TRUE;
 				}
@@ -1208,11 +1208,11 @@ void cd_draw_item(short dlog_num,short item_num)
 						OffsetRect(&item_rect[item_index],-1 * button_left_adj[item_flag[item_index]],0);
 					if (item_type[item_index] < 2) {
 						char_win_draw_string(win_dc,item_rect[item_index],
-						 (char *) (button_strs[item_flag[item_index]]),1,8);
+						 button_strs[item_flag[item_index]],1,8);
 						}
 						else {
 							char_win_draw_string(win_dc,item_rect[item_index],
-							 (char *) ((item_index < 10) ? text_long_str[item_index] :
+							 ((item_index < 10) ? text_long_str[item_index] :
 							  text_short_str[item_index - 10]),1,8);
 							}
 					if (item_type[item_index] < 2)
@@ -1249,14 +1249,14 @@ void cd_draw_item(short dlog_num,short item_num)
 
 					if (item_rect[item_index].bottom - item_rect[item_index].top < 20) {
 						item_rect[item_index].left += 3;
-							DrawText(win_dc,(char *) ((item_index < 10) ? text_long_str[item_index] :
+							DrawText(win_dc, ((item_index < 10) ? text_long_str[item_index] :
 								text_short_str[item_index - 10]), -1, &item_rect[item_index],
 								DT_LEFT | DT_SINGLELINE | DT_VCENTER | DT_NOCLIP);
 						item_rect[item_index].left -= 3;
 						}
 						else {
 							InflateRect(&item_rect[item_index],-4,-4);
-							DrawText(win_dc,(char *) ((item_index < 10) ? text_long_str[item_index] :
+							DrawText(win_dc, ((item_index < 10) ? text_long_str[item_index] :
 								text_short_str[item_index - 10]), -1, &item_rect[item_index],
 								DT_LEFT | DT_WORDBREAK | DT_NOCLIP);
 							InflateRect(&item_rect[item_index],4,4);
@@ -1307,7 +1307,7 @@ void cd_draw_item(short dlog_num,short item_num)
 				if (item_active[item_index] != 0) {
 					SetTextColor(win_dc,PALETTEINDEX(c[3]));
 
-					DrawText(win_dc, (char *) labels[item_label_loc[item_index]],
+					DrawText(win_dc, labels[item_label_loc[item_index]],
 						-1, &to_rect, DT_LEFT | DT_SINGLELINE | DT_VCENTER);
 					SetTextColor(win_dc,PALETTEINDEX(c[0]));
 
@@ -1522,11 +1522,11 @@ void cd_press_button(short dlog_num, short item_num)
 		OffsetRect(&item_rect[item_index],-1 * button_left_adj[item_flag[item_index]],0);
 	if (item_type[item_index] < 2) {
 		char_win_draw_string(win_dc,item_rect[item_index],
-		(char *) (button_strs[item_flag[item_index]]),1,8);
+		button_strs[item_flag[item_index]],1,8);
 		}
 		else {
 			char_win_draw_string(win_dc,item_rect[item_index],
-			 (char *) ((item_index < 10) ? text_long_str[item_index] : 
+			 ((item_index < 10) ? text_long_str[item_index] : 
 			text_short_str[item_index - 10]),1,8);
 			}
 	if (item_type[item_index] < 2)
@@ -1547,11 +1547,11 @@ void cd_press_button(short dlog_num, short item_num)
 		OffsetRect(&item_rect[item_index],-1 * button_left_adj[item_flag[item_index]],0);
 	if (item_type[item_index] < 2) {
 		char_win_draw_string(win_dc,item_rect[item_index],
-		(char *) (button_strs[item_flag[item_index]]),1,8);
+		 button_strs[item_flag[item_index]],1,8);
 		}
 		else {
 			char_win_draw_string(win_dc,item_rect[item_index],
-			 (char *) ((item_index < 10) ? text_long_str[item_index] : 
+			  ((item_index < 10) ? text_long_str[item_index] : 
 			text_short_str[item_index - 10]),1,8);
 			}
 	if (item_type[item_index] < 2)

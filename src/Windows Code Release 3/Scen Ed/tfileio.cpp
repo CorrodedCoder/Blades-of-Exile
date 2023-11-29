@@ -11,9 +11,6 @@
 #include "edsound.h"
 #include "graphutl.h"
 
-#define	DONE_BUTTON_ITEM	1
-#define	NIL		0L
-
 extern scenario_data_type far scenario;
 extern HDC main_dc;
 

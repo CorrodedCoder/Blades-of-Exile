@@ -22,7 +22,6 @@
 
 #include "exlsound.h"
 
-#define	DONE_BUTTON_ITEM	1
 
 HWND	the_dialog;
 extern party_record_type far	party;
@@ -1569,13 +1568,13 @@ void build_scen_headers()
 	listbox = CreateWindow("listbox", NULL,
 		WS_CHILDWINDOW, 0,0,0,0,
 		mainPtr, reinterpret_cast<HMENU>(1), reinterpret_cast<HINSTANCE>(GetWindowLongPtr(mainPtr, GWLP_HINSTANCE)), NULL);
-	SendMessage(listbox,LB_DIR,0x0,(LONG) (LPSTR) "BLADSCEN/*.EXS");
+	SendMessage(listbox,LB_DIR,0x0, reinterpret_cast<LPARAM>("BLADSCEN/*.EXS"));
 	count = (WORD) SendMessage(listbox,LB_GETCOUNT,0,0L);
 
 	count = min(count,20);
 
 	for (i = 0; i < count; i++) {
-		SendMessage(listbox,LB_GETTEXT,i,(LONG) (LPSTR) filename2);
+		SendMessage(listbox,LB_GETTEXT,i, reinterpret_cast<LPARAM>(filename2));
 		sprintf(filename,"BLADSCEN/%s",filename2);
 
 		if (load_scenario_header(filename,cur_entry) == TRUE) {

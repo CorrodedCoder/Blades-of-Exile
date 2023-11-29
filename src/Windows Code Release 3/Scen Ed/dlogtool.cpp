@@ -1,5 +1,5 @@
 
-#include <windows.h>
+#include <Windows.h>
 #include <array>
 #include <cassert>
 
@@ -419,7 +419,7 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 			else if ((item_str[0] == '^') || (item_str[0] == '&')) {
 				type = (item_str[0] == '^') ? 10 : 11;
 				flag = 1;
-				//if (string_length((char *) item_str) > 55)
+				//if (string_length(item_str) > 55)
 				//	flag = 2;
 				str_stored = TRUE;
 				}
@@ -1135,11 +1135,11 @@ void cd_draw_item(short dlog_num,short item_num)
 						OffsetRect(&item_rect[item_index],-1 * button_left_adj[item_flag[item_index]],0);
 					if (item_type[item_index] < 2) {
 						char_win_draw_string(win_dc,item_rect[item_index],
-						 (char *) (button_strs[item_flag[item_index]]),1,8);
+						  button_strs[item_flag[item_index]],1,8);
 						}
 						else {
 							char_win_draw_string(win_dc,item_rect[item_index],
-							 (char *) ((item_index < 10) ? text_long_str[item_index] :
+							 ((item_index < 10) ? text_long_str[item_index] :
 							  text_short_str[item_index - 10]),1,8);
 							}
 					if (item_type[item_index] < 2)
@@ -1176,14 +1176,14 @@ void cd_draw_item(short dlog_num,short item_num)
 
 					if (item_rect[item_index].bottom - item_rect[item_index].top < 20) {
 						item_rect[item_index].left += 3;
-							DrawText(win_dc,(char *) ((item_index < 10) ? text_long_str[item_index] :
+							DrawText(win_dc, ((item_index < 10) ? text_long_str[item_index] :
 								text_short_str[item_index - 10]), -1, &item_rect[item_index],
 								DT_LEFT | DT_SINGLELINE | DT_VCENTER | DT_NOCLIP);
 						item_rect[item_index].left -= 3;
 						}
 						else {
 							InflateRect(&item_rect[item_index],-4,-4);
-							DrawText(win_dc,(char *) ((item_index < 10) ? text_long_str[item_index] :
+							DrawText(win_dc, ((item_index < 10) ? text_long_str[item_index] :
 								text_short_str[item_index - 10]), -1, &item_rect[item_index],
 								DT_LEFT | DT_WORDBREAK | DT_NOCLIP);
 							InflateRect(&item_rect[item_index],4,4);
@@ -1235,7 +1235,7 @@ void cd_draw_item(short dlog_num,short item_num)
 				if (item_active[item_index] != 0) {
 
 					SetTextColor(win_dc,PALETTEINDEX(c[3]));
-					DrawText(win_dc, (char *) labels[item_label_loc[item_index]],
+					DrawText(win_dc, labels[item_label_loc[item_index]],
 						-1, &to_rect, DT_LEFT | DT_SINGLELINE | DT_VCENTER);
 					SetTextColor(win_dc,PALETTEINDEX(c[0]));
 					}
@@ -1458,11 +1458,11 @@ void cd_press_button(short dlog_num, short item_num)
 		OffsetRect(&item_rect[item_index],-1 * button_left_adj[item_flag[item_index]],0);
 	if (item_type[item_index] < 2) {
 		char_win_draw_string(win_dc,item_rect[item_index],
-		(char *) (button_strs[item_flag[item_index]]),1,8);
+		button_strs[item_flag[item_index]],1,8);
 		}
 		else {
 			char_win_draw_string(win_dc,item_rect[item_index],
-			 (char *) ((item_index < 10) ? text_long_str[item_index] : 
+			 ((item_index < 10) ? text_long_str[item_index] : 
 			text_short_str[item_index - 10]),1,8);
 			}
 	if (item_type[item_index] < 2)
@@ -1482,11 +1482,11 @@ void cd_press_button(short dlog_num, short item_num)
 		OffsetRect(&item_rect[item_index],-1 * button_left_adj[item_flag[item_index]],0);
 	if (item_type[item_index] < 2) {
 		char_win_draw_string(win_dc,item_rect[item_index],
-		(char *) (button_strs[item_flag[item_index]]),1,8);
+		button_strs[item_flag[item_index]],1,8);
 		}
 		else {
 			char_win_draw_string(win_dc,item_rect[item_index],
-			 (char *) ((item_index < 10) ? text_long_str[item_index] : 
+			 ((item_index < 10) ? text_long_str[item_index] : 
 			text_short_str[item_index - 10]),1,8);
 			}
 	if (item_type[item_index] < 2)
