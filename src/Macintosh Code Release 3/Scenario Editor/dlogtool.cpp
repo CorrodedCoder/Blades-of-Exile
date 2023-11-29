@@ -283,8 +283,8 @@ void process_new_window (WindowPtr hDlg) {
 			p2c(item_str);
 			dlg_highest_item[free_slot]++;
 			str_stored = FALSE;
-			if (strlen((char *)item_str) == 0) {
-				sprintf((char *) item_str, "+");
+			if (strlen(item_str) == 0) {
+				sprintf(item_str, "+");
 				type = 3;
 				flag = 1;
 	            str_stored = TRUE;
@@ -349,7 +349,7 @@ void process_new_window (WindowPtr hDlg) {
 					break;
 				default:
 					if ((type == 9) || 
-					 ((str_stored == TRUE) && (strlen((char *) item_str) > 35))) {
+					 ((str_stored == TRUE) && (strlen(item_str) > 35))) {
 						for (j = 0; j < 10; j++)
 							if (item_dlg[j] < 0) {
 								free_item = j;
@@ -673,7 +673,7 @@ void cd_set_text_edit_str(short dlog_num, short item_num, char *str)
 	if ((dlg_index = cd_get_dlg_index(dlog_num)) < 0) {
 		SysBeep(50); return ;
 		}
-	strcpy((char *) store_ptr,str);
+	strcpy(store_ptr,str);
 	c2p(store_ptr);
 	GetDItem( dlgs[dlg_index], item_num, &the_type, &the_handle, &the_rect );
 	SetIText ( the_handle, store_ptr);	
@@ -691,7 +691,7 @@ void cd_set_text_edit_num(short dlog_num, short item_num, short num)
 		SysBeep(50); return ;
 		}
 		
-	sprintf((char *) store_ptr,"%d",num);
+	sprintf(store_ptr,"%d",num);
 	c2p(store_ptr);
 	GetDItem( dlgs[dlg_index], item_num, &the_type, &the_handle, &the_rect );
 	SetIText ( the_handle, store_ptr);	
@@ -861,7 +861,7 @@ void cd_add_label(short dlog_num, short item_num, char *label, short label_flag)
 		}
       else cd_erase_item(dlog_num,item_num + 100);
 	label_loc = item_label_loc[item_index];
-	sprintf((char *) labels[label_loc],"%-24s",label);
+	sprintf(labels[label_loc],"%-24s",label);
 	if (item_active[item_index] > 0)
 		cd_draw_item(dlog_num,item_num);
 }
@@ -882,7 +882,7 @@ void cd_key_label(short dlog_num, short item_num,short loc)
 	char str[10];
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
 		return;
-	sprintf((char *) str,"  ");
+	sprintf(str,"  ");
 	str[0] = item_key[item_index];
 	cd_add_label(dlog_num,item_num, str, 7 + loc * 100);
 }

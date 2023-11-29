@@ -283,7 +283,6 @@ HDC hdc;
 PAINTSTRUCT ps;
 //RECT s_rect = {0,0,30,30},d_rect = {0,0,30,30},d2 = {0,0,420,216},s2 = {0,0,420,216};
 POINT press;
-short handled = 0;
 HMENU menu;
 
 	//ed_reg = FALSE;
@@ -690,8 +689,8 @@ item_record_type convert_item (short_item_record_type s_item) {
 	i.weight = s_item.weight;
 	i.special_class = 0;
 	i.item_loc = l;
-	strcpy((char *)i.full_name,(char *)s_item.full_name);
-	strcpy((char *)i.name,(char *)s_item.name);
+	strcpy(i.full_name, s_item.full_name);
+	strcpy(i.name, s_item.name);
 
 	if (i.charges > 0)
 		temp_val = i.value * i.charges;
@@ -726,7 +725,6 @@ void update_item_menu()
 	short i,j;
 
 	HMENU menu[10],big_menu;
-	short total_added = 0;
 	char item_name[256];
 
 	big_menu = GetMenu(mainPtr);
@@ -735,7 +733,7 @@ void update_item_menu()
 		menu[i] = GetSubMenu(big_menu,3 + i);
 	for (j = 0; j < 10; j++) {
 		for (i = 0; i < 37; i++) {
-				sprintf((char *) item_name, "%s",item_list[i + j * 37].full_name);
+				sprintf(item_name, "%s",item_list[i + j * 37].full_name);
 				if ((i % 19 == 0) && (i > 0))
 					AppendMenu(menu[j],MF_MENUBREAK | MF_BYCOMMAND | MF_ENABLED | MF_STRING, 600 + (37 * j) + i, item_name);
 					else AppendMenu(menu[j],MF_BYCOMMAND | MF_ENABLED | MF_STRING, 600 + (37 * j) + i, item_name);
@@ -767,7 +765,6 @@ void max_window(HWND window)
 void check_cd_event(HWND hwnd,UINT message,UINT wparam,LONG lparam)
 {
 	POINT press;
-	Boolean action_done = FALSE;
 	short wind_hit = -1,item_hit = -1;
 
 	switch (message) {

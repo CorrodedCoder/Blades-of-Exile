@@ -277,7 +277,7 @@ void set_up_monst(short mode,unsigned char m_num)
 void do_monsters()
 {
 	short i,j,r1,target;
-	location l1,l2, dummy_loc = {0,0};
+	location l1,l2;
 	Boolean acted_yet = FALSE;
 	
 	if (overall_mode == 1) 
@@ -299,8 +299,8 @@ void do_monsters()
 						target = 6;	
 					}
 			monst_target[i] = target;
-//			sprintf((char *)debug,"  t: %d targets %d.",i,monst_target[i]);
-//			add_string_to_buf((char *) debug);			
+//			sprintf(debug,"  t: %d targets %d.",i,monst_target[i]);
+//			add_string_to_buf( debug);			
 
 			if ((c_town.monst.dudes[i].active == 2)
 				 || ((c_town.monst.dudes[i].active != 0) && (c_town.monst.dudes[i].attitude % 2 != 1))) {
@@ -573,7 +573,7 @@ short closest_monst(location where,short mode)
 short switch_target_to_adjacent(short which_m,short orig_target)
 {
 	location monst_loc;
-	short i,num_adj = 0,targ_pc = 6, targ_m = 6;
+	short i,num_adj = 0;
 	
 	monst_loc = c_town.monst.dudes[which_m].m_loc;
 
@@ -1334,8 +1334,8 @@ void record_monst(creature_data_type *which_m)
 					party.imprisoned_monst[r1] = which_m->number;
 					}
 			ASB("Capture Soul: Success!");
-			sprintf((char *)str,"  Caught in slot %d.",r1 + 1);
-			add_string_to_buf((char *)str);
+			sprintf(str,"  Caught in slot %d.",r1 + 1);
+			add_string_to_buf(str);
 			play_sound(53);
 			}
 }

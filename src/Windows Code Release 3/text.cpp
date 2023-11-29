@@ -2,6 +2,7 @@
 #define	TEXT_BUF_LEN	70
 
 #include <windows.h>
+#include <array>
 #include <cassert>
 
 #include "global.h"
@@ -14,13 +15,13 @@
 #include "graphutl.h"
 #include "graphutl_helpers.hpp"
 
-char far *m_mage_sp[] = {"Spark","Minor Haste","Strength","Flame Cloud","Flame",
+static const std::array m_mage_sp{"Spark","Minor Haste","Strength","Flame Cloud","Flame",
 						"Minor Poison","Slow","Dumbfound","Stinking Cloud","Summon Beast",
 						"Conflagration","Fireball","Weak Summoning","Web","Poison",
 						"Ice Bolt","Slow Group","Major Haste","Firestorm","Summoning",
 						"Shockstorm","Major Poison","Kill","Daemon","Major Blessing",
 						"Major Summoning","Shockwave"};
-char far *m_priest_sp[] = {"Minor Bless","Light Heal","Wrack","Stumble","Bless",
+static const std::array m_priest_sp{"Minor Bless","Light Heal","Wrack","Stumble","Bless",
 						"Curse","Wound","Summon Spirit","Disease","Heal",
 						"Holy Scourge","Smite","Curse All","Sticks to Snakes","Martyr's Shield",
 						"Bless All","Major Heal","Flamestrike","Summon Host","Heal All",
@@ -133,12 +134,11 @@ short text_pc_has_abil_equip(short pc_num,short abil)
 void put_pc_screen()
 {
 	char to_draw[256];
-	short i = 0,j,weap1 = 16, weap2 = 16;
+	short i = 0,j;
 	RECT erase_rect = {2,17,270,99},to_draw_rect,from_rect;
 	RECT final_from_draw_rect = {0,0,271,116},final_to_draw_rect = {0,0,271,116};
 	RECT small_erase_rects[3] = {{34,101,76,114},{106,101,147,114},{174,101,201,114}};
-	RECT pc_screen_help_button = {251,101,266,113};
-	RECT info_from = {1,0,13,12},switch_from = {12,0,25,12}; /**/
+	RECT info_from = {1,0,13,12};
 
 	HDC hdc;
 	COLORREF colors[6] = {RGB(0,0,0),RGB(255,0,0),RGB(128,0,0),RGB(0,160,0),RGB(0,0,255),RGB(255,255,255)};
@@ -192,14 +192,14 @@ void put_pc_screen()
 
 	// Put food, gold, day
 	SetTextColor(hdc,PALETTEINDEX(c[5]));
-	sprintf((char *) to_draw, "%d", (short) party.gold);
+	sprintf(to_draw, "%d", (short) party.gold);
 	win_draw_string(hdc,small_erase_rects[1],
 	  to_draw,0,10);
-	sprintf((char *) to_draw, "%d", (short) party.food);
+	sprintf(to_draw, "%d", (short) party.food);
 	win_draw_string(hdc,small_erase_rects[0],
 	  to_draw,0,10);
 	i = calc_day();
-	sprintf((char *) to_draw, "%d", i);
+	sprintf(to_draw, "%d", i);
 	win_draw_string(hdc,small_erase_rects[2],
 	  to_draw,0,10);
 	SetTextColor(hdc,PALETTEINDEX(c[0]));
@@ -215,7 +215,7 @@ void put_pc_screen()
 				SetTextColor(hdc,PALETTEINDEX(c[4]));
 				}
 
-			sprintf((char *) to_draw, "%d. %-20s             ", i + 1, (char *) adven[i].name);
+			sprintf(to_draw, "%d. %-20s             ", i + 1, adven[i].name);
 			win_draw_string(hdc,pc_buttons[i][0],
 			 to_draw,0,10);
 			//TextFace(bold);
@@ -230,13 +230,13 @@ void put_pc_screen()
 					if (adven[i].cur_health == adven[i].max_health)
 						SetTextColor(hdc,PALETTEINDEX(c[3]));
 						else SetTextColor(hdc,PALETTEINDEX(c[1]));
-					sprintf((char *) to_draw, "%-3d              ",adven[i].cur_health);
+					sprintf(to_draw, "%-3d              ",adven[i].cur_health);
 					win_draw_string(hdc,pc_buttons[i][1],
 					  to_draw,0,10);
 					if (adven[i].cur_sp == adven[i].max_sp)
 						SetTextColor(hdc,PALETTEINDEX(c[4]));
 						else SetTextColor(hdc,PALETTEINDEX(c[2]));
-					sprintf((char *) to_draw, "%-3d              ",adven[i].cur_sp);
+					sprintf(to_draw, "%-3d              ",adven[i].cur_sp);
 					win_draw_string(hdc,pc_buttons[i][2],
 					  to_draw,0,10);
 					SetTextColor(hdc,PALETTEINDEX(c[0]));
@@ -245,25 +245,25 @@ void put_pc_screen()
 					SelectObject(hdc,pc_stats_gworld);
 					break;
 				case 2:
-					sprintf((char *) to_draw, "Dead");
+					sprintf(to_draw, "Dead");
 					break;
 				case 3:
-					sprintf((char *) to_draw, "Dust");
+					sprintf(to_draw, "Dust");
 					break;
 				case 4:
-					sprintf((char *) to_draw, "Stone");
+					sprintf(to_draw, "Stone");
 					break;
 				case 5:
-					sprintf((char *) to_draw, "Fled");
+					sprintf(to_draw, "Fled");
 					break;
 				case 6:
-					sprintf((char *) to_draw, "Surface");
+					sprintf(to_draw, "Surface");
 					break;
 				case 7:
-					sprintf((char *) to_draw, "Won");
+					sprintf(to_draw, "Won");
 					break;
 				default:
-					sprintf((char *) to_draw, "Absent");
+					sprintf(to_draw, "Absent");
 					break;
 				}
 			if (adven[i].main_status != 1)
@@ -320,7 +320,6 @@ void put_pc_screen()
 void put_item_screen(short screen_num,short suppress_buttons)
 // if suppress_buttons > 0, save time by not redrawing buttons
 {
-	char pstats[256] = "Party stats:";
 	char to_draw[256];
 	short i_num,item_offset;
 	short i = 0,j,pc;
@@ -395,14 +394,14 @@ void put_item_screen(short screen_num,short suppress_buttons)
 		case 6: // On special items page
 			//TextFace(bold);
 			SelectObject(hdc,bold_font);
-			sprintf((char *) to_draw, "Special items:");
+			sprintf(to_draw, "Special items:");
 			win_draw_string(hdc,upper_frame_rect,
 				to_draw,0,10);
 		 	SetTextColor(hdc,PALETTEINDEX(c[0]));
 			for (i = 0; i < 8; i++) {
 				i_num = i + item_offset;
 				if (spec_item_array[i_num] >= 0){
-					strcpy((char *) to_draw,data_store5->scen_strs[60 + spec_item_array[i_num] * 2]);
+					strcpy(to_draw,data_store5->scen_strs[60 + spec_item_array[i_num] * 2]);
 					win_draw_string(hdc,item_buttons[i][0],to_draw,0,10);
 
 					SelectObject(hdc,store_bmp);
@@ -419,15 +418,15 @@ void put_item_screen(short screen_num,short suppress_buttons)
 
 		default: // on an items page
 			pc = screen_num;
-			sprintf((char *) to_draw, "%s inventory:",
-				(char *) adven[pc].name);
+			sprintf(to_draw, "%s inventory:",
+				adven[pc].name);
 			win_draw_string(hdc,upper_frame_rect,
 			  to_draw,0,10);
 
 		 	SetTextColor(hdc,PALETTEINDEX(c[0]));
 			for (i = 0; i < 8; i++) {
 				i_num = i + item_offset;
-				sprintf((char *) to_draw, "%d.",i_num + 1);
+				sprintf(to_draw, "%d.",i_num + 1);
 				win_draw_string(hdc,item_buttons[i][0],
 				  to_draw,0,10);
 
@@ -453,12 +452,12 @@ void put_item_screen(short screen_num,short suppress_buttons)
 					//	draw_obj_graphic(i + ((which_item_page[pc] == 1) ? 1 : 0),adven[pc].items[i_num].graphic_num,text_panel_rect); // rect is space holder
 
 							if (is_ident(adven[pc].items[i_num]) == 0)
-								sprintf((char *) to_draw, "%s  ",adven[pc].items[i_num].name);
+								sprintf(to_draw, "%s  ",adven[pc].items[i_num].name);
 								else { /// Don't place # of charges when Sell button up and space tight
 									if ((adven[pc].items[i_num].charges > 0) && (adven[pc].items[i_num].type != 2)
 										&& (stat_screen_mode <= 1))
-										sprintf((char *) to_draw, "%s (%d)",adven[pc].items[i_num].full_name,adven[pc].items[i_num].charges);
-										else sprintf((char *) to_draw, "%s",adven[pc].items[i_num].full_name);
+										sprintf(to_draw, "%s (%d)",adven[pc].items[i_num].full_name,adven[pc].items[i_num].charges);
+										else sprintf(to_draw, "%s",adven[pc].items[i_num].full_name);
 									}
 						dest_rect.left -= 2;
 						win_draw_string(hdc,dest_rect,to_draw,0,10);
@@ -585,7 +584,7 @@ void place_buy_button(short position,short pc_num,short item_num,HDC hdc)
 		dest_rect.right = dest_rect.left + 30;
 		rect_draw_some_item_bmp(mixed_gworld, source_rect,
 		  item_stats_gworld, dest_rect, 1, 0);
-		sprintf((char *) store_string,"        %d",val_to_place);
+		sprintf(store_string,"        %d",val_to_place);
 		//if (val_to_place >= 10000)
 		//	TextFace(0);
 		store_bmp = SelectObject(hdc,item_stats_gworld);
@@ -801,7 +800,6 @@ void draw_pc_effects(short pc,HDC dest_dc)
 							{103,0,115,12},{103,12,115,24},{103,24,115,36},
 							{115,0,127,12},{115,12,127,24},{115,24,127,36}};
 	RECT dest_rect = {18,15,30,27},dlog_dest_rect = {66,354,78,366};//rects altered below
-	Boolean on_dialog = FALSE;
 	short right_limit = 250;
 	short dest = 0; // 0 - in gworld  2 - on dialog
 	short name_width,i,mode = 1;
@@ -921,18 +919,18 @@ void draw_pc_effects(short pc,HDC dest_dc)
 
 void print_party_stats() {
 	add_string_to_buf("PARTY STATS:");
-	sprintf((char *) store_string, "  Number of kills: %ld                   ", party.total_m_killed);
-	add_string_to_buf((char *) store_string);
+	sprintf(store_string, "  Number of kills: %ld                   ", party.total_m_killed);
+	add_string_to_buf( store_string);
 	if ((is_town()) || ((is_combat()) && (which_combat_type == 1))) {
-		sprintf((char *) store_string, "  Kills in this town: %d                   ", party.m_killed[c_town.town_num]);
-		add_string_to_buf((char *) store_string);
+		sprintf(store_string, "  Kills in this town: %d                   ", party.m_killed[c_town.town_num]);
+		add_string_to_buf( store_string);
 		}
-	sprintf((char *) store_string, "  Total experience: %ld                   ", party.total_xp_gained);
-	add_string_to_buf((char *) store_string);
-	sprintf((char *) store_string, "  Total damage done: %ld                   ", party.total_dam_done);
-	add_string_to_buf((char *) store_string);
-	sprintf((char *) store_string, "  Total damage taken: %ld                   ", party.total_dam_taken);
-	add_string_to_buf((char *) store_string);
+	sprintf(store_string, "  Total experience: %ld                   ", party.total_xp_gained);
+	add_string_to_buf( store_string);
+	sprintf(store_string, "  Total damage done: %ld                   ", party.total_dam_done);
+	add_string_to_buf( store_string);
+	sprintf(store_string, "  Total damage taken: %ld                   ", party.total_dam_taken);
+	add_string_to_buf( store_string);
 	print_buf();
 }
 
@@ -953,8 +951,8 @@ short do_look(location space)
 		for (i = 0; i < 6; i++)
 			if ((same_point(space,pc_pos[i]) == TRUE) && (adven[i].main_status == 1)
 				&& (is_lit == TRUE) && (can_see(pc_pos[current_pc],space,0) < 5)) {
-				sprintf((char *) store_string, "    %s", (char *) adven[i].name);
-				add_string_to_buf((char *) store_string);
+				sprintf(store_string, "    %s", adven[i].name);
+				add_string_to_buf( store_string);
 				}
 
 	if (is_out() == FALSE) {
@@ -968,16 +966,16 @@ short do_look(location space)
 				get_m_name(store_string2,c_town.monst.dudes[i].number);
 				if (c_town.monst.dudes[i].m_d.health < c_town.monst.dudes[i].m_d.m_health) {
 					if (c_town.monst.dudes[i].attitude % 2 == 1)
-						sprintf((char *) store_string, "    Wounded %s (H)", store_string2);
-						else sprintf((char *) store_string, "    Wounded %s (F)", store_string2);
+						sprintf(store_string, "    Wounded %s (H)", store_string2);
+						else sprintf(store_string, "    Wounded %s (F)", store_string2);
 					}
 				else {
 					if (c_town.monst.dudes[i].attitude % 2 == 1)
-						sprintf((char *) store_string, "    %s (H)", (char *) store_string2);
-						else sprintf((char *) store_string, "    %s (F)", (char *) store_string2);
+						sprintf(store_string, "    %s (H)", store_string2);
+						else sprintf(store_string, "    %s (F)", store_string2);
 					}
 
-				add_string_to_buf((char *) store_string);
+				add_string_to_buf( store_string);
 
 				}
 		}
@@ -988,8 +986,8 @@ short do_look(location space)
 					for (j = 0; j < 7; j++)
 						if (party.out_c[i].what_monst.monst[j] != 0) {
 							get_m_name(store_string2,party.out_c[i].what_monst.monst[j]);
-							sprintf((char *) store_string, "    %s", store_string2);
-							add_string_to_buf((char *) store_string);
+							sprintf(store_string, "    %s", store_string2);
+							add_string_to_buf( store_string);
 							j = 7;
 
 							}
@@ -1071,9 +1069,9 @@ short do_look(location space)
 				if ((t_i.items[i].variety != 0) && (t_i.items[i].variety != 3) &&(t_i.items[i].variety != 11) &&
 					 (same_point(space,t_i.items[i].item_loc) == TRUE) && (is_contained(t_i.items[i]) == FALSE)) {
 					if (is_ident(t_i.items[i]) == TRUE)
-						sprintf((char *) store_string, "    %s",t_i.items[i].full_name);
-						else sprintf((char *) store_string, "    %s",t_i.items[i].name);
-					add_string_to_buf((char *) store_string);
+						sprintf(store_string, "    %s",t_i.items[i].full_name);
+						else sprintf(store_string, "    %s",t_i.items[i].name);
+					add_string_to_buf( store_string);
 					}
 				}
 		}
@@ -1133,8 +1131,8 @@ void notify_out_combat_began(out_wandering_type encounter,short *nums)
 {
 	short i;
 
-	sprintf((char *) store_string, "COMBAT!                 ");				
-	add_string_to_buf((char *) store_string);	
+	sprintf(store_string, "COMBAT!                 ");				
+	add_string_to_buf( store_string);	
 
 	for (i = 0; i < 6; i++)
 		if (encounter.monst[i] != 0) {
@@ -1143,21 +1141,21 @@ void notify_out_combat_began(out_wandering_type encounter,short *nums)
 				
 				default:
 				get_m_name(store_string2,encounter.monst[i]);
-				sprintf((char *) store_string, "  %d x %s        ",nums[i],store_string2);
+				sprintf(store_string, "  %d x %s        ",nums[i],store_string2);
 				break;		
 			}				
-			add_string_to_buf((char *) store_string);	
+			add_string_to_buf( store_string);	
 			}
 	if (encounter.monst[6] != 0) {
 			get_m_name(store_string2,encounter.monst[6]);
-			sprintf((char *) store_string, "  %s        ",store_string2);
-			add_string_to_buf((char *) store_string);		
+			sprintf(store_string, "  %s        ",store_string2);
+			add_string_to_buf( store_string);		
 		}
 }
 
 void get_m_name(char *str,unsigned char num)
 {
-	strcpy((char *) str,(char *) data_store2->scen_item_list.monst_names[num]);
+	strcpy(str, data_store2->scen_item_list.monst_names[num]);
 }
 void get_ter_name(char *str,unsigned char num)
 {
@@ -1165,18 +1163,18 @@ void get_ter_name(char *str,unsigned char num)
 	
 	////
 	if ((num == 90) && ((is_out()) || (is_town()) || ((is_combat()) && (which_combat_type == 1))))
-		sprintf((char *) store_name,"Pit");
+		sprintf(store_name,"Pit");
 		else {
-			strcpy((char *) store_name,(char *) data_store2->scen_item_list.ter_names[num]);
+			strcpy(store_name, data_store2->scen_item_list.ter_names[num]);
 			}
-	strcpy((char *) str,(char *) store_name);
+	strcpy(str, store_name);
 }
 
 void print_monst_name(unsigned char m_type)
 {
 	get_m_name(store_string2,m_type);
-	sprintf ((char *) store_string, "%s:",store_string2);
-	add_string_to_buf((char *) store_string);
+	sprintf(store_string, "%s:",store_string2);
+	add_string_to_buf( store_string);
 }
 
 void print_monst_attacks(unsigned char m_type,short target)
@@ -1186,14 +1184,14 @@ void print_monst_attacks(unsigned char m_type,short target)
 	
 	get_m_name(store_string2,m_type);
 	if (target < 100)
-		sprintf ((char *) store_string, "%s attacks %s",
-			store_string2,(char *) adven[target].name);
+		sprintf(store_string, "%s attacks %s",
+			store_string2, adven[target].name);
 		else {
 			get_m_name(store_string3,c_town.monst.dudes[target - 100].number);
-			sprintf ((char *) store_string, "%s attacks %s",
+			sprintf(store_string, "%s attacks %s",
 			store_string2,store_string3);
 			}
-	add_string_to_buf((char *) store_string);
+	add_string_to_buf( store_string);
 }
 
 void damaged_message(short damage,short type)
@@ -1201,16 +1199,16 @@ void damaged_message(short damage,short type)
 	char str[256];
 	
 	get_str(str,20,130 + type);
-	sprintf ((char *) store_string, "  %s for %d",
-			(char *) str,damage);
-	add_string_to_buf((char *) store_string);	
+	sprintf(store_string, "  %s for %d",
+			str,damage);
+	add_string_to_buf( store_string);	
 }
 
 // This prepares the monster's string for the text bar
 void print_monster_going(char *combat_str,unsigned char m_num,short ap)
 {
 	get_m_name(store_string2,m_num);
-	sprintf ((char *) combat_str, "%s (ap: %d)",
+	sprintf(combat_str, "%s (ap: %d)",
 		store_string2,ap);
 }
 
@@ -1219,112 +1217,112 @@ void monst_spell_note(unsigned char number,short which_mess)
 	get_m_name(store_string2,number);
 	switch (which_mess) {
 		case 1:
-	sprintf ((char *) store_string, "  %s scared. ",store_string2);break;
+	sprintf(store_string, "  %s scared. ",store_string2);break;
 	
 		case 2:
-	sprintf ((char *) store_string, "  %s slowed. ",store_string2);break;
+	sprintf(store_string, "  %s slowed. ",store_string2);break;
 	
 		case 3:
-	sprintf ((char *) store_string, "  %s weakened.",store_string2);break;
+	sprintf(store_string, "  %s weakened.",store_string2);break;
 	
 		case 4:
-	sprintf ((char *) store_string, "  %s poisoned.",store_string2);break;
+	sprintf(store_string, "  %s poisoned.",store_string2);break;
 	
 		case 5:
-	sprintf ((char *) store_string, "  %s cursed.",store_string2);break;
+	sprintf(store_string, "  %s cursed.",store_string2);break;
 
 		case 6:
-	sprintf ((char *) store_string, "  %s ravaged.",store_string2);break;
+	sprintf(store_string, "  %s ravaged.",store_string2);break;
 
 		case 7:
-	sprintf ((char *) store_string, "  %s undamaged.",store_string2);break;
+	sprintf(store_string, "  %s undamaged.",store_string2);break;
 
 		case 8:
-	sprintf ((char *) store_string, "  %s is stoned.",store_string2);break;
+	sprintf(store_string, "  %s is stoned.",store_string2);break;
 		case 9:
-	sprintf ((char *) store_string, "  Gazes at %s.",store_string2);break;
+	sprintf(store_string, "  Gazes at %s.",store_string2);break;
 		case 10:
-	sprintf ((char *) store_string, "  %s resists.",store_string2);break;		
+	sprintf(store_string, "  %s resists.",store_string2);break;		
 		case 11:
-	sprintf ((char *) store_string, "  Drains %s.",store_string2);break;	
+	sprintf(store_string, "  Drains %s.",store_string2);break;	
 		case 12:
-	sprintf ((char *) store_string, "  Shoots at %s.",store_string2);break;	
+	sprintf(store_string, "  Shoots at %s.",store_string2);break;	
 		case 13:
-	sprintf ((char *) store_string, "  Throws spear at %s.",
+	sprintf(store_string, "  Throws spear at %s.",
 		store_string2);
 			break;	
 		case 14:
-	sprintf ((char *) store_string, "  Throws rock at %s.",
+	sprintf(store_string, "  Throws rock at %s.",
 		store_string2);
 			break;	
 		case 15:
-	sprintf ((char *) store_string, "  Throws razordisk at %s.",
+	sprintf(store_string, "  Throws razordisk at %s.",
 		store_string2);
 			break;
 		case 16:
-	sprintf ((char *) store_string, "  Hits %s.",
+	sprintf(store_string, "  Hits %s.",
 		store_string2);
 			break;
 		case 17:
-	sprintf ((char *) store_string, "%s disappears.",
+	sprintf(store_string, "%s disappears.",
 		store_string2);
 			break;
 		case 18:
-	sprintf ((char *) store_string, "  Misses %s.",
+	sprintf(store_string, "  Misses %s.",
 		store_string2);
 			break;
 		case 19:
-	sprintf ((char *) store_string, "  %s is webbed.",store_string2);break;
+	sprintf(store_string, "  %s is webbed.",store_string2);break;
 		case 20:
-	sprintf ((char *) store_string, "  %s chokes.",store_string2);break;
+	sprintf(store_string, "  %s chokes.",store_string2);break;
 		case 21:
-	sprintf ((char *) store_string, "  %s summoned.",store_string2);break;
+	sprintf(store_string, "  %s summoned.",store_string2);break;
 		case 22:
-	sprintf ((char *) store_string, "  %s is dumbfounded.",store_string2);break;
+	sprintf(store_string, "  %s is dumbfounded.",store_string2);break;
 		case 23:
-	sprintf ((char *) store_string, "  %s is charmed.",store_string2);break;
+	sprintf(store_string, "  %s is charmed.",store_string2);break;
 		case 24:
-	sprintf ((char *) store_string, "  %s is recorded.",store_string2);break;
+	sprintf(store_string, "  %s is recorded.",store_string2);break;
 		case 25:
-	sprintf ((char *) store_string, "  %s is diseased.",store_string2);break;
+	sprintf(store_string, "  %s is diseased.",store_string2);break;
 		case 26:
-	sprintf ((char *) store_string, "  %s is an avatar!",store_string2);break;
+	sprintf(store_string, "  %s is an avatar!",store_string2);break;
 		case 27:
-	sprintf ((char *) store_string, "  %s splits!",store_string2);break;
+	sprintf(store_string, "  %s splits!",store_string2);break;
 		case 28:
-	sprintf ((char *) store_string, "  %s falls asleep.",store_string2);break;
+	sprintf(store_string, "  %s falls asleep.",store_string2);break;
 		case 29:
-	sprintf ((char *) store_string, "  %s wakes up.",store_string2);break;
+	sprintf(store_string, "  %s wakes up.",store_string2);break;
 		case 30:
-	sprintf ((char *) store_string, "  %s paralyzed.",store_string2);break;
+	sprintf(store_string, "  %s paralyzed.",store_string2);break;
 		case 31:
-	sprintf ((char *) store_string, "  %s covered with acid.",store_string2);break;
+	sprintf(store_string, "  %s covered with acid.",store_string2);break;
 		case 32:
-	sprintf ((char *) store_string, "  Fires spines at %s.",store_string2);break;
+	sprintf(store_string, "  Fires spines at %s.",store_string2);break;
 		}
 
 	if (which_mess > 0)
-		add_string_to_buf((char *) store_string);
+		add_string_to_buf( store_string);
 }
 
 void monst_cast_spell_note(unsigned char number,short spell,short type)
 //short type; // 0 - mage 1- priest
 {
 	get_m_name(store_string2,number);
-	sprintf ((char *) store_string, "%s casts:",
-			(char *) store_string2);
-	add_string_to_buf((char *) store_string);
-	sprintf ((char *) store_string, "  %s",
-			(type == 1) ? (char *) m_priest_sp[spell - 1] : (char *) m_mage_sp[spell - 1]);
-	add_string_to_buf((char *) store_string);
+	sprintf(store_string, "%s casts:",
+			store_string2);
+	add_string_to_buf( store_string);
+	sprintf(store_string, "  %s",
+			(type == 1) ? m_priest_sp[spell - 1] : m_mage_sp[spell - 1]);
+	add_string_to_buf( store_string);
 }
 
 void monst_breathe_note(unsigned char number)
 {
 	get_m_name(store_string2,number);
-	sprintf ((char *) store_string, "%s breathes.",
-			(char *) store_string2);
-	add_string_to_buf((char *) store_string);
+	sprintf(store_string, "%s breathes.",
+			store_string2);
+	add_string_to_buf( store_string);
 
 }
 
@@ -1332,26 +1330,26 @@ void monst_damaged_mes(short which_m,short how_much,short how_much_spec)
 {
 	get_m_name(store_string2,c_town.monst.dudes[which_m].number);
 	if (how_much_spec > 0)
-		sprintf ((char *) store_string, "  %s takes %d+%d",
+		sprintf(store_string, "  %s takes %d+%d",
 			store_string2, how_much,how_much_spec);
-		else sprintf ((char *) store_string, "  %s takes %d",
+		else sprintf(store_string, "  %s takes %d",
 			store_string2, how_much);
  
-	add_string_to_buf((char *) store_string);
+	add_string_to_buf( store_string);
 }
 
 void monst_killed_mes(short which_m)
 {
 	get_m_name(store_string2,c_town.monst.dudes[which_m].number);
-	sprintf ((char *) store_string, "  %s dies.",
-		(char *) store_string2);
-	add_string_to_buf((char *) store_string);
+	sprintf(store_string, "  %s dies.",
+		store_string2);
+	add_string_to_buf( store_string);
 }
 
 void print_nums(short a,short b,short c)
 {
-	sprintf((char *) store_string, "debug: %d %d %d", a,b,c);
-	add_string_to_buf((char *) store_string);
+	sprintf(store_string, "debug: %d %d %d", a,b,c);
+	add_string_to_buf( store_string);
 
 }
 
@@ -1369,14 +1367,14 @@ short print_terrain(location space)
 		which_terrain = combat_terrain[space.x][space.y];
 		}
 	get_ter_name(store_string2,which_terrain);
-	sprintf((char *) store_string, "    %s", store_string2);
-	add_string_to_buf((char *) store_string);
+	sprintf(store_string, "    %s", store_string2);
+	add_string_to_buf( store_string);
 
 	return (short) which_terrain;
 }
 
 
-void add_string_to_buf(char *string)
+void add_string_to_buf(const char * str)
 {
 	//SetControlValue(text_sbar,58);
 	SetScrollPos(text_sbar,SB_CTL,58,TRUE);
@@ -1386,7 +1384,7 @@ void add_string_to_buf(char *string)
 		print_buf();
 		through_sending();
 		}
-	sprintf((char *)text_buffer[buf_pointer].line, "%-49.49s", string);
+	sprintf(text_buffer[buf_pointer].line, "%-49.49s", str);
    text_buffer[buf_pointer].line[49] = 0;
 //	c2pstr((char *)text_buffer[buf_pointer].line);
 	if (buf_pointer == (TEXT_BUF_LEN - 1))
@@ -1399,7 +1397,7 @@ void init_buf()
 	short i;
 	
 	for (i = 0; i < TEXT_BUF_LEN; i++)
-		sprintf((char *) text_buffer[buf_pointer].line, " ");
+		sprintf(text_buffer[buf_pointer].line, " ");
 }
 
 
@@ -1506,8 +1504,8 @@ void through_sending()
 void Display_String(char *str)
 {
 //	//c2pstr((char *) str);
-// 	sprintf((char *)str2," %s",str);
-//	str2[0] = (char) strlen((char *)str);
+// 	sprintf(str2," %s",str);
+//	str2[0] = (char) strlen(str);
 //	DrawString(str2);
 }
 
@@ -1578,9 +1576,9 @@ short string_length(char *str,HDC hdc)
 	for (i = 0; i < 257; i++)
 		text_len[i]= 0;
 	
-	strcpy((char *) p_str,str);
+	strcpy(p_str,str);
 	MeasureText(256,p_str,text_len,hdc);
-	len = strlen((char *)str);
+	len = strlen(str);
 
 	//print_nums(text_len[1],text_len[2],text_len[3]);
    //print_nums(text_len[10],text_len[20],text_len[30]);
@@ -1591,11 +1589,11 @@ short string_length(char *str,HDC hdc)
 }
 
 
-void char_win_draw_string(HDC dest_window,RECT dest_rect,char *str,short mode,short line_height)
+void char_win_draw_string(HDC dest_window,RECT dest_rect, const char * str,short mode,short line_height)
 {
 	char store_s[256];
 	
-	strcpy((char *) store_s,str);
+	strcpy(store_s,str);
 	win_draw_string( dest_window, dest_rect,store_s, mode, line_height);
 
 }
@@ -1625,14 +1623,14 @@ void win_draw_string(HDC dest_hdc,RECT dest_rect,char *str,short mode,short line
 	switch (mode) {
 		case 0:
          dest_rect.bottom += 6;
-			DrawText(dest_hdc,str,strlen((char *)str),&dest_rect,DT_LEFT | DT_NOPREFIX | DT_WORDBREAK); break;
+			DrawText(dest_hdc,str,strlen(str),&dest_rect,DT_LEFT | DT_NOPREFIX | DT_WORDBREAK); break;
 		case 1:
 			dest_rect.bottom += 6; dest_rect.top -= 6;
-			DrawText(dest_hdc,str,strlen((char *)str),&dest_rect,
+			DrawText(dest_hdc,str,strlen(str),&dest_rect,
 			DT_CENTER | DT_NOPREFIX | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE); break;
 		case 2: case 3:
 			dest_rect.bottom += 6; dest_rect.top -= 6;
-			DrawText(dest_hdc,str,strlen((char *)str),&dest_rect,
+			DrawText(dest_hdc,str,strlen(str),&dest_rect,
 			DT_LEFT | DT_NOPREFIX | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE); break;
 		}
 	// not yet done adjusts for 1, 2, 3
@@ -1825,7 +1823,7 @@ static DWORD GetTextExtent16(HDC hdc, LPCSTR str, INT16 count)
 void MeasureText(short str_len,char *str, short *len_array,HDC hdc)
 {
 	short text_len[257];
-	short total_width = 0,i;
+	short i;
 	char p_str[257];
 	DWORD val_returned;
 	char *store_array;

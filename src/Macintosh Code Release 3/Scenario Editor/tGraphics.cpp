@@ -1108,10 +1108,10 @@ void place_location()
 	
 	MoveTo(terrain_rects[255].left + 20 ,terrain_rects[255].top + 12);
 	if (overall_mode < 60)
-		sprintf((char *) draw_str,"Center: x = %d, y = %d  ",cen_x,cen_y);
+		sprintf(draw_str,"Center: x = %d, y = %d  ",cen_x,cen_y);
 		else {
 			MoveTo(5 ,terrain_rects[255].top + 28);		
-			sprintf((char *) draw_str,"Click terrain to edit. ",cen_x,cen_y);
+			sprintf(draw_str,"Click terrain to edit. ",cen_x,cen_y);
 			}
 	c2p(draw_str);
 	DrawString(draw_str);
@@ -1184,10 +1184,10 @@ void place_just_location()
 	
 	MoveTo(terrain_rects[255].left + 20 ,terrain_rects[255].top + 12);
 	if (overall_mode < 60)
-		sprintf((char *) draw_str,"Center: x = %d, y = %d  ",cen_x,cen_y);
+		sprintf(draw_str,"Center: x = %d, y = %d  ",cen_x,cen_y);
 		else {
 			MoveTo(5 ,terrain_rects[255].top + 28);		
-			sprintf((char *) draw_str,"Click terrain to edit. ",cen_x,cen_y);
+			sprintf(draw_str,"Click terrain to edit. ",cen_x,cen_y);
 			}
 	c2p(draw_str);
 	DrawString(draw_str);
@@ -1211,7 +1211,7 @@ void set_string(char *string,char *string2)
 //	if (strlen(string2) == 0)
 //		current_string2[0] = 0;
 //		else 
-//	sprintf((char *)current_string2,"Bob");
+//	sprintf(current_string2,"Bob");
 	strcpy((char *)current_string2,string2);
 	c2p(current_string2);
 
@@ -1426,7 +1426,7 @@ void char_win_draw_string(GrafPtr dest_window,Rect dest_rect,char *str,short mod
 {
 	Str255 store_s;
 	
-	strcpy((char *) store_s,str);
+	strcpy(store_s,str);
 	win_draw_string( dest_window, dest_rect,store_s, mode, line_height);
 
 }
@@ -1449,13 +1449,13 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 	RgnHandle current_clip;
 	short adjust_x = 0,adjust_y = 0;
 	
-	strcpy((char *) p_str,(char *) str);
-	strcpy((char *) c_str,(char *) str);
+	strcpy(p_str,(char *) str);
+	strcpy(c_str,(char *) str);
 	c2p(p_str);	
 	for (i = 0; i < 257; i++)
 		text_len[i]= 0;
 	MeasureText(256,p_str,text_len);
-	str_len = (short) strlen((char *)str);
+	str_len = (short) strlen(str);
 	if (str_len == 0) {
 		return;
 		}
@@ -1493,10 +1493,10 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 				  		c_str[i] = ' ';
 				  		force_skip = TRUE;
 				  		}
-					sprintf((char *)str_to_draw,"%s",(char *)null_s);
+					sprintf(str_to_draw,"%s",(char *)null_s);
 					strncpy ((char *) str_to_draw,(char *) c_str + last_line_break,(size_t) (last_word_break - last_line_break - 1));
-					sprintf((char *)str_to_draw2," %s",str_to_draw);
-					str_to_draw2[0] = (char) strlen((char *)str_to_draw);
+					sprintf(str_to_draw2," %s",str_to_draw);
+					str_to_draw2[0] = (char) strlen(str_to_draw);
 					DrawString(str_to_draw2);
 					on_what_line++;
 					MoveTo(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + line_height * on_what_line + adjust_y + 9);
@@ -1517,9 +1517,9 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 			if (i - last_line_break > 1) {
 				strcpy((char *)str_to_draw,(char *)null_s);
 				strncpy ((char *) str_to_draw,(char *) c_str + last_line_break,(size_t) (i - last_line_break));
-				sprintf((char *)str_to_draw2," %s",str_to_draw);
-				if (strlen((char *) str_to_draw2) > 3) {
-					str_to_draw2[0] = (char) strlen((char *)str_to_draw);
+				sprintf(str_to_draw2," %s",str_to_draw);
+				if (strlen(str_to_draw2) > 3) {
+					str_to_draw2[0] = (char) strlen(str_to_draw);
 					DrawString(str_to_draw2);
 					}
 				}	
@@ -1550,8 +1550,8 @@ void c2p(Str255 str)
 	Str255 str2;
 	short len;
 	
-	len = strlen((char *) str);
-	strcpy((char *) str2,(char *) str);
+	len = strlen(str);
+	strcpy(str2,(char *) str);
 	str[0] = (unsigned char) len;
 	strncpy((char *) (str + 1), (char *) str2,len);
 }
@@ -1564,25 +1564,25 @@ void p2c(Str255 str)
 	len = (short) str[0];
 	strncpy((char *) str2,(char *) (str + 1), len);
 	str2[len] = 0;
-	strcpy((char *) str,(char *) str2);
+	strcpy(str,(char *) str2);
 }
 
 void get_str(Str255 str,short i, short j)
 {
 	if (i == -1) {
-		strcpy((char *) str,data_store->scen_item_list.monst_names[j]);
+		strcpy(str,data_store->scen_item_list.monst_names[j]);
 		return;
 		}
 	if (i == -2) {
-		strcpy((char *) str,data_store->scen_item_list.scen_items[j].full_name);
+		strcpy(str,data_store->scen_item_list.scen_items[j].full_name);
 		return;
 		}
 	if (i == -3) {
-		strcpy((char *) str,button_strs[available_dlog_buttons[j]]);
+		strcpy(str,button_strs[available_dlog_buttons[j]]);
 		return;
 		}
 	if (i == -4) {
-		strcpy((char *) str,data_store->scen_item_list.ter_names[j]);
+		strcpy(str,data_store->scen_item_list.ter_names[j]);
 		return;
 		}
 	if (i == -5) {
@@ -1602,10 +1602,10 @@ short string_length(char *str)
 	for (i = 0; i < 257; i++)
 		text_len[i]= 0;
 	
-	strcpy((char *) p_str,str);
+	strcpy(p_str,str);
 	c2p(p_str);
 	MeasureText(256,p_str,text_len);
-	len = strlen((char *)str);
+	len = strlen(str);
 	
 	for (i = 0; i < 257; i++)
 		if ((text_len[i] > total_width) && (i <= len))

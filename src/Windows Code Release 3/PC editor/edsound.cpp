@@ -132,7 +132,7 @@ if (err != 0) {
 		sound_handles[i] = NULL;
 		load_when_play[i] = TRUE;
 		if (load_when_play[i] == FALSE) {
-		sprintf((char *)snd_name,"#%d",i + 1);
+		sprintf(snd_name,"#%d",i + 1);
 		h = FindResource(store_hInstance,snd_name,"#100");
 
 		sound_handles[i] = LoadResource(store_hInstance,h);
@@ -158,7 +158,7 @@ void force_play_sound(short which)
 {
 	short i,num_fails = 0;
 	char snd_name[30];
-	Boolean asyn = FALSE,a_sound_did_get_played = FALSE,sound_played_nostop = FALSE;
+	Boolean asyn = FALSE,a_sound_did_get_played = FALSE;
 	Boolean check_sound;
 	HRSRC h;
 
@@ -187,7 +187,7 @@ void force_play_sound(short which)
 	if ((load_when_play[which] == TRUE) && (sound_handles[which] == NULL)) {
 	  //	if (can_ignore[which] != 4)
 			asyn = FALSE;
-		sprintf((char *)snd_name,"#%d",which + 1);
+		sprintf(snd_name,"#%d",which + 1);
 		h = FindResource(store_hInstance,snd_name,"#100");
 
 		sound_handles[which] = LoadResource(store_hInstance,h);
@@ -272,7 +272,6 @@ void force_play_sound(short which)
 	if ((load_when_play[which] == TRUE) && (asyn == FALSE)) {
 		// deleted a seemingly extraneous LoadResource here
 		//ASB("Dumped a sound.");
-		UnlockResource(sound_handles[which]);
 		FreeResource(sound_handles[which]);
 		sound_handles[which] = NULL;
 		}
@@ -281,7 +280,6 @@ void force_play_sound(short which)
 		if ((load_when_play[which] == TRUE) && (sound_handles[which] != NULL)
 			&& (a_sound_did_get_played == TRUE) && (i != which)){
 		// deleted a seemingly extraneous LoadResource here
-		UnlockResource(sound_handles[i]);
 		FreeResource(sound_handles[i]);
 		sound_handles[i] = NULL;
 		//ASB("Kept sound dumped:");

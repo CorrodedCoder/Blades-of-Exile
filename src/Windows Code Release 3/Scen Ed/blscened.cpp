@@ -770,7 +770,6 @@ void max_window(HWND window)
 short check_cd_event(HWND hwnd,UINT message,UINT wparam,LONG lparam)
 {
 	POINT press;
-	Boolean action_done = FALSE;
 	short wind_hit = -1,item_hit = -1;
 
 	switch (message) {

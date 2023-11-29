@@ -198,7 +198,7 @@ short fancy_choice_dialog(short which_dlog,short parent)
 
 
 //cre = check range error
-Boolean cre(short val,short min,short max,char *text1, char *text2,short parent_num) 
+Boolean cre(short val,short min,short max,const char *text1, const char *text2,short parent_num) 
 {
 	if ((val < min) || (val > max)) {
 		give_error(text1,text2,parent_num);
@@ -207,15 +207,13 @@ Boolean cre(short val,short min,short max,char *text1, char *text2,short parent_
 	return FALSE;
 }
 
-void give_error(char *text1, char *text2,short parent_num)
+void give_error(const char *text1, const char *text2,short parent_num)
 {
 	display_strings(text1,text2,"Error!",57,716,parent_num);
 }
 
 void display_strings_event_filter (short item_hit)
 {
-	Boolean had1 = FALSE, had2 = FALSE;
-	
 	switch (item_hit) {
 		case 1:
 			dialog_not_toast = FALSE;
@@ -224,11 +222,9 @@ void display_strings_event_filter (short item_hit)
 		}
 }
 
-void display_strings(char *text1, char *text2,
-	char *title,short sound_num,short graphic_num,short parent_num)
+void display_strings(const char *text1, const char *text2,
+	const char *title,short sound_num,short graphic_num,short parent_num)
 {
-	Boolean sound_done = FALSE;
-
 	//make_cursor_sword();
 		
 	if ((text1 == NULL) && (text2 == NULL))
@@ -260,7 +256,6 @@ void display_strings(char *text1, char *text2,
 void choose_graphic_event_filter (short item_hit)
 {
 	short i;
-	Boolean had1 = FALSE, had2 = FALSE;
 	
 	switch (item_hit) {
 		case 1:
@@ -315,8 +310,6 @@ void put_choice_pics()
 
 short choose_graphic(short first_g,short last_g,short cur_choice,short parent_num)
 {
-	Boolean sound_done = FALSE;
-
 	//make_cursor_sword();
 	
 	store_first_g = first_g;
@@ -345,7 +338,6 @@ short choose_graphic(short first_g,short last_g,short cur_choice,short parent_nu
 void choose_text_res_event_filter (short item_hit)
 {
 	short i;
-	Boolean had1 = FALSE, had2 = FALSE;
 	
 	switch (item_hit) {
 		case 2:
@@ -400,10 +392,8 @@ void put_text_res()
 
 }
 
-short choose_text_res(short res_list,short first_t,short last_t,short cur_choice,short parent_num,char *title)
+short choose_text_res(short res_list,short first_t,short last_t,short cur_choice,short parent_num,const char *title)
 {
-	Boolean sound_done = FALSE;
-
 	//make_cursor_sword();
 	store_res_list = res_list;
 	store_first_t = first_t;
@@ -500,8 +490,8 @@ void edit_area_rect_event_filter (short item_hit)
 			dialog_not_toast = FALSE; 
 			CDGT(840,2,(char *) str);
 			if (store_str_mode == 0)
-				sprintf(data_store->out_strs[store_which_str + 1],"%-29.29s",(char *) str);
-				else sprintf(town_strs[store_which_str + 1],"%-29.29s",(char *) str);
+				sprintf(data_store->out_strs[store_which_str + 1],"%-29.29s", str);
+				else sprintf(town_strs[store_which_str + 1],"%-29.29s", str);
 			break;
 
 		case 3:
@@ -931,7 +921,7 @@ void edit_spec_text_event_filter (short item_hit)
 
 		case 6:
 			CDGT(826,2,(char *) str);
-			if (strlen((char *) str) > 0) {
+			if (strlen(str) > 0) {
 				if (*store_str1 < 0) {
 					switch (store_spec_str_mode) {
 						case 0:
@@ -966,19 +956,19 @@ void edit_spec_text_event_filter (short item_hit)
 				if (*store_str1 >= 0) {
 					switch (store_spec_str_mode) {
 						case 0:
-							strcpy(scen_strs2[*store_str1],(char *) str);
+							strcpy(scen_strs2[*store_str1], str);
 							break;				
 						case 1:
-							strcpy(data_store->out_strs[*store_str1 + 10],(char *) str);
+							strcpy(data_store->out_strs[*store_str1 + 10], str);
 							break;				
 						case 2:
-							strcpy(town_strs[*store_str1 + 20],(char *) str);
+							strcpy(town_strs[*store_str1 + 20], str);
 							break;				
 						}
 					}
 				}
 			CDGT(826,3,(char *) str);
-			if (strlen((char *) str) > 0) {
+			if (strlen(str) > 0) {
 				if (*store_str2 < 0) {
 					switch (store_spec_str_mode) {
 						case 0:
@@ -1013,13 +1003,13 @@ void edit_spec_text_event_filter (short item_hit)
 				if (*store_str2 >= 0) {
 					switch (store_spec_str_mode) {
 						case 0:
-							strcpy(scen_strs2[*store_str2],(char *) str);
+							strcpy(scen_strs2[*store_str2], str);
 							break;				
 						case 1:
-							strcpy(data_store->out_strs[*store_str2 + 10],(char *) str);
+							strcpy(data_store->out_strs[*store_str2 + 10], str);
 							break;				
 						case 2:
-							strcpy(town_strs[*store_str2 + 20],(char *) str);
+							strcpy(town_strs[*store_str2 + 20], str);
 							break;				
 						}
 					}
@@ -1082,13 +1072,13 @@ void edit_dialog_text_event_filter (short item_hit)
 				CDGT(842,2 + i,(char *) str);
 				switch (store_spec_str_mode) {
 					case 0:
-						strcpy(scen_strs2[*store_str1 + i],(char *) str);
+						strcpy(scen_strs2[*store_str1 + i], str);
 						break;				
 					case 1:
-						strcpy(data_store->out_strs[*store_str1 + 10 + i],(char *) str);
+						strcpy(data_store->out_strs[*store_str1 + 10 + i], str);
 						break;				
 					case 2:
-						strcpy(town_strs[*store_str1 + 20 + i],(char *) str);
+						strcpy(town_strs[*store_str1 + 20 + i], str);
 						break;				
 					}
 				}
@@ -1259,8 +1249,6 @@ void edit_scen_intro_event_filter (short item_hit)
 void edit_scen_intro()
 {
 	short i;
-	short num_s_strs[3] = {100,90,100};
-	
 		
 	cd_create_dialog_parent_num(804,0);
 	

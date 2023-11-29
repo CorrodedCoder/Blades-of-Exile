@@ -558,9 +558,9 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 		}
 	if (take_charge == TRUE) {
 		if (is_ident(adven[pc].items[item]) == FALSE)
-			sprintf((char *) to_draw, "Use: %s",adven[pc].items[item].name);
-			else sprintf((char *) to_draw, "Use: %s",adven[pc].items[item].full_name);
-		add_string_to_buf((char *) to_draw);
+			sprintf(to_draw, "Use: %s",adven[pc].items[item].name);
+			else sprintf(to_draw, "Use: %s",adven[pc].items[item].full_name);
+		add_string_to_buf( to_draw);
 
 		if ((adven[pc].items[item].variety == 7) &&
 		      (adven[pc].items[item].graphic_num >= 50) && (adven[pc].items[item].graphic_num <= 52))
@@ -1266,8 +1266,8 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 			draw_terrain(2);
 			play_sound(2);
 			}
-//		sprintf ((char *) create_line, "  No damage.              ");
-//		add_string_to_buf((char *) create_line);		
+//		sprintf(create_line, "  No damage.              ");
+//		add_string_to_buf( create_line);		
 		return FALSE;	
 		}
 
@@ -2971,9 +2971,9 @@ void get_strs(char *str1,char *str2,short cur_type,short which_str1,short which_
 	switch (cur_type) {
 		case 0:
 			if (which_str1 >= 0)
-				strcpy((char *) str1,data_store->scen_strs[which_str1]);
+				strcpy(str1,data_store->scen_strs[which_str1]);
 			if (which_str2 >= 0)
-				strcpy((char *) str2,data_store->scen_strs[which_str2]);
+				strcpy(str2,data_store->scen_strs[which_str2]);
 			break;
 		case 1:
 			if (which_str1 >= 0)
@@ -2987,9 +2987,9 @@ void get_strs(char *str1,char *str2,short cur_type,short which_str1,short which_
 			break;
 		case 2:
 			if (which_str1 >= 0)
-				strcpy((char *) str1,data_store->town_strs[which_str1]);
+				strcpy(str1,data_store->town_strs[which_str1]);
 			if (which_str2 >= 0)
-				strcpy((char *) str2,data_store->town_strs[which_str2]);
+				strcpy(str2,data_store->town_strs[which_str2]);
 			break;
 		}
 

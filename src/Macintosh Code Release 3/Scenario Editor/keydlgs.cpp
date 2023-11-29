@@ -956,7 +956,7 @@ void edit_spec_text_event_filter (short item_hit)
 
 		case 6:
 			CDGT(826,2,(char *) str);
-			if (strlen((char *) str) > 0) {
+			if (strlen(str) > 0) {
 				if (*store_str1 < 0) {
 					switch (store_spec_str_mode) {
 						case 0:
@@ -1003,7 +1003,7 @@ void edit_spec_text_event_filter (short item_hit)
 					}
 				}
 			CDGT(826,3,(char *) str);
-			if (strlen((char *) str) > 0) {
+			if (strlen(str) > 0) {
 				if (*store_str2 < 0) {
 					switch (store_spec_str_mode) {
 						case 0:

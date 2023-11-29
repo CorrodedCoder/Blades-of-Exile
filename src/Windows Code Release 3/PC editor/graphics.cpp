@@ -76,9 +76,8 @@ void init_main_buttons()
 {
 
 	short i;
-	RECT start_rect = {0,0,28,36};
 	short indent = 0, indent2 = 0;
-	RECT mask_rect = {0,0,308,396},base_rect;
+	RECT base_rect;
 	RECT active_area_rect = {0,0,590,440};
 
 
@@ -376,7 +375,7 @@ void draw_main_screen()
 	
 
 	if (ed_reg == FALSE) {
-		sprintf((char *)temp_str,"Unregistered Copy |To find out how to order, |select How To Order from File Menu.");
+		sprintf(temp_str,"Unregistered Copy |To find out how to order, |select How To Order from File Menu.");
 		win_draw_string(main_dc,reg_rect,temp_str,0,12);
 		}
 }
@@ -425,18 +424,18 @@ void draw_items(short clear_first)
 	}
 	for (i = 0; i < 24; i++) // Loop through items and draw each
 		if (adven[current_active_pc].items[i].variety > 0) { // i.e. does item exist
-			sprintf((char *) to_draw, "");
+			sprintf(to_draw, "");
 			if (adven[current_active_pc].items[i].item_properties % 2 == 0)
-				sprintf((char *) to_draw, "%d. %s  ",i + 1,adven[current_active_pc].items[i].name);
+				sprintf(to_draw, "%d. %s  ",i + 1,adven[current_active_pc].items[i].name);
 				else if (adven[current_active_pc].items[i].charges > 0)
-					sprintf((char *) to_draw, "%d. %s (%d)",i + 1,adven[current_active_pc].items[i].full_name,
+					sprintf(to_draw, "%d. %s (%d)",i + 1,adven[current_active_pc].items[i].full_name,
 					adven[current_active_pc].items[i].charges);
-				else sprintf((char *) to_draw, "%d. %s ",i + 1,adven[current_active_pc].items[i].full_name);			
+				else sprintf(to_draw, "%d. %s ",i + 1,adven[current_active_pc].items[i].full_name);			
 
 			//if (i % 2 == 0)
-			//	sprintf((char *) to_draw, "%d %d %d %d",
+			//	sprintf(to_draw, "%d %d %d %d",
 			//	pc_info_rect.left,pc_info_rect.right,pc_info_rect.top,pc_info_rect.bottom);
-			//	else sprintf((char *) to_draw, "%d %d %d %d",
+			//	else sprintf(to_draw, "%d %d %d %d",
 			//	name_rect.left,name_rect.right,name_rect.top,name_rect.bottom);
 
 			char_win_draw_string(main_dc,item_string_rects[i][0],(char *) to_draw,0,10);
@@ -458,11 +457,9 @@ void display_party(short mode,short clear_first)
 {
 	short i;
 	char to_draw[256],skill_value[256];
-	short start_v = 115, start_h = 80;
 	RECT from_base = {0,0,28,36},from_rect;
 	COLORREF colors[4] = {RGB(0,0,0),RGB(255,0,0),RGB(0,0,102),RGB(255,255,255)};
 	UINT c[4];
-	RECT pc_black_from = {521,228,549,264},mixed_to = {355,234,383,270};
 
 	short k,string_num, cur_rect=0;
 	RECT no_party_rect,temp_rect;
@@ -524,11 +521,11 @@ void display_party(short mode,short clear_first)
 					if( (strlen(adven[i].name)) >= 0) {
 						//TextFace(0);
 						SelectObject(main_dc,font);
-						sprintf((char *) to_draw, "%-s", (char *) adven[i].name);
+						sprintf(to_draw, "%-s", adven[i].name);
 						//TextSize(6);
 						}
 					else {
-						sprintf((char *) to_draw, "%-s", (char *) adven[i].name);
+						sprintf(to_draw, "%-s", adven[i].name);
 						}
 
 					if (i == current_active_pc)
@@ -540,7 +537,7 @@ void display_party(short mode,short clear_first)
 					//TextSize(10);
 
 					if (i == current_active_pc){
-						sprintf((char *) to_draw, "%-.18s  ", (char *) adven[i].name);
+						sprintf(to_draw, "%-.18s  ", adven[i].name);
 						if( (strlen(adven[i].name)) > 12)
 							SelectObject(main_dc,font);
 						SetTextColor(main_dc,PALETTEINDEX(c[0]));
@@ -561,9 +558,9 @@ void display_party(short mode,short clear_first)
 									char_win_draw_string(main_dc,pc_race_rect,"Slithzerikai  ",1,10);
 								// Draw in skills	
 								
-								sprintf((char *) to_draw, "Skills:");
+								sprintf(to_draw, "Skills:");
 								win_draw_string(main_dc,skill_rect,to_draw,0,10);
-								sprintf((char *) to_draw, "Hp: %d/%d  Sp: %d/%d",adven[i].cur_health,adven[i].max_health,adven[i].cur_sp,
+								sprintf(to_draw, "Hp: %d/%d  Sp: %d/%d",adven[i].cur_health,adven[i].max_health,adven[i].cur_sp,
 									adven[i].max_sp);
 								win_draw_string(main_dc,hp_sp_rect,to_draw,0,10);
 								
@@ -578,7 +575,7 @@ void display_party(short mode,short clear_first)
 									get_str(to_draw,9,string_num);
 									win_draw_string(main_dc,pc_skills_rect[k],to_draw,0,9);
 									
-									sprintf((char *) skill_value,"%d",adven[i].skills[k]);
+									sprintf(skill_value,"%d",adven[i].skills[k]);
 									OffsetRect(&temp_rect,-8,0);
                            temp_rect.right += 10;
 									win_draw_string(main_dc,temp_rect,skill_value,0,9);	
@@ -589,7 +586,7 @@ void display_party(short mode,short clear_first)
 								
 								//Write in pc Status
 								SelectObject(main_dc,bold_font);
-								sprintf((char *) to_draw, "Status:");
+								sprintf(to_draw, "Status:");
 								win_draw_string(main_dc,status_rect,to_draw,0,10);
 								
 								SelectObject(main_dc,font);
@@ -679,7 +676,7 @@ void display_party(short mode,short clear_first)
 								
 								//Write in Traits
 								SelectObject(main_dc,bold_font);
-								sprintf((char *) to_draw, "Traits:");
+								sprintf(to_draw, "Traits:");
 								win_draw_string(main_dc,traits_rect,to_draw,0,10);
 								//for(k = 0 ; k < 16; k++)
 									//frame_dlog_rect((GrafPtr) mainPtr,pc_traits_rect[k],0);
@@ -848,7 +845,7 @@ void display_party(short mode,short clear_first)
 			 
 		}
 //			MoveTo(start_h + 10, start_v + 127);	
-//			sprintf((char *) to_draw, " Gold: %d       Food: %d ",(short) party.gold, (short) party.food);
+//			sprintf(to_draw, " Gold: %d       Food: %d ",(short) party.gold, (short) party.food);
 //			DrawString(to_draw);
 		}
 SetTextColor(main_dc,PALETTEINDEX(c[0]));
@@ -859,7 +856,7 @@ void undo_clip()
 //	ClipRect(&whole_win_rect);
 }
 
-void add_string_to_buf(char *str) {
+void add_string_to_buf(const char * str) {
 
 	}
 	
@@ -867,8 +864,6 @@ void add_string_to_buf(char *str) {
 
 void display_strings_event_filter (short item_hit)
 {
-	Boolean had1 = FALSE, had2 = FALSE;
-	
 	switch (item_hit) {
 		case 1:
 			dialog_not_toast = FALSE;
@@ -877,10 +872,9 @@ void display_strings_event_filter (short item_hit)
 }
 
 void display_strings(short str1a,short str1b,short str2a,short str2b,
-	char *title,short sound_num,short graphic_num,short parent_num)
+	const char *title,short sound_num,short graphic_num,short parent_num)
 {
 	char sign_text[256];
-	Boolean sound_done = FALSE;
 
 	make_cursor_sword();
 	
@@ -933,11 +927,11 @@ void get_str(char *str,short i, short j)
 }
 
 
-void char_win_draw_string(HDC dest_window,RECT dest_rect,char *str,short mode,short line_height)
+void char_win_draw_string(HDC dest_window,RECT dest_rect, const char * str,short mode,short line_height)
 {
 	char store_s[256];
 	
-	strcpy((char *) store_s,str);
+	strcpy(store_s,str);
 	win_draw_string( dest_window, dest_rect,store_s, mode, line_height);
 
 }
@@ -962,14 +956,14 @@ void win_draw_string(HDC dest_hdc,RECT dest_rect,char *str,short mode,short line
 	switch (mode) {
 		case 0:
          dest_rect.bottom += 6;
-			DrawText(dest_hdc,str,strlen((char *)str),&dest_rect,DT_LEFT | DT_WORDBREAK); break;
+			DrawText(dest_hdc,str,strlen(str),&dest_rect,DT_LEFT | DT_WORDBREAK); break;
 		case 1:
 			dest_rect.bottom += 6; dest_rect.top -= 6;
-			DrawText(dest_hdc,str,strlen((char *)str),&dest_rect,
+			DrawText(dest_hdc,str,strlen(str),&dest_rect,
 			DT_CENTER | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE); break;
 		case 2: case 3:
 			dest_rect.bottom += 6; dest_rect.top -= 6;
-			DrawText(dest_hdc,str,strlen((char *)str),&dest_rect,
+			DrawText(dest_hdc,str,strlen(str),&dest_rect,
 			DT_LEFT | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE); break;
 		}
 	// not yet done adjusts for 1, 2, 3
@@ -985,9 +979,9 @@ short string_length(char *str,HDC hdc)
 	for (i = 0; i < 257; i++)
 		text_len[i]= 0;
 	
-	strcpy((char *) p_str,str);
+	strcpy(p_str,str);
 	MeasureText(256,p_str,text_len,hdc);
-	len = strlen((char *)str);
+	len = strlen(str);
 
 	//print_nums(text_len[1],text_len[2],text_len[3]);
    //print_nums(text_len[10],text_len[20],text_len[30]);
@@ -1014,7 +1008,7 @@ static DWORD GetTextExtent16(HDC hdc, LPCSTR str, INT16 count)
 void MeasureText(short str_len,char *str, short *len_array,HDC hdc)
 {
 	short text_len[257];
-	short total_width = 0,i;
+	short i;
 	char p_str[257];
 	DWORD val_returned;
 	char *store_array;

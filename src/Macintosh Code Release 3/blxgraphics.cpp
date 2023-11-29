@@ -558,13 +558,13 @@ void draw_startup_stats()
 			switch (adven[i].main_status) {
 				case 1:
 					switch (adven[i].race) {
-						case 0: sprintf((char *) str,"Level %d Human",adven[i].level); break;
-						case 1: sprintf((char *) str,"Level %d Nephilim",adven[i].level); break;
-						case 2: sprintf((char *) str,"Level %d Slithzerikai",adven[i].level); break;
+						case 0: sprintf(str,"Level %d Human",adven[i].level); break;
+						case 1: sprintf(str,"Level %d Nephilim",adven[i].level); break;
+						case 2: sprintf(str,"Level %d Slithzerikai",adven[i].level); break;
 						}
 					char_win_draw_string((GrafPtr) mainPtr,pc_rect,(char *) str,0,18);
 					OffsetRect(&pc_rect,0,13);
-					sprintf((char *) str,"Health %d, Spell pts. %d",
+					sprintf(str,"Health %d, Spell pts. %d",
 						adven[i].max_health,adven[i].max_sp);
 					char_win_draw_string((GrafPtr) mainPtr,pc_rect,(char *) str,0,18);
 					break;
@@ -1095,7 +1095,7 @@ void draw_text_bar(short mode)
 	
 		}
 	if ((is_combat()) && (current_pc < 6) && (monsters_going == FALSE)) {
-		sprintf((char *) combat_string,"%s (ap: %d)",
+		sprintf(combat_string,"%s (ap: %d)",
 			adven[current_pc].name,pc_moves[current_pc]);
 		put_text_bar((char *) combat_string);
 		remember_tiny_text = 500;
@@ -1128,25 +1128,25 @@ void put_text_bar(char *str)
 	if (monsters_going == FALSE) {
 		if (PSD[305][0] > 0) {
 			MoveTo(xpos,14);
-			sprintf((char *) status_str,"Stealth");
+			sprintf(status_str,"Stealth");
 			drawstring(status_str);
 			xpos -= 60;
 			}
 		if (PSD[305][1] > 0) {
 			MoveTo(xpos,14);
-			sprintf((char *) status_str,"Flying");
+			sprintf(status_str,"Flying");
 			drawstring(status_str);
 			xpos -= 60;
 			}
 		if (PSD[305][2] > 0) {
 			MoveTo(xpos,14);
-			sprintf((char *) status_str,"Detect Life");
+			sprintf(status_str,"Detect Life");
 			drawstring(status_str);
 			xpos -= 60;
 			}
 		if (PSD[305][3] > 0) {
 			MoveTo(xpos,14);
-			sprintf((char *) status_str,"Firewalk");
+			sprintf(status_str,"Firewalk");
 			drawstring(status_str);
 			xpos -= 60;
 			}
@@ -1630,8 +1630,8 @@ GWorldPtr load_pict(short picture_to_get)
     	print_nums(10,1000,x);
     	}
 	if (current_pic_handle == NIL)  {
-		sprintf((char *) d_s, "Stuck on %d  ",(short) picture_to_get);
-		add_string_to_buf((char *)d_s);
+		sprintf(d_s, "Stuck on %d  ",(short) picture_to_get);
+		add_string_to_buf(d_s);
 		Alert(1076,NIL);
 		return NULL;
 		}
@@ -1647,8 +1647,8 @@ GWorldPtr load_pict(short picture_to_get)
  			ReleaseResource ((Handle) current_pic_handle);
    			return NULL;
    			}
-		sprintf((char *) d_s, "Stuck on %d  error %d ",(short) picture_to_get,check_error);
-		add_string_to_buf((char *)d_s);
+		sprintf(d_s, "Stuck on %d  error %d ",(short) picture_to_get,check_error);
+		add_string_to_buf(d_s);
 		print_buf(); 
 		Alert(1076,NIL);
 		return NULL;
@@ -2313,7 +2313,7 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 	
 	if ((cartoon_happening == FALSE) && (dest_rect.right - dest_rect.left >= 28)
 		&& (dest_rect.bottom - dest_rect.top >= 36)) {
-		sprintf((char *) dam_str,"%d",damage);
+		sprintf(dam_str,"%d",damage);
 		TextSize(10);
 		TextFace(bold);
 		//text_rect = coord_to_rect(where_draw.x,where_draw.y);

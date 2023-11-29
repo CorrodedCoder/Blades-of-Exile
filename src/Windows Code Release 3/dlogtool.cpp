@@ -1,5 +1,6 @@
 
 #include <windows.h>
+#include <array>
 
 #define ND	15
 #define	NI	500
@@ -106,7 +107,7 @@ short button_type[150] = {1,1,4,5,1,1,0,0,1,1,
 						 2,2,2,2,2,2,2,2,1,1,
 						 1,1,1,1,1,1,1,1,0,0,
 						 0,0,0,0,0,0,0,0,0,0};
-char *button_strs[150] = {"Done ","Ask"," "," ","Keep", "Cancel","+","-","Buy","Leave",
+static const std::array button_strs{"Done ","Ask"," "," ","Keep", "Cancel","+","-","Buy","Leave",
 						"Get","1","2","3","4","5","6","Cast"," "," ",
 						" "," "," ","Buy","Sell","Other Spells","Buy x10"," "," ","Save",
 						"Race","Train","Items","Spells","Heal Party","1","2","3","4","5",
@@ -226,7 +227,7 @@ short cd_create_custom_dialog(HWND parent,
 
 	char strs[6][256];
 
-	short cur_item = 1,cur_bottom = 8;
+	short cur_item = 1;
 	short but_items[3] = {-1,-1,-1};
 	RECT measure_rect,pic_rect = {8,8,44,44},cur_text_rect = {50,2,0,0};
 	short win_width = 100, win_height = 100;
@@ -359,7 +360,7 @@ short cd_create_custom_dialog(HWND parent,
 	cur_text_rect.right = cur_text_rect.left + str_width;
 	// finally, 0-6 text, then create the items
 	for (i = 0; i < 6; i++)
-		if (strlen((char *) strs[i]) > 0) {// text
+		if (strlen(strs[i]) > 0) {// text
 			for (j = 0; j < 10; j++)
 				if (item_dlg[j] < 0) {
 					free_item = j;
@@ -371,7 +372,7 @@ short cd_create_custom_dialog(HWND parent,
 			item_rect[free_item] = cur_text_rect;
 			measure_rect.top = 0; measure_rect.bottom = 0;
 			measure_rect.left = 0; measure_rect.right = 340;
-			DrawText(main_dc, (char *) strs[i],strlen((char *) strs[i]),
+			DrawText(main_dc, (char *) strs[i],strlen(strs[i]),
 				&measure_rect,DT_CALCRECT | DT_WORDBREAK);
 			item_rect[free_item].bottom = item_rect[free_item].top +
 				(measure_rect.bottom - measure_rect.top) + 16;
@@ -385,8 +386,7 @@ short cd_create_custom_dialog(HWND parent,
 			item_label[free_item] = 0;
            	item_label_loc[free_item] = -1;
             item_key[free_item] = 0;
- 			sprintf(text_long_str[free_item],"%s",
-				(char *) strs[i]);
+ 			sprintf(text_long_str[free_item],"%s", strs[i]);
       		cur_item++;
        		}
 	
@@ -432,7 +432,7 @@ short cd_create_custom_dialog(HWND parent,
 
 short cd_create_dialog(short dlog_num,HWND parent)
 {
-	short i,free_slot = -1,free_item = -1;
+	short i,free_slot = -1;
 	HWND dlg;
 
 	if (parent != NULL) {
@@ -560,8 +560,8 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
       	str_offset = 1;
 			dlg_highest_item[free_slot] = i;
 			str_stored = FALSE;
-			if (strlen((char *)item_str) == 0) {
-				sprintf((char *) item_str, "+");
+			if (strlen(item_str) == 0) {
+				sprintf(item_str, "+");
 				type = 3;
 				flag = 0;
 	            str_stored = TRUE;
@@ -618,7 +618,7 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 					break;
 				default:
 					if ((type == 9) ||
-					 ((str_stored == TRUE) && (strlen((char *) item_str) > 35))) {
+					 ((str_stored == TRUE) && (strlen(item_str) > 35))) {
 						for (j = 0; j < 10; j++)
 							if (item_dlg[j] < 0) {
 								free_item = j;
@@ -680,7 +680,7 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 							if (str_stored == TRUE) {
 								if (free_item < 10) {
 									sprintf(text_long_str[free_item],"%s",
-									  (char *) (item_str + str_offset));
+									  item_str + str_offset);
 									for (k = 0; k < 256; k++) {
 										if (text_long_str[free_item][k] == '|')
 											 text_long_str[free_item][k] = 13;
@@ -693,7 +693,7 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 									}
 								else {
 									sprintf(text_short_str[free_item - 10],"%-34s",
-									  (char *) (item_str + str_offset));
+									  item_str + str_offset);
 									for (k = 0; k < 35; k++) {
 										if (text_short_str[free_item][k] == '|')
 											 text_short_str[free_item][k] = 13;
@@ -997,7 +997,7 @@ void cd_get_text_edit_str(short dlog_num, char *str)
 			else str[0] = 0;
 }
 // NOTE!!! Expects a c string
-void cd_set_text_edit_str(short dlog_num, char *str)
+void cd_set_text_edit_str(short dlog_num, const char * str)
 {
 		if (edit_box != NULL)
 			SetWindowText(edit_box,str);
@@ -1006,9 +1006,9 @@ void cdsin(short dlog_num, short item_num, short num)
 {
 	cd_set_item_num( dlog_num,  item_num,  num);
 }
-void csit(short dlog_num, short item_num, char *str)
+void csit(short dlog_num, short item_num, const char * str)
 {
-cd_set_item_text( dlog_num,  item_num, str);
+	cd_set_item_text( dlog_num,  item_num, str);
 }
 void csp(short dlog_num, short item_num, short pict_num)
 {
@@ -1016,7 +1016,7 @@ void csp(short dlog_num, short item_num, short pict_num)
 }
 
 
-void cd_set_item_text(short dlog_num, short item_num, char *str)
+void cd_set_item_text(short dlog_num, short item_num, const char * str)
 {
 	short k,dlg_index,item_index;
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
@@ -1115,7 +1115,7 @@ void cd_text_frame(short dlog_num,short item_num,short frame)
 	cd_draw_item(dlog_num,item_num);
 }
 
-void cd_add_label(short dlog_num, short item_num, char *label, short label_flag)
+void cd_add_label(short dlog_num, short item_num, const char *label, short label_flag)
 {
 	short dlg_index,item_index,label_loc = -1;
 	short i;
@@ -1139,7 +1139,7 @@ void cd_add_label(short dlog_num, short item_num, char *label, short label_flag)
 		}
       else cd_erase_item(dlog_num,item_num + 100);
 	label_loc = item_label_loc[item_index];
-	sprintf((char *) labels[label_loc],"%-24s",label);
+	sprintf(labels[label_loc],"%-24s",label);
 	if (item_active[item_index] > 0)
 		cd_draw_item(dlog_num,item_num);
 }
@@ -1160,7 +1160,7 @@ void cd_key_label(short dlog_num, short item_num,short loc)
 	char str[10];
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
 		return;
-	sprintf((char *) str," ");
+	sprintf(str," ");
 	str[0] = item_key[item_index];
 	cd_add_label(dlog_num,item_num, str, 7 + loc * 100);
 }
@@ -1725,14 +1725,11 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 // 1600 + x - B&W maps
 // 1700 + x - anim graphic
 {
-	RECT from1 = {0,0,36,28},from2 = {0,0,36,36},from3 = {0,0,72,72},tiny_obj_rect = {0,0,18,18};
+	RECT from2 = {0,0,36,36},tiny_obj_rect = {0,0,18,18};
 	RECT from_rect = {0,0,28, 36};
 	RECT face_from = {0,0,32,32};
-	RECT death_to = {6,6,78,78};
 	RECT to_rect = {6,6,42,42};
-	RECT m_to_rect = {10,6,38,42};
 	RECT bw_from = {0,0,120,120};
-	RECT map_from = {0,0,240,240};
 	
 	RECT pc_info_from = {0,127,106,157};
 	RECT item_info_from = {174,0,312,112};

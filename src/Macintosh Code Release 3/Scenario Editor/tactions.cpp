@@ -263,14 +263,14 @@ Boolean handle_action(Point the_point,EventRecord event)
 						edit_monst_type(j); 
 						update_item_menu();
 						start_monster_editing(1);
-						//sprintf((char *) str,"%d - %s",j,(char *) data_store->scen_item_list.monst_names[j]);
+						//sprintf(str,"%d - %s",j,(char *) data_store->scen_item_list.monst_names[j]);
 						//set_rb(j - 1,2000 + j,(char *) str,0);
 						break;
 					case 3: 
 						edit_item_type(j);
 						update_item_menu();
 						start_item_editing(1);
-						//sprintf((char *) str,"%d - %s",j,(char *) data_store->scen_item_list.scen_items[j].full_name);
+						//sprintf(str,"%d - %s",j,(char *) data_store->scen_item_list.scen_items[j].full_name);
 						//set_rb(j,3000 + j,(char *) str,0);
 						break;
 					case 4:
@@ -279,7 +279,7 @@ Boolean handle_action(Point the_point,EventRecord event)
 							} 
 							else edit_spec_enc(j,0,0); 
 						//get_str(s2,22,scenario.scen_specials[j].type + 1);
-						//sprintf((char *) str,"%d - %-30.30s",j,(char *) s2);
+						//sprintf(str,"%d - %-30.30s",j,(char *) s2);
 						//set_rb(j,4000 + j,(char *) str,0);
 						start_special_editing(0,1);
 						break;
@@ -289,7 +289,7 @@ Boolean handle_action(Point the_point,EventRecord event)
 							} 
 							else edit_spec_enc(j,1,0); 
 						//get_str(s2,22,current_terrain.specials[j].type + 1);
-						//sprintf((char *) str,"%d - %-30.30s",j,(char *) s2);
+						//sprintf(str,"%d - %-30.30s",j,(char *) s2);
 						//set_rb(j,5000 + j,(char *) str,0);
 						start_special_editing(1,1);
 						break;
@@ -299,7 +299,7 @@ Boolean handle_action(Point the_point,EventRecord event)
 							} 
 							else edit_spec_enc(j,2,0); 
 						//get_str(s2,22,town.specials[j].type + 1);
-						//sprintf((char *) str,"%d - %-30.30s",j,(char *) s2);
+						//sprintf(str,"%d - %-30.30s",j,(char *) s2);
 						//set_rb(j,6000 + j,(char *) str,0);
 						start_special_editing(2,1);
 						break;
@@ -309,7 +309,7 @@ Boolean handle_action(Point the_point,EventRecord event)
 							strcpy(data_store->scen_strs[j],(char *) s2);
 							} 
 							else edit_text_str(j,0);
-						//sprintf((char *) str,"%d - %-30.30s",j,(char *)data_store->scen_strs[j]);
+						//sprintf(str,"%d - %-30.30s",j,(char *)data_store->scen_strs[j]);
 						//set_rb(j,7000 + j,(char *) str,0);
 						start_string_editing(0,1);
 						break;
@@ -320,7 +320,7 @@ Boolean handle_action(Point the_point,EventRecord event)
 							strcpy(data_store->out_strs[j],(char *) s2);
 							} 
 							else edit_text_str(j,1);
-						//sprintf((char *) str,"%d - %-30.30s",j,(char *) data_store->out_strs[j]);
+						//sprintf(str,"%d - %-30.30s",j,(char *) data_store->out_strs[j]);
 						//set_rb(j,8000 + j,(char *) str,0);
 						start_string_editing(1,1);
 						break;
@@ -330,13 +330,13 @@ Boolean handle_action(Point the_point,EventRecord event)
 							strcpy(data_store->town_strs[j],(char *) s2);
 							} 
 							else edit_text_str(j,2);
-						//sprintf((char *) str,"%d - %-30.30s",j,(char *) data_store->town_strs[j]);
+						//sprintf(str,"%d - %-30.30s",j,(char *) data_store->town_strs[j]);
 						//set_rb(j,9000 + j,(char *) str,0);
 						start_string_editing(2,1);
 						break;
 					case 10:
 						edit_spec_item(j);
-						//sprintf((char *) str,"%d - %s",j,(char *) data_store->scen_strs[60 + j * 2]);
+						//sprintf(str,"%d - %s",j,(char *) data_store->scen_strs[60 + j * 2]);
 						//set_rb(j,10000 + j,(char *) str,0);
 						start_special_item_editing();
 					break;
@@ -3188,13 +3188,13 @@ void set_up_main_screen()
 	set_lb(-1,11,"Edit Special Items",0);
 	set_lb(-1,1,"",0);
 	set_lb(-1,1,"Outdoors Options",0);
-	sprintf((char *) message,"  Section x = %d, y = %d",(short) cur_out.x,(short) cur_out.y);
+	sprintf(message,"  Section x = %d, y = %d",(short) cur_out.x,(short) cur_out.y);
 	set_lb(-1,1,(char *) message,0);
 	set_lb(-1,11,"Load New Section",0);
 	set_lb(-1,11,"Edit Outdoor Terrain",0);
 	set_lb(-1,1,"",0);
 	set_lb(-1,1,"Town/Dungeon Options",0);
-	sprintf((char *) message,"  Town %d: %s",cur_town,data_store->town_strs[0]);
+	sprintf(message,"  Town %d: %s",cur_town,data_store->town_strs[0]);
 	set_lb(-1,1,(char *) message,0);
 	set_lb(-1,11,"Load Another Town",0);
 	set_lb(-1,11,"Edit Town Terrain",0);
@@ -3335,7 +3335,7 @@ void start_terrain_editing()
 	reset_rb();
 	SetControlMaximum(right_sbar,256 - NRSONPAGE);
 	for (i = 0; i < 256; i++) {
-		sprintf((char *) str,"%d - %s",i,(char *) data_store->scen_item_list.ter_names[i]);
+		sprintf(str,"%d - %s",i,(char *) data_store->scen_item_list.ter_names[i]);
 		set_rb(i,1000 + i,(char *) str,0);
 		}
 	for (i = 0; i < NRSONPAGE; i++)
@@ -3359,7 +3359,7 @@ void start_monster_editing(short just_redo_text)
 		SetControlMaximum(right_sbar,255 - NRSONPAGE);
 		}
 	for (i = 1; i < 256; i++) {
-		sprintf((char *) str,"%d - %s",i,(char *) data_store->scen_item_list.monst_names[i]);
+		sprintf(str,"%d - %s",i,(char *) data_store->scen_item_list.monst_names[i]);
 		set_rb(i - 1,2000 + i,(char *) str,0);
 		}
 	if (draw_full == TRUE)
@@ -3405,7 +3405,7 @@ void start_item_editing(short just_redo_text)
 		SetControlMaximum(right_sbar,400 - NRSONPAGE);
 		}
 	for (i = 0; i < 400; i++) {
-		sprintf((char *) str,"%d - %s",i,(char *) data_store->scen_item_list.scen_items[i].full_name);
+		sprintf(str,"%d - %s",i,(char *) data_store->scen_item_list.scen_items[i].full_name);
 		set_rb(i,3000 + i,(char *) str,0);
 		}
 	if (draw_full == TRUE)
@@ -3432,7 +3432,7 @@ void start_special_item_editing()
 		reset_rb();
 	SetControlMaximum(right_sbar,50 - NRSONPAGE);
 	for (i = 0; i < 50; i++) {
-		sprintf((char *) str,"%d - %s",i,(char *) data_store->scen_strs[60 + i * 2]);
+		sprintf(str,"%d - %s",i,(char *) data_store->scen_strs[60 + i * 2]);
 		set_rb(i,10000 + i,(char *) str,0);
 		}
 	if (draw_full == TRUE)
@@ -3465,15 +3465,15 @@ void start_string_editing(short mode,short just_redo_text)
 	for (i = 0; i < num_strs[mode]; i++) {
 		switch (mode) {
 			case 0:
-				sprintf((char *) str,"%d - %-30.30s",i,(char *) data_store->scen_strs[i]);
+				sprintf(str,"%d - %-30.30s",i,(char *) data_store->scen_strs[i]);
 				set_rb(i,7000 + i,(char *) str,0);
 				break;
 			case 1:
-				sprintf((char *) str,"%d - %-30.30s",i,(char *) data_store->out_strs[i]);
+				sprintf(str,"%d - %-30.30s",i,(char *) data_store->out_strs[i]);
 				set_rb(i,8000 + i,(char *) str,0);
 				break;
 			case 2:
-				sprintf((char *) str,"%d - %-30.30s",i,(char *) data_store->town_strs[i]);
+				sprintf(str,"%d - %-30.30s",i,(char *) data_store->town_strs[i]);
 				set_rb(i,9000 + i,(char *) str,0);
 				break;
 			}
@@ -3512,17 +3512,17 @@ void start_special_editing(short mode,short just_redo_text)
 		switch (mode) {
 			case 0:
 				get_str(s2,22,scenario.scen_specials[i].type + 1);
-				sprintf((char *) str,"%d - %-30.30s",i,(char *) s2);
+				sprintf(str,"%d - %-30.30s",i,(char *) s2);
 				set_rb(i,4000 + i,(char *) str,0);
 				break;
 			case 1:
 				get_str(s2,22,current_terrain.specials[i].type + 1);
-				sprintf((char *) str,"%d - %-30.30s",i,(char *) s2);
+				sprintf(str,"%d - %-30.30s",i,(char *) s2);
 				set_rb(i,5000 + i,(char *) str,0);
 				break;
 			case 2:
 				get_str(s2,22,town.specials[i].type + 1);
-				sprintf((char *) str,"%d - %-30.30s",i,(char *) s2);
+				sprintf(str,"%d - %-30.30s",i,(char *) s2);
 				set_rb(i,6000 + i,(char *) str,0);
 				break;
 			}
@@ -3555,7 +3555,7 @@ void start_dialogue_editing(short restoring)
 		SetControlMaximum(right_sbar,70 - NRSONPAGE);
 		}
 	for (i = 0; i < 10; i++) {
-		sprintf((char *) str,"Personality %d - %s",i + cur_town * 10,
+		sprintf(str,"Personality %d - %s",i + cur_town * 10,
 			(char *) data_store->talk_strs[i]);
 		set_rb(i,13000 + i,(char *) str,0);
 		}
@@ -3564,7 +3564,7 @@ void start_dialogue_editing(short restoring)
 			s[j] = talking.talk_nodes[i].link1[j];
 			s[j + 6] = talking.talk_nodes[i].link2[j];
 			}
-		sprintf((char *) str,"Node %d - Per. %d, %s",i,
+		sprintf(str,"Node %d - Per. %d, %s",i,
 			talking.talk_nodes[i].personality,s);
 		set_rb(10 + i,12000 + i,(char *) str,0);
 		}
@@ -3607,7 +3607,7 @@ void update_item_menu()
 			DeleteMenuItem(item_menu[j],1); 
 			}
 		for (i = 0; i < 80; i++) {
-				sprintf((char *) item_name, "%s",data_store->scen_item_list.scen_items[i + j * 80].full_name);
+				sprintf(item_name, "%s",data_store->scen_item_list.scen_items[i + j * 80].full_name);
 				c2p(item_name);
 				AppendMenu(item_menu[j],item_name);
 				} 
@@ -3619,7 +3619,7 @@ void update_item_menu()
 			DeleteMenuItem(mon_menu[j],1); 
 			}
 		for (i = 0; i < 64; i++) {
-			sprintf((char *) item_name, "%s",data_store->scen_item_list.monst_names[i + j * 64]);
+			sprintf(item_name, "%s",data_store->scen_item_list.monst_names[i + j * 64]);
 			c2p( item_name);
 			AppendMenu(mon_menu[j],item_name);
 			} 

@@ -700,7 +700,6 @@ Boolean party_sees_a_monst() // Returns true is a hostile monster is in sight.
 short party_can_see(location where)
 {
 	short i;
-	Boolean in_light = FALSE;
 	
 	if (is_out()) {
 		if ((point_onscreen(party.p_loc,where) == TRUE) && (can_see(party.p_loc,where,0) < 5))

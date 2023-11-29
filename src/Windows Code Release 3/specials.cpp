@@ -542,9 +542,9 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 		}
 	if (take_charge == TRUE) {
 		if (is_ident(adven[pc].items[item]) == FALSE)
-			sprintf((char *) to_draw, "Use: %s",adven[pc].items[item].name);
-			else sprintf((char *) to_draw, "Use: %s",adven[pc].items[item].full_name);
-		add_string_to_buf((char *) to_draw);
+			sprintf(to_draw, "Use: %s",adven[pc].items[item].name);
+			else sprintf(to_draw, "Use: %s",adven[pc].items[item].full_name);
+		add_string_to_buf( to_draw);
 
 		if ((adven[pc].items[item].variety == 7) &&
 		      (adven[pc].items[item].graphic_num >= 50) && (adven[pc].items[item].graphic_num <= 52))
@@ -895,7 +895,6 @@ Boolean use_space(location where)
 {
 	unsigned char ter;
 	short i;
-	Boolean can_enter = TRUE;
 	location from_loc,to_loc;
 	
 
@@ -1249,8 +1248,8 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 			draw_terrain(2);
 			play_sound(2);
 			}
-//		sprintf ((char *) create_line, "  No damage.              ");
-//		add_string_to_buf((char *) create_line);		
+//		sprintf(create_line, "  No damage.              ");
+//		add_string_to_buf( create_line);		
 		return FALSE;	
 		}
 
@@ -1323,8 +1322,8 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 
 void kill_monst(creature_data_type *which_m,short who_killed)
 {
-	short xp,i,j,num_brooch = 0,s1,s2,s3;	
-	location false_loc = {20,20},l;
+	short xp,i,j,s1,s2,s3;	
+	location l;
 /*	item_record_type items[4] = {
 	{8,0,0,0,0,0,0,33,69,0,0,0,1,0,0,{0,0},"Nephilim Map","Scroll"},
 	{13,7,3,0,0,0,0,16,0,0,0,150,0,0,0,{0,0},"Bronze Breastplate","Breastplate"},
@@ -1874,9 +1873,8 @@ void oneshot_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 	short *next_spec,short *next_spec_type,short *a,short *b,short *redraw)
 {
 	Boolean check_mess = TRUE,set_sd = TRUE;
-	char str1[256] = "",str2[256] = "";
 	char strs[6][256] = {"","","","","",""};
-	short store_val = 0,i,j,buttons[3] = {-1,-1,-1};
+	short i,j,buttons[3] = {-1,-1,-1};
 	special_node_type spec;
 	item_record_type store_i;
 	location l;
@@ -2041,8 +2039,7 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 	short *next_spec,short *next_spec_type,short *a,short *b,short *redraw)
 {
 	Boolean check_mess = TRUE;
-	char str1[256] = "",str2[256] = "";
-	short store_val = 0,i,pc,r1;
+	short i,pc,r1;
 	special_node_type spec;
 	
 	spec = cur_node;
@@ -2263,7 +2260,7 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 {
 	Boolean check_mess = FALSE;
 	char str1[256] = "",str2[256] = "",str3[256] = "";
-	short store_val = 0,i,j,k;
+	short i,j,k;
 	special_node_type spec;
 	location l;
 	
@@ -2446,8 +2443,8 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 	short *next_spec,short *next_spec_type,short *a,short *b,short *redraw)
 {
 	Boolean check_mess = TRUE;
-	char str1[256] = "",str2[256] = "",strs[6][256] = {"","","","","",""};
-	short store_val = 0,i,buttons[3] = {-1,-1,-1},r1;
+	char strs[6][256] = {"","","","","",""};
+	short i,buttons[3] = {-1,-1,-1},r1;
 	special_node_type spec;
 	location l;
 	unsigned char ter;
@@ -2767,8 +2764,7 @@ void rect_spec(short which_mode,special_node_type cur_node,short cur_spec_type,
 	short *next_spec,short *next_spec_type,short *a,short *b,short *redraw)
 {
 	Boolean check_mess = TRUE;
-	char str1[256] = "",str2[256] = "";
-	short store_val = 0,i,j;
+	short i,j;
 	special_node_type spec;
 	location l;
 	unsigned char ter;
@@ -2848,7 +2844,6 @@ void outdoor_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 {
 	Boolean check_mess = FALSE;
 	char str1[256] = "",str2[256] = "";
-	short store_val = 0;
 	special_node_type spec;
 	location l;
 	
@@ -2962,14 +2957,14 @@ void get_strs(char *str1,char *str2,short cur_type,short which_str1,short which_
 		case 0:
 			if (which_str1 >= 0) {
 				if (which_str1 < 160)
-					strcpy((char *) str1,data_store5->scen_strs[which_str1]);
-					else strcpy((char *) str1,scen_strs2[which_str1 - 160]);
+					strcpy(str1,data_store5->scen_strs[which_str1]);
+					else strcpy(str1,scen_strs2[which_str1 - 160]);
 				
 				}
 			if (which_str2 >= 0){
 				if (which_str2 < 160)
-					strcpy((char *) str2,data_store5->scen_strs[which_str2]);
-					else strcpy((char *) str2,scen_strs2[which_str2 - 160]);				
+					strcpy(str2,data_store5->scen_strs[which_str2]);
+					else strcpy(str2,scen_strs2[which_str2 - 160]);				
 				}
 			break;
 		case 1:
@@ -2984,9 +2979,9 @@ void get_strs(char *str1,char *str2,short cur_type,short which_str1,short which_
 			break;
 		case 2:
 			if (which_str1 >= 0)
-				strcpy((char *) str1,data_store->town_strs[which_str1]);
+				strcpy(str1,data_store->town_strs[which_str1]);
 			if (which_str2 >= 0)
-				strcpy((char *) str2,data_store->town_strs[which_str2]);
+				strcpy(str2,data_store->town_strs[which_str2]);
 			break;
 		}
 

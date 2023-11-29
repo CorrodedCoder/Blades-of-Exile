@@ -1,4 +1,5 @@
 #include <Windows.h>
+#include <array>
 #include <cstdio>
 #include <cstring>
 #include "global.h"
@@ -43,7 +44,7 @@ short spec_item_spec,store_horse_page,store_boat_page ;
 item_storage_shortcut_type store_storage;
 short cur_shortcut;
 
-	char *item_types[] = {"No Item","1-Handed weapon","2-Handed weapon","Gold","Bow","Arrows","Thrown missile",
+static const std::array item_types{"No Item","1-Handed weapon","2-Handed weapon","Gold","Bow","Arrows","Thrown missile",
 			"Potion/Magic Item","Scroll/Magic Item","Wand","Tool","Food","Shield","Armor","Helm",
 			"Gloves","Shield","Boots","Ring","Necklace",
 			"Weapon Poison","Non-Use Object","Pants","Crossbow","Bolts","Missile (no ammo)","Unused","Unused"};
@@ -817,8 +818,8 @@ item_record_type convert_item (short_item_record_type s_item) {
 	i.weight = s_item.weight;
 	i.special_class = 0;
 	i.item_loc = l;
-	strcpy((char *)i.full_name,(char *)s_item.full_name);
-	strcpy((char *)i.name,(char *)s_item.name);
+	strcpy(i.full_name, s_item.full_name);
+	strcpy(i.name, s_item.name);
 
 	if (i.charges > 0)
 		temp_val = i.value * i.charges;
@@ -909,10 +910,10 @@ void init_scenario()
 		scenario.scen_monsters[i] = return_monster_template(i);
 		get_str(temp_str,2,i);
 		if ((i > 187) || (i == 0))
-			sprintf((char *)scen_item_list.monst_names[i], "Unused");
-			else sprintf((char *)scen_item_list.monst_names[i], "%s", temp_str);
+			sprintf(scen_item_list.monst_names[i], "Unused");
+			else sprintf(scen_item_list.monst_names[i], "%s", temp_str);
 		if (i == 0)
-			sprintf((char *)scen_item_list.monst_names[i], "Empty");
+			sprintf(scen_item_list.monst_names[i], "Empty");
 		}
 	for (i = 0; i < 30; i++) {
 		scenario.scen_boats[i] = null_boat;
@@ -923,7 +924,7 @@ void init_scenario()
 		scenario.ter_types[i].blockage = ter_block[i];
 		scenario.ter_types[i].special = ter_traits[i];
 		get_str(temp_str,1,i + 1);
-		sprintf((char *)scen_item_list.ter_names[i], "%s", temp_str);
+		sprintf(scen_item_list.ter_names[i], "%s", temp_str);
 		
 		scenario.scen_specials[i] = null_spec_node;
 		}
@@ -949,12 +950,12 @@ void init_scenario()
 	for (i = 0; i < 270; i++) {
 		get_str(temp_str,35,i + 1);
 		if (i < 160) {
-			sprintf((char *)scen_strs[i], "%s", temp_str);
-			scenario.scen_str_len[i] = strlen((char *) scen_strs[i]);
+			sprintf(scen_strs[i], "%s", temp_str);
+			scenario.scen_str_len[i] = strlen(scen_strs[i]);
 			}
 			else {
-				sprintf((char *)scen_strs2[i - 160], "%s", temp_str);
-				scenario.scen_str_len[i] = strlen((char *) scen_strs[i - 160]);
+				sprintf(scen_strs2[i - 160], "%s", temp_str);
+				scenario.scen_str_len[i] = strlen(scen_strs[i - 160]);
 				}
 		}
 }	
@@ -1108,14 +1109,15 @@ void edit_ter_type_event_filter (short item_hit)
 		}
 }
 
+static const std::array blocked_strs{"Clear","Walk through, Opaque","Clear, Special","Clear, Blocked","Blocked, Obstructed",
+	"Blocked, Opaque" };
+static const std::array sound_strs{ "Footstep","Squish","Crunch","Silence" };
+
 short edit_ter_type(short which_ter)
 // ignore parent in Mac version
 {
 	short i;
 	char temp_str[256];
-	char *blocked_strs[6] = {"Clear","Walk through, Opaque","Clear, Special","Clear, Blocked","Blocked, Obstructed",
-		"Blocked, Opaque"};
-	char *sound_strs[4] = {"Footstep","Squish","Crunch","Silence"};
 	
 	store_which_ter = which_ter;
 	store_ter = scenario.ter_types[which_ter];
@@ -1151,9 +1153,9 @@ void put_monst_info_in_dlog()
 	cdsin(814,33,store_which_monst);
 	CDST(814,2,scen_item_list.monst_names[store_which_monst]);
 	CDSN(814,3,store_monst.picture_num);
-	sprintf((char *) str,"Width = %d",store_monst.x_width);
+	sprintf(str,"Width = %d",store_monst.x_width);
 	csit(814,40,(char *) str);
-	sprintf((char *) str,"Height = %d",store_monst.y_width);
+	sprintf(str,"Height = %d",store_monst.y_width);
 	csit(814,41,(char *) str);
 	CDSN(814,4,store_monst.level);
 	CDSN(814,5,store_monst.health);
@@ -1338,11 +1340,12 @@ void edit_monst_type_event_filter (short item_hit)
 		}
 }
 
+static const std::array attitude{ "Friendly, Docile","Hostile, Type A","Friendly, Will Fight","Hostile, Type B" };
+
 short edit_monst_type(short which_monst)
 // ignore parent in Mac version
 {
 	short i;
-	char *attitude[4] = {"Friendly, Docile","Hostile, Type A","Friendly, Will Fight","Hostile, Type B"};
 	
 	store_which_monst = which_monst;
 	store_monst = scenario.scen_monsters[which_monst];
@@ -2326,10 +2329,10 @@ Boolean save_scen_details()
 			0,9,"The digits in the version number must be in the 0 to 9 range.","",803) == TRUE) return FALSE;
 	CDGT(803,5,(char *) str);
 	str[59] = 0;
-	strcpy(scen_strs[1],(char *) str);
+	strcpy(scen_strs[1], str);
 	CDGT(803,6,(char *) str);
 	str[59] = 0;
-	strcpy(scen_strs[2],(char *) str);
+	strcpy(scen_strs[2], str);
 	CDGT(803,7,scen_strs[3]);
 	
 	return TRUE;
@@ -2390,7 +2393,7 @@ void edit_make_scen_1_event_filter (short item_hit)
 	switch (item_hit) {
 		case 4:
 			CDGT(800,3,(char *) str);
-			j = strlen((char *) str);
+			j = strlen(str);
 			if (j == 0) {
 				give_error("You've left the file name empty.","",800);
 				break;
@@ -2511,7 +2514,7 @@ void build_scenario()
 	
 	if (edit_make_scen_1((char *) f_name,(char *) title,&grass) == FALSE)
 		return;
-	sprintf((char *) f_name2,"%s.exs",f_name);
+	sprintf(f_name2,"%s.exs",f_name);
 	if (edit_make_scen_2((short *) two_flags) == FALSE)
 		return;
 	user_given_password = given_password = get_password();
@@ -2520,7 +2523,7 @@ void build_scenario()
 		
 	init_out();
 	init_scenario();
-	strcpy((char *) scen_strs[0],(char *) title);
+	strcpy(scen_strs[0], title);
 	if (two_flags[5] == 0) {
 		init_town(1);
 		if (grass == 0)
@@ -2535,7 +2538,7 @@ void build_scenario()
 		two_flags[3]--;
 	
 	make_new_scenario(f_name2,two_flags[0],two_flags[1],two_flags[5],grass,title);
-	//strcpy((char *) scen_strs[0],(char *) title);
+	//strcpy(scen_strs[0], title);
 	//scenario.scen_str_len[0] = strlen(scen_strs[0]);
 	// now make sure correct outdoors is in memory, because we're going to be saving scenarios
 	// for a while
@@ -2636,7 +2639,7 @@ void set_starting_loc_filter (short item_hit)
 			j = CDGN(805,3);
 			k = CDGN(805,4);
 			if ((i < 0) || (i >= scenario.num_towns)) {
-				sprintf((char *) str,"The starting town must be from 0 to %d.",scenario.num_towns - 1);
+				sprintf(str,"The starting town must be from 0 to %d.",scenario.num_towns - 1);
 				give_error((char *) str,"",805);
 				break;
 				}

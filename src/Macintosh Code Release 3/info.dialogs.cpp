@@ -87,8 +87,8 @@ void put_spell_info()
 	cd_set_item_text(1096,4,(char *) store_text);
 
 	if (spell_cost[store_display_mode][pos] > 0)
-		sprintf((char *) store_text, "%d/%d",spell_level[pos],spell_cost[store_display_mode][pos]);
-		else sprintf((char *) store_text, "%d/?",spell_level[pos]);
+		sprintf(store_text, "%d/%d",spell_level[pos],spell_cost[store_display_mode][pos]);
+		else sprintf(store_text, "%d/?",spell_level[pos]);
 	cd_set_item_text(1096,5,(char *) store_text);
 
 	if (ran == 0) {
@@ -371,11 +371,11 @@ void put_item_info(short pc,short item)////
 			cd_set_item_num(998,7,s_i.bonus);
 		
 			switch (s_i.type) {
-				case 1:sprintf((char *) store_text, "Edged weapon");
+				case 1:sprintf(store_text, "Edged weapon");
 					break;
-				case 2:sprintf((char *) store_text, "Bashing weapon");
+				case 2:sprintf(store_text, "Bashing weapon");
 					break;
-				case 3:sprintf((char *) store_text, "Pole weapon");
+				case 3:sprintf(store_text, "Pole weapon");
 					break;
 				}
 			if (s_i.ability == 0)
@@ -516,7 +516,7 @@ void put_monst_info()////
 	
 	for (i = 0; i < 3; i++)
 		if (store_m->m_d.a[i] > 0) {
-			sprintf((char *) store_text," %dd%d              ",
+			sprintf(store_text," %dd%d              ",
 				store_m->m_d.a[i] / 100 + 1, store_m->m_d.a[i] % 100);
 
 			cd_set_item_text(999,13 + i,store_text);
@@ -844,13 +844,13 @@ void display_pc_info()
 	
 	store = pc_carry_weight(pc);
 	i = amount_pc_can_carry(pc);
-	sprintf ((char *) to_draw, "%s is carrying %d stones out of %d.",adven[pc].name,store,i);
+	sprintf(to_draw, "%s is carrying %d stones out of %d.",adven[pc].name,store,i);
 	csit(1019,69,(char *) to_draw);
 
-	sprintf((char *) str,"%d out of %d.",
+	sprintf(str,"%d out of %d.",
 			adven[pc].cur_health,adven[pc].max_health);
 	csit(1019,65,(char *) str);
-	sprintf((char *) str,"%d out of %d.",
+	sprintf(str,"%d out of %d.",
 			adven[pc].cur_sp,adven[pc].max_sp);
 	csit(1019,67,(char *) str);
 
@@ -1021,7 +1021,7 @@ void adventure_notes_event_filter (short item_hit)
 	for (i = 0; i < 3; i++) {
 		if (party.special_notes_str[i][0] > 0) {
 			switch (party.special_notes_str[i][0] / 1000) {
-				case 0: strcpy((char *) place_str,data_store->scen_strs[party.special_notes_str[i][0] % 1000]); break;
+				case 0: strcpy(place_str,data_store->scen_strs[party.special_notes_str[i][0] % 1000]); break;
 				case 1:
 					 load_outdoors(party.special_notes_str[i][1] % scenario.out_width,
 					 	party.special_notes_str[i][1] / scenario.out_width, 
@@ -1039,7 +1039,7 @@ void adventure_notes_event_filter (short item_hit)
 	for (i = store_page_on * 3; i < (store_page_on * 3) + 3; i++) {
 		if (party.special_notes_str[i][0] > 0) {
 			switch (party.special_notes_str[i][0] / 1000) {
-				case 0: strcpy((char *) place_str,data_store->scen_strs[party.special_notes_str[i][0] % 1000]); break;
+				case 0: strcpy(place_str,data_store->scen_strs[party.special_notes_str[i][0] % 1000]); break;
 				case 1:
 					 load_outdoors(party.special_notes_str[i][1] % scenario.out_width,
 					 	party.special_notes_str[i][1] / scenario.out_width, 
@@ -1084,7 +1084,7 @@ void adventure_notes()
 	for (i = 0; i < 3; i++) {
 		if (party.special_notes_str[i][0] > 0) {
 			switch (party.special_notes_str[i][0] / 1000) {
-				case 0: strcpy((char *) place_str,data_store->scen_strs[party.special_notes_str[i][0] % 1000]); break;
+				case 0: strcpy(place_str,data_store->scen_strs[party.special_notes_str[i][0] % 1000]); break;
 				case 1:
 					 load_outdoors(party.special_notes_str[i][1] % scenario.out_width,
 					 	party.special_notes_str[i][1] / scenario.out_width, 
@@ -1257,7 +1257,7 @@ void journal_event_filter (short item_hit)
 		if (party.journal_str[i + (store_page_on * 3)] > 0) {
 			////get_str(place_str,17,party.journal_str[i + (store_page_on * 3)]);
 			csit(962,3 + i,data_store->scen_strs[party.journal_str[i] + 10]);
-			sprintf((char *)place_str,"Day: %d",party.journal_day[i + (store_page_on * 3)]);
+			sprintf(place_str,"Day: %d",party.journal_day[i + (store_page_on * 3)]);
 			csit(962,9 + i,(char *)place_str);
 			}
 			else {csit(962,3 + i,"");csit(962,9 + i,"");}
@@ -1286,7 +1286,7 @@ void journal()
 		if (party.journal_str[i] > 0) {
 			////get_str(place_str,17,party.journal_str[i]);
 			csit(962,3 + i,data_store->scen_strs[party.journal_str[i] + 10]);
-			sprintf((char *)place_str,"Day: %d",party.journal_day[i]);
+			sprintf(place_str,"Day: %d",party.journal_day[i]);
 			csit(962,9 + i,(char *)place_str);
 			}
 		}

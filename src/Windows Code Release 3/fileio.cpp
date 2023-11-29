@@ -1,5 +1,6 @@
 
 #include <Windows.h>
+#include <array>
 #include <commdlg.h>
 
 #include <cstring>
@@ -102,13 +103,13 @@ town_record_type  far dummy_town;
 short jl;
 extern char file_path_name[256];
 
+static const std::array szFilter{ "Blades of Exile Save Files (*.SAV)","*.sav",
+	"Text Files (*.TXT)","*.txt",
+	"All Files (*.*)","*.*",
+	"" };
+
 void file_initialize()
 {
-static char *szFilter[] = {"Blades of Exile Save Files (*.SAV)","*.sav",
-		"Text Files (*.TXT)","*.txt",
-		"All Files (*.*)","*.*",
-		""};
-
 		OpenFile("outdoor.dat",&save_dir,OF_PARSE);
 		OpenFile("town.dat",&save_dir2,OF_PARSE);
 
@@ -143,7 +144,6 @@ void load_file()
 	short i,j,k;
 	Boolean town_restore = FALSE;
 	Boolean maps_there = FALSE;
-	Boolean map_doh = FALSE;
 	
 	char flag_data[8];
 
@@ -176,8 +176,8 @@ void load_file()
 
 	len = sizeof(flag_type);
 
-//	sprintf((char *) debug, "  Len %d               ", (short) len);
-//	add_string_to_buf((char *) debug);
+//	sprintf(debug, "  Len %d               ", (short) len);
+//	add_string_to_buf( debug);
 
 	for (i = 0; i < 3; i++) {
 		if ((error = _lread(file_id, (char *) flag_data, len)) == HFILE_ERROR) {
@@ -436,7 +436,7 @@ void save_file(short mode)
 //mode;  // 0 - normal  1 - save as
 {
 	HFILE file_id;
-	Boolean got_error = FALSE,town_save = FALSE;
+	Boolean town_save = FALSE;
 	UINT error;
 
 	short i;
@@ -714,12 +714,12 @@ void build_scen_file_name (char *file_n)
 		if ((file_path_name[i] == 92) || (file_path_name[i] == '/'))
 			last_slash = i;
 	if (last_slash < 0) {
-		sprintf((char *) file_n,"BLADSCEN/%s",party.scen_name);
+		sprintf(file_n,"BLADSCEN/%s",party.scen_name);
 		return;
 		}
 	strcpy(file_n,file_path_name);
 	file_n += last_slash + 1;
-	sprintf((char *) file_n,"BLADSCEN/%s",party.scen_name);
+	sprintf(file_n,"BLADSCEN/%s",party.scen_name);
 }
 
 void build_scen_ed_name (char *file_n)
@@ -730,12 +730,12 @@ void build_scen_ed_name (char *file_n)
 		if ((file_path_name[i] == 92) || (file_path_name[i] == '/'))
 			last_slash = i;
 	if (last_slash < 0) {
-		sprintf((char *) file_n,"BLSCENED/bladdata.bld");
+		sprintf(file_n,"BLSCENED/bladdata.bld");
 		return;
 		}
 	strcpy(file_n,file_path_name);
 	file_n += last_slash + 1;
-	sprintf((char *) file_n,"BLSCENED/bladdata.bld");
+	sprintf(file_n,"BLSCENED/bladdata.bld");
 }
 
 // mode 0 want town and talking, 1 talking only, 2 want a string only, and extra is string num
@@ -1114,7 +1114,6 @@ void position_party(short out_x,short out_y,short pc_pos_x,short pc_pos_y)
 void build_outdoors()
 {
 	short i,j;
-	unsigned char exit_g_type[12] = {0,0,2,2,2, 28,26,6,30,2, 2,0};
 		for (i = 0; i < 48; i++)
 			for (j = 0; j < 48; j++) {
 				out[i][j] = outdoors[0][0].terrain[i][j];
@@ -1330,7 +1329,7 @@ void get_reg_data()
 {
 	HFILE f;
 	short i;
-	long vals[10],len = 4;
+	long vals[10];
 	OFSTRUCT store;
 
 	f = OpenFile("bladmisc.dat",&store,OF_READ /* | OF_SEARCH */);
@@ -1387,7 +1386,7 @@ void build_data_file(short mode)
 //mode; // 0 - make first time file  1 - customize  2 - new write
 {
 	short i;
-	long val_store,to_return = 0,len = 4,s_vals[10] = {0,0,0,0,0, 0,0,0,0,0};
+	long val_store,s_vals[10] = {0,0,0,0,0, 0,0,0,0,0};
 	OFSTRUCT store;
 	HFILE f;
 
@@ -1544,7 +1543,7 @@ void oops_error(short error)
 		SysBeep(50);
 		SysBeep(50);
 		SysBeep(50);
-	sprintf((char *) error_str,"Giving the scenario editor more memory might also help. Be sure to back your scenario up often. Error number: %d.",error);
+	sprintf(error_str,"Giving the scenario editor more memory might also help. Be sure to back your scenario up often. Error number: %d.",error);
 	give_error("The program encountered an error while loading/saving/creating the scenario. To prevent future problems, the program will now terminate. Trying again may solve the problem.",(char *) error_str,0);
 	//ExitToShell();
 }
@@ -1559,7 +1558,7 @@ typedef struct {
 */
 void build_scen_headers()
 {
-	short i,index = 1;
+	short i;
 	short cur_entry = 0;
 	HWND listbox;
 	WORD count;
@@ -1577,12 +1576,12 @@ void build_scen_headers()
 
 	for (i = 0; i < count; i++) {
 		SendMessage(listbox,LB_GETTEXT,i,(LONG) (LPSTR) filename2);
-		sprintf((char *) filename,"BLADSCEN/%s",filename2);
+		sprintf(filename,"BLADSCEN/%s",filename2);
 
 		if (load_scenario_header(filename,cur_entry) == TRUE) {
 			// now we need to store the file name, first stripping any path that occurs
 			// before it
-			strcpy((char *) data_store2->scen_names[cur_entry],(char *) filename2);
+			strcpy(data_store2->scen_names[cur_entry], filename2);
 			cur_entry++;
 			}
 		}
@@ -1656,7 +1655,7 @@ Boolean load_scenario_header(char *filename,short header_entry)
 		if (i == 0)
 			load_str[29] = 0;
 			else load_str[59] = 0;
-		strcpy(data_store2->scen_header_strs[header_entry][i],(char *) load_str);
+		strcpy(data_store2->scen_header_strs[header_entry][i], load_str);
 		}
 	
 	FSClose(file_id);
@@ -2137,7 +2136,6 @@ short SetFPos(HFILE file, short mode, long len)
 Boolean load_blades_data()
 {
 	HFILE file_id;
-	Boolean file_ok = FALSE;
 	char file_name[256];
 	 OFSTRUCT store;
 

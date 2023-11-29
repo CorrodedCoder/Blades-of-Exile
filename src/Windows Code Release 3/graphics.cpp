@@ -1,5 +1,5 @@
 #include <Windows.h>
-
+#include <array>
 #include <cstring>
 #include <cstdio>
 #include "global.h"
@@ -199,7 +199,7 @@ void plop_fancy_startup()
 	HBITMAP pict_to_draw = NULL;
 	short i,j;
 
-	RECT screen_rect = {0,0,613,448},from_rect = {0,0,350,350},to_rect,whole_window;
+	RECT from_rect = {0,0,350,350},to_rect,whole_window;
 	POINT graphic_ul;
 	HGDIOBJ old_brush;
 	long cur_time;
@@ -304,8 +304,6 @@ void plop_fancy_startup()
 
 void fancy_startup_delay()
 {
-	RECT old_rect = {0,0,0,0};
-
 	//play_sound(-9);
 	 // insert gray out window here
 
@@ -430,13 +428,13 @@ void draw_startup_stats()
 			switch (adven[i].main_status) {
 				case 1:
 					switch (adven[i].race) {
-						case 0: sprintf((char *) str,"Level %d Human",adven[i].level); break;
-						case 1: sprintf((char *) str,"Level %d Nephilim",adven[i].level); break;
-						case 2: sprintf((char *) str,"Level %d Slithzerikai",adven[i].level); break;
+						case 0: sprintf(str,"Level %d Human",adven[i].level); break;
+						case 1: sprintf(str,"Level %d Nephilim",adven[i].level); break;
+						case 2: sprintf(str,"Level %d Slithzerikai",adven[i].level); break;
 						}
 					char_win_draw_string(main_dc,pc_rect,(char *) str,0,18);
 					OffsetRect(&pc_rect,0,13);
-					sprintf((char *) str,"Health %d, Spell pts. %d",
+					sprintf(str,"Health %d, Spell pts. %d",
 						adven[i].max_health,adven[i].max_sp);
 					char_win_draw_string(main_dc,pc_rect,(char *) str,0,18);
 					break;
@@ -481,12 +479,12 @@ void draw_startup_anim()
 	rect_draw_some_item_bmp(startup_button_g,anim_size,startup_button_g,startup_button[5],0,1);
 }
 
+static const std::array button_labels{ "Load Game","Make New Party","How To Order",
+	"Start Scenario","Custom Scenario","Quit" };
+
 void draw_start_button(short which_position,short which_button)
 {
 	RECT from_rect,to_rect;
-	char *button_labels[] = {"Load Game","Make New Party","How To Order",
-		"Start Scenario","Custom Scenario","Quit"};
-	RECT button_from = {172,0,202,30};
 	COLORREF colors[5] = {RGB(0,0,0),RGB(255,0,0),RGB(255,255,255),RGB(0,255,255),RGB(0,0,255)};
 	UINT c[5];
 
@@ -614,7 +612,7 @@ void Set_up_win ()
 	RECT pc_rect = {0,0,113,216};
 	HBITMAP temp_gworld;
 	short i,j;
-	RECT mask_rect = {0,0,308,396},r = {0,0,280,180}; /**/
+	RECT r = {0,0,280,180}; /**/
 	RECT bg_from[9] = {{0,168,8,176},{23,206,31,214},{32,168,40,176},{102,174,110,182},	
 		{173,191,181,199},{203,190,211,198},{273,183,281,191},{373,0,381,8},
 		{380,17,388,25}};
@@ -1017,8 +1015,6 @@ void draw_buttons(short mode)
 	RECT	source_rect = {0,0,258,37}, dest_rec; /**/
 	HBITMAP	buttons_to_draw;
 	Boolean spec_draw = FALSE;
-	RECT base_rect = {0,0,40,40};
-	short i = 0,j = 0;
 
 	if (mode == 1) {
 		spec_draw = TRUE;
@@ -1104,7 +1100,7 @@ void draw_text_bar(short mode)
 	
 		}
   	if ((is_combat()) && (current_pc < 6) && (monsters_going == FALSE)) {
-		sprintf((char *) combat_string,"%s (ap: %d)",
+		sprintf(combat_string,"%s (ap: %d)",
 			adven[current_pc].name,pc_moves[current_pc]);
 		put_text_bar((char *) combat_string);
 		remember_tiny_text = 500;
@@ -1147,25 +1143,25 @@ void put_text_bar(char *str)
 	if (monsters_going == FALSE) {
 		if (PSD[305][0] > 0) {
 			text_rect.left = xpos;
-			sprintf((char *) status_str,"Stealth");
+			sprintf(status_str,"Stealth");
 			win_draw_string(hdc,text_rect,status_str,2,9);
 			xpos -= 60;
 			}
 		if (PSD[305][1] > 0) {
 			text_rect.left = xpos;
-			sprintf((char *) status_str,"Flying");
+			sprintf(status_str,"Flying");
 			win_draw_string(hdc,text_rect,status_str,2,9);
 			xpos -= 60;
 			}
 		if (PSD[305][2] > 0) {
 			text_rect.left = xpos;
-			sprintf((char *) status_str,"Detect Life");
+			sprintf(status_str,"Detect Life");
 			win_draw_string(hdc,text_rect,status_str,2,9);
 			xpos -= 60;
 			}
 		if (PSD[305][3] > 0) {
 			text_rect.left = xpos;
-			sprintf((char *) status_str,"Firewalk");
+			sprintf(status_str,"Firewalk");
 			win_draw_string(hdc,text_rect,status_str,2,9);
 			xpos -= 60;
 			}
@@ -1690,7 +1686,6 @@ void draw_terrain(short	mode)
 	unsigned char spec_terrain;
 	Boolean off_terrain = FALSE,draw_trim = TRUE;
 	short i,j,short_spec_terrain;
-	COLORREF colors[5] = {RGB(0,0,0),RGB(255,0,0),RGB(128,0,0),RGB(0,160,0),RGB(255,255,255)};
 
 	if (mode == 2) {
 		if (current_working_monster < 0) return;
@@ -1959,7 +1954,6 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 {
 	Boolean at_top = FALSE,at_bot = FALSE,at_left = FALSE,at_right = FALSE;
 	unsigned char store,store2,store3,store1;
-	char to_return = 0;
 	location targ;
 	
 	// FIrst quick check ... if a pit or barrier in outdoor combat, no trim
@@ -2214,14 +2208,9 @@ void pre_boom_space(location where,short mode,short type,short damage,short soun
 	// 3 - pole  4 - club  5 - fireball hit  6 - squish  7 - cold
 	// 8 - acid  9 - claw  10 - bite  11 - slime  12 - zap  13 - missile hit
 {
-	location where_draw = {4,4};
-	RECT source_rect = {0,0,28,36},dest_rect = {13,13,41,49},big_to = {13,13,265,337};
-	/**/
 	short sound_key;
-	short x_adj = 0,y_adj = 0;
 	short sound_to_play[20] = {97,69,70,71,72, 73,55,75,42,86,
 			87,88,89,98,0, 0,0,0,0,0};
-	RECT mixed_square = {353,169,381,205};
 
 	sound_key = type / 10;
 	type = type % 10;
@@ -2317,7 +2306,7 @@ void pre_boom_space(location where,short mode,short type,short damage,short soun
 
 	if ((cartoon_happening == FALSE) && (dest_rect.right - dest_rect.left >= 28)
 		&& (dest_rect.bottom - dest_rect.top >= 36)) {
-				sprintf((char *) dam_str,"%d",damage);
+				sprintf(dam_str,"%d",damage);
 		text_rect = dest_rect;
 		text_rect.top += 10;
 		if ((damage < 10) && (dest_rect.right - dest_rect.left > 19))
@@ -2391,9 +2380,7 @@ void redraw_terrain()
 void draw_targets(location center)
 {
 	RECT source_rect = {36,74,47,85},dest_rect; /**/
-	location target = {4,4};
 	short i = 0;
-	short dir_array[8] = {0,3,3,3,2,1,1,1};
 
 	if (party_toast() == TRUE)
 		return;
@@ -2498,7 +2485,7 @@ void draw_targeting_line(POINT where_curs)
 								 && (store_loc.y - which_space.y + 4 == 4)) {
 								 storec = GetTextColor(main_dc);
 								 SetTextColor(main_dc,PALETTEINDEX(c[1]));
-									sprintf((char *) dam_str,"%d  ",num_targets_left);
+									sprintf(dam_str,"%d  ",num_targets_left);
 									DrawText(main_dc,dam_str,-1,&target_rect,DT_SINGLELINE | DT_VCENTER | DT_CENTER);
 									//WinDrawString(dam_str,((target_rect.left + target_rect.right) / 2) - 3,
 									// (target_rect.top + target_rect.bottom) / 2);

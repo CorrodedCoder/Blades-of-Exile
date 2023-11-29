@@ -1,5 +1,5 @@
 #include <Windows.h>
-
+#include <array>
 #include <cstdio>
 
 #include "graphics.h"
@@ -71,9 +71,9 @@ pc_record_type *store_xp_pc;
 Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 //short mode; // ignore,
 {
-	short i,button_hit = 100,first_existing_pc = 0;
+	short i;
 	
-	short choice = 4,for_pc = 6;
+	short choice = 4;
 	
 	Boolean to_return = FALSE;
 	Boolean ctrl_key = FALSE;
@@ -165,7 +165,7 @@ void edit_gold_or_food_event_filter (short item_hit)
 	
 	cd_get_text_edit_str((store_which_to_edit == 0) ? 1012 : 947,(char *) get_text);
 	dialog_answer = 0;
-	sscanf((char *) get_text,"%hd",&dialog_answer);
+	sscanf(get_text,"%hd",&dialog_answer);
 	dialog_not_toast = FALSE;
 }
 
@@ -180,7 +180,7 @@ void edit_gold_or_food(short which_to_edit)
 	
 	cd_create_dialog((which_to_edit == 0) ? 1012 : 947,mainPtr);
 		
-	sprintf((char *) sign_text,"%d",(short) ((which_to_edit == 0) ? party.gold : party.food));
+	sprintf(sign_text,"%d",(short) ((which_to_edit == 0) ? party.gold : party.food));
 	cd_set_text_edit_str((which_to_edit == 0) ? 1012 : 947,(char *) sign_text);
 	
 	cd_set_edit_focus();
@@ -207,7 +207,7 @@ void edit_day_event_filter (short item_hit)
 	
 	cd_get_text_edit_str(917,(char *) get_text);
 	dialog_answer = 0;
-	sscanf((char *) get_text,"%hd",&dialog_answer);
+	sscanf(get_text,"%hd",&dialog_answer);
 	dialog_not_toast = FALSE;
 }
 
@@ -219,7 +219,7 @@ void edit_day()
 	
 	cd_create_dialog(917,mainPtr);
 		
-	sprintf((char *) sign_text,"%d",(short) ( ((party.age) / 3700) + 1));
+	sprintf(sign_text,"%d",(short) ( ((party.age) / 3700) + 1));
 	cd_set_text_edit_str(917,(char *) sign_text);
 	
 	cd_set_edit_focus();
@@ -338,17 +338,17 @@ Boolean display_alchemy_event_filter (short item_hit)
 					return FALSE;
 }
 
+static const std::array alch_names{ "Weak Curing Potion (1)","Weak Healing Potion (1)","Weak Poison (1)",
+"Weak Speed Potion (3)","Medium Poison (3)",
+	"Medium Heal Potion (4)","Strong Curing (5)","Medium Speed Potion (5)",
+	"Graymold Salve (7)","Weak Power Potion (9)",
+	"Potion of Clarity (9)","Strong Poison (10)","Strong Heal Potion (12)","Killer Poison (12)",
+	"Resurrection Balm (9)","Medium Power Potion (14)","Knowledge Brew (19)",
+	"Strong Strength (10)","Bliss (18)","Strong Power (20)"};
+
 void display_alchemy()
 {
 	short i;
-	char *alch_names[] = {"Weak Curing Potion (1)","Weak Healing Potion (1)","Weak Poison (1)",
-	"Weak Speed Potion (3)","Medium Poison (3)",
-		"Medium Heal Potion (4)","Strong Curing (5)","Medium Speed Potion (5)",
-		"Graymold Salve (7)","Weak Power Potion (9)",
-		"Potion of Clarity (9)","Strong Poison (10)","Strong Heal Potion (12)","Killer Poison (12)",
-		"Resurrection Balm (9)","Medium Power Potion (14)","Knowledge Brew (19)",
-		"Strong Strength (10)","Bliss (18)","Strong Power (20)"
-		};
 
 	make_cursor_sword();
 
@@ -409,7 +409,7 @@ void do_xp_draw()
 
 	pc_num = store_train_pc;
 
-			sprintf((char *) get_text, "%s",(char *) adven[pc_num].name);
+			sprintf(get_text, "%s", adven[pc_num].name);
 
 
 	cd_set_item_text (1010, 51,get_text);
@@ -428,7 +428,7 @@ void do_xp_draw()
 
 Boolean spend_xp_event_filter (short item_hit)
 {
-	short pc_num,mode = 1;
+	short pc_num;
 	Boolean talk_done = FALSE;
 
 	pc_num = store_train_pc;
@@ -583,14 +583,14 @@ Boolean spend_xp(short pc_num, short mode, short parent)
 	make_cursor_sword();
 
 	cd_create_dialog_parent_num(1010,parent);
-	sprintf((char *) get_text,"Health (%d/%d)",1,10);
+	sprintf(get_text,"Health (%d/%d)",1,10);
 	cd_add_label(1010,52,(char *) get_text,1075);
-	sprintf((char *) get_text,"Spell Pts. (%d/%d)",1,15);
+	sprintf(get_text,"Spell Pts. (%d/%d)",1,15);
 	//cd_add_label(1010,5,get_text,1040);
 	cd_add_label(1010,53,(char *) get_text,1075);
 	for (i = 54; i < 73; i++) {
 		get_str(text2,9,1 + 2 * (i - 54));
-		sprintf((char *) get_text,"%s (%d/%d)",text2,skill_cost[i - 54],skill_g_cost[i - 54]);
+		sprintf(get_text,"%s (%d/%d)",text2,skill_cost[i - 54],skill_g_cost[i - 54]);
 		cd_add_label(1010,i,(char *) get_text,(i < 63) ? 1075 : 1069);
 		}
 	do_xp_draw();
@@ -637,7 +637,7 @@ void do_registration_event_filter (short item_hit)
 	
 	cd_get_text_edit_str(1075,(char *) get_text);
 	dialog_answer = 0;
-	sscanf((char *) get_text,"%hd",&dialog_answer);
+	sscanf(get_text,"%hd",&dialog_answer);
 		
 	dialog_not_toast = FALSE;
 }
@@ -680,7 +680,7 @@ void edit_xp_event_filter (short item_hit)
 	
 	cd_get_text_edit_str(1024,(char *) get_text);
 	dialog_answer = 0;
-	sscanf((char *) get_text,"%hd",&dialog_answer);
+	sscanf(get_text,"%hd",&dialog_answer);
 
 	dialog_not_toast = FALSE;
 }
@@ -697,7 +697,7 @@ void edit_xp(pc_record_type *pc)
 	
 	cd_create_dialog(1024,mainPtr);
 		
-	sprintf((char *) sign_text,"%d",(short)pc->experience);
+	sprintf(sign_text,"%d",(short)pc->experience);
 	cd_set_text_edit_str(1024,(char *) sign_text);
 	item_hit = get_tnl(store_xp_pc);
 	cdsin(1024,8,item_hit);

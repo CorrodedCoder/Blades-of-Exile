@@ -1,5 +1,5 @@
 #include <Windows.h>
-
+#include <array>
 #include <cstring>
 #include <cstdio>
 #include "global.h"
@@ -17,6 +17,9 @@
 #include "exlsound.h"
 #include "graphutl.h"
 #include "graphutl_helpers.hpp"
+
+static const std::array heal_types{"Heal Damage","Cure Poison","Cure Disease","Cure Paralysis",
+		"Uncurse Items","Cure Stoned Character","Raise Dead","Resurrection","Cure Dumbfounding"};
 
 short far monsters_faces[190] = {0,1,2,3,4,5,6,7,8,9,
 							10,0,12,11,11,12,13,13,2,11,
@@ -98,7 +101,6 @@ extern RECT shop_name_str;
 extern RECT shop_frame ;
 extern RECT shop_done_rect;
 extern item_record_type far food_types[15];
-extern char *heal_types[];
 extern short heal_costs[8];
 extern short terrain_there[9][9];
 
@@ -149,7 +151,6 @@ extern HBITMAP checker_bitmap;
 
 void apply_unseen_mask()
 {
-	RECT apply_bases[4] = {{0,0,28,4},{0,0,4,36},{0, 32,28,36},{24,0,28,36}}; // t l b r
 	RECT base_rect = {8,10,43,53}/*{9,9,43,53}*/,to_rect,big_to = {13,13,265,337}; /**/
 	short i,j,k,l;
 	Boolean need_bother = FALSE;
@@ -205,7 +206,7 @@ void apply_unseen_mask()
 void apply_light_mask() 
 {
 	RECT temp = {0,0,84,108},paint_rect,base_rect = {0,0,28,36};
-	RECT big_from = {28,36,280,360},big_to = {13,13,265,337}; /**/
+	RECT big_to = {13,13,265,337}; /**/
 	short i,j;
 	Boolean is_dark = FALSE,same_mask = TRUE;
 	
@@ -624,7 +625,7 @@ void do_explosion_anim(short sound_num,short special_draw)
 // sound_num currently ignored
 // special_draw - 0 normal 1 - first half 2 - second half
 {
-	RECT temp_rect,missile_origin_base = {1,1,17,17},to_rect,from_rect;
+	RECT temp_rect,to_rect,from_rect;
 	RECT base_rect = {0,0,28,36},text_rect;
 	char str[256];
 	short i,temp_val,temp_val2;
@@ -807,6 +808,10 @@ void click_shop_rect(RECT area_rect)
 	draw_shop_graphics(0,area_rect);
 
 }
+
+static const std::array cost_strs{ "Extremely Cheap","Very Reasonable","Pretty Average","Somewhat Pricey",
+	"Expensive","Exorbitant","Utterly Ridiculous" };
+
 void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 // mode 1 - drawing dark for button press
 {
@@ -824,8 +829,6 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 	short cur_cost,what_magic_shop,what_magic_shop_item;
 	char cur_name[256];
 	char cur_info_str[256];
-char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somewhat Pricey",
-	"Expensive","Exorbitant","Utterly Ridiculous"};
 	item_record_type base_item;
 	HDC hdc;
 	COLORREF colors[7] = {RGB(0,0,0),RGB(255,0,130),RGB(128,0,70),RGB(0,0,100),RGB(0,0,220),
@@ -1025,7 +1028,6 @@ void refresh_shopping()
 
 void click_talk_rect(char *str_to_place,char *str_to_place2,RECT c_rect)
 {
-	RECT dummy = {0,0,0,0};
 	long dum;
 
 	place_talk_str(str_to_place,str_to_place2,1,c_rect);
@@ -1051,7 +1053,7 @@ item_record_type store_mage_spells(short which_s)
 	spell.item_level = which_s + 30;
 	spell.value = cost[which_s];
 	get_str(str,38,which_s + 1);
-	strcpy((char *)spell.full_name,(char *)str);
+	strcpy(spell.full_name, str);
 	return spell;
 }
 
@@ -1073,7 +1075,7 @@ short cost[32] = {100,150,75,400,200, 100,80,250,
 	spell.item_level = which_s + 30;
 	spell.value = cost[which_s];
 	get_str(str,38,which_s + 50);
-	strcpy((char *)spell.full_name,(char *)str);
+	strcpy(spell.full_name, str);
 	return spell;
 }
 item_record_type store_alchemy(short which_s)
@@ -1087,7 +1089,7 @@ short val[20] = {50,75,30,130,100,150, 200,200,300,250,300, 500,600,750,700,1000
 	spell.item_level = which_s;
 	spell.value = val[which_s];
 	get_str(str,38,which_s + 100);
-	strcpy((char *)spell.full_name,(char *)str);
+	strcpy(spell.full_name, str);
 	return spell; 
 }
 
@@ -1138,7 +1140,7 @@ void get_item_interesting_string(item_record_type item,char *message)
 		}
 
 
-void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_rect)
+void place_talk_str(char *str_to_place,const char *str_to_place2,short color,RECT c_rect)
 // color 0 - regular  1 - darker
 {
 	RECT area_rect;
@@ -1153,17 +1155,6 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_re
 	short last_line_break = 0,last_word_break = 0,on_what_line = 0,last_stored_word_break = 0;
 	Boolean force_skip = FALSE;
 	short face_to_draw;
-	
-	short force_faces[100] = {33,6,32,27,31,28,24,29,118,31,
-							117,18,130,28,129,31,134,31,143,28,
-							162,18,156,32,157,30,171,39,172,31,
-							174,10,193,29,195,19,165,32,27,6,
-							206,10,219,40,276,29,282,28,0,0,
-							253,32,122,31,340,40,251,57,0,0,
-							0,0,0,0,0,0,0,0,0,0,
-							0,0,0,0,0,0,0,0,0,0,
-							0,0,0,0,0,0,0,0,0,0,
-							0,0,0,0,0,0,0,0,0,0};
 	
 	HDC hdc;
 	COLORREF colors[7] = {RGB(0,0,0),RGB(0,0,204),RGB(0,0,102),RGB(0,0,100),RGB(0,0,220),
@@ -1249,12 +1240,12 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_re
 		for (i = 0; i < 50; i++)
 			store_words[i].word_rect.left = store_words[i].word_rect.right = 0;
 
-	str_len = (short) strlen((char *)str_to_place);
+	str_len = (short) strlen(str_to_place);
 	if (str_len == 0) {
-		sprintf((char *) str_to_place,".");
+		sprintf(str_to_place,".");
 		}
-	strcpy((char *) str,str_to_place);
-	strcpy((char *) p_str,str_to_place);
+	strcpy(str,str_to_place);
+	strcpy(p_str,str_to_place);
 	c2p(p_str);
 	for (i = 0; i < 257; i++)
 		text_len[i]= 0;
@@ -1319,10 +1310,10 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_re
 	 		store_last_word_break = last_word_break;
 	 		if (i == str_len - 1)
 	 			last_word_break = i + 2;
-			sprintf((char *)str_to_draw,"                                                         ");
-			strncpy ((char *) str_to_draw,(char *) str + last_line_break,(size_t) (last_word_break - last_line_break - 1));
-			sprintf((char *)str_to_draw2," %s",str_to_draw);
-			str_to_draw2[0] = (char) strlen((char *)str_to_draw);
+			sprintf(str_to_draw,"                                                         ");
+			strncpy(str_to_draw, str + last_line_break,(size_t) (last_word_break - last_line_break - 1));
+			sprintf(str_to_draw2," %s",str_to_draw);
+			str_to_draw2[0] = (char) strlen(str_to_draw);
 			MoveToDrawString((str_to_draw2 + 1),hdc);
 			on_what_line++;
 			MoveTo(dest_rect.left + 1 , dest_rect.top + 1 + line_height * on_what_line + 9);
@@ -1346,13 +1337,13 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_re
 		}
 
 	// Now for string 2
-	str_len = (short) strlen((char *)str_to_place2);
+	str_len = (short) strlen(str_to_place2);
 	start_of_last_kept_word = -1;
 
 	if (str_len > 0) {
 
-	strcpy((char *) str,str_to_place2);
-	strcpy((char *) p_str,str_to_place2);
+	strcpy(str,str_to_place2);
+	strcpy(p_str,str_to_place2);
 	c2p(p_str);
 	for (i = 0; i < 257; i++)
 		text_len[i]= 0;
@@ -1409,10 +1400,10 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_re
 			store_last_word_break = last_word_break;
 			if (i == str_len - 1)
 				last_word_break = i + 2;
-			sprintf((char *)str_to_draw,"                                                         ");
-			strncpy ((char *) str_to_draw,(char *) str + last_line_break,(size_t) (last_word_break - last_line_break - 1));
-			sprintf((char *)str_to_draw2," %s",str_to_draw);
-			str_to_draw2[0] = (char) strlen((char *)str_to_draw);
+			sprintf(str_to_draw,"                                                         ");
+			strncpy(str_to_draw, str + last_line_break,(size_t) (last_word_break - last_line_break - 1));
+			sprintf(str_to_draw2," %s",str_to_draw);
+			str_to_draw2[0] = (char) strlen(str_to_draw);
 			MoveToDrawString((str_to_draw2 + 1),hdc);
 			on_what_line++;
 			MoveTo(dest_rect.left + 1 , dest_rect.top + 1 + line_height * on_what_line + 9);

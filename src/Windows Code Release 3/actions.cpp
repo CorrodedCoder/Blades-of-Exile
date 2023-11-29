@@ -1,5 +1,6 @@
 
 #include <Windows.h>
+#include <array>
 #include <cstdio>
 
 #include "global.h"
@@ -131,7 +132,7 @@ extern short shop_identify_cost;
 extern Boolean fry_startup;
 
 
-char *dir_string[] = {"North", "NorthEast", "East", "SouthEast", "South", "SouthWest", "West", "NorthWest"};
+static const std::array dir_string{"North", "NorthEast", "East", "SouthEast", "South", "SouthWest", "West", "NorthWest"};
 char get_new_terrain();
 creature_start_type	save_monster_type;
 
@@ -156,7 +157,7 @@ RECT shopping_rects[8][7];
  void init_screen_locs()
 {
 	short i,j,k,l;
-	RECT bottom_base = {0,0,18,15},startup_base = {5,279,306,327};
+	RECT startup_base = {5,279,306,327};
 	RECT shop_base = {12,63,267,99}; /**/
 
 		for (i = 0; i < 7; i++)
@@ -314,7 +315,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 	Boolean are_done = FALSE;
 	Boolean need_redraw = FALSE, did_something = FALSE, need_reprint = FALSE;
 	Boolean town_move_done = FALSE,pc_delayed = FALSE;
-	location destination,cur_loc,sector = {0,0},loc_in_sec,cur_direction = {0,0};
+	location destination,cur_loc,loc_in_sec,cur_direction = {0,0};
 	unsigned char storage;
 	short find_direction_from,ter_looked_at,button_hit = 12,store_cur_pc;
 	short store_sp[6];
@@ -724,8 +725,8 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 					add_string_to_buf("Pause.");
 					for (k = 0; k < 6; k++)
 						if ((adven[k].main_status == 1) && (adven[k].status[6] > 0)) {
-							sprintf((char *) str,"%s cleans webs.",adven[k].name);
-							add_string_to_buf((char *) str);
+							sprintf(str,"%s cleans webs.",adven[k].name);
+							add_string_to_buf( str);
 							adven[k].status[6] = move_to_zero(adven[k].status[6]);
 							adven[k].status[6] = move_to_zero(adven[k].status[6]);
 							}
@@ -1079,21 +1080,21 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 									current_pc = i;
 									set_stat_window (i);
 									if (overall_mode == 21)
-										sprintf((char *) str,"Now shopping: %s",adven[i].name);
-										else sprintf((char *) str,"Now active: %s",adven[i].name);
-									add_string_to_buf((char *)str);
+										sprintf(str,"Now shopping: %s",adven[i].name);
+										else sprintf(str,"Now active: %s",adven[i].name);
+									add_string_to_buf(str);
 									adjust_spell_menus();
 									}
 							break;
 						case 1:
-							sprintf((char *) str,"%s has %d health out of %d.",adven[i].name,
+							sprintf(str,"%s has %d health out of %d.",adven[i].name,
 								adven[i].cur_health,adven[i].max_health);
-							add_string_to_buf((char *)str);
+							add_string_to_buf(str);
 							break;
 						case 2:
-							sprintf((char *) str,"%s has %d spell pts. out of %d.",adven[i].name,
+							sprintf(str,"%s has %d spell pts. out of %d.",adven[i].name,
 								adven[i].cur_sp,adven[i].max_sp);
-							add_string_to_buf((char *)str);
+							add_string_to_buf(str);
 							break;
 						case 3: // pc info
 							give_pc_info(i);
@@ -1144,8 +1145,8 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 										add_string_to_buf("Set active: PC must be here & active.");
 										else {
 											current_pc = i;
-											sprintf((char *) str,"Now active: %s",adven[i].name);
-											add_string_to_buf((char *)str);
+											sprintf(str,"Now active: %s",adven[i].name);
+											add_string_to_buf(str);
 											adjust_spell_menus();
 											}
 								}
@@ -1485,7 +1486,6 @@ Boolean someone_awake()
 void check_cd_event(HWND hwnd,UINT message,UINT wparam,LONG lparam)
 {
 	POINT press;
-	Boolean action_done = FALSE;
 	short wind_hit = -1,item_hit = -1;
 
 	switch (message) {
@@ -1753,12 +1753,10 @@ Boolean handle_keystroke(UINT wParam,LONG lParam)
 	DWORD s1;
 	UINT s2;
 
-	char keypad[10] = {82,83,84,85,86,87,88,89,91,92};
 	POINT terrain_click[10] = {{150,185},{120,215},{150,215},{180,215},
 							{120,185},{150,185},{180,185},
 								{120,155},{150,155},{180,135}};
 	char talk_chars[9] = {'l','n','j','b','s','r','d','g','a'};
-	Boolean dialog_grabbed_key = FALSE;
 	char chr;
 
 	if (in_startup_mode == TRUE)
@@ -2471,18 +2469,18 @@ void handle_cave_lore()
 	for (i = 0; i < 6; i++)
 		if ((adven[i].main_status == 1) && (adven[i].traits[4] > 0) && (get_ran(1,0,12) == 5)
 			&& (((pic >= 0) && (pic <= 1)) || ((pic >= 70) && (pic <= 76))) ) {
-			sprintf((char *)str,"%s hunts.",adven[i].name);
+			sprintf(str,"%s hunts.",adven[i].name);
 			party.food += get_ran(2,1,6);
-			add_string_to_buf((char *)str);
+			add_string_to_buf(str);
 			put_pc_screen();
 			}
 	for (i = 0; i < 6; i++)
 		if (
 		(adven[i].main_status == 1) && (adven[i].traits[5] > 0) && (get_ran(1,0,12) == 5)
 			&& (((pic >= 2) && (pic <= 4)) || ((pic >= 79) && (pic <= 84)))) {
-			sprintf((char *)str,"%s hunts.",adven[i].name);
+			sprintf(str,"%s hunts.",adven[i].name);
 			party.food += get_ran(2,1,6);
-			add_string_to_buf((char *)str);
+			add_string_to_buf(str);
 			put_pc_screen();
 			}
 			
@@ -2573,9 +2571,7 @@ void handle_death()
 void start_new_game()
 {
 	short i; // 0 - make party   1 - sample party
-	short num_pcs = 0,choice;
-	Boolean creation_done = FALSE;
-	location in_town_loc = {59,6};
+	short choice;
 
 	choice = FCD(1065,0);
 	if (choice == 2)
@@ -2820,8 +2816,8 @@ Boolean outd_move_party(location destination,Boolean forced)
 		party.i_w_c.x = (party.p_loc.x > 47) ? 1 : 0;
 		party.i_w_c.y = (party.p_loc.y > 47) ? 1 : 0;
 		party.loc_in_sec = global_to_local(party.p_loc);
-		//sprintf ((char *) create_line, "Moved: %s",dir_string[party.direction]);//, party.p_loc.x, party.p_loc.y, party.loc_in_sec.x, party.loc_in_sec.y);
-		//add_string_to_buf((char *) create_line);
+		//sprintf(create_line, "Moved: %s",dir_string[party.direction]);//, party.p_loc.x, party.p_loc.y, party.loc_in_sec.x, party.loc_in_sec.y);
+		//add_string_to_buf( create_line);
 		move_sound(out[real_dest.x][real_dest.y],num_out_moves);
 		num_out_moves++;
 		
@@ -2866,8 +2862,8 @@ Boolean outd_move_party(location destination,Boolean forced)
 		return TRUE;
 		}
 		else {
-			sprintf ((char *) create_line, "Blocked: %s",dir_string[set_direction(party.p_loc, destination)]);		
-			add_string_to_buf((char *) create_line);	
+			sprintf(create_line, "Blocked: %s",dir_string[set_direction(party.p_loc, destination)]);		
+			add_string_to_buf( create_line);	
 			return FALSE;
 			}
 	}
@@ -2986,8 +2982,8 @@ Boolean town_move_party(location destination,short forced)
 				}
 			party.direction = set_direction(c_town.p_loc, destination);
 			c_town.p_loc = destination;
-			//sprintf ((char *) create_line, "Moved: %s",dir_string[party.direction]);
-			//add_string_to_buf((char *) create_line);
+			//sprintf(create_line, "Moved: %s",dir_string[party.direction]);
+			//add_string_to_buf( create_line);
 //			place_treasure(destination,5,3);
 
 			move_sound(t_d.terrain[destination.x][destination.y],(short) party.age);
@@ -3005,9 +3001,9 @@ Boolean town_move_party(location destination,short forced)
 			}
 		else {
 			if (is_door(destination) == TRUE)
-				sprintf ((char *) create_line, "Door locked: %s               ",dir_string[set_direction(c_town.p_loc, destination)]);		
-				else sprintf ((char *) create_line, "Blocked: %s               ",dir_string[set_direction(c_town.p_loc, destination)]);		
-			add_string_to_buf((char *) create_line);
+				sprintf(create_line, "Door locked: %s               ",dir_string[set_direction(c_town.p_loc, destination)]);		
+				else sprintf(create_line, "Blocked: %s               ",dir_string[set_direction(c_town.p_loc, destination)]);		
+			add_string_to_buf( create_line);
 			return FALSE;
 			}
 		}
@@ -3070,8 +3066,6 @@ short count_walls(location loc)
 
 Boolean is_sign(unsigned char ter)
 {
-	unsigned char signs[6] = {110,127,142,213,214,252};
-	
 	if (scenario.ter_types[ter].special == 11)
 		return TRUE;
 	return FALSE;

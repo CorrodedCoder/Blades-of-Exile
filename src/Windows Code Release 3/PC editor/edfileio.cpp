@@ -1,4 +1,5 @@
 #include <Windows.h>
+#include <array>
 #include <commdlg.h>
 
 #include <cstring>
@@ -53,14 +54,13 @@ short give_intro_hint = 1;
 short display_mode = 0;
  short store_size;
 
+ static const std::array szFilter{ "Blades of Exile Save Files (*.SAV)","*.sav",
+	 "Text Files (*.TXT)","*.txt",
+	 "All Files (*.*)","*.*",
+	 "" };
+
 void file_initialize()
 {
-static char *szFilter[] = {"Blades of Exile Save Files (*.SAV)","*.sav",
-		"Text Files (*.TXT)","*.txt",
-		"All Files (*.*)","*.*",
-		""};
-
-
 		ofn.lStructSize = sizeof(OPENFILENAME);
 		ofn.hwndOwner = mainPtr;
 		ofn.hInstance = NULL;
@@ -91,7 +91,6 @@ void load_file()
 	short i;
 	Boolean town_restore = FALSE;
 	Boolean maps_there = FALSE;
-	Boolean map_doh = FALSE;
 	Boolean in_scen = FALSE;
 
 	char flag_data[8];
@@ -124,8 +123,8 @@ void load_file()
 
 	len = sizeof(flag_type);
 
-//	sprintf((char *) debug, "  Len %d               ", (short) len);
-//	add_string_to_buf((char *) debug);
+//	sprintf(debug, "  Len %d               ", (short) len);
+//	add_string_to_buf( debug);
 
 	for (i = 0; i < 3; i++) {
 		if ((error = _lread(file_id, (char *) flag_data, len)) == HFILE_ERROR) {
@@ -323,7 +322,7 @@ void save_file(short mode)
 	stored_outdoor_maps_type *o_maps_ptr;
 
 	char *party_encryptor;
-	Boolean got_error = FALSE,town_save = FALSE,in_scen = FALSE,save_maps = FALSE;
+	Boolean town_save = FALSE,in_scen = FALSE,save_maps = FALSE;
 
       mode = 1;
 	if (file_in_mem == FALSE)
@@ -590,7 +589,7 @@ void get_reg_data()
 {
 	HFILE f;
 	short i;
-	long vals[10],len = 4;
+	long vals[10];
 	OFSTRUCT store;
 
 	return;
@@ -646,7 +645,7 @@ void build_data_file(short mode)
 //mode; // 0 - make first time file  1 - customize  2 - new write
 {
 	short i;
-	long val_store,to_return = 0,len = 4,s_vals[10] = {0,0,0,0,0, 0,0,0,0,0};
+	long val_store,s_vals[10] = {0,0,0,0,0, 0,0,0,0,0};
 	OFSTRUCT store;
 	HFILE f;
 

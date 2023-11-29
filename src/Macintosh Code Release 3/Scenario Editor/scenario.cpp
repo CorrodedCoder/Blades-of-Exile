@@ -909,10 +909,10 @@ void init_scenario()
 		scenario.scen_monsters[i] = return_monster_template(i);
 		get_str(temp_str,2,i);
 		if ((i > 187) || (i == 0))
-			sprintf((char *)data_store->scen_item_list.monst_names[i], "Unused");
-			else sprintf((char *)data_store->scen_item_list.monst_names[i], "%s", temp_str);
+			sprintf(data_store->scen_item_list.monst_names[i], "Unused");
+			else sprintf(data_store->scen_item_list.monst_names[i], "%s", temp_str);
 		if (i == 0)
-			sprintf((char *)data_store->scen_item_list.monst_names[i], "Empty");
+			sprintf(data_store->scen_item_list.monst_names[i], "Empty");
 		}
 	for (i = 0; i < 30; i++) {
 		scenario.scen_boats[i] = null_boat;
@@ -923,7 +923,7 @@ void init_scenario()
 		scenario.ter_types[i].blockage = ter_block[i];
 		scenario.ter_types[i].special = ter_traits[i];
 		get_str(temp_str,1,i + 1);
-		sprintf((char *)data_store->scen_item_list.ter_names[i], "%s", temp_str);
+		sprintf(data_store->scen_item_list.ter_names[i], "%s", temp_str);
 		
 		scenario.scen_specials[i] = null_spec_node;
 		}
@@ -947,8 +947,8 @@ void init_scenario()
 		}
 	for (i = 0; i < 270; i++) {
 		get_str(temp_str,35,i + 1);
-		sprintf((char *)data_store->scen_strs[i], "%s", temp_str);
-		scenario.scen_str_len[i] = strlen((char *) data_store->scen_strs[i]);
+		sprintf(data_store->scen_strs[i], "%s", temp_str);
+		scenario.scen_str_len[i] = strlen(data_store->scen_strs[i]);
 		}
 }	
 void put_ter_info_in_dlog()
@@ -1144,9 +1144,9 @@ void put_monst_info_in_dlog()
 	cdsin(814,33,store_which_monst);
 	CDST(814,2,data_store->scen_item_list.monst_names[store_which_monst]);
 	CDSN(814,3,store_monst.picture_num);
-	sprintf((char *) str,"Width = %d",store_monst.x_width);
+	sprintf(str,"Width = %d",store_monst.x_width);
 	csit(814,40,(char *) str);
-	sprintf((char *) str,"Height = %d",store_monst.y_width);
+	sprintf(str,"Height = %d",store_monst.y_width);
 	csit(814,41,(char *) str);
 	CDSN(814,4,store_monst.level);
 	CDSN(814,5,store_monst.health);
@@ -2459,7 +2459,7 @@ void edit_make_scen_1_event_filter (short item_hit)
 	switch (item_hit) {
 		case 4:
 			CDGT(800,3,(char *) str);
-			j = strlen((char *) str);
+			j = strlen(str);
 			if (j == 0) {
 				give_error("You've left the file name empty.","",800);
 				break;
@@ -2589,7 +2589,7 @@ void build_scenario()
 	
 	if (edit_make_scen_1((char *) f_name,(char *) title,&grass) == FALSE)
 		return;
-	sprintf((char *) f_name2,"%s.exs",f_name);
+	sprintf(f_name2,"%s.exs",f_name);
 	if (edit_make_scen_2((short *) two_flags) == FALSE)
 		return;
 	user_given_password = given_password = get_password();
@@ -2598,7 +2598,7 @@ void build_scenario()
 		
 	init_out();
 	init_scenario();
-	strcpy((char *) data_store->scen_strs[0],(char *) title);
+	strcpy(data_store->scen_strs[0],(char *) title);
 	if (two_flags[5] == 0) {
 		init_town(1);
 		if (grass == 0)
@@ -2712,7 +2712,7 @@ void set_starting_loc_filter (short item_hit)
 			j = CDGN(805,3);
 			k = CDGN(805,4);
 			if ((i < 0) || (i >= scenario.num_towns)) {
-				sprintf((char *) str,"The starting town must be from 0 to %d.",scenario.num_towns - 1);
+				sprintf(str,"The starting town must be from 0 to %d.",scenario.num_towns - 1);
 				give_error((char *) str,"",805);
 				break;
 				}

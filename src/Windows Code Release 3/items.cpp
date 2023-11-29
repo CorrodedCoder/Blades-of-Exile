@@ -141,10 +141,10 @@ Boolean give_to_pc(short pc_num,item_record_type  item,short  print_result)
 			}
 			if (in_startup_mode == FALSE) {
 				if (is_ident(item) == 0)
-					sprintf((char *) announce_string,"  %s gets %s.",adven[pc_num].name,item.name);
-					else sprintf((char *) announce_string,"  %s gets %s.",adven[pc_num].name,item.full_name);
+					sprintf(announce_string,"  %s gets %s.",adven[pc_num].name,item.name);
+					else sprintf(announce_string,"  %s gets %s.",adven[pc_num].name,item.full_name);
 				if (print_result == TRUE)
-					add_string_to_buf((char *)announce_string);
+					add_string_to_buf(announce_string);
 				}
 
 			combine_things(pc_num);
@@ -184,9 +184,9 @@ Boolean forced_give(short item_num,short abil)
 				adven[i].items[j] = item;
 
 				if (is_ident(item) == 0)
-					sprintf((char *) announce_string,"  %s gets %s.",adven[i].name,item.name);
-					else sprintf((char *) announce_string,"  %s gets %s.",adven[i].name,item.full_name);
-				add_string_to_buf((char *)announce_string);
+					sprintf(announce_string,"  %s gets %s.",adven[i].name,item.name);
+					else sprintf(announce_string,"  %s gets %s.",adven[i].name,item.full_name);
+				add_string_to_buf(announce_string);
 				combine_things(i);
 				sort_pc_items(i);
 				return TRUE;
@@ -439,39 +439,39 @@ void enchant_weapon(short pc_num,short item_hit,short enchant_type,short new_val
 	adven[pc_num].items[item_hit].item_properties |= 4;
 	switch (enchant_type) {
 		case 0:
-			sprintf((char *)store_name,"%s (+1)",adven[pc_num].items[item_hit].full_name);
+			sprintf(store_name,"%s (+1)",adven[pc_num].items[item_hit].full_name);
 			adven[pc_num].items[item_hit].bonus++;
 			adven[pc_num].items[item_hit].value = new_val;
 			break;
 		case 1:
-			sprintf((char *)store_name,"%s (+2)",adven[pc_num].items[item_hit].full_name);
+			sprintf(store_name,"%s (+2)",adven[pc_num].items[item_hit].full_name);
 			adven[pc_num].items[item_hit].bonus += 2;
 			adven[pc_num].items[item_hit].value = new_val;
 			break;
 		case 2:
-			sprintf((char *)store_name,"%s (+3)",adven[pc_num].items[item_hit].full_name);
+			sprintf(store_name,"%s (+3)",adven[pc_num].items[item_hit].full_name);
 			adven[pc_num].items[item_hit].bonus += 3;
 			adven[pc_num].items[item_hit].value = new_val;
 			break;
 		case 3:
-			sprintf((char *)store_name,"%s (F)",adven[pc_num].items[item_hit].full_name);
+			sprintf(store_name,"%s (F)",adven[pc_num].items[item_hit].full_name);
 			adven[pc_num].items[item_hit].ability = 110;
 			adven[pc_num].items[item_hit].ability_strength = 5;
 			adven[pc_num].items[item_hit].charges = 8;
 			break;
 		case 4:
-			sprintf((char *)store_name,"%s (F!)",adven[pc_num].items[item_hit].full_name);
+			sprintf(store_name,"%s (F!)",adven[pc_num].items[item_hit].full_name);
 			adven[pc_num].items[item_hit].value = new_val;
 			adven[pc_num].items[item_hit].ability = 1;
 			adven[pc_num].items[item_hit].ability_strength = 5;
 			break;
 		case 5:
-			sprintf((char *)store_name,"%s (+5)",adven[pc_num].items[item_hit].full_name);
+			sprintf(store_name,"%s (+5)",adven[pc_num].items[item_hit].full_name);
 			adven[pc_num].items[item_hit].value = new_val;
 			adven[pc_num].items[item_hit].bonus += 5;
 			break;
 		case 6:
-			sprintf((char *)store_name,"%s (B)",adven[pc_num].items[item_hit].full_name);
+			sprintf(store_name,"%s (B)",adven[pc_num].items[item_hit].full_name);
 			adven[pc_num].items[item_hit].bonus++;
 			adven[pc_num].items[item_hit].ability = 71;
 			adven[pc_num].items[item_hit].ability_strength = 5;
@@ -770,7 +770,7 @@ short get_item(location place,short pc_num,Boolean check_container)
 //short pc_num; // if 6, any   
 {
 	short i,taken = 0;
-	Boolean item_near = FALSE,gold_sound = FALSE,food_sound = FALSE;
+	Boolean item_near = FALSE;
 	short mass_get = 1;
 	
 	for (i = 0; i < T_M; i++)
@@ -895,8 +895,8 @@ void put_item_graphics()
 		if (item_array[i + first_item_shown] != 200) { // display an item in window
 			item = t_i.items[item_array[i + first_item_shown]]; 
 
-					sprintf ((char *) message, "%s",
-					 (is_ident(item) == TRUE) ? (char *) item.full_name : (char *) item.name);
+					sprintf(message, "%s",
+					 (is_ident(item) == TRUE) ? item.full_name : item.name);
 					csit(987,21 + i * 4,(char *) message);
 					if (item.graphic_num >= 150)
 						csp(987,20 + i * 4,3000 + 2000 + item.graphic_num - 150);
@@ -904,12 +904,12 @@ void put_item_graphics()
 					get_item_interesting_string(item,(char *) message);
 					csit(987,22 + i * 4,(char *) message);
 					storage = item_weight(item);
-					sprintf ((char *) message, "Weight: %d",storage);
+					sprintf(message, "Weight: %d",storage);
 					csit(987,53 + i,(char *) message);
 
 		  			}
 			else { // erase the spot
-				sprintf ((char *) message, "");
+				sprintf(message, "");
 				csit(987,21 + i * 4,(char *) message);
 				csit(987,22 + i * 4,(char *) message);
 				csit(987,53 + i,(char *) message);
@@ -919,7 +919,7 @@ void put_item_graphics()
 	if (current_getting_pc < 6) {
 		i = amount_pc_can_carry(current_getting_pc);
 		storage = pc_carry_weight(current_getting_pc);
-		sprintf ((char *) message, "%s is carrying %d out of %d.",adven[current_getting_pc].name,storage,i);
+		sprintf(message, "%s is carrying %d out of %d.",adven[current_getting_pc].name,storage,i);
 		csit(987,52,(char *) message);
 		}
 		
@@ -1150,7 +1150,7 @@ void select_pc_event_filter (short item_hit)
 		else dialog_answer = item_hit - 3;
 }
 
-short char_select_pc(short active_only,short free_inv_only,char *title)
+short char_select_pc(short active_only,short free_inv_only, const char * title)
 //active_only;  // 0 - no  1 - yes   2 - disarm trap   
 {
 	short i;
@@ -1200,7 +1200,7 @@ void get_num_of_items_event_filter (short item_hit)
 	
 	cd_get_text_edit_str(1012,(char *) get_text);
 	dialog_answer = 0;
-	sscanf((char *) get_text,"%hd",&dialog_answer);
+	sscanf(get_text,"%hd",&dialog_answer);
 	dialog_not_toast = FALSE;
 }
 
@@ -1215,9 +1215,9 @@ short get_num_of_items(short max_num)
 	
 	cd_create_dialog(1012,mainPtr);
 		
-	sprintf((char *) sign_text,"How many? (0-%d) ",max_num);
+	sprintf(sign_text,"How many? (0-%d) ",max_num);
 	csit(1012,4,(char *)sign_text);	
-	sprintf((char *) sign_text,"%d",max_num);
+	sprintf(sign_text,"%d",max_num);
 	cd_set_text_edit_str(1012,(char *) sign_text);
 	cd_set_edit_focus();
 		
@@ -1231,10 +1231,6 @@ short get_num_of_items(short max_num)
 }
 
 INT_PTR CALLBACK choice_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
-	RECT to_rect = {8,8,44,44};
-	Boolean do_stnd = TRUE;
-	RECT r1 = {16,90,44,126},r2 = {16,139,44,175};
-
 	test_dlog3 = hDlg;
 
 	switch (message) {
@@ -1266,7 +1262,6 @@ short choice_dialog(short pic,short num)
 		return 1;
 		}
 	DialogBox(store_hInstance, MAKEINTRESOURCE(num), store_focus, dlog_proc1);
-	FreeProcInstance(dlog_proc1);
 	DestroyWindow(test_dlog3);
 	SetFocus(store_focus);
 	return answer_given;
@@ -1275,8 +1270,7 @@ short choice_dialog(short pic,short num)
 
 INT_PTR CALLBACK modeless_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
 	short i,which_d,store_which;
-	Boolean do_stnd = TRUE,id_dlg = TRUE;
-	RECT to_rect = {6,6,42,42};
+	Boolean id_dlg = TRUE;
 
 	for (i = 0; i < 18; i++)
 		if ((modeless_exists[i] == TRUE) &&

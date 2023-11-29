@@ -141,7 +141,6 @@ void take_item(short pc_num,short which_item)
 //short pc_num,which_item;  // if which_item > 20, don't update stat win, item is which_item - 20
 {
 	short i;
-	Boolean do_print = TRUE;
 
 	if ((adven[pc_num].weap_poisoned == which_item) && (adven[pc_num].status[0] > 0)) {
 //			add_string_to_buf("  Poison lost.           ");
@@ -196,7 +195,7 @@ void select_pc_event_filter (short item_hit)
 		else dialog_answer = item_hit - 3;
 }
 
-short char_select_pc(short active_only,short free_inv_only,char *title)
+short char_select_pc(short active_only,short free_inv_only, const char * title)
 //active_only;  // 0 - no  1 - yes   2 - disarm trap   
 {
 	short i;
@@ -239,10 +238,6 @@ short select_pc(short active_only,short free_inv_only)
 
 
 INT_PTR CALLBACK choice_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
-	RECT to_rect = {8,8,44,44};
-	Boolean do_stnd = TRUE;
-	RECT r1 = {16,90,44,126},r2 = {16,139,44,175};
-
 	test_dlog3 = hDlg;
 
 	switch (message) {
@@ -274,7 +269,6 @@ short choice_dialog(short pic,short num)
 		return 1;
 		}
 	DialogBox(store_hInstance, MAKEINTRESOURCE(num), store_focus, dlog_proc1);
-	FreeProcInstance(dlog_proc1);
 	DestroyWindow(test_dlog3);
 	SetFocus(store_focus);
 	return answer_given;
@@ -359,12 +353,13 @@ void pick_race_abil_event_filter(short item_hit)
 
 }
 
+static const char c_start_str1[]{"Click on advantage button for description."};
+static const char c_start_str2[]{"Click on advantage button to add/lose."};
+
+
 void pick_race_abil(pc_record_type *pc,short mode,short parent_num)
 //mode; // 0 - edit  1 - just display  2 - can't change race
 {
-	char *start_str1 = "Click on advantage button for description.";
-	char *start_str2 = "Click on advantage button to add/lose.";
-	
 	mode = 0;
 	store_trait_mode = mode;
 	store_pc = pc;
@@ -374,8 +369,8 @@ void pick_race_abil(pc_record_type *pc,short mode,short parent_num)
 
 	display_traits_graphics();
 	if (mode == 1)
-		csit(1013,19,start_str1);
-		else csit(1013,19,start_str2);
+		csit(1013,19,c_start_str1);
+		else csit(1013,19,c_start_str2);
 
 	while (dialog_not_toast)
 		ModalDialog();	

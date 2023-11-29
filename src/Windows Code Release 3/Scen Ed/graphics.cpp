@@ -1,4 +1,5 @@
 #include <Windows.h>
+#include <array>
 #include <cassert>
 
 #include <cstdio>
@@ -51,7 +52,6 @@ extern Boolean left_buttons_active,right_buttons_active;
 extern short left_button_status[NLS]; // 0 - clear, 1 - text, 2 - title text, +10 - button
 extern short right_button_status[NRS]; 
 extern unsigned char m_pic_index[200];
-extern char *button_strs[140];
 extern location cur_out;
 extern short ulx,uly;
 extern HINSTANCE store_hInstance;
@@ -770,9 +770,8 @@ void draw_monsts(HDC hdc)
 	GWorldPtr from_gworld;
 	RECT source_rect;
 	location where_draw,store_loc;
-	COLORREF y = RGB(128,128,128),red = RGB(255,0,0),white = RGB(255,255,255);//y = RGB(119,119,119);
 	
-		for (i = 0; i < 60; i++)
+	for (i = 0; i < 60; i++)
 		if (t_d.creatures[i].number != 0) {
 				where_draw.x = t_d.creatures[i].start_loc.x - cen_x + 4;
 				where_draw.y = t_d.creatures[i].start_loc.y - cen_y + 4;
@@ -830,7 +829,6 @@ void draw_items(HDC hdc)
 	RECT source_rect,draw_rect;
 	location where_draw;
 	short pic_num;
-	COLORREF y = RGB(128,128,128),red = RGB(255,0,0),blue = RGB(0,0,255);//y = RGB(119,119,119);
 	
 	for (i = 0; i < 64; i++) {
 		if (town.preset_items[i].item_code >= 0) {
@@ -1102,12 +1100,10 @@ RECT get_template_rect (unsigned char type_wanted)
 
 void place_location()
 {
-	RECT text_rect = {367,290,384,510};
 	char draw_str[256];
 	RECT draw_rect,source_rect,erase_rect;
 	short picture_wanted;
 	HGDIOBJ store_bmp;
-	COLORREF y = RGB(128,128,128),red = RGB(255,0,0),white = RGB(255,255,255);//y = RGB(119,119,119);
 	HDC hdc;
 
 	erase_rect.left = terrain_rects[255].left + 17;
@@ -1131,11 +1127,11 @@ void place_location()
 	draw_rect.left = terrain_rects[255].left + 20;
 	draw_rect.top = terrain_rects[255].top;
 	if (overall_mode < 60)
-		sprintf((char *) draw_str,"Center: x = %d, y = %d  ",(short) cen_x, (short) cen_y);
+		sprintf(draw_str,"Center: x = %d, y = %d  ",(short) cen_x, (short) cen_y);
 		else {
 			draw_rect.left = 5;
 			draw_rect.top = terrain_rects[255].top + 28;
-			sprintf((char *) draw_str,"Click terrain to edit. ");
+			sprintf(draw_str,"Click terrain to edit. ");
 			}
 
 	draw_rect.bottom = draw_rect.top + 14;
@@ -1198,11 +1194,9 @@ void place_location()
 // klugde for speed ...exactly like place location above, but just writes location
 void place_just_location()
 {
-	RECT text_rect = {367,290,384,510};
 	char draw_str[256];
 	RECT from_rect,draw_rect,erase_rect;
 	HGDIOBJ store_bmp;
-	COLORREF y = RGB(128,128,128),red = RGB(255,0,0),white = RGB(255,255,255);//y = RGB(119,119,119);
 	HDC hdc;
 
 	erase_rect.left = terrain_rects[255].left + 17;
@@ -1221,11 +1215,11 @@ void place_just_location()
 	draw_rect.left = terrain_rects[255].left + 20;
 	draw_rect.top = terrain_rects[255].top;
 	if (overall_mode < 60)
-		sprintf((char *) draw_str,"Center: x = %d, y = %d  ",cen_x,cen_y);
+		sprintf(draw_str,"Center: x = %d, y = %d  ",cen_x,cen_y);
 		else {
 			draw_rect.left = 5;
 			draw_rect.top = terrain_rects[255].top + 28;
-			sprintf((char *) draw_str,"Click terrain to edit. ");
+			sprintf(draw_str,"Click terrain to edit. ");
 			}
 
 	draw_rect.bottom = draw_rect.top + 14;
@@ -1244,15 +1238,15 @@ void place_just_location()
 	DeleteObject(hdc);
 }
 
-void set_string(char *string,char *string2)
+void set_string(const char * string, const char * string2)
 {
-	strcpy((char *)current_string,string);
+	strcpy(current_string,string);
 	c2p(current_string);
 //	if (strlen(string2) == 0)
 //		current_string2[0] = 0;
 //		else 
-//	sprintf((char *)current_string2,"Bob");
-	strcpy((char *)current_string2,string2);
+//	sprintf(current_string2,"Bob");
+	strcpy(current_string2, string2);
 	c2p(current_string2);
 
 	place_location();
@@ -1454,11 +1448,11 @@ Boolean container_there(location l)
 }
 
 
-void char_win_draw_string(HDC dest_window,RECT dest_rect,char *str,short mode,short line_height)
+void char_win_draw_string(HDC dest_window,RECT dest_rect, const char * str,short mode,short line_height)
 {
 	char store_s[256];
 	
-	strcpy((char *) store_s,str);
+	strcpy(store_s,str);
 	win_draw_string( dest_window, dest_rect,store_s, mode, line_height);
 
 }
@@ -1483,14 +1477,14 @@ void win_draw_string(HDC dest_hdc,RECT dest_rect,char *str,short mode,short line
 	switch (mode) {
 		case 0:
          dest_rect.bottom += 6;
-			DrawText(dest_hdc,str,strlen((char *)str),&dest_rect,DT_LEFT | DT_WORDBREAK); break;
+			DrawText(dest_hdc,str,strlen(str),&dest_rect,DT_LEFT | DT_WORDBREAK); break;
 		case 1:
 			dest_rect.bottom += 6; dest_rect.top -= 6;
-			DrawText(dest_hdc,str,strlen((char *)str),&dest_rect,
+			DrawText(dest_hdc,str,strlen(str),&dest_rect,
 			DT_CENTER | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE); break;
 		case 2: case 3:
 			dest_rect.bottom += 6; dest_rect.top -= 6;
-			DrawText(dest_hdc,str,strlen((char *)str),&dest_rect,
+			DrawText(dest_hdc,str,strlen(str),&dest_rect,
 			DT_LEFT | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE); break;
 		}
 	// not yet done adjusts for 1, 2, 3
@@ -1506,9 +1500,9 @@ short string_length(char *str,HDC hdc)
 	for (i = 0; i < 257; i++)
 		text_len[i]= 0;
 	
-	strcpy((char *) p_str,str);
+	strcpy(p_str,str);
 	MeasureText(256,p_str,text_len,hdc);
-	len = strlen((char *)str);
+	len = strlen(str);
 
 	//print_nums(text_len[1],text_len[2],text_len[3]);
    //print_nums(text_len[10],text_len[20],text_len[30]);
@@ -1535,7 +1529,7 @@ static DWORD GetTextExtent16(HDC hdc, LPCSTR str, INT16 count)
 void MeasureText(short str_len,char *str, short *len_array,HDC hdc)
 {
 	short text_len[257];
-	short total_width = 0,i;
+	short i;
 	char p_str[257];
 	DWORD val_returned;
 	char *store_array;
@@ -1590,19 +1584,19 @@ void p2c(char *str)
 void get_str(char *str,short i, short j)
 {
 	if (i == -1) {
-		strcpy((char *) str,scen_item_list.monst_names[j]);
+		strcpy(str,scen_item_list.monst_names[j]);
 		return;
 		}
 	if (i == -2) {
-		strcpy((char *) str,scen_item_list.scen_items[j].full_name);
+		strcpy(str,scen_item_list.scen_items[j].full_name);
 		return;
 		}
 	if (i == -3) {
-		strcpy((char *) str,button_strs[available_dlog_buttons[j]]);
+		strcpy(str,get_button_str(available_dlog_buttons[j]));
 		return;
 		}
 	if (i == -4) {
-		strcpy((char *) str,scen_item_list.ter_names[j]);
+		strcpy(str,scen_item_list.ter_names[j]);
 		return;
 		}
 	if (i == -5) {
@@ -1622,10 +1616,10 @@ short string_length(char *str)
 	for (i = 0; i < 257; i++)
 		text_len[i]= 0;
 	
-	strcpy((char *) p_str,str);
+	strcpy(p_str,str);
 	c2p(p_str);
 	MeasureText(256,p_str,text_len,main_dc);
-	len = strlen((char *)str);
+	len = strlen(str);
 	
 	for (i = 0; i < 257; i++)
 		if ((text_len[i] > total_width) && (i <= len))

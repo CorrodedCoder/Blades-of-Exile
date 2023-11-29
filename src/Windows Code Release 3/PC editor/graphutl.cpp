@@ -205,7 +205,7 @@ void extract_given_palette(BYTE * lpDib)
 
 void inflict_palette()
 {
-	COLORREF x = RGB(0,0,192),y = RGB(0,128,0);
+	COLORREF x = RGB(0,0,192);
 	UINT c;
 	COLORREF elem_color[5];
 
@@ -324,7 +324,7 @@ BYTE * GetDibBitsAddr(BYTE * lpDib)
 	return lpDib + GetDibInfoHeaderSize(lpDib) + dwColorTableSize;
 	}
 
-HBITMAP ReadDib(char * name,HDC hdc) {
+HBITMAP ReadDib(const char * name,HDC hdc) {
 BITMAPFILEHEADER bmfh;
 BYTE * lpDib;
 DWORD dwDibSize, dwOffset, dwHeaderSize;
@@ -342,13 +342,13 @@ short i,next_to_last_slash = -1,last_slash = -1;
 			last_slash = i;
 			}
 	if (next_to_last_slash < 0) {
-		strcpy((char *) real_name,name);
+		strcpy(real_name,name);
 		}
 		else {
 			strcpy(real_name,file_path_name);
 			name_ptr = (char *) real_name;
 			name_ptr += last_slash + 1;
-			sprintf((char *) name_ptr,"%s",name);
+			sprintf(name_ptr,"%s",name);
 			//real_name -= last_slash + 1;
 			//ASB(real_name);
 			}
@@ -462,8 +462,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 	short trans, short main_win) {
 	HDC hdcMem,hdcMem2,hdcMem3,destDC;
 	HBITMAP transbmp;
-	COLORREF white = RGB(255,255,255),black = RGB(0,0,0),oldcolor;
-	RECT debug = {0,0,200,20};
+	COLORREF white = RGB(255,255,255),oldcolor;
 	HBRUSH hbrush;
 	HGDIOBJ old_brush;
 	COLORREF x = RGB(17,17,17);
