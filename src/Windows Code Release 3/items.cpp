@@ -770,7 +770,7 @@ short get_item(location place,short pc_num,Boolean check_container)
 //short pc_num; // if 6, any   
 {
 	short i,taken = 0;
-	Boolean item_near = FALSE,gold_sound = FALSE,food_sound = FALSE;
+	Boolean item_near = FALSE;
 	short mass_get = 1;
 	
 	for (i = 0; i < T_M; i++)
@@ -1231,10 +1231,6 @@ short get_num_of_items(short max_num)
 }
 
 INT_PTR CALLBACK choice_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
-	RECT to_rect = {8,8,44,44};
-	Boolean do_stnd = TRUE;
-	RECT r1 = {16,90,44,126},r2 = {16,139,44,175};
-
 	test_dlog3 = hDlg;
 
 	switch (message) {
@@ -1274,8 +1270,7 @@ short choice_dialog(short pic,short num)
 
 INT_PTR CALLBACK modeless_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
 	short i,which_d,store_which;
-	Boolean do_stnd = TRUE,id_dlg = TRUE;
-	RECT to_rect = {6,6,42,42};
+	Boolean id_dlg = TRUE;
 
 	for (i = 0; i < 18; i++)
 		if ((modeless_exists[i] == TRUE) &&

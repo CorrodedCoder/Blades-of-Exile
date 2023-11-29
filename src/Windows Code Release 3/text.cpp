@@ -134,12 +134,11 @@ short text_pc_has_abil_equip(short pc_num,short abil)
 void put_pc_screen()
 {
 	char to_draw[256];
-	short i = 0,j,weap1 = 16, weap2 = 16;
+	short i = 0,j;
 	RECT erase_rect = {2,17,270,99},to_draw_rect,from_rect;
 	RECT final_from_draw_rect = {0,0,271,116},final_to_draw_rect = {0,0,271,116};
 	RECT small_erase_rects[3] = {{34,101,76,114},{106,101,147,114},{174,101,201,114}};
-	RECT pc_screen_help_button = {251,101,266,113};
-	RECT info_from = {1,0,13,12},switch_from = {12,0,25,12}; /**/
+	RECT info_from = {1,0,13,12};
 
 	HDC hdc;
 	COLORREF colors[6] = {RGB(0,0,0),RGB(255,0,0),RGB(128,0,0),RGB(0,160,0),RGB(0,0,255),RGB(255,255,255)};
@@ -321,7 +320,6 @@ void put_pc_screen()
 void put_item_screen(short screen_num,short suppress_buttons)
 // if suppress_buttons > 0, save time by not redrawing buttons
 {
-	char pstats[256] = "Party stats:";
 	char to_draw[256];
 	short i_num,item_offset;
 	short i = 0,j,pc;
@@ -802,7 +800,6 @@ void draw_pc_effects(short pc,HDC dest_dc)
 							{103,0,115,12},{103,12,115,24},{103,24,115,36},
 							{115,0,127,12},{115,12,127,24},{115,24,127,36}};
 	RECT dest_rect = {18,15,30,27},dlog_dest_rect = {66,354,78,366};//rects altered below
-	Boolean on_dialog = FALSE;
 	short right_limit = 250;
 	short dest = 0; // 0 - in gworld  2 - on dialog
 	short name_width,i,mode = 1;
@@ -1826,7 +1823,7 @@ static DWORD GetTextExtent16(HDC hdc, LPCSTR str, INT16 count)
 void MeasureText(short str_len,char *str, short *len_array,HDC hdc)
 {
 	short text_len[257];
-	short total_width = 0,i;
+	short i;
 	char p_str[257];
 	DWORD val_returned;
 	char *store_array;

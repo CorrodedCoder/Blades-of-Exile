@@ -1763,7 +1763,7 @@ void do_priest_spell(short pc_num,short spell_num)
 {
 	short r1,r2, target, i,item,store,adj,x,y;
 	location loc;
-	location where,dest = {27,1};
+	location where;
 	
 	short store_victim_health,store_caster_health,targ_damaged; // for symbiosis	
 
@@ -2289,8 +2289,6 @@ void cast_town_spell(location where)
 void sanctify_space(location where)
 {
 	short i,s1,s2,s3;
-	location l = {25,13};
-
 		for (i = 0; i < 50; i++)
 			if ((same_point(where,c_town.town.special_locs[i]) == TRUE) &&
 				(c_town.town.spec_id[i] >= 0)) {
@@ -2303,7 +2301,7 @@ void sanctify_space(location where)
 
 void crumble_wall(location where)
 {
-	unsigned char ter,blastable[9] = {111,112,113,128,129, 130,143,144,145};
+	unsigned char ter;
 	
 	if (loc_off_act_area(where) == TRUE)
 		return;

@@ -160,7 +160,7 @@ void force_play_sound(short which)
 {
 	short i,num_fails = 0;
 	char snd_name[30];
-	Boolean asyn = FALSE,a_sound_did_get_played = FALSE,sound_played_nostop = FALSE;
+	Boolean asyn = FALSE,a_sound_did_get_played = FALSE;
 	Boolean not_asyn = FALSE,check_sound;
 	HRSRC h;
 

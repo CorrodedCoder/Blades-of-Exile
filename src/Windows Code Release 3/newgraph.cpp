@@ -151,7 +151,6 @@ extern HBITMAP checker_bitmap;
 
 void apply_unseen_mask()
 {
-	RECT apply_bases[4] = {{0,0,28,4},{0,0,4,36},{0, 32,28,36},{24,0,28,36}}; // t l b r
 	RECT base_rect = {8,10,43,53}/*{9,9,43,53}*/,to_rect,big_to = {13,13,265,337}; /**/
 	short i,j,k,l;
 	Boolean need_bother = FALSE;
@@ -207,7 +206,7 @@ void apply_unseen_mask()
 void apply_light_mask() 
 {
 	RECT temp = {0,0,84,108},paint_rect,base_rect = {0,0,28,36};
-	RECT big_from = {28,36,280,360},big_to = {13,13,265,337}; /**/
+	RECT big_to = {13,13,265,337}; /**/
 	short i,j;
 	Boolean is_dark = FALSE,same_mask = TRUE;
 	
@@ -626,7 +625,7 @@ void do_explosion_anim(short sound_num,short special_draw)
 // sound_num currently ignored
 // special_draw - 0 normal 1 - first half 2 - second half
 {
-	RECT temp_rect,missile_origin_base = {1,1,17,17},to_rect,from_rect;
+	RECT temp_rect,to_rect,from_rect;
 	RECT base_rect = {0,0,28,36},text_rect;
 	char str[256];
 	short i,temp_val,temp_val2;
@@ -1029,7 +1028,6 @@ void refresh_shopping()
 
 void click_talk_rect(char *str_to_place,char *str_to_place2,RECT c_rect)
 {
-	RECT dummy = {0,0,0,0};
 	long dum;
 
 	place_talk_str(str_to_place,str_to_place2,1,c_rect);
@@ -1157,17 +1155,6 @@ void place_talk_str(char *str_to_place,const char *str_to_place2,short color,REC
 	short last_line_break = 0,last_word_break = 0,on_what_line = 0,last_stored_word_break = 0;
 	Boolean force_skip = FALSE;
 	short face_to_draw;
-	
-	short force_faces[100] = {33,6,32,27,31,28,24,29,118,31,
-							117,18,130,28,129,31,134,31,143,28,
-							162,18,156,32,157,30,171,39,172,31,
-							174,10,193,29,195,19,165,32,27,6,
-							206,10,219,40,276,29,282,28,0,0,
-							253,32,122,31,340,40,251,57,0,0,
-							0,0,0,0,0,0,0,0,0,0,
-							0,0,0,0,0,0,0,0,0,0,
-							0,0,0,0,0,0,0,0,0,0,
-							0,0,0,0,0,0,0,0,0,0};
 	
 	HDC hdc;
 	COLORREF colors[7] = {RGB(0,0,0),RGB(0,0,204),RGB(0,0,102),RGB(0,0,100),RGB(0,0,220),

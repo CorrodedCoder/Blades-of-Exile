@@ -91,7 +91,6 @@ void load_file()
 	short i;
 	Boolean town_restore = FALSE;
 	Boolean maps_there = FALSE;
-	Boolean map_doh = FALSE;
 	Boolean in_scen = FALSE;
 
 	char flag_data[8];
@@ -323,7 +322,7 @@ void save_file(short mode)
 	stored_outdoor_maps_type *o_maps_ptr;
 
 	char *party_encryptor;
-	Boolean got_error = FALSE,town_save = FALSE,in_scen = FALSE,save_maps = FALSE;
+	Boolean town_save = FALSE,in_scen = FALSE,save_maps = FALSE;
 
       mode = 1;
 	if (file_in_mem == FALSE)
@@ -590,7 +589,7 @@ void get_reg_data()
 {
 	HFILE f;
 	short i;
-	long vals[10],len = 4;
+	long vals[10];
 	OFSTRUCT store;
 
 	return;
@@ -646,7 +645,7 @@ void build_data_file(short mode)
 //mode; // 0 - make first time file  1 - customize  2 - new write
 {
 	short i;
-	long val_store,to_return = 0,len = 4,s_vals[10] = {0,0,0,0,0, 0,0,0,0,0};
+	long val_store,s_vals[10] = {0,0,0,0,0, 0,0,0,0,0};
 	OFSTRUCT store;
 	HFILE f;
 

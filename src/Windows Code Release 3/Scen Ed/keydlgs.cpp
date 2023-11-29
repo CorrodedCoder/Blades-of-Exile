@@ -214,8 +214,6 @@ void give_error(const char *text1, const char *text2,short parent_num)
 
 void display_strings_event_filter (short item_hit)
 {
-	Boolean had1 = FALSE, had2 = FALSE;
-	
 	switch (item_hit) {
 		case 1:
 			dialog_not_toast = FALSE;
@@ -227,8 +225,6 @@ void display_strings_event_filter (short item_hit)
 void display_strings(const char *text1, const char *text2,
 	const char *title,short sound_num,short graphic_num,short parent_num)
 {
-	Boolean sound_done = FALSE;
-
 	//make_cursor_sword();
 		
 	if ((text1 == NULL) && (text2 == NULL))
@@ -260,7 +256,6 @@ void display_strings(const char *text1, const char *text2,
 void choose_graphic_event_filter (short item_hit)
 {
 	short i;
-	Boolean had1 = FALSE, had2 = FALSE;
 	
 	switch (item_hit) {
 		case 1:
@@ -315,8 +310,6 @@ void put_choice_pics()
 
 short choose_graphic(short first_g,short last_g,short cur_choice,short parent_num)
 {
-	Boolean sound_done = FALSE;
-
 	//make_cursor_sword();
 	
 	store_first_g = first_g;
@@ -345,7 +338,6 @@ short choose_graphic(short first_g,short last_g,short cur_choice,short parent_nu
 void choose_text_res_event_filter (short item_hit)
 {
 	short i;
-	Boolean had1 = FALSE, had2 = FALSE;
 	
 	switch (item_hit) {
 		case 2:
@@ -402,8 +394,6 @@ void put_text_res()
 
 short choose_text_res(short res_list,short first_t,short last_t,short cur_choice,short parent_num,const char *title)
 {
-	Boolean sound_done = FALSE;
-
 	//make_cursor_sword();
 	store_res_list = res_list;
 	store_first_t = first_t;
@@ -1259,8 +1249,6 @@ void edit_scen_intro_event_filter (short item_hit)
 void edit_scen_intro()
 {
 	short i;
-	short num_s_strs[3] = {100,90,100};
-	
 		
 	cd_create_dialog_parent_num(804,0);
 	

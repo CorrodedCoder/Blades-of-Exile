@@ -733,7 +733,7 @@ Boolean abil_exists(short abil) // use when outdoors
 
 void start_town_combat(short direction)
 {
-	short i,num_tries = 0;
+	short i;
 
 	create_town_combat_terrain();
 
@@ -1174,7 +1174,6 @@ void erase_specials()
 {
 	location where;
 	short k,sd1,sd2;
-	unsigned char floors[6] = {0,150,186,193,2,36};
 	special_node_type sn;
 	
 	if ((is_combat()) && (which_combat_type == 0))
@@ -1217,8 +1216,6 @@ void erase_out_specials()
 {
 
 	short i,j,k,l,m,out_num;
-	unsigned char floors[6] = {0,150,186,193,2,36};
-	unsigned char exit_g_type[12] = {0,0,2,2,2, 28,26,6,30,2, 2,0};
 	special_node_type sn;
 	short sd1,sd2;
 	location where;
@@ -1314,10 +1311,6 @@ void clear_map()
 
 }
 
-static const char comb_mess[]{" Map unavailable."};
-static const char unav_mess[]{" Map unavailable."};
-static const char blank_mess[]{""};
-
 
 void draw_map (HWND the_dialog, short the_item)
 //short the_item; // Being sneaky - if this gets value of 5, this is not a full restore -
@@ -1329,7 +1322,7 @@ void draw_map (HWND the_dialog, short the_item)
 {
 
 //	RECT map_rect = {47,29,297,279},map_world_rect = {0,0,321,321};
-	RECT map_rect = {53,7,303,257},map_world_rect = {0,0,321,321};
+	RECT map_world_rect = {0,0,321,321};
 	RECT whole_map_win_rect = {0,0,400,400};
 	location map_adj = {0,0};
 	location where;
@@ -1338,7 +1331,7 @@ void draw_map (HWND the_dialog, short the_item)
 	RECT ter_temp_from,dlogpicrect = {6,6,42,42},orig_draw_rect = {0,0,6,6};
 	Boolean draw_pcs = TRUE;
 	RECT view_rect= {0,0,48,48},tiny_rect = {0,0,32,32},
-		redraw_rect = {0,0,48,48},small_rect = {0,0,9,9},big_rect = {0,0,64,64}; // RECTangle visible in view screen
+		redraw_rect = {0,0,48,48},big_rect = {0,0,64,64}; // RECTangle visible in view screen
 	HDC hdc = NULL,hdc2;
 	HGDIOBJ old_bmp;
 	HGDIOBJ old_brush;
@@ -1701,9 +1694,6 @@ void draw_map (HWND the_dialog, short the_item)
 
 
 INT_PTR CALLBACK map_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
-	Boolean do_stnd = TRUE,id_dlg = TRUE;
-	RECT to_rect = {10,11,46,47},d_rect = {0,0,240,240};
-
 	switch (message) {
 		case WM_INITDIALOG:
 			if (store_map_window_rect.right > 0)

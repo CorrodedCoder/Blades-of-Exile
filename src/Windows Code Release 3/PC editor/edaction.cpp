@@ -71,9 +71,9 @@ pc_record_type *store_xp_pc;
 Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 //short mode; // ignore,
 {
-	short i,button_hit = 100,first_existing_pc = 0;
+	short i;
 	
-	short choice = 4,for_pc = 6;
+	short choice = 4;
 	
 	Boolean to_return = FALSE;
 	Boolean ctrl_key = FALSE;
@@ -428,7 +428,7 @@ void do_xp_draw()
 
 Boolean spend_xp_event_filter (short item_hit)
 {
-	short pc_num,mode = 1;
+	short pc_num;
 	Boolean talk_done = FALSE;
 
 	pc_num = store_train_pc;

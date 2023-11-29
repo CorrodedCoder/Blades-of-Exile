@@ -157,7 +157,7 @@ RECT shopping_rects[8][7];
  void init_screen_locs()
 {
 	short i,j,k,l;
-	RECT bottom_base = {0,0,18,15},startup_base = {5,279,306,327};
+	RECT startup_base = {5,279,306,327};
 	RECT shop_base = {12,63,267,99}; /**/
 
 		for (i = 0; i < 7; i++)
@@ -315,7 +315,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 	Boolean are_done = FALSE;
 	Boolean need_redraw = FALSE, did_something = FALSE, need_reprint = FALSE;
 	Boolean town_move_done = FALSE,pc_delayed = FALSE;
-	location destination,cur_loc,sector = {0,0},loc_in_sec,cur_direction = {0,0};
+	location destination,cur_loc,loc_in_sec,cur_direction = {0,0};
 	unsigned char storage;
 	short find_direction_from,ter_looked_at,button_hit = 12,store_cur_pc;
 	short store_sp[6];
@@ -1486,7 +1486,6 @@ Boolean someone_awake()
 void check_cd_event(HWND hwnd,UINT message,UINT wparam,LONG lparam)
 {
 	POINT press;
-	Boolean action_done = FALSE;
 	short wind_hit = -1,item_hit = -1;
 
 	switch (message) {
@@ -1754,12 +1753,10 @@ Boolean handle_keystroke(UINT wParam,LONG lParam)
 	DWORD s1;
 	UINT s2;
 
-	char keypad[10] = {82,83,84,85,86,87,88,89,91,92};
 	POINT terrain_click[10] = {{150,185},{120,215},{150,215},{180,215},
 							{120,185},{150,185},{180,185},
 								{120,155},{150,155},{180,135}};
 	char talk_chars[9] = {'l','n','j','b','s','r','d','g','a'};
-	Boolean dialog_grabbed_key = FALSE;
 	char chr;
 
 	if (in_startup_mode == TRUE)
@@ -2574,9 +2571,7 @@ void handle_death()
 void start_new_game()
 {
 	short i; // 0 - make party   1 - sample party
-	short num_pcs = 0,choice;
-	Boolean creation_done = FALSE;
-	location in_town_loc = {59,6};
+	short choice;
 
 	choice = FCD(1065,0);
 	if (choice == 2)
@@ -3071,8 +3066,6 @@ short count_walls(location loc)
 
 Boolean is_sign(unsigned char ter)
 {
-	unsigned char signs[6] = {110,127,142,213,214,252};
-	
 	if (scenario.ter_types[ter].special == 11)
 		return TRUE;
 	return FALSE;

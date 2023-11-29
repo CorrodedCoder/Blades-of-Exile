@@ -144,7 +144,6 @@ void load_file()
 	short i,j,k;
 	Boolean town_restore = FALSE;
 	Boolean maps_there = FALSE;
-	Boolean map_doh = FALSE;
 	
 	char flag_data[8];
 
@@ -437,7 +436,7 @@ void save_file(short mode)
 //mode;  // 0 - normal  1 - save as
 {
 	HFILE file_id;
-	Boolean got_error = FALSE,town_save = FALSE;
+	Boolean town_save = FALSE;
 	UINT error;
 
 	short i;
@@ -1115,7 +1114,6 @@ void position_party(short out_x,short out_y,short pc_pos_x,short pc_pos_y)
 void build_outdoors()
 {
 	short i,j;
-	unsigned char exit_g_type[12] = {0,0,2,2,2, 28,26,6,30,2, 2,0};
 		for (i = 0; i < 48; i++)
 			for (j = 0; j < 48; j++) {
 				out[i][j] = outdoors[0][0].terrain[i][j];
@@ -1331,7 +1329,7 @@ void get_reg_data()
 {
 	HFILE f;
 	short i;
-	long vals[10],len = 4;
+	long vals[10];
 	OFSTRUCT store;
 
 	f = OpenFile("bladmisc.dat",&store,OF_READ /* | OF_SEARCH */);
@@ -1388,7 +1386,7 @@ void build_data_file(short mode)
 //mode; // 0 - make first time file  1 - customize  2 - new write
 {
 	short i;
-	long val_store,to_return = 0,len = 4,s_vals[10] = {0,0,0,0,0, 0,0,0,0,0};
+	long val_store,s_vals[10] = {0,0,0,0,0, 0,0,0,0,0};
 	OFSTRUCT store;
 	HFILE f;
 
@@ -1560,7 +1558,7 @@ typedef struct {
 */
 void build_scen_headers()
 {
-	short i,index = 1;
+	short i;
 	short cur_entry = 0;
 	HWND listbox;
 	WORD count;
@@ -2138,7 +2136,6 @@ short SetFPos(HFILE file, short mode, long len)
 Boolean load_blades_data()
 {
 	HFILE file_id;
-	Boolean file_ok = FALSE;
 	char file_name[256];
 	 OFSTRUCT store;
 

@@ -277,7 +277,7 @@ void set_up_monst(short mode,unsigned char m_num)
 void do_monsters()
 {
 	short i,j,r1,target;
-	location l1,l2, dummy_loc = {0,0};
+	location l1,l2;
 	Boolean acted_yet = FALSE;
 	
 	if (overall_mode == 1) 
@@ -573,7 +573,7 @@ short closest_monst(location where,short mode)
 short switch_target_to_adjacent(short which_m,short orig_target)
 {
 	location monst_loc;
-	short i,num_adj = 0,targ_pc = 6, targ_m = 6;
+	short i,num_adj = 0;
 	
 	monst_loc = c_town.monst.dudes[which_m].m_loc;
 

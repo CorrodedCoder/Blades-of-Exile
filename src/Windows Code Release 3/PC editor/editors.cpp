@@ -141,7 +141,6 @@ void take_item(short pc_num,short which_item)
 //short pc_num,which_item;  // if which_item > 20, don't update stat win, item is which_item - 20
 {
 	short i;
-	Boolean do_print = TRUE;
 
 	if ((adven[pc_num].weap_poisoned == which_item) && (adven[pc_num].status[0] > 0)) {
 //			add_string_to_buf("  Poison lost.           ");
@@ -239,10 +238,6 @@ short select_pc(short active_only,short free_inv_only)
 
 
 INT_PTR CALLBACK choice_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
-	RECT to_rect = {8,8,44,44};
-	Boolean do_stnd = TRUE;
-	RECT r1 = {16,90,44,126},r2 = {16,139,44,175};
-
 	test_dlog3 = hDlg;
 
 	switch (message) {

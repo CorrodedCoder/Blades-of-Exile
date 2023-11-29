@@ -283,7 +283,6 @@ HDC hdc;
 PAINTSTRUCT ps;
 //RECT s_rect = {0,0,30,30},d_rect = {0,0,30,30},d2 = {0,0,420,216},s2 = {0,0,420,216};
 POINT press;
-short handled = 0;
 HMENU menu;
 
 	//ed_reg = FALSE;
@@ -726,7 +725,6 @@ void update_item_menu()
 	short i,j;
 
 	HMENU menu[10],big_menu;
-	short total_added = 0;
 	char item_name[256];
 
 	big_menu = GetMenu(mainPtr);
@@ -767,7 +765,6 @@ void max_window(HWND window)
 void check_cd_event(HWND hwnd,UINT message,UINT wparam,LONG lparam)
 {
 	POINT press;
-	Boolean action_done = FALSE;
 	short wind_hit = -1,item_hit = -1;
 
 	switch (message) {

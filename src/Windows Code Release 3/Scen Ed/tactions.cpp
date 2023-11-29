@@ -84,13 +84,11 @@ short special_to_paste = -1;
 
 void init_current_terrain()
 {	
-	location d_loc = {0,0};
-	RECT d_rect = {0,0,0,0};
-	wandering_type d_wan = {0,0,0,0};
-	creature_start_type dummy_creature = {0,0,{0,0},0,0,0,0,0,0,0};
-	city_ter_rect_type dummy_ter_rect = {{0,0,0,0},0,0};
-		
-		
+	// location d_loc = {0,0};
+	// RECT d_rect = {0,0,0,0};
+	// wandering_type d_wan = {0,0,0,0};
+	// creature_start_type dummy_creature = {0,0,{0,0},0,0,0,0,0,0,0};
+	// city_ter_rect_type dummy_ter_rect = {{0,0,0,0},0,0};
 }
 
 void init_screen_locs()
@@ -124,7 +122,6 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 	RECT temp_rect;
 	long dummy;
 	
-	Boolean to_return = FALSE;
 	Boolean ctrl_key = FALSE;
 	Boolean right_button = FALSE;
 
@@ -1269,8 +1266,6 @@ Boolean handle_keystroke(UINT wParam,LONG lParam)
 	POINT pass_point;
 	short i,j;
 	short store_ter;
-
-	Boolean dialog_grabbed_key = FALSE;
 	char chr;
 
 	store_ter = current_terrain_type;
@@ -1464,7 +1459,7 @@ Boolean where_lit[64][64];
 Boolean is_wall(short i,short j)
 {
 
-	unsigned char ter,walls[3] = {77,77,224};
+	unsigned char ter;
 	Boolean answer = FALSE;
 	short pic;
 	

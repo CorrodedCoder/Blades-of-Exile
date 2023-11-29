@@ -936,7 +936,7 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 	HFILE dummy_f,file_id;
 	DWORD buf_len = 100000;
 	short error;
-	long len,scen_ptr_move = 0,save_town_size = 0,save_out_size = 0;
+	long len,scen_ptr_move = 0;
 	location loc;
 	short x,y;
 	HGLOBAL temp_buffer;
@@ -1446,7 +1446,6 @@ void reset_pwd()
 void start_data_dump()
 {
 	short i;
-	long to_return = 0;
 	char get_text[280];
 	HFILE data_dump_file_id;
 	long len;
@@ -1514,7 +1513,6 @@ void scen_text_dump()
 {
 	short i;
 	short j;
-	long to_return = 0;
 	HFILE data_dump_file_id;
 	char get_text[300];
 	long len;

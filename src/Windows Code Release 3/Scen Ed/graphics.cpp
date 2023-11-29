@@ -770,9 +770,8 @@ void draw_monsts(HDC hdc)
 	GWorldPtr from_gworld;
 	RECT source_rect;
 	location where_draw,store_loc;
-	COLORREF y = RGB(128,128,128),red = RGB(255,0,0),white = RGB(255,255,255);//y = RGB(119,119,119);
 	
-		for (i = 0; i < 60; i++)
+	for (i = 0; i < 60; i++)
 		if (t_d.creatures[i].number != 0) {
 				where_draw.x = t_d.creatures[i].start_loc.x - cen_x + 4;
 				where_draw.y = t_d.creatures[i].start_loc.y - cen_y + 4;
@@ -830,7 +829,6 @@ void draw_items(HDC hdc)
 	RECT source_rect,draw_rect;
 	location where_draw;
 	short pic_num;
-	COLORREF y = RGB(128,128,128),red = RGB(255,0,0),blue = RGB(0,0,255);//y = RGB(119,119,119);
 	
 	for (i = 0; i < 64; i++) {
 		if (town.preset_items[i].item_code >= 0) {
@@ -1102,12 +1100,10 @@ RECT get_template_rect (unsigned char type_wanted)
 
 void place_location()
 {
-	RECT text_rect = {367,290,384,510};
 	char draw_str[256];
 	RECT draw_rect,source_rect,erase_rect;
 	short picture_wanted;
 	HGDIOBJ store_bmp;
-	COLORREF y = RGB(128,128,128),red = RGB(255,0,0),white = RGB(255,255,255);//y = RGB(119,119,119);
 	HDC hdc;
 
 	erase_rect.left = terrain_rects[255].left + 17;
@@ -1198,11 +1194,9 @@ void place_location()
 // klugde for speed ...exactly like place location above, but just writes location
 void place_just_location()
 {
-	RECT text_rect = {367,290,384,510};
 	char draw_str[256];
 	RECT from_rect,draw_rect,erase_rect;
 	HGDIOBJ store_bmp;
-	COLORREF y = RGB(128,128,128),red = RGB(255,0,0),white = RGB(255,255,255);//y = RGB(119,119,119);
 	HDC hdc;
 
 	erase_rect.left = terrain_rects[255].left + 17;
@@ -1535,7 +1529,7 @@ static DWORD GetTextExtent16(HDC hdc, LPCSTR str, INT16 count)
 void MeasureText(short str_len,char *str, short *len_array,HDC hdc)
 {
 	short text_len[257];
-	short total_width = 0,i;
+	short i;
 	char p_str[257];
 	DWORD val_returned;
 	char *store_array;

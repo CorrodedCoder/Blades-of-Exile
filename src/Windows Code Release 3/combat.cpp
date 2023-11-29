@@ -907,7 +907,7 @@ void place_target(location target)
 //   70 - mass sleep
 void do_combat_cast(location target)
 {
-	short adjust,r1,r2,targ_num,which_mess = 0,s_num,level,bonus = 1,i,item,store_sound = 0;
+	short adjust,r1,r2,targ_num,s_num,level,bonus = 1,i,item,store_sound = 0;
 	creature_data_type *cur_monst;
 	Boolean freebie = FALSE,ap_taken = FALSE,cost_taken = FALSE;
 	short num_targets = 1,store_m_type = 2;
@@ -1406,7 +1406,7 @@ void handle_marked_damage()
 
 void load_missile()
 {
-	short i,bow = 24,arrow = 24,thrown = 24,crossbow = 24,bolts = 24,no_ammo = 24,m_type = 0;
+	short i,bow = 24,arrow = 24,thrown = 24,crossbow = 24,bolts = 24,no_ammo = 24;
 		
 	for (i = 0; i < 24; i++) {
 		if ((adven[current_pc].equip[i] == TRUE) &&
@@ -1596,7 +1596,7 @@ void fire_missile(location target)
 // if monsters go or PC switches (i.e. if need redraw above), return TRUE
 Boolean combat_next_step()
 {
-	Boolean need_stat_reprint = FALSE,to_return = FALSE;
+	Boolean to_return = FALSE;
 	short store_pc; // will print current pc name is active pc changes
 
 	store_pc = current_pc;
@@ -1766,7 +1766,7 @@ void do_monster_turn()
 	Boolean acted_yet, had_monst = FALSE,printed_poison = FALSE,printed_disease = FALSE,printed_acid = FALSE;
 	Boolean redraw_not_yet_done = TRUE;
 	location targ_space = {0,0},move_targ,l;
-	short i,j,k,num_monst,num_tries = 0, target,r1,move_target;
+	short i,j,k,num_monst,target,r1,move_target;
 	creature_data_type *cur_monst;
 	Boolean pc_adj[6];
 	short abil_range[40] = {0,6,8,8,10, 10,10,8,6,8, 6,0,0,0,6, 0,0,0,0,4, 10,0,0,6,0,
@@ -4530,8 +4530,6 @@ void start_fancy_spell_targeting(short num)
 
 void spell_cast_hit_return()
 {
-	location null_loc = {0,0};
-
 	if (force_wall_position < 10) {
 		force_wall_position = (force_wall_position + 1) % 8;
 		current_pat = field[force_wall_position];

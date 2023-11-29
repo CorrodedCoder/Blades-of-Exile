@@ -1252,8 +1252,6 @@ void display_strings(const char *text1, const char *text2,short str_label_1,shor
 	short str_label_2b,
 	const char *title,short sound_num,short graphic_num,short parent_num)
 {
-	Boolean sound_done = FALSE;
-
 	make_cursor_sword();
 	
 	store_str_label_1 = str_label_1;

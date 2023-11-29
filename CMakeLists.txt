@@ -43,7 +43,6 @@ if (MSVC)
 		# the complexity, or the number of places it touches.
 		add_compile_options(
 			-Wno-extern-initializer
-			-Wno-unused-variable
 			-Wno-char-subscripts
 			-Wno-misleading-indentation
 			-Wno-unused-but-set-variable

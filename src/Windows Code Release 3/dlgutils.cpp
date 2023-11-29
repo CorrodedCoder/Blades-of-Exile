@@ -1057,7 +1057,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 
 void handle_talk_spec(short ttype,char *place_string1,char *place_string2) ////
 {
-	short s1 = 1, s2 = 0,num_horns = 0, num_items = 0;
+	short s1 = 1, s2 = 0;
 	
 	strnum1 = 1000 + s1;
 	get_str(place_string1,15,s1);
@@ -1330,7 +1330,7 @@ void put_party_stats()
 
 void edit_party_event_filter (short item_hit)
 {
-	short i = 0,j = 0,which_pc;
+	short which_pc;
 
 		switch (item_hit) {
 			case 1:

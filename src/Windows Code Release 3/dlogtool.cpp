@@ -227,7 +227,7 @@ short cd_create_custom_dialog(HWND parent,
 
 	char strs[6][256];
 
-	short cur_item = 1,cur_bottom = 8;
+	short cur_item = 1;
 	short but_items[3] = {-1,-1,-1};
 	RECT measure_rect,pic_rect = {8,8,44,44},cur_text_rect = {50,2,0,0};
 	short win_width = 100, win_height = 100;
@@ -432,7 +432,7 @@ short cd_create_custom_dialog(HWND parent,
 
 short cd_create_dialog(short dlog_num,HWND parent)
 {
-	short i,free_slot = -1,free_item = -1;
+	short i,free_slot = -1;
 	HWND dlg;
 
 	if (parent != NULL) {
@@ -1725,14 +1725,11 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 // 1600 + x - B&W maps
 // 1700 + x - anim graphic
 {
-	RECT from1 = {0,0,36,28},from2 = {0,0,36,36},from3 = {0,0,72,72},tiny_obj_rect = {0,0,18,18};
+	RECT from2 = {0,0,36,36},tiny_obj_rect = {0,0,18,18};
 	RECT from_rect = {0,0,28, 36};
 	RECT face_from = {0,0,32,32};
-	RECT death_to = {6,6,78,78};
 	RECT to_rect = {6,6,42,42};
-	RECT m_to_rect = {10,6,38,42};
 	RECT bw_from = {0,0,120,120};
-	RECT map_from = {0,0,240,240};
 	
 	RECT pc_info_from = {0,127,106,157};
 	RECT item_info_from = {174,0,312,112};
