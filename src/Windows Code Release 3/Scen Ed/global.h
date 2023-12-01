@@ -1,6 +1,5 @@
 
 #define DRAG_EDGE		15
-#define	NIL				0L
 
 #define	DISPLAY_LEFT	23
 #define	DISPLAY_TOP		23

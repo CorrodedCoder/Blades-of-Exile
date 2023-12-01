@@ -1,5 +1,5 @@
 
-#include <windows.h>
+#include <Windows.h>
 
 #include "global.h"
 #include "itemdata.h"

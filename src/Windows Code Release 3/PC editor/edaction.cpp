@@ -60,10 +60,8 @@ short skill_cost[20] = {3,3,3,2,2,2, 1,2,2,6,
 						5, 1,2,4,2,1, 4,2,5,0};
 short skill_max[20] = {20,20,20,20,20,20,20,20,20,7,
 						7,20,20,10,20,20,20,20,20};
-short skill_g_cost[20] = {50,50,50,40,40,40,30,50,40,250,
+static const short skill_g_cost[20] = {50,50,50,40,40,40,30,50,40,250,
 						250,25,100,200,30,20,100,80,0,0};
-short skill_bonus[21] = {-3,-3,-2,-1,0,0,1,1,1,2,
-							2,2,3,3,3,3,4,4,4,5,5};
 pc_record_type *store_xp_pc;
 
 //extern Rect pc_area_buttons[6][6] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later

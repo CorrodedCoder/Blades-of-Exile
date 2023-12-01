@@ -24,6 +24,7 @@ add_executable (Blades-of-Exile WIN32
 	combat.cpp
 	townspec.cpp
 	specials.cpp
+	
 	BLADES.RC
 	)
 

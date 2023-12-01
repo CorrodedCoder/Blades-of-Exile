@@ -1,7 +1,7 @@
 #define  LINES_IN_TEXT_WIN	11
 #define	TEXT_BUF_LEN	70
 
-#include <windows.h>
+#include <Windows.h>
 #include <array>
 #include <cassert>
 

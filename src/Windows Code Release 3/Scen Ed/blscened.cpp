@@ -20,7 +20,7 @@ Blades of Exile Game/Scenario Editor/Character Editor
 
 // Blades of Exile Scenario Editor for Windoze
 
-#include <windows.h>
+#include <Windows.h>
 #include <cassert>
 
 #include <cstdlib>

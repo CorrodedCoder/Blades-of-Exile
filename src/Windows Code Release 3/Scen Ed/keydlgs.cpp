@@ -238,9 +238,9 @@ void display_strings(const char *text1, const char *text2,
 	
 	csp(store_which_string_dlog,store_which_string_dlog,graphic_num);
 	
-	csit(store_which_string_dlog,4,(char *) text1);
+	csit(store_which_string_dlog,4,text1);
 	if (text2 != NULL) {
-		csit(store_which_string_dlog,5,(char *) text2);
+		csit(store_which_string_dlog,5,text2);
 		}
 	if (strlen(title) > 0)
 		csit(store_which_string_dlog,6,title);
@@ -382,7 +382,7 @@ void put_text_res()
 			}
 			else {
 				get_str(str,store_res_list,store_first_t + 40 * which_page + i);
-				csit(820,8 + i * 2,(char *) str);
+				csit(820,8 + i * 2,str);
 				cd_activate_item(820,9 + i * 2,1);
 				}
 		if (which_page * 40 + i == store_cur_t - store_first_t)
@@ -488,7 +488,7 @@ void edit_area_rect_event_filter (short item_hit)
 		case 6:
 			dialog_answer = TRUE;
 			dialog_not_toast = FALSE; 
-			CDGT(840,2,(char *) str);
+			CDGT(840,2,str);
 			if (store_str_mode == 0)
 				sprintf(data_store->out_strs[store_which_str + 1],"%-29.29s", str);
 				else sprintf(town_strs[store_which_str + 1],"%-29.29s", str);
@@ -560,7 +560,7 @@ void put_spec_enc_in_dlog()
 
 	cdsin(822,15,store_which_node);
 	get_str(str,22,store_spec_node.type + 1);
-	csit(822,27,(char *) str);
+	csit(822,27,str);
 	
 	if (last_node[0] == -1)
 		cd_activate_item(822,14,0);
@@ -611,7 +611,7 @@ void put_spec_enc_in_dlog()
 
 	CDSN(822,7,store_spec_node.ex1a);
 	get_str(str,30,store_spec_node.type + 1);
-	csit(822,25,(char *) str);
+	csit(822,25,str);
 	cd_activate_item(822,47,0);
 	for (i = 0 ; i < 12; i++)
 		if (store_spec_node.type == ex1a_choose[i])
@@ -619,7 +619,7 @@ void put_spec_enc_in_dlog()
 	
 	CDSN(822,8,store_spec_node.ex1b);
 	get_str(str,31,store_spec_node.type + 1);
-	csit(822,26,(char *) str);
+	csit(822,26,str);
 	cd_activate_item(822,43,0);
 	for (i = 0 ; i < 40; i++)
 		if (store_spec_node.type == ex1b_choose[i])
@@ -627,7 +627,7 @@ void put_spec_enc_in_dlog()
 
 	CDSN(822,9,store_spec_node.ex2a);
 	get_str(str,32,store_spec_node.type + 1);
-	csit(822,28,(char *) str);
+	csit(822,28,str);
 	cd_activate_item(822,48,0);
 	for (i = 0 ; i < 18; i++)
 		if (store_spec_node.type == ex2a_choose[i])
@@ -635,7 +635,7 @@ void put_spec_enc_in_dlog()
 	
 	CDSN(822,10,store_spec_node.ex2b);
 	get_str(str,33,store_spec_node.type + 1);
-	csit(822,29,(char *) str);
+	csit(822,29,str);
 	cd_activate_item(822,44,0);
 	for (i = 0 ; i < 20; i++)
 		if (store_spec_node.type == ex2b_choose[i])
@@ -920,7 +920,7 @@ void edit_spec_text_event_filter (short item_hit)
 			break;
 
 		case 6:
-			CDGT(826,2,(char *) str);
+			CDGT(826,2,str);
 			if (strlen(str) > 0) {
 				if (*store_str1 < 0) {
 					switch (store_spec_str_mode) {
@@ -967,7 +967,7 @@ void edit_spec_text_event_filter (short item_hit)
 						}
 					}
 				}
-			CDGT(826,3,(char *) str);
+			CDGT(826,3,str);
 			if (strlen(str) > 0) {
 				if (*store_str2 < 0) {
 					switch (store_spec_str_mode) {
@@ -1069,7 +1069,7 @@ void edit_dialog_text_event_filter (short item_hit)
 
 		case 8:
 			for (i = 0; i < 6; i++) {
-				CDGT(842,2 + i,(char *) str);
+				CDGT(842,2 + i,str);
 				switch (store_spec_str_mode) {
 					case 0:
 						strcpy(scen_strs2[*store_str1 + i], str);

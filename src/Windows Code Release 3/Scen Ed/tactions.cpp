@@ -22,8 +22,8 @@ short current_block_edited = 0;
 short current_terrain_type = 0;
 short safety = 0;
 location spot_hit,last_spot_hit = {-1,-1};
-creature_start_type null_monst = {0,0,{0,0},0,0,0,0,0,0};
-//creature_start_type store_monst = {0,0,{0,0},0,0,0,0,0,0};
+creature_start_type null_monst{};
+//creature_start_type store_monst{};
 Boolean sign_error_received = FALSE;
 short copied_spec = -1;
 
@@ -70,7 +70,7 @@ short right_button_status[NRS];
 RECT right_buttons[NRSONPAGE];
 RECT palette_buttons[8][6];
 short current_rs_top = 0;
-	creature_start_type last_placed_monst = {0,0,{0,0},0,0,0,0,0,0,0};
+creature_start_type last_placed_monst{};
 
 special_node_type null_spec_node = {0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
 talking_node_type null_talk_node = {0,0,{120,120,120,120},{120,120,120,120},{0,0,0,0}};
