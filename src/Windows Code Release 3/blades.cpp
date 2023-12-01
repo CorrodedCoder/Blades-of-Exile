@@ -22,6 +22,8 @@ Blades of Exile Game/Scenario Editor/Character Editor
 // Will this horror never end?
 
 #include <Windows.h>
+#include <format>
+#include <exception>
 #include <cassert>
 #include <cstdlib>
 #include <cmath>
@@ -932,23 +934,35 @@ Boolean handle_menu (short item, HMENU menu)
 	return to_return;
 }
 
+
+static HCURSOR load_cursor(int id)
+{
+	auto cursor = LoadCursor(store_hInstance, MAKEINTRESOURCE(id));
+	if (!cursor)
+	{
+		throw std::runtime_error(std::format("Could not load cursor with id = {}", id));
+	}
+	return cursor;
+}
+
 void load_cursors()
 {
-	short i,j;
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			arrow_curs[i][j] = load_cursor(100 + (i - 1) + 10 * (j - 1));
+		}
+	}
 
-	for (i = 0; i < 3; i++)
-		for (j = 0; j < 3; j++)
-			arrow_curs[i][j] = LoadCursor(store_hInstance,MAKEINTRESOURCE(100 + (i - 1) + 10 * (j - 1)));
-	sword_curs = LoadCursor(store_hInstance,MAKEINTRESOURCE(120));
-
-	key_curs = LoadCursor(store_hInstance,MAKEINTRESOURCE(122));
-	talk_curs = LoadCursor(store_hInstance,MAKEINTRESOURCE(126));
-	target_curs = LoadCursor(store_hInstance,MAKEINTRESOURCE(124));
-	look_curs = LoadCursor(store_hInstance,MAKEINTRESOURCE(129));
+	sword_curs = load_cursor(120);
+	key_curs = load_cursor(122);
+	talk_curs = load_cursor(126);
+	target_curs = load_cursor(124);
+	look_curs = load_cursor(129);
 
 	set_cursor(sword_curs);
 	current_cursor = 124;
-
 }
 
 void set_cursor(HCURSOR which_curs)
