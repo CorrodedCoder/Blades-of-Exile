@@ -36,7 +36,7 @@ extern Boolean editing_town;
 extern short max_dim[3];
 extern short dungeon_font_num,geneva_font_num;
 extern RECT windRect;
-extern piles_of_stuff_dumping_type *data_store;
+extern piles_of_stuff_dumping_type data_store;
 extern scenario_data_type far scenario;
 extern RECT world_screen;
 extern scen_item_data_type far scen_item_list;
@@ -348,7 +348,7 @@ void draw_lb_slot (short which,short mode)
 	if (mode > 0)
 		SetTextColor(main_dc,PALETTEINDEX(c));
 
-	char_win_draw_string(main_dc,text_rect,(char *)data_store->strings_ls[which],0,12);
+	char_win_draw_string(main_dc,text_rect,(char *)data_store.strings_ls[which],0,12);
 	SetTextColor(main_dc,PALETTEINDEX(c2));
 
 	SelectObject(main_dc,font);
@@ -390,7 +390,7 @@ void draw_rb_slot (short which,short mode)
 	if (mode > 0)
 		SetTextColor(main_dc,PALETTEINDEX(c));
    OffsetRect(&text_rect,0,-1);
-	char_win_draw_string(main_dc,text_rect,(char *)data_store->strings_rs[which],0,12);
+	char_win_draw_string(main_dc,text_rect,(char *)data_store.strings_rs[which],0,12);
 	SetTextColor(main_dc,PALETTEINDEX(c2));
 }
 

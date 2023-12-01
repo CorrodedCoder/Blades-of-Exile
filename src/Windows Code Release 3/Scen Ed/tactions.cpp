@@ -53,7 +53,7 @@ extern scenario_data_type far scenario;
 extern HWND right_sbar,mainPtr;
 extern outdoor_record_type far current_terrain;
 extern location cur_out;
-extern piles_of_stuff_dumping_type *data_store;
+extern piles_of_stuff_dumping_type data_store;
 Boolean small_any_drawn = FALSE;
 extern talking_record_type far talking;
 extern Boolean change_made;
@@ -325,10 +325,10 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 					case 8:
 						if (option_hit == TRUE) {
 							get_str(s2,37,j + 1);
-							strcpy(data_store->out_strs[j], s2);
+							strcpy(data_store.out_strs[j], s2);
 							} 
 							else edit_text_str(j,1);
-						//sprintf(str,"%d - %-30.30s",j, data_store->out_strs[j]);
+						//sprintf(str,"%d - %-30.30s",j, data_store.out_strs[j]);
 						//set_rb(j,8000 + j,(char *) str,0);
 						start_string_editing(1,1);
 						break;
@@ -456,7 +456,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 									for (x = 0; x < 8; x++)
 									if (current_terrain.info_rect[x].right == 0) {
 										current_terrain.info_rect[x] = working_rect;
-										sprintf(data_store->out_strs[x + 1],"");
+										sprintf(data_store.out_strs[x + 1],"");
 										if (edit_area_rect_str(x,0) == FALSE)
 											current_terrain.info_rect[x].right = 0;
 										x = 500;
@@ -3455,7 +3455,7 @@ void start_string_editing(short mode,short just_redo_text)
 				set_rb(i,7000 + i,(char *) str,0);
 				break;
 			case 1:
-				sprintf(str,"%d - %-30.30s",i, data_store->out_strs[i]);
+				sprintf(str,"%d - %-30.30s",i, data_store.out_strs[i]);
 				set_rb(i,8000 + i,(char *) str,0);
 				break;
 			case 2:

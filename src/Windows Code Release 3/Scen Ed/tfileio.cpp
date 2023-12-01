@@ -25,7 +25,7 @@ extern big_tr_type far t_d;
 extern short town_type, max_dim[3];  // 0 - big 1 - ave 2 - small
 extern short cur_town,overall_mode,given_password,user_given_password;
 extern location cur_out;
-extern piles_of_stuff_dumping_type *data_store;
+extern piles_of_stuff_dumping_type data_store;
 extern talking_record_type far talking;
 extern outdoor_record_type far current_terrain;
 extern unsigned char borders[4][50];
@@ -96,13 +96,11 @@ void save_scenario()
 {
 	short i,j,k,num_outdoors;
 	HFILE dummy_f,scen_f;
-	char *buffer = NULL;
-	DWORD buf_len = 100005;
+	char buffer[100005];
 	short error;
 	short out_num;
 	long len,scen_ptr_move = 0,save_town_size = 0,save_out_size = 0;
 	outdoor_record_type *dummy_out_ptr;
-	HGLOBAL temp_buffer;
 	long total_file_size = 0;
 
 	if (check_p(user_given_password) == FALSE) {
@@ -125,16 +123,6 @@ void save_scenario()
 		}
 
 	// Now we need to set up a buffer for moving the data over to the dummy
-	temp_buffer = GlobalAlloc(GMEM_FIXED,buf_len);
-	if (temp_buffer == NULL) {
-		_lclose(scen_f); _lclose(dummy_f); oops_error(14);
-		return;
-		}
-	buffer = reinterpret_cast<char*>(GlobalLock(temp_buffer));
-	if (buffer == NULL) {
-		_lclose(scen_f); _lclose(dummy_f); oops_error(14);
-		return;
-		}
 	scenario.prog_make_ver[0] = 1;
 	scenario.prog_make_ver[1] = 0;
 	scenario.prog_make_ver[2] = 0;
@@ -177,7 +165,7 @@ void save_scenario()
 	scenario.out_data_size[out_num][0] = sizeof(outdoor_record_type);
 	scenario.out_data_size[out_num][1] = 0;
 	for (i = 0; i < 120; i++)
-		scenario.out_data_size[out_num][1] += strlen(data_store->out_strs[i]);
+		scenario.out_data_size[out_num][1] += strlen(data_store.out_strs[i]);
 		
 	for (i = 0; i < 300; i++) 
 		scenario.scen_str_len[i] = 0;
@@ -242,14 +230,14 @@ void save_scenario()
 			for (j = 0; j < 180; j++)
 				current_terrain.strlens[j] = 0;
 			for (j = 0; j < 120; j++)
-				current_terrain.strlens[j] = strlen(data_store->out_strs[j]);
+				current_terrain.strlens[j] = strlen(data_store.out_strs[j]);
 			len = sizeof(outdoor_record_type);
 			error = FSWrite(dummy_f, &len, (char *) &current_terrain);
 			if (error != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(18);}
 			
 			for (j = 0; j < 120; j++) {
 				len = (long) current_terrain.strlens[j];
-				FSWrite(dummy_f, &len, (char *) &(data_store->out_strs[j]));
+				FSWrite(dummy_f, &len, (char *) &(data_store.out_strs[j]));
 				}
 
 			SetFPos(scen_f,3,save_out_size);
@@ -407,9 +395,6 @@ void save_scenario()
 	error = _lclose(scen_f);
 	if (error != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(26);}
 	OpenFile(szFileName2,&store,OF_DELETE);
-	GlobalUnlock(temp_buffer);
-	GlobalFree(temp_buffer);
-	
 }
 
 void load_scenario()
@@ -607,8 +592,8 @@ void load_outdoors(location which_out,short mode)
 		port_out(&current_terrain);
 		for (i = 0; i < 120; i++) {
 			len = (long) (current_terrain.strlens[i]);
-			FSRead(file_id, &len, (char *) &(data_store->out_strs[i]));
-			data_store->out_strs[i][len] = 0;
+			FSRead(file_id, &len, (char *) &(data_store.out_strs[i]));
+			data_store.out_strs[i][len] = 0;
 			}
 
 		}
@@ -760,12 +745,10 @@ void import_town(short which_town)
 	Boolean file_ok = FALSE;
 	short error;
 	long len,len_to_jump = 0,store;
-	DWORD buf_len = 100000;
-	char *buffer = NULL;
+	char buffer[100000];
 	short import_user_given_password;
 	char szFileName3 [128] = "scen.exs";
-	HGLOBAL temp_buffer;
-	
+
 	if (which_town >= 0) {
 		ofn.hwndOwner = mainPtr;
 		ofn.lpstrFile = szFileName3;
@@ -786,17 +769,6 @@ void import_town(short which_town)
 		return;
 		}
 	
-	temp_buffer = GlobalAlloc(GMEM_FIXED,buf_len);
-	if (temp_buffer == NULL) {
-		_lclose(file_id); oops_error(41);
-		return;
-		}
-	buffer = reinterpret_cast<char*>(GlobalLock(temp_buffer));
-	if (buffer == NULL) {
-		_lclose(file_id); oops_error(41);
-		return;
-		}
-
 	len = (long) sizeof(scenario_data_type);
 	if ((error = FSRead(file_id, &len, buffer)) != 0){
 		_lclose(file_id); oops_error(43); return;
@@ -805,12 +777,12 @@ void import_town(short which_town)
 	
 	if (temp_scenario->town_size[which_town] != scenario.town_size[cur_town]) {
 		give_error("Oops ... the town in the selected scenario and the current town are different sizes. Import failed.","",0);
-		GlobalUnlock(temp_buffer); GlobalFree(temp_buffer); _lclose(file_id);
+		_lclose(file_id);
 		return;
 		}
 	if (which_town >= temp_scenario->num_towns) {
 		give_error("Oops ... the selected scenario doesn't have enough towns. The town you selected doesn't exist inside this scenario.","",0);
-		GlobalUnlock(temp_buffer); GlobalFree(temp_buffer); _lclose(file_id); 
+		_lclose(file_id); 
 		return;
 		}
 	
@@ -820,7 +792,7 @@ void import_town(short which_town)
 	  	file_ok = TRUE;
 	  	}
 	 if (file_ok == FALSE) {
-		GlobalUnlock(temp_buffer); GlobalFree(temp_buffer); _lclose(file_id); give_error("This is not a legitimate Blades of Exile scenario. If it is a scenario, note that it needs to have been saved by the Windows scenario editor.","",0); return;	 
+		_lclose(file_id); give_error("This is not a legitimate Blades of Exile scenario. If it is a scenario, note that it needs to have been saved by the Windows scenario editor.","",0); return;	 
 	 	}
 
 	
@@ -921,8 +893,6 @@ void import_town(short which_town)
 
 	error = _lclose(file_id);
 	if (error != 0) {_lclose(file_id);oops_error(47);}
-	GlobalUnlock(temp_buffer);
-	GlobalFree(temp_buffer);	
 }
 
 // When this is called, the current town is the town to make town 0.
@@ -931,13 +901,10 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 {
 	short i,j,k,num_outdoors;
 	HFILE dummy_f,file_id;
-	DWORD buf_len = 100000;
 	short error;
 	long len,scen_ptr_move = 0;
 	location loc;
 	short x,y;
-	HGLOBAL temp_buffer;
-	char *buffer;
 
 	// Step 1 - load scenario file from scenario base. It contains all the monsters and
 	// items done up properly!
@@ -950,17 +917,6 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 			}
 	strcpy(szFileName,file_name);
 
-	temp_buffer = GlobalAlloc(GMEM_FIXED,buf_len);
-	if (temp_buffer == NULL) {
-		_lclose(file_id); oops_error(114);
-		return;
-		}
-	buffer = reinterpret_cast<char*>(GlobalLock(temp_buffer));
-	if (buffer == NULL) {
-		_lclose(file_id); oops_error(114);
-		return;
-		}
-	
 	len = (long) sizeof(scenario_data_type);
 	if ((error = FSRead(file_id, &len, (char *) &scenario)) != 0){
 		_lclose(file_id); oops_error(82); return;
@@ -1033,7 +989,7 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 		scenario.out_data_size[i][0] = sizeof(outdoor_record_type);
 		scenario.out_data_size[i][1] = 0;
 		for (j = 0; j < 120; j++)
-			scenario.out_data_size[i][1] += strlen(data_store->out_strs[j]);
+			scenario.out_data_size[i][1] += strlen(data_store.out_strs[j]);
 		}
 		
 	for (i = 0; i < 300; i++) 
@@ -1124,14 +1080,14 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 			for (j = 0; j < 180; j++)
 				current_terrain.strlens[j] = 0;
 			for (j = 0; j < 120; j++)
-				current_terrain.strlens[j] = strlen(data_store->out_strs[j]);
+				current_terrain.strlens[j] = strlen(data_store.out_strs[j]);
 			len = sizeof(outdoor_record_type);
 			error = FSWrite(dummy_f, &len, (char *) &current_terrain); 
 			if (error != 0) {_lclose(dummy_f);oops_error(6);}
 
 			for (j = 0; j < 120; j++) {
 				len = (long) current_terrain.strlens[j];
-				error = FSWrite(dummy_f, &len, (char *) &(data_store->out_strs[j]));
+				error = FSWrite(dummy_f, &len, (char *) &(data_store.out_strs[j]));
 				if (error != 0) {_lclose(dummy_f);oops_error(7);}
 				}
 			
@@ -1214,9 +1170,6 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 	// now, everything is moved over. Delete the original, and rename the dummy
 	error = _lclose(dummy_f);		
 	if (error != 0) {_lclose(dummy_f);oops_error(10);}
-
-	GlobalUnlock(temp_buffer);
-	GlobalFree(temp_buffer);
 }
 
 void oops_error(short error)
@@ -1568,8 +1521,8 @@ void scen_text_dump()
 
 			load_outdoors(out_sec,0);
 			for (i = 0; i < 108; i++)
-				if (data_store->out_strs[i][0] != '*') {
-					sprintf(get_text,"  Message %d: %s\n",i,data_store->out_strs[i]);
+				if (data_store.out_strs[i][0] != '*') {
+					sprintf(get_text,"  Message %d: %s\n",i,data_store.out_strs[i]);
 					len = (long) (strlen(get_text));
 					FSWrite(data_dump_file_id, &len, (char *) get_text);
 					}

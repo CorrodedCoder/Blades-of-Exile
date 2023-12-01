@@ -22,8 +22,7 @@ extern short current_spell_range,town_type;
 extern Boolean in_startup_mode,anim_onscreen,registered,play_sounds,frills_on,startup_loaded,cartoon_happening;
 extern short town_size[3];
 extern party_record_type far party;
-extern piles_of_stuff_dumping_type *data_store;
-extern piles_of_stuff_dumping_type2 *data_store2;
+extern piles_of_stuff_dumping_type2 data_store2;
 extern talking_record_type far talking;
 extern scenario_data_type far scenario;
 
@@ -1072,7 +1071,7 @@ void adjust_monst_menu()
 	for (i = 0; i < 256; i++)
 		if (on_monst_menu[i] >= 0) {
 			//GetIndString(monst_name, 2,on_monst_menu[i]);
-			sprintf(monst_name,"%s",data_store2->scen_item_list.monst_names[on_monst_menu[i]]);			if ((total_added % 24 == 0) && (total_added > 0))
+			sprintf(monst_name,"%s",data_store2.scen_item_list.monst_names[on_monst_menu[i]]);			if ((total_added % 24 == 0) && (total_added > 0))
 				InsertMenu(menu,599,MF_MENUBREAK | MF_BYCOMMAND | MF_ENABLED | MF_STRING, 600 + i, monst_name);
 				else InsertMenu(menu,599,MF_BYCOMMAND | MF_ENABLED | MF_STRING, 600 + i, monst_name);
 			total_added++;

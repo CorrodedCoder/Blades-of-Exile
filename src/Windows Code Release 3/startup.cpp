@@ -24,8 +24,7 @@ extern Boolean in_startup_mode,registered,play_sounds,party_in_memory;
 extern long register_flag;
 extern HWND	mainPtr;	
 extern short ulx,uly;
- extern piles_of_stuff_dumping_type *data_store;
-extern piles_of_stuff_dumping_type2 *data_store2;
+extern piles_of_stuff_dumping_type2 data_store2;
 
 
 //void start_game();
@@ -110,7 +109,7 @@ Boolean handle_startup_press(POINT the_point)
 					if (scen >= 0) {
 						if (registered == FALSE)
 							unreg_party_in_scen_not_check = TRUE;
-						sprintf(party.scen_name,"%s",data_store2->scen_names[scen]);
+						sprintf(party.scen_name,"%s",data_store2.scen_names[scen]);
 						put_party_in_scen();
 						}
 

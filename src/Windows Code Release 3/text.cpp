@@ -75,8 +75,7 @@ extern HBITMAP dialog_pattern_gworld,pattern_gworld,status_pattern_gworld,spec_s
 
 // game globals
 extern party_record_type far party;
-extern piles_of_stuff_dumping_type *data_store;
-extern piles_of_stuff_dumping_type2 *data_store2;
+extern piles_of_stuff_dumping_type2 data_store2;
 extern talking_record_type far talking;
 extern scenario_data_type far  scenario;
 
@@ -113,7 +112,7 @@ extern HFONT font,italic_font,underline_font,bold_font,small_bold_font;
 extern HPALETTE hpal;
 extern HDC main_dc;
 extern HINSTANCE store_hInstance;
-extern piles_of_stuff_dumping_type5 *data_store5;
+extern piles_of_stuff_dumping_type5 data_store5;
 
 short current_item_button[6] = {-1,-1,-1,-1,-1,-1};
 short pc_button_state[6] = {-1,-1,-1,-1,-1,-1};
@@ -401,7 +400,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 			for (i = 0; i < 8; i++) {
 				i_num = i + item_offset;
 				if (spec_item_array[i_num] >= 0){
-					strcpy(to_draw,data_store5->scen_strs[60 + spec_item_array[i_num] * 2]);
+					strcpy(to_draw,data_store5.scen_strs[60 + spec_item_array[i_num] * 2]);
 					win_draw_string(hdc,item_buttons[i][0],to_draw,0,10);
 
 					SelectObject(hdc,store_bmp);
@@ -1155,7 +1154,7 @@ void notify_out_combat_began(out_wandering_type encounter,short *nums)
 
 void get_m_name(char *str,unsigned char num)
 {
-	strcpy(str, data_store2->scen_item_list.monst_names[num]);
+	strcpy(str, data_store2.scen_item_list.monst_names[num]);
 }
 void get_ter_name(char *str,unsigned char num)
 {
@@ -1165,7 +1164,7 @@ void get_ter_name(char *str,unsigned char num)
 	if ((num == 90) && ((is_out()) || (is_town()) || ((is_combat()) && (which_combat_type == 1))))
 		sprintf(store_name,"Pit");
 		else {
-			strcpy(store_name, data_store2->scen_item_list.ter_names[num]);
+			strcpy(store_name, data_store2.scen_item_list.ter_names[num]);
 			}
 	strcpy(str, store_name);
 }

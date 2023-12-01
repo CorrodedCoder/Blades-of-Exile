@@ -49,8 +49,6 @@ extern short dungeon_font_num,geneva_font_num,overall_mode,town_type,which_comba
 extern Boolean play_sounds,boom_anim_active,cartoon_happening,in_startup_mode;
 extern HBITMAP fields_gworld,mixed_gworld,dlg_buttons_gworld,terrain_screen_gworld,missiles_gworld;
 extern party_record_type far party;
-extern piles_of_stuff_dumping_type *data_store;
-extern piles_of_stuff_dumping_type2 *data_store2;
 extern talking_record_type far talking;
 extern scenario_data_type far scenario;
 
