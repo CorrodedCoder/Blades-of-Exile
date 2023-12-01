@@ -1264,11 +1264,6 @@ void edit_scen_intro()
 }
 
 
-void make_cursor_sword() 
-{
-	set_cursor(0);
-}
-
 void set_cursor(short which_c) 
 {
 	short i;

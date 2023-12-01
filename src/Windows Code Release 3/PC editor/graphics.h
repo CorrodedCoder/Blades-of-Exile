@@ -5,7 +5,6 @@ void draw_main_screen();
 void do_button_action(short which_pc,short which_button);
 void draw_items(short clear_first);
 void display_party(short mode,short clear_first);
-void undo_clip();
 void add_string_to_buf(const char * str) ;
 void char_win_draw_string(HDC dest_window,RECT dest_rect, const char * str,short mode,short line_height);
 void win_draw_string(HDC dest_hdc,RECT dest_rect,char *str,short mode,short line_height);
@@ -21,6 +20,5 @@ void make_cursor_sword();
 void MeasureText(short str_len,char *str, short *len_array,HDC hdc);
 void GetIndString(char *str,short i, short j) ;
 
-void make_cursor_sword();
 void lose_graphics();
  

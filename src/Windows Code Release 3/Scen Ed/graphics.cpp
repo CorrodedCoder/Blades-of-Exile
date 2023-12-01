@@ -115,6 +115,17 @@ short map_pats[220] = {50,50,1,1,1,6,6,6,6,6,
 unsigned char small_what_drawn[64][64];
 extern Boolean small_any_drawn;
 
+static void undo_clip(HDC hdc)
+{
+ //	RECT overall_rect = {0,0,530,435};
+	HRGN rgn;
+
+	rgn = CreateRectRgn(0,0,5000,5000);
+	SelectClipRgn(hdc,rgn);
+	DeleteObject(rgn);
+}
+
+
 void Set_up_win ()
 {
 	short i,j;
@@ -1625,16 +1636,6 @@ short string_length(char *str)
 		if ((text_len[i] > total_width) && (i <= len))
 			total_width = text_len[i];
 	return total_width;
-}
-
-void undo_clip(HDC hdc)
-{
- //	RECT overall_rect = {0,0,530,435};
-	HRGN rgn;
-
-	rgn = CreateRectRgn(0,0,5000,5000);
-	SelectClipRgn(hdc,rgn);
-	DeleteObject(rgn);
 }
 
 void ClipRect(HDC hdc,RECT *rect)

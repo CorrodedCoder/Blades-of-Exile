@@ -31,7 +31,7 @@ static const std::array m_priest_sp{"Minor Bless","Light Heal","Wrack","Stumble"
 						"Divine Thud"};
 
 static std::array < std::array<char, 50>, TEXT_BUF_LEN> text_buffer;
-short buf_pointer = 30, lines_to_print= 0, num_added_since_stop = 0;
+short buf_pointer = 30, num_added_since_stop = 0;
 char far store_string[256];
 char far store_string2[256];
 short start_print_point= 0;
@@ -45,7 +45,6 @@ RECT status_panel_clip_rect = {299, 11,495,175},item_panel_clip_rect = {297,11,4
 RECT far item_buttons_from[7] = {{0,12,14,24},{14,12,28,24},{28,12,42,24},{42,12,56,24},
 						{0,24,30,36},{30,24,60,36},{0,36,30,48}}; /**/
 
-short store_mode;
 Boolean string_added = FALSE;
 short store_text_x = 0, store_text_y = 0;
 extern short had_text_freeze,stat_screen_mode;
@@ -114,6 +113,19 @@ extern piles_of_stuff_dumping_type5 data_store5;
 
 short current_item_button[6] = {-1,-1,-1,-1,-1,-1};
 short pc_button_state[6] = {-1,-1,-1,-1,-1,-1};
+
+static void place_buy_button(short position,short pc_num,short item_num,HDC hdc);
+static void place_item_bottom_buttons();
+static void place_item_button(short which_button_to_put,short which_slot,short which_button_position,short extra_val);
+static short print_terrain(location space);
+
+
+static void DrawString(const char* string, short x, short y, HDC hdc)
+{
+	RECT text_r = { 0,0,450,20 };
+	OffsetRect(&text_r, x, y);
+	DrawText(hdc, string, -1, &text_r, DT_LEFT | DT_SINGLELINE | DT_TOP | DT_NOCLIP);
+}
 
 short text_pc_has_abil_equip(short pc_num,short abil)
 {
@@ -511,7 +523,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 		}
 }
 
-void place_buy_button(short position,short pc_num,short item_num,HDC hdc)
+static void place_buy_button(short position,short pc_num,short item_num,HDC hdc)
 {
 	RECT dest_rect,source_rect;
 	RECT button_sources[3] = {{0,24,30,36},{30,24,60,36},{0,36,30,48}}; /**/
@@ -596,7 +608,7 @@ void place_buy_button(short position,short pc_num,short item_num,HDC hdc)
  // name, use, give, drop, info, sell/id
 // shortcuts - if which_button_to_put is 10, all 4 buttons now
 //				if which_button_to_put is 11, just right 2
-void place_item_button(short which_button_to_put,short which_slot,short which_button_position,short extra_val)
+static void place_item_button(short which_button_to_put,short which_slot,short which_button_position,short extra_val)
 {
 	RECT from_rect = {0,0,18,18},to_rect;
 
@@ -655,7 +667,7 @@ RECT get_custom_rect (short which_rect) ////
 	return store_rect;
 }
 
-void place_item_bottom_buttons()
+static void place_item_bottom_buttons()
 {
 	RECT pc_from_rect = {0,0,28,36},but_from_rect = {36,85,54,101},to_rect; /**/
 	short i;
@@ -1154,7 +1166,8 @@ void get_m_name(char *str,unsigned char num)
 {
 	strcpy(str, data_store2.scen_item_list.monst_names[num]);
 }
-void get_ter_name(char *str,unsigned char num)
+
+static void get_ter_name(char *str,unsigned char num)
 {
 	char store_name[256];
 	
@@ -1350,7 +1363,7 @@ void print_nums(short a,short b,short c)
 
 }
 
-short print_terrain(location space)
+static short print_terrain(location space)
 {
 	unsigned char which_terrain;
 
@@ -1480,37 +1493,12 @@ void print_buf ()
 	string_added = FALSE;	
 }
 
-void restart_printing()
-{
-	lines_to_print = 0;
-	//clear_text_panel();
-}
-
-void restore_mode()
-{
-	overall_mode = store_mode;
-}
-
 void through_sending()
 {
 	mark_where_printing_long = buf_pointer + LINES_IN_TEXT_WIN - 1;
 	if (mark_where_printing_long > TEXT_BUF_LEN - 1)
 		mark_where_printing_long -= TEXT_BUF_LEN;
 	printing_long = FALSE;
-}
-
-void Display_String(char *str)
-{
-//	//c2pstr((char *) str);
-// 	sprintf(str2," %s",str);
-//	str2[0] = (char) strlen(str);
-//	DrawString(str2);
-}
-
-void display_string(char *str)
-{
-//	c2pstr(str);
-//	drawstring(str);
 }
 
 /* Draw a bitmap in the world window. hor in 0 .. 8, vert in 0 .. 8,
@@ -1551,18 +1539,9 @@ RECT coord_to_rect(short i,short j)
 }
 
 
-void c2p(char *str) 
-{
-}
-
-void p2c(char *str)
-{
-}
-
 void get_str(char *str,short i, short j)
 {
 	GetIndString(str, i, j);
-	p2c(str);
 }
 
 short string_length(char *str,HDC hdc)
@@ -1694,19 +1673,6 @@ void WinBlackDrawString(char *string,short x,short y)
 }
 
 
-void DrawString(char *string,short x,short y,HDC hdc)
-{
-	RECT text_r = {0,0,450,20};
-
-	OffsetRect(&text_r,x,y);
-	DrawText(hdc,string,-1,&text_r,DT_LEFT | DT_SINGLELINE | DT_TOP | DT_NOCLIP);
-
-}
-
-//void Display_String(char *string) {
-	//DrawString(string,store_x,store_y,store_text_hdc);
-	//}
-
 void FlushEvents(short mode)
 // mode... 0 - keystrokes   1 - mouse presses  2 - both
 {
@@ -1726,16 +1692,6 @@ void FlushEvents(short mode)
 void ExitToShell()
 {
 	PostQuitMessage(0);
-}
-
-void undo_clip()
-{
- //	RECT overall_rect = {0,0,530,435};
-	HRGN rgn;
-
-	rgn = CreateRectRgn(0,0,5000,5000);
-	SelectClipRgn(main_dc,rgn);
-	DeleteObject(rgn);
 }
 
 void ClipRect(RECT *rect)
@@ -1762,12 +1718,6 @@ void beep()
 void SysBeep(short a)
 {
 	MessageBeep(MB_OK);
-}
-
-void make_cursor_sword() 
-{
-	SetCursor(sword_curs);
-
 }
 
 void GetIndString(char *str,short i, short j) {

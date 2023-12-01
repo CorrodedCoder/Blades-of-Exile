@@ -176,6 +176,19 @@ location ok_space[4] = {{0,0},{0,0},{0,0},{0,0}};
  	char combat_string[100];
 
 
+static void undo_clip()
+{
+	//	RECT overall_rect = {0,0,530,435};
+	HRGN rgn = CreateRectRgn(0, 0, 5000, 5000);
+	SelectClipRgn(main_dc, rgn);
+	DeleteObject(rgn);
+}
+
+void make_cursor_sword()
+{
+	SetCursor(sword_curs);
+}
+
 void adjust_window_mode()
 {
 	create_clip_region();

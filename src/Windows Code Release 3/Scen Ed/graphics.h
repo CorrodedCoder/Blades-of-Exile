@@ -25,7 +25,6 @@ void draw_frames();
 void place_location();
 void place_just_location();
 void set_string(const char * string, const char * string2);
-void undo_clip();
 Boolean is_special(short i,short j);
 void take_special(short i,short j);
 void make_special(short i,short j);
@@ -63,8 +62,6 @@ void get_str(char *str,short i, short j);
 short string_length(char *str,HDC hdc);
 void MeasureText(short str_len,char *str, short *len_array,HDC hdc);
 void GetIndString(char *str,short i, short j);
-void undo_clip(HDC hdc);
 void ClipRect(HDC hdc,RECT *rect);
 void FlushEvents(short mode);
 void discard_graphics();
-

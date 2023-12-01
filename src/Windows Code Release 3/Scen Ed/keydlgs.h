@@ -30,7 +30,6 @@ void edit_scen_intro();
 short choice_dialog(short pic,short num);
 Boolean edit_area_rect_str(short which_str,short mode);
 void edit_area_rect_event_filter (short item_hit);
-void make_cursor_sword() ;
 void edit_dialog_text_event_filter (short item_hit);
 void edit_dialog_text(short mode,short *str1,short parent);
 void set_cursor(short which_c) ;
