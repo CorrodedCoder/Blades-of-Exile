@@ -3,6 +3,8 @@
 
 #include <Windows.h>
 #include <array>
+#include <algorithm>
+#include <format>
 #include <cassert>
 
 #include "global.h"
@@ -28,11 +30,7 @@ static const std::array m_priest_sp{"Minor Bless","Light Heal","Wrack","Stumble"
 						"Unholy Ravaging","Summon Guardian","Pestilence","Revive All","Avatar",
 						"Divine Thud"};
 
-typedef struct {
-	char line[50];
-	} buf_line;
-
-buf_line far text_buffer[TEXT_BUF_LEN];
+static std::array < std::array<char, 50>, TEXT_BUF_LEN> text_buffer;
 short buf_pointer = 30, lines_to_print= 0, num_added_since_stop = 0;
 char far store_string[256];
 char far store_string2[256];
@@ -1383,9 +1381,9 @@ void add_string_to_buf(const char * str)
 		print_buf();
 		through_sending();
 		}
-	sprintf(text_buffer[buf_pointer].line, "%-49.49s", str);
-   text_buffer[buf_pointer].line[49] = 0;
-//	c2pstr((char *)text_buffer[buf_pointer].line);
+	sprintf(text_buffer[buf_pointer].data(), "%-49.49s", str);
+   text_buffer[buf_pointer][49] = 0;
+//	c2pstr(text_buffer[buf_pointer].data());
 	if (buf_pointer == (TEXT_BUF_LEN - 1))
 		buf_pointer = 0;
 		else buf_pointer++;
@@ -1393,10 +1391,11 @@ void add_string_to_buf(const char * str)
 
 void init_buf()
 {
-	short i;
-	
-	for (i = 0; i < TEXT_BUF_LEN; i++)
-		sprintf(text_buffer[buf_pointer].line, " ");
+	for (auto& buffer : text_buffer)
+	{
+		buffer[0] = ' ';
+		buffer[1] = '\0';
+	}
 }
 
 
@@ -1451,8 +1450,8 @@ void print_buf ()
 	
 	while ((line_to_print!= buf_pointer) && (num_lines_printed < LINES_IN_TEXT_WIN)) {
 		//MoveTo(4, 13 + 12 * num_lines_printed);
-		//drawstring((char *) text_buffer[line_to_print].line);
-		DrawString((char *) text_buffer[line_to_print].line,4,
+		//drawstring(text_buffer[line_to_print].data());
+		DrawString(text_buffer[line_to_print].data(), 4,
 			 2 + 12 * num_lines_printed,hdc);
 		num_lines_printed++;
 		line_to_print++;
