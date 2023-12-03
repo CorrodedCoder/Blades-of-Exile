@@ -62,8 +62,8 @@ extern char far scen_strs2[110][256];
 extern stored_town_maps_type far town_maps,town_maps2;
 extern scenario_data_type far scenario;
  extern unsigned char far combat_terrain[64][64];
-extern piles_of_stuff_dumping_type *data_store;
-extern piles_of_stuff_dumping_type2 *data_store2;
+extern piles_of_stuff_dumping_type data_store;
+extern piles_of_stuff_dumping_type2 data_store2;
  extern talking_record_type far talking;
 
 extern short terrain_pic[256];
@@ -71,9 +71,9 @@ extern scen_header_type scen_headers[25];
 HBITMAP spec_scen_g = NULL;
 
 extern HDC main_dc,main_dc2,main_dc3;
-extern piles_of_stuff_dumping_type3 *data_store3;
-extern piles_of_stuff_dumping_type4 *data_store4;
-extern piles_of_stuff_dumping_type5 *data_store5;
+extern piles_of_stuff_dumping_type3 data_store3;
+extern piles_of_stuff_dumping_type4 data_store4;
+extern piles_of_stuff_dumping_type5 data_store5;
 
 typedef struct {
 	char expl[96][96];
@@ -862,16 +862,16 @@ void load_town(short town_num,short mode,short extra,char *str)
 		len = (mode == 0) ? (long) (c_town.town.strlens[i]) : (long) (dummy_town.strlens[i]);
 		switch (mode) {
 			case 0:
-				FSRead(file_id, &len, (char *) &(data_store->town_strs[i]));
-				data_store->town_strs[i][len] = 0;
+				FSRead(file_id, &len, (char *) &(data_store.town_strs[i]));
+				data_store.town_strs[i][len] = 0;
 				break;
 			case 1:
 				SetFPos (file_id, 3, len);
 				break;
 			case 2:
 				if (extra < 0) {
-					FSRead(file_id, &len, (char *) &(data_store->town_strs[i]));
-					data_store->town_strs[i][len] = 0;
+					FSRead(file_id, &len, (char *) &(data_store.town_strs[i]));
+					data_store.town_strs[i][len] = 0;
 					}
 				else if (i == extra) {
 					FSRead(file_id, &len, (char *) str);
@@ -890,8 +890,8 @@ void load_town(short town_num,short mode,short extra,char *str)
 	
 		for (i = 0; i < 170; i++) {
 			len = (long) (talking.strlens[i]);
-			FSRead(file_id, &len, (char *) &(data_store3->talk_strs[i]));
-			data_store3->talk_strs[i][len] = 0;
+			FSRead(file_id, &len, (char *) &(data_store3.talk_strs[i]));
+			data_store3.talk_strs[i][len] = 0;
 			}
 		cur_town_talk_loaded = town_num;
 		}
@@ -940,8 +940,8 @@ void shift_universe_left()
 	party.p_loc.x += 48;
 	outdoors[1][0] = outdoors[0][0];
 	outdoors[1][1] = outdoors[0][1];
-	data_store4->outdoor_text[1][0] = data_store4->outdoor_text[0][0];
-	data_store4->outdoor_text[1][1] = data_store4->outdoor_text[0][1];
+	data_store4.outdoor_text[1][0] = data_store4.outdoor_text[0][0];
+	data_store4.outdoor_text[1][1] = data_store4.outdoor_text[0][1];
 
 	for (i = 48; i < 96; i++)
 		for (j = 0; j < 96; j++)
@@ -980,8 +980,8 @@ void shift_universe_right()
 	party.p_loc.x -= 48;
 	outdoors[0][0] = outdoors[1][0];
 	outdoors[0][1] = outdoors[1][1];
-	data_store4->outdoor_text[0][0] = data_store4->outdoor_text[1][0];
-	data_store4->outdoor_text[0][1] = data_store4->outdoor_text[1][1];
+	data_store4.outdoor_text[0][0] = data_store4.outdoor_text[1][0];
+	data_store4.outdoor_text[0][1] = data_store4.outdoor_text[1][1];
 	for (i = 0; i < 48; i++)
 		for (j = 0; j < 96; j++)
 			out_e[i][j] = out_e[i + 48][j];
@@ -1018,8 +1018,8 @@ void shift_universe_up()
 	outdoors[0][1] = outdoors[0][0];
 	outdoors[1][1] = outdoors[1][0];
 
-	data_store4->outdoor_text[0][1] = data_store4->outdoor_text[0][0];
-	data_store4->outdoor_text[1][1] = data_store4->outdoor_text[1][0];
+	data_store4.outdoor_text[0][1] = data_store4.outdoor_text[0][0];
+	data_store4.outdoor_text[1][1] = data_store4.outdoor_text[1][0];
 		for (i = 0; i < 96; i++)
 			for (j = 48; j < 96; j++)
 				out_e[i][j] = out_e[i][j - 48];
@@ -1057,8 +1057,8 @@ void shift_universe_down()
 	outdoors[0][0] = outdoors[0][1];
 	outdoors[1][0] = outdoors[1][1];
 
-	data_store4->outdoor_text[0][0] = data_store4->outdoor_text[0][1];
-	data_store4->outdoor_text[1][0] = data_store4->outdoor_text[1][1];
+	data_store4.outdoor_text[0][0] = data_store4.outdoor_text[0][1];
+	data_store4.outdoor_text[1][0] = data_store4.outdoor_text[1][1];
 		for (i = 0; i < 96; i++)
 			for (j = 0; j < 48; j++)
 				out_e[i][j] = out_e[i][j + 48];
@@ -1303,8 +1303,8 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 	if (mode == 0) {
 		for (i = 0; i < 9; i++) {
 			len = (long) (outdoors[targ_x][targ_y].strlens[i]);
-			FSRead(file_id, &len, (char *) &(data_store4->outdoor_text[targ_x][targ_y].out_strs[i]));
-			data_store4->outdoor_text[targ_x][targ_y].out_strs[i][len] = 0;
+			FSRead(file_id, &len, (char *) &(data_store4.outdoor_text[targ_x][targ_y].out_strs[i]));
+			data_store4.outdoor_text[targ_x][targ_y].out_strs[i][len] = 0;
 			}
 		}
 	if (mode == 1) {
@@ -1505,15 +1505,15 @@ Boolean load_scenario()
 		return FALSE;	 
 	 	}
 	len = sizeof(scen_item_data_type); // item data
-	if ((error = FSRead(file_id, &len, (char *) &(data_store2->scen_item_list))) != 0){
+	if ((error = FSRead(file_id, &len, (char *) &(data_store2.scen_item_list))) != 0){
 		FSClose(file_id); oops_error(30); return FALSE;
 		}
 	port_item_list();
 	for (i = 0; i < 270; i++) {
 		len = (long) (scenario.scen_str_len[i]);
 		if (i < 160) {
-			FSRead(file_id, &len, (char *) &(data_store5->scen_strs[i]));
-			data_store5->scen_strs[i][len] = 0;
+			FSRead(file_id, &len, (char *) &(data_store5.scen_strs[i]));
+			data_store5.scen_strs[i][len] = 0;
 			}
 			else {
 				FSRead(file_id, &len, (char *) &(scen_strs2[i - 160]));
@@ -1580,7 +1580,7 @@ void build_scen_headers()
 		if (load_scenario_header(filename,cur_entry) == TRUE) {
 			// now we need to store the file name, first stripping any path that occurs
 			// before it
-			strcpy(data_store2->scen_names[cur_entry], filename2);
+			strcpy(data_store2.scen_names[cur_entry], filename2);
 			cur_entry++;
 			}
 		}
@@ -1654,7 +1654,7 @@ Boolean load_scenario_header(char *filename,short header_entry)
 		if (i == 0)
 			load_str[29] = 0;
 			else load_str[59] = 0;
-		strcpy(data_store2->scen_header_strs[header_entry][i], load_str);
+		strcpy(data_store2.scen_header_strs[header_entry][i], load_str);
 		}
 	
 	FSClose(file_id);
@@ -2019,9 +2019,9 @@ void port_item_list()
 		return;
 
 	for (i = 0; i < 400; i++) {
-		flip_short(&(data_store2->scen_item_list.scen_items[i].variety));
-		flip_short(&(data_store2->scen_item_list.scen_items[i].item_level));
-		flip_short(&(data_store2->scen_item_list.scen_items[i].value));
+		flip_short(&(data_store2.scen_item_list.scen_items[i].variety));
+		flip_short(&(data_store2.scen_item_list.scen_items[i].item_level));
+		flip_short(&(data_store2.scen_item_list.scen_items[i].value));
 		}
 }
 

@@ -20,8 +20,6 @@
 
 extern short stat_window,overall_mode,current_cursor,which_combat_type,current_pc;
 extern party_record_type far party;
-extern piles_of_stuff_dumping_type *data_store;
-extern piles_of_stuff_dumping_type2 *data_store2;
 extern talking_record_type far talking;
 extern scenario_data_type far scenario;
 

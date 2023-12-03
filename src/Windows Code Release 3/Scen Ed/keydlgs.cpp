@@ -20,7 +20,7 @@ extern short_item_record_type item_list[400];
 extern scenario_data_type far scenario;
 extern special_node_type null_spec_node;
 extern talking_node_type null_talk_node;
-extern piles_of_stuff_dumping_type *data_store;
+extern piles_of_stuff_dumping_type data_store;
 extern outdoor_record_type far current_terrain;
 extern HINSTANCE store_hInstance;
 
@@ -428,7 +428,7 @@ void edit_text_event_filter (short item_hit)
 				CDGT(816,2,(store_which_str >= 160) ? 
 					scen_strs2[store_which_str - 160] : scen_strs[store_which_str]);
 			if (store_str_mode == 1)
-				CDGT(816,2,data_store->out_strs[store_which_str]);
+				CDGT(816,2,data_store.out_strs[store_which_str]);
 			if (store_str_mode == 2)
 				CDGT(816,2,town_strs[store_which_str]);
 	switch (item_hit) {
@@ -450,7 +450,7 @@ void edit_text_event_filter (short item_hit)
 		CDST(816,2,(store_which_str >= 160) ? 
 					scen_strs2[store_which_str - 160] : scen_strs[store_which_str]);
 	if (store_str_mode)
-		CDST(816,2,data_store->out_strs[store_which_str]);
+		CDST(816,2,data_store.out_strs[store_which_str]);
 	if (store_str_mode == 2)
 		CDST(816,2,town_strs[store_which_str]);
 }
@@ -469,7 +469,7 @@ void edit_text_str(short which_str,short mode)
 		CDST(816,2,(which_str >= 160) ? 
 					scen_strs2[which_str - 160] : scen_strs[which_str]);
 	if (mode == 1)
-		CDST(816,2,data_store->out_strs[which_str]);
+		CDST(816,2,data_store.out_strs[which_str]);
 	if (mode == 2)
 		CDST(816,2,town_strs[which_str]);
 	cd_attach_key(816,3,0);
@@ -490,7 +490,7 @@ void edit_area_rect_event_filter (short item_hit)
 			dialog_not_toast = FALSE; 
 			CDGT(840,2,str);
 			if (store_str_mode == 0)
-				sprintf(data_store->out_strs[store_which_str + 1],"%-29.29s", str);
+				sprintf(data_store.out_strs[store_which_str + 1],"%-29.29s", str);
 				else sprintf(town_strs[store_which_str + 1],"%-29.29s", str);
 			break;
 
@@ -511,7 +511,7 @@ Boolean edit_area_rect_str(short which_str,short mode)
 	cd_create_dialog_parent_num(840,0);
 	
 	if (store_str_mode == 0)
-		CDST(840,2,data_store->out_strs[store_which_str + 1]);
+		CDST(840,2,data_store.out_strs[store_which_str + 1]);
 		else CDST(840,2,town_strs[store_which_str + 1]);
 		
 	while (dialog_not_toast)
@@ -933,7 +933,7 @@ void edit_spec_text_event_filter (short item_hit)
 							break;
 						case 1:
 							for (i = 10; i < 100; i++)
-								if (data_store->out_strs[i][0] == '*') {
+								if (data_store.out_strs[i][0] == '*') {
 									*store_str1 = i - 10;
 									i = 500;
 									}
@@ -959,7 +959,7 @@ void edit_spec_text_event_filter (short item_hit)
 							strcpy(scen_strs2[*store_str1], str);
 							break;				
 						case 1:
-							strcpy(data_store->out_strs[*store_str1 + 10], str);
+							strcpy(data_store.out_strs[*store_str1 + 10], str);
 							break;				
 						case 2:
 							strcpy(town_strs[*store_str1 + 20], str);
@@ -980,7 +980,7 @@ void edit_spec_text_event_filter (short item_hit)
 							break;
 						case 1:
 							for (i = 10; i < 100; i++)
-								if (data_store->out_strs[i][0] == '*') {
+								if (data_store.out_strs[i][0] == '*') {
 									*store_str2 = i - 10;
 									i = 500;
 									}
@@ -1006,7 +1006,7 @@ void edit_spec_text_event_filter (short item_hit)
 							strcpy(scen_strs2[*store_str2], str);
 							break;				
 						case 1:
-							strcpy(data_store->out_strs[*store_str2 + 10], str);
+							strcpy(data_store.out_strs[*store_str2 + 10], str);
 							break;				
 						case 2:
 							strcpy(town_strs[*store_str2 + 20], str);
@@ -1036,7 +1036,7 @@ void edit_spec_text(short mode,short *str1,short *str2,short parent)
 		if (mode == 0)
 			CDST(826,2,scen_strs2[*str1]);
 		if (mode == 1)
-			CDST(826,2,data_store->out_strs[*str1 + 10]);
+			CDST(826,2,data_store.out_strs[*str1 + 10]);
 		if (mode == 2)
 			CDST(826,2,town_strs[*str1 + 20]);
 		}
@@ -1046,7 +1046,7 @@ void edit_spec_text(short mode,short *str1,short *str2,short parent)
 		if (mode == 0)
 			CDST(826,3,scen_strs2[*str2]);
 		if (mode == 1)
-			CDST(826,3,data_store->out_strs[*str2 + 10]);
+			CDST(826,3,data_store.out_strs[*str2 + 10]);
 		if (mode == 2)
 			CDST(826,3,town_strs[*str2 + 20]);
 		}
@@ -1075,7 +1075,7 @@ void edit_dialog_text_event_filter (short item_hit)
 						strcpy(scen_strs2[*store_str1 + i], str);
 						break;				
 					case 1:
-						strcpy(data_store->out_strs[*store_str1 + 10 + i], str);
+						strcpy(data_store.out_strs[*store_str1 + 10 + i], str);
 						break;				
 					case 2:
 						strcpy(town_strs[*store_str1 + 20 + i], str);
@@ -1116,7 +1116,7 @@ void edit_dialog_text(short mode,short *str1,short parent)
 						case 1:
 							for (i = 10; i < 100 - 6; i++) {
 								for (j = i; j < i + 6; j++)
-									if (data_store->out_strs[j][0] != '*') {
+									if (data_store.out_strs[j][0] != '*') {
 										j = 500;
 										}
 								if (j < 500) {
@@ -1146,7 +1146,7 @@ void edit_dialog_text(short mode,short *str1,short parent)
 						sprintf(scen_strs2[i],"");
 						break;				
 					case 1:
-						sprintf(data_store->out_strs[10 + i],"");
+						sprintf(data_store.out_strs[10 + i],"");
 						break;				
 					case 2:
 						sprintf(town_strs[20 + i],"");
@@ -1166,7 +1166,7 @@ void edit_dialog_text(short mode,short *str1,short parent)
 			if (mode == 0)
 				CDST(842,2 + i,scen_strs2[*str1 + i]);
 			if (mode == 1)
-				CDST(842,2 + i,data_store->out_strs[*str1 + 10 + i]);
+				CDST(842,2 + i,data_store.out_strs[*str1 + 10 + i]);
 			if (mode == 2)
 				CDST(842,2 + i,town_strs[*str1 + 20 + i]);
 			}
@@ -1263,11 +1263,6 @@ void edit_scen_intro()
 	cd_kill_dialog(804,0);
 }
 
-
-void make_cursor_sword() 
-{
-	set_cursor(0);
-}
 
 void set_cursor(short which_c) 
 {

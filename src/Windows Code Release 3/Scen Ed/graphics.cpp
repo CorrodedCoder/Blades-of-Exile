@@ -36,7 +36,7 @@ extern Boolean editing_town;
 extern short max_dim[3];
 extern short dungeon_font_num,geneva_font_num;
 extern RECT windRect;
-extern piles_of_stuff_dumping_type *data_store;
+extern piles_of_stuff_dumping_type data_store;
 extern scenario_data_type far scenario;
 extern RECT world_screen;
 extern scen_item_data_type far scen_item_list;
@@ -114,6 +114,17 @@ short map_pats[220] = {50,50,1,1,1,6,6,6,6,6,
 				
 unsigned char small_what_drawn[64][64];
 extern Boolean small_any_drawn;
+
+static void undo_clip(HDC hdc)
+{
+ //	RECT overall_rect = {0,0,530,435};
+	HRGN rgn;
+
+	rgn = CreateRectRgn(0,0,5000,5000);
+	SelectClipRgn(hdc,rgn);
+	DeleteObject(rgn);
+}
+
 
 void Set_up_win ()
 {
@@ -348,7 +359,7 @@ void draw_lb_slot (short which,short mode)
 	if (mode > 0)
 		SetTextColor(main_dc,PALETTEINDEX(c));
 
-	char_win_draw_string(main_dc,text_rect,(char *)data_store->strings_ls[which],0,12);
+	char_win_draw_string(main_dc,text_rect,(char *)data_store.strings_ls[which],0,12);
 	SetTextColor(main_dc,PALETTEINDEX(c2));
 
 	SelectObject(main_dc,font);
@@ -390,7 +401,7 @@ void draw_rb_slot (short which,short mode)
 	if (mode > 0)
 		SetTextColor(main_dc,PALETTEINDEX(c));
    OffsetRect(&text_rect,0,-1);
-	char_win_draw_string(main_dc,text_rect,(char *)data_store->strings_rs[which],0,12);
+	char_win_draw_string(main_dc,text_rect,(char *)data_store.strings_rs[which],0,12);
 	SetTextColor(main_dc,PALETTEINDEX(c2));
 }
 
@@ -1625,16 +1636,6 @@ short string_length(char *str)
 		if ((text_len[i] > total_width) && (i <= len))
 			total_width = text_len[i];
 	return total_width;
-}
-
-void undo_clip(HDC hdc)
-{
- //	RECT overall_rect = {0,0,530,435};
-	HRGN rgn;
-
-	rgn = CreateRectRgn(0,0,5000,5000);
-	SelectClipRgn(hdc,rgn);
-	DeleteObject(rgn);
 }
 
 void ClipRect(HDC hdc,RECT *rect)

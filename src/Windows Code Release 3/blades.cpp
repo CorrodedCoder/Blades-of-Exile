@@ -22,6 +22,8 @@ Blades of Exile Game/Scenario Editor/Character Editor
 // Will this horror never end?
 
 #include <Windows.h>
+#include <format>
+#include <exception>
 #include <cassert>
 #include <cstdlib>
 #include <cmath>
@@ -181,11 +183,11 @@ HINSTANCE store_hInstance;
 HACCEL accel;
 BOOL event_handled;
 scenario_data_type far scenario;
-piles_of_stuff_dumping_type *data_store;
-piles_of_stuff_dumping_type2 *data_store2;
-piles_of_stuff_dumping_type3 *data_store3;
-piles_of_stuff_dumping_type4 *data_store4;
-piles_of_stuff_dumping_type5 *data_store5;
+piles_of_stuff_dumping_type data_store;
+piles_of_stuff_dumping_type2 data_store2;
+piles_of_stuff_dumping_type3 data_store3;
+piles_of_stuff_dumping_type4 data_store4;
+piles_of_stuff_dumping_type5 data_store5;
 talking_record_type far talking;
 char far scen_strs2[110][256];
 stored_town_maps_type far town_maps,town_maps2;
@@ -206,9 +208,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpszCmdPar
 	WNDCLASS wndclass,wndclass2;
 	short seed;
    RECT windRECT;
-	HGLOBAL temp_buffer,temp_buffer2;
-	HGLOBAL temp_buffer3,temp_buffer4;
-	HGLOBAL temp_buffer5;
 
 	if (!hPrevInstance) {
 		wndclass.style = CS_HREDRAW | CS_VREDRAW | CS_BYTEALIGNWINDOW;
@@ -259,48 +258,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpszCmdPar
 		accel = LoadAccelerators(hInstance, MAKEINTRESOURCE(1));
 		init_buf();
 		load_cursors();
-
-		temp_buffer = GlobalAlloc(GMEM_FIXED,sizeof(piles_of_stuff_dumping_type));
-		if (temp_buffer == NULL) {
-			PostQuitMessage(0);
-			}
-		data_store = (piles_of_stuff_dumping_type *) (GlobalLock(temp_buffer));
-		if (data_store == NULL) {
-			PostQuitMessage(0);
-			}
-		temp_buffer2 = GlobalAlloc(GMEM_FIXED,sizeof(piles_of_stuff_dumping_type2));
-		if (temp_buffer2 == NULL) {
-			PostQuitMessage(0);
-			}
-		data_store2 = (piles_of_stuff_dumping_type2 *) (GlobalLock(temp_buffer2));
-		if (data_store2 == NULL) {
-			PostQuitMessage(0);
-			}
-		temp_buffer3 = GlobalAlloc(GMEM_FIXED,sizeof(piles_of_stuff_dumping_type3));
-		if (temp_buffer3 == NULL) {
-			PostQuitMessage(0);
-			}
-		data_store3 = (piles_of_stuff_dumping_type3 *) (GlobalLock(temp_buffer3));
-		if (data_store3 == NULL) {
-			PostQuitMessage(0);
-			}
-		temp_buffer4 = GlobalAlloc(GMEM_FIXED,sizeof(piles_of_stuff_dumping_type4));
-		if (temp_buffer4 == NULL) {
-			PostQuitMessage(0);
-			}
-		data_store4 = (piles_of_stuff_dumping_type4 *) (GlobalLock(temp_buffer4));
-		if (data_store4 == NULL) {
-			PostQuitMessage(0);
-			}
-		temp_buffer5 = GlobalAlloc(GMEM_FIXED,sizeof(piles_of_stuff_dumping_type5));
-		if (temp_buffer5 == NULL) {
-			PostQuitMessage(0);
-			}
-		data_store5 = (piles_of_stuff_dumping_type5 *) (GlobalLock(temp_buffer5));
-		if (data_store5 == NULL) {
-			PostQuitMessage(0);
-			}
-
 		last_redraw_time = seed = (short) GetCurrentTime();
 		srand(seed);
 
@@ -977,23 +934,35 @@ Boolean handle_menu (short item, HMENU menu)
 	return to_return;
 }
 
+
+static HCURSOR load_cursor(int id)
+{
+	auto cursor = LoadCursor(store_hInstance, MAKEINTRESOURCE(id));
+	if (!cursor)
+	{
+		throw std::runtime_error(std::format("Could not load cursor with id = {}", id));
+	}
+	return cursor;
+}
+
 void load_cursors()
 {
-	short i,j;
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			arrow_curs[i][j] = load_cursor(100 + (i - 1) + 10 * (j - 1));
+		}
+	}
 
-	for (i = 0; i < 3; i++)
-		for (j = 0; j < 3; j++)
-			arrow_curs[i][j] = LoadCursor(store_hInstance,MAKEINTRESOURCE(100 + (i - 1) + 10 * (j - 1)));
-	sword_curs = LoadCursor(store_hInstance,MAKEINTRESOURCE(120));
-
-	key_curs = LoadCursor(store_hInstance,MAKEINTRESOURCE(122));
-	talk_curs = LoadCursor(store_hInstance,MAKEINTRESOURCE(126));
-	target_curs = LoadCursor(store_hInstance,MAKEINTRESOURCE(124));
-	look_curs = LoadCursor(store_hInstance,MAKEINTRESOURCE(129));
+	sword_curs = load_cursor(120);
+	key_curs = load_cursor(122);
+	talk_curs = load_cursor(126);
+	target_curs = load_cursor(124);
+	look_curs = load_cursor(129);
 
 	set_cursor(sword_curs);
 	current_cursor = 124;
-
 }
 
 void set_cursor(HCURSOR which_curs)

@@ -3,6 +3,8 @@
 
 #include <Windows.h>
 #include <array>
+#include <algorithm>
+#include <format>
 #include <cassert>
 
 #include "global.h"
@@ -28,12 +30,8 @@ static const std::array m_priest_sp{"Minor Bless","Light Heal","Wrack","Stumble"
 						"Unholy Ravaging","Summon Guardian","Pestilence","Revive All","Avatar",
 						"Divine Thud"};
 
-typedef struct {
-	char line[50];
-	} buf_line;
-
-buf_line far text_buffer[TEXT_BUF_LEN];
-short buf_pointer = 30, lines_to_print= 0, num_added_since_stop = 0;
+static std::array < std::array<char, 50>, TEXT_BUF_LEN> text_buffer;
+short buf_pointer = 30, num_added_since_stop = 0;
 char far store_string[256];
 char far store_string2[256];
 short start_print_point= 0;
@@ -47,7 +45,6 @@ RECT status_panel_clip_rect = {299, 11,495,175},item_panel_clip_rect = {297,11,4
 RECT far item_buttons_from[7] = {{0,12,14,24},{14,12,28,24},{28,12,42,24},{42,12,56,24},
 						{0,24,30,36},{30,24,60,36},{0,36,30,48}}; /**/
 
-short store_mode;
 Boolean string_added = FALSE;
 short store_text_x = 0, store_text_y = 0;
 extern short had_text_freeze,stat_screen_mode;
@@ -75,8 +72,7 @@ extern HBITMAP dialog_pattern_gworld,pattern_gworld,status_pattern_gworld,spec_s
 
 // game globals
 extern party_record_type far party;
-extern piles_of_stuff_dumping_type *data_store;
-extern piles_of_stuff_dumping_type2 *data_store2;
+extern piles_of_stuff_dumping_type2 data_store2;
 extern talking_record_type far talking;
 extern scenario_data_type far  scenario;
 
@@ -113,10 +109,23 @@ extern HFONT font,italic_font,underline_font,bold_font,small_bold_font;
 extern HPALETTE hpal;
 extern HDC main_dc;
 extern HINSTANCE store_hInstance;
-extern piles_of_stuff_dumping_type5 *data_store5;
+extern piles_of_stuff_dumping_type5 data_store5;
 
 short current_item_button[6] = {-1,-1,-1,-1,-1,-1};
 short pc_button_state[6] = {-1,-1,-1,-1,-1,-1};
+
+static void place_buy_button(short position,short pc_num,short item_num,HDC hdc);
+static void place_item_bottom_buttons();
+static void place_item_button(short which_button_to_put,short which_slot,short which_button_position,short extra_val);
+static short print_terrain(location space);
+
+
+static void DrawString(const char* string, short x, short y, HDC hdc)
+{
+	RECT text_r = { 0,0,450,20 };
+	OffsetRect(&text_r, x, y);
+	DrawText(hdc, string, -1, &text_r, DT_LEFT | DT_SINGLELINE | DT_TOP | DT_NOCLIP);
+}
 
 short text_pc_has_abil_equip(short pc_num,short abil)
 {
@@ -401,7 +410,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 			for (i = 0; i < 8; i++) {
 				i_num = i + item_offset;
 				if (spec_item_array[i_num] >= 0){
-					strcpy(to_draw,data_store5->scen_strs[60 + spec_item_array[i_num] * 2]);
+					strcpy(to_draw,data_store5.scen_strs[60 + spec_item_array[i_num] * 2]);
 					win_draw_string(hdc,item_buttons[i][0],to_draw,0,10);
 
 					SelectObject(hdc,store_bmp);
@@ -514,7 +523,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 		}
 }
 
-void place_buy_button(short position,short pc_num,short item_num,HDC hdc)
+static void place_buy_button(short position,short pc_num,short item_num,HDC hdc)
 {
 	RECT dest_rect,source_rect;
 	RECT button_sources[3] = {{0,24,30,36},{30,24,60,36},{0,36,30,48}}; /**/
@@ -599,7 +608,7 @@ void place_buy_button(short position,short pc_num,short item_num,HDC hdc)
  // name, use, give, drop, info, sell/id
 // shortcuts - if which_button_to_put is 10, all 4 buttons now
 //				if which_button_to_put is 11, just right 2
-void place_item_button(short which_button_to_put,short which_slot,short which_button_position,short extra_val)
+static void place_item_button(short which_button_to_put,short which_slot,short which_button_position,short extra_val)
 {
 	RECT from_rect = {0,0,18,18},to_rect;
 
@@ -658,7 +667,7 @@ RECT get_custom_rect (short which_rect) ////
 	return store_rect;
 }
 
-void place_item_bottom_buttons()
+static void place_item_bottom_buttons()
 {
 	RECT pc_from_rect = {0,0,28,36},but_from_rect = {36,85,54,101},to_rect; /**/
 	short i;
@@ -1155,9 +1164,10 @@ void notify_out_combat_began(out_wandering_type encounter,short *nums)
 
 void get_m_name(char *str,unsigned char num)
 {
-	strcpy(str, data_store2->scen_item_list.monst_names[num]);
+	strcpy(str, data_store2.scen_item_list.monst_names[num]);
 }
-void get_ter_name(char *str,unsigned char num)
+
+static void get_ter_name(char *str,unsigned char num)
 {
 	char store_name[256];
 	
@@ -1165,7 +1175,7 @@ void get_ter_name(char *str,unsigned char num)
 	if ((num == 90) && ((is_out()) || (is_town()) || ((is_combat()) && (which_combat_type == 1))))
 		sprintf(store_name,"Pit");
 		else {
-			strcpy(store_name, data_store2->scen_item_list.ter_names[num]);
+			strcpy(store_name, data_store2.scen_item_list.ter_names[num]);
 			}
 	strcpy(str, store_name);
 }
@@ -1353,7 +1363,7 @@ void print_nums(short a,short b,short c)
 
 }
 
-short print_terrain(location space)
+static short print_terrain(location space)
 {
 	unsigned char which_terrain;
 
@@ -1384,9 +1394,9 @@ void add_string_to_buf(const char * str)
 		print_buf();
 		through_sending();
 		}
-	sprintf(text_buffer[buf_pointer].line, "%-49.49s", str);
-   text_buffer[buf_pointer].line[49] = 0;
-//	c2pstr((char *)text_buffer[buf_pointer].line);
+	sprintf(text_buffer[buf_pointer].data(), "%-49.49s", str);
+   text_buffer[buf_pointer][49] = 0;
+//	c2pstr(text_buffer[buf_pointer].data());
 	if (buf_pointer == (TEXT_BUF_LEN - 1))
 		buf_pointer = 0;
 		else buf_pointer++;
@@ -1394,10 +1404,11 @@ void add_string_to_buf(const char * str)
 
 void init_buf()
 {
-	short i;
-	
-	for (i = 0; i < TEXT_BUF_LEN; i++)
-		sprintf(text_buffer[buf_pointer].line, " ");
+	for (auto& buffer : text_buffer)
+	{
+		buffer[0] = ' ';
+		buffer[1] = '\0';
+	}
 }
 
 
@@ -1452,8 +1463,8 @@ void print_buf ()
 	
 	while ((line_to_print!= buf_pointer) && (num_lines_printed < LINES_IN_TEXT_WIN)) {
 		//MoveTo(4, 13 + 12 * num_lines_printed);
-		//drawstring((char *) text_buffer[line_to_print].line);
-		DrawString((char *) text_buffer[line_to_print].line,4,
+		//drawstring(text_buffer[line_to_print].data());
+		DrawString(text_buffer[line_to_print].data(), 4,
 			 2 + 12 * num_lines_printed,hdc);
 		num_lines_printed++;
 		line_to_print++;
@@ -1482,37 +1493,12 @@ void print_buf ()
 	string_added = FALSE;	
 }
 
-void restart_printing()
-{
-	lines_to_print = 0;
-	//clear_text_panel();
-}
-
-void restore_mode()
-{
-	overall_mode = store_mode;
-}
-
 void through_sending()
 {
 	mark_where_printing_long = buf_pointer + LINES_IN_TEXT_WIN - 1;
 	if (mark_where_printing_long > TEXT_BUF_LEN - 1)
 		mark_where_printing_long -= TEXT_BUF_LEN;
 	printing_long = FALSE;
-}
-
-void Display_String(char *str)
-{
-//	//c2pstr((char *) str);
-// 	sprintf(str2," %s",str);
-//	str2[0] = (char) strlen(str);
-//	DrawString(str2);
-}
-
-void display_string(char *str)
-{
-//	c2pstr(str);
-//	drawstring(str);
 }
 
 /* Draw a bitmap in the world window. hor in 0 .. 8, vert in 0 .. 8,
@@ -1553,18 +1539,9 @@ RECT coord_to_rect(short i,short j)
 }
 
 
-void c2p(char *str) 
-{
-}
-
-void p2c(char *str)
-{
-}
-
 void get_str(char *str,short i, short j)
 {
 	GetIndString(str, i, j);
-	p2c(str);
 }
 
 short string_length(char *str,HDC hdc)
@@ -1696,19 +1673,6 @@ void WinBlackDrawString(char *string,short x,short y)
 }
 
 
-void DrawString(char *string,short x,short y,HDC hdc)
-{
-	RECT text_r = {0,0,450,20};
-
-	OffsetRect(&text_r,x,y);
-	DrawText(hdc,string,-1,&text_r,DT_LEFT | DT_SINGLELINE | DT_TOP | DT_NOCLIP);
-
-}
-
-//void Display_String(char *string) {
-	//DrawString(string,store_x,store_y,store_text_hdc);
-	//}
-
 void FlushEvents(short mode)
 // mode... 0 - keystrokes   1 - mouse presses  2 - both
 {
@@ -1728,16 +1692,6 @@ void FlushEvents(short mode)
 void ExitToShell()
 {
 	PostQuitMessage(0);
-}
-
-void undo_clip()
-{
- //	RECT overall_rect = {0,0,530,435};
-	HRGN rgn;
-
-	rgn = CreateRectRgn(0,0,5000,5000);
-	SelectClipRgn(main_dc,rgn);
-	DeleteObject(rgn);
 }
 
 void ClipRect(RECT *rect)
@@ -1764,12 +1718,6 @@ void beep()
 void SysBeep(short a)
 {
 	MessageBeep(MB_OK);
-}
-
-void make_cursor_sword() 
-{
-	SetCursor(sword_curs);
-
 }
 
 void GetIndString(char *str,short i, short j) {

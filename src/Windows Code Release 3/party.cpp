@@ -143,11 +143,9 @@ extern town_item_list far  t_i;
 extern HDC main_dc;
 extern char far scen_strs2[110][256];
 extern stored_town_maps_type far town_maps,town_maps2;
- extern scenario_data_type far scenario;
- extern piles_of_stuff_dumping_type *data_store;
-extern piles_of_stuff_dumping_type2 *data_store2;
+extern scenario_data_type far scenario;
 extern const item_record_type start_items[6];
-extern piles_of_stuff_dumping_type5 *data_store5;
+extern piles_of_stuff_dumping_type5 data_store5;
 
 char c_line[60];
 
@@ -514,9 +512,9 @@ void put_party_in_scen()
 	// Throw up intro dialog
 	buttons[0] = 1;
 	for (j = 0; j < 6; j++)
-		if (strlen(data_store5->scen_strs[4 + j]) > 0) {
+		if (strlen(data_store5.scen_strs[4 + j]) > 0) {
 			for (i = 0; i < 6; i++)
-				strcpy(strs[i],data_store5->scen_strs[4 + i]);
+				strcpy(strs[i],data_store5.scen_strs[4 + i]);
 			custom_choice_dialog((char *) strs,-1 * (1600 + scenario.intro_pic),buttons) ;
 			j = 6;
 		}

@@ -851,11 +851,6 @@ void display_party(short mode,short clear_first)
 SetTextColor(main_dc,PALETTEINDEX(c[0]));
 }
 
-void undo_clip()
-{
-//	ClipRect(&whole_win_rect);
-}
-
 void add_string_to_buf(const char * str) {
 
 	}

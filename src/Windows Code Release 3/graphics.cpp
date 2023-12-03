@@ -23,8 +23,7 @@ extern Boolean in_startup_mode,anim_onscreen,play_sounds,frills_on,startup_loade
 extern short town_size[3];
 extern short anim_step;
 extern party_record_type far party;
-extern piles_of_stuff_dumping_type *data_store;
-extern piles_of_stuff_dumping_type2 *data_store2;
+extern piles_of_stuff_dumping_type data_store;
 extern talking_record_type far talking;
 extern scenario_data_type far scenario;
 
@@ -70,8 +69,7 @@ extern HINSTANCE store_hInstance;
 extern Boolean modeless_exists[18],diff_depth_ok;
 extern short modeless_key[18];
 extern HWND modeless_dialogs[18];
-extern piles_of_stuff_dumping_type3 *data_store3;
-extern piles_of_stuff_dumping_type4 *data_store4;
+extern piles_of_stuff_dumping_type4 data_store4;
 
 extern unsigned char m_pic_index[200];
 
@@ -177,6 +175,19 @@ Boolean supressing_some_spaces = FALSE;
 location ok_space[4] = {{0,0},{0,0},{0,0},{0,0}};
  	char combat_string[100];
 
+
+static void undo_clip()
+{
+	//	RECT overall_rect = {0,0,530,435};
+	HRGN rgn = CreateRectRgn(0, 0, 5000, 5000);
+	SelectClipRgn(main_dc, rgn);
+	DeleteObject(rgn);
+}
+
+void make_cursor_sword()
+{
+	SetCursor(sword_curs);
+}
 
 void adjust_window_mode()
 {
@@ -1074,12 +1085,12 @@ void draw_text_bar(short mode)
 				if ((remember_tiny_text == i) && (mode == 0))
 					return;
 					else {
-						put_text_bar(data_store4->outdoor_text[party.i_w_c.x][party.i_w_c.y].out_strs[i + 1]);
+						put_text_bar(data_store4.outdoor_text[party.i_w_c.x][party.i_w_c.y].out_strs[i + 1]);
 						remember_tiny_text = i;
 						return;
 						}
 		if (remember_tiny_text != 50 + party.i_w_c.x + party.i_w_c.y) {
-			put_text_bar((char *) data_store4->outdoor_text[party.i_w_c.x][party.i_w_c.y].out_strs[0]);
+			put_text_bar((char *) data_store4.outdoor_text[party.i_w_c.x][party.i_w_c.y].out_strs[0]);
 			remember_tiny_text = 50 + party.i_w_c.x + party.i_w_c.y;
 			}
 		}
@@ -1089,12 +1100,12 @@ void draw_text_bar(short mode)
 				if ((remember_tiny_text == 200 + i) && (mode == 0))
 					return;
 					else {
-						put_text_bar(data_store->town_strs[i + 1]);
+						put_text_bar(data_store.town_strs[i + 1]);
 						remember_tiny_text = 200 + i;
 						return;
 						}
 		if (remember_tiny_text != 250) {
-			put_text_bar((char *) data_store->town_strs[0]); ////
+			put_text_bar((char *) data_store.town_strs[0]); ////
 			remember_tiny_text = 250;
 			}
 	

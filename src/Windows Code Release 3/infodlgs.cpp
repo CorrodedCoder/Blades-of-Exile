@@ -45,10 +45,9 @@ extern short on_monst_menu[256],cur_town_talk_loaded;
 extern big_tr_type far  t_d;
 extern location tinraya_portculli[12];
 extern char far scen_strs2[110][256];
- extern scenario_data_type far scenario;
-extern piles_of_stuff_dumping_type3 *data_store3;
-extern piles_of_stuff_dumping_type4 *data_store4;
-extern piles_of_stuff_dumping_type5 *data_store5;
+extern scenario_data_type far scenario;
+extern piles_of_stuff_dumping_type3 data_store3;
+extern piles_of_stuff_dumping_type5 data_store5;
 
 Boolean full_roster = FALSE;
 
@@ -952,7 +951,7 @@ void adventure_notes_event_filter (short item_hit)
 		if (party.special_notes_str[i][0] > 0) {
 			switch (party.special_notes_str[i][0] / 1000) {
 				case 0: if (party.special_notes_str[i][0] % 1000 < 160)
-							strcpy(place_str,data_store5->scen_strs[party.special_notes_str[i][0] % 1000]); 
+							strcpy(place_str,data_store5.scen_strs[party.special_notes_str[i][0] % 1000]); 
 							else strcpy(place_str,scen_strs2[(party.special_notes_str[i][0] % 1000) - 160]);
 						break;
 				case 1:
@@ -973,7 +972,7 @@ void adventure_notes_event_filter (short item_hit)
 		if (party.special_notes_str[i][0] > 0) {
 			switch (party.special_notes_str[i][0] / 1000) {
 				case 0: if (party.special_notes_str[i][0] % 1000 < 160)
-							strcpy(place_str,data_store5->scen_strs[party.special_notes_str[i][0] % 1000]); 
+							strcpy(place_str,data_store5.scen_strs[party.special_notes_str[i][0] % 1000]); 
 							else strcpy(place_str,scen_strs2[(party.special_notes_str[i][0] % 1000) - 160]); 
 					break;
 				case 1:
@@ -1020,7 +1019,7 @@ void adventure_notes()
 			switch (party.special_notes_str[i][0] / 1000) {
 				case 0: 
 					if (party.special_notes_str[i][0] % 1000 < 160)
-							strcpy(place_str,data_store5->scen_strs[party.special_notes_str[i][0] % 1000]); 
+							strcpy(place_str,data_store5.scen_strs[party.special_notes_str[i][0] % 1000]); 
 							else strcpy(place_str,scen_strs2[(party.special_notes_str[i][0] % 1000) - 160]);
 					break;
 				case 1:
@@ -1063,12 +1062,12 @@ void put_talk()
 		csit(960,9,(char *) place_str);
 		
 		//get_str(place_str,120 + ((personality - 1) / 10),((personality - 1) % 10) + 1);
-		csit(960,7,data_store3->talk_strs[personality % 10]);
+		csit(960,7,data_store3.talk_strs[personality % 10]);
 
 		if (party.talk_save[store_page_on].str1 >= 1000) {
 			if (party.talk_save[store_page_on].str1 >= 3000) {
 				if (party.talk_save[store_page_on].str1 - 3000 < 160)
-					csit(960,3,data_store5->scen_strs[party.talk_save[store_page_on].str1 - 3000 ]);
+					csit(960,3,data_store5.scen_strs[party.talk_save[store_page_on].str1 - 3000 ]);
 					else csit(960,3,scen_strs2[party.talk_save[store_page_on].str1 - 3000 - 160]);
 
 				}
@@ -1080,12 +1079,12 @@ void put_talk()
 			}
 			else if ((party.talk_save[store_page_on].str1 > 0) &&
          	(party.talk_save[store_page_on].str1 < 170))
-				csit(960,3,data_store3->talk_strs[party.talk_save[store_page_on].str1]);
+				csit(960,3,data_store3.talk_strs[party.talk_save[store_page_on].str1]);
 
 		if (party.talk_save[store_page_on].str2 >= 1000) {
 			if (party.talk_save[store_page_on].str2 >= 3000) {
 				if (party.talk_save[store_page_on].str2 - 3000 < 160)
-					csit(960,5,data_store5->scen_strs[party.talk_save[store_page_on].str2 - 3000 ]);
+					csit(960,5,data_store5.scen_strs[party.talk_save[store_page_on].str2 - 3000 ]);
 					else csit(960,5,scen_strs2[party.talk_save[store_page_on].str2 - 3000 - 160]);
 
 				}
@@ -1097,7 +1096,7 @@ void put_talk()
 			}
 			else if ((party.talk_save[store_page_on].str2 > 0) &&
 				(party.talk_save[store_page_on].str2 < 170))
-					csit(960,5,data_store3->talk_strs[party.talk_save[store_page_on].str2]);
+					csit(960,5,data_store3.talk_strs[party.talk_save[store_page_on].str2]);
 	}
 }
 
@@ -1196,9 +1195,9 @@ void give_help(short help1,short help2,short parent_num)
 
 void put_spec_item_info (short which_i)
 {
-	display_strings(data_store5->scen_strs[60 + 1 + which_i * 2],"",
+	display_strings(data_store5.scen_strs[60 + 1 + which_i * 2],"",
 	-1,-1,-1,-1,
-	data_store5->scen_strs[60 + which_i * 2],57,1600 + scenario.intro_pic,0);
+	data_store5.scen_strs[60 + which_i * 2],57,1600 + scenario.intro_pic,0);
 }
 
 void display_strings_event_filter (short item_hit)

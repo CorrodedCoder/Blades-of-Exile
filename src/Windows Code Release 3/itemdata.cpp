@@ -8,8 +8,7 @@
 
 
 item_record_type convert_item (short_item_record_type s_item);
-extern piles_of_stuff_dumping_type *data_store;
-extern piles_of_stuff_dumping_type2 *data_store2;
+extern piles_of_stuff_dumping_type2 data_store2;
 
 short loot_min[5] = {0,0,5,50,400};
 short loot_max[5] = {3,8,40,800,4000};
@@ -32,7 +31,7 @@ item_record_type get_stored_item(short which)
 		return s_item;
 		}
 	
-	s_item = data_store2->scen_item_list.scen_items[which]; 
+	s_item = data_store2.scen_item_list.scen_items[which]; 
 	return s_item;
 }
 

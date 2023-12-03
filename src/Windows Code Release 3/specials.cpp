@@ -26,8 +26,7 @@
 extern HWND mainPtr;
 extern short overall_mode;
 extern party_record_type far party;
-extern piles_of_stuff_dumping_type *data_store;
-extern piles_of_stuff_dumping_type2 *data_store2;
+extern piles_of_stuff_dumping_type data_store;
 extern talking_record_type far talking;
 extern scenario_data_type far scenario;
 
@@ -51,7 +50,7 @@ extern HWND modeless_dialogs[18];
 extern Boolean fast_bang,end_scenario;
 extern short town_size[3];
 extern short town_type;
-extern piles_of_stuff_dumping_type5 *data_store5;
+extern piles_of_stuff_dumping_type5 data_store5;
 extern char far scen_strs2[110][256];
 
 Boolean can_draw_pcs = TRUE;
@@ -2957,13 +2956,13 @@ void get_strs(char *str1,char *str2,short cur_type,short which_str1,short which_
 		case 0:
 			if (which_str1 >= 0) {
 				if (which_str1 < 160)
-					strcpy(str1,data_store5->scen_strs[which_str1]);
+					strcpy(str1,data_store5.scen_strs[which_str1]);
 					else strcpy(str1,scen_strs2[which_str1 - 160]);
 				
 				}
 			if (which_str2 >= 0){
 				if (which_str2 < 160)
-					strcpy(str2,data_store5->scen_strs[which_str2]);
+					strcpy(str2,data_store5.scen_strs[which_str2]);
 					else strcpy(str2,scen_strs2[which_str2 - 160]);				
 				}
 			break;
@@ -2979,9 +2978,9 @@ void get_strs(char *str1,char *str2,short cur_type,short which_str1,short which_
 			break;
 		case 2:
 			if (which_str1 >= 0)
-				strcpy(str1,data_store->town_strs[which_str1]);
+				strcpy(str1,data_store.town_strs[which_str1]);
 			if (which_str2 >= 0)
-				strcpy(str2,data_store->town_strs[which_str2]);
+				strcpy(str2,data_store.town_strs[which_str2]);
 			break;
 		}
 

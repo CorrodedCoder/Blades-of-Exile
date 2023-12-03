@@ -24,7 +24,6 @@ extern unsigned char template_terrain[64][64];
 extern scenario_data_type far scenario;
 extern special_node_type null_spec_node;
 extern talking_node_type null_talk_node;
-extern piles_of_stuff_dumping_type *data_store;
 extern char far scen_strs[160][256];
 extern char far scen_strs2[110][256];
 extern char far talk_strs[170][256];

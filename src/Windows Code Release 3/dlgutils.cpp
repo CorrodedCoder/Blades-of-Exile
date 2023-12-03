@@ -30,8 +30,8 @@ extern big_tr_type far  t_d;
 extern short stat_window,overall_mode,dialog_answer;
 extern current_town_type far c_town;
 extern party_record_type far party;
-extern piles_of_stuff_dumping_type *data_store;
-extern piles_of_stuff_dumping_type2 *data_store2;
+extern piles_of_stuff_dumping_type data_store;
+extern piles_of_stuff_dumping_type2 data_store2;
 extern talking_record_type far talking;
 extern scenario_data_type far scenario;
 
@@ -58,8 +58,7 @@ extern HPALETTE hpal;
 extern far PALETTEENTRY ape[256];
 extern HDC main_dc,main_dc2,main_dc3;
 extern Boolean cursor_shown;
-extern piles_of_stuff_dumping_type3 *data_store3;
-extern piles_of_stuff_dumping_type4 *data_store4;
+extern piles_of_stuff_dumping_type3 data_store3;
 
 
 HBITMAP pcs_gworld = NULL;
@@ -536,7 +535,7 @@ void start_talk_mode(short m_num,short personality,unsigned char monst_type,shor
 	store_responses();
 
 	// Dredge up critter's name
-	sprintf(title_string,"%s:",data_store3->talk_strs[personality % 10]);
+	sprintf(title_string,"%s:",data_store3.talk_strs[personality % 10]);
 	
 	store_pre_talk_mode = overall_mode;
 	overall_mode = 20;
@@ -545,7 +544,7 @@ void start_talk_mode(short m_num,short personality,unsigned char monst_type,shor
 	stat_screen_mode = 1;
 	
 	// Bring up and place first strings.
-	sprintf(place_string1,"%s",data_store3->talk_strs[personality % 10 + 10]);
+	sprintf(place_string1,"%s",data_store3.talk_strs[personality % 10 + 10]);
 	strnum1 = personality % 10 + 10;
 	strnum2 = 0;
 	strcpy(old_str1, place_string1);
@@ -687,7 +686,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 			case 1: case 2: case 3:
 				get_str(place_string1,120 + ((store_personality - 1) / 10),
 				 ((store_personality - 1) % 10) * 3 + 10 + force_special);
-				sprintf(place_string1,"%s",data_store3->talk_strs[store_personality % 10 + 10 * force_special]);
+				sprintf(place_string1,"%s",data_store3.talk_strs[store_personality % 10 + 10 * force_special]);
 					
 				oldstrnum1 = strnum1; oldstrnum2 = strnum2;
 				strnum1 =  store_personality % 10 + 10 * force_special;
@@ -740,7 +739,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 		strcpy(one_back1, old_str1);
 		strcpy(one_back2, old_str2);
 		sprintf(old_str2,"");
-		sprintf(old_str1,"%s",data_store3->talk_strs[store_personality % 10 + 160]);
+		sprintf(old_str1,"%s",data_store3.talk_strs[store_personality % 10 + 160]);
 		if (strlen(old_str1) < 2)
 			sprintf(old_str1,"You get no response.");
 		place_talk_str((char *) old_str1,(char *) old_str2,0,dummy_rect);
@@ -754,8 +753,8 @@ void handle_talk_event(POINT p,Boolean right_button)
 	c = talking.talk_nodes[which_talk_entry].extras[2];
 	d = talking.talk_nodes[which_talk_entry].extras[3];
 
-	sprintf(place_string1,"%s",data_store3->talk_strs[40 + which_talk_entry * 2]);
-	sprintf(place_string2,"%s",data_store3->talk_strs[40 + which_talk_entry * 2 + 1]);
+	sprintf(place_string1,"%s",data_store3.talk_strs[40 + which_talk_entry * 2]);
+	sprintf(place_string2,"%s",data_store3.talk_strs[40 + which_talk_entry * 2 + 1]);
 	
 	oldstrnum1 = strnum1; oldstrnum2 = strnum2;
 	strnum1 =  40 + which_talk_entry * 2; strnum2 = 40 + which_talk_entry * 2 + 1;
@@ -1104,7 +1103,7 @@ void do_sign(short town_num, short which_sign, short sign_type,location sign_loc
 			1,which_sign + 100,(char *) sign_text);
 		}
 		else {
-			sprintf(sign_text,"%s",data_store->town_strs[120 + which_sign]);
+			sprintf(sign_text,"%s",data_store.town_strs[120 + which_sign]);
 			}
 	csit(1014,2,(char *) sign_text);
 	
@@ -1501,14 +1500,14 @@ void put_scen_info()
 			cd_set_pict(947, 6 + i * 3,1600 + scen_headers[store_scen_page_on * 3 + i].intro_pic);
 			sprintf(place_str,
 				"%s v%d.%d.%d - |  Difficulty: %s, Rating: %s |%s |%s",
-				data_store2->scen_header_strs[store_scen_page_on * 3 + i][0],
+				data_store2.scen_header_strs[store_scen_page_on * 3 + i][0],
 				(short) scen_headers[store_scen_page_on * 3 + i].ver[0],
 				(short) scen_headers[store_scen_page_on * 3 + i].ver[1],
 				(short) scen_headers[store_scen_page_on * 3 + i].ver[2],
 				difficulty[scen_headers[store_scen_page_on * 3 + i].difficulty],
 				ratings[scen_headers[store_scen_page_on * 3 + i].default_ground],
-				data_store2->scen_header_strs[store_scen_page_on * 3 + i][1],
-				data_store2->scen_header_strs[store_scen_page_on * 3 + i][2]); 
+				data_store2.scen_header_strs[store_scen_page_on * 3 + i][1],
+				data_store2.scen_header_strs[store_scen_page_on * 3 + i][2]); 
 			csit(947,7 + i * 3,(char *) place_str);
 			cd_activate_item(947,8 + i * 3,1);			
 			}

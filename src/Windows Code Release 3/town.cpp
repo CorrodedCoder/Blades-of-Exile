@@ -74,8 +74,7 @@ extern far PALETTEENTRY ape[256];
 extern HDC main_dc,main_dc2,main_dc3;
 extern HINSTANCE store_hInstance;
 extern stored_town_maps_type far town_maps,town_maps2;
-extern piles_of_stuff_dumping_type *data_store;
-extern piles_of_stuff_dumping_type2 *data_store2;
+extern piles_of_stuff_dumping_type data_store;
 extern stored_town_maps_type far town_maps,town_maps2;
 
 extern short ulx,uly;
@@ -519,7 +518,7 @@ void start_town_mode(short which_town, short entry_dir)
 	party.stuff_done[305][9] = 0;
 		
 	add_string_to_buf("Now entering:");
-	sprintf(message, "   %-30.30s ",data_store->town_strs[0]);
+	sprintf(message, "   %-30.30s ",data_store.town_strs[0]);
 	add_string_to_buf( message);                       
 
 

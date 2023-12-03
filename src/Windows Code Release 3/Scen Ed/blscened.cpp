@@ -126,7 +126,7 @@ HACCEL accel;
 BOOL event_handled;
 
 scenario_data_type far scenario;
-piles_of_stuff_dumping_type *data_store;
+piles_of_stuff_dumping_type data_store;
 RECT right_sbar_rect;
 town_record_type far town;
 big_tr_type far t_d;
@@ -161,8 +161,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpszCmdPar
 	MSG msg;
 	WNDCLASS wndclass,wndclass2;
 	short seed;
-	HGLOBAL temp_buffer;
-
 
 	if (!hPrevInstance) {
 		wndclass.style = CS_HREDRAW | CS_VREDRAW | CS_BYTEALIGNWINDOW;
@@ -213,15 +211,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpszCmdPar
 
 		seed = (short) GetCurrentTime();
 		srand(seed);
-
-		temp_buffer = GlobalAlloc(GMEM_FIXED,sizeof(piles_of_stuff_dumping_type));
-		if (temp_buffer == NULL) {
-			PostQuitMessage(0);
-			}
-		data_store = (piles_of_stuff_dumping_type *) (GlobalLock(temp_buffer));
-		if (data_store == NULL) {
-			PostQuitMessage(0);
-			}
 
 		max_window(mainPtr);
 		GetWindowRect(mainPtr,&windRect);
