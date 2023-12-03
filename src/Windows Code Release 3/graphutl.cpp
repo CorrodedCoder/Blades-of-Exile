@@ -621,9 +621,6 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 	if (ReleaseDC(hwnd,dc) == 0)
 	  //	add_string_to_buf("xx");
 		PostQuitMessage(0);
-	if (DeleteDC(dc) == 0)
-		//add_string_to_buf("yy");
-		PostQuitMessage(0);
  }
 
 void DisposeGWorld(HBITMAP bitmap)
