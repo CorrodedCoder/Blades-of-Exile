@@ -3,6 +3,7 @@
 const auto NUM_TOWN_ITEMS = 115;
 
 typedef char Boolean;
+static_assert(sizeof(Boolean) == 1);
 
 typedef struct BoeRect
 {
@@ -11,35 +12,42 @@ typedef struct BoeRect
 	short right;
 	short bottom;
 } BoeRect;
+static_assert(sizeof(BoeRect) == 8);
 
 typedef struct {
 	char x, y;
 } location;
+static_assert(sizeof(location) == 2);
 
 typedef struct {
 	short type, sd1, sd2, pic, m1, m2, ex1a, ex1b, ex2a, ex2b, jumpto;
 } special_node_type;
+static_assert(sizeof(special_node_type) == 22);
 
 typedef struct {
 	short personality, type;
 	char link1[4], link2[4];
 	short extras[4];
 } talking_node_type;
+static_assert(sizeof(talking_node_type) == 20);
 
 typedef struct {
 	unsigned char strlens[200];
 	talking_node_type talk_nodes[60];
 } talking_record_type;
+static_assert(sizeof(talking_record_type) == 1400);
 
 typedef struct {
 	short picture;
 	unsigned char blockage, flag1, flag2, special, trans_to_what, fly_over, boat_over;
 	unsigned char block_horse, light_radius, step_sound, shortcut_key, res1, res2, res3;
 } terrain_type_type;
+static_assert(sizeof(terrain_type_type) == 16);
 
 typedef	struct {
 	unsigned char monst[4];
 } wandering_type;
+static_assert(sizeof(wandering_type) == 4);
 
 typedef struct {
 	unsigned char monst[7];
@@ -47,6 +55,7 @@ typedef struct {
 	short spec_on_meet, spec_on_win, spec_on_flee, cant_flee;
 	short end_spec1, end_spec2;
 } out_wandering_type;
+static_assert(sizeof(out_wandering_type) == 22);
 
 typedef struct {
 	unsigned char	terrain[48][48];
@@ -61,6 +70,7 @@ typedef struct {
 	unsigned char strlens[180];
 	special_node_type specials[60];
 } outdoor_record_type;
+static_assert(sizeof(outdoor_record_type) == 4146);
 
 typedef struct {
 	unsigned char number;
@@ -73,9 +83,8 @@ typedef struct {
 	char spec_enc_code, time_code;
 	short monster_time, personality;
 	short special_on_kill, facial_pic;
-
 } creature_start_type;
-
+static_assert(sizeof(creature_start_type) == 22);
 
 typedef struct {
 	short variety, item_level;
@@ -88,7 +97,7 @@ typedef struct {
 	unsigned char reserved1, reserved2;
 	unsigned char magic_use_type, ability_strength, treas_class, real_abil;
 } short_item_record_type;
-
+static_assert(sizeof(short_item_record_type) == 66);
 
 typedef struct {
 	short variety, item_level;
@@ -100,17 +109,20 @@ typedef struct {
 	char full_name[25], name[15];
 	unsigned char treas_class, item_properties, reserved1, reserved2;
 } item_record_type;
+static_assert(sizeof(item_record_type) == 66);
 
 typedef struct {
 	location item_loc;
 	short item_code, ability;
 	unsigned char charges, always_there, property, contained;
 } preset_item_type;
+static_assert(sizeof(preset_item_type) == 10);
 
 typedef struct {
 	location field_loc;
 	short field_type;
 } preset_field_type;
+static_assert(sizeof(preset_field_type) == 4);
 
 typedef struct {
 	short town_chop_time, town_chop_key;
@@ -135,8 +147,7 @@ typedef struct {
 	unsigned char specials1, specials2, res1, res2;
 	short difficulty;
 } town_record_type;
-
-
+static_assert(sizeof(town_record_type) == 3506);
 
 typedef struct {
 	unsigned char terrain[64][64];
@@ -144,6 +155,7 @@ typedef struct {
 	creature_start_type creatures[60];
 	unsigned char lighting[8][64];
 } big_tr_type;
+static_assert(sizeof(big_tr_type) == 6056);
 
 typedef struct {
 	unsigned char terrain[48][48];
@@ -151,6 +163,7 @@ typedef struct {
 	creature_start_type creatures[40];
 	unsigned char lighting[6][48];
 } ave_tr_type;
+static_assert(sizeof(ave_tr_type) == 3600);
 
 typedef struct {
 	unsigned char terrain[32][32];
@@ -158,6 +171,7 @@ typedef struct {
 	creature_start_type creatures[30];
 	unsigned char lighting[4][32];
 } tiny_tr_type;
+static_assert(sizeof(tiny_tr_type) == 1940);
 
 typedef struct {
 	short block_type;
@@ -166,28 +180,34 @@ typedef struct {
 	char block_key_time;
 	location block_loc;
 } city_block_type;
+static_assert(sizeof(city_block_type) == 8);
 
 typedef struct {
 	BoeRect what_rect;
 	unsigned char ter_type;
 	unsigned char hollow;
 } city_ter_rect_type;
+static_assert(sizeof(city_ter_rect_type) == 10);
 
 typedef struct {
 	creature_start_type creatures[30];
 	city_block_type city_block[15];
 	city_ter_rect_type city_ter_rect[10];
 } template_town_type;
+static_assert(sizeof(template_town_type) == 880);
 
 typedef struct {
 	item_record_type scen_items[400];
 	char monst_names[256][20];
 	char ter_names[256][30];
 } scen_item_data_type;
+static_assert(sizeof(scen_item_data_type) == 39200);
+
 
 typedef struct {
 	short ter_type, item_num[10], item_odds[10], property;
 } item_storage_shortcut_type;
+static_assert(sizeof(item_storage_shortcut_type) == 44);
 
 typedef struct {
 	unsigned char m_num, level, m_name[26];
@@ -201,25 +221,29 @@ typedef struct {
 	unsigned char direction, immunities, x_width, y_width, radiate_1, radiate_2;
 	unsigned char default_attitude, summon_type, default_facial_pic, res1, res2, res3;
 	short picture_num;
-
 } monster_record_type;
+static_assert(sizeof(monster_record_type) == 108);
 
 typedef struct {
 	location horse_loc, horse_loc_in_sec, horse_sector;
 	short which_town;
 	Boolean exists, property;
 } horse_record_type;
+static_assert(sizeof(horse_record_type) == 10);
+
 typedef struct {
 	location boat_loc, boat_loc_in_sec, boat_sector;
 	short which_town;
 	Boolean exists, property;
 } boat_record_type;
+static_assert(sizeof(boat_record_type) == 10);
 
 typedef struct {
 	unsigned char flag1, flag2, flag3, flag4;
 	unsigned char ver[3], min_run_ver, prog_make_ver[3], num_towns;
 	unsigned char out_width, out_height, difficulty, intro_pic, default_ground;
 } scen_header_type;
+static_assert(sizeof(scen_header_type) == 17);
 
 typedef struct {
 	unsigned char flag1, flag2, flag3, flag4;
@@ -261,3 +285,5 @@ typedef struct {
 	short last_town_edited;
 
 } scenario_data_type;
+
+static_assert(sizeof(scenario_data_type) == 41942);
