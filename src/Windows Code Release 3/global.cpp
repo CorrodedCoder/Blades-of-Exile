@@ -5,17 +5,6 @@
 
 extern short give_delays;
 
-void alter_rect(RECT *r) 
-{
-	short a;
-
-	a = r->top;
-	r->top = r->left;
-	r->left = a;
-	a = r->bottom;
-	r->bottom = r->right;
-	r->right = a;
-}
 short get_ran (short times,short  min,short  max)
 {
 	short store;

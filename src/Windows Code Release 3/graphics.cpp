@@ -2346,20 +2346,14 @@ void pre_boom_space(location where,short mode,short type,short damage,short soun
 
 void draw_pointing_arrows() 
 {
-	RECT sources[4] = {{65,46,73,54},{56,46,64,54},{56,37,64,45},{65,37,73,45}};
-	RECT dests[8] = {{7,100,15,108},{7,170,15,178},{140,7,148,15},{212,7,220,15},
-		{346,100,354,108},{346,170,354,178},{140,274,148,282},{212,274,220,282}};
-	// rects modified below
-	short i;
+	const RECT sources[4] = { BOE_INIT_RECT(46,65,73,54),BOE_INIT_RECT(56,46,64,54),BOE_INIT_RECT(56,37,64,45),BOE_INIT_RECT(65,37,73,45) };
+	const RECT dests[8] = { BOE_INIT_RECT(7,100,15,108),BOE_INIT_RECT(7,170,15,178),BOE_INIT_RECT(140,7,148,15),BOE_INIT_RECT(212,7,220,15),
+		BOE_INIT_RECT(346,100,354,108),BOE_INIT_RECT(346,170,354,178),BOE_INIT_RECT(140,274,148,282),BOE_INIT_RECT(212,274,220,282) };
 	
-	for (i = 0; i < 4; i++)
-		alter_rect(&sources[i]);
-	for (i = 0; i < 8; i++)
-		alter_rect(&dests[i]);
 	if ((monsters_going == TRUE) || (overall_mode <= 1) || (overall_mode <= 10)
 		|| (overall_mode == 35)) 
 			return;
-	for (i = 0; i < 4; i++) {
+	for (short i = 0; i < 4; i++) {
 		rect_draw_some_item_bmp(mixed_gworld,sources[i],mixed_gworld,dests[i * 2],1,1);
 		rect_draw_some_item_bmp(mixed_gworld,sources[i],mixed_gworld,dests[i * 2 + 1],1,1);
 		}

@@ -191,5 +191,15 @@ void pause(short length);
 short minmax(short min,short max,short k);
 short move_to_zero(short val);
 void Delay(short val,long *dummy);
-void alter_rect(RECT *r) ;
 Boolean sd_legit(short a, short b);
+
+// Windows RECT structure layout is: left, top, right, bottom
+// Mac Quickdraw Rect structure layout is: top, left, bottom, right
+// Where common BOE rectangle initialization data is used, it expects
+// that data to be in the Mac Quickdraw format, so provide a convenience
+// for now.
+#ifdef _WIN32
+#define BOE_INIT_RECT(top, left, bottom, right) {left, top, right, bottom}
+#else
+#define BOE_INIT_RECT(top, left, bottom, right) {top, left, bottom, right}
+#endif
