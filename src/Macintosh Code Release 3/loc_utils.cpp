@@ -6,11 +6,13 @@
 #include "monster.h"
 #include "fields.h"
 
+typedef struct {
+	short x, y;
+} shortloc;
 
 char terrain_blocked[256];
 
 
-short short_can_see();
 Boolean combat_pt_in_light();
 extern short town_size[3];
 location obs_sec;
@@ -148,7 +150,7 @@ location get_cur_loc()
 		}
 }
 
-short short_can_see(shortloc p1,shortloc p2)
+static short short_can_see(shortloc p1,shortloc p2)
 {
 	location s1,s2;
 	

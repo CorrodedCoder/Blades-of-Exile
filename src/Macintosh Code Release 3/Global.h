@@ -64,8 +64,6 @@
 typedef struct {
 	char x,y;
 	} location;
-typedef struct {
-	short x,y;} shortloc;
 
 typedef struct {
 	short type,sd1,sd2,pic,m1,m2,ex1a,ex1b,ex2a,ex2b,jumpto;
