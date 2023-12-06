@@ -41,7 +41,7 @@ add_custom_command(
 add_custom_command(
         TARGET Blades-of-Exile POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
-               "${CMAKE_CURRENT_SOURCE_DIR}/BLADSCEN"
+               "${CMAKE_SOURCE_DIR}/src/Macintosh Code Release 3/Blades of Exile Scenarios"
                "${CMAKE_CURRENT_BINARY_DIR}/bladscen")
 
 add_subdirectory("PC Editor")
