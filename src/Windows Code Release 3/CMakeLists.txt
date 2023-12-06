@@ -24,6 +24,7 @@ add_executable (Blades-of-Exile WIN32
 	combat.cpp
 	townspec.cpp
 	specials.cpp
+	endian_adjust.cpp
 	
 	BLADES.RC
 	GAMEDLOG.RC

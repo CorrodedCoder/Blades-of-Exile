@@ -50,7 +50,6 @@ void port_t_d();
 void port_scenario();
 void port_item_list();
 void port_out(outdoor_record_type *out);
-void flip_spec_node(special_node_type *spec);
 short FSWrite(HFILE file,long *len,char *buffer);
 short FSRead(HFILE file,long *len,char *buffer);
 short FSClose(HFILE file);

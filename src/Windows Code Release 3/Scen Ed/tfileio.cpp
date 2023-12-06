@@ -10,6 +10,7 @@
 #include "scenario.h"
 #include "edsound.h"
 #include "graphutl.h"
+#include "../endian_adjust.hpp"
 
 extern scenario_data_type far scenario;
 extern HDC main_dc;
@@ -61,39 +62,6 @@ static const std::array szFilter{ "Blades of Exile Scenarios (*.EXS)","*.exs",
 		"Text Files (*.TXT)","*.txt",
 		"All Files (*.*)","*.*",
 		"" };
-
-static void flip_short(short* s)
-{
-	char store, * s1, * s2;
-
-	s1 = (char*)s;
-	s2 = s1 + 1;
-	store = *s1;
-	*s1 = *s2;
-	*s2 = store;
-
-}
-
-static void alter_rect(BoeRect* r)
-{
-	short a;
-
-	a = r->top;
-	r->top = r->left;
-	r->left = a;
-	a = r->bottom;
-	r->bottom = r->right;
-	r->right = a;
-}
-
-static void flip_rect(BoeRect* s)
-{
-	flip_short((short*)&(s->top));
-	flip_short((short*)&(s->bottom));
-	flip_short((short*)&(s->left));
-	flip_short((short*)&(s->right));
-	alter_rect(s);
-}
 
 void file_initialize()
 {
@@ -1637,309 +1605,85 @@ void scen_text_dump()
 }
 void port_talk_nodes()
 {
-	short i;
-
 	if (cur_scen_is_win == TRUE)
 		return;
-	for (i = 0; i < 60; i++) {
-		flip_short(&talking.talk_nodes[i].personality);
-		flip_short(&talking.talk_nodes[i].type);
-		flip_short(&talking.talk_nodes[i].extras[0]);
-		flip_short(&talking.talk_nodes[i].extras[1]);
-		flip_short(&talking.talk_nodes[i].extras[2]);
-		flip_short(&talking.talk_nodes[i].extras[3]);
-		}
+
+	endian_adjust(talking);
 }
 
 void port_town()
 {
-	short i;
-
 	if (cur_scen_is_win == TRUE)
 		return;
-	flip_short(&town.town_chop_time);
-	flip_short(&town.town_chop_key);
-	flip_short(&town.lighting);
-	for (i =0 ; i < 4; i++)
-		flip_short(&town.exit_specs[i]);
-	flip_rect(&town.in_town_rect);
-	for (i =0 ; i < 64; i++) {
-		flip_short(&town.preset_items[i].item_code);
-		flip_short(&town.preset_items[i].ability);
-		}
-	for (i =0 ; i < 50; i++) {
-		flip_short(&town.preset_fields[i].field_type);
-		}
-	flip_short(&town.max_num_monst);
-	flip_short(&town.spec_on_entry);
-	flip_short(&town.spec_on_entry_if_dead);
-	for (i =0 ; i < 8; i++)
-		flip_short(&town.timer_spec_times[i]);
-	for (i =0 ; i < 8; i++)
-		flip_short(&town.timer_specs[i]);
-	flip_short(&town.difficulty);
-	for (i =0 ; i < 100; i++)
-		flip_spec_node(&town.specials[i]);
 
+	endian_adjust(town);
 }
 
 void port_dummy_town()
 {
-	short i;
-
 	if (cur_scen_is_win == TRUE)
 		return;
-	flip_short(&dummy_town_ptr->town_chop_time);
-	flip_short(&dummy_town_ptr->town_chop_key);
-	flip_short(&dummy_town_ptr->lighting);
-	for (i =0 ; i < 4; i++)
-		flip_short(&dummy_town_ptr->exit_specs[i]);
-	flip_rect(&dummy_town_ptr->in_town_rect);
-	for (i =0 ; i < 64; i++) {
-		flip_short(&dummy_town_ptr->preset_items[i].item_code);
-		flip_short(&dummy_town_ptr->preset_items[i].ability);
-		}
-	for (i =0 ; i < 50; i++) {
-		flip_short(&dummy_town_ptr->preset_fields[i].field_type);
-		}
-	flip_short(&dummy_town_ptr->max_num_monst);
-	flip_short(&dummy_town_ptr->spec_on_entry);
-	flip_short(&dummy_town_ptr->spec_on_entry_if_dead);
-	for (i =0 ; i < 8; i++)
-		flip_short(&dummy_town_ptr->timer_spec_times[i]);
-	for (i =0 ; i < 8; i++)
-		flip_short(&dummy_town_ptr->timer_specs[i]);
-	flip_short(&dummy_town_ptr->difficulty);
-	for (i =0 ; i < 100; i++)
-		flip_spec_node(&dummy_town_ptr->specials[i]);
 
+	endian_adjust(*dummy_town_ptr);
 }
 
 void port_dummy_t_d(short size,char *buffer)
 {
-	short i;
-	big_tr_type *d1;
-	ave_tr_type *d2;
-	tiny_tr_type *d3;
-
 	if (cur_scen_is_win == TRUE)
 		return;
 
 	switch (size) {
 		case 0:
-			d1 = (big_tr_type *) buffer;
-			for (i =0 ; i < 16; i++)
-				flip_rect(&d1->room_rect[i]);
-			for (i =0 ; i < 60; i++) {
-				flip_short(&d1->creatures[i].spec1);
-				flip_short(&d1->creatures[i].spec2);
-				flip_short(&d1->creatures[i].monster_time);
-				flip_short(&d1->creatures[i].personality);
-				flip_short(&d1->creatures[i].special_on_kill);
-				flip_short(&d1->creatures[i].facial_pic);
-				}
+			endian_adjust(*(big_tr_type*)buffer);
 			break;
 		case 1:
-			d2 = (ave_tr_type *) buffer;
-			for (i =0 ; i < 16; i++)
-				flip_rect(&d2->room_rect[i]);
-			for (i =0 ; i < 40; i++) {
-				flip_short(&d2->creatures[i].spec1);
-				flip_short(&d2->creatures[i].spec2);
-				flip_short(&d2->creatures[i].monster_time);
-				flip_short(&d2->creatures[i].personality);
-				flip_short(&d2->creatures[i].special_on_kill);
-				flip_short(&d2->creatures[i].facial_pic);
-				}
+			endian_adjust(*(ave_tr_type*)buffer);
 			break;
 		case 2:
-			d3 = (tiny_tr_type *) buffer;
-			for (i =0 ; i < 16; i++)
-				flip_rect(&d3->room_rect[i]);
-			for (i =0 ; i < 30; i++) {
-				flip_short(&d3->creatures[i].spec1);
-				flip_short(&d3->creatures[i].spec2);
-				flip_short(&d3->creatures[i].monster_time);
-				flip_short(&d3->creatures[i].personality);
-				flip_short(&d3->creatures[i].special_on_kill);
-				flip_short(&d3->creatures[i].facial_pic);
-				}
+			endian_adjust(*(tiny_tr_type*)buffer);
 			break;
 		}
 }
 
 void port_dummy_talk_nodes()
 {
-	short i;
-
 	if (cur_scen_is_win == TRUE)
 		return;
-	for (i = 0; i < 60; i++) {
-		flip_short(&dummy_talk_ptr->talk_nodes[i].personality);
-		flip_short(&dummy_talk_ptr->talk_nodes[i].type);
-		flip_short(&dummy_talk_ptr->talk_nodes[i].extras[0]);
-		flip_short(&dummy_talk_ptr->talk_nodes[i].extras[1]);
-		flip_short(&dummy_talk_ptr->talk_nodes[i].extras[2]);
-		flip_short(&dummy_talk_ptr->talk_nodes[i].extras[3]);
-		}
+
+	endian_adjust(*dummy_talk_ptr);
 }
 
 void port_t_d()
 {
-	short i;
 	if (cur_scen_is_win == TRUE)
 		return;
 
-	for (i =0 ; i < 16; i++)
-		flip_rect(&t_d.room_rect[i]);
-	for (i =0 ; i < 60; i++) {
-		flip_short(&t_d.creatures[i].spec1);
-		flip_short(&t_d.creatures[i].spec2);
-		flip_short(&t_d.creatures[i].monster_time);
-		flip_short(&t_d.creatures[i].personality);
-		flip_short(&t_d.creatures[i].special_on_kill);
-		flip_short(&t_d.creatures[i].facial_pic);
-
-		}
+	endian_adjust(t_d);
 }
 
 void port_scenario()
 {
-	short i,j;
-
 	if (cur_scen_is_win == TRUE)
 		return;
 
-	flip_short(&scenario.flag_a);
-	flip_short(&scenario.flag_b);
-	flip_short(&scenario.flag_c);
-	flip_short(&scenario.flag_d);
-	flip_short(&scenario.flag_e);
-	flip_short(&scenario.flag_f);
-	flip_short(&scenario.flag_g);
-	flip_short(&scenario.flag_h);
-	flip_short(&scenario.flag_i);
-	flip_short(&scenario.intro_mess_pic);
-	flip_short(&scenario.intro_mess_len);
-	flip_short(&scenario.which_town_start);
-	for (i = 0; i < 200; i++)
-		for (j = 0; j < 5; j++)
-			flip_short(&scenario.town_data_size[i][j]);
-	for (i = 0; i < 10; i++)
-		flip_short(&scenario.town_to_add_to[i]);
-	for (i = 0; i < 10; i++)
-		for (j = 0; j < 2; j++)
-			flip_short(&scenario.flag_to_add_to_town[i][j]);
-	for (i = 0; i < 100; i++)
-		for (j = 0; j < 2; j++)
-			flip_short(&scenario.out_data_size[i][j]);
-	for (i = 0; i < 3; i++)
-		flip_rect(&scenario.store_item_rects[i]);
-	for (i = 0; i < 3; i++)
-		flip_short(&scenario.store_item_towns[i]);
-	for (i = 0; i < 50; i++)
-		flip_short(&scenario.special_items[i]);
-	for (i = 0; i < 50; i++)
-		flip_short(&scenario.special_item_special[i]);
-	flip_short(&scenario.rating);
-	flip_short(&scenario.uses_custom_graphics);
-	for (i = 0; i < 256; i++) {
-		flip_short(&scenario.scen_monsters[i].health);
-		flip_short(&scenario.scen_monsters[i].m_health);
-		flip_short(&scenario.scen_monsters[i].max_mp);
-		flip_short(&scenario.scen_monsters[i].mp);
-		flip_short(&scenario.scen_monsters[i].a[1]);
-		flip_short(&scenario.scen_monsters[i].a[0]);
-		flip_short(&scenario.scen_monsters[i].a[2]);
-		flip_short(&scenario.scen_monsters[i].morale);
-		flip_short(&scenario.scen_monsters[i].m_morale);
-		flip_short(&scenario.scen_monsters[i].corpse_item);
-		flip_short(&scenario.scen_monsters[i].corpse_item_chance);
-		flip_short(&scenario.scen_monsters[i].picture_num);
-		}
-
-	for (i = 0; i < 256; i++) {
-		flip_short(&scenario.ter_types[i].picture);
-		}
-	for (i = 0; i < 30; i++) {
-		flip_short(&scenario.scen_boats[i].which_town);
-		}
-	for (i = 0; i < 30; i++) {
-		flip_short(&scenario.scen_horses[i].which_town);
-		}
-	for (i = 0; i < 20; i++)
-		flip_short(&scenario.scenario_timer_times[i]);
-	for (i = 0; i < 20; i++)
-		flip_short(&scenario.scenario_timer_specs[i]);
-	for (i = 0; i < 256; i++) {
-		flip_spec_node(&scenario.scen_specials[i]);
-		}
-	for (i = 0; i < 10; i++)  {
-		flip_short(&scenario.storage_shortcuts[i].ter_type);
-		flip_short(&scenario.storage_shortcuts[i].property);
-		for (j = 0; j < 10; j++)  {
-			flip_short(&scenario.storage_shortcuts[i].item_num[j]);
-			flip_short(&scenario.storage_shortcuts[i].item_odds[j]);
-			}
-		}
-	flip_short(&scenario.last_town_edited);
+	endian_adjust(scenario);
 }
 
 
 void port_item_list()
 {
-	short i;
-
 	if (cur_scen_is_win == TRUE)
 		return;
 
-	for (i = 0; i < 400; i++) {
-		flip_short(&(scen_item_list.scen_items[i].variety));
-		flip_short(&(scen_item_list.scen_items[i].item_level));
-		flip_short(&(scen_item_list.scen_items[i].value));
-		}
+	endian_adjust(scen_item_list);
 }
 
 void port_out(outdoor_record_type *out)
 {
-	short i;
-
 	if (cur_scen_is_win == TRUE)
 		return;
 
-	for (i = 0; i < 4; i++) {
-		flip_short(&(out->wandering[i].spec_on_meet));
-		flip_short(&(out->wandering[i].spec_on_win));
-		flip_short(&(out->wandering[i].spec_on_flee));
-		flip_short(&(out->wandering[i].cant_flee));
-		flip_short(&(out->wandering[i].end_spec1));
-		flip_short(&(out->wandering[i].end_spec2));
-		flip_short(&(out->special_enc[i].spec_on_meet));
-		flip_short(&(out->special_enc[i].spec_on_win));
-		flip_short(&(out->special_enc[i].spec_on_flee));
-		flip_short(&(out->special_enc[i].cant_flee));
-		flip_short(&(out->special_enc[i].end_spec1));
-		flip_short(&(out->special_enc[i].end_spec2));
-		}
-	for (i = 0; i < 8; i++)
-		flip_rect(&(out->info_rect[i]));
-	for (i = 0; i < 60; i++)
-		flip_spec_node(&(out->specials[i]));
-}
-
-void flip_spec_node(special_node_type *spec)
-{
-	flip_short(&(spec->type));
-	flip_short(&(spec->sd1));
-	flip_short(&(spec->sd2));
-	flip_short(&(spec->pic));
-	flip_short(&(spec->m1));
-	flip_short(&(spec->m2));
-	flip_short(&(spec->ex1a));
-	flip_short(&(spec->ex1b));
-	flip_short(&(spec->ex2a));
-	flip_short(&(spec->ex2b));
-	flip_short(&(spec->jumpto));
+	endian_adjust(*out);
 }
 
 short FSWrite(HFILE file,long *len,char *buffer)
