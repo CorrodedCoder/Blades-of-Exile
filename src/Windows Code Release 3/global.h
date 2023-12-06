@@ -239,18 +239,7 @@ typedef struct {
 	short picture_num;
 	
 	} monster_record_type;
-	
-typedef struct {
-	short active,attitude;
-	unsigned char number;
-	location m_loc;
-	monster_record_type m_d;
-	Boolean mobile;
-	short summoned;
-	creature_start_type monst_start;
-	} creature_data_type;
-	
-	
+
 typedef struct {
 	location horse_loc,horse_loc_in_sec,horse_sector;
 	short which_town;
@@ -319,6 +308,17 @@ typedef struct {
 
 
 
+typedef struct {
+	short active,attitude;
+	unsigned char number;
+	location m_loc;
+	monster_record_type m_d;
+	Boolean mobile;
+	short summoned;
+	creature_start_type monst_start;
+	} creature_data_type;
+	
+	
 
 typedef struct {
 	creature_data_type dudes[60];
