@@ -1,3 +1,4 @@
+#pragma once
 
 #define T_M 	60
 
@@ -48,6 +49,14 @@
 
 typedef char Boolean;
 
+typedef struct BoeRect
+{
+	short left;
+	short top;
+	short right;
+	short bottom;
+} BoeRect;
+
 typedef struct {
 	char x,y;
 	} location;
@@ -95,7 +104,7 @@ typedef struct {
 	location	sign_locs[8];
 	out_wandering_type	wandering[4],special_enc[4];
 	location	wandering_locs[4];
-	RECT info_rect[8];
+	BoeRect info_rect[8];
 	unsigned char strlens[180];
 	special_node_type specials[60];
 	} outdoor_record_type;
@@ -161,7 +170,7 @@ typedef struct {
 	location start_locs[4];
 	location exit_locs[4];
 	short exit_specs[4];
-	RECT in_town_rect;
+	BoeRect in_town_rect;
 	preset_item_type preset_items[64];
 	short max_num_monst;
 	preset_field_type preset_fields[50];
@@ -178,21 +187,21 @@ typedef struct {
 
 typedef struct {
 	unsigned char terrain[64][64];
-	RECT room_rect[16];
+	BoeRect room_rect[16];
 	creature_start_type creatures[60];
 	unsigned char lighting[8][64];
 	} big_tr_type;
 
 typedef struct {
 	unsigned char terrain[48][48];
-	RECT room_rect[16];
+	BoeRect room_rect[16];
 	creature_start_type creatures[40];
 	unsigned char lighting[6][48];
 	} ave_tr_type;
 	
 typedef struct {
 	unsigned char terrain[32][32];
-	RECT room_rect[16];
+	BoeRect room_rect[16];
 	creature_start_type creatures[30];
 	unsigned char lighting[4][32];
 	} tiny_tr_type;	
@@ -206,7 +215,7 @@ typedef struct {
 	} city_block_type;
 	
 typedef struct {
-	RECT what_rect;
+	BoeRect what_rect;
 	unsigned char ter_type;
 	unsigned char hollow;
 	} city_ter_rect_type;
@@ -270,7 +279,7 @@ typedef struct {
 	unsigned char out_width,out_height,difficulty,intro_pic,default_ground;
 	} scen_header_type;
 	
-	typedef struct {
+typedef struct {
 	unsigned char flag1, flag2, flag3, flag4;
 	unsigned char ver[3],min_run_ver,prog_make_ver[3],num_towns;
 	unsigned char out_width,out_height,difficulty,intro_pic,default_ground;
@@ -286,7 +295,7 @@ typedef struct {
 	short flag_to_add_to_town[10][2];
 	short flag_c;
 	short out_data_size[100][2];
-	RECT store_item_rects[3];
+	BoeRect store_item_rects[3];
 	short store_item_towns[3];
 	short flag_e;
 	short special_items[50];
@@ -388,16 +397,16 @@ typedef struct {
 	scen_item_data_type scen_item_list;
 	} piles_of_stuff_dumping_type2;
 typedef struct {
-	char far talk_strs[170][256];
+	char talk_strs[170][256];
 	} piles_of_stuff_dumping_type3;
 typedef struct {
 	char out_strs[9][256];
 	} outdoor_strs_type;
 typedef struct {
-	outdoor_strs_type far outdoor_text[2][2];
+	outdoor_strs_type outdoor_text[2][2];
 	} piles_of_stuff_dumping_type4;
 typedef struct {
-char far scen_strs[160][256];
+char scen_strs[160][256];
 	} piles_of_stuff_dumping_type5;
 
 
@@ -437,6 +446,7 @@ typedef struct {
 	} stored_outdoor_maps_type; 
 
 
+#ifndef BOE_GLOBALS_SKIP_FUNCTIONS
 short s_pow(short x,short y);
 short a_v(short x);
 short ex_abs(short x);
@@ -448,3 +458,4 @@ short move_to_zero(short val);
 void Delay(short val,long *dummy);
 void alter_rect(RECT *r) ;
 Boolean sd_legit(short a, short b);
+#endif

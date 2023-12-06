@@ -107,6 +107,26 @@ static const std::array szFilter{ "Blades of Exile Save Files (*.SAV)","*.sav",
 	"All Files (*.*)","*.*",
 	"" };
 
+static void boe_alter_rect(BoeRect* r)
+{
+	short a = r->top;
+	r->top = r->left;
+	r->left = a;
+	a = r->bottom;
+	r->bottom = r->right;
+	r->right = a;
+}
+
+static void flip_rect(BoeRect* s)
+{
+	flip_short((short*)&(s->top));
+	flip_short((short*)&(s->bottom));
+	flip_short((short*)&(s->left));
+	flip_short((short*)&(s->right));
+	boe_alter_rect(s);
+}
+
+
 void file_initialize()
 {
 		OpenFile("outdoor.dat",&save_dir,OF_PARSE);
@@ -1286,7 +1306,7 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 	store = 0;
 	for (i = 0; i < out_sec_num; i++)
 		for (j = 0; j < 2; j++)
-			store += (long) (scenario.out_data_size[i][j]);
+			store += (long)(scenario.out_data_size[i][j]);
 	len_to_jump += store;
 
 	error = SetFPos (file_id, 1, len_to_jump);
@@ -2079,15 +2099,6 @@ void flip_short(short *s)
 
 }
 
-
-void flip_rect(RECT *s)
-{
-	flip_short((short *) &(s->top));
-	flip_short((short *) &(s->bottom));
-	flip_short((short *) &(s->left));
-	flip_short((short *) &(s->right));
-	alter_rect(s);
-	}
 
 short FSWrite(HFILE file,long *len,char *buffer)
 {

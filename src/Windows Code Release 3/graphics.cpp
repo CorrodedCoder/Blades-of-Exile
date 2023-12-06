@@ -175,6 +175,13 @@ Boolean supressing_some_spaces = FALSE;
 location ok_space[4] = {{0,0},{0,0},{0,0},{0,0}};
  	char combat_string[100];
 
+static Boolean pt_in_rect(location loc, BoeRect rect)
+{
+	if ((loc.x >= rect.left) && (loc.x <= rect.right) && (loc.y >= rect.top) && (loc.y <= rect.bottom))
+		return TRUE;
+	return FALSE;
+}
+
 
 static void undo_clip()
 {
@@ -304,8 +311,10 @@ void plop_fancy_startup()
 	rect_draw_some_item_bmp(pict_to_draw,from_rect,pict_to_draw,to_rect,0,1);
 	DeleteObject(pict_to_draw);
 
+#ifndef _DEBUG
 	play_sound(-22);
-	while (GetCurrentTime() - cur_time < 5000) ;
+	while (GetCurrentTime() - cur_time < 5000);
+#endif
 	old_brush = SelectObject(main_dc,GetStockObject(BLACK_BRUSH));
 	Rectangle(main_dc, whole_window.left,whole_window.top,
 		whole_window.right,whole_window.bottom);

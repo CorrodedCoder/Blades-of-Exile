@@ -1017,13 +1017,6 @@ char add_trim_to_array(location where,unsigned char ter_type)
 	return to_return;
 }
 
-Boolean pt_in_rect(location loc,RECT rect)
-{
-	if ((loc.x >= rect.left) && (loc.x <= rect.right) && (loc.y >= rect.top) && (loc.y <= rect.bottom))
-		return TRUE;
-	return FALSE;
-}
-
 // Sees if party has seen a monster of this sort, updates menu and gives
 // special messages as necessary
 void check_if_monst_seen(unsigned char m_num)
