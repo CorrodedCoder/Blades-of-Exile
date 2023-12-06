@@ -107,6 +107,18 @@ static const std::array szFilter{ "Blades of Exile Save Files (*.SAV)","*.sav",
 	"All Files (*.*)","*.*",
 	"" };
 
+static void flip_short(short* s)
+{
+	char store, * s1, * s2;
+
+	s1 = (char*)s;
+	s2 = s1 + 1;
+	store = *s1;
+	*s1 = *s2;
+	*s2 = store;
+
+}
+
 void file_initialize()
 {
 		OpenFile("outdoor.dat",&save_dir,OF_PARSE);
@@ -2066,19 +2078,6 @@ void flip_spec_node(special_node_type *spec)
 	flip_short(&(spec->ex2b));
 	flip_short(&(spec->jumpto));
 }
-
-void flip_short(short *s)
-{
-	char store,*s1, *s2;
-
-	s1 = (char *) s;
-	s2 = s1 + 1;
-	store = *s1;
-	*s1 = *s2;
-	*s2 = store;
-
-}
-
 
 void flip_rect(RECT *s)
 {

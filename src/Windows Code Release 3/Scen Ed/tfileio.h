@@ -31,7 +31,6 @@ void port_scenario();
 void port_item_list();
 void port_out(outdoor_record_type *out);
 void flip_spec_node(special_node_type *spec);
-void flip_short(short *s);
 void flip_rect(RECT *s);
 void port_dummy_talk_nodes();
 void port_dummy_t_d(short size,char *buffer);

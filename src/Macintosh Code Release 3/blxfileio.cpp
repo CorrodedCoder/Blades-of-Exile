@@ -98,6 +98,18 @@ template_town_type town_template;
 	CInfoPBRec myCPB;
 GWorldPtr spec_scen_g = NULL;
 
+static void flip_short(short* s)
+{
+	char store, * s1, * s2;
+
+	s1 = (char*)s;
+	s2 = s1 + 1;
+	store = *s1;
+	*s1 = *s2;
+	*s2 = store;
+
+}
+
 void init_directories()
 {
 	short error;
@@ -2033,17 +2045,6 @@ void flip_spec_node(special_node_type *spec)
 	flip_short(&(spec->jumpto));
 }
 
-void flip_short(short *s)
-{
-	char store,*s1, *s2;
-
-	s1 = (char *) s;
-	s2 = s1 + 1;
-	store = *s1;
-	*s1 = *s2;
-	*s2 = store;
-
-}
 void alter_rect(Rect *r)
 {
 	short a;

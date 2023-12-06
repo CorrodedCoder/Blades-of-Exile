@@ -57,6 +57,18 @@ town_record_type *dummy_town_ptr;
 
 void print_write_position ();
 
+static void flip_short(short* s)
+{
+	char store, * s1, * s2;
+
+	s1 = (char*)s;
+	s2 = s1 + 1;
+	store = *s1;
+	*s1 = *s2;
+	*s2 = store;
+
+}
+
 void init_directories()
 {
 	short error;
@@ -2103,17 +2115,6 @@ void flip_spec_node(special_node_type *spec)
 	flip_short(&(spec->jumpto));
 }
 
-void flip_short(short *s)
-{
-	char store,*s1, *s2;
-
-	s1 = (char *) s;
-	s2 = s1 + 1;
-	store = *s1;
-	*s1 = *s2;
-	*s2 = store;
-
-}
 void alter_rect(Rect *r)
 {
 	short a;

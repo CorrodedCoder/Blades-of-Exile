@@ -62,6 +62,18 @@ static const std::array szFilter{ "Blades of Exile Scenarios (*.EXS)","*.exs",
 		"All Files (*.*)","*.*",
 		"" };
 
+static void flip_short(short* s)
+{
+	char store, * s1, * s2;
+
+	s1 = (char*)s;
+	s2 = s1 + 1;
+	store = *s1;
+	*s1 = *s2;
+	*s2 = store;
+
+}
+
 void file_initialize()
 {
 		ofn.lStructSize = sizeof(OPENFILENAME);
@@ -1907,18 +1919,6 @@ void flip_spec_node(special_node_type *spec)
 	flip_short(&(spec->ex2a));
 	flip_short(&(spec->ex2b));
 	flip_short(&(spec->jumpto));
-}
-
-void flip_short(short *s)
-{
-	char store,*s1, *s2;
-
-	s1 = (char *) s;
-	s2 = s1 + 1;
-	store = *s1;
-	*s1 = *s2;
-	*s2 = store;
-
 }
 
 void alter_rect(RECT *r)
