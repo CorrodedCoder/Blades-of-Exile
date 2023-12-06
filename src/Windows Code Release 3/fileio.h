@@ -1,7 +1,7 @@
 void file_initialize();
 void load_file();
 void save_file(short mode);
-void change_rect_terrain(RECT r,unsigned char terrain_type,short probability,Boolean hollow);
+void change_rect_terrain(BoeRect r,unsigned char terrain_type,short probability,Boolean hollow);
 void swap_val(unsigned char *val,short a,short b);
 void change_val_4 (unsigned char *val,short a,short b,short c,short d);
 void change_val (unsigned char *val,short a,short b);

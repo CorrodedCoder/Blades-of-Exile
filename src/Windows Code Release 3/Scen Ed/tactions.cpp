@@ -75,7 +75,7 @@ creature_start_type last_placed_monst{};
 special_node_type null_spec_node = {0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
 talking_node_type null_talk_node = {0,0,{120,120,120,120},{120,120,120,120},{0,0,0,0}};
 
-RECT working_rect;
+BoeRect working_rect;
 location last_space_hit;
 Boolean erasing_mode;
 unsigned char current_ground = 0;
@@ -1653,7 +1653,7 @@ for (i = 0; i < ((editing_town == TRUE) ? max_dim[town_type] : 48); i++)
 		}
 }
 
-void change_rect_terrain(RECT r,unsigned char terrain_type,short probability,Boolean hollow)
+void change_rect_terrain(BoeRect r,unsigned char terrain_type,short probability,Boolean hollow)
 // prob is 0 - 20, 0 no, 20 always
 {
 location l;

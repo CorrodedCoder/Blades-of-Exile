@@ -74,7 +74,7 @@ static void flip_short(short* s)
 
 }
 
-static void alter_rect(RECT* r)
+static void alter_rect(BoeRect* r)
 {
 	short a;
 
@@ -86,7 +86,7 @@ static void alter_rect(RECT* r)
 	r->right = a;
 }
 
-static void flip_rect(RECT* s)
+static void flip_rect(BoeRect* s)
 {
 	flip_short((short*)&(s->top));
 	flip_short((short*)&(s->bottom));

@@ -119,7 +119,19 @@ static void flip_short(short* s)
 
 }
 
-static void flip_rect(RECT* s)
+void alter_rect(BoeRect* r)
+{
+	short a;
+
+	a = r->top;
+	r->top = r->left;
+	r->left = a;
+	a = r->bottom;
+	r->bottom = r->right;
+	r->right = a;
+}
+
+static void flip_rect(BoeRect* s)
 {
 	flip_short((short*)&(s->top));
 	flip_short((short*)&(s->bottom));
@@ -685,7 +697,7 @@ void set_terrain(location l, unsigned char terrain_type)
 	combat_terrain[l.x][l.y] = terrain_type;
 }
 
-void change_rect_terrain(RECT r,unsigned char terrain_type,short probability,Boolean hollow)
+void change_rect_terrain(BoeRect r,unsigned char terrain_type,short probability,Boolean hollow)
 // prob is 0 - 20, 0 no, 20 always
 {
 location l;
