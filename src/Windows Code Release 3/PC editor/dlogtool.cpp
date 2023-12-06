@@ -8,7 +8,7 @@
 
 #include <cstring>
 
-#include "global.h"
+#include "../global.h"
 #include "graphutl.h"
 #include "../graphutl_helpers.hpp"
 #include <cstdio>

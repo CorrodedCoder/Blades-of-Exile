@@ -4,7 +4,7 @@
 
 #include <cstdio>
 
-#include "global.h"
+#include "../global.h"
 #include "edsound.h"
 
 #define	NUM_SOUNDS	100

@@ -6,7 +6,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
-#include "global.h"
+#include "../global.h"
 
 
 #include "edsound.h"

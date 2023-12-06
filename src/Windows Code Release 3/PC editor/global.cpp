@@ -1,5 +1,5 @@
 #include <Windows.h>
-#include "global.h"
+#include "../global.h"
 #include <cmath>
 #include <cstdlib>
 

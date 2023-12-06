@@ -2,7 +2,7 @@
 
 
 #include "graphics.h"
-#include "global.h"
+#include "../global.h"
 #include "editors.h"
 #include "dlogtool.h"
 

@@ -2,7 +2,7 @@
 #include <cassert>
 #include <cstdio>
 #include <cstring>
-#include "global.h"
+#include "../global.h"
 #include "graphics.h"
 #include "edsound.h"
 #include "dlogtool.h"
