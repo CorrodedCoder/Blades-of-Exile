@@ -25,38 +25,38 @@
 #include "graphutl_helpers.hpp"
 
 extern HBITMAP mixed_gworld,spec_scen_g;
-extern current_town_type far c_town;
+extern current_town_type c_town;
 extern party_record_type far	party;
 extern std::array<pc_record_type, 6> adven;
-extern town_item_list far  t_i;
+extern town_item_list  t_i;
 extern short stat_window,overall_mode,store_spell_target,which_combat_type,current_pc,combat_active_pc;
 extern location center;
 extern HWND mainPtr;
 extern short monst_target[T_M]; // 0-5 target that pc   6 - no target  100 + x - target monster x
-extern unsigned char far combat_terrain[64][64];
-extern outdoor_record_type far outdoors[2][2];
-extern unsigned char far misc_i[64][64];
+extern unsigned char combat_terrain[64][64];
+extern outdoor_record_type outdoors[2][2];
+extern unsigned char misc_i[64][64];
 extern short store_current_pc,current_ground;
 extern Boolean cd_event_filter();
 extern Boolean dialog_not_toast;
 
 extern short store_pre_shop_mode,store_pre_talk_mode;
 extern location monster_targs[T_M];
-	extern scenario_data_type far scenario;
+	extern scenario_data_type scenario;
 
 extern Boolean modeless_exists[18],diff_depth_ok,belt_present;
 extern short modeless_key[18];
 extern HWND modeless_dialogs[18];
-extern unsigned char far out[96][96];
-extern unsigned char far out_e[96][96];
-extern unsigned char far sfx[64][64];
-extern stored_items_list_type far stored_items[3];
-extern stored_town_maps_type far maps;
-extern stored_outdoor_maps_type far o_maps;
-extern big_tr_type far  t_d;
+extern unsigned char out[96][96];
+extern unsigned char out_e[96][96];
+extern unsigned char sfx[64][64];
+extern stored_items_list_type stored_items[3];
+extern stored_town_maps_type maps;
+extern stored_outdoor_maps_type o_maps;
+extern big_tr_type  t_d;
 extern short town_size[3];
 extern short town_type;
-extern setup_save_type far setup_save;
+extern setup_save_type setup_save;
 extern Boolean web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern location pc_pos[6];
 extern short last_attacked[6], pc_dir[6], pc_parry[6];
@@ -64,18 +64,18 @@ extern std::array<short, 6> pc_moves;
 
 extern location hor_vert_place[14];
 extern location diag_place[14];
-extern short far terrain_pic[256];
+extern short terrain_pic[256];
 extern char terrain_blocked[256];
-extern location far golem_m_locs[16];
+extern location golem_m_locs[16];
 extern std::array< short, 20 > special_queue;
 
 extern HPALETTE hpal;
-extern far PALETTEENTRY ape[256];
+extern PALETTEENTRY ape[256];
 extern HDC main_dc,main_dc2,main_dc3;
 extern HINSTANCE store_hInstance;
-extern stored_town_maps_type far town_maps,town_maps2;
+extern stored_town_maps_type town_maps,town_maps2;
 extern piles_of_stuff_dumping_type data_store;
-extern stored_town_maps_type far town_maps,town_maps2;
+extern stored_town_maps_type town_maps,town_maps2;
 
 extern short ulx,uly;
 
@@ -134,7 +134,7 @@ Boolean shop_button_active[12];
 	RECT map_title_rect = {50,8,300,20}; /**/
 //	Rect map_bar_rect = {285,47,301,218};
 	RECT map_bar_rect = {230,2,400,10};
-unsigned char far map_graphic_placed[8][64]; // keeps track of what's been filled on map
+unsigned char map_graphic_placed[8][64]; // keeps track of what's been filled on map
 char the_string[256];
 Boolean kludge_force_full_refresh = FALSE;
 

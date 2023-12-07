@@ -12,7 +12,7 @@
 #include "graphutl.h"
 #include "../endian_adjust.hpp"
 
-extern scenario_data_type far scenario;
+extern scenario_data_type scenario;
 extern HDC main_dc;
 
 ave_tr_type ave_t;
@@ -21,21 +21,21 @@ tiny_tr_type tiny_t;
 
 HWND	the_dialog;
 extern HWND mainPtr;
-extern town_record_type far town;
-extern big_tr_type far t_d;
+extern town_record_type town;
+extern big_tr_type t_d;
 extern short town_type, max_dim[3];  // 0 - big 1 - ave 2 - small
 extern short cur_town,overall_mode,given_password,user_given_password;
 extern location cur_out;
 extern piles_of_stuff_dumping_type data_store;
-extern talking_record_type far talking;
-extern outdoor_record_type far current_terrain;
+extern talking_record_type talking;
+extern outdoor_record_type current_terrain;
 extern unsigned char borders[4][50];
 extern Boolean change_made;
-extern scen_item_data_type far scen_item_list;
-extern char far scen_strs[160][256];
-extern char far scen_strs2[110][256];
-extern char far talk_strs[170][256];
-extern char far town_strs[180][256];
+extern scen_item_data_type scen_item_list;
+extern char scen_strs[160][256];
+extern char scen_strs2[110][256];
+extern char talk_strs[170][256];
+extern char town_strs[180][256];
 extern HBITMAP spec_scen_g;
 extern char current_string[256] ;
 short specials_res_id,data_dump_file_id;

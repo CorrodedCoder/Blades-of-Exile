@@ -21,7 +21,7 @@
 static const std::array heal_types{"Heal Damage","Cure Poison","Cure Disease","Cure Paralysis",
 		"Uncurse Items","Cure Stoned Character","Raise Dead","Resurrection","Cure Dumbfounding"};
 
-short far monsters_faces[190] = {0,1,2,3,4,5,6,7,8,9,
+short monsters_faces[190] = {0,1,2,3,4,5,6,7,8,9,
 							10,0,12,11,11,12,13,13,2,11,
 							11,14,15,14,59,59,59,14,17,16,
 							18,27,20,30,31,32,19,19,25,25,
@@ -48,9 +48,9 @@ extern HWND mainPtr;
 extern short dungeon_font_num,geneva_font_num,overall_mode,town_type,which_combat_type;
 extern Boolean play_sounds,boom_anim_active,cartoon_happening,in_startup_mode;
 extern HBITMAP fields_gworld,mixed_gworld,dlg_buttons_gworld,terrain_screen_gworld,missiles_gworld;
-extern party_record_type far party;
-extern talking_record_type far talking;
-extern scenario_data_type far scenario;
+extern party_record_type party;
+extern talking_record_type talking;
+extern scenario_data_type scenario;
 
 extern std::array<pc_record_type, 6> adven;
 extern RECT sbar_rect,item_sbar_rect,shop_sbar_rect;
@@ -59,11 +59,11 @@ extern location center;
 extern short pc_marked_damage[6],pc_dir[6],store_talk_face_pic;
 extern short monst_marked_damage[T_M];
 extern location pc_pos[6];
-extern current_town_type far c_town;
-extern big_tr_type far  t_d;
-extern town_item_list far 	t_i;
-extern unsigned char far combat_terrain[64][64];
-extern unsigned char far misc_i[64][64],sfx[64][64];
+extern current_town_type c_town;
+extern big_tr_type  t_d;
+extern town_item_list 	t_i;
+extern unsigned char combat_terrain[64][64];
+extern unsigned char misc_i[64][64],sfx[64][64];
 extern POINT store_anim_ul;
 extern char light_area[13][13];
 extern short terrain_there[9][9];
@@ -74,36 +74,36 @@ extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x
 HRGN oval_region = NULL,dark_mask_region,temp_rect_rgn;
 
 // Talk vars
-extern word_rect_type far store_words[50];
+extern word_rect_type store_words[50];
 extern short store_pre_talk_mode,store_personality,store_personality_graphic,current_pc;
 extern HBITMAP talk_gworld;
 extern Boolean talk_end_forced;
-extern char far old_str1[256];
-extern char far old_str2[256];
-extern char far one_back1[256];
-extern char far one_back2[256];
+extern char old_str1[256];
+extern char old_str2[256];
+extern char one_back1[256];
+extern char one_back2[256];
 extern std::array<word_rect_type, 9> preset_words;
 extern RECT talk_area_rect, word_place_rect,talk_help_rect;
 extern char title_string[50];
 extern unsigned char store_monst_type;
-extern hold_responses far store_resp[83];
+extern hold_responses store_resp[83];
 
 // Shop vars
-extern short far store_shop_items[30];
-extern short far store_shop_costs[30];
+extern short store_shop_items[30];
+extern short store_shop_costs[30];
 extern short store_shop_type,store_shop_min,store_shop_max,store_pre_shop_mode,store_cost_mult;
-extern char far store_store_name[256];
+extern char store_store_name[256];
 extern RECT shopping_rects[8][7];
 extern RECT bottom_help_rects[4];
 extern RECT shop_name_str;
 extern RECT shop_frame ;
 extern RECT shop_done_rect;
-extern item_record_type far food_types[15];
+extern item_record_type food_types[15];
 extern short heal_costs[8];
 extern short terrain_there[9][9];
 
 extern HPALETTE hpal;
-extern far PALETTEENTRY ape[256];
+extern PALETTEENTRY ape[256];
 extern HDC main_dc,main_dc2,main_dc3;
 
 // Missile anim vars
@@ -119,15 +119,15 @@ typedef struct {
 	short boom_type;  // -1 no miss
 	short x_adj,y_adj;
 	} store_boom_type;
-store_missile_type far store_missiles[30];
-store_boom_type far store_booms[30];
+store_missile_type store_missiles[30];
+store_boom_type store_booms[30];
 Boolean have_missile,have_boom;
-RECT far explode_place_rect[30];
+RECT explode_place_rect[30];
 
 
 // Animation vars
-extern town_record_type far anim_town;
-extern tiny_tr_type far anim_t_d;
+extern town_record_type anim_town;
+extern tiny_tr_type anim_t_d;
 extern short anim_step;
 short store_anim_type;
 extern char anim_str[256];

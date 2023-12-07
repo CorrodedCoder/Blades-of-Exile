@@ -15,7 +15,7 @@ HGLOBAL sound_handles[NUM_SOUNDS];
 LPCSTR snds[NUM_SOUNDS];
 
 extern HINSTANCE store_hInstance;
-extern scenario_data_type far scenario;
+extern scenario_data_type scenario;
 
 extern Boolean play_sounds,in_startup_mode;
 extern HWND mainPtr;
@@ -28,7 +28,7 @@ short last_played = 10000;
 short error_beeps = 0;
 short store_last_sound_played = 0;
 
-Boolean far always_asynch[100] = {FALSE,FALSE,FALSE,FALSE,FALSE,
+Boolean always_asynch[100] = {FALSE,FALSE,FALSE,FALSE,FALSE,
 							TRUE,TRUE,FALSE,FALSE,FALSE,
 							TRUE,FALSE,FALSE,FALSE,FALSE, // 10
 							FALSE,FALSE,FALSE,FALSE,FALSE,
@@ -48,7 +48,7 @@ Boolean far always_asynch[100] = {FALSE,FALSE,FALSE,FALSE,FALSE,
 							TRUE,FALSE,FALSE,FALSE,FALSE,
 							FALSE,TRUE,FALSE,FALSE,FALSE, // 90
 							FALSE,FALSE,FALSE,FALSE,FALSE};
-Boolean far load_when_play[100] = {
+Boolean load_when_play[100] = {
 0,0,1,1,1,0,0,1,1,1,
 0,0,0,1,0,1,1,1,1,1,
 1,1,0,1,1,1,1,0,1,1,
@@ -61,7 +61,7 @@ Boolean far load_when_play[100] = {
 1,0,1,1,1,1,1,1,1,0
 };
 
-short far can_ignore[100] = {
+short can_ignore[100] = {
 0,0,0,0,0,5,3,0,0,0,
 5,5,5,0,5,0,0,0,0,0,
 0,0,5,0,0,0,0,0,0,2,

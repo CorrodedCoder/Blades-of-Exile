@@ -42,7 +42,7 @@ extern HBITMAP	terrain_screen_gworld, buttons_gworld, text_screen_gworld,text_ba
 extern HBITMAP	pc_info_screen_gworld,orig_pc_info_screen_gworld,terrain_gworld, party_template_gworld;
 extern HBITMAP	monster_template_gworld;
 extern HBITMAP startmsc_gworld;
-extern short far terrain_pic[256];
+extern short terrain_pic[256];
 
 
 extern HACCEL accel;
@@ -51,27 +51,27 @@ extern unsigned char m_pic_index_y[200];
 extern unsigned char m_pic_index[200];
 
 short current_key = 0;
-short far dlg_keys[ND];
-short far dlg_types[ND];
+short dlg_keys[ND];
+short dlg_types[ND];
 HWND dlgs[ND];
 HWND dlg_parent[ND];
-short far dlg_highest_item[ND];
+short dlg_highest_item[ND];
 Boolean dlg_draw_ready[ND];
 
-short far item_dlg[NI];
-short far item_number[NI];
-char far item_type[NI];
-RECT far item_rect[NI];
-short far item_flag[NI];
-char far item_active[NI];
-char far item_key[NI];
-short far item_label[NI];
-short far item_label_loc[NI];
+short item_dlg[NI];
+short item_number[NI];
+char item_type[NI];
+RECT item_rect[NI];
+short item_flag[NI];
+char item_active[NI];
+char item_key[NI];
+short item_label[NI];
+short item_label_loc[NI];
 
-char far text_long_str[10][256];
-char far text_short_str[140][35];
-char far labels[NL][25];
-Boolean far label_taken[NL];
+char text_long_str[10][256];
+char text_short_str[140][35];
+char labels[NL][25];
+Boolean label_taken[NL];
 
 HWND edit_box = NULL;
 HWND store_edit_parent; // kludgy
@@ -123,7 +123,7 @@ static const std::array button_strs{"Done ","Ask"," "," ","Keep", "Cancel","+","
 						"Insert","Remove","Accept","Refuse","Open","Close","Sit","Stand","","",
 						"18","19","20","Invisible!","","","","","",""};
 
-short far button_left_adj[150] = {0,0,0,0,0, 0,0,0,0,0,
+short button_left_adj[150] = {0,0,0,0,0, 0,0,0,0,0,
 0,0,0,0,0, 0,0,0,0,0,
 0,0,0,0,0, 0,0,0,0,0,
 0,0,0,0,0, 0,0,0,0,0,

@@ -32,17 +32,17 @@ static const std::array m_priest_sp{"Minor Bless","Light Heal","Wrack","Stumble"
 
 static std::array < std::array<char, 50>, TEXT_BUF_LEN> text_buffer;
 short buf_pointer = 30, num_added_since_stop = 0;
-char far store_string[256];
-char far store_string2[256];
+char store_string[256];
+char store_string2[256];
 short start_print_point= 0;
 short mark_where_printing_long;
 Boolean printing_long = FALSE;
-char far c_str[256] = "";
+char c_str[256] = "";
 Boolean save_mess_given = FALSE;
 
 RECT status_panel_clip_rect = {299, 11,495,175},item_panel_clip_rect = {297,11,463,175};
 
-RECT far item_buttons_from[7] = {{0,12,14,24},{14,12,28,24},{28,12,42,24},{42,12,56,24},
+RECT item_buttons_from[7] = {{0,12,14,24},{14,12,28,24},{28,12,42,24},{42,12,56,24},
 						{0,24,30,36},{30,24,60,36},{0,36,30,48}}; /**/
 
 Boolean string_added = FALSE;
@@ -71,17 +71,17 @@ extern short terrain_there[9][9];
 extern HBITMAP dialog_pattern_gworld,pattern_gworld,status_pattern_gworld,spec_scen_g;
 
 // game globals
-extern party_record_type far party;
+extern party_record_type party;
 extern piles_of_stuff_dumping_type2 data_store2;
-extern talking_record_type far talking;
-extern scenario_data_type far  scenario;
+extern talking_record_type talking;
+extern scenario_data_type  scenario;
 
-extern current_town_type far c_town;
-extern outdoor_record_type far outdoors[2][2];
-extern town_item_list far 	t_i;
-extern unsigned char far out[96][96];
+extern current_town_type c_town;
+extern outdoor_record_type outdoors[2][2];
+extern town_item_list 	t_i;
+extern unsigned char out[96][96];
 extern std::array<pc_record_type, 6> adven;
-extern big_tr_type far  t_d;
+extern big_tr_type  t_d;
 extern short ulx,uly;
 extern Boolean play_sounds,suppress_stat_screen,cartoon_happening;
 extern std::array< std::array<RECT, 6>, 8> item_buttons;
@@ -97,7 +97,7 @@ extern short abil_chart[200],store_anim_type;
 extern std::array<short, 9> item_bottom_button_active;
 
 extern location pc_pos[6];
-extern unsigned char far combat_terrain[64][64];
+extern unsigned char combat_terrain[64][64];
 extern short current_pc;
 extern short shop_identify_cost;
 extern std::array<short, 8> store_selling_values;

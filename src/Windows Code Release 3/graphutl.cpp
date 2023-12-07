@@ -14,7 +14,7 @@
 
 extern HWND mainPtr;
 extern HPALETTE hpal,opening_palette;
-extern far PALETTEENTRY ape[256];
+extern PALETTEENTRY ape[256];
 extern HDC main_dc,main_dc2,main_dc3;
 extern short ulx,uly;
 extern HBITMAP bw_bitmap,mixed_gworld,dialog_pattern_gworld,pattern_gworld,status_pattern_gworld;

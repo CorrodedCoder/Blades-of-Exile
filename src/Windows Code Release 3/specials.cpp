@@ -24,24 +24,24 @@
 
 extern HWND mainPtr;
 extern short overall_mode;
-extern party_record_type far party;
+extern party_record_type party;
 extern piles_of_stuff_dumping_type data_store;
-extern talking_record_type far talking;
-extern scenario_data_type far scenario;
+extern talking_record_type talking;
+extern scenario_data_type scenario;
 
-extern current_town_type far	c_town;
-extern unsigned char far out[96][96];
-extern unsigned char far out_e[96][96];
-extern unsigned char far combat_terrain[64][64];
-extern unsigned char far sfx[64][64];
+extern current_town_type	c_town;
+extern unsigned char out[96][96];
+extern unsigned char out_e[96][96];
+extern unsigned char combat_terrain[64][64];
+extern unsigned char sfx[64][64];
 extern short which_combat_type,current_pc,stat_window;
-extern outdoor_record_type far outdoors[2][2];
+extern outdoor_record_type outdoors[2][2];
 extern location pc_pos[6],center;
 extern Boolean in_scen_debug,belt_present,registered,processing_fields,monsters_going,suppress_stat_screen,boom_anim_active;
-extern big_tr_type far  t_d;
+extern big_tr_type  t_d;
 extern std::array<pc_record_type, 6> adven;
 extern effect_pat_type current_pat;
-extern town_item_list far 	t_i;
+extern town_item_list 	t_i;
 extern out_wandering_type store_wandering_special;
 extern short pc_marked_damage[6];
 extern short monst_marked_damage[T_M];
@@ -50,7 +50,7 @@ extern Boolean fast_bang,end_scenario;
 extern short town_size[3];
 extern short town_type;
 extern piles_of_stuff_dumping_type5 data_store5;
-extern char far scen_strs2[110][256];
+extern char scen_strs2[110][256];
 
 Boolean can_draw_pcs = TRUE;
 short store_item_spell_level = 10;

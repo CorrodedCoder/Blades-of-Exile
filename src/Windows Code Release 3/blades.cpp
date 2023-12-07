@@ -94,16 +94,16 @@ Boolean game_run_before = TRUE;
 Boolean debug_on = FALSE,give_intro_hint = TRUE;
 
 /* Adventure globals */
-party_record_type far party;
+party_record_type party;
 std::array<pc_record_type, 6> adven;
-outdoor_record_type far outdoors[2][2];
-current_town_type far c_town;
-big_tr_type far t_d;
-town_item_list far t_i;
-unsigned char far out[96][96];
-unsigned char far out_e[96][96];
-setup_save_type far setup_save;
-unsigned char far misc_i[64][64],sfx[64][64];
+outdoor_record_type outdoors[2][2];
+current_town_type c_town;
+big_tr_type t_d;
+town_item_list t_i;
+unsigned char out[96][96];
+unsigned char out_e[96][96];
+setup_save_type setup_save;
+unsigned char misc_i[64][64],sfx[64][64];
 location monster_targs[T_M];
 
 /* Display globals */
@@ -146,7 +146,7 @@ location spell_targets[8];
 /* Combat globals */
 short which_combat_type,town_type;
 location center;
-unsigned char far combat_terrain[64][64];
+unsigned char combat_terrain[64][64];
 location pc_pos[6];
 short current_pc;
 short combat_active_pc;
@@ -156,8 +156,8 @@ short spell_caster, missile_firer,current_monst_tactic;
 short store_current_pc = 0;
 
 
-stored_items_list_type far stored_items[3];
-stored_outdoor_maps_type far o_maps;
+stored_items_list_type stored_items[3];
+stored_outdoor_maps_type o_maps;
 
 // Special stuff booleans
 Boolean web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
@@ -178,20 +178,20 @@ DLGPROC modeless_dlogprocs[18] = {NULL,	NULL,	NULL,	NULL,	NULL,	NULL,
 								NULL,	NULL,	NULL,	NULL,	NULL,	NULL};
 HBITMAP bmap = NULL;
 HPALETTE hpal;
-PALETTEENTRY far ape[256];
+PALETTEENTRY ape[256];
 HDC main_dc,main_dc2,main_dc3;
 HINSTANCE store_hInstance;
 HACCEL accel;
 BOOL event_handled;
-scenario_data_type far scenario;
+scenario_data_type scenario;
 piles_of_stuff_dumping_type data_store;
 piles_of_stuff_dumping_type2 data_store2;
 piles_of_stuff_dumping_type3 data_store3;
 piles_of_stuff_dumping_type4 data_store4;
 piles_of_stuff_dumping_type5 data_store5;
-talking_record_type far talking;
-char far scen_strs2[110][256];
-stored_town_maps_type far town_maps,town_maps2;
+talking_record_type talking;
+char scen_strs2[110][256];
+stored_town_maps_type town_maps,town_maps2;
 
 char szWinName[] = "Blades of Exile Dialogs";
 char szAppName[] = "Blades of Exile";

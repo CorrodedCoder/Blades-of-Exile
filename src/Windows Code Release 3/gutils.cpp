@@ -21,22 +21,22 @@ extern short stat_window,give_delays,overall_mode;
 extern short current_spell_range,town_type;
 extern Boolean in_startup_mode,anim_onscreen,registered,play_sounds,frills_on,startup_loaded,cartoon_happening;
 extern short town_size[3];
-extern party_record_type far party;
+extern party_record_type party;
 extern piles_of_stuff_dumping_type2 data_store2;
-extern talking_record_type far talking;
-extern scenario_data_type far scenario;
+extern talking_record_type talking;
+extern scenario_data_type scenario;
 
 extern std::array<pc_record_type, 6> adven;
-extern big_tr_type far  t_d;
-extern outdoor_record_type far outdoors[2][2];
-extern current_town_type far c_town;
-extern town_item_list far  t_i;
-extern unsigned char far out[96][96];
-extern unsigned char far combat_terrain[64][64];
+extern big_tr_type  t_d;
+extern outdoor_record_type outdoors[2][2];
+extern current_town_type c_town;
+extern town_item_list  t_i;
+extern unsigned char out[96][96];
+extern unsigned char combat_terrain[64][64];
 extern effect_pat_type current_pat;
 extern Boolean web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern Boolean sleep_field;
-extern unsigned char far misc_i[64][64],sfx[64][64];
+extern unsigned char misc_i[64][64],sfx[64][64];
 extern short on_monst_menu[256];
 extern HWND modeless_dialogs[18];
 extern short monst_target[T_M]; // 0-5 target that pc   6 - no target  100 + x - target monster x
@@ -45,9 +45,9 @@ extern Boolean cat,cow,chicken,dog,sheep;
 
 extern HBITMAP storage_gworld,terrain_screen_gworld,party_template_gworld,items_gworld,tiny_obj_gworld;
 extern HBITMAP fields_gworld,mixed_gworld,small_temp_gworld,spec_scen_g;
-extern short far which_g_stored[STORED_GRAPHICS];
-extern short far wish_list[STORED_GRAPHICS];
-extern short far storage_status[STORED_GRAPHICS]; // 0 - empty 1 - in use 2 - there, not in use
+extern short which_g_stored[STORED_GRAPHICS];
+extern short wish_list[STORED_GRAPHICS];
+extern short storage_status[STORED_GRAPHICS]; // 0 - empty 1 - in use 2 - there, not in use
 extern short terrain_there[9][9];
 
 extern short ulx,uly;
@@ -61,10 +61,10 @@ extern short display_mode;
 
 extern long anim_ticks;
 
-extern short far terrain_pic[256];
+extern short terrain_pic[256];
 extern char spot_seen[9][9];
-extern char far out_trim[96][96];
-extern char far town_trim[64][64];
+extern char out_trim[96][96];
+extern char town_trim[64][64];
 extern short monster_index[21];
 
 extern Boolean supressing_some_spaces;
@@ -72,7 +72,7 @@ extern location ok_space[4];
 extern Boolean can_draw_pcs;
 
 extern HPALETTE hpal;
-extern far PALETTEENTRY ape[256];
+extern PALETTEENTRY ape[256];
 extern HDC main_dc,main_dc2,main_dc3;
 
 extern HFONT font,small_bold_font,italic_font,underline_font,bold_font;

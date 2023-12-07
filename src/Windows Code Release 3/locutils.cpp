@@ -49,21 +49,21 @@ extern short town_size[3];
 location obs_sec;
 location which_party_sec;
 
-extern party_record_type far party;
-extern talking_record_type far talking;
-extern scenario_data_type far scenario;
+extern party_record_type party;
+extern talking_record_type talking;
+extern scenario_data_type scenario;
 
-extern current_town_type far c_town;
+extern current_town_type c_town;
 extern short overall_mode,which_combat_type,current_pc,town_type;
-extern big_tr_type far  t_d;
-extern outdoor_record_type far outdoors[2][2];
-extern unsigned char far out[96][96];
-extern unsigned char far out_e[96][96];
-extern unsigned char far combat_terrain[64][64];
+extern big_tr_type  t_d;
+extern outdoor_record_type outdoors[2][2];
+extern unsigned char out[96][96];
+extern unsigned char out_e[96][96];
+extern unsigned char combat_terrain[64][64];
 extern location pc_pos[6],center;
 extern std::array<pc_record_type, 6> adven;
 extern Boolean belt_present,web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
-extern unsigned char far map_graphic_placed[8][64]; // keeps track of what's been filled on map
+extern unsigned char map_graphic_placed[8][64]; // keeps track of what's been filled on map
 
 location light_locs[40];
 short num_lights = 0;

@@ -12,17 +12,17 @@
 #include "graphutl.h"
 
 /* Adventure globals */
-extern party_record_type far party;
+extern party_record_type party;
 extern std::array<pc_record_type, 6> adven;
-extern outdoor_record_type far outdoors[2][2];
-extern current_town_type far c_town;
-extern big_tr_type far t_d;
+extern outdoor_record_type outdoors[2][2];
+extern current_town_type c_town;
+extern big_tr_type t_d;
 extern town_item_list far	t_i;
-extern unsigned char far out[96][96];
-extern setup_save_type far setup_save;
-extern stored_items_list_type far stored_items[3];
-extern stored_town_maps_type far maps;
-extern stored_outdoor_maps_type far o_maps;
+extern unsigned char out[96][96];
+extern setup_save_type setup_save;
+extern stored_items_list_type stored_items[3];
+extern stored_town_maps_type maps;
+extern stored_outdoor_maps_type o_maps;
 extern Boolean cd_event_filter();
 
 extern Boolean dialog_not_toast,ed_reg;

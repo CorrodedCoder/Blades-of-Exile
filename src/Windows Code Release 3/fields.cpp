@@ -4,20 +4,20 @@
 #include "locutils.h"
 #include "fields.h"
 
-extern current_town_type far c_town;
+extern current_town_type c_town;
 extern short overall_mode,which_combat_type,current_pc,town_type;
 extern Boolean web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern Boolean sleep_field;
-extern big_tr_type far t_d;
-extern outdoor_record_type far outdoors[2][2];
-extern unsigned char far combat_terrain[64][64];
-extern unsigned char far out[96][96];
-extern unsigned char far out_e[96][96];
-extern unsigned char far misc_i[64][64];
-extern unsigned char far sfx[64][64];
+extern big_tr_type t_d;
+extern outdoor_record_type outdoors[2][2];
+extern unsigned char combat_terrain[64][64];
+extern unsigned char out[96][96];
+extern unsigned char out_e[96][96];
+extern unsigned char misc_i[64][64];
+extern unsigned char sfx[64][64];
 extern char terrain_blocked[256];
 extern short town_size[3];
-extern scenario_data_type far scenario;
+extern scenario_data_type scenario;
 
 Boolean is_explored(short i,short j)
 {

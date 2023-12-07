@@ -25,28 +25,28 @@
 HWND	the_dialog;
 extern party_record_type far	party;
 extern std::array<pc_record_type, 6> adven;
-extern outdoor_record_type far outdoors[2][2];
-extern unsigned char far out[96][96];
-extern unsigned char far out_e[96][96];
+extern outdoor_record_type outdoors[2][2];
+extern unsigned char out[96][96];
+extern unsigned char out_e[96][96];
 extern short overall_mode,give_delays,stat_screen_mode;
 extern Boolean in_startup_mode,registered,play_sounds,in_scen_debug,sys_7_avail,save_maps,party_in_memory;
-extern current_town_type far	c_town;
-extern town_item_list far 	t_i;
+extern current_town_type	c_town;
+extern town_item_list 	t_i;
 extern location center;
 extern long register_flag;
 extern HWND mainPtr;
-extern stored_items_list_type far stored_items[3];
-extern stored_outdoor_maps_type far o_maps;
-extern big_tr_type far  t_d;
+extern stored_items_list_type stored_items[3];
+extern stored_outdoor_maps_type o_maps;
+extern big_tr_type  t_d;
 extern short town_size[3];
 extern short town_type,current_pc;
 extern Boolean web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern Boolean sleep_field;
-extern setup_save_type far setup_save;
-extern unsigned char far misc_i[64][64],sfx[64][64];
-extern unsigned char far template_terrain[64][64];
-extern town_record_type far anim_town;
-extern tiny_tr_type far anim_t_d;
+extern setup_save_type setup_save;
+extern unsigned char misc_i[64][64],sfx[64][64];
+extern unsigned char template_terrain[64][64];
+extern town_record_type anim_town;
+extern tiny_tr_type anim_t_d;
 extern Boolean modeless_exists[18];
 extern location monster_targs[T_M];
 extern HWND modeless_dialogs[18] ;
@@ -57,13 +57,13 @@ extern long ed_flag, ed_key;
 extern short display_mode,cur_town_talk_loaded;
 extern Boolean give_intro_hint;
 extern char terrain_blocked[256];
-extern char far scen_strs2[110][256];
-extern stored_town_maps_type far town_maps,town_maps2;
-extern scenario_data_type far scenario;
- extern unsigned char far combat_terrain[64][64];
+extern char scen_strs2[110][256];
+extern stored_town_maps_type town_maps,town_maps2;
+extern scenario_data_type scenario;
+ extern unsigned char combat_terrain[64][64];
 extern piles_of_stuff_dumping_type data_store;
 extern piles_of_stuff_dumping_type2 data_store2;
- extern talking_record_type far talking;
+ extern talking_record_type talking;
 
 extern short terrain_pic[256];
 extern scen_header_type scen_headers[25];
@@ -93,11 +93,11 @@ OPENFILENAME ofn;
 OFSTRUCT save_dir,save_dir2;
 
 // Trying this to fix bug. Hope it works.
-	tiny_tr_type far tiny_t;
-	ave_tr_type far ave_t;
+tiny_tr_type tiny_t;
+ave_tr_type ave_t;
 
-outdoor_record_type  far dummy_out;////
-town_record_type  far dummy_town;
+outdoor_record_type dummy_out;////
+town_record_type dummy_town;
 short jl;
 extern char file_path_name[256];
 

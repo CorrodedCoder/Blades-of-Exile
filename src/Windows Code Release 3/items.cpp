@@ -19,18 +19,18 @@
 #include "monster.h"
 
 extern short stat_window,overall_mode,current_cursor,which_combat_type,current_pc;
-extern party_record_type far party;
-extern talking_record_type far talking;
-extern scenario_data_type far scenario;
+extern party_record_type party;
+extern talking_record_type talking;
+extern scenario_data_type scenario;
 
-extern current_town_type far c_town;
-extern town_item_list far 	t_i;
+extern current_town_type c_town;
+extern town_item_list 	t_i;
 extern HWND mainPtr;
 extern Boolean in_startup_mode,boom_anim_active;
 extern HINSTANCE store_hInstance;
 
 extern std::array<pc_record_type, 6> adven;
-extern big_tr_type far  t_d;
+extern big_tr_type  t_d;
 extern location pc_pos[6];
 
 extern HCURSOR sword_curs;

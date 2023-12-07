@@ -95,27 +95,27 @@ extern Boolean debug_on,registered,cartoon_happening,in_scen_debug,party_in_memo
 // game info globals
 
 extern HWND	mainPtr;
-extern party_record_type far party;
-extern talking_record_type far talking;
-extern scenario_data_type far scenario;
+extern party_record_type party;
+extern talking_record_type talking;
+extern scenario_data_type scenario;
 
 extern std::array<pc_record_type, 6> adven;
-extern outdoor_record_type far outdoors[2][2];
-extern current_town_type far	c_town;
-extern big_tr_type far t_d;
-extern unsigned char far out[96][96];
+extern outdoor_record_type outdoors[2][2];
+extern current_town_type	c_town;
+extern big_tr_type t_d;
+extern unsigned char out[96][96];
 extern short which_item_page[6],current_ground;
 extern short town_size[3],store_spell_target,pc_last_cast[2][6],pc_casting,store_mage,store_priest;
-extern town_item_list far t_i; // shouldn't be here
-extern unsigned char far misc_i[64][64];
+extern town_item_list t_i; // shouldn't be here
+extern unsigned char misc_i[64][64];
 extern short spec_item_array[60];
-extern stored_town_maps_type far town_maps,town_maps2;
+extern stored_town_maps_type town_maps,town_maps2;
 
 // combat globals
 
 
 extern short which_combat_type,num_targets_left;
-extern unsigned char far combat_terrain[64][64];
+extern unsigned char combat_terrain[64][64];
 extern location center;
 extern location pc_pos[6];
 extern short current_pc,town_type;
@@ -125,8 +125,8 @@ extern Boolean modeless_exists[18],diff_depth_ok;
 extern short modeless_key[18];
 extern HWND modeless_dialogs[18];
 
-extern stored_items_list_type far stored_items[3];
-extern stored_outdoor_maps_type far o_maps;
+extern stored_items_list_type stored_items[3];
+extern stored_outdoor_maps_type o_maps;
 extern short ulx,uly;
 extern HWND text_sbar,item_sbar,shop_sbar;
 extern short shop_identify_cost;

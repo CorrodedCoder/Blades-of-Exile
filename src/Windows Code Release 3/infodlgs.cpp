@@ -33,26 +33,26 @@ extern short skill_max[20];
 extern const short skill_g_cost[20];
 extern std::array<pc_record_type, 6> adven;
 extern short which_pc_displayed;
-extern party_record_type far	party;
-extern short far mage_range[66];
-extern short far priest_range[66];
+extern party_record_type party;
+extern short mage_range[66];
+extern short priest_range[66];
 extern const short spell_cost[2][62];
 extern Boolean in_startup_mode,give_intro_hint;
 extern Boolean cd_event_filter();
 extern Boolean dialog_not_toast;
 extern HWND mainPtr;
 extern short on_monst_menu[256],cur_town_talk_loaded;
-extern big_tr_type far  t_d;
+extern big_tr_type  t_d;
 extern location tinraya_portculli[12];
-extern char far scen_strs2[110][256];
-extern scenario_data_type far scenario;
+extern char scen_strs2[110][256];
+extern scenario_data_type scenario;
 extern piles_of_stuff_dumping_type3 data_store3;
 extern piles_of_stuff_dumping_type5 data_store5;
 
 Boolean full_roster = FALSE;
 
-extern short far dest_personalities[40];
-extern location far dest_locs[40];
+extern short dest_personalities[40];
+extern location dest_locs[40];
 
 extern short dest_personalities[40];
 location source_locs[6] = {{2,9},{0,6},{3,6},{3,4},{6,2},{0,0}};

@@ -16,19 +16,19 @@
 #include "exlsound.h"
 
 extern short overall_mode;
-extern party_record_type far party;
-extern talking_record_type far talking;
-extern scenario_data_type far scenario;
+extern party_record_type party;
+extern talking_record_type talking;
+extern scenario_data_type scenario;
 
-extern current_town_type far	c_town;
-extern unsigned char far out[96][96];
-extern unsigned char far combat_terrain[64][64];
+extern current_town_type	c_town;
+extern unsigned char out[96][96];
+extern unsigned char combat_terrain[64][64];
 extern short current_pc,stat_window;
-extern outdoor_record_type far outdoors[2][2];
+extern outdoor_record_type outdoors[2][2];
 extern location pc_pos[6],center;
-extern town_item_list far 	t_i;
+extern town_item_list 	t_i;
 extern std::array<pc_record_type, 6> adven;
-extern big_tr_type far  t_d;
+extern big_tr_type  t_d;
 extern Boolean registered;
 extern HWND mainPtr;
 
