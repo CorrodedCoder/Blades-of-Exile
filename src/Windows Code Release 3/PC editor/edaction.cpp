@@ -52,7 +52,7 @@ extern short ulx,uly;
 	Boolean talk_done = FALSE;
 	long val_for_text;
 	Boolean keep_change = FALSE;
-	short store_skills[20],store_h,store_sp,i,which_skill,store_skp = 10000,store_g = 10000;
+	static short store_skills[20],store_h,store_sp,which_skill,store_skp = 10000,store_g = 10000;
 
 
 short skill_cost[20] = {3,3,3,2,2,2, 1,2,2,6,
@@ -369,7 +369,7 @@ void display_alchemy()
 
 void do_xp_keep(short pc_num,short mode)
 {
-					for (i = 0; i < 20; i++)
+					for (short i = 0; i < 20; i++)
 						adven[pc_num].skills[i] = store_skills[i];
 					adven[pc_num].cur_health += store_h - adven[pc_num].max_health;
 					adven[pc_num].max_health = store_h;
@@ -411,7 +411,7 @@ void do_xp_draw()
 
 	cd_set_item_text (1010, 51,get_text);
 
-	for (i = 0; i < 20; i++)
+	for (short i = 0; i < 20; i++)
 		store_skills[i] = adven[pc_num].skills[i];
 	store_h = adven[pc_num].max_health;
 	store_sp = adven[pc_num].max_sp;
@@ -585,7 +585,7 @@ Boolean spend_xp(short pc_num, short mode, short parent)
 	sprintf(get_text,"Spell Pts. (%d/%d)",1,15);
 	//cd_add_label(1010,5,get_text,1040);
 	cd_add_label(1010,53,(char *) get_text,1075);
-	for (i = 54; i < 73; i++) {
+	for (short i = 54; i < 73; i++) {
 		get_str(text2,9,1 + 2 * (i - 54));
 		sprintf(get_text,"%s (%d/%d)",text2,skill_cost[i - 54],skill_g_cost[i - 54]);
 		cd_add_label(1010,i,(char *) get_text,(i < 63) ? 1075 : 1069);
