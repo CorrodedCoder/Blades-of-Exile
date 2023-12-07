@@ -133,16 +133,16 @@ typedef struct {
 	scen_item_data_type scen_item_list;
 	} piles_of_stuff_dumping_type2;
 typedef struct {
-	char far talk_strs[170][256];
+	char talk_strs[170][256];
 	} piles_of_stuff_dumping_type3;
 typedef struct {
 	char out_strs[9][256];
 	} outdoor_strs_type;
 typedef struct {
-	outdoor_strs_type far outdoor_text[2][2];
+	outdoor_strs_type outdoor_text[2][2];
 	} piles_of_stuff_dumping_type4;
 typedef struct {
-char far scen_strs[160][256];
+char scen_strs[160][256];
 	} piles_of_stuff_dumping_type5;
 
 

@@ -47,3 +47,4 @@ add_custom_command(
 
 add_subdirectory("PC Editor")
 add_subdirectory("Scen Ed")
+add_subdirectory("Dump Scenario")

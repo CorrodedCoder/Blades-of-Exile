@@ -1,10 +1,6 @@
 #include "endian_adjust.hpp"
 
 #include <bit>
-#include <array>
-#include <algorithm>
-#include <concepts>
-#include <cassert>
 
 #if __cpp_lib_byteswap
 
@@ -12,6 +8,10 @@
 using std::byteswap;
 
 #else
+
+#include <array>
+#include <algorithm>
+#include <concepts>
 
 // Pre C++23
 template<std::integral T>
