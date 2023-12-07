@@ -21,7 +21,7 @@ extern party_record_type far party;
 extern talking_record_type far talking;
 extern scenario_data_type far scenario;
 
-extern pc_record_type far adven[6];
+extern std::array<pc_record_type, 6> adven;
 extern current_town_type far c_town;
 extern big_tr_type far  t_d;
 extern town_item_list far 	t_i;
@@ -50,7 +50,7 @@ extern Boolean sleep_field;
 extern Boolean fast_bang;
 extern unsigned char far misc_i[64][64],sfx[64][64];
 extern short store_current_pc;
-extern const short refer_mage[62],refer_priest[62];
+extern const std::array<short, 62> refer_mage,refer_priest;
 extern location monster_targs[T_M];
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
 
@@ -307,7 +307,8 @@ effect_pat_type far field[8] = {{{{0,0,0,0,1,1,0,0,0},
 							{0,0,0,0,0,0,0,1,1},
 							{0,0,0,0,0,0,0,0,1}}}};
 
-short last_attacked[6],pc_dir[6],pc_parry[6],pc_moves[6];
+short last_attacked[6], pc_dir[6], pc_parry[6];
+std::array<short, 6> pc_moves;
 Boolean center_on_monst;
 
 

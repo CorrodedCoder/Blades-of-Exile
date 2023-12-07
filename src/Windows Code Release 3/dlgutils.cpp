@@ -43,7 +43,7 @@ extern long register_flag;
 extern long ed_flag,ed_key;
 extern Boolean registered,ed_reg,save_maps;
 extern short give_delays;
-extern pc_record_type far adven[6];
+extern std::array<pc_record_type, 6> adven;
 extern location center;
 extern HWND text_sbar,item_sbar,shop_sbar;
 extern Boolean modeless_exists[18];
@@ -77,7 +77,7 @@ char far old_str1[256];
 char far old_str2[256];
 char far one_back1[256];
 char far one_back2[256]; 
-extern word_rect_type preset_words[9];
+extern std::array<word_rect_type, 9> preset_words;
 RECT talk_area_rect = {5,5,284,420}, word_place_rect = {7,44,257,372},talk_help_rect = {254,5,272,21};
 /**/
 char title_string[50];

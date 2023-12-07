@@ -115,7 +115,7 @@ outdoor_record_type outdoors[2][2];
 current_town_type c_town;
 big_tr_type t_d;
 town_item_list	t_i;
-unsigned char out[96][96],out_e[96][96];
+unsigned char out[96][96];
 setup_save_type setup_save;
 unsigned char misc_i[64][64],sfx[64][64];
 ////unsigned char template_terrain[64][64];

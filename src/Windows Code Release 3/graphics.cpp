@@ -27,7 +27,7 @@ extern piles_of_stuff_dumping_type data_store;
 extern talking_record_type far talking;
 extern scenario_data_type far scenario;
 
-extern pc_record_type far adven[6];
+extern std::array<pc_record_type, 6> adven;
 extern big_tr_type far  t_d;
 extern outdoor_record_type far outdoors[2][2];
 extern current_town_type far c_town;
@@ -43,7 +43,7 @@ extern short which_combat_type,current_pc;
 extern Boolean monsters_going,boom_anim_active,cartoon_happening;
 extern short current_ground;
 extern short terrain_pic[256];
-extern short pc_moves[6];
+extern std::array<short, 6> pc_moves;
 extern short num_targets_left;
 extern location spell_targets[8];
 extern short display_mode;
@@ -102,7 +102,7 @@ RECT win_to_rects[6] = {{5,5,284,356},{5,383,263,420},{0,0,271,116},{0,0,271,144
 
 // 0 - title  1 - button  2 - credits  3 - base button
 RECT startup_from[4] = {{0,0,602,274},{0,274,301,322},{301,0,579,67},{301,274,341,314}}; ////
-extern RECT startup_button[6];
+extern std::array<RECT, 6> startup_button;
 	
 	RECT trim_rects[8] = {{0,0,28,5},{0,31,28,36},{0,0,5,36},{24,0,28,36},
 						{0,0,5,5},{24,0,28,5},{24,31,28,36},{0,31,5,36}};  /**/

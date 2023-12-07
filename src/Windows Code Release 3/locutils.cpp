@@ -1,4 +1,5 @@
 #include <Windows.h>
+#include <array>
 #include <cmath>
 #include "global.h"
 #include "locutils.h"
@@ -60,7 +61,7 @@ extern unsigned char far out[96][96];
 extern unsigned char far out_e[96][96];
 extern unsigned char far combat_terrain[64][64];
 extern location pc_pos[6],center;
-extern pc_record_type far adven[6];
+extern std::array<pc_record_type, 6> adven;
 extern Boolean belt_present,web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern unsigned char far map_graphic_placed[8][64]; // keeps track of what's been filled on map
 

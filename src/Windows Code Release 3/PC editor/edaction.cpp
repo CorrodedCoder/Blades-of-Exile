@@ -13,13 +13,12 @@
 
 /* Adventure globals */
 extern party_record_type far party;
-extern pc_record_type far adven[6];
+extern std::array<pc_record_type, 6> adven;
 extern outdoor_record_type far outdoors[2][2];
 extern current_town_type far c_town;
 extern big_tr_type far t_d;
 extern town_item_list far	t_i;
-extern unsigned char far out[96][96] ;
-extern unsigned char far out_e[96][96];
+extern unsigned char far out[96][96];
 extern setup_save_type far setup_save;
 extern stored_items_list_type far stored_items[3];
 extern stored_town_maps_type far maps;

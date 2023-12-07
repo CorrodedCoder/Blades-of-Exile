@@ -1,4 +1,5 @@
 #include <Windows.h>
+#include <array>
 #include <cstdio>
 
 #include "global.h"
@@ -19,10 +20,9 @@ extern scenario_data_type far scenario;
 extern short overall_mode;
 extern outdoor_record_type far outdoors[2][2];
 extern unsigned char far out[96][96];
-extern unsigned char far out_e[96][96];
 extern unsigned char far combat_terrain[64][64];
 extern short which_combat_type;
-extern pc_record_type far adven[6];
+extern std::array<pc_record_type, 6> adven;
 extern big_tr_type far  t_d;
 extern short monst_target[T_M]; // 0-5 target that pc   6 - no target  100 + x - target monster x
 extern short spell_caster, missile_firer,current_monst_tactic;

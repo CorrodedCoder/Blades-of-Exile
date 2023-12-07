@@ -14,7 +14,7 @@
 
 /* Adventure globals */
 extern party_record_type far party;
-extern pc_record_type far adven[6];
+extern std::array<pc_record_type, 6> adven;
 extern outdoor_record_type far outdoors[2][2];
 extern current_town_type far c_town;
 extern big_tr_type far t_d;

@@ -1,5 +1,5 @@
-
 #include <Windows.h>
+#include <array>
 
 #include "global.h"
 #include "party.h"
@@ -22,13 +22,12 @@ extern scenario_data_type far scenario;
 
 extern current_town_type far	c_town;
 extern unsigned char far out[96][96];
-extern unsigned char far out_e[96][96];
 extern unsigned char far combat_terrain[64][64];
 extern short current_pc,stat_window;
 extern outdoor_record_type far outdoors[2][2];
 extern location pc_pos[6],center;
 extern town_item_list far 	t_i;
-extern pc_record_type far adven[6];
+extern std::array<pc_record_type, 6> adven;
 extern big_tr_type far  t_d;
 extern Boolean registered;
 extern HWND mainPtr;

@@ -22,7 +22,7 @@ extern HWND mainPtr;
 extern Boolean gInBackground;
 extern party_record_type far	party;
 extern Boolean cat,cow,chicken,dog,sheep,monsters_going;
-extern short num_chirps_played,overall_mode;
+extern short overall_mode;
 
 short last_played = 10000;
 short error_beeps = 0;

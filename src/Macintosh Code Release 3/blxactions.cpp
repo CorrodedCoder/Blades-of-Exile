@@ -47,7 +47,6 @@ Rect item_buttons[8][6];
  // name, use, give, drip, info, sell/id
 Rect pc_buttons[6][5];
  // name, hp, sp, info, trade
-short num_chirps_played = 0;
 
 extern Rect startup_button[6];
 Rect startup_top;
@@ -95,7 +94,6 @@ short debug_ok = 0;
 short store_selling_values[8] = {0,0,0,0,0,0,0,0};
 
 extern short cen_x, cen_y, overall_mode, stat_window,give_delays,pc_moves[6];
-extern Point	to_create;
 extern Boolean in_startup_mode,All_Done,play_sounds,frills_on,spell_forced,save_maps,monsters_going;
 extern Boolean debug_on,registered,cartoon_happening,party_in_memory,in_scen_debug;
 
@@ -107,7 +105,7 @@ extern pc_record_type adven[6];
 extern outdoor_record_type outdoors[2][2];
 extern current_town_type	c_town;
 extern big_tr_type t_d;
-extern unsigned char out[96][96],out_e[96][96];
+extern unsigned char out[96][96];
 extern short which_item_page[6];
 extern short town_size[3],store_spell_target,pc_last_cast[2][6],pc_casting,store_mage,store_priest;
 extern town_item_list	t_i; // shouldn't be here
@@ -355,8 +353,6 @@ Boolean handle_action(EventRecord event)
 			return FALSE;
 		}
 		
-	num_chirps_played = 0;
-
 // First, figure out where party is
 	switch (overall_mode) {
 		case 0: case 35:

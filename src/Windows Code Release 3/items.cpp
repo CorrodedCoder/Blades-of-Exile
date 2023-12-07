@@ -1,7 +1,7 @@
 #include <Windows.h>
+#include <array>
 
 #include "global.h"
-
 #include "graphics.h"
 #include "text.h"
 #include "dlogtool.h"
@@ -29,7 +29,7 @@ extern HWND mainPtr;
 extern Boolean in_startup_mode,boom_anim_active;
 extern HINSTANCE store_hInstance;
 
-extern pc_record_type far adven[6];
+extern std::array<pc_record_type, 6> adven;
 extern big_tr_type far  t_d;
 extern location pc_pos[6];
 

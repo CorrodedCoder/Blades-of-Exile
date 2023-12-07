@@ -25,7 +25,7 @@ extern big_tr_type t_d;
 extern outdoor_record_type outdoors[2][2];
 extern current_town_type c_town;
 extern town_item_list t_i;
-extern unsigned char out[96][96],out_e[96][96],combat_terrain[64][64];
+extern unsigned char out[96][96],combat_terrain[64][64];
 extern effect_pat_type current_pat;
 extern Boolean web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern Boolean sleep_field;

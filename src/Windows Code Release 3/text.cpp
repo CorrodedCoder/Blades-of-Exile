@@ -80,27 +80,27 @@ extern current_town_type far c_town;
 extern outdoor_record_type far outdoors[2][2];
 extern town_item_list far 	t_i;
 extern unsigned char far out[96][96];
-extern pc_record_type far adven[6];
+extern std::array<pc_record_type, 6> adven;
 extern big_tr_type far  t_d;
 extern short ulx,uly;
 extern Boolean play_sounds,suppress_stat_screen,cartoon_happening;
-extern RECT item_buttons[8][6];
+extern std::array< std::array<RECT, 6>, 8> item_buttons;
  // name, use, give, drip, info, sell/id
-extern RECT pc_buttons[6][5];
+extern std::array< std::array<RECT, 5>, 6> pc_buttons;
  // name, hp, sp, info, trade
-extern Boolean item_area_button_active[8][6];
-extern Boolean pc_area_button_active[6][5];
-extern RECT item_screen_button_rects[9];
+extern std::array< std::array<Boolean, 6>, 8> item_area_button_active;
+extern std::array< std::array<Boolean, 5>, 6> pc_area_button_active;
+extern std::array<RECT, 9> item_screen_button_rects;
 extern short spec_item_array[60];
 extern short abil_chart[200],store_anim_type;
 // combat globals
-extern short item_bottom_button_active[9];
+extern std::array<short, 9> item_bottom_button_active;
 
 extern location pc_pos[6];
 extern unsigned char far combat_terrain[64][64];
 extern short current_pc;
 extern short shop_identify_cost;
-extern short store_selling_values[8];
+extern std::array<short, 8> store_selling_values;
 extern short combat_posing_monster, current_working_monster; // 0-5 PC 100 + x - monster x
 extern Boolean supressing_some_spaces;
 extern location ok_space[4];

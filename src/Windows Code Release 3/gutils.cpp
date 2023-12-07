@@ -1,5 +1,5 @@
-
 #include <Windows.h>
+#include <array>
 
 #include "global.h"
 #include "gutils.h"
@@ -26,13 +26,12 @@ extern piles_of_stuff_dumping_type2 data_store2;
 extern talking_record_type far talking;
 extern scenario_data_type far scenario;
 
-extern pc_record_type far adven[6];
+extern std::array<pc_record_type, 6> adven;
 extern big_tr_type far  t_d;
 extern outdoor_record_type far outdoors[2][2];
 extern current_town_type far c_town;
 extern town_item_list far  t_i;
 extern unsigned char far out[96][96];
-extern unsigned char far out_e[96][96];
 extern unsigned char far combat_terrain[64][64];
 extern effect_pat_type current_pat;
 extern Boolean web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
@@ -56,7 +55,6 @@ extern location pc_pos[6],center;
 extern short which_combat_type,pc_dir[6],current_pc;
 extern Boolean monsters_going,anim_onscreen;
 
-extern short pc_moves[6];
 extern short num_targets_left;
 extern location spell_targets[8];
 extern short display_mode;

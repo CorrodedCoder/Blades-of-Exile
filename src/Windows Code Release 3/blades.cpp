@@ -22,6 +22,7 @@ Blades of Exile Game/Scenario Editor/Character Editor
 // Will this horror never end?
 
 #include <Windows.h>
+#include <array>
 #include <format>
 #include <exception>
 #include <cassert>
@@ -94,7 +95,7 @@ Boolean debug_on = FALSE,give_intro_hint = TRUE;
 
 /* Adventure globals */
 party_record_type far party;
-pc_record_type far adven[6];
+std::array<pc_record_type, 6> adven;
 outdoor_record_type far outdoors[2][2];
 current_town_type far c_town;
 big_tr_type far t_d;

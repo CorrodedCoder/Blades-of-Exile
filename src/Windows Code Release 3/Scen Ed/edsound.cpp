@@ -18,7 +18,7 @@ extern Boolean play_sounds,in_startup_mode;
 extern HWND mainPtr;
 extern Boolean gInBackground;
 
-extern short num_chirps_played,overall_mode;
+extern short overall_mode;
 
 short last_played = 10000;
 short error_beeps = 0;

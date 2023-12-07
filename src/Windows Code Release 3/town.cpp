@@ -1,6 +1,5 @@
-
-
 #include <Windows.h>
+#include <array>
 #include <cstdio>
 
 #include "global.h"
@@ -28,7 +27,7 @@
 extern HBITMAP mixed_gworld,spec_scen_g;
 extern current_town_type far c_town;
 extern party_record_type far	party;
-extern pc_record_type far adven[6];
+extern std::array<pc_record_type, 6> adven;
 extern town_item_list far  t_i;
 extern short stat_window,overall_mode,store_spell_target,which_combat_type,current_pc,combat_active_pc;
 extern location center;
@@ -60,14 +59,15 @@ extern short town_type;
 extern setup_save_type far setup_save;
 extern Boolean web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern location pc_pos[6];
-extern short last_attacked[6],pc_dir[6],pc_parry[6],pc_moves[6];
+extern short last_attacked[6], pc_dir[6], pc_parry[6];
+extern std::array<short, 6> pc_moves;
 
 extern location hor_vert_place[14];
 extern location diag_place[14];
 extern short far terrain_pic[256];
 extern char terrain_blocked[256];
 extern location far golem_m_locs[16];
-extern short special_queue[20];
+extern std::array< short, 20 > special_queue;
 
 extern HPALETTE hpal;
 extern far PALETTEENTRY ape[256];

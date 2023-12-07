@@ -24,7 +24,7 @@
 
 HWND	the_dialog;
 extern party_record_type far	party;
-extern pc_record_type far adven[6];
+extern std::array<pc_record_type, 6> adven;
 extern outdoor_record_type far outdoors[2][2];
 extern unsigned char far out[96][96];
 extern unsigned char far out_e[96][96];

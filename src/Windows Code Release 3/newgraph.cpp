@@ -52,7 +52,7 @@ extern party_record_type far party;
 extern talking_record_type far talking;
 extern scenario_data_type far scenario;
 
-extern pc_record_type far adven[6];
+extern std::array<pc_record_type, 6> adven;
 extern RECT sbar_rect,item_sbar_rect,shop_sbar_rect;
 extern HWND text_sbar,item_sbar,shop_sbar;
 extern location center;
@@ -82,7 +82,7 @@ extern char far old_str1[256];
 extern char far old_str2[256];
 extern char far one_back1[256];
 extern char far one_back2[256];
-extern word_rect_type far preset_words[9];
+extern std::array<word_rect_type, 9> preset_words;
 extern RECT talk_area_rect, word_place_rect,talk_help_rect;
 extern char title_string[50];
 extern unsigned char store_monst_type;

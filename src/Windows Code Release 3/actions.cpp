@@ -27,65 +27,69 @@
 #include "dlogtool.h"
 #include "graphutl.h"
 
-static RECT bottom_buttons[7];
-static RECT town_buttons[10];
-static RECT combat_buttons[9];
-static const RECT world_screen = { 23, 23, 274,346 };
-RECT item_screen_button_rects[9] = { {11,126,28,140},{40,126,57,140},{69,126,86,140},{98,126,115,140},
-{127,126,144,140},{156,126,173,140},{176,126,211,141},{213,126,248,141},{251,127,267,139} };
+static std::array<RECT, 7> bottom_buttons;
+static std::array<RECT, 10> town_buttons;
+static std::array<RECT, 9> combat_buttons;
+static const RECT world_screen{ 23, 23, 274,346 };
+std::array<RECT, 9> item_screen_button_rects{ {
+	{11,126,28,140}, {40,126,57,140}, {69,126,86,140},
+	{98,126,115,140}, {127,126,144,140}, {156,126,173,140},
+	{176,126,211,141},{213,126,248,141},{251,127,267,139}
+	} };
 
-static const RECT border_rect[4] = { {5, 5, 283, 15}, {5, 5, 15, 355},
-						{5, 345, 283, 355}, {273, 5, 283, 355} };
-static const RECT medium_buttons[4] = { {190, 383,225,401}, {190, 402, 225, 420},
-							{227, 383, 263, 401}, {227, 402, 263,420} }; ;
+static const auto border_rect{ std::to_array<RECT>({
+	{5, 5, 283, 15}, {5, 5, 15, 355}, {5, 345, 283, 355}, {273, 5, 283, 355}
+	}) };
+static const auto medium_buttons{ std::to_array<RECT>({
+	{190, 383,225,401}, {190, 402, 225, 420}, {227, 383, 263, 401}, {227, 402, 263,420}
+	}) };
 
-RECT item_buttons[8][6];
+std::array< std::array<RECT, 6>, 8> item_buttons;
  // name, use, give, drip, info, sell/id
-RECT pc_buttons[6][5];
+std::array< std::array<RECT, 5>, 6> pc_buttons;
  // name, hp, sp, info, trade
-short num_chirps_played = 0;
 RECT startup_top;
-short special_queue[20];
+std::array< short, 20 > special_queue;
 Boolean end_scenario = FALSE;
 
-extern RECT startup_button[6];
+extern std::array<RECT, 6> startup_button;
 
 // For menu spell casting, some info needs to be stored up here.
-extern const short refer_mage[62] = {0,2,1,1,2,2,0,2,2,0, 2,2,2,2,1,2,2,2,2,2, 0,1,2,0,2,2,3,3,2,1,
+extern const std::array<short, 62> refer_mage{0,2,1,1,2,2,0,2,2,0, 2,2,2,2,1,2,2,2,2,2, 0,1,2,0,2,2,3,3,2,1,
 							2,2,1,0,2,2,3,2, 0,1,2,0,2,3,2,3, 2,1,2,3,2,2,2,0, 1,1,1,0,3,2,2,3};
-extern const short refer_priest[62] = {1,0,0,2,0,0,0,0,0,2, 1,0,2,0,2,2,0,2,3,0, 0,0,2,0,0,0,2,0,0,3,
+extern const std::array<short, 62> refer_priest{1,0,0,2,0,0,0,0,0,2, 1,0,2,0,2,2,0,2,3,0, 0,0,2,0,0,0,2,0,0,3,
 							0,1,2,0,3,0,0,0, 1,0,0,2,0,3,0,2, 0,0,0,0,2,1,1,1, 0,2,0,2,1,2,0,0};
 	// 0 - refer  1 - do in combat immed.  2 - need targeting  3 - need fancy targeting
-extern const short mage_need_select[62] = {0,0,1,1,0,0,0,0,0,0, 0,0,0,0,1,0,0,0,0,0, 0,1,0,0,0,0,0,0,0,1,
+extern const std::array<short, 62> mage_need_select{0,0,1,1,0,0,0,0,0,0, 0,0,0,0,1,0,0,0,0,0, 0,1,0,0,0,0,0,0,0,1,
 						0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,1,0,0,0,0};
-extern const short priest_need_select[62] = {1,1,1,0,0,1,1,0,0,0, 1,1,0,0,0,0,0,0,0,1, 1,0,0,0,1,0,0,1,1,0,
+extern const std::array<short, 62> priest_need_select{1,1,1,0,0,1,1,0,0,0, 1,1,0,0,0,0,0,0,0,1, 1,0,0,0,1,0,0,1,1,0,
 						0,0,0,1,0,1,1,0, 0,1,2,0,0,0,0,0, 0,1,0,2,0,0,0,0, 0,0,2,0,0,0,0,0};
 // 0 - no select  1 - active only  2 - any existing
 
-extern word_rect_type preset_words[9] = {{"Look",{4,366,54,389}},{"Name",{70,366,130,389}},{"Job",{136,366,186,389}},
-								{"Buy",{4,389,54,412}},{"Sell",{70,389,120,412}},{"Record",{121,389,186,412}},
-								{"Done",{210,389,270,412}},{"Go Back",{190,366,270,389}},
-								{"Ask About...",{4,343,134,366}}};
+extern std::array<word_rect_type, 9> preset_words{ {
+	{"Look",{4,366,54,389}},{"Name",{70,366,130,389}},{"Job",{136,366,186,389}},
+	{"Buy",{4,389,54,412}},{"Sell",{70,389,120,412}},{"Record",{121,389,186,412}},
+	{"Done",{210,389,270,412}},{"Go Back",{190,366,270,389}},{"Ask About...",{4,343,134,366}}
+	} };
 
-Boolean item_area_button_active[8][6];
-Boolean pc_area_button_active[6][5];
-short item_bottom_button_active[9] = {0,0,0,0,0, 0,1,1,1};
+std::array< std::array<Boolean, 6>, 8> item_area_button_active;
+std::array< std::array<Boolean, 5>, 6> pc_area_button_active;
+std::array<short, 9> item_bottom_button_active{0,0,0,0,0, 0,1,1,1};
 
-RECT pc_help_button,pc_area_rect,item_area_rect;
+static RECT pc_help_button,pc_area_rect,item_area_rect;
 
-short current_terrain_type = 0,num_out_moves = 0;
-short door_pc,store_drop_item;
-short current_switch = 6;
+static short num_out_moves = 0;
+static short door_pc,store_drop_item;
+static short current_switch = 6;
 out_wandering_type store_wandering_special;
-long dummy;
 short store_shop_type;
 
-short debug_ok = 0;
-short store_selling_values[8] = {0,0,0,0,0,0,0,0};
+static short debug_ok = 0;
+std::array<short, 8> store_selling_values{ {0,0,0,0,0,0,0,0} };
 
-extern short cen_x, cen_y, overall_mode, stat_window,give_delays,pc_moves[6];
-extern POINT	to_create;
-extern Boolean in_startup_mode,All_Done,play_sounds,frills_on,spell_forced,save_maps,monsters_going;
+extern short overall_mode, stat_window;
+extern std::array<short, 6> pc_moves;
+extern Boolean in_startup_mode,All_Done,play_sounds,spell_forced;
 extern Boolean debug_on,registered,cartoon_happening,in_scen_debug,party_in_memory;
 
 // game info globals
@@ -95,12 +99,11 @@ extern party_record_type far party;
 extern talking_record_type far talking;
 extern scenario_data_type far scenario;
 
-extern pc_record_type far adven[6];
+extern std::array<pc_record_type, 6> adven;
 extern outdoor_record_type far outdoors[2][2];
 extern current_town_type far	c_town;
 extern big_tr_type far t_d;
 extern unsigned char far out[96][96];
-extern unsigned char far out_e[96][96];
 extern short which_item_page[6],current_ground;
 extern short town_size[3],store_spell_target,pc_last_cast[2][6],pc_casting,store_mage,store_priest;
 extern town_item_list far t_i; // shouldn't be here
@@ -360,8 +363,6 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 			return FALSE;
 		}
 		
-	num_chirps_played = 0;
-
 // First, figure out where party is
 	switch (overall_mode) {
 		case 0: case 35:
