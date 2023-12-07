@@ -79,7 +79,7 @@ std::array<short, 9> item_bottom_button_active{0,0,0,0,0, 0,1,1,1};
 static RECT pc_help_button,pc_area_rect,item_area_rect;
 
 static short num_out_moves = 0;
-static short door_pc,store_drop_item;
+static short store_drop_item;
 static short current_switch = 6;
 out_wandering_type store_wandering_special;
 short store_shop_type;
