@@ -26,6 +26,8 @@ include(cmake/PreventInSourceBuilds.cmake)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
 # set(BOE_WARNINGS_MAX ON)
+# set(BOE_DEBUG_SYMBOLS ON)
+# set(BOE_ADDRESS_SANITIZER ON)
 
 if (MSVC)
 	# Disable complaints about not using MS's "secure" versions of CRT functions,
@@ -62,6 +64,16 @@ if (MSVC)
 				/wd4554
 				/wd4804
 			)
+		endif()
+
+		if(BOE_DEBUG_SYMBOLS)
+			# Enable debug symbols even in release builds
+			set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi")
+			set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /DEBUG")
+		endif()
+
+		if(BOE_ADDRESS_SANITIZER)
+			add_compile_options(/fsanitize=address)
 		endif()
 	elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 		if(BOE_WARNINGS_MAX)
