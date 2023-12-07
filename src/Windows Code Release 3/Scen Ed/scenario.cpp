@@ -850,7 +850,7 @@ item_record_type convert_item (short_item_record_type s_item) {
 void init_scenario()
 {
 	short i;
-	RECT dummy_rect = {0,0,0,0};
+	BoeRect dummy_rect = {0,0,0,0};
 	char temp_str[256];
 	boat_record_type null_boat = {{0,0},{0,0},{0,0},-1,FALSE,FALSE};
 	horse_record_type null_horse = {{0,0},{0,0},{0,0},-1,FALSE,FALSE};

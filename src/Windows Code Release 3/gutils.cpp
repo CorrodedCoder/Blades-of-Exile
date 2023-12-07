@@ -1017,7 +1017,7 @@ char add_trim_to_array(location where,unsigned char ter_type)
 	return to_return;
 }
 
-Boolean pt_in_rect(location loc,RECT rect)
+Boolean pt_in_rect(location loc,BoeRect rect)
 {
 	if ((loc.x >= rect.left) && (loc.x <= rect.right) && (loc.y >= rect.top) && (loc.y <= rect.bottom))
 		return TRUE;

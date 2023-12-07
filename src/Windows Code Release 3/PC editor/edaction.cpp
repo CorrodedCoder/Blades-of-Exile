@@ -3,7 +3,7 @@
 #include <cstdio>
 
 #include "graphics.h"
-#include "global.h"
+#include "../global.h"
 #include "editors.h"
 #include "edfileio.h" 
 #include "edaction.h" 

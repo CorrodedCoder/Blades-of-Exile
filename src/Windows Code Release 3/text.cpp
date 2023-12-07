@@ -802,23 +802,20 @@ short get_tnl(pc_record_type *pc)
 void draw_pc_effects(short pc,HDC dest_dc)
 //short pc; // 10 + x -> draw for pc x, but on spell dialog  
 {
-	RECT source_rects[18] = {{55,0,67,12},{55,12,67,24},{55,24,67,36},
-							{67,0,79,12},{67,12,79,24},{67,24,79,36},
-							{79,0,91,12},{79,12,91,24},{79,24,91,36},
-							{91,0,103,12},{91,12,103,24},{91,24,103,36},
-							{103,0,115,12},{103,12,115,24},{103,24,115,36},
-							{115,0,127,12},{115,12,127,24},{115,24,127,36}};
-	RECT dest_rect = {18,15,30,27},dlog_dest_rect = {66,354,78,366};//rects altered below
+	const RECT source_rects[18] = {
+		BOE_INIT_RECT(55,0,67,12), BOE_INIT_RECT(55,12,67,24), BOE_INIT_RECT(55,24,67,36),
+		BOE_INIT_RECT(67,0,79,12), BOE_INIT_RECT(67,12,79,24), BOE_INIT_RECT(67,24,79,36),
+		BOE_INIT_RECT(79,0,91,12), BOE_INIT_RECT(79,12,91,24), BOE_INIT_RECT(79,24,91,36),
+		BOE_INIT_RECT(91,0,103,12), BOE_INIT_RECT(91,12,103,24), BOE_INIT_RECT(91,24,103,36),
+		BOE_INIT_RECT(103,0,115,12), BOE_INIT_RECT(103,12,115,24), BOE_INIT_RECT(103,24,115,36),
+		BOE_INIT_RECT(115,0,127,12), BOE_INIT_RECT(115,12,127,24), BOE_INIT_RECT(115,24,127,36)
+	};
+	RECT dest_rect = BOE_INIT_RECT(18, 15, 30, 27), dlog_dest_rect = BOE_INIT_RECT(66, 354, 78, 366);
 	short right_limit = 250;
 	short dest = 0; // 0 - in gworld  2 - on dialog
-	short name_width,i,mode = 1;
+	short name_width,mode = 1;
 	HBITMAP dest_bmp;
 
-	for (i = 0; i < 18; i++)
-		alter_rect(&source_rects[i]);
-	alter_rect(&dest_rect);
-	alter_rect(&dlog_dest_rect);
-	
 	if (pc >= 10) {
 		pc -= 10;
 		right_limit = 490;

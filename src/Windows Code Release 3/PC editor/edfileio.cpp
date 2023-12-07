@@ -5,7 +5,7 @@
 #include <cstring>
 #include <cstdio>
 
-#include "global.h"
+#include "../global.h"
 #include "edfileio.h"
 #include "graphics.h"
 #include "edsound.h"
