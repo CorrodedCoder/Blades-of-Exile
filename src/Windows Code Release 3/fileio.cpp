@@ -86,13 +86,6 @@ static short FSRead(HFILE file, long* len, char* buffer);
 static short FSClose(HFILE file);
 static short SetFPos(HFILE file, short mode, long len);
 
-static void port_talk_nodes();
-static void port_town();
-static void port_t_d();
-static void port_scenario();
-static void port_item_list();
-static void port_out(outdoor_record_type* out);
-
 void save_outdoor_maps();
 void add_outdoor_maps();
 
@@ -772,8 +765,11 @@ void load_town(short town_num,short mode,short extra,char *str)
 
 	if (mode == 0) {
 		error = FSRead(file_id, &len , (char *) &c_town.town);
-		port_town();
+		if (cur_scen_is_win != TRUE)
+		{
+			endian_adjust(c_town.town);
 		}
+	}
 		else error = FSRead(file_id, &len , (char *) &dummy_town);
 	if (error != 0) {FSClose(file_id);oops_error(36);}
 
@@ -782,8 +778,11 @@ void load_town(short town_num,short mode,short extra,char *str)
 			len =  sizeof(big_tr_type);
 			if (mode == 0) {
 				FSRead(file_id, &len, (char *) &t_d);
-				port_t_d();
+				if (cur_scen_is_win != TRUE)
+				{
+					endian_adjust(t_d);
 				}
+			}
 				else error = SetFPos (file_id, 3, len);
 
 			break;
@@ -813,8 +812,11 @@ void load_town(short town_num,short mode,short extra,char *str)
 					for (i = 40; i < 60; i++) {
 						t_d.creatures[i].number = 0;
 						}
-					port_t_d();
+					if (cur_scen_is_win != TRUE)
+					{
+						endian_adjust(t_d);
 					}
+				}
 					else error = SetFPos (file_id, 3, len);
 
 			break;
@@ -837,8 +839,11 @@ void load_town(short town_num,short mode,short extra,char *str)
 				for (i = 30; i < 60; i++) {
 					t_d.creatures[i].number = 0;
 					}
-				port_t_d();
+				if (cur_scen_is_win != TRUE)
+				{
+					endian_adjust(t_d);
 				}
+			}
 				else error = SetFPos (file_id, 3, len);
 			break;
 		}
@@ -870,7 +875,10 @@ void load_town(short town_num,short mode,short extra,char *str)
 	if (mode < 2) {
 		len = sizeof(talking_record_type);
 		error = FSRead(file_id, &len , (char *) &talking);
-		port_talk_nodes();
+		if (cur_scen_is_win != TRUE)
+		{
+			endian_adjust(talking);
+		}
 		if (error != 0) {FSClose(file_id);oops_error(37);}
 	
 		for (i = 0; i < 170; i++) {
@@ -1280,7 +1288,10 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 	len = sizeof(outdoor_record_type);
 	if (mode == 0) {
 		error = FSRead(file_id, &len, (char *) &outdoors[targ_x][targ_y]);
-		port_out(&outdoors[targ_x][targ_y]);
+		if (cur_scen_is_win != TRUE)
+		{
+			endian_adjust(outdoors[targ_x][targ_y]);
+		}
 		if (error != 0) {FSClose(file_id);oops_error(33);}
 		}
 		else error = FSRead(file_id, &len, (char *) &dummy_out);
@@ -1476,8 +1487,11 @@ Boolean load_scenario()
 	  && (scenario.flag4 == 40)) {
 	  	file_ok = TRUE;
 		cur_scen_is_win = FALSE;
-		port_scenario();
+		if (cur_scen_is_win != TRUE)
+		{
+			endian_adjust(scenario);
 		}
+	}
 	if ((scenario.flag1 == 20) && (scenario.flag2 == 40)
 	 && (scenario.flag3 == 60)
 	  && (scenario.flag4 == 80)) {
@@ -1493,7 +1507,10 @@ Boolean load_scenario()
 	if ((error = FSRead(file_id, &len, (char *) &(data_store2.scen_item_list))) != 0){
 		FSClose(file_id); oops_error(30); return FALSE;
 		}
-	port_item_list();
+	if (cur_scen_is_win != TRUE)
+	{
+		endian_adjust(data_store2.scen_item_list);
+	}
 	for (i = 0; i < 270; i++) {
 		len = (long) (scenario.scen_str_len[i]);
 		if (i < 160) {
@@ -1844,56 +1861,6 @@ void reg_alert()
 }
 
  //	MessageBox(mainPtr,"A","Debug note",MB_OK | MB_ICONEXCLAMATION);
-
-static void port_talk_nodes()
-{
-	if (cur_scen_is_win == TRUE)
-		return;
-
-	endian_adjust(talking);
-}
-
-static void port_town()
-{
-	if (cur_scen_is_win == TRUE)
-		return;
-
-	endian_adjust(c_town.town);
-}
-
-
-static void port_t_d()
-{
-	if (cur_scen_is_win == TRUE)
-		return;
-
-	endian_adjust(t_d);
-}
-
-static void port_scenario()
-{
-	if (cur_scen_is_win == TRUE)
-		return;
-
-	endian_adjust(scenario);
-}
-
-
-static void port_item_list()
-{
-	if (cur_scen_is_win == TRUE)
-		return;
-
-	endian_adjust(data_store2.scen_item_list);
-}
-
-static void port_out(outdoor_record_type *out)
-{
-	if (cur_scen_is_win == TRUE)
-		return;
-
-	endian_adjust(*out);
-}
 
 static short FSWrite(HFILE file,long *len,char *buffer)
 {
