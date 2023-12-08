@@ -3,18 +3,14 @@
 #include <cstdio>
 
 #include "global.h"
-#include "newgraph.h"
 #include "graphics.h"
 #include "fileio.h"
 #include "actions.h"
 #include "dlgutils.h"
-#include "text.h"
-#include "gutils.h"
 #include "items.h"
 #include "party.h"
 #include "exlsound.h"
 #include "startup.h"
-#include "exlsound.h"
 
 extern party_record_type party;
 extern scen_header_type scen_headers[25];

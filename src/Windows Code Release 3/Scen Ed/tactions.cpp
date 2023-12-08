@@ -1670,30 +1670,6 @@ for (i = 0; i < ((editing_town == TRUE) ? max_dim[town_type] : 48); i++)
 		}
 }
 
-void swap_val(unsigned char *val,short a,short b)
-{
-	if (*val == a)
-		*val = b;
-		else if (*val == b)
-			*val = a;
-}
-void change_val_4 (unsigned char *val,short a,short b,short c,short d)
-{
-	if (*val == a)
-		*val = b;
-		else if (*val == b)
-			*val = c;
-			else if (*val == c)
-			*val = d;
-			else if (*val == d)
-				*val = a;
-}
-void change_val (unsigned char *val,short a,short b)
-{
-	if (*val == a)
-		*val = b;
-}
-
 void frill_up_terrain()
 {
 	short i,j;

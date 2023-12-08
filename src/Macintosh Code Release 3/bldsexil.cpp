@@ -239,8 +239,6 @@ shop_sbar_UPP = NewControlActionProc(shop_sbar_action);
 	if (sys_7_avail == TRUE) {
 		set_up_apple_events();
 		}
-	//import_template_terrain();
-	//import_anim_terrain(0);
 	plop_fancy_startup();
 
 	party.stuff_done[306][2] = 0;

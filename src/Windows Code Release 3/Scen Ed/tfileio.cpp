@@ -56,7 +56,15 @@ OPENFILENAME ofn;
 	OFSTRUCT store;
 Boolean suppress_load_file_name = FALSE;
 
-void print_write_position ();
+static void port_talk_nodes();
+static void port_town();
+static void port_t_d();
+static void port_scenario();
+static void port_item_list();
+static void port_out(outdoor_record_type* out);
+static void port_dummy_talk_nodes();
+static void port_dummy_t_d(short size, char* buffer);
+static void port_dummy_town();
 
 static const std::array szFilter{ "Blades of Exile Scenarios (*.EXS)","*.exs",
 		"Text Files (*.TXT)","*.txt",
@@ -1603,7 +1611,7 @@ void scen_text_dump()
 	_lclose(data_dump_file_id);
 
 }
-void port_talk_nodes()
+static void port_talk_nodes()
 {
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -1611,7 +1619,7 @@ void port_talk_nodes()
 	endian_adjust(talking);
 }
 
-void port_town()
+static void port_town()
 {
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -1619,7 +1627,7 @@ void port_town()
 	endian_adjust(town);
 }
 
-void port_dummy_town()
+static void port_dummy_town()
 {
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -1627,7 +1635,7 @@ void port_dummy_town()
 	endian_adjust(*dummy_town_ptr);
 }
 
-void port_dummy_t_d(short size,char *buffer)
+static void port_dummy_t_d(short size,char *buffer)
 {
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -1645,7 +1653,7 @@ void port_dummy_t_d(short size,char *buffer)
 		}
 }
 
-void port_dummy_talk_nodes()
+static void port_dummy_talk_nodes()
 {
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -1653,7 +1661,7 @@ void port_dummy_talk_nodes()
 	endian_adjust(*dummy_talk_ptr);
 }
 
-void port_t_d()
+static void port_t_d()
 {
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -1661,7 +1669,7 @@ void port_t_d()
 	endian_adjust(t_d);
 }
 
-void port_scenario()
+static void port_scenario()
 {
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -1670,7 +1678,7 @@ void port_scenario()
 }
 
 
-void port_item_list()
+static void port_item_list()
 {
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -1678,7 +1686,7 @@ void port_item_list()
 	endian_adjust(scen_item_list);
 }
 
-void port_out(outdoor_record_type *out)
+static void port_out(outdoor_record_type *out)
 {
 	if (cur_scen_is_win == TRUE)
 		return;

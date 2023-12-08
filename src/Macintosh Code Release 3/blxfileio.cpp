@@ -768,32 +768,6 @@ void set_terrain(location l, unsigned char terrain_type)
 }
 
 
-void swap_val(unsigned char *val,short a,short b)
-{
-	if (*val == a)
-		*val = b;
-		else if (*val == b)
-			*val = a;
-}
-void change_val_4 (unsigned char *val,short a,short b,short c,short d)
-{
-	if (*val == a)
-		*val = b;
-		else if (*val == b)
-			*val = c;
-			else if (*val == c)
-			*val = d;
-			else if (*val == d)
-				*val = a;
-}
-void change_val (unsigned char *val,short a,short b)
-{
-	if (*val == a)
-		*val = b;
-}
-
-
-
 void build_scen_file_name (Str255 file_n)
 {
 	sprintf(file_n,":Blades of Exile Scenarios:%s",party.scen_name);

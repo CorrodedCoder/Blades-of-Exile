@@ -81,8 +81,13 @@ typedef struct {
 Boolean loaded_yet = FALSE, got_nagged = FALSE,ae_loading = FALSE;
  Boolean cur_scen_is_win = TRUE;
 
+static void port_talk_nodes();
+static void port_town();
+static void port_t_d();
+static void port_scenario();
+static void port_item_list();
+static void port_out(outdoor_record_type* out);
 
-void print_write_position ();
 void save_outdoor_maps();
 void add_outdoor_maps();
 
@@ -678,30 +683,6 @@ for (i = 0; i < town_size[town_type]; i++)
 		  && ((hollow == TRUE) || (get_ran(1,1,20) <= probability)))
 			set_terrain(l,terrain_type);
 		}
-}
-
-void swap_val(unsigned char *val,short a,short b)
-{
-	if (*val == a)
-		*val = b;
-		else if (*val == b)
-			*val = a;
-}
-void change_val_4 (unsigned char *val,short a,short b,short c,short d)
-{
-	if (*val == a)
-		*val = b;
-		else if (*val == b)
-			*val = c;
-			else if (*val == c)
-			*val = d;
-			else if (*val == d)
-				*val = a;
-}
-void change_val (unsigned char *val,short a,short b)
-{
-	if (*val == a)
-		*val = b;
 }
 
 void build_scen_file_name (char *file_n)
@@ -1742,7 +1723,7 @@ short out_s(short flag)
 	return (short) k;
 }
 
-short str_size_1(short flag)
+static short str_size_1(short flag)
 {
 	long k = 0;
 		
@@ -1762,7 +1743,7 @@ short str_size_1(short flag)
 	return (short) k;
 }
 
-short str_size_2(short flag)
+static short str_size_2(short flag)
 {
 	long k = 0;
 		
@@ -1781,7 +1762,7 @@ short str_size_2(short flag)
 	return (short) k;
 }
 
-short str_size_3(short flag)
+static short str_size_3(short flag)
 {
 	long k = 0;
 		
@@ -1859,7 +1840,7 @@ void reg_alert()
 
  //	MessageBox(mainPtr,"A","Debug note",MB_OK | MB_ICONEXCLAMATION);
 
-void port_talk_nodes()
+static void port_talk_nodes()
 {
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -1867,7 +1848,7 @@ void port_talk_nodes()
 	endian_adjust(talking);
 }
 
-void port_town()
+static void port_town()
 {
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -1876,7 +1857,7 @@ void port_town()
 }
 
 
-void port_t_d()
+static void port_t_d()
 {
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -1884,7 +1865,7 @@ void port_t_d()
 	endian_adjust(t_d);
 }
 
-void port_scenario()
+static void port_scenario()
 {
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -1893,7 +1874,7 @@ void port_scenario()
 }
 
 
-void port_item_list()
+static void port_item_list()
 {
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -1901,7 +1882,7 @@ void port_item_list()
 	endian_adjust(data_store2.scen_item_list);
 }
 
-void port_out(outdoor_record_type *out)
+static void port_out(outdoor_record_type *out)
 {
 	if (cur_scen_is_win == TRUE)
 		return;
