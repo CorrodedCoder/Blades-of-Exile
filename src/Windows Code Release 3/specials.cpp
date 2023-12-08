@@ -22,7 +22,6 @@
 #include "newgraph.h"
 #include "dlgutils.h"
 
-extern HWND mainPtr;
 extern short overall_mode;
 extern party_record_type party;
 extern piles_of_stuff_dumping_type data_store;

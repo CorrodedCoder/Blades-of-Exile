@@ -44,7 +44,6 @@ extern short ulx,uly;
 extern RECT	windRect;
 extern long anim_ticks;
 extern HBRUSH bg[14];
-extern HWND mainPtr;
 extern short dungeon_font_num,geneva_font_num,overall_mode,town_type,which_combat_type;
 extern Boolean play_sounds,boom_anim_active,cartoon_happening,in_startup_mode;
 extern HBITMAP fields_gworld,mixed_gworld,dlg_buttons_gworld,terrain_screen_gworld,missiles_gworld;

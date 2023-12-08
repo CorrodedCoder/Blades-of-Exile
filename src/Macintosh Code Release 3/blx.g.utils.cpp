@@ -13,7 +13,6 @@
 #include "dlogtool.h"
 #include "Exile.sound.h"
 
-extern WindowPtr	mainPtr;
 extern Rect	windRect;
 extern short stat_window,give_delays,overall_mode;
 extern short current_spell_range,town_type;

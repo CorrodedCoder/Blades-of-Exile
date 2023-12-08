@@ -27,7 +27,6 @@ extern town_item_list	t_i;
 extern pc_record_type adven[6];
 extern big_tr_type t_d;
 extern Boolean registered;
-extern WindowPtr mainPtr;
 extern scenario_data_type scenario;
 
 Str255 answer;

@@ -31,7 +31,6 @@ extern party_record_type party;
 extern pc_record_type adven[6];
 extern Boolean in_startup_mode,registered,play_sounds,party_in_memory;
 extern long register_flag;
-extern WindowPtr	mainPtr;	
 extern Point ul;
 extern piles_of_stuff_dumping_type *data_store;
 extern scen_header_type scen_headers[25];

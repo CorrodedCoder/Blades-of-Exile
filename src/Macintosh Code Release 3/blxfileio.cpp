@@ -40,7 +40,6 @@ extern current_town_type	c_town;
 extern town_item_list	t_i;
 extern location center;
 extern long register_flag;
-extern WindowPtr mainPtr;
 extern stored_items_list_type stored_items[3];
 extern stored_town_maps_type maps;
 extern stored_outdoor_maps_type o_maps;

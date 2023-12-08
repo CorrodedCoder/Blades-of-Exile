@@ -35,7 +35,6 @@ extern short current_pc;
 extern short pc_last_cast[2][6];
 extern short combat_active_pc;
 extern Boolean monsters_going,spell_forced,in_scen_debug;
-extern HWND mainPtr;
 extern short store_mage, store_priest;
 extern short store_mage_lev, store_priest_lev;
 extern short store_spell_target,pc_casting,current_spell_range;

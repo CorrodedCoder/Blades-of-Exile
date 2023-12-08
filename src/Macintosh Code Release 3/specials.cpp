@@ -23,7 +23,6 @@
 #include "newgraph.h"
 #include "dialogutils.h"
 
-extern WindowPtr mainPtr;
 extern short overall_mode;
 extern party_record_type party;
 extern current_town_type	c_town;
