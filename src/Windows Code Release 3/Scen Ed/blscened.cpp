@@ -59,7 +59,7 @@ Boolean All_Done = FALSE;
 short had_text_freeze = 0,num_fonts;
 Boolean in_startup_mode = TRUE,app_started_normally = FALSE,file_in_mem = FALSE,mouse_button_held = FALSE;
 Boolean play_sounds = TRUE,first_startup_update = TRUE;
-Boolean diff_depth_ok = FALSE,first_sound_played = FALSE,spell_forced = FALSE,startup_loaded = FALSE;
+Boolean diff_depth_ok = FALSE,first_sound_played = FALSE,spell_forced = FALSE;
 Boolean save_maps = FALSE,first_time = FALSE,palette_suspect = FALSE,window_in_front = TRUE;
 Boolean change_made = FALSE;
 

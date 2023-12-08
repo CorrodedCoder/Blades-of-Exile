@@ -19,7 +19,7 @@ extern HWND	mainPtr;
 extern RECT	windRect;
 extern short stat_window,give_delays,overall_mode;
 extern short current_spell_range,town_type;
-extern Boolean in_startup_mode,anim_onscreen,registered,play_sounds,frills_on,startup_loaded,cartoon_happening;
+extern Boolean in_startup_mode,anim_onscreen,registered,play_sounds,frills_on,cartoon_happening;
 extern short town_size[3];
 extern party_record_type party;
 extern piles_of_stuff_dumping_type2 data_store2;
