@@ -4,6 +4,7 @@
 
 #include <format>
 #include <vector>
+#include <bit>
 
 template< typename T >
 void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, T t)
@@ -44,14 +45,14 @@ void dump_to<short>(std::ostream_iterator<char>& strm, std::string_view parent, 
 	std::format_to(strm, "{}.{}={} {:x}\n", parent, item, t, t);
 }
 
-void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const location& t)
+static void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const location& t)
 {
 	const auto path{ std::format("{}.{}", parent, item) };
 	dump_to(strm, path, "x", t.x);
 	dump_to(strm, path, "y", t.y);
 }
 
-void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const out_wandering_type& t)
+static void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const out_wandering_type& t)
 {
 	const auto path{ std::format("{}.{}", parent, item) };
 	dump_to(strm, path, "monst", t.monst);
@@ -66,7 +67,7 @@ void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::st
 }
 
 
-void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const outdoor_record_type& t)
+static void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const outdoor_record_type& t)
 {
 	const auto path{ std::format("{}.{}", parent, item) };
 	dump_to(strm, path, "terrain", t.terrain);
@@ -84,7 +85,7 @@ void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::st
 	dump_to(strm, path, "specials", t.specials);
 }
 
-void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const item_record_type& t)
+static void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const item_record_type& t)
 {
 	const auto path{ std::format("{}.{}", parent, item) };
 	dump_to(strm, path, "variety", t.variety);
@@ -116,7 +117,7 @@ void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::st
 	dump_to(strm, path, "reserved2", t.reserved2);
 }
 
-void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const scen_item_data_type& t)
+static void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const scen_item_data_type& t)
 {
 	const auto path{ std::format("{}.{}", parent, item) };
 	dump_to(strm, path, "scen_items", t.scen_items);
@@ -124,7 +125,7 @@ void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::st
 	dump_to(strm, path, "ter_names", t.ter_names);
 }
 
-void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const BoeRect& t)
+static void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const BoeRect& t)
 {
 	const auto path{ std::format("{}.{}", parent, item) };
 	dump_to(strm, path, "left", (unsigned int)t.left);
@@ -133,7 +134,7 @@ void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::st
 	dump_to(strm, path, "bottom", (unsigned int)t.bottom);
 }
 
-void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const horse_record_type& t)
+static void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const horse_record_type& t)
 {
 	const auto path{ std::format("{}.{}", parent, item) };
 	dump_to(strm, path, "horse_loc", t.horse_loc);
@@ -144,7 +145,7 @@ void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::st
 	dump_to(strm, path, "property", t.property);
 }
 
-void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const boat_record_type& t)
+static void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const boat_record_type& t)
 {
 	const auto path{ std::format("{}.{}", parent, item) };
 	dump_to(strm, path, "boat_loc", t.boat_loc);
@@ -155,7 +156,7 @@ void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::st
 	dump_to(strm, path, "property", t.property);
 }
 
-void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const special_node_type& t)
+static void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const special_node_type& t)
 {
 	const auto path{ std::format("{}.{}", parent, item) };
 	dump_to(strm, path, "type", t.type);
@@ -171,7 +172,7 @@ void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::st
 	dump_to(strm, path, "jumpto", t.jumpto);
 }
 
-void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const item_storage_shortcut_type& t)
+static void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const item_storage_shortcut_type& t)
 {
 	const auto path{ std::format("{}.{}", parent, item) };
 	dump_to(strm, path, "ter_type", t.ter_type);
@@ -182,7 +183,7 @@ void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::st
 
 
 
-void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const terrain_type_type& t)
+static void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const terrain_type_type& t)
 {
 	const auto path{ std::format("{}.{}", parent, item) };
 	dump_to(strm, path, "picture", t.picture);
@@ -202,7 +203,7 @@ void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::st
 	dump_to(strm, path, "res3", t.res3);
 }
 
-void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const monster_record_type& t)
+static void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const monster_record_type& t)
 {
 	const auto path{ std::format("{}.{}", parent, item) };
 	dump_to(strm, path, "m_num", t.m_num);
@@ -247,7 +248,7 @@ void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::st
 	dump_to(strm, path, "picture_num", t.picture_num);
 }
 
-void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const scenario_data_type& t)
+static void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const scenario_data_type& t)
 {
 	const auto path{ std::format("{}.{}", parent, item) };
 	dump_to(strm, path, "flag1", t.flag1);

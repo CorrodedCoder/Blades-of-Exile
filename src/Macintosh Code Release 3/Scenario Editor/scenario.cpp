@@ -2122,7 +2122,7 @@ void edit_horses()
 	cd_kill_dialog(808,0);
 }
 
-Boolean save_boats()
+static Boolean save_boats()
 {
 	Str255 str;
 	short i;
@@ -2142,7 +2142,7 @@ Boolean save_boats()
 	return TRUE;
 }
 
-void put_boats_in_dlog()
+static void put_boats_in_dlog()
 {
 	Str255 str;
 	short i;
@@ -2368,7 +2368,7 @@ void edit_item_placement()
 	cd_kill_dialog(812,0);
 }
 
-Boolean save_scen_details()
+static Boolean save_scen_details()
 {
 	Str255 str;
 	short i;
@@ -2392,7 +2392,7 @@ Boolean save_scen_details()
 	return TRUE;
 }
 
-void put_scen_details_in_dlog()
+static void put_scen_details_in_dlog()
 {
 	Str255 str;
 	short i;

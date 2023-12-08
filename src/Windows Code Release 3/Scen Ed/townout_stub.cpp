@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <cstring>
 #include "global.h"
+#include "townout.h"
 
 void init_town(short size)
 {

@@ -1,6 +1,8 @@
 #include "endian_adjust.hpp"
 
 #include <bit>
+#include <utility>
+#include <cstddef>
 
 #if __cpp_lib_byteswap
 

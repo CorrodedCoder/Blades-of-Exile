@@ -1228,7 +1228,7 @@ short get_num_of_items(short max_num)
 	return dialog_answer;
 }
 
-INT_PTR CALLBACK choice_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
+static INT_PTR CALLBACK choice_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
 	test_dlog3 = hDlg;
 
 	switch (message) {
@@ -1266,7 +1266,7 @@ short choice_dialog(short pic,short num)
 }
 
 
-INT_PTR CALLBACK modeless_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
+static INT_PTR CALLBACK modeless_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
 	short i,which_d,store_which;
 	Boolean id_dlg = TRUE;
 

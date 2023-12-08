@@ -2087,7 +2087,7 @@ void edit_horses()
 	cd_kill_dialog(808,0);
 }
 
-Boolean save_boats()
+static Boolean save_boats()
 {
 	short i;
 	
@@ -2106,7 +2106,7 @@ Boolean save_boats()
 	return TRUE;
 }
 
-void put_boats_in_dlog()
+static void put_boats_in_dlog()
 {
 	short i;
 	
@@ -2313,7 +2313,7 @@ void edit_item_placement()
 	cd_kill_dialog(812,0);
 }
 
-Boolean save_scen_details()
+static Boolean save_scen_details()
 {
 	char str[256];
 	short i;
@@ -2337,7 +2337,7 @@ Boolean save_scen_details()
 	return TRUE;
 }
 
-void put_scen_details_in_dlog()
+static void put_scen_details_in_dlog()
 {
 	cd_set_led_range(803,30,33,scenario.difficulty);
 	cd_set_led_range(803,21,24,scenario.rating);

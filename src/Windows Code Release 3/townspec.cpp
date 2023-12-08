@@ -66,6 +66,9 @@ Boolean GFI(short dialog_num)
 		else return FALSE;
 }
 
+#if 0
+// Not referenced
+
 //DSG = Do Special Give
 void DSG(short item_num,unsigned char *flip_bit,short dialog_num,short what_spec,short amt_gold,short amt_food)
 //short special;  // 0 - nah  3** - Set spec item 1000 + * give food  2000 + * give cash
@@ -102,7 +105,7 @@ void DSG(short item_num,unsigned char *flip_bit,short dialog_num,short what_spec
 				else choice = fancy_choice_dialog(1049,0);
 		}
 }
-
+#endif
 
 Boolean run_trap(short pc_num,short trap_type,short trap_level,short diff)
 //short pc_num; // 6 - BOOM!  7 - pick here

@@ -1692,7 +1692,7 @@ void draw_map (HWND the_dialog, short the_item)
 
 
 
-INT_PTR CALLBACK map_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
+static INT_PTR CALLBACK map_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
 	switch (message) {
 		case WM_INITDIALOG:
 			if (store_map_window_rect.right > 0)

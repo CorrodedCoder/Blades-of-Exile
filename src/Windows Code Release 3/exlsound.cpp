@@ -25,7 +25,6 @@ extern Boolean cat,cow,chicken,dog,sheep,monsters_going;
 extern short overall_mode;
 
 short last_played = 10000;
-short error_beeps = 0;
 short store_last_sound_played = 0;
 
 Boolean always_asynch[100] = {FALSE,FALSE,FALSE,FALSE,FALSE,

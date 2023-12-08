@@ -1,4 +1,6 @@
 
+if (MSVC)
+
 add_executable (Blades-of-Exile WIN32
 	blades.cpp
 	graphics.cpp
@@ -47,4 +49,7 @@ add_custom_command(
 
 add_subdirectory("PC Editor")
 add_subdirectory("Scen Ed")
+
+endif()
+
 add_subdirectory("Dump Scenario")

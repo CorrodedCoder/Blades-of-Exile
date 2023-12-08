@@ -59,7 +59,6 @@ void win_draw_string(HDC dest_hdc,RECT dest_rect,char *str,short mode,short line
 void c2p(char *str) ;
 void p2c(char *str);
 void get_str(char *str,short i, short j);
-short string_length(char *str,HDC hdc);
 void MeasureText(short str_len,char *str, short *len_array,HDC hdc);
 void GetIndString(char *str,short i, short j);
 void ClipRect(HDC hdc,RECT *rect);

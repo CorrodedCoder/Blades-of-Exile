@@ -1,4 +1,4 @@
-﻿cmake_minimum_required (VERSION 3.27.2)
+﻿cmake_minimum_required (VERSION 3.25.1)
 
 # Enable Hot Reload for MSVC compilers if supported.
 if (POLICY CMP0141)
@@ -98,7 +98,6 @@ if (MSVC)
 				-Wno-unused-parameter
 				-Wno-old-style-cast
 				-Wno-cast-align
-				-Wno-missing-prototypes
 				-Wno-unreachable-code-break
 				-Wno-implicit-int-conversion
 				-Wno-sign-conversion

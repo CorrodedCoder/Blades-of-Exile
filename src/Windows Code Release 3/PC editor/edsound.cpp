@@ -22,7 +22,6 @@ extern Boolean cat,cow,chicken,dog,sheep,monsters_going;
 extern short overall_mode;
 
 short last_played = 10000;
-short error_beeps = 0;
 short store_last_sound_played = 0;
 
 Boolean always_asynch[100] = {FALSE,FALSE,FALSE,FALSE,FALSE,
@@ -288,10 +287,6 @@ void force_play_sound(short which)
 
 }
 
-void kill_sound()
-{
-			sndPlaySound(NULL,0);
-}
 void one_sound(short which)
 {
 	if (which == last_played)

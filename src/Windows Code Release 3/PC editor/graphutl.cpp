@@ -118,7 +118,7 @@ plgpl = (LOGPALETTE*) LocalLock(l);
 
 // extracts and inflicts palette from given dib. WARNING ...
 // does NOT do any deleting or cleanup
-void extract_given_palette(BYTE * lpDib)
+static void extract_given_palette(BYTE * lpDib)
 {
 	HDC hdc;
 	short i;

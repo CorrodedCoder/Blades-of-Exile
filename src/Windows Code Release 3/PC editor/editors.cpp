@@ -236,7 +236,7 @@ short select_pc(short active_only,short free_inv_only)
 }
 
 
-INT_PTR CALLBACK choice_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
+static INT_PTR CALLBACK choice_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
 	test_dlog3 = hDlg;
 
 	switch (message) {

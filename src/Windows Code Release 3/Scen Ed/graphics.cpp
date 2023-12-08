@@ -1502,27 +1502,6 @@ void win_draw_string(HDC dest_hdc,RECT dest_rect,char *str,short mode,short line
 	
 }
 
-short string_length(char *str,HDC hdc)
-{
-	short text_len[257];
-	short total_width = 0,i,len;
-	char p_str[256];
-	
-	for (i = 0; i < 257; i++)
-		text_len[i]= 0;
-	
-	strcpy(p_str,str);
-	MeasureText(256,p_str,text_len,hdc);
-	len = strlen(str);
-
-	//print_nums(text_len[1],text_len[2],text_len[3]);
-   //print_nums(text_len[10],text_len[20],text_len[30]);
-	for (i = 0; i < 257; i++)
-		if ((text_len[i] > total_width) && (i <= len))
-			total_width = text_len[i];
-	return total_width;
-}
-
 // Adapted from Wine source: https://github.com/reactos/wine/blob/master/dlls/gdi.exe16/gdi.c
 static DWORD GetTextExtent16(HDC hdc, LPCSTR str, INT16 count)
 {
@@ -1616,26 +1595,6 @@ void get_str(char *str,short i, short j)
 		}
 	GetIndString(str, i, j);
 	p2c(str);
-}
-
-short string_length(char *str)
-{
-	short text_len[257];
-	short total_width = 0,i,len;
-	char p_str[256];
-	
-	for (i = 0; i < 257; i++)
-		text_len[i]= 0;
-	
-	strcpy(p_str,str);
-	c2p(p_str);
-	MeasureText(256,p_str,text_len,main_dc);
-	len = strlen(str);
-	
-	for (i = 0; i < 257; i++)
-		if ((text_len[i] > total_width) && (i <= len))
-			total_width = text_len[i];
-	return total_width;
 }
 
 void ClipRect(HDC hdc,RECT *rect)
