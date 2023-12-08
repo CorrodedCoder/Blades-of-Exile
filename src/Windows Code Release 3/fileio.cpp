@@ -79,7 +79,12 @@ typedef struct {
 	}	out_info_type;
 
 Boolean loaded_yet = FALSE, got_nagged = FALSE,ae_loading = FALSE;
- Boolean cur_scen_is_win = TRUE;
+Boolean cur_scen_is_win = TRUE;
+
+static short FSWrite(HFILE file, long* len, char* buffer);
+static short FSRead(HFILE file, long* len, char* buffer);
+static short FSClose(HFILE file);
+static short SetFPos(HFILE file, short mode, long len);
 
 static void port_talk_nodes();
 static void port_town();
@@ -1890,7 +1895,7 @@ static void port_out(outdoor_record_type *out)
 	endian_adjust(*out);
 }
 
-short FSWrite(HFILE file,long *len,char *buffer)
+static short FSWrite(HFILE file,long *len,char *buffer)
 {
 	long error = 0;
 
@@ -1899,7 +1904,7 @@ short FSWrite(HFILE file,long *len,char *buffer)
 	return 0;
 }
 
-short FSRead(HFILE file,long *len,char *buffer)
+static short FSRead(HFILE file,long *len,char *buffer)
 {
 	long error = 0;
 
@@ -1909,7 +1914,7 @@ short FSRead(HFILE file,long *len,char *buffer)
 		
 }
 
-short FSClose(HFILE file)
+static short FSClose(HFILE file)
 {
 	if (_lclose(file) == HFILE_ERROR)
 	{
@@ -1918,7 +1923,7 @@ short FSClose(HFILE file)
 	return 0;
 }
 
-short SetFPos(HFILE file, short mode, long len)
+static short SetFPos(HFILE file, short mode, long len)
 {
 	long error = 0; 
 	

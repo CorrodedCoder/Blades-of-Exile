@@ -33,11 +33,6 @@ short town_s(short flag);
 short out_s(short flag);
 short get_buf_ptr(short flag);
 void outdoor_alert(),town_alert(),reg_alert();
-
-short FSWrite(HFILE file,long *len,char *buffer);
-short FSRead(HFILE file,long *len,char *buffer);
-short FSClose(HFILE file);
-short SetFPos(HFILE file, short mode, long len);
-					 void build_data_file(short mode);
+void build_data_file(short mode);
 void build_scen_ed_name (char *file_n);
 Boolean load_blades_data();

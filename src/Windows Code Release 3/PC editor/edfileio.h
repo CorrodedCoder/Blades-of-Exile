@@ -7,8 +7,4 @@ long init_data(long flag);
 void get_reg_data();
 void build_data_file(short mode);
 void reg_alert();
-short FSWrite(HFILE file,long *len,char *buffer);
-short FSRead(HFILE file,long *len,char *buffer);
-short FSClose(HFILE file);
-short SetFPos(HFILE file, short mode, long len);
 void remove_party_from_scen();

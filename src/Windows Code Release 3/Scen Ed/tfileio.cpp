@@ -56,6 +56,10 @@ OPENFILENAME ofn;
 	OFSTRUCT store;
 Boolean suppress_load_file_name = FALSE;
 
+static short FSWrite(HFILE file, long* len, char* buffer);
+static short FSRead(HFILE file, long* len, char* buffer);
+static short SetFPos(HFILE file, short mode, long len);
+
 static void port_talk_nodes();
 static void port_town();
 static void port_t_d();
@@ -1694,7 +1698,7 @@ static void port_out(outdoor_record_type *out)
 	endian_adjust(*out);
 }
 
-short FSWrite(HFILE file,long *len,char *buffer)
+static short FSWrite(HFILE file,long *len,char *buffer)
 {
 	long error = 0;
 
@@ -1703,7 +1707,7 @@ short FSWrite(HFILE file,long *len,char *buffer)
 	return 0;
 }
 
-short FSRead(HFILE file,long *len,char *buffer)
+static short FSRead(HFILE file,long *len,char *buffer)
 {
 	long error = 0;
 
@@ -1713,7 +1717,7 @@ short FSRead(HFILE file,long *len,char *buffer)
 		
 }
 
-short SetFPos(HFILE file, short mode, long len)
+static short SetFPos(HFILE file, short mode, long len)
 {
 	long error = 0; 
 	

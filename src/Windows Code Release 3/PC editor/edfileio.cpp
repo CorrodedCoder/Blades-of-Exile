@@ -59,6 +59,10 @@ short display_mode = 0;
 	 "All Files (*.*)","*.*",
 	 "" };
 
+static short FSWrite(HFILE file, long* len, char* buffer);
+static short FSRead(HFILE file, long* len, char* buffer);
+static short FSClose(HFILE file);
+
 void file_initialize()
 {
 		ofn.lStructSize = sizeof(OPENFILENAME);
@@ -732,7 +736,7 @@ void reg_alert()
 	  "File Error",MB_OK | MB_ICONEXCLAMATION);
 }
 
-short FSWrite(HFILE file,long *len,char *buffer)
+static short FSWrite(HFILE file,long *len,char *buffer)
 {
 	long error = 0;
 
@@ -741,7 +745,7 @@ short FSWrite(HFILE file,long *len,char *buffer)
 	return 0;
 }
 
-short FSRead(HFILE file,long *len,char *buffer)
+static short FSRead(HFILE file,long *len,char *buffer)
 {
 	long error = 0;
 
@@ -751,26 +755,11 @@ short FSRead(HFILE file,long *len,char *buffer)
 		
 }
 
-short FSClose(HFILE file)
+static short FSClose(HFILE file)
 {
 	if (_lclose(file) == HFILE_ERROR)
 	{
 		return -1;
 	}
-	return 0;
-}
-
-short SetFPos(HFILE file, short mode, long len)
-{
-	long error = 0; 
-	
-	switch (mode) {
-		case 1: error = _llseek(file,len,0); break; 
-		case 2: error = _llseek(file,len,2); break; 
-		case 3: error = _llseek(file,len,1); break; 
-		}
-
-	if (error == HFILE_ERROR)
-		return -1;
 	return 0;
 }

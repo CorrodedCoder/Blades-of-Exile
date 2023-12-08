@@ -26,7 +26,3 @@ void scen_text_dump();
 
 void load_spec_graphics();
 void file_initialize();
-
-short FSWrite(HFILE file, long* len, char* buffer);
-short FSRead(HFILE file, long* len, char* buffer);
-short SetFPos(HFILE file, short mode, long len);
