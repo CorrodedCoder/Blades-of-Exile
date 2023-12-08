@@ -16,7 +16,7 @@
 #include "startup.h"
 #include "exlsound.h"
 
-extern party_record_type far	party;
+extern party_record_type party;
 extern scen_header_type scen_headers[25];
 extern Boolean unreg_party_in_scen_not_check;
 extern Boolean in_startup_mode,registered,play_sounds,party_in_memory;
