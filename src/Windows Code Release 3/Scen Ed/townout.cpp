@@ -33,7 +33,7 @@ extern short cur_viewing_mode;
 extern town_record_type town;
 extern big_tr_type t_d;
 extern short town_type;  // 0 - big 1 - ave 2 - small
-extern short max_dim[3],mode_count,to_create,cur_town;
+extern short max_dim[3],mode_count,cur_town;
 extern unsigned char template_terrain[64][64];
 extern short_item_record_type item_list[400];
 extern scenario_data_type scenario;

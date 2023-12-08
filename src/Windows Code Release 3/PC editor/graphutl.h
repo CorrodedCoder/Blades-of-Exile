@@ -1,5 +1,4 @@
 void init_palette(BYTE * lpDib);
-void extract_given_palette(BYTE * lpDib);
 void inflict_palette();
 void reset_palette();
 DWORD GetDibInfoHeaderSize(BYTE * lpDib);

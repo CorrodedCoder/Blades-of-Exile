@@ -18,7 +18,7 @@
 extern short overall_mode;
 extern party_record_type party;
 extern current_town_type	c_town;
-extern unsigned char out[96][96],out_e[96][96];
+extern unsigned char out[96][96];
 extern unsigned char combat_terrain[64][64];
 extern short current_pc,stat_window;
 extern outdoor_record_type outdoors[2][2];
@@ -27,7 +27,6 @@ extern town_item_list	t_i;
 extern pc_record_type adven[6];
 extern big_tr_type t_d;
 extern Boolean registered;
-extern WindowPtr mainPtr;
 extern scenario_data_type scenario;
 
 Str255 answer;

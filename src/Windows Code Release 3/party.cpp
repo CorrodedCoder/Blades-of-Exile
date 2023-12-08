@@ -100,50 +100,51 @@ char empty_string[256] = "                                           ";
 
 extern Boolean fast_bang;
 extern party_record_type far	party;
-extern pc_record_type far adven[6];
+extern std::array<pc_record_type, 6> adven;
 extern short stat_window,overall_mode,current_pc,town_size[3],town_type;
-extern current_town_type far	c_town;
-extern big_tr_type far  t_d;
-extern unsigned char far out[96][96];
-extern unsigned char far out_e[96][96];
+extern current_town_type	c_town;
+extern big_tr_type  t_d;
+extern unsigned char out[96][96];
+extern unsigned char out_e[96][96];
 extern location pc_pos[6],center;
 extern HWND mainPtr;
 extern Boolean in_startup_mode,spell_forced,save_maps,suppress_stat_screen,boom_anim_active;
-extern stored_items_list_type far stored_items[3];
+extern stored_items_list_type stored_items[3];
 extern HCURSOR sword_curs;
-extern setup_save_type far setup_save;
+extern setup_save_type setup_save;
 extern short store_mage, store_priest,stat_screen_mode;
 extern short store_mage_lev, store_priest_lev;
 extern short store_spell_target,pc_casting;
 extern short pc_last_cast[2][6];
-extern effect_pat_type far null_pat;
-extern effect_pat_type far single;
-extern effect_pat_type far t;
-extern effect_pat_type far square;
-extern effect_pat_type far rad_pat2;
-extern effect_pat_type far rad_pat3;
-extern effect_pat_type far current_pat;
+extern effect_pat_type null_pat;
+extern effect_pat_type single;
+extern effect_pat_type t;
+extern effect_pat_type square;
+extern effect_pat_type rad_pat2;
+extern effect_pat_type rad_pat3;
+extern effect_pat_type current_pat;
 extern short current_spell_range;
-extern short hit_chance[21],pc_parry[6],pc_moves[6],combat_active_pc;
+extern short hit_chance[21],pc_parry[6],combat_active_pc;
+extern std::array<short, 6> pc_moves;
 extern short boom_gr[8];
 extern	unsigned char beasts[5];
 extern	unsigned char m1[20];
 extern	unsigned char m2[16];
 extern	unsigned char m3[16];
-extern stored_outdoor_maps_type far o_maps;
+extern stored_outdoor_maps_type o_maps;
 extern short current_ground,dialog_answer;
 extern short on_spell_menu[2][62];
 extern Boolean cd_event_filter();
 extern Boolean dialog_not_toast;
-extern const short far mage_need_select[62];
-extern const short far priest_need_select[62];
+extern const std::array<short, 62> mage_need_select;
+extern const std::array<short, 62> priest_need_select;
 extern short pc_marked_damage[6];
 extern short monst_marked_damage[T_M];
-extern town_item_list far  t_i;
+extern town_item_list  t_i;
 extern HDC main_dc;
-extern char far scen_strs2[110][256];
-extern stored_town_maps_type far town_maps,town_maps2;
-extern scenario_data_type far scenario;
+extern char scen_strs2[110][256];
+extern stored_town_maps_type town_maps,town_maps2;
+extern scenario_data_type scenario;
 extern const item_record_type start_items[6];
 extern piles_of_stuff_dumping_type5 data_store5;
 
@@ -163,7 +164,7 @@ char c_line[60];
 	Boolean talk_done = FALSE;
 	long val_for_text;
 	Boolean keep_change = FALSE;
-	short store_skills[20],store_h,store_sp,i,store_skp,which_skill;
+	static short store_skills[20],store_h,store_sp,store_skp,which_skill;
 	long store_g;
 	short store_train_mode,store_train_pc;
 	
@@ -1109,7 +1110,7 @@ void drain_pc(short which_pc,short how_much)
 
 void do_xp_keep(short pc_num,short mode)
 {
-					for (i = 0; i < 20; i++)
+					for (short i = 0; i < 20; i++)
 						adven[pc_num].skills[i] = store_skills[i];
 					adven[pc_num].cur_health += store_h - adven[pc_num].max_health;
 					adven[pc_num].max_health = store_h;
@@ -1159,7 +1160,7 @@ void do_xp_draw()
 
 	cd_set_item_text (1010, 51,get_text);
 
-	for (i = 0; i < 20; i++)
+	for (short i = 0; i < 20; i++)
 		store_skills[i] = adven[pc_num].skills[i];
 	store_h = adven[pc_num].max_health;
 	store_sp = adven[pc_num].max_sp;
@@ -1389,7 +1390,7 @@ Boolean spend_xp(short pc_num, short mode, short parent)
 	sprintf(get_text,"Spell Pts. (%d/%d)",1,15);
 	//cd_add_label(1010,5,get_text,1040);
 	cd_add_label(1010,53,(char *) get_text,1075);
-	for (i = 54; i < 73; i++) {
+	for (short i = 54; i < 73; i++) {
 		get_str(text2,9,1 + 2 * (i - 54));
 		sprintf(get_text,"%s (%d/%d)",text2,skill_cost[i - 54],skill_g_cost[i - 54]);
 		cd_add_label(1010,i,(char *) get_text,(i < 63) ? 1075 : 1069);
@@ -2485,14 +2486,14 @@ void draw_spell_info()
 {
 	if (((store_situation == 0) && (store_mage == 70)) ||
 		((store_situation == 1) && (store_priest == 70))) {	 // No spell selected
-			for (i = 0; i < 6; i++) {
+			for (short i = 0; i < 6; i++) {
 				cd_activate_item(1098,10 + i,0);
 				}
 				
 			}
 			else { // Spell selected
 
-				for (i = 0; i < 6; i++) {
+				for (short i = 0; i < 6; i++) {
 					switch (((store_situation == 0) ?
 						mage_need_select[store_mage] : priest_need_select[store_priest])) {
 					case 0:
@@ -2720,7 +2721,7 @@ void pick_spell_event_filter (short item_hit)
 			default:
 				if (item_hit >= 100) {
 					item_hit -= 100;
-					i = (on_which_spell_page == 0) ? item_hit - 37 : spell_index[item_hit - 37];
+					const short i = (on_which_spell_page == 0) ? item_hit - 37 : spell_index[item_hit - 37];
 					display_spells(store_situation,i,1098);
 					}
 				else if (cd_get_led(1098,item_hit) == 0) {
@@ -2832,6 +2833,7 @@ short pick_spell(short pc_num,short type,short situation)  // 70 - no spell OW s
 	if (pc_num == 6) { // See if can keep same caster
 		can_choose_caster = TRUE;
 		if (pc_can_cast_spell(pc_casting,type,type) == FALSE) {
+			short i;
 			for (i = 0; i < 6; i++)
 				if (pc_can_cast_spell(i,type,type)) {
 					pc_casting = i;
@@ -2901,7 +2903,7 @@ short pick_spell(short pc_num,short type,short situation)  // 70 - no spell OW s
 
 	cd_create_dialog(1098,mainPtr);
 	cd_set_pict(1098,2,714 + type);
-	for (i = 37; i < 75; i++) {
+	for (short i = 37; i < 75; i++) {
 		cd_add_label(1098,i,"",55);
 		if (i > 62)
 			cd_attach_key(1098,i,(char ) (65 + i - 63));
@@ -2915,9 +2917,9 @@ short pick_spell(short pc_num,short type,short situation)  // 70 - no spell OW s
 	cd_attach_key(1098,13,'$');
 	cd_attach_key(1098,14,'%');
 	cd_attach_key(1098,15,'^');
-	for (i = 0; i < 6; i++)
+	for (short i = 0; i < 6; i++)
    		cd_key_label(1098,10 + i,0);
-	for (i = 24; i < 36; i++)
+	for (short i = 24; i < 36; i++)
 		cd_text_frame(1098,i,1);
 
   	cd_set_flag(1098,78,0);
@@ -3148,9 +3150,9 @@ Boolean pick_pc_graphic(short pc_num,short mode,short parent_num)
 		}
 	cd_create_dialog_parent_num(1050,parent_num);
 
-	for (i = 41; i < 77; i++) 
+	for (short i = 41; i < 77; i++) 
 		csp(1050,i,800 + i - 41);
-	for (i = 5; i < 41; i++) {
+	for (short i = 5; i < 41; i++) {
 		if (store_pc_graphic + 5 == i)
 			cd_set_led(1050,i,1);
 			else cd_set_led(1050,i,0);

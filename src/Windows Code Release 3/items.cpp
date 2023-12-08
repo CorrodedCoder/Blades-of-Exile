@@ -1,7 +1,7 @@
 #include <Windows.h>
+#include <array>
 
 #include "global.h"
-
 #include "graphics.h"
 #include "text.h"
 #include "dlogtool.h"
@@ -19,18 +19,18 @@
 #include "monster.h"
 
 extern short stat_window,overall_mode,current_cursor,which_combat_type,current_pc;
-extern party_record_type far party;
-extern talking_record_type far talking;
-extern scenario_data_type far scenario;
+extern party_record_type party;
+extern talking_record_type talking;
+extern scenario_data_type scenario;
 
-extern current_town_type far c_town;
-extern town_item_list far 	t_i;
+extern current_town_type c_town;
+extern town_item_list 	t_i;
 extern HWND mainPtr;
 extern Boolean in_startup_mode,boom_anim_active;
 extern HINSTANCE store_hInstance;
 
-extern pc_record_type far adven[6];
-extern big_tr_type far  t_d;
+extern std::array<pc_record_type, 6> adven;
+extern big_tr_type  t_d;
 extern location pc_pos[6];
 
 extern HCURSOR sword_curs;
@@ -1228,7 +1228,7 @@ short get_num_of_items(short max_num)
 	return dialog_answer;
 }
 
-INT_PTR CALLBACK choice_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
+static INT_PTR CALLBACK choice_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
 	test_dlog3 = hDlg;
 
 	switch (message) {
@@ -1266,7 +1266,7 @@ short choice_dialog(short pic,short num)
 }
 
 
-INT_PTR CALLBACK modeless_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
+static INT_PTR CALLBACK modeless_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
 	short i,which_d,store_which;
 	Boolean id_dlg = TRUE;
 

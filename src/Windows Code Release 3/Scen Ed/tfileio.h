@@ -24,18 +24,5 @@ void start_data_dump();
 Boolean import_check_p (short pword);
 void scen_text_dump();
 
-void port_talk_nodes();
-void port_town();
-void port_t_d();
-void port_scenario();
-void port_item_list();
-void port_out(outdoor_record_type *out);
-void port_dummy_talk_nodes();
-void port_dummy_t_d(short size,char *buffer);
-void port_dummy_town();
 void load_spec_graphics();
 void file_initialize();
-
-short FSWrite(HFILE file, long* len, char* buffer);
-short FSRead(HFILE file, long* len, char* buffer);
-short SetFPos(HFILE file, short mode, long len);

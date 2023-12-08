@@ -1,35 +1,28 @@
-
 #include <Windows.h>
+#include <array>
 #include <cstdio>
 
 #include "global.h"
-#include "newgraph.h"
 #include "graphics.h"
 #include "fileio.h"
 #include "actions.h"
 #include "dlgutils.h"
-#include "text.h"
-#include "gutils.h"
 #include "items.h"
 #include "party.h"
 #include "exlsound.h"
 #include "startup.h"
-#include "exlsound.h"
 
-extern party_record_type far	party;
-extern pc_record_type far adven[6];
+extern party_record_type party;
 extern scen_header_type scen_headers[25];
 extern Boolean unreg_party_in_scen_not_check;
 extern Boolean in_startup_mode,registered,play_sounds,party_in_memory;
-extern long register_flag;
-extern HWND	mainPtr;	
 extern short ulx,uly;
 extern piles_of_stuff_dumping_type2 data_store2;
 
 
 //void start_game();
 
-RECT startup_button[6];
+std::array<RECT, 6> startup_button;
 
 Boolean handle_startup_press(POINT the_point)
 {

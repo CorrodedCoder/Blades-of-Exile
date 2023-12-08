@@ -16,16 +16,16 @@
 
 extern HWND mainPtr;
 extern HPALETTE hpal;
-extern far PALETTEENTRY ape[256];
+extern PALETTEENTRY ape[256];
 extern HDC main_dc,main_dc2,main_dc3;
 extern short ulx,uly;
 extern HBITMAP mixed_gworld,dialog_pattern_gworld,pattern_gworld,status_pattern_gworld;
 extern Boolean suppress_load_file_name;
 
-extern char far scen_strs[160][256];
-extern char far scen_strs2[110][256];
-extern char far talk_strs[170][256];
-extern char far town_strs[180][256];
+extern char scen_strs[160][256];
+extern char scen_strs2[110][256];
+extern char talk_strs[170][256];
+extern char town_strs[180][256];
 extern char file_path_name[256];
 HPALETTE opening_palette;
 
@@ -123,7 +123,7 @@ plgpl = (LOGPALETTE*) LocalLock(l);
 
 // extracts and inflicts palette from given dib. WARNING ...
 // does NOT do any deleting or cleanup
-void extract_given_palette(BYTE * lpDib)
+static void extract_given_palette(BYTE * lpDib)
 {
 	HDC hdc;
 	short i;

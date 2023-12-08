@@ -23,7 +23,7 @@ Blades of Exile Game/Scenario Editor/Character Editor
 // May God have mercy on all our souls.
 
 #include <Windows.h>
-
+#include <array>
 #include <cstdlib>
 #include <cstring>
 #include <cstdio>
@@ -61,7 +61,7 @@ Boolean All_Done = FALSE;
 short had_text_freeze = 0,num_fonts;
 Boolean in_startup_mode = TRUE,app_started_normally = FALSE,file_in_mem = FALSE;
 Boolean play_sounds = TRUE,first_startup_update = TRUE,party_in_scen = FALSE;
-Boolean diff_depth_ok = FALSE,first_sound_played = FALSE,spell_forced = FALSE,startup_loaded = FALSE;
+Boolean diff_depth_ok = FALSE,first_sound_played = FALSE,spell_forced = FALSE;
 Boolean save_maps = FALSE,first_time = FALSE,palette_suspect = FALSE,window_in_front = TRUE;
 
 HWND sbar;
@@ -97,22 +97,22 @@ Boolean game_run_before = TRUE,save_blocked = FALSE;
 short store_flags[3];
 
 /* Adventure globals */
-party_record_type far party;
-pc_record_type far adven[6];
-outdoor_record_type far outdoors[2][2];
-current_town_type far c_town;
-big_tr_type far t_d;
+party_record_type party;
+std::array<pc_record_type, 6> adven;
+outdoor_record_type outdoors[2][2];
+current_town_type c_town;
+big_tr_type t_d;
 town_item_list far	t_i;
-unsigned char far out[96][96];
- unsigned char far out_e[96][96];
-setup_save_type far setup_save;
+unsigned char out[96][96];
+ unsigned char out_e[96][96];
+setup_save_type setup_save;
 unsigned char misc_i[64][64],sfx[64][64];
 
 short current_active_pc = 0;
 
-stored_items_list_type far stored_items[3];
-stored_town_maps_type far town_maps,town_maps2;
-stored_outdoor_maps_type far o_maps;
+stored_items_list_type stored_items[3];
+stored_town_maps_type town_maps,town_maps2;
+stored_outdoor_maps_type o_maps;
 
 
 /* Display globals */
@@ -154,7 +154,7 @@ HWND force_dlog = NULL;
 HFONT font,small_bold_font,italic_font,underline_font,bold_font,tiny_font;
 HBITMAP bmap = NULL;
 HPALETTE hpal;
-PALETTEENTRY far ape[256];
+PALETTEENTRY ape[256];
 HDC main_dc,main_dc2,main_dc3;
 HINSTANCE store_hInstance;
 HACCEL accel;

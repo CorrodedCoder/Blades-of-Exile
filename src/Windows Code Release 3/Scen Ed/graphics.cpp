@@ -13,21 +13,21 @@
 #include "../graphutl_helpers.hpp"
 #include "keydlgs.h"
 
-extern char far scen_strs[160][256];
-extern char far scen_strs2[110][256];
-extern char far talk_strs[170][256];
-extern char far town_strs[180][256];
+extern char scen_strs[160][256];
+extern char scen_strs2[110][256];
+extern char talk_strs[170][256];
+extern char town_strs[180][256];
 extern HFONT font,italic_font,underline_font,bold_font,tiny_font,small_bold_font;
 extern HPALETTE hpal;
 extern HDC main_dc,main_dc2,main_dc3;
 
 extern HCURSOR cursors[8];
-extern outdoor_record_type far current_terrain;
+extern outdoor_record_type current_terrain;
 extern HWND	mainPtr;
 extern town_record_type current_town;
 extern short cen_x, cen_y,current_terrain_type,cur_town;
-extern town_record_type far town;
-extern big_tr_type far t_d;
+extern town_record_type town;
+extern big_tr_type t_d;
 extern template_town_type town_template;
 extern short town_type;  // 0 - big 1 - ave 2 - small
 extern short cur_viewing_mode,overall_mode;
@@ -37,9 +37,9 @@ extern short max_dim[3];
 extern short dungeon_font_num,geneva_font_num;
 extern RECT windRect;
 extern piles_of_stuff_dumping_type data_store;
-extern scenario_data_type far scenario;
+extern scenario_data_type scenario;
 extern RECT world_screen;
-extern scen_item_data_type far scen_item_list;
+extern scen_item_data_type scen_item_list;
 
 extern RECT left_button[NLS];
 extern RECT right_buttons[NRSONPAGE];
@@ -1502,27 +1502,6 @@ void win_draw_string(HDC dest_hdc,RECT dest_rect,char *str,short mode,short line
 	
 }
 
-short string_length(char *str,HDC hdc)
-{
-	short text_len[257];
-	short total_width = 0,i,len;
-	char p_str[256];
-	
-	for (i = 0; i < 257; i++)
-		text_len[i]= 0;
-	
-	strcpy(p_str,str);
-	MeasureText(256,p_str,text_len,hdc);
-	len = strlen(str);
-
-	//print_nums(text_len[1],text_len[2],text_len[3]);
-   //print_nums(text_len[10],text_len[20],text_len[30]);
-	for (i = 0; i < 257; i++)
-		if ((text_len[i] > total_width) && (i <= len))
-			total_width = text_len[i];
-	return total_width;
-}
-
 // Adapted from Wine source: https://github.com/reactos/wine/blob/master/dlls/gdi.exe16/gdi.c
 static DWORD GetTextExtent16(HDC hdc, LPCSTR str, INT16 count)
 {
@@ -1616,26 +1595,6 @@ void get_str(char *str,short i, short j)
 		}
 	GetIndString(str, i, j);
 	p2c(str);
-}
-
-short string_length(char *str)
-{
-	short text_len[257];
-	short total_width = 0,i,len;
-	char p_str[256];
-	
-	for (i = 0; i < 257; i++)
-		text_len[i]= 0;
-	
-	strcpy(p_str,str);
-	c2p(p_str);
-	MeasureText(256,p_str,text_len,main_dc);
-	len = strlen(str);
-	
-	for (i = 0; i < 257; i++)
-		if ((text_len[i] > total_width) && (i <= len))
-			total_width = text_len[i];
-	return total_width;
 }
 
 void ClipRect(HDC hdc,RECT *rect)

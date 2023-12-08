@@ -24,29 +24,29 @@
 
 HWND	the_dialog;
 extern party_record_type far	party;
-extern pc_record_type far adven[6];
-extern outdoor_record_type far outdoors[2][2];
-extern unsigned char far out[96][96];
-extern unsigned char far out_e[96][96];
+extern std::array<pc_record_type, 6> adven;
+extern outdoor_record_type outdoors[2][2];
+extern unsigned char out[96][96];
+extern unsigned char out_e[96][96];
 extern short overall_mode,give_delays,stat_screen_mode;
 extern Boolean in_startup_mode,registered,play_sounds,in_scen_debug,sys_7_avail,save_maps,party_in_memory;
-extern current_town_type far	c_town;
-extern town_item_list far 	t_i;
+extern current_town_type	c_town;
+extern town_item_list 	t_i;
 extern location center;
 extern long register_flag;
 extern HWND mainPtr;
-extern stored_items_list_type far stored_items[3];
-extern stored_outdoor_maps_type far o_maps;
-extern big_tr_type far  t_d;
+extern stored_items_list_type stored_items[3];
+extern stored_outdoor_maps_type o_maps;
+extern big_tr_type  t_d;
 extern short town_size[3];
 extern short town_type,current_pc;
 extern Boolean web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern Boolean sleep_field;
-extern setup_save_type far setup_save;
-extern unsigned char far misc_i[64][64],sfx[64][64];
-extern unsigned char far template_terrain[64][64];
-extern town_record_type far anim_town;
-extern tiny_tr_type far anim_t_d;
+extern setup_save_type setup_save;
+extern unsigned char misc_i[64][64],sfx[64][64];
+extern unsigned char template_terrain[64][64];
+extern town_record_type anim_town;
+extern tiny_tr_type anim_t_d;
 extern Boolean modeless_exists[18];
 extern location monster_targs[T_M];
 extern HWND modeless_dialogs[18] ;
@@ -57,13 +57,13 @@ extern long ed_flag, ed_key;
 extern short display_mode,cur_town_talk_loaded;
 extern Boolean give_intro_hint;
 extern char terrain_blocked[256];
-extern char far scen_strs2[110][256];
-extern stored_town_maps_type far town_maps,town_maps2;
-extern scenario_data_type far scenario;
- extern unsigned char far combat_terrain[64][64];
+extern char scen_strs2[110][256];
+extern stored_town_maps_type town_maps,town_maps2;
+extern scenario_data_type scenario;
+ extern unsigned char combat_terrain[64][64];
 extern piles_of_stuff_dumping_type data_store;
 extern piles_of_stuff_dumping_type2 data_store2;
- extern talking_record_type far talking;
+ extern talking_record_type talking;
 
 extern short terrain_pic[256];
 extern scen_header_type scen_headers[25];
@@ -79,10 +79,13 @@ typedef struct {
 	}	out_info_type;
 
 Boolean loaded_yet = FALSE, got_nagged = FALSE,ae_loading = FALSE;
- Boolean cur_scen_is_win = TRUE;
+Boolean cur_scen_is_win = TRUE;
 
+static short FSWrite(HFILE file, long* len, char* buffer);
+static short FSRead(HFILE file, long* len, char* buffer);
+static short FSClose(HFILE file);
+static short SetFPos(HFILE file, short mode, long len);
 
-void print_write_position ();
 void save_outdoor_maps();
 void add_outdoor_maps();
 
@@ -93,11 +96,11 @@ OPENFILENAME ofn;
 OFSTRUCT save_dir,save_dir2;
 
 // Trying this to fix bug. Hope it works.
-	tiny_tr_type far tiny_t;
-	ave_tr_type far ave_t;
+tiny_tr_type tiny_t;
+ave_tr_type ave_t;
 
-outdoor_record_type  far dummy_out;////
-town_record_type  far dummy_town;
+outdoor_record_type dummy_out;////
+town_record_type dummy_town;
 short jl;
 extern char file_path_name[256];
 
@@ -680,30 +683,6 @@ for (i = 0; i < town_size[town_type]; i++)
 		}
 }
 
-void swap_val(unsigned char *val,short a,short b)
-{
-	if (*val == a)
-		*val = b;
-		else if (*val == b)
-			*val = a;
-}
-void change_val_4 (unsigned char *val,short a,short b,short c,short d)
-{
-	if (*val == a)
-		*val = b;
-		else if (*val == b)
-			*val = c;
-			else if (*val == c)
-			*val = d;
-			else if (*val == d)
-				*val = a;
-}
-void change_val (unsigned char *val,short a,short b)
-{
-	if (*val == a)
-		*val = b;
-}
-
 void build_scen_file_name (char *file_n)
 {
 	short i,last_slash = -1;
@@ -786,8 +765,11 @@ void load_town(short town_num,short mode,short extra,char *str)
 
 	if (mode == 0) {
 		error = FSRead(file_id, &len , (char *) &c_town.town);
-		port_town();
+		if (cur_scen_is_win != TRUE)
+		{
+			endian_adjust(c_town.town);
 		}
+	}
 		else error = FSRead(file_id, &len , (char *) &dummy_town);
 	if (error != 0) {FSClose(file_id);oops_error(36);}
 
@@ -796,8 +778,11 @@ void load_town(short town_num,short mode,short extra,char *str)
 			len =  sizeof(big_tr_type);
 			if (mode == 0) {
 				FSRead(file_id, &len, (char *) &t_d);
-				port_t_d();
+				if (cur_scen_is_win != TRUE)
+				{
+					endian_adjust(t_d);
 				}
+			}
 				else error = SetFPos (file_id, 3, len);
 
 			break;
@@ -827,8 +812,11 @@ void load_town(short town_num,short mode,short extra,char *str)
 					for (i = 40; i < 60; i++) {
 						t_d.creatures[i].number = 0;
 						}
-					port_t_d();
+					if (cur_scen_is_win != TRUE)
+					{
+						endian_adjust(t_d);
 					}
+				}
 					else error = SetFPos (file_id, 3, len);
 
 			break;
@@ -851,8 +839,11 @@ void load_town(short town_num,short mode,short extra,char *str)
 				for (i = 30; i < 60; i++) {
 					t_d.creatures[i].number = 0;
 					}
-				port_t_d();
+				if (cur_scen_is_win != TRUE)
+				{
+					endian_adjust(t_d);
 				}
+			}
 				else error = SetFPos (file_id, 3, len);
 			break;
 		}
@@ -884,7 +875,10 @@ void load_town(short town_num,short mode,short extra,char *str)
 	if (mode < 2) {
 		len = sizeof(talking_record_type);
 		error = FSRead(file_id, &len , (char *) &talking);
-		port_talk_nodes();
+		if (cur_scen_is_win != TRUE)
+		{
+			endian_adjust(talking);
+		}
 		if (error != 0) {FSClose(file_id);oops_error(37);}
 	
 		for (i = 0; i < 170; i++) {
@@ -1294,7 +1288,10 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 	len = sizeof(outdoor_record_type);
 	if (mode == 0) {
 		error = FSRead(file_id, &len, (char *) &outdoors[targ_x][targ_y]);
-		port_out(&outdoors[targ_x][targ_y]);
+		if (cur_scen_is_win != TRUE)
+		{
+			endian_adjust(outdoors[targ_x][targ_y]);
+		}
 		if (error != 0) {FSClose(file_id);oops_error(33);}
 		}
 		else error = FSRead(file_id, &len, (char *) &dummy_out);
@@ -1490,8 +1487,11 @@ Boolean load_scenario()
 	  && (scenario.flag4 == 40)) {
 	  	file_ok = TRUE;
 		cur_scen_is_win = FALSE;
-		port_scenario();
+		if (cur_scen_is_win != TRUE)
+		{
+			endian_adjust(scenario);
 		}
+	}
 	if ((scenario.flag1 == 20) && (scenario.flag2 == 40)
 	 && (scenario.flag3 == 60)
 	  && (scenario.flag4 == 80)) {
@@ -1507,7 +1507,10 @@ Boolean load_scenario()
 	if ((error = FSRead(file_id, &len, (char *) &(data_store2.scen_item_list))) != 0){
 		FSClose(file_id); oops_error(30); return FALSE;
 		}
-	port_item_list();
+	if (cur_scen_is_win != TRUE)
+	{
+		endian_adjust(data_store2.scen_item_list);
+	}
 	for (i = 0; i < 270; i++) {
 		len = (long) (scenario.scen_str_len[i]);
 		if (i < 160) {
@@ -1742,7 +1745,7 @@ short out_s(short flag)
 	return (short) k;
 }
 
-short str_size_1(short flag)
+static short str_size_1(short flag)
 {
 	long k = 0;
 		
@@ -1762,7 +1765,7 @@ short str_size_1(short flag)
 	return (short) k;
 }
 
-short str_size_2(short flag)
+static short str_size_2(short flag)
 {
 	long k = 0;
 		
@@ -1781,7 +1784,7 @@ short str_size_2(short flag)
 	return (short) k;
 }
 
-short str_size_3(short flag)
+static short str_size_3(short flag)
 {
 	long k = 0;
 		
@@ -1859,57 +1862,7 @@ void reg_alert()
 
  //	MessageBox(mainPtr,"A","Debug note",MB_OK | MB_ICONEXCLAMATION);
 
-void port_talk_nodes()
-{
-	if (cur_scen_is_win == TRUE)
-		return;
-
-	endian_adjust(talking);
-}
-
-void port_town()
-{
-	if (cur_scen_is_win == TRUE)
-		return;
-
-	endian_adjust(c_town.town);
-}
-
-
-void port_t_d()
-{
-	if (cur_scen_is_win == TRUE)
-		return;
-
-	endian_adjust(t_d);
-}
-
-void port_scenario()
-{
-	if (cur_scen_is_win == TRUE)
-		return;
-
-	endian_adjust(scenario);
-}
-
-
-void port_item_list()
-{
-	if (cur_scen_is_win == TRUE)
-		return;
-
-	endian_adjust(data_store2.scen_item_list);
-}
-
-void port_out(outdoor_record_type *out)
-{
-	if (cur_scen_is_win == TRUE)
-		return;
-
-	endian_adjust(*out);
-}
-
-short FSWrite(HFILE file,long *len,char *buffer)
+static short FSWrite(HFILE file,long *len,char *buffer)
 {
 	long error = 0;
 
@@ -1918,7 +1871,7 @@ short FSWrite(HFILE file,long *len,char *buffer)
 	return 0;
 }
 
-short FSRead(HFILE file,long *len,char *buffer)
+static short FSRead(HFILE file,long *len,char *buffer)
 {
 	long error = 0;
 
@@ -1928,7 +1881,7 @@ short FSRead(HFILE file,long *len,char *buffer)
 		
 }
 
-short FSClose(HFILE file)
+static short FSClose(HFILE file)
 {
 	if (_lclose(file) == HFILE_ERROR)
 	{
@@ -1937,7 +1890,7 @@ short FSClose(HFILE file)
 	return 0;
 }
 
-short SetFPos(HFILE file, short mode, long len)
+static short SetFPos(HFILE file, short mode, long len)
 {
 	long error = 0; 
 	

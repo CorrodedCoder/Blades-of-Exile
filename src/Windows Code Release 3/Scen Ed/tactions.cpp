@@ -43,26 +43,26 @@ RECT terrain_rects[256],terrain_rect_base = {0,0,16,16},command_rects[21];
 extern short ulx,uly,cen_x, cen_y, overall_mode,cur_town;
 extern Boolean mouse_button_held,editing_town;
 extern short cur_viewing_mode,user_given_password;
-extern town_record_type far town;
-extern big_tr_type far t_d;
+extern town_record_type town;
+extern big_tr_type t_d;
 extern short town_type;  // 0 - big 1 - ave 2 - small
-extern short max_dim[3],mode_count,to_create;
+extern short max_dim[3],mode_count;
 extern unsigned char template_terrain[64][64];
 extern short_item_record_type item_list[400];
-extern scenario_data_type far scenario;
+extern scenario_data_type scenario;
 extern HWND right_sbar,mainPtr;
-extern outdoor_record_type far current_terrain;
+extern outdoor_record_type current_terrain;
 extern location cur_out;
 extern piles_of_stuff_dumping_type data_store;
 Boolean small_any_drawn = FALSE;
-extern talking_record_type far talking;
+extern talking_record_type talking;
 extern Boolean change_made;
-extern scen_item_data_type far scen_item_list;
+extern scen_item_data_type scen_item_list;
 
-extern char far scen_strs[160][256];
-extern char far scen_strs2[110][256];
-extern char far talk_strs[170][256];
-extern char far town_strs[180][256];
+extern char scen_strs[160][256];
+extern char scen_strs2[110][256];
+extern char talk_strs[170][256];
+extern char town_strs[180][256];
 
 RECT left_buttons[NLS][2]; // 0 - whole, 1 - blue button
 short left_button_status[NLS]; // 0 - clear, 1 - text, 2 - title text, +10 - button
@@ -1668,30 +1668,6 @@ for (i = 0; i < ((editing_town == TRUE) ? max_dim[town_type] : 48); i++)
 		  && ((hollow == TRUE) || (get_ran(1,1,20) <= probability)))
 			set_terrain(l,terrain_type);
 		}
-}
-
-void swap_val(unsigned char *val,short a,short b)
-{
-	if (*val == a)
-		*val = b;
-		else if (*val == b)
-			*val = a;
-}
-void change_val_4 (unsigned char *val,short a,short b,short c,short d)
-{
-	if (*val == a)
-		*val = b;
-		else if (*val == b)
-			*val = c;
-			else if (*val == c)
-			*val = d;
-			else if (*val == d)
-				*val = a;
-}
-void change_val (unsigned char *val,short a,short b)
-{
-	if (*val == a)
-		*val = b;
 }
 
 void frill_up_terrain()

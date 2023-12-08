@@ -13,19 +13,19 @@
 
 
 /* Adventure globals */
-extern party_record_type far party;
-extern pc_record_type far adven[6];
-extern outdoor_record_type far outdoors[2][2];
-extern current_town_type far c_town;
-extern big_tr_type far t_d;
+extern party_record_type party;
+extern std::array<pc_record_type, 6> adven;
+extern outdoor_record_type outdoors[2][2];
+extern current_town_type c_town;
+extern big_tr_type t_d;
 extern town_item_list far	t_i;
 extern unsigned char misc_i[64][64],sfx[64][64];
-extern unsigned char far out[96][96];
-extern unsigned char far out_e[96][96];
-extern setup_save_type far setup_save;
-extern stored_items_list_type far stored_items[3];
-extern stored_town_maps_type far maps;
-extern stored_outdoor_maps_type far o_maps;
+extern unsigned char out[96][96];
+extern unsigned char out_e[96][96];
+extern setup_save_type setup_save;
+extern stored_items_list_type stored_items[3];
+extern stored_town_maps_type maps;
+extern stored_outdoor_maps_type o_maps;
 
 extern Boolean registered,play_sounds,sys_7_avail,save_blocked,ed_reg,party_in_scen;
 extern short current_active_pc;
@@ -43,12 +43,12 @@ typedef struct {
 extern short store_flags[3];
 
 // Big waste!
-out_info_type far store_map;
+out_info_type store_map;
 char last_load_file[63] = "blades.sav";
 char szFileName [128] = "blades.sav";
 char szTitleName [128] = "blades.sav";
 OPENFILENAME ofn;
-extern stored_town_maps_type far town_maps,town_maps2;
+extern stored_town_maps_type town_maps,town_maps2;
 
 short give_intro_hint = 1;
 short display_mode = 0;
@@ -58,6 +58,10 @@ short display_mode = 0;
 	 "Text Files (*.TXT)","*.txt",
 	 "All Files (*.*)","*.*",
 	 "" };
+
+static short FSWrite(HFILE file, long* len, char* buffer);
+static short FSRead(HFILE file, long* len, char* buffer);
+static short FSClose(HFILE file);
 
 void file_initialize()
 {
@@ -732,7 +736,7 @@ void reg_alert()
 	  "File Error",MB_OK | MB_ICONEXCLAMATION);
 }
 
-short FSWrite(HFILE file,long *len,char *buffer)
+static short FSWrite(HFILE file,long *len,char *buffer)
 {
 	long error = 0;
 
@@ -741,7 +745,7 @@ short FSWrite(HFILE file,long *len,char *buffer)
 	return 0;
 }
 
-short FSRead(HFILE file,long *len,char *buffer)
+static short FSRead(HFILE file,long *len,char *buffer)
 {
 	long error = 0;
 
@@ -751,26 +755,11 @@ short FSRead(HFILE file,long *len,char *buffer)
 		
 }
 
-short FSClose(HFILE file)
+static short FSClose(HFILE file)
 {
 	if (_lclose(file) == HFILE_ERROR)
 	{
 		return -1;
 	}
-	return 0;
-}
-
-short SetFPos(HFILE file, short mode, long len)
-{
-	long error = 0; 
-	
-	switch (mode) {
-		case 1: error = _llseek(file,len,0); break; 
-		case 2: error = _llseek(file,len,2); break; 
-		case 3: error = _llseek(file,len,1); break; 
-		}
-
-	if (error == HFILE_ERROR)
-		return -1;
 	return 0;
 }

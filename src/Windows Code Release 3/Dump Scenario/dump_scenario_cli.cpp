@@ -4,6 +4,10 @@
 #include <iostream>
 
 #ifdef _WIN32
+#if defined(__clang__)
+/* Clang doesn't know about wmain() */
+#pragma clang diagnostic ignored "-Wmissing-prototypes"
+#endif
 int wmain(int argc, wchar_t* argv[])
 #else
 int main(int argc, char* argv[])

@@ -12,18 +12,17 @@
 #include "graphutl.h"
 
 /* Adventure globals */
-extern party_record_type far party;
-extern pc_record_type far adven[6];
-extern outdoor_record_type far outdoors[2][2];
-extern current_town_type far c_town;
-extern big_tr_type far t_d;
+extern party_record_type party;
+extern std::array<pc_record_type, 6> adven;
+extern outdoor_record_type outdoors[2][2];
+extern current_town_type c_town;
+extern big_tr_type t_d;
 extern town_item_list far	t_i;
-extern unsigned char far out[96][96] ;
-extern unsigned char far out_e[96][96];
-extern setup_save_type far setup_save;
-extern stored_items_list_type far stored_items[3];
-extern stored_town_maps_type far maps;
-extern stored_outdoor_maps_type far o_maps;
+extern unsigned char out[96][96];
+extern setup_save_type setup_save;
+extern stored_items_list_type stored_items[3];
+extern stored_town_maps_type maps;
+extern stored_outdoor_maps_type o_maps;
 extern Boolean cd_event_filter();
 
 extern Boolean dialog_not_toast,ed_reg;
@@ -53,7 +52,7 @@ extern short ulx,uly;
 	Boolean talk_done = FALSE;
 	long val_for_text;
 	Boolean keep_change = FALSE;
-	short store_skills[20],store_h,store_sp,i,which_skill,store_skp = 10000,store_g = 10000;
+	static short store_skills[20],store_h,store_sp,which_skill,store_skp = 10000,store_g = 10000;
 
 
 short skill_cost[20] = {3,3,3,2,2,2, 1,2,2,6,
@@ -370,7 +369,7 @@ void display_alchemy()
 
 void do_xp_keep(short pc_num,short mode)
 {
-					for (i = 0; i < 20; i++)
+					for (short i = 0; i < 20; i++)
 						adven[pc_num].skills[i] = store_skills[i];
 					adven[pc_num].cur_health += store_h - adven[pc_num].max_health;
 					adven[pc_num].max_health = store_h;
@@ -412,7 +411,7 @@ void do_xp_draw()
 
 	cd_set_item_text (1010, 51,get_text);
 
-	for (i = 0; i < 20; i++)
+	for (short i = 0; i < 20; i++)
 		store_skills[i] = adven[pc_num].skills[i];
 	store_h = adven[pc_num].max_health;
 	store_sp = adven[pc_num].max_sp;
@@ -586,7 +585,7 @@ Boolean spend_xp(short pc_num, short mode, short parent)
 	sprintf(get_text,"Spell Pts. (%d/%d)",1,15);
 	//cd_add_label(1010,5,get_text,1040);
 	cd_add_label(1010,53,(char *) get_text,1075);
-	for (i = 54; i < 73; i++) {
+	for (short i = 54; i < 73; i++) {
 		get_str(text2,9,1 + 2 * (i - 54));
 		sprintf(get_text,"%s (%d/%d)",text2,skill_cost[i - 54],skill_g_cost[i - 54]);
 		cd_add_label(1010,i,(char *) get_text,(i < 63) ? 1075 : 1069);

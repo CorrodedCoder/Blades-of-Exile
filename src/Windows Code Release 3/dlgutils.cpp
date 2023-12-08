@@ -26,14 +26,14 @@
 
 #define	NUM_HINTS	30
 
-extern big_tr_type far  t_d;
+extern big_tr_type  t_d;
 extern short stat_window,overall_mode,dialog_answer;
-extern current_town_type far c_town;
-extern party_record_type far party;
+extern current_town_type c_town;
+extern party_record_type party;
 extern piles_of_stuff_dumping_type data_store;
 extern piles_of_stuff_dumping_type2 data_store2;
-extern talking_record_type far talking;
-extern scenario_data_type far scenario;
+extern talking_record_type talking;
+extern scenario_data_type scenario;
 
 extern Boolean in_startup_mode,play_sounds,sys_7_avail,give_intro_hint;
 extern HWND mainPtr;
@@ -43,7 +43,7 @@ extern long register_flag;
 extern long ed_flag,ed_key;
 extern Boolean registered,ed_reg,save_maps;
 extern short give_delays;
-extern pc_record_type far adven[6];
+extern std::array<pc_record_type, 6> adven;
 extern location center;
 extern HWND text_sbar,item_sbar,shop_sbar;
 extern Boolean modeless_exists[18];
@@ -55,7 +55,7 @@ extern Boolean dialog_not_toast;
 extern Boolean game_run_before;
 
 extern HPALETTE hpal;
-extern far PALETTEENTRY ape[256];
+extern PALETTEENTRY ape[256];
 extern HDC main_dc,main_dc2,main_dc3;
 extern Boolean cursor_shown;
 extern piles_of_stuff_dumping_type3 data_store3;
@@ -69,22 +69,22 @@ char null_string[256] = "";
 short store_tip_page_on = 0;
 
 // Talking vars
-word_rect_type far store_words[50];
+word_rect_type store_words[50];
 short store_pre_talk_mode,store_personality,store_personality_graphic,shop_identify_cost;
 HBITMAP talk_gworld = NULL;
 Boolean talk_end_forced;
-char far old_str1[256];
-char far old_str2[256];
-char far one_back1[256];
-char far one_back2[256]; 
-extern word_rect_type preset_words[9];
+char old_str1[256];
+char old_str2[256];
+char one_back1[256];
+char one_back2[256]; 
+extern std::array<word_rect_type, 9> preset_words;
 RECT talk_area_rect = {5,5,284,420}, word_place_rect = {7,44,257,372},talk_help_rect = {254,5,272,21};
 /**/
 char title_string[50];
 unsigned char store_monst_type;
 short store_m_num;
 RECT dummy_rect = {0,0,0,0};
-hold_responses far store_resp[83];
+hold_responses store_resp[83];
 short strnum1,strnum2,oldstrnum1,oldstrnum2;
 short store_talk_face_pic,cur_town_talk_loaded = -1;
 
@@ -97,11 +97,11 @@ short store_talk_face_pic,cur_town_talk_loaded = -1;
 // 800 + - mage spells
 // 900 + - priest spells
 // n000 + i - magic store n item i
-short far store_shop_items[30];
-short far store_shop_costs[30];
+short store_shop_items[30];
+short store_shop_costs[30];
 // talk_area_rect and talk_help_rect used for this too
 short store_shop_min,store_shop_max,store_pre_shop_mode,store_cost_mult;
-char far store_store_name[256];
+char store_store_name[256];
 // 0 - whole area, 1 - active area 2 - graphic 3 - item name
 // 4 - item cost 5 - item extra str  6 - item help button
 extern RECT shopping_rects[8][7];

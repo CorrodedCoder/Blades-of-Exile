@@ -28,7 +28,7 @@ extern HDC main_dc;
 extern HINSTANCE store_hInstance;
 
 
-extern short far terrain_pic[256];
+extern short terrain_pic[256];
 extern unsigned char m_pic_index[200];
 extern unsigned char m_pic_index_x[200];
 extern unsigned char m_pic_index_y[200];
@@ -36,27 +36,27 @@ extern unsigned char m_pic_index_y[200];
 extern HACCEL accel;
 
 short current_key = 0;
-short far dlg_keys[ND];
-short far dlg_types[ND];
+short dlg_keys[ND];
+short dlg_types[ND];
 HWND dlgs[ND];
 HWND dlg_parent[ND];
-short far dlg_highest_item[ND];
+short dlg_highest_item[ND];
 Boolean dlg_draw_ready[ND];
 
-short far item_dlg[NI];
-short far item_number[NI];
-char far item_type[NI];
-RECT far item_rect[NI];
-short far item_flag[NI];
-char far item_active[NI];
-char far item_key[NI];
-short far item_label[NI];
-short far item_label_loc[NI];
+short item_dlg[NI];
+short item_number[NI];
+char item_type[NI];
+RECT item_rect[NI];
+short item_flag[NI];
+char item_active[NI];
+char item_key[NI];
+short item_label[NI];
+short item_label_loc[NI];
 
-char far text_long_str[10][256];
-char far text_short_str[140][40];
-char far labels[NL][25];
-Boolean far label_taken[NL];
+char text_long_str[10][256];
+char text_short_str[140][40];
+char labels[NL][25];
+Boolean label_taken[NL];
 
 HWND edit_box[80];
 HWND store_edit_parent[80];

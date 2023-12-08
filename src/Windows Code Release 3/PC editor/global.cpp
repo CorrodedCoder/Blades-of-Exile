@@ -84,16 +84,3 @@ void pause(short length)
 	if (give_delays == 0)
 		Delay(len, &dummy);
 }
-
-void beep()
-{
-	long dummy;
-
-	MessageBeep(MB_OK);
-   Delay(30,&dummy);
-	}
-
-void SysBeep(short a)
-{
-	MessageBeep(MB_OK);
-}

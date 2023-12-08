@@ -15,22 +15,22 @@
 extern short cen_x, cen_y, overall_mode,cur_town;
 extern Boolean mouse_button_held,dialog_not_toast;
 extern short cur_viewing_mode,dialog_answer,given_password,user_given_password;
-extern town_record_type far town;
-extern big_tr_type far t_d;
+extern town_record_type town;
+extern big_tr_type t_d;
 extern short town_type;  // 0 - big 1 - ave 2 - small
-extern short max_dim[3],mode_count,to_create;
+extern short max_dim[3],mode_count;
 extern unsigned char template_terrain[64][64];
 
-extern scenario_data_type far scenario;
+extern scenario_data_type scenario;
 extern special_node_type null_spec_node;
 extern talking_node_type null_talk_node;
-extern char far scen_strs[160][256];
-extern char far scen_strs2[110][256];
-extern char far talk_strs[170][256];
-extern char far town_strs[180][256];
+extern char scen_strs[160][256];
+extern char scen_strs2[110][256];
+extern char talk_strs[170][256];
+extern char town_strs[180][256];
 
 extern location cur_out;
-extern scen_item_data_type far scen_item_list;
+extern scen_item_data_type scen_item_list;
 
 short store_which_ter;
 terrain_type_type store_ter;
@@ -2087,7 +2087,7 @@ void edit_horses()
 	cd_kill_dialog(808,0);
 }
 
-Boolean save_boats()
+static Boolean save_boats()
 {
 	short i;
 	
@@ -2106,7 +2106,7 @@ Boolean save_boats()
 	return TRUE;
 }
 
-void put_boats_in_dlog()
+static void put_boats_in_dlog()
 {
 	short i;
 	
@@ -2313,7 +2313,7 @@ void edit_item_placement()
 	cd_kill_dialog(812,0);
 }
 
-Boolean save_scen_details()
+static Boolean save_scen_details()
 {
 	char str[256];
 	short i;
@@ -2337,7 +2337,7 @@ Boolean save_scen_details()
 	return TRUE;
 }
 
-void put_scen_details_in_dlog()
+static void put_scen_details_in_dlog()
 {
 	cd_set_led_range(803,30,33,scenario.difficulty);
 	cd_set_led_range(803,21,24,scenario.rating);

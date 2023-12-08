@@ -16,11 +16,10 @@
 Handle sound_handles[NUM_SOUNDS];
 
 extern Boolean play_sounds,in_startup_mode;
-extern WindowPtr mainPtr;
 extern Boolean gInBackground;
 extern party_record_type	party;
 extern Boolean monsters_going;
-extern short num_chirps_played,overall_mode;
+extern short overall_mode;
 extern scenario_data_type scenario;
 
 short last_played = 10000;

@@ -15,7 +15,7 @@ extern outdoor_record_type outdoors[2][2];
 extern current_town_type c_town;
 extern big_tr_type t_d;
 extern town_item_list	t_i;
-extern unsigned char out[96][96],out_e[96][96];
+extern unsigned char out[96][96];
 extern setup_save_type setup_save;
 extern stored_items_list_type stored_items[3];
 

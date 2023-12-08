@@ -12,7 +12,6 @@
 Handle sound_handles[NUM_SOUNDS];
 
 extern Boolean play_sounds,in_startup_mode;
-extern WindowPtr mainPtr;
 extern Boolean gInBackground;
 extern party_record_type	party;
 

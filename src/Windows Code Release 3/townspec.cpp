@@ -1,5 +1,5 @@
-
 #include <Windows.h>
+#include <array>
 
 #include "global.h"
 #include "party.h"
@@ -16,24 +16,22 @@
 #include "exlsound.h"
 
 extern short overall_mode;
-extern party_record_type far party;
-extern talking_record_type far talking;
-extern scenario_data_type far scenario;
+extern party_record_type party;
+extern talking_record_type talking;
+extern scenario_data_type scenario;
 
-extern current_town_type far	c_town;
-extern unsigned char far out[96][96];
-extern unsigned char far out_e[96][96];
-extern unsigned char far combat_terrain[64][64];
+extern current_town_type	c_town;
+extern unsigned char out[96][96];
+extern unsigned char combat_terrain[64][64];
 extern short current_pc,stat_window;
-extern outdoor_record_type far outdoors[2][2];
+extern outdoor_record_type outdoors[2][2];
 extern location pc_pos[6],center;
-extern town_item_list far 	t_i;
-extern pc_record_type far adven[6];
-extern big_tr_type far  t_d;
+extern town_item_list 	t_i;
+extern std::array<pc_record_type, 6> adven;
+extern big_tr_type  t_d;
 extern Boolean registered;
-extern HWND mainPtr;
 
-	item_record_type	null_thing = {0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
+item_record_type	null_thing = {0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
 char answer[256];
 
 
@@ -66,6 +64,9 @@ Boolean GFI(short dialog_num)
 		return TRUE;
 		else return FALSE;
 }
+
+#if 0
+// Not referenced
 
 //DSG = Do Special Give
 void DSG(short item_num,unsigned char *flip_bit,short dialog_num,short what_spec,short amt_gold,short amt_food)
@@ -103,7 +104,7 @@ void DSG(short item_num,unsigned char *flip_bit,short dialog_num,short what_spec
 				else choice = fancy_choice_dialog(1049,0);
 		}
 }
-
+#endif
 
 Boolean run_trap(short pc_num,short trap_type,short trap_level,short diff)
 //short pc_num; // 6 - BOOM!  7 - pick here

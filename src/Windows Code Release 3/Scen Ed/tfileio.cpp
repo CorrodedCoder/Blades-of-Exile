@@ -12,7 +12,7 @@
 #include "graphutl.h"
 #include "../endian_adjust.hpp"
 
-extern scenario_data_type far scenario;
+extern scenario_data_type scenario;
 extern HDC main_dc;
 
 ave_tr_type ave_t;
@@ -21,21 +21,21 @@ tiny_tr_type tiny_t;
 
 HWND	the_dialog;
 extern HWND mainPtr;
-extern town_record_type far town;
-extern big_tr_type far t_d;
+extern town_record_type town;
+extern big_tr_type t_d;
 extern short town_type, max_dim[3];  // 0 - big 1 - ave 2 - small
 extern short cur_town,overall_mode,given_password,user_given_password;
 extern location cur_out;
 extern piles_of_stuff_dumping_type data_store;
-extern talking_record_type far talking;
-extern outdoor_record_type far current_terrain;
+extern talking_record_type talking;
+extern outdoor_record_type current_terrain;
 extern unsigned char borders[4][50];
 extern Boolean change_made;
-extern scen_item_data_type far scen_item_list;
-extern char far scen_strs[160][256];
-extern char far scen_strs2[110][256];
-extern char far talk_strs[170][256];
-extern char far town_strs[180][256];
+extern scen_item_data_type scen_item_list;
+extern char scen_strs[160][256];
+extern char scen_strs2[110][256];
+extern char talk_strs[170][256];
+extern char town_strs[180][256];
 extern HBITMAP spec_scen_g;
 extern char current_string[256] ;
 short specials_res_id,data_dump_file_id;
@@ -56,7 +56,9 @@ OPENFILENAME ofn;
 	OFSTRUCT store;
 Boolean suppress_load_file_name = FALSE;
 
-void print_write_position ();
+static short FSWrite(HFILE file, long* len, char* buffer);
+static short FSRead(HFILE file, long* len, char* buffer);
+static short SetFPos(HFILE file, short mode, long len);
 
 static const std::array szFilter{ "Blades of Exile Scenarios (*.EXS)","*.exs",
 		"Text Files (*.TXT)","*.txt",
@@ -247,7 +249,10 @@ void save_scenario()
 				len = (long) (scenario.out_data_size[i][0]) + (long) (scenario.out_data_size[i][1]);
 				error = FSRead(scen_f, &len, buffer);
 				dummy_out_ptr = (outdoor_record_type *) buffer;
-				port_out(dummy_out_ptr);
+				if (cur_scen_is_win != TRUE)
+				{
+					endian_adjust(*dummy_out_ptr);
+				}
 				if (error != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(19);}
 				if ((error = FSWrite(dummy_f, &len, buffer)) != 0) {
 					SysBeep(2); _lclose(scen_f); _lclose(dummy_f);oops_error(20);
@@ -332,17 +337,36 @@ void save_scenario()
 				error = FSRead(scen_f, &len, buffer);
 				if (error != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(24);}
 				dummy_town_ptr = (town_record_type *) buffer;
-				port_dummy_town();
-				if ((error = FSWrite(dummy_f, &len, buffer)) != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(23);return;}						
+				if (cur_scen_is_win != TRUE)
+				{
+					endian_adjust(*dummy_town_ptr);
+				}
+				if ((error = FSWrite(dummy_f, &len, buffer)) != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(23);return;}
 		
 				if (scenario.town_size[k] == 0) 
 					len = (long) ( sizeof(big_tr_type));
-					else if (scenario.town_size[k] == 1) 
-						len = (long) ( sizeof(ave_tr_type));
-						else len = (long) ( sizeof(tiny_tr_type));
+				else if (scenario.town_size[k] == 1) 
+					len = (long) ( sizeof(ave_tr_type));
+					else len = (long) ( sizeof(tiny_tr_type));
 				error = FSRead(scen_f, &len, buffer);
 				if (error != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(24);}
-				port_dummy_t_d(scenario.town_size[k],buffer);
+
+				if (cur_scen_is_win != TRUE)
+				{
+					switch(scenario.town_size[k])
+					{
+					case 0:
+						endian_adjust(*(big_tr_type*)buffer);
+						break;
+					case 1:
+						endian_adjust(*(ave_tr_type*)buffer);
+						break;
+					case 2:
+						endian_adjust(*(tiny_tr_type*)buffer);
+						break;
+					}
+				}
+
 				if ((error = FSWrite(dummy_f, &len, buffer)) != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(23);return;}						
 				
 				len = (long) (scenario.town_data_size[k][1])
@@ -355,8 +379,11 @@ void save_scenario()
 				error = FSRead(scen_f, &len, buffer);
 				if (error != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(24);}
 				dummy_talk_ptr = (talking_record_type *) buffer;
-				port_dummy_talk_nodes();
-				if ((error = FSWrite(dummy_f, &len, buffer)) != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(23);return;}						
+				if (cur_scen_is_win != TRUE)
+				{
+					endian_adjust(*dummy_talk_ptr);
+				}
+				if ((error = FSWrite(dummy_f, &len, buffer)) != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(23);return;}
 				len = (long) (scenario.town_data_size[k][4]);
 				error = FSRead(scen_f, &len, buffer);
 				if (error != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(24);}
@@ -429,8 +456,11 @@ void load_scenario()
 	  && (scenario.flag4 == 40)) {
 		cur_scen_is_win = FALSE;
 		file_ok = TRUE;
-		port_scenario();
+		if (cur_scen_is_win != TRUE)
+		{
+			endian_adjust(scenario);
 		}
+	}
 	if ((scenario.flag1 == 20) && (scenario.flag2 == 40)
 	 && (scenario.flag3 == 60)
 	  && (scenario.flag4 == 80)) {
@@ -447,7 +477,10 @@ void load_scenario()
 	if ((error = FSRead(file_id, &len, (char *) &(scen_item_list))) != 0){
 		_lclose(file_id); oops_error(30); return;
 		}
-	port_item_list();
+	if (cur_scen_is_win != TRUE)
+	{
+		endian_adjust(scen_item_list);
+	}
 	for (i = 0; i < 270; i++) {
 		len = (long) (scenario.scen_str_len[i]);
 		if (i < 160) {
@@ -590,7 +623,10 @@ void load_outdoors(location which_out,short mode)
 
 	if (mode == 0) {
 		current_terrain = store_out;
-		port_out(&current_terrain);
+		if (cur_scen_is_win != TRUE)
+		{
+			endian_adjust(current_terrain);
+		}
 		for (i = 0; i < 120; i++) {
 			len = (long) (current_terrain.strlens[i]);
 			FSRead(file_id, &len, (char *) &(data_store.out_strs[i]));
@@ -663,14 +699,20 @@ void load_town(short which_town)
 	len = sizeof(town_record_type);
 	
 	error = FSRead(file_id, &len , (char *) &town);
-	port_town();
+	if (cur_scen_is_win != TRUE)
+	{
+		endian_adjust(town);
+	}
 	if (error != 0) {_lclose(file_id);oops_error(36);}
 
 	switch (scenario.town_size[which_town]) {
 		case 0:
 			len =  sizeof(big_tr_type);
 			FSRead(file_id, &len, (char *) &t_d);
-			port_t_d();
+			if (cur_scen_is_win != TRUE)
+			{
+				endian_adjust(t_d);
+			}
 			break;
 
 		case 1:
@@ -687,7 +729,10 @@ void load_town(short which_town)
 				for (i = 0; i < 40; i++) {
 					t_d.creatures[i] = ave_t.creatures[i];
 					}
-				port_t_d();
+				if (cur_scen_is_win != TRUE)
+				{
+					endian_adjust(t_d);
+				}
 				for (i = 40; i < 60; i++) {
 					t_d.creatures[i].number = 0;
 					}
@@ -707,7 +752,10 @@ void load_town(short which_town)
 			for (i = 0; i < 30; i++) {
 				t_d.creatures[i] = tiny_t.creatures[i];
 				}
-			port_t_d();
+			if (cur_scen_is_win != TRUE)
+			{
+				endian_adjust(t_d);
+			}
 			for (i = 30; i < 60; i++) {
 				t_d.creatures[i].number = 0;
 				}
@@ -724,8 +772,11 @@ void load_town(short which_town)
 	len = sizeof(talking_record_type);
 	error = FSRead(file_id, &len , (char *) &talking);
 	if (error != 0) {_lclose(file_id);oops_error(37);}
-	port_talk_nodes();
-	
+	if (cur_scen_is_win != TRUE)
+	{
+		endian_adjust(talking);
+	}
+
 	for (i = 0; i < 170; i++) {
 		len = (long) (talking.strlens[i]);
 		FSRead(file_id, &len, (char *) &(talk_strs[i]));
@@ -1603,90 +1654,8 @@ void scen_text_dump()
 	_lclose(data_dump_file_id);
 
 }
-void port_talk_nodes()
-{
-	if (cur_scen_is_win == TRUE)
-		return;
 
-	endian_adjust(talking);
-}
-
-void port_town()
-{
-	if (cur_scen_is_win == TRUE)
-		return;
-
-	endian_adjust(town);
-}
-
-void port_dummy_town()
-{
-	if (cur_scen_is_win == TRUE)
-		return;
-
-	endian_adjust(*dummy_town_ptr);
-}
-
-void port_dummy_t_d(short size,char *buffer)
-{
-	if (cur_scen_is_win == TRUE)
-		return;
-
-	switch (size) {
-		case 0:
-			endian_adjust(*(big_tr_type*)buffer);
-			break;
-		case 1:
-			endian_adjust(*(ave_tr_type*)buffer);
-			break;
-		case 2:
-			endian_adjust(*(tiny_tr_type*)buffer);
-			break;
-		}
-}
-
-void port_dummy_talk_nodes()
-{
-	if (cur_scen_is_win == TRUE)
-		return;
-
-	endian_adjust(*dummy_talk_ptr);
-}
-
-void port_t_d()
-{
-	if (cur_scen_is_win == TRUE)
-		return;
-
-	endian_adjust(t_d);
-}
-
-void port_scenario()
-{
-	if (cur_scen_is_win == TRUE)
-		return;
-
-	endian_adjust(scenario);
-}
-
-
-void port_item_list()
-{
-	if (cur_scen_is_win == TRUE)
-		return;
-
-	endian_adjust(scen_item_list);
-}
-
-void port_out(outdoor_record_type *out)
-{
-	if (cur_scen_is_win == TRUE)
-		return;
-
-	endian_adjust(*out);
-}
-
-short FSWrite(HFILE file,long *len,char *buffer)
+static short FSWrite(HFILE file,long *len,char *buffer)
 {
 	long error = 0;
 
@@ -1695,7 +1664,7 @@ short FSWrite(HFILE file,long *len,char *buffer)
 	return 0;
 }
 
-short FSRead(HFILE file,long *len,char *buffer)
+static short FSRead(HFILE file,long *len,char *buffer)
 {
 	long error = 0;
 
@@ -1705,7 +1674,7 @@ short FSRead(HFILE file,long *len,char *buffer)
 		
 }
 
-short SetFPos(HFILE file, short mode, long len)
+static short SetFPos(HFILE file, short mode, long len)
 {
 	long error = 0; 
 	

@@ -22,19 +22,19 @@ extern short current_spell_range,town_type,store_anim_type;
 extern Boolean in_startup_mode,anim_onscreen,play_sounds,frills_on,startup_loaded,party_in_memory;
 extern short town_size[3];
 extern short anim_step;
-extern party_record_type far party;
+extern party_record_type party;
 extern piles_of_stuff_dumping_type data_store;
-extern talking_record_type far talking;
-extern scenario_data_type far scenario;
+extern talking_record_type talking;
+extern scenario_data_type scenario;
 
-extern pc_record_type far adven[6];
-extern big_tr_type far  t_d;
-extern outdoor_record_type far outdoors[2][2];
-extern current_town_type far c_town;
-extern town_item_list far  t_i;
-extern unsigned char far out[96][96];
-extern unsigned char far out_e[96][96];
-extern unsigned char far combat_terrain[64][64];
+extern std::array<pc_record_type, 6> adven;
+extern big_tr_type  t_d;
+extern outdoor_record_type outdoors[2][2];
+extern current_town_type c_town;
+extern town_item_list  t_i;
+extern unsigned char out[96][96];
+extern unsigned char out_e[96][96];
+extern unsigned char combat_terrain[64][64];
 extern effect_pat_type current_pat;
 extern Boolean web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern short ulx,uly;
@@ -43,7 +43,7 @@ extern short which_combat_type,current_pc;
 extern Boolean monsters_going,boom_anim_active,cartoon_happening;
 extern short current_ground;
 extern short terrain_pic[256];
-extern short pc_moves[6];
+extern std::array<short, 6> pc_moves;
 extern short num_targets_left;
 extern location spell_targets[8];
 extern short display_mode;
@@ -59,7 +59,7 @@ extern Boolean registered,ed_reg;
 extern Boolean fast_bang;
 
 extern HPALETTE hpal;
-extern far PALETTEENTRY ape[256];
+extern PALETTEENTRY ape[256];
 extern HDC main_dc,main_dc2,main_dc3;
 
 extern HFONT fantasy_font,font,small_bold_font,italic_font,underline_font,bold_font;
@@ -102,7 +102,7 @@ RECT win_to_rects[6] = {{5,5,284,356},{5,383,263,420},{0,0,271,116},{0,0,271,144
 
 // 0 - title  1 - button  2 - credits  3 - base button
 RECT startup_from[4] = {{0,0,602,274},{0,274,301,322},{301,0,579,67},{301,274,341,314}}; ////
-extern RECT startup_button[6];
+extern std::array<RECT, 6> startup_button;
 	
 	RECT trim_rects[8] = {{0,0,28,5},{0,31,28,36},{0,0,5,36},{24,0,28,36},
 						{0,0,5,5},{24,0,28,5},{24,31,28,36},{0,31,5,36}};  /**/
@@ -137,11 +137,11 @@ HBRUSH gbrush;
 HPEN gpen;
 
 // Graphics storage vals
-short far which_g_stored[STORED_GRAPHICS];
+short which_g_stored[STORED_GRAPHICS];
 // 0 - 299 terrain graphic   300 + i  monster graphic i, face right  600 + i face left
 // 1000 + 100 * j + i   anim i pos j    2300 + i  combat monster graphic i, face right  2600 + i face left
-short far wish_list[STORED_GRAPHICS];
-short far storage_status[STORED_GRAPHICS]; // 0 - empty 1 - in use 2 - there, not in use
+short wish_list[STORED_GRAPHICS];
+short storage_status[STORED_GRAPHICS]; // 0 - empty 1 - in use 2 - there, not in use
 
 Boolean has_run_anim = FALSE,currently_loading_graphics = FALSE;
 //short anim_step = 0;
@@ -160,8 +160,8 @@ RECT start_buttons_source_rect = {0,0,190,186},
 	start_buttons_rect = {30,214,220,400}; /**/
 
 // Variables to store trim. Makes game faster, but wastes 15K. We'll see how it works...
-char far out_trim[96][96];
-char far town_trim[64][64];
+char out_trim[96][96];
+char town_trim[64][64];
 
 // Array to store which spots have been seen. Time-saver for drawing fields
 char spot_seen[9][9];

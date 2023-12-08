@@ -16,7 +16,7 @@
 
 extern HWND mainPtr;
 extern HPALETTE hpal;
-extern far PALETTEENTRY ape[256];
+extern PALETTEENTRY ape[256];
 extern HDC main_dc,main_dc2,main_dc3;
 extern short ulx,uly;
 extern HBITMAP mixed_gworld,dialog_pattern_gworld,pattern_gworld,status_pattern_gworld;
@@ -118,7 +118,7 @@ plgpl = (LOGPALETTE*) LocalLock(l);
 
 // extracts and inflicts palette from given dib. WARNING ...
 // does NOT do any deleting or cleanup
-void extract_given_palette(BYTE * lpDib)
+static void extract_given_palette(BYTE * lpDib)
 {
 	HDC hdc;
 	short i;

@@ -1,4 +1,5 @@
 #include <Windows.h>
+#include <array>
 #include <cstdio>
 
 #include "global.h"
@@ -11,29 +12,28 @@
 #include "graphics.h"
 #include "newgraph.h"
 
-extern current_town_type far c_town;
-extern party_record_type far party;
-extern talking_record_type far talking;
-extern scenario_data_type far scenario;
+extern current_town_type c_town;
+extern party_record_type party;
+extern talking_record_type talking;
+extern scenario_data_type scenario;
 
 extern short overall_mode;
-extern outdoor_record_type far outdoors[2][2];
-extern unsigned char far out[96][96];
-extern unsigned char far out_e[96][96];
-extern unsigned char far combat_terrain[64][64];
+extern outdoor_record_type outdoors[2][2];
+extern unsigned char out[96][96];
+extern unsigned char combat_terrain[64][64];
 extern short which_combat_type;
-extern pc_record_type far adven[6];
-extern big_tr_type far  t_d;
+extern std::array<pc_record_type, 6> adven;
+extern big_tr_type  t_d;
 extern short monst_target[T_M]; // 0-5 target that pc   6 - no target  100 + x - target monster x
 extern short spell_caster, missile_firer,current_monst_tactic;
-extern short far hit_chance[21];
-extern unsigned char far misc_i[64][64];
+extern short hit_chance[21];
+extern unsigned char misc_i[64][64];
 extern location monster_targs[T_M];
 
 extern location pc_pos[6],center;
 extern short boom_gr[8],futzing;
 extern Boolean processing_fields,monsters_going;
-extern town_item_list far 	t_i;
+extern town_item_list 	t_i;
 
 
 
