@@ -81,10 +81,12 @@ typedef struct {
 Boolean loaded_yet = FALSE, got_nagged = FALSE,ae_loading = FALSE;
 Boolean cur_scen_is_win = TRUE;
 
+enum class FSOrigin { SET=1, CUR=3, END=2 };
+
 static short FSWrite(HFILE file, long len, const char* buffer);
 static short FSRead(HFILE file, long len, char* buffer);
 static short FSClose(HFILE file);
-static short SetFPos(HFILE file, short mode, long len);
+static short SetFPos(HFILE file, FSOrigin mode, long len);
 
 void save_outdoor_maps();
 void add_outdoor_maps();
@@ -761,7 +763,7 @@ void load_town(short town_num,short mode,short extra,char *str)
 			store += (long) (scenario.town_data_size[i][j]);
 	len_to_jump += store;
 
-	error = SetFPos (file_id, 1, len_to_jump);
+	error = SetFPos (file_id, FSOrigin::SET, len_to_jump);
 	if (error != 0) {FSClose(file_id);oops_error(35);}
 
 	if (mode == 0) {
@@ -783,7 +785,7 @@ void load_town(short town_num,short mode,short extra,char *str)
 					endian_adjust(t_d);
 				}
 			}
-				else error = SetFPos (file_id, 3, sizeof(big_tr_type));
+				else error = SetFPos (file_id, FSOrigin::CUR, sizeof(big_tr_type));
 
 			break;
 			
@@ -816,7 +818,7 @@ void load_town(short town_num,short mode,short extra,char *str)
 						endian_adjust(t_d);
 					}
 				}
-					else error = SetFPos (file_id, 3, sizeof(ave_tr_type));
+					else error = SetFPos (file_id, FSOrigin::CUR, sizeof(ave_tr_type));
 
 			break;
 			
@@ -842,7 +844,7 @@ void load_town(short town_num,short mode,short extra,char *str)
 					endian_adjust(t_d);
 				}
 			}
-				else error = SetFPos (file_id, 3, sizeof(tiny_tr_type));
+				else error = SetFPos (file_id, FSOrigin::CUR, sizeof(tiny_tr_type));
 			break;
 		}
 		
@@ -853,7 +855,7 @@ void load_town(short town_num,short mode,short extra,char *str)
 				file_read_string(file_id, len, data_store.town_strs[i]);
 				break;
 			case 1:
-				SetFPos (file_id, 3, len);
+				SetFPos (file_id, FSOrigin::CUR, len);
 				break;
 			case 2:
 				if (extra < 0) {
@@ -862,7 +864,7 @@ void load_town(short town_num,short mode,short extra,char *str)
 				else if (i == extra) {
 					file_read_string(file_id, len, str);
 					}
-					else SetFPos (file_id, 3, len);
+					else SetFPos (file_id, FSOrigin::CUR, len);
 				break;
 			}
 		}
@@ -1273,7 +1275,7 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 			store += (long) (scenario.out_data_size[i][j]);
 	len_to_jump += store;
 
-	error = SetFPos (file_id, 1, len_to_jump);
+	error = SetFPos (file_id, FSOrigin::SET, len_to_jump);
 	if (error != 0) {FSClose(file_id);oops_error(32);}
 
 	if (mode == 0) {
@@ -1297,7 +1299,7 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 			if (i == extra) {
 				file_read_string(file_id, len, str);
 				}
-				else SetFPos (file_id, 3, len);	
+				else SetFPos (file_id, FSOrigin::CUR, len);
 			}
 	
 		}
@@ -1617,7 +1619,7 @@ Boolean load_scenario_header(char *filename,short header_entry)
 	 	}
 
 	// So file is OK, so load in string data and close it.
-	SetFPos(file_id,1,0);
+	SetFPos(file_id, FSOrigin::SET,0);
 	error = file_read_type(file_id, scenario);
 	if ( error != 0){
 		FSClose(file_id); oops_error(29); return FALSE;
@@ -1627,7 +1629,7 @@ Boolean load_scenario_header(char *filename,short header_entry)
 		endian_adjust(store);
 	scen_headers[header_entry].default_ground = store;
 
-	error = SetFPos(file_id, 3, sizeof(scen_item_data_type));
+	error = SetFPos(file_id, FSOrigin::CUR, sizeof(scen_item_data_type));
 	if (error != 0)
 		return FALSE;
 		
@@ -1873,15 +1875,16 @@ static short FSClose(HFILE file)
 	return 0;
 }
 
-static short SetFPos(HFILE file, short mode, long len)
+static short SetFPos(HFILE file, FSOrigin mode, long len)
 {
 	long error = 0; 
 	
-	switch (mode) {
-		case 1: error = _llseek(file,len, SEEK_SET); break;
-		case 2: error = _llseek(file,len, SEEK_END); break;
-		case 3: error = _llseek(file,len, SEEK_CUR); break;
-		}
+	switch (mode)
+	{
+	case FSOrigin::SET: error = _llseek(file,len, SEEK_SET); break;
+	case FSOrigin::END: error = _llseek(file,len, SEEK_END); break;
+	case FSOrigin::CUR: error = _llseek(file,len, SEEK_CUR); break;
+	}
 
 	if (error == HFILE_ERROR)
 		return -1;
