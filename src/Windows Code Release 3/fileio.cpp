@@ -126,9 +126,14 @@ static inline short file_write_type(HFILE file, const auto& type)
 	return FSWrite(file, sizeof(type), reinterpret_cast<const char*>(&type));
 }
 
+static inline UINT llfile_read_type(HFILE file, auto& type)
+{
+	return _lread(file, reinterpret_cast<char*>(&type), sizeof(type));
+}
+
 static inline UINT llfile_write_type(HFILE file, const auto& type)
 {
-	return _lwrite(file, (const char*)&type, sizeof(type));
+	return _lwrite(file, reinterpret_cast<const char*>(&type), sizeof(type));
 }
 
 static inline void xor_type(auto& type, char xor_value)
@@ -204,7 +209,7 @@ void load_file()
 	//	add_string_to_buf( debug);
 
 	for (i = 0; i < 3; i++) {
-		error = _lread(file_id, &flag, sizeof(flag_type));
+		error = llfile_read_type(file_id, flag);
 		if (error == HFILE_ERROR) {
 			beep();
 			return;
@@ -225,7 +230,7 @@ void load_file()
 	}
 
 	// LOAD PARTY
-	error = _lread(file_id, &party, sizeof(party_record_type));
+	error = llfile_read_type(file_id, party);
 	if (error == HFILE_ERROR) {
 		_lclose(file_id);
 		SysBeep(2);
@@ -235,7 +240,7 @@ void load_file()
 	xor_type(party, 0x5C);
 
 	// LOAD SETUP
-	error = _lread(file_id, &setup_save, sizeof(setup_save_type));
+	error = llfile_read_type(file_id, setup_save);
 	if (error == HFILE_ERROR) {
 		_lclose(file_id);
 		SysBeep(2);
@@ -245,7 +250,7 @@ void load_file()
 
 	// LOAD PCS
 	for (i = 0; i < 6; i++) {
-		error = _lread(file_id, &adven[i], sizeof(pc_record_type));
+		error = llfile_read_type(file_id, adven[i]);
 		if (error == HFILE_ERROR) {
 			_lclose(file_id);
 			SysBeep(2);
