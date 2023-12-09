@@ -127,6 +127,15 @@ static inline short file_write_type(HFILE file, const auto& type)
 	return FSWrite(file, sizeof(type), reinterpret_cast<const char*>(&type));
 }
 
+static inline void xor_type(auto& type, char xor_value)
+{
+	for (size_t index = 0; index < sizeof(type); ++index)
+	{
+		reinterpret_cast<char*>(&type)[index] ^= xor_value;
+	}
+}
+
+
 void file_initialize()
 {
 		OpenFile("outdoor.dat",&save_dir,OF_PARSE);
@@ -166,7 +175,7 @@ void load_file()
 	
 	char flag_data[8];
 
-	UINT count,error;
+	UINT error;
 	char *party_ptr;
 	char *pc_ptr;
 	flag_type flag;
@@ -227,8 +236,7 @@ void load_file()
 		FCD(1064,0);
 		return;
 		}
-	for (count = 0; count < (long)sizeof(party_record_type); count++)
-		party_ptr[count] ^= 0x5C;	
+	xor_type(party, 0x5C);
 
 	// LOAD SETUP
 	error = _lread(file_id, (char*)&setup_save, sizeof(setup_save_type));
@@ -249,8 +257,7 @@ void load_file()
 		FCD(1064,0);
 			return;
 			}
-		for (count = 0; count < (long)sizeof(pc_record_type); count++)
-			pc_ptr[count] ^= 0x6B;	
+		xor_type(adven[i], 0x6B);
 		}
 
 	if (in_scen == TRUE) {
@@ -461,7 +468,6 @@ void save_file(short mode)
 
 	short i;
 
-	long count;
 	flag_type flag;
 	flag_type *store;
 	party_record_type *party_ptr;
@@ -469,8 +475,6 @@ void save_file(short mode)
 	pc_record_type *pc_ptr;
 //	out_info_type store_explored;
 		
-	char *party_encryptor;	
-
 	if ((in_startup_mode == FALSE) && (is_town()))
 		town_save = TRUE;
 
@@ -519,20 +523,16 @@ void save_file(short mode)
 	// SAVE PARTY
 	party_ptr = &party;	
 
-	party_encryptor = (char *) party_ptr;
-	for (count = 0; count < (long)sizeof(party_record_type); count++)
-		party_encryptor[count] ^= 0x5C;
+	xor_type(party, 0x5C);
 	error = _lwrite(file_id, (char*)party_ptr, sizeof(party_record_type));
 	if ( error == HFILE_ERROR) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		_lclose(file_id);
-		for (count = 0; count < (long)sizeof(party_record_type); count++)
-			party_encryptor[count] ^= 0x5C;
+		xor_type(party, 0x5C);
 			SysBeep(2); 
 		return;
 		}
-	for (count = 0; count < (long)sizeof(party_record_type); count++)
-		party_encryptor[count] ^= 0x5C;
+	xor_type(party, 0x5C);
 
 	// SAVE SETUP
 	setup_ptr = &setup_save;	
@@ -547,22 +547,17 @@ void save_file(short mode)
 	// SAVE PCS	
 	for (i = 0; i < 6; i++) {
 		pc_ptr = &adven[i];	
-
-		party_encryptor = (char *) pc_ptr;
-		for (count = 0; count < (long)sizeof(pc_record_type); count++)
-			party_encryptor[count] ^= 0x6B;
+		xor_type(adven[i], 0x6B);
 		error = _lwrite(file_id, (char*)pc_ptr, sizeof(pc_record_type));
 		if ( error == HFILE_ERROR){
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			_lclose(file_id);
-			for (count = 0; count < (long)sizeof(pc_record_type); count++)
-				party_encryptor[count] ^= 0x6B;
-				SysBeep(2); 
+			xor_type(adven[i], 0x6B);
+			SysBeep(2);
 			return;
 			}
-		for (count = 0; count < (long)sizeof(pc_record_type); count++)
-			party_encryptor[count] ^= 0x6B;
-		}
+		xor_type(adven[i], 0x6B);
+	}
 		
 	if (in_startup_mode == FALSE) {
 	
