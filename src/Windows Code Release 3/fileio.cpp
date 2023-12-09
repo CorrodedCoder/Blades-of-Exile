@@ -126,6 +126,11 @@ static inline short file_write_type(HFILE file, const auto& type)
 	return FSWrite(file, sizeof(type), reinterpret_cast<const char*>(&type));
 }
 
+static inline UINT llfile_write_type(HFILE file, const auto& type)
+{
+	return _lwrite(file, (const char*)&type, sizeof(type));
+}
+
 static inline void xor_type(auto& type, char xor_value)
 {
 	for (size_t index = 0; index < sizeof(type); ++index)
@@ -485,14 +490,14 @@ void save_file(short mode)
 		}
 
 	flag.i = (town_save == TRUE) ? 1342 : 5790;
-	error = _lwrite(file_id, (const char*)&flag, sizeof(flag_type));
+	error = llfile_write_type(file_id, flag);
 	if (error == HFILE_ERROR) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		_lclose(file_id);
 		SysBeep(2);
 	}
 	flag.i = (in_startup_mode == FALSE) ? 100 : 200;
-	error = _lwrite(file_id, (const char*)&flag, sizeof(flag_type));
+	error = llfile_write_type(file_id, flag);
 	if (error == HFILE_ERROR) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		_lclose(file_id);
@@ -500,7 +505,7 @@ void save_file(short mode)
 		return;
 	}
 	flag.i = (save_maps == TRUE) ? 5567 : 3422;
-	error = _lwrite(file_id, (const char*)&flag, sizeof(flag_type));
+	error = llfile_write_type(file_id, flag);
 	if (error == HFILE_ERROR) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		_lclose(file_id);
@@ -510,7 +515,7 @@ void save_file(short mode)
 
 	// SAVE PARTY
 	xor_type(party, 0x5C);
-	error = _lwrite(file_id, (const char*)&party, sizeof(party_record_type));
+	error = llfile_write_type(file_id, party);
 	if (error == HFILE_ERROR) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		_lclose(file_id);
@@ -521,7 +526,7 @@ void save_file(short mode)
 	xor_type(party, 0x5C);
 
 	// SAVE SETUP
-	error = _lwrite(file_id, (const char*)&setup_save, sizeof(setup_save_type));
+	error = llfile_write_type(file_id, setup_save);
 	if (error == HFILE_ERROR) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		_lclose(file_id);
@@ -532,7 +537,7 @@ void save_file(short mode)
 	// SAVE PCS	
 	for (i = 0; i < 6; i++) {
 		xor_type(adven[i], 0x6B);
-		error = _lwrite(file_id, (const char*)&adven[i], sizeof(pc_record_type));
+		error = llfile_write_type(file_id, adven[i]);
 		if (error == HFILE_ERROR) {
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			_lclose(file_id);
@@ -1421,7 +1426,7 @@ void build_data_file(short mode)
 			break;
 		}
 		static_assert(sizeof(val_store) == 4);
-		_lwrite(f, (const char*)&val_store, sizeof(val_store));
+		llfile_write_type(f, val_store);
 	}
 
 	_lclose(f);
