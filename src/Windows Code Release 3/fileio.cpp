@@ -177,7 +177,6 @@ void load_file()
 	Boolean town_restore = FALSE;
 	Boolean maps_there = FALSE;
 
-	char flag_data[8];
 	UINT error;
 	flag_type flag;
 	Boolean in_scen = FALSE;
@@ -205,12 +204,11 @@ void load_file()
 	//	add_string_to_buf( debug);
 
 	for (i = 0; i < 3; i++) {
-		error = _lread(file_id, flag_data, sizeof(flag_type));
+		error = _lread(file_id, &flag, sizeof(flag_type));
 		if (error == HFILE_ERROR) {
 			beep();
 			return;
 		}
-		flag = *(flag_type*)flag_data;
 		if ((flag.i != flags[i][0]) && (flag.i != flags[i][1])) { // OK Exile II save file?
 			_lclose(file_id);
 			FCD(1063, 0);
