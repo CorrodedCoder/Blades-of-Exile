@@ -81,8 +81,8 @@ typedef struct {
 Boolean loaded_yet = FALSE, got_nagged = FALSE,ae_loading = FALSE;
 Boolean cur_scen_is_win = TRUE;
 
-static short FSWrite(HFILE file, long* len, char* buffer);
-static short FSRead(HFILE file, long* len, char* buffer);
+static short FSWrite(HFILE file, long len, const char* buffer);
+static short FSRead(HFILE file, long len, char* buffer);
 static short FSClose(HFILE file);
 static short SetFPos(HFILE file, short mode, long len);
 
@@ -247,7 +247,7 @@ void load_file()
 	
 	// LOAD OUTDOOR MAP
 	len = (long) sizeof(out_info_type);
-	error = FSRead(file_id, &len, (char*)out_e);
+	error = FSRead(file_id, len, (char*)out_e);
 	if ( error != 0){
 		FSClose(file_id);
 		SysBeep(2);
@@ -258,7 +258,7 @@ void load_file()
 	// LOAD TOWN 
 	if (town_restore == TRUE) {
 		len = (long) sizeof(current_town_type);
-		error = FSRead(file_id, &len, (char*)&c_town);
+		error = FSRead(file_id, len, (char*)&c_town);
 		if ( error != 0){
 				FSClose(file_id);
 				SysBeep(2);
@@ -267,7 +267,7 @@ void load_file()
 				}
 	
 		len = (long) sizeof(big_tr_type);
-		error = FSRead(file_id, &len, (char*)&t_d);
+		error = FSRead(file_id, len, (char*)&t_d);
 		if ( error != 0){
 				FSClose(file_id);
 				SysBeep(2);
@@ -276,7 +276,7 @@ void load_file()
 				}
 
 		len = (long) sizeof(town_item_list);
-		error = FSRead(file_id, &len, (char*)&t_i);
+		error = FSRead(file_id, len, (char*)&t_i);
 		if ( error != 0){
 			FSClose(file_id);
 			SysBeep(2);
@@ -289,7 +289,7 @@ void load_file()
 	// LOAD STORED ITEMS
 	for (i = 0; i < 3; i++) {
 		len = (long) sizeof(stored_items_list_type);
-		error = FSRead(file_id, &len, (char*)&stored_items[i]);
+		error = FSRead(file_id, len, (char*)&stored_items[i]);
 		if (error != 0){
 				FSClose(file_id);
 				SysBeep(2);
@@ -301,7 +301,7 @@ void load_file()
 	// LOAD SAVED MAPS
 	if (maps_there == TRUE) {
 		len = (long) sizeof(stored_town_maps_type);
-		error = FSRead(file_id, &len, (char*)&(town_maps));
+		error = FSRead(file_id, len, (char*)&(town_maps));
 		if ( error != 0){
 				FSClose(file_id);
 				SysBeep(2);
@@ -309,7 +309,7 @@ void load_file()
 				return;
 				}
 		len = (long) sizeof(stored_town_maps_type);
-		error = FSRead(file_id, &len, (char*)&(town_maps2));
+		error = FSRead(file_id, len, (char*)&(town_maps2));
 		if ( error != 0){
 				FSClose(file_id);
 				SysBeep(2);
@@ -318,7 +318,7 @@ void load_file()
 				}
 	
 		len = (long) sizeof(stored_outdoor_maps_type);
-		error = FSRead(file_id, &len, (char*)&o_maps);
+		error = FSRead(file_id, len, (char*)&o_maps);
 		if (error != 0) {
 				FSClose(file_id);
 				SysBeep(2);
@@ -329,14 +329,14 @@ void load_file()
 
 	// LOAD SFX & MISC_I
 		len = (long) (64 * 64);
-		error = FSRead(file_id, &len, (char*)sfx);
+		error = FSRead(file_id, len, (char*)sfx);
 		if ( error != 0){
 				FSClose(file_id);
 				SysBeep(2);
 		FCD(1064,0);
 				return;
 				}
-		error = FSRead(file_id, &len, (char*)misc_i);
+		error = FSRead(file_id, len, (char*)misc_i);
 		if ( error != 0){
 				FSClose(file_id);
 				SysBeep(2);
@@ -577,7 +577,7 @@ void save_file(short mode)
 	
 	// SAVE OUT DATA
 	len = sizeof(out_info_type);
-	error = FSWrite(file_id, &len, (char*)out_e);
+	error = FSWrite(file_id, len, (char*)out_e);
 	if ( error != 0) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		FSClose(file_id);
@@ -588,7 +588,7 @@ void save_file(short mode)
 	if (town_save == TRUE) {	
 			town_ptr = &c_town;	
 			len = sizeof(current_town_type);
-			error = FSWrite(file_id, &len, (char*)town_ptr);
+			error = FSWrite(file_id, len, (char*)town_ptr);
 			if ( error != 0) {
 				add_string_to_buf("Save: Couldn't write to file.         ");
 				FSClose(file_id);
@@ -597,7 +597,7 @@ void save_file(short mode)
 				}
 			town_data_ptr = &t_d;	
 			len = sizeof(big_tr_type);
-			error = FSWrite(file_id, &len, (char*)town_data_ptr);
+			error = FSWrite(file_id, len, (char*)town_data_ptr);
 			if ( error != 0) {
 				add_string_to_buf("Save: Couldn't write to file.         ");
 				FSClose(file_id);
@@ -606,7 +606,7 @@ void save_file(short mode)
 				}
 			item_ptr = &t_i;	
 			len = sizeof(town_item_list);
-			error = FSWrite(file_id, &len, (char*)item_ptr);
+			error = FSWrite(file_id, len, (char*)item_ptr);
 			if ( error != 0) {
 				add_string_to_buf("Save: Couldn't write to file.         ");
 				FSClose(file_id);
@@ -619,7 +619,7 @@ void save_file(short mode)
 	for (i = 0; i < 3; i++) {
 		items_ptr = &stored_items[i];
 		len = (long) sizeof(stored_items_list_type);
-		error = FSWrite(file_id, &len, (char*)items_ptr);
+		error = FSWrite(file_id, len, (char*)items_ptr);
 		if ( error != 0){
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			FSClose(file_id);
@@ -632,7 +632,7 @@ void save_file(short mode)
 	if (save_maps == TRUE) {
 		maps_ptr = &(town_maps);
 		len = (long) sizeof(stored_town_maps_type);
-		error = FSWrite(file_id, &len, (char*)maps_ptr);
+		error = FSWrite(file_id, len, (char*)maps_ptr);
 		if ( error != 0){
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			FSClose(file_id);
@@ -641,7 +641,7 @@ void save_file(short mode)
 			}	
 		maps_ptr = &(town_maps2);
 		len = (long) sizeof(stored_town_maps_type);
-		error = FSWrite(file_id, &len, (char*)maps_ptr);
+		error = FSWrite(file_id, len, (char*)maps_ptr);
 		if ( error != 0){
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			FSClose(file_id);
@@ -651,7 +651,7 @@ void save_file(short mode)
 
 		o_maps_ptr = &o_maps;
 		len = (long) sizeof(stored_outdoor_maps_type);
-		error = FSWrite(file_id, &len, (char*)o_maps_ptr);
+		error = FSWrite(file_id, len, (char*)o_maps_ptr);
 		if ( error != 0) {
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			FSClose(file_id);
@@ -662,14 +662,14 @@ void save_file(short mode)
 	
 	// SAVE SFX and MISC_I
 		len = (long) (64 * 64);
-		error = FSWrite(file_id, &len, (char*)sfx);
+		error = FSWrite(file_id, len, (char*)sfx);
 		if ( error != 0){
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			FSClose(file_id);
 			SysBeep(2); 
 			return;
 			}
-		error = FSWrite(file_id, &len, (char*)misc_i);
+		error = FSWrite(file_id, len, (char*)misc_i);
 		if ( error != 0){
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			FSClose(file_id);
@@ -796,20 +796,20 @@ void load_town(short town_num,short mode,short extra,char *str)
 	len = sizeof(town_record_type);
 
 	if (mode == 0) {
-		error = FSRead(file_id, &len , (char *) &c_town.town);
+		error = FSRead(file_id, len, (char *) &c_town.town);
 		if (cur_scen_is_win != TRUE)
 		{
 			endian_adjust(c_town.town);
 		}
 	}
-		else error = FSRead(file_id, &len , (char *) &dummy_town);
+		else error = FSRead(file_id, len, (char *) &dummy_town);
 	if (error != 0) {FSClose(file_id);oops_error(36);}
 
 	switch (scenario.town_size[which_town]) {
 		case 0:
 			len =  sizeof(big_tr_type);
 			if (mode == 0) {
-				FSRead(file_id, &len, (char *) &t_d);
+				FSRead(file_id, len, (char *) &t_d);
 				if (cur_scen_is_win != TRUE)
 				{
 					endian_adjust(t_d);
@@ -822,7 +822,7 @@ void load_town(short town_num,short mode,short extra,char *str)
 		case 1:
 				len = sizeof(ave_tr_type);
 				if (mode == 0) {
-					FSRead(file_id, &len, (char *) &ave_t);
+					FSRead(file_id, len, (char *) &ave_t);
 					for (i = 0; i < 48; i++)
 						for (j = 0; j < 48; j++) {
 							t_d.terrain[i][j] = ave_t.terrain[i][j];
@@ -856,7 +856,7 @@ void load_town(short town_num,short mode,short extra,char *str)
 		case 2:
 			len = sizeof(tiny_tr_type);
 			if (mode == 0) {
-				FSRead(file_id,&len , (char *) &tiny_t);
+				FSRead(file_id, len, (char *) &tiny_t);
 				for (i = 0; i < 32; i++)
 					for (j = 0; j < 32; j++) {
 						t_d.terrain[i][j] = tiny_t.terrain[i][j];
@@ -884,7 +884,7 @@ void load_town(short town_num,short mode,short extra,char *str)
 		len = (mode == 0) ? (long) (c_town.town.strlens[i]) : (long) (dummy_town.strlens[i]);
 		switch (mode) {
 			case 0:
-				FSRead(file_id, &len, (char *) &(data_store.town_strs[i]));
+				FSRead(file_id, len, (char *) &(data_store.town_strs[i]));
 				data_store.town_strs[i][len] = 0;
 				break;
 			case 1:
@@ -892,11 +892,11 @@ void load_town(short town_num,short mode,short extra,char *str)
 				break;
 			case 2:
 				if (extra < 0) {
-					FSRead(file_id, &len, (char *) &(data_store.town_strs[i]));
+					FSRead(file_id, len, (char *) &(data_store.town_strs[i]));
 					data_store.town_strs[i][len] = 0;
 					}
 				else if (i == extra) {
-					FSRead(file_id, &len, (char *) str);
+					FSRead(file_id, len, (char *) str);
 					str[len] = 0;
 					}
 					else SetFPos (file_id, 3, len);
@@ -906,7 +906,7 @@ void load_town(short town_num,short mode,short extra,char *str)
 
 	if (mode < 2) {
 		len = sizeof(talking_record_type);
-		error = FSRead(file_id, &len , (char *) &talking);
+		error = FSRead(file_id, len, (char *) &talking);
 		if (cur_scen_is_win != TRUE)
 		{
 			endian_adjust(talking);
@@ -915,7 +915,7 @@ void load_town(short town_num,short mode,short extra,char *str)
 	
 		for (i = 0; i < 170; i++) {
 			len = (long) (talking.strlens[i]);
-			FSRead(file_id, &len, (char *) &(data_store3.talk_strs[i]));
+			FSRead(file_id, len, (char *) &(data_store3.talk_strs[i]));
 			data_store3.talk_strs[i][len] = 0;
 			}
 		cur_town_talk_loaded = town_num;
@@ -1319,19 +1319,19 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 
 	len = sizeof(outdoor_record_type);
 	if (mode == 0) {
-		error = FSRead(file_id, &len, (char *) &outdoors[targ_x][targ_y]);
+		error = FSRead(file_id, len, (char *) &outdoors[targ_x][targ_y]);
 		if (cur_scen_is_win != TRUE)
 		{
 			endian_adjust(outdoors[targ_x][targ_y]);
 		}
 		if (error != 0) {FSClose(file_id);oops_error(33);}
 		}
-		else error = FSRead(file_id, &len, (char *) &dummy_out);
+		else error = FSRead(file_id, len, (char *) &dummy_out);
 		
 	if (mode == 0) {
 		for (i = 0; i < 9; i++) {
 			len = (long) (outdoors[targ_x][targ_y].strlens[i]);
-			FSRead(file_id, &len, (char *) &(data_store4.outdoor_text[targ_x][targ_y].out_strs[i]));
+			FSRead(file_id, len, (char *) &(data_store4.outdoor_text[targ_x][targ_y].out_strs[i]));
 			data_store4.outdoor_text[targ_x][targ_y].out_strs[i][len] = 0;
 			}
 		}
@@ -1339,7 +1339,7 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 		for (i = 0; i < 120; i++) {
 			len = (long) (dummy_out.strlens[i]);
 			if (i == extra) {
-				FSRead(file_id, &len, (char *) str);
+				FSRead(file_id, len, (char *) str);
 				str[len] = 0;
 				}
 				else SetFPos (file_id, 3, len);	
@@ -1511,7 +1511,7 @@ Boolean load_scenario()
 		}
 		
 	len = (long) sizeof(scenario_data_type);
-	error = FSRead(file_id, &len, (char*)&scenario);
+	error = FSRead(file_id, len, (char*)&scenario);
 	if ( error != 0){
 		FSClose(file_id); oops_error(29); return FALSE;
 		}
@@ -1537,7 +1537,7 @@ Boolean load_scenario()
 		return FALSE;	 
 	 	}
 	len = sizeof(scen_item_data_type); // item data
-	error = FSRead(file_id, &len, (char*)&(data_store2.scen_item_list));
+	error = FSRead(file_id, len, (char*)&(data_store2.scen_item_list));
 	if ( error != 0){
 		FSClose(file_id); oops_error(30); return FALSE;
 		}
@@ -1548,11 +1548,11 @@ Boolean load_scenario()
 	for (i = 0; i < 270; i++) {
 		len = (long) (scenario.scen_str_len[i]);
 		if (i < 160) {
-			FSRead(file_id, &len, (char *) &(data_store5.scen_strs[i]));
+			FSRead(file_id, len, (char *) &(data_store5.scen_strs[i]));
 			data_store5.scen_strs[i][len] = 0;
 			}
 			else {
-				FSRead(file_id, &len, (char *) &(scen_strs2[i - 160]));
+				FSRead(file_id, len, (char *) &(scen_strs2[i - 160]));
 				scen_strs2[i - 160][len] = 0;
 				}
 		}
@@ -1646,7 +1646,7 @@ Boolean load_scenario_header(char *filename,short header_entry)
 		}	
 		
 	len = (long) sizeof(scen_header_type);
-	error = FSRead(file_id, &len, (char*)&(scen_headers[header_entry]));
+	error = FSRead(file_id, len, (char*)&(scen_headers[header_entry]));
 	if ( error != 0){
 		FSClose(file_id); return FALSE;
 		}
@@ -1671,7 +1671,7 @@ Boolean load_scenario_header(char *filename,short header_entry)
 	// So file is OK, so load in string data and close it.
 	SetFPos(file_id,1,0);
 	len = (long) sizeof(scenario_data_type);
-	error = FSRead(file_id, &len, (char*)&scenario);
+	error = FSRead(file_id, len, (char*)&scenario);
 	if ( error != 0){
 		FSClose(file_id); oops_error(29); return FALSE;
 		}
@@ -1688,7 +1688,7 @@ Boolean load_scenario_header(char *filename,short header_entry)
 	for (i = 0; i < 3; i++) {
 		store = (short) scenario.scen_str_len[i];
 		len = (long) (store);
-		FSRead(file_id, &len, (char *) load_str);
+		FSRead(file_id, len, (char *) load_str);
 		load_str[len] = 0;
 		if (i == 0)
 			load_str[29] = 0;
@@ -1899,21 +1899,21 @@ void reg_alert()
 
  //	MessageBox(mainPtr,"A","Debug note",MB_OK | MB_ICONEXCLAMATION);
 
-static short FSWrite(HFILE file,long *len,char *buffer)
+static short FSWrite(HFILE file,long len,const char *buffer)
 {
 	long error = 0;
 
-	error = _lwrite(file, (char*)buffer, (UINT)(*len));
+	error = _lwrite(file, buffer, (UINT)len);
 	if ( error == HFILE_ERROR)
 		return -1;
 	return 0;
 }
 
-static short FSRead(HFILE file,long *len,char *buffer)
+static short FSRead(HFILE file,long len,char *buffer)
 {
 	long error = 0;
 
-	error = _lread(file, (char*)buffer, (UINT)(*len));
+	error = _lread(file, buffer, (UINT)len);
 	if ( error == HFILE_ERROR)
 		return -1;
 	return 0;
