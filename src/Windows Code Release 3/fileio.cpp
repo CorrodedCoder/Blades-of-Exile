@@ -114,11 +114,15 @@ static inline short file_read_type(HFILE file, auto & type)
 	return FSRead(file, sizeof(type), reinterpret_cast<char*>(&type));
 }
 
-
 static inline void file_read_string(HFILE file, long len, char * arr)
 {
 	FSRead(file, len, arr);
 	arr[len] = '\0';
+}
+
+static inline short file_write_type(HFILE file, const auto& type)
+{
+	return FSWrite(file, sizeof(type), reinterpret_cast<const char*>(&type));
 }
 
 void file_initialize()
@@ -562,7 +566,7 @@ void save_file(short mode)
 	
 	// SAVE OUT DATA
 	static_assert(sizeof(out_info_type) == sizeof(out_e));
-	error = FSWrite(file_id, sizeof(out_info_type), (char*)out_e);
+	error = file_write_type(file_id, out_e);
 	if ( error != 0) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		FSClose(file_id);
@@ -571,21 +575,21 @@ void save_file(short mode)
 		}
 
 	if (town_save == TRUE) {
-			error = FSWrite(file_id, sizeof(current_town_type), (char*)&c_town);
+			error = file_write_type(file_id, c_town);
 			if ( error != 0) {
 				add_string_to_buf("Save: Couldn't write to file.         ");
 				FSClose(file_id);
 				SysBeep(2); 
 				return;
 				}
-			error = FSWrite(file_id, sizeof(big_tr_type), (char*)&t_d);
+			error = file_write_type(file_id, t_d);
 			if ( error != 0) {
 				add_string_to_buf("Save: Couldn't write to file.         ");
 				FSClose(file_id);
 				SysBeep(2); 
 				return;
 				}
-			error = FSWrite(file_id, sizeof(town_item_list), (char*)&t_i);
+			error = file_write_type(file_id, t_i);
 			if ( error != 0) {
 				add_string_to_buf("Save: Couldn't write to file.         ");
 				FSClose(file_id);
@@ -596,7 +600,7 @@ void save_file(short mode)
 	
 	// Save stored items 
 	for (i = 0; i < 3; i++) {
-		error = FSWrite(file_id, sizeof(stored_items_list_type), (char*)&stored_items[i]);
+		error = file_write_type(file_id, stored_items[i]);
 		if ( error != 0){
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			FSClose(file_id);
@@ -607,21 +611,21 @@ void save_file(short mode)
 			
 	// If saving maps, save maps
 	if (save_maps == TRUE) {
-		error = FSWrite(file_id, sizeof(stored_town_maps_type), (char*)&town_maps);
+		error = file_write_type(file_id, town_maps);
 		if ( error != 0){
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			FSClose(file_id);
 			SysBeep(2); 
 			return;
 			}	
-		error = FSWrite(file_id, sizeof(stored_town_maps_type), (char*)&town_maps2);
+		error = file_write_type(file_id, town_maps2);
 		if ( error != 0){
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			FSClose(file_id);
 			SysBeep(2); 
 			return;
 			}	
-		error = FSWrite(file_id, sizeof(stored_outdoor_maps_type), (char*)&o_maps);
+		error = file_write_type(file_id, o_maps);
 		if ( error != 0) {
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			FSClose(file_id);
@@ -631,14 +635,16 @@ void save_file(short mode)
 		} 
 	
 	// SAVE SFX and MISC_I
-		error = FSWrite(file_id, 64 * 64, (char*)sfx);
+		static_assert(sizeof(sfx) == 64 * 64);
+		error = file_write_type(file_id, sfx);
 		if ( error != 0){
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			FSClose(file_id);
 			SysBeep(2); 
 			return;
 			}
-		error = FSWrite(file_id, 64 * 64, (char*)misc_i);
+		static_assert(sizeof(misc_i) == 64 * 64);
+		error = file_write_type(file_id, misc_i);
 		if ( error != 0){
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			FSClose(file_id);
