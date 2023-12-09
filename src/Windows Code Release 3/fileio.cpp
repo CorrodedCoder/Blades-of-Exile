@@ -149,7 +149,7 @@ void load_file()
 	char flag_data[8];
 
 	long len;
-	UINT store_len,count,error;
+	UINT count,error;
 	char *party_ptr;
 	char *pc_ptr;
 	flag_type flag;
@@ -205,7 +205,6 @@ void load_file()
 	
 	// LOAD PARTY	
 	len = (UINT) sizeof(party_record_type);
-	store_len = len;
 	party_ptr = (char *) &party;
 	error = _lread(file_id, (char*)party_ptr, len);
 	if ( error == HFILE_ERROR){
@@ -214,7 +213,7 @@ void load_file()
 		FCD(1064,0);
 		return;
 		}
-	for (count = 0; count < store_len; count++)
+	for (count = 0; count < (long)sizeof(party_record_type); count++)
 		party_ptr[count] ^= 0x5C;	
 
 	// LOAD SETUP
@@ -228,9 +227,8 @@ void load_file()
 		}
 
 	// LOAD PCS
-	store_len = (UINT) sizeof(pc_record_type);
 	for (i = 0; i < 6; i++) {
-		len = store_len;
+		len = sizeof(pc_record_type);
 		pc_ptr = (char *) &adven[i];
 		error = _lread(file_id, (char*)pc_ptr, len);
 		if ( error == HFILE_ERROR){
@@ -239,7 +237,7 @@ void load_file()
 		FCD(1064,0);
 			return;
 			}
-		for (count = 0; count < store_len; count++)
+		for (count = 0; count < (long)sizeof(pc_record_type); count++)
 			pc_ptr[count] ^= 0x6B;	
 		}
 
@@ -457,7 +455,7 @@ void save_file(short mode)
 
 	short i;
 
-	long len,store_len,count;
+	long len,count;
 	flag_type flag;
 	flag_type *store;
 	party_record_type *party_ptr;
@@ -524,20 +522,19 @@ void save_file(short mode)
 	party_ptr = &party;	
 	len = sizeof(party_record_type);
 
-	store_len = len;
 	party_encryptor = (char *) party_ptr;
-	for (count = 0; count < store_len; count++)
+	for (count = 0; count < (long)sizeof(party_record_type); count++)
 		party_encryptor[count] ^= 0x5C;
 	error = _lwrite(file_id, (char*)party_ptr, len);
 	if ( error == HFILE_ERROR) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		_lclose(file_id);
-		for (count = 0; count < store_len; count++)
+		for (count = 0; count < (long)sizeof(party_record_type); count++)
 			party_encryptor[count] ^= 0x5C;
 			SysBeep(2); 
 		return;
 		}
-	for (count = 0; count < store_len; count++)
+	for (count = 0; count < (long)sizeof(party_record_type); count++)
 		party_encryptor[count] ^= 0x5C;
 
 	// SAVE SETUP
@@ -552,24 +549,23 @@ void save_file(short mode)
 		}
 		
 	// SAVE PCS	
-	store_len = sizeof(pc_record_type);
 	for (i = 0; i < 6; i++) {
 		pc_ptr = &adven[i];	
 
-		len = store_len;
+		len = sizeof(pc_record_type);
 		party_encryptor = (char *) pc_ptr;
-		for (count = 0; count < store_len; count++)
+		for (count = 0; count < (long)sizeof(pc_record_type); count++)
 			party_encryptor[count] ^= 0x6B;
 		error = _lwrite(file_id, (char*)pc_ptr, len);
 		if ( error == HFILE_ERROR){
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			_lclose(file_id);
-			for (count = 0; count < store_len; count++)
+			for (count = 0; count < (long)sizeof(pc_record_type); count++)
 				party_encryptor[count] ^= 0x6B;
 				SysBeep(2); 
 			return;
 			}
-		for (count = 0; count < store_len; count++)
+		for (count = 0; count < (long)sizeof(pc_record_type); count++)
 			party_encryptor[count] ^= 0x6B;
 		}
 		
