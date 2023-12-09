@@ -208,8 +208,6 @@ void load_file()
 	short i, j, k;
 	Boolean town_restore = FALSE;
 	Boolean maps_there = FALSE;
-
-	UINT error;
 	flag_type flag;
 	Boolean in_scen = FALSE;
 
@@ -236,8 +234,7 @@ void load_file()
 	//	add_string_to_buf( debug);
 
 	for (i = 0; i < 3; i++) {
-		error = llfile_read_type(file_id, flag);
-		if (error == HFILE_ERROR) {
+		if (llfile_read_type(file_id, flag) == HFILE_ERROR) {
 			beep();
 			return;
 		}
@@ -257,8 +254,7 @@ void load_file()
 	}
 
 	// LOAD PARTY
-	error = llfile_read_type(file_id, party);
-	if (error == HFILE_ERROR) {
+	if (llfile_read_type(file_id, party) == HFILE_ERROR) {
 		_lclose(file_id);
 		SysBeep(2);
 		FCD(1064, 0);
@@ -267,8 +263,7 @@ void load_file()
 	xor_type(party, 0x5C);
 
 	// LOAD SETUP
-	error = llfile_read_type(file_id, setup_save);
-	if (error == HFILE_ERROR) {
+	if (llfile_read_type(file_id, setup_save) == HFILE_ERROR) {
 		_lclose(file_id);
 		SysBeep(2);
 		FCD(1064, 0);
@@ -277,8 +272,7 @@ void load_file()
 
 	// LOAD PCS
 	for (i = 0; i < 6; i++) {
-		error = llfile_read_type(file_id, adven[i]);
-		if (error == HFILE_ERROR) {
+		if (llfile_read_type(file_id, adven[i]) == HFILE_ERROR) {
 			_lclose(file_id);
 			SysBeep(2);
 			FCD(1064, 0);
@@ -291,8 +285,7 @@ void load_file()
 
 		// LOAD OUTDOOR MAP
 		static_assert(sizeof(out_info_type) == sizeof(out_e));
-		error = file_read_type(file_id, out_e);
-		if (error != 0) {
+		if (file_read_type(file_id, out_e) != 0) {
 			FSClose(file_id);
 			SysBeep(2);
 			FCD(1064, 0);
@@ -301,24 +294,21 @@ void load_file()
 
 		// LOAD TOWN 
 		if (town_restore == TRUE) {
-			error = file_read_type(file_id, c_town);
-			if (error != 0) {
+			if (file_read_type(file_id, c_town) != 0) {
 				FSClose(file_id);
 				SysBeep(2);
 				FCD(1064, 0);
 				return;
 			}
 
-			error = file_read_type(file_id, t_d);
-			if (error != 0) {
+			if (file_read_type(file_id, t_d) != 0) {
 				FSClose(file_id);
 				SysBeep(2);
 				FCD(1064, 0);
 				return;
 			}
 
-			error = file_read_type(file_id, t_i);
-			if (error != 0) {
+			if (file_read_type(file_id, t_i) != 0) {
 				FSClose(file_id);
 				SysBeep(2);
 				FCD(1064, 0);
@@ -329,8 +319,7 @@ void load_file()
 
 		// LOAD STORED ITEMS
 		for (i = 0; i < 3; i++) {
-			error = file_read_type(file_id, stored_items);
-			if (error != 0) {
+			if (file_read_type(file_id, stored_items) != 0) {
 				FSClose(file_id);
 				SysBeep(2);
 				FCD(1064, 0);
@@ -340,23 +329,20 @@ void load_file()
 
 		// LOAD SAVED MAPS
 		if (maps_there == TRUE) {
-			error = file_read_type(file_id, town_maps);
-			if (error != 0) {
+			if (file_read_type(file_id, town_maps) != 0) {
 				FSClose(file_id);
 				SysBeep(2);
 				FCD(1064, 0);
 				return;
 			}
-			error = file_read_type(file_id, town_maps2);
-			if (error != 0) {
+			if (file_read_type(file_id, town_maps2) != 0) {
 				FSClose(file_id);
 				SysBeep(2);
 				FCD(1064, 0);
 				return;
 			}
 
-			error = file_read_type(file_id, o_maps);
-			if (error != 0) {
+			if (file_read_type(file_id, o_maps) != 0) {
 				FSClose(file_id);
 				SysBeep(2);
 				FCD(1064, 0);
@@ -366,16 +352,14 @@ void load_file()
 
 		// LOAD SFX & MISC_I
 		static_assert(sizeof(sfx) == 64 * 64);
-		error = file_read_type(file_id, sfx);
-		if (error != 0) {
+		if (file_read_type(file_id, sfx) != 0) {
 			FSClose(file_id);
 			SysBeep(2);
 			FCD(1064, 0);
 			return;
 		}
 		static_assert(sizeof(misc_i) == 64 * 64);
-		error = file_read_type(file_id, misc_i);
-		if (error != 0) {
+		if (file_read_type(file_id, misc_i) != 0) {
 			FSClose(file_id);
 			SysBeep(2);
 			FCD(1064, 0);
@@ -384,8 +368,7 @@ void load_file()
 
 	} // end if_scen
 
-	error = _lclose(file_id);
-	if (error == HFILE_ERROR) {
+	if (_lclose(file_id) == HFILE_ERROR) {
 		add_string_to_buf("Load: Can't close file.          ");
 		SysBeep(2);
 		return;
@@ -493,10 +476,7 @@ void save_file(short mode)
 {
 	HFILE file_id;
 	Boolean town_save = FALSE;
-	UINT error;
-
 	short i;
-
 	flag_type flag;
 	//	out_info_type store_explored;
 
@@ -520,23 +500,20 @@ void save_file(short mode)
 		}
 
 	flag.i = (town_save == TRUE) ? 1342 : 5790;
-	error = llfile_write_type(file_id, flag);
-	if (error == HFILE_ERROR) {
+	if (llfile_write_type(file_id, flag) == HFILE_ERROR) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		_lclose(file_id);
 		SysBeep(2);
 	}
 	flag.i = (in_startup_mode == FALSE) ? 100 : 200;
-	error = llfile_write_type(file_id, flag);
-	if (error == HFILE_ERROR) {
+	if (llfile_write_type(file_id, flag) == HFILE_ERROR) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		_lclose(file_id);
 		SysBeep(2);
 		return;
 	}
 	flag.i = (save_maps == TRUE) ? 5567 : 3422;
-	error = llfile_write_type(file_id, flag);
-	if (error == HFILE_ERROR) {
+	if (llfile_write_type(file_id, flag) == HFILE_ERROR) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		_lclose(file_id);
 		SysBeep(2);
@@ -545,8 +522,7 @@ void save_file(short mode)
 
 	// SAVE PARTY
 	xor_type(party, 0x5C);
-	error = llfile_write_type(file_id, party);
-	if (error == HFILE_ERROR) {
+	if (llfile_write_type(file_id, party) == HFILE_ERROR) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		_lclose(file_id);
 		xor_type(party, 0x5C);
@@ -556,8 +532,7 @@ void save_file(short mode)
 	xor_type(party, 0x5C);
 
 	// SAVE SETUP
-	error = llfile_write_type(file_id, setup_save);
-	if (error == HFILE_ERROR) {
+	if (llfile_write_type(file_id, setup_save) == HFILE_ERROR) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		_lclose(file_id);
 		SysBeep(2);
@@ -567,8 +542,7 @@ void save_file(short mode)
 	// SAVE PCS	
 	for (i = 0; i < 6; i++) {
 		xor_type(adven[i], 0x6B);
-		error = llfile_write_type(file_id, adven[i]);
-		if (error == HFILE_ERROR) {
+		if (llfile_write_type(file_id, adven[i]) == HFILE_ERROR) {
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			_lclose(file_id);
 			xor_type(adven[i], 0x6B);
@@ -582,8 +556,7 @@ void save_file(short mode)
 
 		// SAVE OUT DATA
 		static_assert(sizeof(out_info_type) == sizeof(out_e));
-		error = file_write_type(file_id, out_e);
-		if (error != 0) {
+		if (file_write_type(file_id, out_e) != 0) {
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			FSClose(file_id);
 			SysBeep(2);
@@ -591,22 +564,19 @@ void save_file(short mode)
 		}
 
 		if (town_save == TRUE) {
-			error = file_write_type(file_id, c_town);
-			if (error != 0) {
+			if (file_write_type(file_id, c_town) != 0) {
 				add_string_to_buf("Save: Couldn't write to file.         ");
 				FSClose(file_id);
 				SysBeep(2);
 				return;
 			}
-			error = file_write_type(file_id, t_d);
-			if (error != 0) {
+			if (file_write_type(file_id, t_d) != 0) {
 				add_string_to_buf("Save: Couldn't write to file.         ");
 				FSClose(file_id);
 				SysBeep(2);
 				return;
 			}
-			error = file_write_type(file_id, t_i);
-			if (error != 0) {
+			if (file_write_type(file_id, t_i) != 0) {
 				add_string_to_buf("Save: Couldn't write to file.         ");
 				FSClose(file_id);
 				SysBeep(2);
@@ -616,8 +586,7 @@ void save_file(short mode)
 
 		// Save stored items 
 		for (i = 0; i < 3; i++) {
-			error = file_write_type(file_id, stored_items[i]);
-			if (error != 0) {
+			if (file_write_type(file_id, stored_items[i]) != 0) {
 				add_string_to_buf("Save: Couldn't write to file.         ");
 				FSClose(file_id);
 				SysBeep(2);
@@ -627,22 +596,19 @@ void save_file(short mode)
 
 		// If saving maps, save maps
 		if (save_maps == TRUE) {
-			error = file_write_type(file_id, town_maps);
-			if (error != 0) {
+			if (file_write_type(file_id, town_maps) != 0) {
 				add_string_to_buf("Save: Couldn't write to file.         ");
 				FSClose(file_id);
 				SysBeep(2);
 				return;
 			}
-			error = file_write_type(file_id, town_maps2);
-			if (error != 0) {
+			if (file_write_type(file_id, town_maps2) != 0) {
 				add_string_to_buf("Save: Couldn't write to file.         ");
 				FSClose(file_id);
 				SysBeep(2);
 				return;
 			}
-			error = file_write_type(file_id, o_maps);
-			if (error != 0) {
+			if (file_write_type(file_id, o_maps) != 0) {
 				add_string_to_buf("Save: Couldn't write to file.         ");
 				FSClose(file_id);
 				SysBeep(2);
@@ -652,16 +618,14 @@ void save_file(short mode)
 
 		// SAVE SFX and MISC_I
 		static_assert(sizeof(sfx) == 64 * 64);
-		error = file_write_type(file_id, sfx);
-		if (error != 0) {
+		if (file_write_type(file_id, sfx) != 0) {
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			FSClose(file_id);
 			SysBeep(2);
 			return;
 		}
 		static_assert(sizeof(misc_i) == 64 * 64);
-		error = file_write_type(file_id, misc_i);
-		if (error != 0) {
+		if (file_write_type(file_id, misc_i) != 0) {
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			FSClose(file_id);
 			SysBeep(2);
@@ -669,8 +633,7 @@ void save_file(short mode)
 		}
 	}
 
-	error = _lclose(file_id);
-	if (error == HFILE_ERROR) {
+	if (_lclose(file_id) == HFILE_ERROR) {
 		add_string_to_buf("Save: Couldn't close file.         ");
 		SysBeep(2);
 		return;
@@ -777,8 +740,7 @@ void load_town(short town_num, short mode, short extra, char* str)
 			store += (long)(scenario.town_data_size[i][j]);
 	len_to_jump += store;
 
-	error = SetFPos(file_id, len_to_jump, FSOrigin::SET);
-	if (error != 0) { FSClose(file_id); oops_error(35); }
+	if (SetFPos(file_id, len_to_jump, FSOrigin::SET) != 0) { FSClose(file_id); oops_error(35); }
 
 	if (mode == 0) {
 		error = file_read_type(file_id, c_town.town);
@@ -898,8 +860,7 @@ void load_town(short town_num, short mode, short extra, char* str)
 	}
 	if (mode == 0)
 		town_type = scenario.town_size[which_town];
-	error = FSClose(file_id);
-	if (error != 0) { FSClose(file_id); oops_error(38); }
+	if (FSClose(file_id) != 0) { FSClose(file_id); oops_error(38); }
 
 	// Now more initialization is needed. First need to properly create the misc_i array.
 
@@ -1289,8 +1250,7 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 			store += (long)(scenario.out_data_size[i][j]);
 	len_to_jump += store;
 
-	error = SetFPos(file_id, len_to_jump, FSOrigin::SET);
-	if (error != 0) { FSClose(file_id); oops_error(32); }
+	if (SetFPos(file_id, len_to_jump, FSOrigin::SET) != 0) { FSClose(file_id); oops_error(32); }
 
 	if (mode == 0) {
 		error = file_read_type(file_id, outdoors[targ_x][targ_y]);
@@ -1318,8 +1278,7 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 
 	}
 
-	error = FSClose(file_id);
-	if (error != 0) { FSClose(file_id); oops_error(33); }
+	if (FSClose(file_id) != 0) { FSClose(file_id); oops_error(33); }
 }
 
 
@@ -1467,12 +1426,11 @@ void build_data_file(short mode)
 Boolean load_scenario()
 {
 
-	short i, error;
+	short i;
 	HFILE file_id;
 	Boolean file_ok = FALSE;
 	char file_name[256];
 	OFSTRUCT store;
-
 	build_scen_file_name(file_name);
 
 	file_id = OpenFile(file_name, &store, OF_READ /* | OF_SEARCH */);
@@ -1481,8 +1439,7 @@ Boolean load_scenario()
 		SysBeep(2);	return FALSE;
 	}
 
-	error = file_read_type(file_id, scenario);
-	if (error != 0) {
+	if (file_read_type(file_id, scenario) != 0) {
 		FSClose(file_id); oops_error(29); return FALSE;
 	}
 	if ((scenario.flag1 == 10) && (scenario.flag2 == 20)
@@ -1506,8 +1463,7 @@ Boolean load_scenario()
 		give_error("This is not a legitimate Blades of Exile scenario.", "", 0);
 		return FALSE;
 	}
-	error = file_read_type(file_id, data_store2.scen_item_list);
-	if (error != 0) {
+	if (file_read_type(file_id, data_store2.scen_item_list) != 0) {
 		FSClose(file_id); oops_error(30); return FALSE;
 	}
 	if (cur_scen_is_win != TRUE)
@@ -1603,7 +1559,6 @@ Boolean load_scenario_header(char* filename, short header_entry)
 	char load_str[256];
 	Boolean mac_header = TRUE;
 	OFSTRUCT store_str;
-	short error;
 
 	file_id = OpenFile(filename, &store_str, OF_READ /* | OF_SEARCH */);
 	if (file_id == HFILE_ERROR) {
@@ -1611,8 +1566,7 @@ Boolean load_scenario_header(char* filename, short header_entry)
 		return FALSE;
 	}
 
-	error = file_read_type(file_id, scen_headers[header_entry]);
-	if (error != 0) {
+	if (file_read_type(file_id, scen_headers[header_entry]) != 0) {
 		FSClose(file_id); return FALSE;
 	}
 	if ((scen_headers[header_entry].flag1 == 10) && (scen_headers[header_entry].flag2 == 20)
@@ -1635,8 +1589,7 @@ Boolean load_scenario_header(char* filename, short header_entry)
 
 	// So file is OK, so load in string data and close it.
 	SetFPos(file_id, 0, FSOrigin::SET);
-	error = file_read_type(file_id, scenario);
-	if (error != 0) {
+	if (file_read_type(file_id, scenario) != 0) {
 		FSClose(file_id); oops_error(29); return FALSE;
 	}
 	store = scenario.rating;
@@ -1644,8 +1597,7 @@ Boolean load_scenario_header(char* filename, short header_entry)
 		endian_adjust(store);
 	scen_headers[header_entry].default_ground = store;
 
-	error = SetFPos(file_id, sizeof(scen_item_data_type), FSOrigin::CUR);
-	if (error != 0)
+	if (SetFPos(file_id, sizeof(scen_item_data_type), FSOrigin::CUR) != 0)
 		return FALSE;
 
 	for (i = 0; i < 3; i++) {
