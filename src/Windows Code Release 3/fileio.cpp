@@ -82,11 +82,6 @@ Boolean cur_scen_is_win = TRUE;
 
 enum class FSOrigin { SET = 1, CUR = 3, END = 2 };
 
-static short FSWrite(HFILE file, long len, const char* buffer);
-static short FSRead(HFILE file, long len, char* buffer);
-static short FSClose(HFILE file);
-static short SetFPos(HFILE file, long len, FSOrigin mode);
-
 void save_outdoor_maps();
 void add_outdoor_maps();
 
@@ -110,20 +105,52 @@ static const std::array szFilter{ "Blades of Exile Save Files (*.SAV)","*.sav",
 	"All Files (*.*)","*.*",
 	"" };
 
+static short FSClose(HFILE file)
+{
+	long error = _lclose(file);
+	if (error == HFILE_ERROR)
+	{
+		return -1;
+	}
+	return 0;
+}
+
+static short SetFPos(HFILE file, long len, FSOrigin mode)
+{
+	long error = 0;
+
+	switch (mode)
+	{
+	case FSOrigin::SET: error = _llseek(file, len, SEEK_SET); break;
+	case FSOrigin::END: error = _llseek(file, len, SEEK_END); break;
+	case FSOrigin::CUR: error = _llseek(file, len, SEEK_CUR); break;
+	}
+
+	if (error == HFILE_ERROR)
+		return -1;
+	return 0;
+}
+
 static inline short file_read_type(HFILE file, auto& type)
 {
-	return FSRead(file, sizeof(type), reinterpret_cast<char*>(&type));
+	long error = _lread(file, &type, (UINT)sizeof(type));
+	if (error == HFILE_ERROR)
+		return -1;
+	return 0;
 }
 
 static inline void file_read_string(HFILE file, long len, char* arr)
 {
-	FSRead(file, len, arr);
+	_lread(file, arr, (UINT)len);
 	arr[len] = '\0';
 }
 
 static inline short file_write_type(HFILE file, const auto& type)
 {
-	return FSWrite(file, sizeof(type), reinterpret_cast<const char*>(&type));
+	long error = _lwrite(file, reinterpret_cast<const char*>(&type), (UINT)sizeof(type));
+	if (error == HFILE_ERROR)
+		return -1;
+	return 0;
 }
 
 static inline UINT llfile_read_type(HFILE file, auto& type)
@@ -1831,54 +1858,6 @@ void reg_alert()
 }
 
 //	MessageBox(mainPtr,"A","Debug note",MB_OK | MB_ICONEXCLAMATION);
-
-static short FSWrite(HFILE file, long len, const char* buffer)
-{
-	long error = 0;
-
-	error = _lwrite(file, buffer, (UINT)len);
-	if (error == HFILE_ERROR)
-		return -1;
-	return 0;
-}
-
-static short FSRead(HFILE file, long len, char* buffer)
-{
-	long error = 0;
-
-	error = _lread(file, buffer, (UINT)len);
-	if (error == HFILE_ERROR)
-		return -1;
-	return 0;
-
-}
-
-static short FSClose(HFILE file)
-{
-	long error = _lclose(file);
-	if (error == HFILE_ERROR)
-	{
-		return -1;
-	}
-	return 0;
-}
-
-static short SetFPos(HFILE file, long len, FSOrigin mode)
-{
-	long error = 0;
-
-	switch (mode)
-	{
-	case FSOrigin::SET: error = _llseek(file, len, SEEK_SET); break;
-	case FSOrigin::END: error = _llseek(file, len, SEEK_END); break;
-	case FSOrigin::CUR: error = _llseek(file, len, SEEK_CUR); break;
-	}
-
-	if (error == HFILE_ERROR)
-		return -1;
-	return 0;
-}
-
 Boolean load_blades_data()
 {
 	HFILE file_id;
