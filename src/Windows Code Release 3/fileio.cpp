@@ -181,7 +181,8 @@ void load_file()
 //	add_string_to_buf( debug);
 
 	for (i = 0; i < 3; i++) {
-		if ((error = _lread(file_id, (char *) flag_data, len)) == HFILE_ERROR) {
+		error = _lread(file_id, (char*)flag_data, len);
+		if ( error == HFILE_ERROR) {
 			beep();
 			return;
 			}
@@ -206,7 +207,8 @@ void load_file()
 	len = (UINT) sizeof(party_record_type);
 	store_len = len;
 	party_ptr = (char *) &party;
-	if ((error = _lread(file_id, (char *) party_ptr, len)) == HFILE_ERROR){
+	error = _lread(file_id, (char*)party_ptr, len);
+	if ( error == HFILE_ERROR){
 		_lclose(file_id);
 		SysBeep(2);
 		FCD(1064,0);
@@ -217,7 +219,8 @@ void load_file()
 
 	// LOAD SETUP
 	len = (UINT) sizeof(setup_save_type);
-	if ((error = _lread(file_id, (char *) &setup_save, len)) == HFILE_ERROR){
+	error = _lread(file_id, (char*)&setup_save, len);
+	if ( error == HFILE_ERROR){
 		_lclose(file_id);
 		SysBeep(2);
 		FCD(1064,0);
@@ -229,7 +232,8 @@ void load_file()
 	for (i = 0; i < 6; i++) {
 		len = store_len;
 		pc_ptr = (char *) &adven[i];
-		if ((error = _lread(file_id,(char *) pc_ptr, len))  == HFILE_ERROR){
+		error = _lread(file_id, (char*)pc_ptr, len);
+		if ( error == HFILE_ERROR){
 			_lclose(file_id);
 			SysBeep(2);
 		FCD(1064,0);
@@ -243,7 +247,8 @@ void load_file()
 	
 	// LOAD OUTDOOR MAP
 	len = (long) sizeof(out_info_type);
-	if ((error = FSRead(file_id, &len, (char *) out_e)) != 0){
+	error = FSRead(file_id, &len, (char*)out_e);
+	if ( error != 0){
 		FSClose(file_id);
 		SysBeep(2);
 		FCD(1064,0);
@@ -253,7 +258,8 @@ void load_file()
 	// LOAD TOWN 
 	if (town_restore == TRUE) {
 		len = (long) sizeof(current_town_type);
-		if ((error = FSRead(file_id, &len, (char *) &c_town)) != 0){
+		error = FSRead(file_id, &len, (char*)&c_town);
+		if ( error != 0){
 				FSClose(file_id);
 				SysBeep(2);
 		FCD(1064,0);
@@ -261,7 +267,8 @@ void load_file()
 				}
 	
 		len = (long) sizeof(big_tr_type);
-		if ((error = FSRead(file_id, &len, (char *) &t_d)) != 0){
+		error = FSRead(file_id, &len, (char*)&t_d);
+		if ( error != 0){
 				FSClose(file_id);
 				SysBeep(2);
 		FCD(1064,0);
@@ -269,7 +276,8 @@ void load_file()
 				}
 
 		len = (long) sizeof(town_item_list);
-		if ((error = FSRead(file_id, &len, (char *) &t_i))  != 0){
+		error = FSRead(file_id, &len, (char*)&t_i);
+		if ( error != 0){
 			FSClose(file_id);
 			SysBeep(2);
 		FCD(1064,0);
@@ -281,7 +289,8 @@ void load_file()
 	// LOAD STORED ITEMS
 	for (i = 0; i < 3; i++) {
 		len = (long) sizeof(stored_items_list_type);
-		if ((error = FSRead(file_id, &len, (char *) &stored_items[i]))  != 0){
+		error = FSRead(file_id, &len, (char*)&stored_items[i]);
+		if (error != 0){
 				FSClose(file_id);
 				SysBeep(2);
 		FCD(1064,0);
@@ -292,14 +301,16 @@ void load_file()
 	// LOAD SAVED MAPS
 	if (maps_there == TRUE) {
 		len = (long) sizeof(stored_town_maps_type);
-		if ((error = FSRead(file_id, &len, (char *) &(town_maps)))  != 0){
+		error = FSRead(file_id, &len, (char*)&(town_maps));
+		if ( error != 0){
 				FSClose(file_id);
 				SysBeep(2);
 				FCD(1064,0);
 				return;
 				}
 		len = (long) sizeof(stored_town_maps_type);
-		if ((error = FSRead(file_id, &len, (char *) &(town_maps2)))  != 0){
+		error = FSRead(file_id, &len, (char*)&(town_maps2));
+		if ( error != 0){
 				FSClose(file_id);
 				SysBeep(2);
 				FCD(1064,0);
@@ -307,7 +318,8 @@ void load_file()
 				}
 	
 		len = (long) sizeof(stored_outdoor_maps_type);
-		if ((error = FSRead(file_id, &len, (char *) &o_maps)) != 0) {
+		error = FSRead(file_id, &len, (char*)&o_maps);
+		if (error != 0) {
 				FSClose(file_id);
 				SysBeep(2);
 		FCD(1064,0);
@@ -317,13 +329,15 @@ void load_file()
 
 	// LOAD SFX & MISC_I
 		len = (long) (64 * 64);
-		if ((error = FSRead(file_id, &len, (char *) sfx))  != 0){
+		error = FSRead(file_id, &len, (char*)sfx);
+		if ( error != 0){
 				FSClose(file_id);
 				SysBeep(2);
 		FCD(1064,0);
 				return;
-				}	
-		if ((error = FSRead(file_id, &len, (char *) misc_i))  != 0){
+				}
+		error = FSRead(file_id, &len, (char*)misc_i);
+		if ( error != 0){
 				FSClose(file_id);
 				SysBeep(2);
 		FCD(1064,0);
@@ -332,7 +346,8 @@ void load_file()
 
 	} // end if_scen
 
-	if ((error = _lclose(file_id))  == HFILE_ERROR){
+	error = _lclose(file_id);
+	if ( error == HFILE_ERROR){
 		add_string_to_buf("Load: Can't close file.          ");
 		SysBeep(2);
 		return;
@@ -482,20 +497,23 @@ void save_file(short mode)
 	len = sizeof(flag_type);
 
 	flag.i = (town_save == TRUE) ? 1342 : 5790;
-	if ((error = _lwrite(file_id, (char *) store, len))  == HFILE_ERROR){
+	error = _lwrite(file_id, (char*)store, len);
+	if ( error == HFILE_ERROR){
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		_lclose(file_id);
 		SysBeep(2);
 		}
 	flag.i = (in_startup_mode == FALSE) ? 100 : 200;
-	if ((error = _lwrite(file_id, (char *) store, len)) == HFILE_ERROR) {
+	error = _lwrite(file_id, (char*)store, len);
+	if ( error == HFILE_ERROR) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		_lclose(file_id);
 		SysBeep(2);
 		return;
 		}
 	flag.i = (save_maps == TRUE) ? 5567 : 3422;
-	if ((error = _lwrite(file_id, (char *) store, len))  == HFILE_ERROR){
+	error = _lwrite(file_id, (char*)store, len);
+	if ( error == HFILE_ERROR){
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		_lclose(file_id);
 		SysBeep(2); 
@@ -510,7 +528,8 @@ void save_file(short mode)
 	party_encryptor = (char *) party_ptr;
 	for (count = 0; count < store_len; count++)
 		party_encryptor[count] ^= 0x5C;
-	if ((error = _lwrite(file_id, (char *) party_ptr, len)) == HFILE_ERROR) {
+	error = _lwrite(file_id, (char*)party_ptr, len);
+	if ( error == HFILE_ERROR) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		_lclose(file_id);
 		for (count = 0; count < store_len; count++)
@@ -524,7 +543,8 @@ void save_file(short mode)
 	// SAVE SETUP
 	setup_ptr = &setup_save;	
 	len = sizeof(setup_save_type);
-	if ((error = _lwrite(file_id, (char *) setup_ptr, len))  == HFILE_ERROR){
+	error = _lwrite(file_id, (char*)setup_ptr, len);
+	if ( error == HFILE_ERROR){
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		_lclose(file_id);
 		SysBeep(2); 
@@ -540,7 +560,8 @@ void save_file(short mode)
 		party_encryptor = (char *) pc_ptr;
 		for (count = 0; count < store_len; count++)
 			party_encryptor[count] ^= 0x6B;
-		if ((error = _lwrite(file_id, (char *) pc_ptr, len))  == HFILE_ERROR){
+		error = _lwrite(file_id, (char*)pc_ptr, len);
+		if ( error == HFILE_ERROR){
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			_lclose(file_id);
 			for (count = 0; count < store_len; count++)
@@ -556,7 +577,8 @@ void save_file(short mode)
 	
 	// SAVE OUT DATA
 	len = sizeof(out_info_type);
-	if ((error = FSWrite(file_id, &len, (char *) out_e)) != 0) {
+	error = FSWrite(file_id, &len, (char*)out_e);
+	if ( error != 0) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		FSClose(file_id);
 		SysBeep(2); 
@@ -566,7 +588,8 @@ void save_file(short mode)
 	if (town_save == TRUE) {	
 			town_ptr = &c_town;	
 			len = sizeof(current_town_type);
-			if ((error = FSWrite(file_id, &len, (char *) town_ptr)) != 0) {
+			error = FSWrite(file_id, &len, (char*)town_ptr);
+			if ( error != 0) {
 				add_string_to_buf("Save: Couldn't write to file.         ");
 				FSClose(file_id);
 				SysBeep(2); 
@@ -574,7 +597,8 @@ void save_file(short mode)
 				}
 			town_data_ptr = &t_d;	
 			len = sizeof(big_tr_type);
-			if ((error = FSWrite(file_id, &len, (char *) town_data_ptr)) != 0) {
+			error = FSWrite(file_id, &len, (char*)town_data_ptr);
+			if ( error != 0) {
 				add_string_to_buf("Save: Couldn't write to file.         ");
 				FSClose(file_id);
 				SysBeep(2); 
@@ -582,7 +606,8 @@ void save_file(short mode)
 				}
 			item_ptr = &t_i;	
 			len = sizeof(town_item_list);
-			if ((error = FSWrite(file_id, &len, (char *) item_ptr)) != 0) {
+			error = FSWrite(file_id, &len, (char*)item_ptr);
+			if ( error != 0) {
 				add_string_to_buf("Save: Couldn't write to file.         ");
 				FSClose(file_id);
 				SysBeep(2); 
@@ -594,7 +619,8 @@ void save_file(short mode)
 	for (i = 0; i < 3; i++) {
 		items_ptr = &stored_items[i];
 		len = (long) sizeof(stored_items_list_type);
-		if ((error = FSWrite(file_id, &len, (char *) items_ptr))  != 0){
+		error = FSWrite(file_id, &len, (char*)items_ptr);
+		if ( error != 0){
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			FSClose(file_id);
 			SysBeep(2); 
@@ -606,7 +632,8 @@ void save_file(short mode)
 	if (save_maps == TRUE) {
 		maps_ptr = &(town_maps);
 		len = (long) sizeof(stored_town_maps_type);
-		if ((error = FSWrite(file_id, &len, (char *) maps_ptr))  != 0){
+		error = FSWrite(file_id, &len, (char*)maps_ptr);
+		if ( error != 0){
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			FSClose(file_id);
 			SysBeep(2); 
@@ -614,7 +641,8 @@ void save_file(short mode)
 			}	
 		maps_ptr = &(town_maps2);
 		len = (long) sizeof(stored_town_maps_type);
-		if ((error = FSWrite(file_id, &len, (char *) maps_ptr))  != 0){
+		error = FSWrite(file_id, &len, (char*)maps_ptr);
+		if ( error != 0){
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			FSClose(file_id);
 			SysBeep(2); 
@@ -623,7 +651,8 @@ void save_file(short mode)
 
 		o_maps_ptr = &o_maps;
 		len = (long) sizeof(stored_outdoor_maps_type);
-		if ((error = FSWrite(file_id, &len, (char *) o_maps_ptr)) != 0) {
+		error = FSWrite(file_id, &len, (char*)o_maps_ptr);
+		if ( error != 0) {
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			FSClose(file_id);
 			SysBeep(2); 
@@ -633,13 +662,15 @@ void save_file(short mode)
 	
 	// SAVE SFX and MISC_I
 		len = (long) (64 * 64);
-		if ((error = FSWrite(file_id, &len, (char *) sfx))  != 0){
+		error = FSWrite(file_id, &len, (char*)sfx);
+		if ( error != 0){
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			FSClose(file_id);
 			SysBeep(2); 
 			return;
 			}
-		if ((error = FSWrite(file_id, &len, (char *) misc_i))  != 0){
+		error = FSWrite(file_id, &len, (char*)misc_i);
+		if ( error != 0){
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			FSClose(file_id);
 			SysBeep(2); 
@@ -650,7 +681,8 @@ void save_file(short mode)
 
 	}
 
-	if ((error = _lclose(file_id)) == HFILE_ERROR) {
+	error = _lclose(file_id);
+	if ( error == HFILE_ERROR) {
 		add_string_to_buf("Save: Couldn't close file.         ");
 		SysBeep(2);
 		return;
@@ -1479,7 +1511,8 @@ Boolean load_scenario()
 		}
 		
 	len = (long) sizeof(scenario_data_type);
-	if ((error = FSRead(file_id, &len, (char *) &scenario)) != 0){
+	error = FSRead(file_id, &len, (char*)&scenario);
+	if ( error != 0){
 		FSClose(file_id); oops_error(29); return FALSE;
 		}
 	if ((scenario.flag1 == 10) && (scenario.flag2 == 20)
@@ -1504,7 +1537,8 @@ Boolean load_scenario()
 		return FALSE;	 
 	 	}
 	len = sizeof(scen_item_data_type); // item data
-	if ((error = FSRead(file_id, &len, (char *) &(data_store2.scen_item_list))) != 0){
+	error = FSRead(file_id, &len, (char*)&(data_store2.scen_item_list));
+	if ( error != 0){
 		FSClose(file_id); oops_error(30); return FALSE;
 		}
 	if (cur_scen_is_win != TRUE)
@@ -1612,7 +1646,8 @@ Boolean load_scenario_header(char *filename,short header_entry)
 		}	
 		
 	len = (long) sizeof(scen_header_type);
-	if ((error = FSRead(file_id, &len, (char *) &(scen_headers[header_entry]))) != 0){
+	error = FSRead(file_id, &len, (char*)&(scen_headers[header_entry]));
+	if ( error != 0){
 		FSClose(file_id); return FALSE;
 		}
 	if ((scen_headers[header_entry].flag1 == 10) && (scen_headers[header_entry].flag2 == 20)
@@ -1636,7 +1671,8 @@ Boolean load_scenario_header(char *filename,short header_entry)
 	// So file is OK, so load in string data and close it.
 	SetFPos(file_id,1,0);
 	len = (long) sizeof(scenario_data_type);
-	if ((error = FSRead(file_id, &len, (char *) &scenario)) != 0){
+	error = FSRead(file_id, &len, (char*)&scenario);
+	if ( error != 0){
 		FSClose(file_id); oops_error(29); return FALSE;
 		}
 	store = scenario.rating;
@@ -1645,7 +1681,8 @@ Boolean load_scenario_header(char *filename,short header_entry)
 	scen_headers[header_entry].default_ground = store;
 	
 	len = sizeof(scen_item_data_type);
-	if (SetFPos(file_id,3,len) != 0)
+	error = SetFPos(file_id, 3, len);
+	if (error != 0)
 		return FALSE;
 		
 	for (i = 0; i < 3; i++) {
@@ -1866,7 +1903,8 @@ static short FSWrite(HFILE file,long *len,char *buffer)
 {
 	long error = 0;
 
-	if ((error = _lwrite(file, (char *) buffer, (UINT) (*len)))  == HFILE_ERROR)
+	error = _lwrite(file, (char*)buffer, (UINT)(*len));
+	if ( error == HFILE_ERROR)
 		return -1;
 	return 0;
 }
@@ -1875,7 +1913,8 @@ static short FSRead(HFILE file,long *len,char *buffer)
 {
 	long error = 0;
 
-	if ((error = _lread(file, (char *) buffer, (UINT) (*len)))  == HFILE_ERROR)
+	error = _lread(file, (char*)buffer, (UINT)(*len));
+	if ( error == HFILE_ERROR)
 		return -1;
 	return 0;
 		
@@ -1883,7 +1922,8 @@ static short FSRead(HFILE file,long *len,char *buffer)
 
 static short FSClose(HFILE file)
 {
-	if (_lclose(file) == HFILE_ERROR)
+	long error = _lclose(file);
+	if ( error == HFILE_ERROR)
 	{
 		return -1;
 	}
