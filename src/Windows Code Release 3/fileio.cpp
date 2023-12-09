@@ -1331,7 +1331,7 @@ void get_reg_data()
 				return;
 				}
 		}
-	_llseek(f,0,0);
+	_llseek(f,0, SEEK_SET);
 
 	for (i = 0; i < 10; i++) {
 		_hread(f,(char *) &(vals[i]), 4);
@@ -1376,7 +1376,7 @@ void build_data_file(short mode)
 	if (f == HFILE_ERROR)
 		f = OpenFile("bladmisc.dat",&store,OF_WRITE | OF_CREATE /* | OF_SEARCH */);
 		else {
-			_llseek(f,0,0);
+			_llseek(f,0, SEEK_SET);
 			for (i = 0; i < 10; i++)
 				_hread(f,(char *) &(s_vals[i]), 4);
 
@@ -1390,7 +1390,7 @@ void build_data_file(short mode)
 		ed_flag = -1;
 		return;
 		}
-	_llseek(f,0,0);
+	_llseek(f,0, SEEK_SET);
 
 	for (i = 0; i < 10; i++) {
 		if (mode < 2)
@@ -1878,9 +1878,9 @@ static short SetFPos(HFILE file, short mode, long len)
 	long error = 0; 
 	
 	switch (mode) {
-		case 1: error = _llseek(file,len,0); break; 
-		case 2: error = _llseek(file,len,2); break; 
-		case 3: error = _llseek(file,len,1); break; 
+		case 1: error = _llseek(file,len, SEEK_SET); break;
+		case 2: error = _llseek(file,len, SEEK_END); break;
+		case 3: error = _llseek(file,len, SEEK_CUR); break;
 		}
 
 	if (error == HFILE_ERROR)
