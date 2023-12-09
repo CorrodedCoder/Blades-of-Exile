@@ -114,6 +114,13 @@ static inline short file_read_type(HFILE file, auto & type)
 	return FSRead(file, sizeof(type), reinterpret_cast<char*>(&type));
 }
 
+
+static inline void file_read_string(HFILE file, long len, char * arr)
+{
+	FSRead(file, len, arr);
+	arr[len] = '\0';
+}
+
 void file_initialize()
 {
 		OpenFile("outdoor.dat",&save_dir,OF_PARSE);
@@ -853,20 +860,17 @@ void load_town(short town_num,short mode,short extra,char *str)
 		const long len = (mode == 0) ? (long) (c_town.town.strlens[i]) : (long) (dummy_town.strlens[i]);
 		switch (mode) {
 			case 0:
-				FSRead(file_id, len, (char *) &(data_store.town_strs[i]));
-				data_store.town_strs[i][len] = 0;
+				file_read_string(file_id, len, data_store.town_strs[i]);
 				break;
 			case 1:
 				SetFPos (file_id, 3, len);
 				break;
 			case 2:
 				if (extra < 0) {
-					FSRead(file_id, len, (char *) &(data_store.town_strs[i]));
-					data_store.town_strs[i][len] = 0;
+					file_read_string(file_id, len, data_store.town_strs[i]);
 					}
 				else if (i == extra) {
-					FSRead(file_id, len, (char *) str);
-					str[len] = 0;
+					file_read_string(file_id, len, str);
 					}
 					else SetFPos (file_id, 3, len);
 				break;
@@ -882,9 +886,7 @@ void load_town(short town_num,short mode,short extra,char *str)
 		if (error != 0) {FSClose(file_id);oops_error(37);}
 	
 		for (i = 0; i < 170; i++) {
-			const long len = (long) (talking.strlens[i]);
-			FSRead(file_id, len, (char *) &(data_store3.talk_strs[i]));
-			data_store3.talk_strs[i][len] = 0;
+			file_read_string(file_id, (long)talking.strlens[i], data_store3.talk_strs[i]);
 			}
 		cur_town_talk_loaded = town_num;
 		}
@@ -1296,17 +1298,14 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 		
 	if (mode == 0) {
 		for (i = 0; i < 9; i++) {
-			const long len = (long) (outdoors[targ_x][targ_y].strlens[i]);
-			FSRead(file_id, len, (char *) &(data_store4.outdoor_text[targ_x][targ_y].out_strs[i]));
-			data_store4.outdoor_text[targ_x][targ_y].out_strs[i][len] = 0;
+			file_read_string(file_id, (long)outdoors[targ_x][targ_y].strlens[i], data_store4.outdoor_text[targ_x][targ_y].out_strs[i]);
 			}
 		}
 	if (mode == 1) {
 		for (i = 0; i < 120; i++) {
 			const long len = (long) (dummy_out.strlens[i]);
 			if (i == extra) {
-				FSRead(file_id, len, (char *) str);
-				str[len] = 0;
+				file_read_string(file_id, len, str);
 				}
 				else SetFPos (file_id, 3, len);	
 			}
@@ -1511,12 +1510,10 @@ Boolean load_scenario()
 	for (i = 0; i < 270; i++) {
 		const long len = (long) (scenario.scen_str_len[i]);
 		if (i < 160) {
-			FSRead(file_id, len, (char *) &(data_store5.scen_strs[i]));
-			data_store5.scen_strs[i][len] = 0;
+			file_read_string(file_id, len, data_store5.scen_strs[i]);
 			}
 			else {
-				FSRead(file_id, len, (char *) &(scen_strs2[i - 160]));
-				scen_strs2[i - 160][len] = 0;
+			file_read_string(file_id, len, scen_strs2[i - 160]);
 				}
 		}
 	
@@ -1645,10 +1642,7 @@ Boolean load_scenario_header(char *filename,short header_entry)
 		return FALSE;
 		
 	for (i = 0; i < 3; i++) {
-		store = (short) scenario.scen_str_len[i];
-		const long len = (long) (store);
-		FSRead(file_id, len, (char *) load_str);
-		load_str[len] = 0;
+		file_read_string(file_id, (long)(short)scenario.scen_str_len[i], load_str);
 		if (i == 0)
 			load_str[29] = 0;
 			else load_str[59] = 0;
