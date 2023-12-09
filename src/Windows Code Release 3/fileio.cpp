@@ -109,6 +109,11 @@ static const std::array szFilter{ "Blades of Exile Save Files (*.SAV)","*.sav",
 	"All Files (*.*)","*.*",
 	"" };
 
+static inline short file_read_type(HFILE file, auto & type)
+{
+	return FSRead(file, sizeof(type), reinterpret_cast<char*>(&type));
+}
+
 void file_initialize()
 {
 		OpenFile("outdoor.dat",&save_dir,OF_PARSE);
@@ -238,7 +243,8 @@ void load_file()
 	if (in_scen == TRUE) {
 	
 	// LOAD OUTDOOR MAP
-	error = FSRead(file_id, sizeof(out_info_type), (char*)out_e);
+	static_assert(sizeof(out_info_type) == sizeof(out_e));
+	error = file_read_type(file_id, out_e);
 	if ( error != 0){
 		FSClose(file_id);
 		SysBeep(2);
@@ -248,7 +254,7 @@ void load_file()
 
 	// LOAD TOWN 
 	if (town_restore == TRUE) {
-		error = FSRead(file_id, sizeof(current_town_type), (char*)&c_town);
+		error = file_read_type(file_id, c_town);
 		if ( error != 0){
 				FSClose(file_id);
 				SysBeep(2);
@@ -256,7 +262,7 @@ void load_file()
 				return;
 				}
 	
-		error = FSRead(file_id, sizeof(big_tr_type), (char*)&t_d);
+		error = file_read_type(file_id, t_d);
 		if ( error != 0){
 				FSClose(file_id);
 				SysBeep(2);
@@ -264,7 +270,7 @@ void load_file()
 				return;
 				}
 
-		error = FSRead(file_id, sizeof(town_item_list), (char*)&t_i);
+		error = file_read_type(file_id, t_i);
 		if ( error != 0){
 			FSClose(file_id);
 			SysBeep(2);
@@ -276,7 +282,7 @@ void load_file()
 
 	// LOAD STORED ITEMS
 	for (i = 0; i < 3; i++) {
-		error = FSRead(file_id, sizeof(stored_items_list_type), (char*)&stored_items[i]);
+		error = file_read_type(file_id, stored_items);
 		if (error != 0){
 				FSClose(file_id);
 				SysBeep(2);
@@ -287,14 +293,14 @@ void load_file()
 
 	// LOAD SAVED MAPS
 	if (maps_there == TRUE) {
-		error = FSRead(file_id, sizeof(stored_town_maps_type), (char*)&(town_maps));
+		error = file_read_type(file_id, town_maps);
 		if ( error != 0){
 				FSClose(file_id);
 				SysBeep(2);
 				FCD(1064,0);
 				return;
 				}
-		error = FSRead(file_id, sizeof(stored_town_maps_type), (char*)&(town_maps2));
+		error = file_read_type(file_id, town_maps2);
 		if ( error != 0){
 				FSClose(file_id);
 				SysBeep(2);
@@ -302,7 +308,7 @@ void load_file()
 				return;
 				}
 	
-		error = FSRead(file_id, sizeof(stored_outdoor_maps_type), (char*)&o_maps);
+		error = file_read_type(file_id, o_maps);
 		if (error != 0) {
 				FSClose(file_id);
 				SysBeep(2);
@@ -312,14 +318,16 @@ void load_file()
 		}
 
 	// LOAD SFX & MISC_I
-		error = FSRead(file_id, 64 * 64, (char*)sfx);
+		static_assert(sizeof(sfx) == 64 * 64);
+		error = file_read_type(file_id, sfx);
 		if ( error != 0){
 				FSClose(file_id);
 				SysBeep(2);
 		FCD(1064,0);
 				return;
 				}
-		error = FSRead(file_id, 64 * 64, (char*)misc_i);
+		static_assert(sizeof(misc_i) == 64 * 64);
+		error = file_read_type(file_id, misc_i);
 		if ( error != 0){
 				FSClose(file_id);
 				SysBeep(2);
@@ -760,19 +768,19 @@ void load_town(short town_num,short mode,short extra,char *str)
 	if (error != 0) {FSClose(file_id);oops_error(35);}
 
 	if (mode == 0) {
-		error = FSRead(file_id, sizeof(town_record_type), (char *) &c_town.town);
+		error = file_read_type(file_id, c_town.town);
 		if (cur_scen_is_win != TRUE)
 		{
 			endian_adjust(c_town.town);
 		}
 	}
-		else error = FSRead(file_id, sizeof(town_record_type), (char *) &dummy_town);
+		else error = file_read_type(file_id, dummy_town);
 	if (error != 0) {FSClose(file_id);oops_error(36);}
 
 	switch (scenario.town_size[which_town]) {
 		case 0:
 			if (mode == 0) {
-				FSRead(file_id, sizeof(big_tr_type), (char *) &t_d);
+				file_read_type(file_id, t_d);
 				if (cur_scen_is_win != TRUE)
 				{
 					endian_adjust(t_d);
@@ -784,7 +792,7 @@ void load_town(short town_num,short mode,short extra,char *str)
 			
 		case 1:
 				if (mode == 0) {
-					FSRead(file_id, sizeof(ave_tr_type), (char *) &ave_t);
+					file_read_type(file_id, ave_t);
 					for (i = 0; i < 48; i++)
 						for (j = 0; j < 48; j++) {
 							t_d.terrain[i][j] = ave_t.terrain[i][j];
@@ -817,7 +825,7 @@ void load_town(short town_num,short mode,short extra,char *str)
 			
 		case 2:
 			if (mode == 0) {
-				FSRead(file_id, sizeof(tiny_tr_type), (char *) &tiny_t);
+				file_read_type(file_id, tiny_t);
 				for (i = 0; i < 32; i++)
 					for (j = 0; j < 32; j++) {
 						t_d.terrain[i][j] = tiny_t.terrain[i][j];
@@ -866,7 +874,7 @@ void load_town(short town_num,short mode,short extra,char *str)
 		}
 
 	if (mode < 2) {
-		error = FSRead(file_id, sizeof(talking_record_type), (char *) &talking);
+		error = file_read_type(file_id, talking);
 		if (cur_scen_is_win != TRUE)
 		{
 			endian_adjust(talking);
@@ -1277,14 +1285,14 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 	if (error != 0) {FSClose(file_id);oops_error(32);}
 
 	if (mode == 0) {
-		error = FSRead(file_id, sizeof(outdoor_record_type), (char *) &outdoors[targ_x][targ_y]);
+		error = file_read_type(file_id, outdoors[targ_x][targ_y]);
 		if (cur_scen_is_win != TRUE)
 		{
 			endian_adjust(outdoors[targ_x][targ_y]);
 		}
 		if (error != 0) {FSClose(file_id);oops_error(33);}
 		}
-		else error = FSRead(file_id, sizeof(outdoor_record_type), (char *) &dummy_out);
+		else error = file_read_type(file_id, dummy_out);
 		
 	if (mode == 0) {
 		for (i = 0; i < 9; i++) {
@@ -1467,7 +1475,7 @@ Boolean load_scenario()
 		SysBeep(2);	return FALSE;
 		}
 
-	error = FSRead(file_id, sizeof(scenario_data_type), (char*)&scenario);
+	error = file_read_type(file_id, scenario);
 	if ( error != 0){
 		FSClose(file_id); oops_error(29); return FALSE;
 		}
@@ -1492,7 +1500,7 @@ Boolean load_scenario()
 		give_error("This is not a legitimate Blades of Exile scenario.","",0);
 		return FALSE;	 
 	 	}
-	error = FSRead(file_id, sizeof(scen_item_data_type), (char*)&(data_store2.scen_item_list));
+	error = file_read_type(file_id, data_store2.scen_item_list);
 	if ( error != 0){
 		FSClose(file_id); oops_error(30); return FALSE;
 		}
@@ -1599,7 +1607,7 @@ Boolean load_scenario_header(char *filename,short header_entry)
 		return FALSE;
 		}	
 
-	error = FSRead(file_id, sizeof(scen_header_type), (char*)&(scen_headers[header_entry]));
+	error = file_read_type(file_id, scen_headers[header_entry]);
 	if ( error != 0){
 		FSClose(file_id); return FALSE;
 		}
@@ -1623,7 +1631,7 @@ Boolean load_scenario_header(char *filename,short header_entry)
 
 	// So file is OK, so load in string data and close it.
 	SetFPos(file_id,1,0);
-	error = FSRead(file_id, sizeof(scenario_data_type), (char*)&scenario);
+	error = file_read_type(file_id, scenario);
 	if ( error != 0){
 		FSClose(file_id); oops_error(29); return FALSE;
 		}
