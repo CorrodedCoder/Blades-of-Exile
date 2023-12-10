@@ -226,7 +226,7 @@ void load_file()
 			return;
 		}
 		if ((flag.i != flags[i][0]) && (flag.i != flags[i][1])) { // OK Exile II save file?
-			_lclose(file_id);
+			FSClose(file_id);
 			FCD(1063, 0);
 			return;
 		}
@@ -242,7 +242,7 @@ void load_file()
 
 	// LOAD PARTY
 	if (!llfile_read_type(file_id, party)) {
-		_lclose(file_id);
+		FSClose(file_id);
 		SysBeep(2);
 		FCD(1064, 0);
 		return;
@@ -251,7 +251,7 @@ void load_file()
 
 	// LOAD SETUP
 	if (!llfile_read_type(file_id, setup_save)) {
-		_lclose(file_id);
+		FSClose(file_id);
 		SysBeep(2);
 		FCD(1064, 0);
 		return;
@@ -260,7 +260,7 @@ void load_file()
 	// LOAD PCS
 	for (i = 0; i < 6; i++) {
 		if (!llfile_read_type(file_id, adven[i])) {
-			_lclose(file_id);
+			FSClose(file_id);
 			SysBeep(2);
 			FCD(1064, 0);
 			return;
@@ -355,7 +355,7 @@ void load_file()
 
 	} // end if_scen
 
-	if (_lclose(file_id) == HFILE_ERROR) {
+	if (!FSClose(file_id)) {
 		add_string_to_buf("Load: Can't close file.          ");
 		SysBeep(2);
 		return;
@@ -489,20 +489,20 @@ void save_file(short mode)
 	flag.i = (town_save == TRUE) ? 1342 : 5790;
 	if (!llfile_write_type(file_id, flag)) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
-		_lclose(file_id);
+		FSClose(file_id);
 		SysBeep(2);
 	}
 	flag.i = (in_startup_mode == FALSE) ? 100 : 200;
 	if (!llfile_write_type(file_id, flag)) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
-		_lclose(file_id);
+		FSClose(file_id);
 		SysBeep(2);
 		return;
 	}
 	flag.i = (save_maps == TRUE) ? 5567 : 3422;
 	if (!llfile_write_type(file_id, flag)) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
-		_lclose(file_id);
+		FSClose(file_id);
 		SysBeep(2);
 		return;
 	}
@@ -511,7 +511,7 @@ void save_file(short mode)
 	xor_type(party, 0x5C);
 	if (!llfile_write_type(file_id, party)) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
-		_lclose(file_id);
+		FSClose(file_id);
 		xor_type(party, 0x5C);
 		SysBeep(2);
 		return;
@@ -521,7 +521,7 @@ void save_file(short mode)
 	// SAVE SETUP
 	if (!llfile_write_type(file_id, setup_save)) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
-		_lclose(file_id);
+		FSClose(file_id);
 		SysBeep(2);
 		return;
 	}
@@ -531,7 +531,7 @@ void save_file(short mode)
 		xor_type(adven[i], 0x6B);
 		if (!llfile_write_type(file_id, adven[i])) {
 			add_string_to_buf("Save: Couldn't write to file.         ");
-			_lclose(file_id);
+			FSClose(file_id);
 			xor_type(adven[i], 0x6B);
 			SysBeep(2);
 			return;
@@ -620,7 +620,7 @@ void save_file(short mode)
 		}
 	}
 
-	if (_lclose(file_id) == HFILE_ERROR) {
+	if (!FSClose(file_id)) {
 		add_string_to_buf("Save: Couldn't close file.         ");
 		SysBeep(2);
 		return;
@@ -1289,7 +1289,7 @@ void get_reg_data()
 			return;
 		}
 		else {
-			_lclose(f);
+			FSClose(f);
 			return;
 		}
 	}
@@ -1312,7 +1312,7 @@ void get_reg_data()
 	}
 	if (vals[5] == 2000) {
 		game_run_before = FALSE;
-		_lclose(f);
+		FSClose(f);
 		build_data_file(1);
 		return;
 	}
@@ -1322,7 +1322,7 @@ void get_reg_data()
 		//if (vals[7] == init_data(vals[6]))
 		//	registered = TRUE;
 	}
-	_lclose(f);
+	FSClose(f);
 
 }
 
@@ -1405,7 +1405,7 @@ void build_data_file(short mode)
 		llfile_write_type(f, val_store);
 	}
 
-	_lclose(f);
+	FSClose(f);
 
 }
 
