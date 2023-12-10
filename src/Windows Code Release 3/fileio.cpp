@@ -145,26 +145,31 @@ static void xor_type(auto& type, char xor_value)
 	}
 }
 
-template< typename T>
-struct xor_wrap
+
+template< char K, typename T>
+struct xor_wrap_detail
 {
 	T& t_;
-	const char xor_;
-	xor_wrap(T & t, char xor_value)
+	xor_wrap_detail(T & t)
 		: t_(t)
-		, xor_(xor_value)
 	{
-		xor_type(t_, xor_);
+		xor_type(t_, K);
 	}
 	T& get() const
 	{
 		return t_;
 	}
-	~xor_wrap()
+	~xor_wrap_detail()
 	{
-		xor_type(t_, xor_);
+		xor_type(t_, K);
 	}
 };
+
+template<char K, typename T>
+xor_wrap_detail<K, T> xor_wrap(T& t)
+{
+	return xor_wrap_detail<K, T>(t);
+}
 
 void file_initialize()
 {
@@ -503,7 +508,7 @@ void save_file(short mode)
 	}
 
 	// SAVE PARTY
-	if (!file_write_type(file_id, xor_wrap(party, 0x5C).get())) {
+	if (!file_write_type(file_id, xor_wrap<0x5C>(party).get())) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		SysBeep(2);
 		return;
@@ -518,7 +523,7 @@ void save_file(short mode)
 
 	// SAVE PCS	
 	for (i = 0; i < 6; i++) {
-		if (!file_write_type(file_id, xor_wrap(adven[i], 0x6B).get())) {
+		if (!file_write_type(file_id, xor_wrap<0x6B>(adven[i]).get())) {
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			SysBeep(2);
 			return;
