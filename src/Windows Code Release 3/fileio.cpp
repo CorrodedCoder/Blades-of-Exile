@@ -268,14 +268,12 @@ void load_file()
 	}
 
 	// LOAD PCS
-	for (i = 0; i < 6; i++) {
-		if (!file_read_type(file_id, adven[i])) {
-			SysBeep(2);
-			FCD(1064, 0);
-			return;
-		}
-		xor_type(adven[i], 0x6B);
+	if (!file_read_type(file_id, adven)) {
+		SysBeep(2);
+		FCD(1064, 0);
+		return;
 	}
+	xor_type(adven, 0x6B);
 
 	if (in_scen == TRUE) {
 
