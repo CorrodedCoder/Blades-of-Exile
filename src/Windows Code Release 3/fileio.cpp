@@ -119,25 +119,25 @@ static bool SetFPos(auto& file, long len, std::ios_base::seekdir origin)
 	return !file.fail();
 }
 
-static inline bool file_read_type(auto& file, auto& type)
+static bool file_read_type(auto& file, auto& type)
 {
 	file.read(reinterpret_cast<char*>(&type), sizeof(type));
 	return !file.fail();
 }
 
-static inline void file_read_string(std::ifstream& file, long len, char* arr)
+static void file_read_string(std::ifstream& file, long len, char* arr)
 {
 	file.read(arr, len);
 	arr[len] = '\0';
 }
 
-static inline bool file_write_type(auto& file, const auto& type)
+static bool file_write_type(auto& file, const auto& type)
 {
 	file.write(reinterpret_cast<const char*>(&type), sizeof(type));
 	return !file.fail();
 }
 
-static inline void xor_type(auto& type, char xor_value)
+static void xor_type(auto& type, char xor_value)
 {
 	for (size_t index = 0; index < sizeof(type); ++index)
 	{
@@ -214,7 +214,6 @@ void load_file()
 			return;
 		}
 		if ((flag.i != flags[i][0]) && (flag.i != flags[i][1])) { // OK Exile II save file?
-			FSClose(file_id);
 			FCD(1063, 0);
 			return;
 		}
@@ -230,7 +229,6 @@ void load_file()
 
 	// LOAD PARTY
 	if (!file_read_type(file_id, party)) {
-		FSClose(file_id);
 		SysBeep(2);
 		FCD(1064, 0);
 		return;
@@ -239,7 +237,6 @@ void load_file()
 
 	// LOAD SETUP
 	if (!file_read_type(file_id, setup_save)) {
-		FSClose(file_id);
 		SysBeep(2);
 		FCD(1064, 0);
 		return;
@@ -248,7 +245,6 @@ void load_file()
 	// LOAD PCS
 	for (i = 0; i < 6; i++) {
 		if (!file_read_type(file_id, adven[i])) {
-			FSClose(file_id);
 			SysBeep(2);
 			FCD(1064, 0);
 			return;
@@ -261,7 +257,6 @@ void load_file()
 		// LOAD OUTDOOR MAP
 		static_assert(sizeof(out_info_type) == sizeof(out_e));
 		if (!file_read_type(file_id, out_e)) {
-			FSClose(file_id);
 			SysBeep(2);
 			FCD(1064, 0);
 			return;
@@ -270,21 +265,18 @@ void load_file()
 		// LOAD TOWN 
 		if (town_restore == TRUE) {
 			if (!file_read_type(file_id, c_town)) {
-				FSClose(file_id);
 				SysBeep(2);
 				FCD(1064, 0);
 				return;
 			}
 
 			if (!file_read_type(file_id, t_d)) {
-				FSClose(file_id);
 				SysBeep(2);
 				FCD(1064, 0);
 				return;
 			}
 
 			if (!file_read_type(file_id, t_i)) {
-				FSClose(file_id);
 				SysBeep(2);
 				FCD(1064, 0);
 				return;
@@ -295,7 +287,6 @@ void load_file()
 		// LOAD STORED ITEMS
 		for (i = 0; i < 3; i++) {
 			if (!file_read_type(file_id, stored_items)) {
-				FSClose(file_id);
 				SysBeep(2);
 				FCD(1064, 0);
 				return;
@@ -305,20 +296,17 @@ void load_file()
 		// LOAD SAVED MAPS
 		if (maps_there == TRUE) {
 			if (!file_read_type(file_id, town_maps)) {
-				FSClose(file_id);
 				SysBeep(2);
 				FCD(1064, 0);
 				return;
 			}
 			if (!file_read_type(file_id, town_maps2)) {
-				FSClose(file_id);
 				SysBeep(2);
 				FCD(1064, 0);
 				return;
 			}
 
 			if (!file_read_type(file_id, o_maps)) {
-				FSClose(file_id);
 				SysBeep(2);
 				FCD(1064, 0);
 				return;
@@ -328,14 +316,12 @@ void load_file()
 		// LOAD SFX & MISC_I
 		static_assert(sizeof(sfx) == 64 * 64);
 		if (!file_read_type(file_id, sfx)) {
-			FSClose(file_id);
 			SysBeep(2);
 			FCD(1064, 0);
 			return;
 		}
 		static_assert(sizeof(misc_i) == 64 * 64);
 		if (!file_read_type(file_id, misc_i)) {
-			FSClose(file_id);
 			SysBeep(2);
 			FCD(1064, 0);
 			return;
@@ -486,14 +472,12 @@ void save_file(short mode)
 	flag.i = (in_startup_mode == FALSE) ? 100 : 200;
 	if (!file_write_type(file_id, flag)) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
-		FSClose(file_id);
 		SysBeep(2);
 		return;
 	}
 	flag.i = (save_maps == TRUE) ? 5567 : 3422;
 	if (!file_write_type(file_id, flag)) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
-		FSClose(file_id);
 		SysBeep(2);
 		return;
 	}
@@ -502,7 +486,6 @@ void save_file(short mode)
 	xor_type(party, 0x5C);
 	if (!file_write_type(file_id, party)) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
-		FSClose(file_id);
 		xor_type(party, 0x5C);
 		SysBeep(2);
 		return;
@@ -512,7 +495,6 @@ void save_file(short mode)
 	// SAVE SETUP
 	if (!file_write_type(file_id, setup_save)) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
-		FSClose(file_id);
 		SysBeep(2);
 		return;
 	}
@@ -522,7 +504,6 @@ void save_file(short mode)
 		xor_type(adven[i], 0x6B);
 		if (!file_write_type(file_id, adven[i])) {
 			add_string_to_buf("Save: Couldn't write to file.         ");
-			FSClose(file_id);
 			xor_type(adven[i], 0x6B);
 			SysBeep(2);
 			return;
@@ -536,7 +517,6 @@ void save_file(short mode)
 		static_assert(sizeof(out_info_type) == sizeof(out_e));
 		if (!file_write_type(file_id, out_e)) {
 			add_string_to_buf("Save: Couldn't write to file.         ");
-			FSClose(file_id);
 			SysBeep(2);
 			return;
 		}
@@ -544,19 +524,16 @@ void save_file(short mode)
 		if (town_save == TRUE) {
 			if (!file_write_type(file_id, c_town)) {
 				add_string_to_buf("Save: Couldn't write to file.         ");
-				FSClose(file_id);
 				SysBeep(2);
 				return;
 			}
 			if (!file_write_type(file_id, t_d)) {
 				add_string_to_buf("Save: Couldn't write to file.         ");
-				FSClose(file_id);
 				SysBeep(2);
 				return;
 			}
 			if (!file_write_type(file_id, t_i)) {
 				add_string_to_buf("Save: Couldn't write to file.         ");
-				FSClose(file_id);
 				SysBeep(2);
 				return;
 			}
@@ -566,7 +543,6 @@ void save_file(short mode)
 		for (i = 0; i < 3; i++) {
 			if (!file_write_type(file_id, stored_items[i])) {
 				add_string_to_buf("Save: Couldn't write to file.         ");
-				FSClose(file_id);
 				SysBeep(2);
 				return;
 			}
@@ -576,19 +552,16 @@ void save_file(short mode)
 		if (save_maps == TRUE) {
 			if (!file_write_type(file_id, town_maps)) {
 				add_string_to_buf("Save: Couldn't write to file.         ");
-				FSClose(file_id);
 				SysBeep(2);
 				return;
 			}
 			if (!file_write_type(file_id, town_maps2)) {
 				add_string_to_buf("Save: Couldn't write to file.         ");
-				FSClose(file_id);
 				SysBeep(2);
 				return;
 			}
 			if (!file_write_type(file_id, o_maps)) {
 				add_string_to_buf("Save: Couldn't write to file.         ");
-				FSClose(file_id);
 				SysBeep(2);
 				return;
 			}
@@ -598,14 +571,12 @@ void save_file(short mode)
 		static_assert(sizeof(sfx) == 64 * 64);
 		if (!file_write_type(file_id, sfx)) {
 			add_string_to_buf("Save: Couldn't write to file.         ");
-			FSClose(file_id);
 			SysBeep(2);
 			return;
 		}
 		static_assert(sizeof(misc_i) == 64 * 64);
 		if (!file_write_type(file_id, misc_i)) {
 			add_string_to_buf("Save: Couldn't write to file.         ");
-			FSClose(file_id);
 			SysBeep(2);
 			return;
 		}
@@ -838,7 +809,7 @@ void load_town(short town_num, short mode, short extra, char* str)
 	}
 	if (mode == 0)
 		town_type = scenario.town_size[which_town];
-	if (!FSClose(file_id)) { FSClose(file_id); oops_error(38); }
+	if (!FSClose(file_id)) { oops_error(38); }
 
 	// Now more initialization is needed. First need to properly create the misc_i array.
 
@@ -1256,7 +1227,7 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 
 	}
 
-	if (!FSClose(file_id)) { FSClose(file_id); oops_error(33); }
+	if (!FSClose(file_id)) { oops_error(33); }
 }
 
 
@@ -1279,7 +1250,6 @@ void get_reg_data()
 			return;
 		}
 		else {
-			FSClose(f);
 			return;
 		}
 	}
@@ -1303,7 +1273,6 @@ void get_reg_data()
 	}
 	if (vals[5] == 2000) {
 		game_run_before = FALSE;
-		FSClose(f);
 		build_data_file(1);
 		return;
 	}
@@ -1313,8 +1282,6 @@ void get_reg_data()
 		//if (vals[7] == init_data(vals[6]))
 		//	registered = TRUE;
 	}
-	FSClose(f);
-
 }
 
 void build_data_file(short mode)
@@ -1399,8 +1366,6 @@ void build_data_file(short mode)
 		static_assert(sizeof(val_store) == 4);
 		file_write_type(f, val_store);
 	}
-
-	FSClose(f);
 }
 
 // expecting party record to contain name of proper scenario to load
@@ -1421,7 +1386,7 @@ Boolean load_scenario()
 	}
 
 	if (!file_read_type(file_id, scenario)) {
-		FSClose(file_id); oops_error(29); return FALSE;
+		oops_error(29); return FALSE;
 	}
 	if ((scenario.flag1 == 10) && (scenario.flag2 == 20)
 		&& (scenario.flag3 == 30)
@@ -1440,12 +1405,11 @@ Boolean load_scenario()
 		cur_scen_is_win = TRUE;
 	}
 	if (file_ok == FALSE) {
-		FSClose(file_id);
 		give_error("This is not a legitimate Blades of Exile scenario.", "", 0);
 		return FALSE;
 	}
 	if (!file_read_type(file_id, data_store2.scen_item_list)) {
-		FSClose(file_id); oops_error(30); return FALSE;
+		oops_error(30); return FALSE;
 	}
 	if (cur_scen_is_win != TRUE)
 	{
@@ -1461,7 +1425,6 @@ Boolean load_scenario()
 		}
 	}
 
-	FSClose(file_id);
 	load_spec_graphics();
 	set_up_ter_pics();
 	return TRUE;
@@ -1548,7 +1511,7 @@ Boolean load_scenario_header(char* filename, short header_entry)
 	}
 
 	if (!file_read_type(file_id, scen_headers[header_entry])) {
-		FSClose(file_id); return FALSE;
+		return FALSE;
 	}
 	if ((scen_headers[header_entry].flag1 == 10) && (scen_headers[header_entry].flag2 == 20)
 		&& (scen_headers[header_entry].flag3 == 30)
@@ -1564,14 +1527,13 @@ Boolean load_scenario_header(char* filename, short header_entry)
 	}
 	if (file_ok == FALSE) {
 		scen_headers[header_entry].flag1 = 0;
-		FSClose(file_id);
 		return FALSE;
 	}
 
 	// So file is OK, so load in string data and close it.
 	SetFPos(file_id, 0, std::ios_base::beg);
 	if (!file_read_type(file_id, scenario)) {
-		FSClose(file_id); oops_error(29); return FALSE;
+		oops_error(29); return FALSE;
 	}
 	store = scenario.rating;
 	if (mac_header == TRUE)
@@ -1588,8 +1550,6 @@ Boolean load_scenario_header(char* filename, short header_entry)
 		else load_str[59] = 0;
 		strcpy(data_store2.scen_header_strs[header_entry][i], load_str);
 	}
-
-	FSClose(file_id);
 
 	return TRUE;
 }
@@ -1803,6 +1763,5 @@ Boolean load_blades_data()
 	if (file_id.fail()) {
 		return FALSE;
 	}
-	FSClose(file_id);
 	return TRUE;
 }
