@@ -113,14 +113,9 @@ static bool FSClose(auto& file)
 	return !file.fail();
 }
 
-static bool SetFPos(auto& file, long len, FSOrigin mode)
+static bool SetFPos(auto& file, long len, std::ios_base::seekdir origin)
 {
-	switch (mode)
-	{
-	case FSOrigin::SET: file.seekg(len, std::ios_base::beg); break;
-	case FSOrigin::END: file.seekg(len, std::ios_base::end); break;
-	case FSOrigin::CUR: file.seekg(len, std::ios_base::cur); break;
-	}
+	file.seekg(len, origin);
 	return !file.fail();
 }
 
@@ -723,7 +718,7 @@ void load_town(short town_num, short mode, short extra, char* str)
 			store += (long)(scenario.town_data_size[i][j]);
 	len_to_jump += store;
 
-	if (!SetFPos(file_id, len_to_jump, FSOrigin::SET)) { FSClose(file_id); oops_error(35); }
+	if (!SetFPos(file_id, len_to_jump, std::ios_base::beg)) { FSClose(file_id); oops_error(35); }
 
 	if (mode == 0) {
 		success = file_read_type(file_id, c_town.town);
@@ -744,7 +739,7 @@ void load_town(short town_num, short mode, short extra, char* str)
 				endian_adjust(t_d);
 			}
 		}
-		else success = SetFPos(file_id, sizeof(big_tr_type), FSOrigin::CUR);
+		else success = SetFPos(file_id, sizeof(big_tr_type), std::ios_base::cur);
 
 		break;
 
@@ -777,7 +772,7 @@ void load_town(short town_num, short mode, short extra, char* str)
 				endian_adjust(t_d);
 			}
 		}
-		else success = SetFPos(file_id, sizeof(ave_tr_type), FSOrigin::CUR);
+		else success = SetFPos(file_id, sizeof(ave_tr_type), std::ios_base::cur);
 
 		break;
 
@@ -803,7 +798,7 @@ void load_town(short town_num, short mode, short extra, char* str)
 				endian_adjust(t_d);
 			}
 		}
-		else success = SetFPos(file_id, sizeof(tiny_tr_type), FSOrigin::CUR);
+		else success = SetFPos(file_id, sizeof(tiny_tr_type), std::ios_base::cur);
 		break;
 	}
 
@@ -814,7 +809,7 @@ void load_town(short town_num, short mode, short extra, char* str)
 			file_read_string(file_id, len, data_store.town_strs[i]);
 			break;
 		case 1:
-			SetFPos(file_id, len, FSOrigin::CUR);
+			SetFPos(file_id, len, std::ios_base::cur);
 			break;
 		case 2:
 			if (extra < 0) {
@@ -823,7 +818,7 @@ void load_town(short town_num, short mode, short extra, char* str)
 			else if (i == extra) {
 				file_read_string(file_id, len, str);
 			}
-			else SetFPos(file_id, len, FSOrigin::CUR);
+			else SetFPos(file_id, len, std::ios_base::cur);
 			break;
 		}
 	}
@@ -1233,7 +1228,7 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 			store += (long)(scenario.out_data_size[i][j]);
 	len_to_jump += store;
 
-	if (!SetFPos(file_id, len_to_jump, FSOrigin::SET)) { FSClose(file_id); oops_error(32); }
+	if (!SetFPos(file_id, len_to_jump, std::ios_base::beg)) { FSClose(file_id); oops_error(32); }
 
 	if (mode == 0) {
 		success = file_read_type(file_id, outdoors[targ_x][targ_y]);
@@ -1256,7 +1251,7 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 			if (i == extra) {
 				file_read_string(file_id, len, str);
 			}
-			else SetFPos(file_id, len, FSOrigin::CUR);
+			else SetFPos(file_id, len, std::ios_base::cur);
 		}
 
 	}
@@ -1288,7 +1283,7 @@ void get_reg_data()
 			return;
 		}
 	}
-	SetFPos(f, 0, FSOrigin::SET);
+	SetFPos(f, 0, std::ios_base::beg);
 
 	for (i = 0; i < 10; i++) {
 		static_assert(sizeof(vals[i]) == 4);
@@ -1335,7 +1330,7 @@ void build_data_file(short mode)
 		// Was: OpenFile("bladmisc.dat", &store, OF_WRITE | OF_CREATE /* | OF_SEARCH */);
 		f.open("bladmisc.dat", std::ios_base::binary | std::ios_base::out);
 	else {
-		SetFPos(f, 0, FSOrigin::SET);
+		SetFPos(f, 0, std::ios_base::beg);
 		for (i = 0; i < 10; i++)
 		{
 			static_assert(sizeof(s_vals[i]) == 4);
@@ -1352,7 +1347,7 @@ void build_data_file(short mode)
 		ed_flag = -1;
 		return;
 	}
-	SetFPos(f, 0, FSOrigin::SET);
+	SetFPos(f, 0, std::ios_base::beg);
 
 	for (i = 0; i < 10; i++) {
 		if (mode < 2)
@@ -1574,7 +1569,7 @@ Boolean load_scenario_header(char* filename, short header_entry)
 	}
 
 	// So file is OK, so load in string data and close it.
-	SetFPos(file_id, 0, FSOrigin::SET);
+	SetFPos(file_id, 0, std::ios_base::beg);
 	if (!file_read_type(file_id, scenario)) {
 		FSClose(file_id); oops_error(29); return FALSE;
 	}
@@ -1583,7 +1578,7 @@ Boolean load_scenario_header(char* filename, short header_entry)
 		endian_adjust(store);
 	scen_headers[header_entry].default_ground = store;
 
-	if (!SetFPos(file_id, sizeof(scen_item_data_type), FSOrigin::CUR))
+	if (!SetFPos(file_id, sizeof(scen_item_data_type), std::ios_base::cur))
 		return FALSE;
 
 	for (i = 0; i < 3; i++) {
