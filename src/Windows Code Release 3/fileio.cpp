@@ -140,16 +140,6 @@ static inline bool file_write_type(HFILE file, const auto& type)
 	return HFILE_ERROR != _lwrite(file, reinterpret_cast<const char*>(&type), (UINT)sizeof(type));
 }
 
-static inline bool llfile_read_type(HFILE file, auto& type)
-{
-	return HFILE_ERROR != _lread(file, reinterpret_cast<char*>(&type), sizeof(type));
-}
-
-static inline bool llfile_write_type(HFILE file, const auto& type)
-{
-	return HFILE_ERROR != _lwrite(file, reinterpret_cast<const char*>(&type), sizeof(type));
-}
-
 static inline void xor_type(auto& type, char xor_value)
 {
 	for (size_t index = 0; index < sizeof(type); ++index)
@@ -221,7 +211,7 @@ void load_file()
 	//	add_string_to_buf( debug);
 
 	for (i = 0; i < 3; i++) {
-		if (!llfile_read_type(file_id, flag)) {
+		if (!file_read_type(file_id, flag)) {
 			beep();
 			return;
 		}
@@ -241,7 +231,7 @@ void load_file()
 	}
 
 	// LOAD PARTY
-	if (!llfile_read_type(file_id, party)) {
+	if (!file_read_type(file_id, party)) {
 		FSClose(file_id);
 		SysBeep(2);
 		FCD(1064, 0);
@@ -250,7 +240,7 @@ void load_file()
 	xor_type(party, 0x5C);
 
 	// LOAD SETUP
-	if (!llfile_read_type(file_id, setup_save)) {
+	if (!file_read_type(file_id, setup_save)) {
 		FSClose(file_id);
 		SysBeep(2);
 		FCD(1064, 0);
@@ -259,7 +249,7 @@ void load_file()
 
 	// LOAD PCS
 	for (i = 0; i < 6; i++) {
-		if (!llfile_read_type(file_id, adven[i])) {
+		if (!file_read_type(file_id, adven[i])) {
 			FSClose(file_id);
 			SysBeep(2);
 			FCD(1064, 0);
@@ -487,20 +477,20 @@ void save_file(short mode)
 		}
 
 	flag.i = (town_save == TRUE) ? 1342 : 5790;
-	if (!llfile_write_type(file_id, flag)) {
+	if (!file_write_type(file_id, flag)) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		FSClose(file_id);
 		SysBeep(2);
 	}
 	flag.i = (in_startup_mode == FALSE) ? 100 : 200;
-	if (!llfile_write_type(file_id, flag)) {
+	if (!file_write_type(file_id, flag)) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		FSClose(file_id);
 		SysBeep(2);
 		return;
 	}
 	flag.i = (save_maps == TRUE) ? 5567 : 3422;
-	if (!llfile_write_type(file_id, flag)) {
+	if (!file_write_type(file_id, flag)) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		FSClose(file_id);
 		SysBeep(2);
@@ -509,7 +499,7 @@ void save_file(short mode)
 
 	// SAVE PARTY
 	xor_type(party, 0x5C);
-	if (!llfile_write_type(file_id, party)) {
+	if (!file_write_type(file_id, party)) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		FSClose(file_id);
 		xor_type(party, 0x5C);
@@ -519,7 +509,7 @@ void save_file(short mode)
 	xor_type(party, 0x5C);
 
 	// SAVE SETUP
-	if (!llfile_write_type(file_id, setup_save)) {
+	if (!file_write_type(file_id, setup_save)) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		FSClose(file_id);
 		SysBeep(2);
@@ -529,7 +519,7 @@ void save_file(short mode)
 	// SAVE PCS	
 	for (i = 0; i < 6; i++) {
 		xor_type(adven[i], 0x6B);
-		if (!llfile_write_type(file_id, adven[i])) {
+		if (!file_write_type(file_id, adven[i])) {
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			FSClose(file_id);
 			xor_type(adven[i], 0x6B);
@@ -1402,7 +1392,7 @@ void build_data_file(short mode)
 			break;
 		}
 		static_assert(sizeof(val_store) == 4);
-		llfile_write_type(f, val_store);
+		file_write_type(f, val_store);
 	}
 
 	FSClose(f);
