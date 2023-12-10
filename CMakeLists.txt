@@ -63,6 +63,7 @@ if (MSVC)
 				/wd4390
 				/wd4554
 				/wd4804
+				/Os
 			)
 		endif()
 

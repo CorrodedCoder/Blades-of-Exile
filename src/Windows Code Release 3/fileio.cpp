@@ -1,6 +1,7 @@
 
 #include <Windows.h>
 #include <array>
+#include <fstream>
 #include <commdlg.h>
 
 #include <cstring>
@@ -20,6 +21,7 @@
 #include "graphutl.h"
 #include "exlsound.h"
 #include "endian_adjust.hpp"
+
 
 HWND	the_dialog;
 extern party_record_type far	party;
@@ -105,39 +107,39 @@ static const std::array szFilter{ "Blades of Exile Save Files (*.SAV)","*.sav",
 	"All Files (*.*)","*.*",
 	"" };
 
-static bool FSClose(HFILE file)
+static bool FSClose(auto& file)
 {
-	return HFILE_ERROR != _lclose(file);
+	file.close();
+	return !file.fail();
 }
 
-static bool SetFPos(HFILE file, long len, FSOrigin mode)
+static bool SetFPos(auto& file, long len, FSOrigin mode)
 {
-	long error = 0;
-
 	switch (mode)
 	{
-	case FSOrigin::SET: error = _llseek(file, len, SEEK_SET); break;
-	case FSOrigin::END: error = _llseek(file, len, SEEK_END); break;
-	case FSOrigin::CUR: error = _llseek(file, len, SEEK_CUR); break;
+	case FSOrigin::SET: file.seekg(len, std::ios_base::beg); break;
+	case FSOrigin::END: file.seekg(len, std::ios_base::end); break;
+	case FSOrigin::CUR: file.seekg(len, std::ios_base::cur); break;
 	}
-
-	return error != HFILE_ERROR;
+	return !file.fail();
 }
 
-static inline bool file_read_type(HFILE file, auto& type)
+static inline bool file_read_type(auto& file, auto& type)
 {
-	return HFILE_ERROR != _lread(file, &type, (UINT)sizeof(type));
+	file.read(reinterpret_cast<char*>(&type), sizeof(type));
+	return !file.fail();
 }
 
-static inline void file_read_string(HFILE file, long len, char* arr)
+static inline void file_read_string(std::ifstream& file, long len, char* arr)
 {
-	_lread(file, arr, (UINT)len);
+	file.read(arr, len);
 	arr[len] = '\0';
 }
 
-static inline bool file_write_type(HFILE file, const auto& type)
+static inline bool file_write_type(auto& file, const auto& type)
 {
-	return HFILE_ERROR != _lwrite(file, reinterpret_cast<const char*>(&type), (UINT)sizeof(type));
+	file.write(reinterpret_cast<const char*>(&type), sizeof(type));
+	return !file.fail();
 }
 
 static inline void xor_type(auto& type, char xor_value)
@@ -181,7 +183,7 @@ void load_file()
 {
 
 	long file_size;
-	HFILE file_id;
+	std::ifstream file_id;
 	short i, j, k;
 	Boolean town_restore = FALSE;
 	Boolean maps_there = FALSE;
@@ -199,8 +201,9 @@ void load_file()
 
 	if (GetOpenFileName(&ofn) == 0)
 		return;
-	file_id = _lopen(szFileName, OF_READ | OF_SHARE_DENY_WRITE);
-	if (file_id == -1) {
+	// Was: _lopen(szFileName, OF_READ | OF_SHARE_DENY_WRITE);
+	file_id.open(szFileName, std::ios_base::binary);
+	if (file_id.fail()) {
 		beep();
 		return;
 	}
@@ -451,7 +454,7 @@ void load_file()
 void save_file(short mode)
 //mode;  // 0 - normal  1 - save as
 {
-	HFILE file_id;
+	std::ofstream file_id;
 	Boolean town_save = FALSE;
 	short i;
 	flag_type flag;
@@ -470,11 +473,14 @@ void save_file(short mode)
 			return;
 	}
 
-	if (-1 == (file_id = _lopen(szFileName, OF_WRITE | OF_SHARE_EXCLUSIVE)))
-		if (-1 == (file_id = _lcreat(szFileName, 0))) {
-			beep();
-			return;
-		}
+	// Was: _lopen(szFileName, OF_WRITE | OF_SHARE_EXCLUSIVE)
+	// And then if it failed: _lcreat(szFileName, 0)
+	file_id.open(szFileName, std::ios_base::binary);
+	if (file_id.fail())
+	{
+		beep();
+		return;
+	}
 
 	flag.i = (town_save == TRUE) ? 1342 : 5790;
 	if (!file_write_type(file_id, flag)) {
@@ -681,10 +687,9 @@ void build_scen_ed_name(char* file_n)
 void load_town(short town_num, short mode, short extra, char* str)
 {
 
-	HFILE file_id;
+	std::ifstream file_id;
 	short i, j;
 	long store;
-	OFSTRUCT store_str;
 	bool success = false;
 	long len_to_jump = 0;
 	short which_town;
@@ -699,8 +704,9 @@ void load_town(short town_num, short mode, short extra, char* str)
 
 	//HGetVol((StringPtr) start_name,&start_volume,&start_dir);
 	build_scen_file_name(file_name);
-	file_id = OpenFile(file_name, &store_str, OF_READ /* | OF_SEARCH */);
-	if (file_id == HFILE_ERROR) {
+	// Was: OpenFile(file_name, &store_str, OF_READ /* | OF_SEARCH */);
+	file_id.open(file_name, std::ios_base::binary);
+	if (file_id.fail()) {
 		FCD(949, 0);
 		return;
 	}
@@ -1189,11 +1195,10 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 	//short	to_create_x, to_create_y; // actual sector being loaded
 //short 	targ_x, targ_y; // 0 or 1
 {
-	HFILE file_id;
+	std::ifstream file_id;
 	bool success = false;
 	short i, j, out_sec_num;
 	char file_name[256];
-	OFSTRUCT store_str;
 	long len_to_jump = 0, store = 0;
 
 	if ((to_create_x != minmax(0, scenario.out_width - 1, to_create_x)) ||
@@ -1209,8 +1214,9 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 	}
 
 	build_scen_file_name(file_name);
-	file_id = OpenFile(file_name, &store_str, OF_READ /* | OF_SEARCH */);
-	if (file_id == HFILE_ERROR) {
+	// Was: OpenFile(file_name, &store_str, OF_READ /* | OF_SEARCH */);
+	file_id.open(file_name, std::ios_base::binary);
+	if (file_id.fail()) {
 		outdoor_alert();
 		PostQuitMessage(0);
 	}
@@ -1261,19 +1267,18 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 
 void get_reg_data()
 {
-	HFILE f;
+	std::ifstream f;
 	short i;
 	long vals[10];
-	OFSTRUCT store;
 
-	f = OpenFile("bladmisc.dat", &store, OF_READ /* | OF_SEARCH */);
-
-	if (f == HFILE_ERROR) {
+	// Was: OpenFile("bladmisc.dat", &store, OF_READ /* | OF_SEARCH */);
+	f.open("bladmisc.dat", std::ios_base::binary);
+	if (f.fail()) {
 		game_run_before = FALSE;
 		build_data_file(1);
-		f = OpenFile("bladmisc.dat", &store, OF_READ /* | OF_SEARCH */);
-
-		if (f == HFILE_ERROR) {
+		// Was: OpenFile("bladmisc.dat", &store, OF_READ /* | OF_SEARCH */);
+		f.open("bladmisc.dat", std::ios_base::binary);
+		if (f.fail()) {
 			reg_alert();
 			register_flag = -1;
 			return;
@@ -1286,7 +1291,8 @@ void get_reg_data()
 	SetFPos(f, 0, FSOrigin::SET);
 
 	for (i = 0; i < 10; i++) {
-		_hread(f, (char*)&(vals[i]), 4);
+		static_assert(sizeof(vals[i]) == 4);
+		file_read_type(f, vals[i]);
 		if (i == 2)
 			give_intro_hint = vals[i];
 		if (i == 3)
@@ -1321,22 +1327,26 @@ void build_data_file(short mode)
 {
 	short i;
 	long val_store, s_vals[10] = { 0,0,0,0,0, 0,0,0,0,0 };
-	OFSTRUCT store;
-	HFILE f;
+	std::fstream f;
 
-	f = OpenFile("bladmisc.dat", &store, OF_READWRITE /* | OF_SEARCH */);
-	if (f == HFILE_ERROR)
-		f = OpenFile("bladmisc.dat", &store, OF_WRITE | OF_CREATE /* | OF_SEARCH */);
+	// Was: OpenFile("bladmisc.dat", &store, OF_READWRITE /* | OF_SEARCH */);
+	f.open("bladmisc.dat", std::ios_base::binary | std::ios_base::in | std::ios_base::out);
+	if (f.fail())
+		// Was: OpenFile("bladmisc.dat", &store, OF_WRITE | OF_CREATE /* | OF_SEARCH */);
+		f.open("bladmisc.dat", std::ios_base::binary | std::ios_base::out);
 	else {
 		SetFPos(f, 0, FSOrigin::SET);
 		for (i = 0; i < 10; i++)
-			_hread(f, (char*)&(s_vals[i]), 4);
+		{
+			static_assert(sizeof(s_vals[i]) == 4);
+			file_read_type(f, s_vals[i]);
+		}
 
 		//sprintf(debug_str,"Starting %d: %d",i,(short) s_vals[i]);
 		//add_string_to_buf(debug_str);
 	}
 
-	if (f == HFILE_ERROR) {
+	if (f.fail()) {
 		reg_alert();
 		register_flag = -1;
 		ed_flag = -1;
@@ -1396,7 +1406,6 @@ void build_data_file(short mode)
 	}
 
 	FSClose(f);
-
 }
 
 // expecting party record to contain name of proper scenario to load
@@ -1404,14 +1413,14 @@ Boolean load_scenario()
 {
 
 	short i;
-	HFILE file_id;
+	std::ifstream file_id;
 	Boolean file_ok = FALSE;
 	char file_name[256];
-	OFSTRUCT store;
 	build_scen_file_name(file_name);
 
-	file_id = OpenFile(file_name, &store, OF_READ /* | OF_SEARCH */);
-	if (file_id == HFILE_ERROR) {
+	// Was: OpenFile(file_name, &store, OF_READ /* | OF_SEARCH */);
+	file_id.open(file_name, std::ios_base::binary);
+	if (file_id.fail()) {
 		oops_error(10000);
 		SysBeep(2);	return FALSE;
 	}
@@ -1530,15 +1539,15 @@ Boolean load_scenario_header(char* filename, short header_entry)
 {
 
 	short i;
-	HFILE file_id;
+	std::ifstream file_id;
 	short store;
 	Boolean file_ok = FALSE;
 	char load_str[256];
 	Boolean mac_header = TRUE;
-	OFSTRUCT store_str;
 
-	file_id = OpenFile(filename, &store_str, OF_READ /* | OF_SEARCH */);
-	if (file_id == HFILE_ERROR) {
+	// Was: OpenFile(filename, &store_str, OF_READ /* | OF_SEARCH */);
+	file_id.open(filename, std::ios_base::binary);
+	if (file_id.fail()) {
 		ASB(filename);
 		return FALSE;
 	}
@@ -1789,14 +1798,14 @@ void reg_alert()
 //	MessageBox(mainPtr,"A","Debug note",MB_OK | MB_ICONEXCLAMATION);
 Boolean load_blades_data()
 {
-	HFILE file_id;
+	std::ifstream file_id;
 	char file_name[256];
-	OFSTRUCT store;
 
 	build_scen_ed_name(file_name);
 
-	file_id = OpenFile(file_name, &store, OF_READ /* | OF_SEARCH */);
-	if (file_id == HFILE_ERROR) {
+	// Was: OpenFile(file_name, &store, OF_READ /* | OF_SEARCH */);
+	file_id.open(file_name, std::ios_base::binary);
+	if (file_id.fail()) {
 		return FALSE;
 	}
 	FSClose(file_id);
