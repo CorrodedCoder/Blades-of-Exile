@@ -145,6 +145,26 @@ static void xor_type(auto& type, char xor_value)
 	}
 }
 
+template< typename T>
+struct xor_wrap
+{
+	T& t_;
+	const char xor_;
+	xor_wrap(T & t, char xor_value)
+		: t_(t)
+		, xor_(xor_value)
+	{
+		xor_type(t_, xor_);
+	}
+	T& get() const
+	{
+		return t_;
+	}
+	~xor_wrap()
+	{
+		xor_type(t_, xor_);
+	}
+};
 
 void file_initialize()
 {
@@ -483,14 +503,11 @@ void save_file(short mode)
 	}
 
 	// SAVE PARTY
-	xor_type(party, 0x5C);
-	if (!file_write_type(file_id, party)) {
+	if (!file_write_type(file_id, xor_wrap(party, 0x5C).get())) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
-		xor_type(party, 0x5C);
 		SysBeep(2);
 		return;
 	}
-	xor_type(party, 0x5C);
 
 	// SAVE SETUP
 	if (!file_write_type(file_id, setup_save)) {
@@ -501,14 +518,11 @@ void save_file(short mode)
 
 	// SAVE PCS	
 	for (i = 0; i < 6; i++) {
-		xor_type(adven[i], 0x6B);
-		if (!file_write_type(file_id, adven[i])) {
+		if (!file_write_type(file_id, xor_wrap(adven[i], 0x6B).get())) {
 			add_string_to_buf("Save: Couldn't write to file.         ");
-			xor_type(adven[i], 0x6B);
 			SysBeep(2);
 			return;
 		}
-		xor_type(adven[i], 0x6B);
 	}
 
 	if (in_startup_mode == FALSE) {
