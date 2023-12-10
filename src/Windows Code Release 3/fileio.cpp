@@ -1293,7 +1293,7 @@ void get_reg_data()
 			return;
 		}
 	}
-	_llseek(f, 0, SEEK_SET);
+	SetFPos(f, 0, FSOrigin::SET);
 
 	for (i = 0; i < 10; i++) {
 		_hread(f, (char*)&(vals[i]), 4);
@@ -1338,7 +1338,7 @@ void build_data_file(short mode)
 	if (f == HFILE_ERROR)
 		f = OpenFile("bladmisc.dat", &store, OF_WRITE | OF_CREATE /* | OF_SEARCH */);
 	else {
-		_llseek(f, 0, SEEK_SET);
+		SetFPos(f, 0, FSOrigin::SET);
 		for (i = 0; i < 10; i++)
 			_hread(f, (char*)&(s_vals[i]), 4);
 
@@ -1352,7 +1352,7 @@ void build_data_file(short mode)
 		ed_flag = -1;
 		return;
 	}
-	_llseek(f, 0, SEEK_SET);
+	SetFPos(f, 0, FSOrigin::SET);
 
 	for (i = 0; i < 10; i++) {
 		if (mode < 2)
