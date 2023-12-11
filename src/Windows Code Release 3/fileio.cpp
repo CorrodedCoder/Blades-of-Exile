@@ -250,21 +250,28 @@ void load_file()
 	{
 		file_id.exceptions(std::ios_base::failbit);
 
-		for (short i = 0; i < 3; i++) {
-			flag_type flag;
-			stream_read_type(file_id, flag);
-			if ((flag != flags[i][0]) && (flag != flags[i][1])) { // OK Exile II save file?
-				throw boe_error(1063);
-			}
-
-			if ((i == 0) && (flag == flags[0][0]))
-				town_restore = TRUE;
-			if ((i == 1) && (flag == flags[1][0])) {
-				in_scen = TRUE;
-			}
-			if ((i == 2) && (flag == flags[2][0]))
-				maps_there = TRUE;
+		flag_type flag;
+		stream_read_type(file_id, flag);
+		if ((flag != flags[0][0]) && (flag != flags[0][1])) { // OK Exile II save file?
+			throw boe_error(1063);
 		}
+		if (flag == flags[0][0])
+			town_restore = TRUE;
+
+		stream_read_type(file_id, flag);
+		if ((flag != flags[1][0]) && (flag != flags[1][1])) { // OK Exile II save file?
+			throw boe_error(1063);
+		}
+		if (flag == flags[1][0]) {
+			in_scen = TRUE;
+		}
+
+		stream_read_type(file_id, flag);
+		if ((flag != flags[2][0]) && (flag != flags[2][1])) { // OK Exile II save file?
+			throw boe_error(1063);
+		}
+		if (flag == flags[2][0])
+			maps_there = TRUE;
 
 		// LOAD PARTY
 		stream_read_type(file_id, party);
