@@ -464,9 +464,7 @@ void load_file()
 void save_file(short mode)
 //mode;  // 0 - normal  1 - save as
 {
-	Boolean town_save = FALSE;
-	if ((in_startup_mode == FALSE) && (is_town()))
-		town_save = TRUE;
+	const bool town_save = (in_startup_mode == FALSE) && is_town();
 
 	ofn.hwndOwner = mainPtr;
 	ofn.lpstrFile = szFileName;
@@ -492,7 +490,7 @@ void save_file(short mode)
 	{
 		file_id.exceptions(std::ios_base::failbit);
 
-		stream_write_type(file_id, (town_save == TRUE) ? flag_type::town : flag_type::out);
+		stream_write_type(file_id, town_save ? flag_type::town : flag_type::out);
 		stream_write_type(file_id, (in_startup_mode == FALSE) ? flag_type::in_scenario : flag_type::not_in_scenario);
 		stream_write_type(file_id, (save_maps == TRUE) ? flag_type::have_maps : flag_type::no_maps);
 
@@ -510,7 +508,7 @@ void save_file(short mode)
 			static_assert(sizeof(out_info_type) == sizeof(out_e));
 			stream_write_type(file_id, out_e);
 
-			if (town_save == TRUE) {
+			if (town_save) {
 				stream_write_type(file_id, c_town);
 				stream_write_type(file_id, t_d);
 				stream_write_type(file_id, t_i);
