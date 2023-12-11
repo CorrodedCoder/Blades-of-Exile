@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <array>
 #include <fstream>
+#include <cassert>
 #include <commdlg.h>
 
 #include <cstring>
@@ -123,6 +124,12 @@ static bool file_read_type(auto& file, auto& type)
 	return !file.fail();
 }
 
+static void stream_read_type(std::istream& file, auto& type)
+{
+	assert((file.exceptions() & std::ios_base::failbit) == std::ios_base::failbit);
+	file.read(reinterpret_cast<char*>(&type), sizeof(type));
+}
+
 static void file_read_string(std::ifstream& file, long len, char* arr)
 {
 	file.read(arr, len);
@@ -222,123 +229,74 @@ void load_file()
 	Boolean maps_there = FALSE;
 	Boolean in_scen = FALSE;
 
-	for (short i = 0; i < 3; i++) {
-		flag_type flag;
-		if (!file_read_type(file_id, flag)) {
-			beep();
-			return;
-		}
-		if ((flag.i != flags[i][0]) && (flag.i != flags[i][1])) { // OK Exile II save file?
-			FCD(1063, 0);
-			return;
+	try
+	{
+		file_id.exceptions(std::ios_base::failbit);
+
+		for (short i = 0; i < 3; i++) {
+			flag_type flag;
+			stream_read_type(file_id, flag);
+			if ((flag.i != flags[i][0]) && (flag.i != flags[i][1])) { // OK Exile II save file?
+				FCD(1063, 0);
+				return;
+			}
+
+			if ((i == 0) && (flag.i == flags[i][1]))
+				town_restore = TRUE;
+			if ((i == 1) && (flag.i == flags[i][0])) {
+				in_scen = TRUE;
+			}
+			if ((i == 2) && (flag.i == flags[i][1]))
+				maps_there = TRUE;
 		}
 
-		if ((i == 0) && (flag.i == flags[i][1]))
-			town_restore = TRUE;
-		if ((i == 1) && (flag.i == flags[i][0])) {
-			in_scen = TRUE;
+		// LOAD PARTY
+		stream_read_type(file_id, party);
+		xor_type(party, 0x5C);
+
+		// LOAD SETUP
+		stream_read_type(file_id, setup_save);
+
+		// LOAD PCS
+		stream_read_type(file_id, adven);
+		xor_type(adven, 0x6B);
+
+		if (in_scen == TRUE) {
+
+			// LOAD OUTDOOR MAP
+			static_assert(sizeof(out_info_type) == sizeof(out_e));
+			stream_read_type(file_id, out_e);
+
+			// LOAD TOWN 
+			if (town_restore == TRUE) {
+				stream_read_type(file_id, c_town);
+				stream_read_type(file_id, t_d);
+				stream_read_type(file_id, t_i);
+			}
+
+			// LOAD STORED ITEMS
+			stream_read_type(file_id, stored_items);
+
+			// LOAD SAVED MAPS
+			if (maps_there == TRUE) {
+				stream_read_type(file_id, town_maps);
+				stream_read_type(file_id, town_maps2);
+				stream_read_type(file_id, o_maps);
+			}
+
+			// LOAD SFX & MISC_I
+			static_assert(sizeof(sfx) == 64 * 64);
+			stream_read_type(file_id, sfx);
+			static_assert(sizeof(misc_i) == 64 * 64);
+			stream_read_type(file_id, misc_i);
 		}
-		if ((i == 2) && (flag.i == flags[i][1]))
-			maps_there = TRUE;
 	}
-
-	// LOAD PARTY
-	if (!file_read_type(file_id, party)) {
+	catch (std::ios_base::failure const&)
+	{
 		SysBeep(2);
 		FCD(1064, 0);
 		return;
 	}
-	xor_type(party, 0x5C);
-
-	// LOAD SETUP
-	if (!file_read_type(file_id, setup_save)) {
-		SysBeep(2);
-		FCD(1064, 0);
-		return;
-	}
-
-	// LOAD PCS
-	if (!file_read_type(file_id, adven)) {
-		SysBeep(2);
-		FCD(1064, 0);
-		return;
-	}
-	xor_type(adven, 0x6B);
-
-	if (in_scen == TRUE) {
-
-		// LOAD OUTDOOR MAP
-		static_assert(sizeof(out_info_type) == sizeof(out_e));
-		if (!file_read_type(file_id, out_e)) {
-			SysBeep(2);
-			FCD(1064, 0);
-			return;
-		}
-
-		// LOAD TOWN 
-		if (town_restore == TRUE) {
-			if (!file_read_type(file_id, c_town)) {
-				SysBeep(2);
-				FCD(1064, 0);
-				return;
-			}
-
-			if (!file_read_type(file_id, t_d)) {
-				SysBeep(2);
-				FCD(1064, 0);
-				return;
-			}
-
-			if (!file_read_type(file_id, t_i)) {
-				SysBeep(2);
-				FCD(1064, 0);
-				return;
-			}
-
-		}
-
-		// LOAD STORED ITEMS
-		if (!file_read_type(file_id, stored_items)) {
-			SysBeep(2);
-			FCD(1064, 0);
-			return;
-		}
-
-		// LOAD SAVED MAPS
-		if (maps_there == TRUE) {
-			if (!file_read_type(file_id, town_maps)) {
-				SysBeep(2);
-				FCD(1064, 0);
-				return;
-			}
-			if (!file_read_type(file_id, town_maps2)) {
-				SysBeep(2);
-				FCD(1064, 0);
-				return;
-			}
-
-			if (!file_read_type(file_id, o_maps)) {
-				SysBeep(2);
-				FCD(1064, 0);
-				return;
-			}
-		}
-
-		// LOAD SFX & MISC_I
-		static_assert(sizeof(sfx) == 64 * 64);
-		if (!file_read_type(file_id, sfx)) {
-			SysBeep(2);
-			FCD(1064, 0);
-			return;
-		}
-		static_assert(sizeof(misc_i) == 64 * 64);
-		if (!file_read_type(file_id, misc_i)) {
-			SysBeep(2);
-			FCD(1064, 0);
-			return;
-		}
-
-	} // end if_scen
 
 	if (!FSClose(file_id)) {
 		add_string_to_buf("Load: Can't close file.          ");
