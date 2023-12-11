@@ -463,9 +463,9 @@ void load_file()
 
 static void savedata_write_all(
 	std::ostream& file_id,
-	bool town_save,
-	bool in_startup_mode,
-	bool save_maps,
+	bool write_town_data,
+	bool write_scenario_data,
+	bool write_map_data,
 	party_record_type& party,
 	const setup_save_type& setup_save,
 	std::array<pc_record_type, 6>& adven,
@@ -488,9 +488,9 @@ static void savedata_write_all(
 		throw std::runtime_error("Internal error: called without the stream first being set to throw on failure");
 	}
 
-	stream_write_type(file_id, town_save ? flag_type::town : flag_type::out);
-	stream_write_type(file_id, !in_startup_mode ? flag_type::in_scenario : flag_type::not_in_scenario);
-	stream_write_type(file_id, save_maps ? flag_type::have_maps : flag_type::no_maps);
+	stream_write_type(file_id, write_town_data ? flag_type::town : flag_type::out);
+	stream_write_type(file_id, write_scenario_data ? flag_type::in_scenario : flag_type::not_in_scenario);
+	stream_write_type(file_id, write_map_data ? flag_type::have_maps : flag_type::no_maps);
 
 	// SAVE PARTY
 	stream_write_type(file_id, xor_wrap<0x5C>(party).get());
@@ -501,12 +501,12 @@ static void savedata_write_all(
 	// SAVE PCS	
 	stream_write_type(file_id, xor_wrap<0x6B>(adven).get());
 
-	if (!in_startup_mode) {
+	if (write_scenario_data) {
 		// SAVE OUT DATA
 		static_assert(sizeof(out_info_type) == sizeof(out_e));
 		stream_write_type(file_id, out_e);
 
-		if (town_save) {
+		if (write_town_data) {
 			stream_write_type(file_id, c_town);
 			stream_write_type(file_id, t_d);
 			stream_write_type(file_id, t_i);
@@ -516,7 +516,7 @@ static void savedata_write_all(
 		stream_write_type(file_id, stored_items);
 
 		// If saving maps, save maps
-		if (save_maps) {
+		if (write_map_data) {
 			stream_write_type(file_id, town_maps);
 			stream_write_type(file_id, town_maps2);
 			stream_write_type(file_id, o_maps);
@@ -559,7 +559,7 @@ void save_file(short mode)
 	{
 		file_id.exceptions(std::ios_base::failbit);
 
-		savedata_write_all(file_id, town_save, in_startup_mode == TRUE, save_maps == TRUE,
+		savedata_write_all(file_id, town_save, in_startup_mode == FALSE, save_maps == TRUE,
 			party, setup_save, adven, out_e, c_town, t_d, t_i,
 			stored_items, town_maps, town_maps2, o_maps, sfx, misc_i);
 	}
