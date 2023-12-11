@@ -241,12 +241,12 @@ void load_file()
 				return;
 			}
 
-			if ((i == 0) && (flag == flags[i][1]))
+			if ((i == 0) && (flag == flags[0][1]))
 				town_restore = TRUE;
-			if ((i == 1) && (flag == flags[i][0])) {
+			if ((i == 1) && (flag == flags[1][0])) {
 				in_scen = TRUE;
 			}
-			if ((i == 2) && (flag == flags[i][1]))
+			if ((i == 2) && (flag == flags[2][1]))
 				maps_there = TRUE;
 		}
 
