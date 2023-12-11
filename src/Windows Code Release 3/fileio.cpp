@@ -238,6 +238,66 @@ static bool savedata_read_flag(std::istream& file_id, flag_type value_true, flag
 	return flag == value_true;
 }
 
+
+static void savedata_read_all(
+	std::istream& file_id,
+	bool & town_restore,
+	bool & in_scen
+	)
+{
+	// Eventually this will be hidden by an interface so this kind of
+	// ugliness will go away.
+	if ((file_id.exceptions() & std::ios_base::failbit) != std::ios_base::failbit)
+	{
+		throw std::runtime_error("Internal error: called without the stream first being set to throw on failure");
+	}
+
+	town_restore = savedata_read_flag(file_id, flag_type::town, flag_type::out);
+	in_scen = savedata_read_flag(file_id, flag_type::in_scenario, flag_type::not_in_scenario);
+	const bool maps_there = savedata_read_flag(file_id, flag_type::have_maps, flag_type::no_maps);
+
+	// LOAD PARTY
+	stream_read_type(file_id, party);
+	xor_type(party, 0x5C);
+
+	// LOAD SETUP
+	stream_read_type(file_id, setup_save);
+
+	// LOAD PCS
+	stream_read_type(file_id, adven);
+	xor_type(adven, 0x6B);
+
+	if (in_scen) {
+
+		// LOAD OUTDOOR MAP
+		static_assert(sizeof(out_info_type) == sizeof(out_e));
+		stream_read_type(file_id, out_e);
+
+		// LOAD TOWN 
+		if (town_restore) {
+			stream_read_type(file_id, c_town);
+			stream_read_type(file_id, t_d);
+			stream_read_type(file_id, t_i);
+		}
+
+		// LOAD STORED ITEMS
+		stream_read_type(file_id, stored_items);
+
+		// LOAD SAVED MAPS
+		if (maps_there) {
+			stream_read_type(file_id, town_maps);
+			stream_read_type(file_id, town_maps2);
+			stream_read_type(file_id, o_maps);
+		}
+
+		// LOAD SFX & MISC_I
+		static_assert(sizeof(sfx) == 64 * 64);
+		stream_read_type(file_id, sfx);
+		static_assert(sizeof(misc_i) == 64 * 64);
+		stream_read_type(file_id, misc_i);
+	}
+}
+
 void load_file()
 {
 	ofn.hwndOwner = mainPtr;
@@ -261,51 +321,7 @@ void load_file()
 	try
 	{
 		file_id.exceptions(std::ios_base::failbit);
-
-		town_restore = savedata_read_flag(file_id, flag_type::town, flag_type::out);
-		in_scen = savedata_read_flag(file_id, flag_type::in_scenario, flag_type::not_in_scenario);
-		const bool maps_there = savedata_read_flag(file_id, flag_type::have_maps, flag_type::no_maps);
-
-		// LOAD PARTY
-		stream_read_type(file_id, party);
-		xor_type(party, 0x5C);
-
-		// LOAD SETUP
-		stream_read_type(file_id, setup_save);
-
-		// LOAD PCS
-		stream_read_type(file_id, adven);
-		xor_type(adven, 0x6B);
-
-		if (in_scen) {
-
-			// LOAD OUTDOOR MAP
-			static_assert(sizeof(out_info_type) == sizeof(out_e));
-			stream_read_type(file_id, out_e);
-
-			// LOAD TOWN 
-			if (town_restore) {
-				stream_read_type(file_id, c_town);
-				stream_read_type(file_id, t_d);
-				stream_read_type(file_id, t_i);
-			}
-
-			// LOAD STORED ITEMS
-			stream_read_type(file_id, stored_items);
-
-			// LOAD SAVED MAPS
-			if (maps_there) {
-				stream_read_type(file_id, town_maps);
-				stream_read_type(file_id, town_maps2);
-				stream_read_type(file_id, o_maps);
-			}
-
-			// LOAD SFX & MISC_I
-			static_assert(sizeof(sfx) == 64 * 64);
-			stream_read_type(file_id, sfx);
-			static_assert(sizeof(misc_i) == 64 * 64);
-			stream_read_type(file_id, misc_i);
-		}
+		savedata_read_all(file_id, town_restore, in_scen);
 	}
 	catch (boe_error const& e)
 	{
