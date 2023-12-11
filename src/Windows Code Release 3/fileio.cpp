@@ -147,6 +147,15 @@ static void stream_read_type(std::istream& file, auto& type)
 	file.read(reinterpret_cast<char*>(&type), sizeof(type));
 }
 
+template< typename T >
+static T stream_read_type(std::istream& file)
+{
+	assert((file.exceptions() & std::ios_base::failbit) == std::ios_base::failbit);
+	T type;
+	file.read(reinterpret_cast<char*>(&type), sizeof(type));
+	return type;
+}
+
 static void file_read_string(std::ifstream& file, long len, char* arr)
 {
 	file.read(arr, len);
@@ -220,16 +229,13 @@ void file_initialize()
 	ofn.lpTemplateName = NULL;
 }
 
-static Boolean savedata_read_flag(std::istream& file_id, flag_type value_true, flag_type value_false)
+static bool savedata_read_flag(std::istream& file_id, flag_type value_true, flag_type value_false)
 {
-	flag_type flag;
-	stream_read_type(file_id, flag);
+	const auto flag = stream_read_type<flag_type>(file_id);
 	if ((flag != value_true) && (flag != value_false)) { // OK Exile II save file?
 		throw boe_error(1063);
 	}
-	if (flag == value_true)
-		return TRUE;
-	return FALSE;
+	return flag == value_true;
 }
 
 void load_file()
@@ -249,9 +255,8 @@ void load_file()
 		return;
 	}
 
-	Boolean town_restore = FALSE;
-	Boolean maps_there = FALSE;
-	Boolean in_scen = FALSE;
+	bool town_restore = false;
+	bool in_scen = false;
 
 	try
 	{
@@ -259,7 +264,7 @@ void load_file()
 
 		town_restore = savedata_read_flag(file_id, flag_type::town, flag_type::out);
 		in_scen = savedata_read_flag(file_id, flag_type::in_scenario, flag_type::not_in_scenario);
-		maps_there = savedata_read_flag(file_id, flag_type::have_maps, flag_type::no_maps);
+		const bool maps_there = savedata_read_flag(file_id, flag_type::have_maps, flag_type::no_maps);
 
 		// LOAD PARTY
 		stream_read_type(file_id, party);
@@ -272,14 +277,14 @@ void load_file()
 		stream_read_type(file_id, adven);
 		xor_type(adven, 0x6B);
 
-		if (in_scen == TRUE) {
+		if (in_scen) {
 
 			// LOAD OUTDOOR MAP
 			static_assert(sizeof(out_info_type) == sizeof(out_e));
 			stream_read_type(file_id, out_e);
 
 			// LOAD TOWN 
-			if (town_restore == TRUE) {
+			if (town_restore) {
 				stream_read_type(file_id, c_town);
 				stream_read_type(file_id, t_d);
 				stream_read_type(file_id, t_i);
@@ -289,7 +294,7 @@ void load_file()
 			stream_read_type(file_id, stored_items);
 
 			// LOAD SAVED MAPS
-			if (maps_there == TRUE) {
+			if (maps_there) {
 				stream_read_type(file_id, town_maps);
 				stream_read_type(file_id, town_maps2);
 				stream_read_type(file_id, o_maps);
@@ -323,7 +328,7 @@ void load_file()
 	party_in_memory = TRUE;
 
 	// now if not in scen, this is it.
-	if (in_scen == FALSE) {
+	if (!in_scen) {
 		if (in_startup_mode == FALSE) {
 			reload_startup();
 			in_startup_mode = TRUE;
@@ -344,7 +349,7 @@ void load_file()
 	load_outdoors(party.outdoor_corner.x + 1, party.outdoor_corner.y, 1, 0, 0, 0, NULL);
 	load_outdoors(party.outdoor_corner.x, party.outdoor_corner.y, 0, 0, 0, 0, NULL);
 
-	overall_mode = (town_restore == TRUE) ? 1 : 0;
+	overall_mode = town_restore ? 1 : 0;
 	stat_screen_mode = 0;
 	build_outdoors();
 	erase_out_specials();
@@ -355,7 +360,7 @@ void load_file()
 	//if (modeless_exists[5] == TRUE)
 	//	BringToFront(modeless_dialogs[5]);
 
-	if (town_restore == FALSE) {
+	if (!town_restore) {
 		center = party.p_loc;
 		load_area_graphics();
 	}
