@@ -287,3 +287,15 @@ typedef struct {
 } scenario_data_type;
 
 static_assert(sizeof(scenario_data_type) == 41942);
+
+// Game save file related structures
+enum class flag_type : short {
+	out = 5790,
+	town = 1342,
+	in_scenario = 100,
+	not_in_scenario = 200,
+	no_maps = 3422,
+	have_maps = 5567
+};
+
+static_assert(sizeof(flag_type) == 2);

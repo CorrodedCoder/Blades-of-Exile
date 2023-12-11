@@ -206,9 +206,9 @@ void file_initialize()
 
 void load_file()
 {
-	short flags[3][2] = { {5790,1342}, // slot 0 ... 5790 - out  1342 - town
-					{100,200}, // slot 1 100  in scenario, 200 not in
-					{3422,5567} }; // slot 2 ... 3422 - no maps  5567 - maps
+	const flag_type flags[3][2] = { {flag_type::out,flag_type::town}, // slot 0 ... 5790 - out  1342 - town
+					{flag_type::in_scenario,flag_type::not_in_scenario}, // slot 1 100  in scenario, 200 not in
+					{flag_type::no_maps,flag_type::have_maps} }; // slot 2 ... 3422 - no maps  5567 - maps
 
 	ofn.hwndOwner = mainPtr;
 	ofn.lpstrFile = szFileName;
@@ -236,17 +236,17 @@ void load_file()
 		for (short i = 0; i < 3; i++) {
 			flag_type flag;
 			stream_read_type(file_id, flag);
-			if ((flag.i != flags[i][0]) && (flag.i != flags[i][1])) { // OK Exile II save file?
+			if ((flag != flags[i][0]) && (flag != flags[i][1])) { // OK Exile II save file?
 				FCD(1063, 0);
 				return;
 			}
 
-			if ((i == 0) && (flag.i == flags[i][1]))
+			if ((i == 0) && (flag == flags[i][1]))
 				town_restore = TRUE;
-			if ((i == 1) && (flag.i == flags[i][0])) {
+			if ((i == 1) && (flag == flags[i][0])) {
 				in_scen = TRUE;
 			}
-			if ((i == 2) && (flag.i == flags[i][1]))
+			if ((i == 2) && (flag == flags[i][1]))
 				maps_there = TRUE;
 		}
 
@@ -432,19 +432,19 @@ void save_file(short mode)
 		return;
 	}
 
-	flag.i = (town_save == TRUE) ? 1342 : 5790;
+	flag = (town_save == TRUE) ? flag_type::town : flag_type::out;
 	if (!file_write_type(file_id, flag)) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		FSClose(file_id);
 		SysBeep(2);
 	}
-	flag.i = (in_startup_mode == FALSE) ? 100 : 200;
+	flag = (in_startup_mode == FALSE) ? flag_type::in_scenario : flag_type::not_in_scenario;
 	if (!file_write_type(file_id, flag)) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		SysBeep(2);
 		return;
 	}
-	flag.i = (save_maps == TRUE) ? 5567 : 3422;
+	flag = (save_maps == TRUE) ? flag_type::have_maps : flag_type::no_maps;
 	if (!file_write_type(file_id, flag)) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		SysBeep(2);

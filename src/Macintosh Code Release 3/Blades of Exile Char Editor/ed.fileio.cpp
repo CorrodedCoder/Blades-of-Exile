@@ -20,6 +20,8 @@
 #define IN_FRONT	(WindowPtr)-1L
 #define	NIL		0L
 
+typedef struct { short i; } flag_type;
+
 DialogPtr	the_dialog;
 
 /* Adventure globals */

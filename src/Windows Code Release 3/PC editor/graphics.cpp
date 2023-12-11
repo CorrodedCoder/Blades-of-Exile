@@ -29,7 +29,6 @@ extern stored_outdoor_maps_type o_maps;
 extern HWND	mainPtr;
 extern Boolean registered,play_sounds,file_in_mem;
 
-extern short store_flags[3];
 extern HBITMAP button_num_gworld;
 extern short current_active_pc,ulx,uly;
 extern Boolean dialog_not_toast,ed_reg,party_in_scen;

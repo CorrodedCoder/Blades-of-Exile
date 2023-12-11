@@ -94,7 +94,6 @@ RECT edit_rect[5][2]; //Buttons that bring up pc edit dialog boxs
 Boolean registered = FALSE,ed_reg = TRUE;
 long register_flag = 0,ed_flag = 0;
 Boolean game_run_before = TRUE,save_blocked = FALSE;
-short store_flags[3];
 
 /* Adventure globals */
 party_record_type party;
