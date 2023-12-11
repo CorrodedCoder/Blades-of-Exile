@@ -206,9 +206,9 @@ void file_initialize()
 
 void load_file()
 {
-	const flag_type flags[3][2] = { {flag_type::out,flag_type::town}, // slot 0 ... 5790 - out  1342 - town
+	const flag_type flags[3][2] = { {flag_type::town, flag_type::out}, // slot 0 ... 5790 - out  1342 - town
 					{flag_type::in_scenario,flag_type::not_in_scenario}, // slot 1 100  in scenario, 200 not in
-					{flag_type::no_maps,flag_type::have_maps} }; // slot 2 ... 3422 - no maps  5567 - maps
+					{flag_type::have_maps, flag_type::no_maps} }; // slot 2 ... 3422 - no maps  5567 - maps
 
 	ofn.hwndOwner = mainPtr;
 	ofn.lpstrFile = szFileName;
@@ -241,12 +241,12 @@ void load_file()
 				return;
 			}
 
-			if ((i == 0) && (flag == flags[0][1]))
+			if ((i == 0) && (flag == flags[0][0]))
 				town_restore = TRUE;
 			if ((i == 1) && (flag == flags[1][0])) {
 				in_scen = TRUE;
 			}
-			if ((i == 2) && (flag == flags[2][1]))
+			if ((i == 2) && (flag == flags[2][0]))
 				maps_there = TRUE;
 		}
 
