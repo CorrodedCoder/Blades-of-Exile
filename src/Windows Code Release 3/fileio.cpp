@@ -298,12 +298,10 @@ void load_file()
 		}
 
 		// LOAD STORED ITEMS
-		for (short i = 0; i < 3; i++) {
-			if (!file_read_type(file_id, stored_items)) {
-				SysBeep(2);
-				FCD(1064, 0);
-				return;
-			}
+		if (!file_read_type(file_id, stored_items)) {
+			SysBeep(2);
+			FCD(1064, 0);
+			return;
 		}
 
 		// LOAD SAVED MAPS
