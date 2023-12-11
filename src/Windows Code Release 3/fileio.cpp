@@ -464,12 +464,7 @@ void load_file()
 void save_file(short mode)
 //mode;  // 0 - normal  1 - save as
 {
-	std::ofstream file_id;
 	Boolean town_save = FALSE;
-	short i;
-	flag_type flag;
-	//	out_info_type store_explored;
-
 	if ((in_startup_mode == FALSE) && (is_town()))
 		town_save = TRUE;
 
@@ -485,6 +480,7 @@ void save_file(short mode)
 
 	// Was: _lopen(szFileName, OF_WRITE | OF_SHARE_EXCLUSIVE)
 	// And then if it failed: _lcreat(szFileName, 0)
+	std::ofstream file_id;
 	file_id.open(szFileName, std::ios_base::binary);
 	if (file_id.fail())
 	{
@@ -496,14 +492,9 @@ void save_file(short mode)
 	{
 		file_id.exceptions(std::ios_base::failbit);
 
-		flag = (town_save == TRUE) ? flag_type::town : flag_type::out;
-		stream_write_type(file_id, flag);
-
-		flag = (in_startup_mode == FALSE) ? flag_type::in_scenario : flag_type::not_in_scenario;
-		stream_write_type(file_id, flag);
-
-		flag = (save_maps == TRUE) ? flag_type::have_maps : flag_type::no_maps;
-		stream_write_type(file_id, flag);
+		stream_write_type(file_id, (town_save == TRUE) ? flag_type::town : flag_type::out);
+		stream_write_type(file_id, (in_startup_mode == FALSE) ? flag_type::in_scenario : flag_type::not_in_scenario);
+		stream_write_type(file_id, (save_maps == TRUE) ? flag_type::have_maps : flag_type::no_maps);
 
 		// SAVE PARTY
 		stream_write_type(file_id, xor_wrap<0x5C>(party).get());
@@ -512,12 +503,9 @@ void save_file(short mode)
 		stream_write_type(file_id, setup_save);
 
 		// SAVE PCS	
-		for (i = 0; i < 6; i++) {
-			stream_write_type(file_id, xor_wrap<0x6B>(adven[i]).get());
-		}
+		stream_write_type(file_id, xor_wrap<0x6B>(adven).get());
 
 		if (in_startup_mode == FALSE) {
-
 			// SAVE OUT DATA
 			static_assert(sizeof(out_info_type) == sizeof(out_e));
 			stream_write_type(file_id, out_e);
@@ -529,9 +517,7 @@ void save_file(short mode)
 			}
 
 			// Save stored items 
-			for (i = 0; i < 3; i++) {
-				stream_write_type(file_id, stored_items[i]);
-			}
+			stream_write_type(file_id, stored_items);
 
 			// If saving maps, save maps
 			if (save_maps == TRUE) {
