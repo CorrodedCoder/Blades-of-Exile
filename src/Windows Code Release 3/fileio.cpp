@@ -220,6 +220,17 @@ void file_initialize()
 	ofn.lpTemplateName = NULL;
 }
 
+static Boolean savedata_read_flag(std::istream& file_id, flag_type value_true, flag_type value_false)
+{
+	flag_type flag;
+	stream_read_type(file_id, flag);
+	if ((flag != value_true) && (flag != value_false)) { // OK Exile II save file?
+		throw boe_error(1063);
+	}
+	if (flag == value_true)
+		return TRUE;
+	return FALSE;
+}
 
 void load_file()
 {
@@ -250,28 +261,9 @@ void load_file()
 	{
 		file_id.exceptions(std::ios_base::failbit);
 
-		flag_type flag;
-		stream_read_type(file_id, flag);
-		if ((flag != flags[0][0]) && (flag != flags[0][1])) { // OK Exile II save file?
-			throw boe_error(1063);
-		}
-		if (flag == flags[0][0])
-			town_restore = TRUE;
-
-		stream_read_type(file_id, flag);
-		if ((flag != flags[1][0]) && (flag != flags[1][1])) { // OK Exile II save file?
-			throw boe_error(1063);
-		}
-		if (flag == flags[1][0]) {
-			in_scen = TRUE;
-		}
-
-		stream_read_type(file_id, flag);
-		if ((flag != flags[2][0]) && (flag != flags[2][1])) { // OK Exile II save file?
-			throw boe_error(1063);
-		}
-		if (flag == flags[2][0])
-			maps_there = TRUE;
+		town_restore = savedata_read_flag(file_id, flags[0][0], flags[0][1]);
+		in_scen = savedata_read_flag(file_id, flags[1][0], flags[1][1]);
+		maps_there = savedata_read_flag(file_id, flags[2][0], flags[2][1]);
 
 		// LOAD PARTY
 		stream_read_type(file_id, party);
