@@ -461,6 +461,75 @@ void load_file()
 
 }
 
+static void savedata_write_all(
+	std::ostream& file_id,
+	bool town_save,
+	bool in_startup_mode,
+	bool save_maps,
+	party_record_type& party,
+	const setup_save_type& setup_save,
+	std::array<pc_record_type, 6>& adven,
+	const unsigned char(&out_e)[96][96],
+	const current_town_type& c_town,
+	const big_tr_type& t_d,
+	const town_item_list& t_i,
+	const stored_items_list_type(&stored_items)[3],
+	const stored_town_maps_type& town_maps,
+	const stored_town_maps_type& town_maps2,
+	const stored_outdoor_maps_type& o_maps,
+	const unsigned char(&sfx)[64][64],
+	const unsigned char(&misc_i)[64][64]
+	)
+{
+	// Eventually this will be hidden by an interface so this kind of
+	// ugliness will go away.
+	if ((file_id.exceptions() & std::ios_base::failbit) != std::ios_base::failbit)
+	{
+		throw std::runtime_error("Internal error: called without the stream first being set to throw on failure");
+	}
+
+	stream_write_type(file_id, town_save ? flag_type::town : flag_type::out);
+	stream_write_type(file_id, !in_startup_mode ? flag_type::in_scenario : flag_type::not_in_scenario);
+	stream_write_type(file_id, save_maps ? flag_type::have_maps : flag_type::no_maps);
+
+	// SAVE PARTY
+	stream_write_type(file_id, xor_wrap<0x5C>(party).get());
+
+	// SAVE SETUP
+	stream_write_type(file_id, setup_save);
+
+	// SAVE PCS	
+	stream_write_type(file_id, xor_wrap<0x6B>(adven).get());
+
+	if (!in_startup_mode) {
+		// SAVE OUT DATA
+		static_assert(sizeof(out_info_type) == sizeof(out_e));
+		stream_write_type(file_id, out_e);
+
+		if (town_save) {
+			stream_write_type(file_id, c_town);
+			stream_write_type(file_id, t_d);
+			stream_write_type(file_id, t_i);
+		}
+
+		// Save stored items 
+		stream_write_type(file_id, stored_items);
+
+		// If saving maps, save maps
+		if (save_maps) {
+			stream_write_type(file_id, town_maps);
+			stream_write_type(file_id, town_maps2);
+			stream_write_type(file_id, o_maps);
+		}
+
+		// SAVE SFX and MISC_I
+		static_assert(sizeof(sfx) == 64 * 64);
+		stream_write_type(file_id, sfx);
+		static_assert(sizeof(misc_i) == 64 * 64);
+		stream_write_type(file_id, misc_i);
+	}
+}
+
 void save_file(short mode)
 //mode;  // 0 - normal  1 - save as
 {
@@ -490,46 +559,9 @@ void save_file(short mode)
 	{
 		file_id.exceptions(std::ios_base::failbit);
 
-		stream_write_type(file_id, town_save ? flag_type::town : flag_type::out);
-		stream_write_type(file_id, (in_startup_mode == FALSE) ? flag_type::in_scenario : flag_type::not_in_scenario);
-		stream_write_type(file_id, (save_maps == TRUE) ? flag_type::have_maps : flag_type::no_maps);
-
-		// SAVE PARTY
-		stream_write_type(file_id, xor_wrap<0x5C>(party).get());
-
-		// SAVE SETUP
-		stream_write_type(file_id, setup_save);
-
-		// SAVE PCS	
-		stream_write_type(file_id, xor_wrap<0x6B>(adven).get());
-
-		if (in_startup_mode == FALSE) {
-			// SAVE OUT DATA
-			static_assert(sizeof(out_info_type) == sizeof(out_e));
-			stream_write_type(file_id, out_e);
-
-			if (town_save) {
-				stream_write_type(file_id, c_town);
-				stream_write_type(file_id, t_d);
-				stream_write_type(file_id, t_i);
-			}
-
-			// Save stored items 
-			stream_write_type(file_id, stored_items);
-
-			// If saving maps, save maps
-			if (save_maps == TRUE) {
-				stream_write_type(file_id, town_maps);
-				stream_write_type(file_id, town_maps2);
-				stream_write_type(file_id, o_maps);
-			}
-
-			// SAVE SFX and MISC_I
-			static_assert(sizeof(sfx) == 64 * 64);
-			stream_write_type(file_id, sfx);
-			static_assert(sizeof(misc_i) == 64 * 64);
-			stream_write_type(file_id, misc_i);
-		}
+		savedata_write_all(file_id, town_save, in_startup_mode == TRUE, save_maps == TRUE,
+			party, setup_save, adven, out_e, c_town, t_d, t_i,
+			stored_items, town_maps, town_maps2, o_maps, sfx, misc_i);
 	}
 	catch (std::ios_base::failure const&)
 	{
