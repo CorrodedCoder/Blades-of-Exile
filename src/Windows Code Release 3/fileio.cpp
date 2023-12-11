@@ -234,10 +234,6 @@ static Boolean savedata_read_flag(std::istream& file_id, flag_type value_true, f
 
 void load_file()
 {
-	const flag_type flags[3][2] = { {flag_type::town, flag_type::out}, // slot 0 ... 5790 - out  1342 - town
-					{flag_type::in_scenario,flag_type::not_in_scenario}, // slot 1 100  in scenario, 200 not in
-					{flag_type::have_maps, flag_type::no_maps} }; // slot 2 ... 3422 - no maps  5567 - maps
-
 	ofn.hwndOwner = mainPtr;
 	ofn.lpstrFile = szFileName;
 	ofn.lpstrFileTitle = szTitleName;
@@ -261,9 +257,9 @@ void load_file()
 	{
 		file_id.exceptions(std::ios_base::failbit);
 
-		town_restore = savedata_read_flag(file_id, flags[0][0], flags[0][1]);
-		in_scen = savedata_read_flag(file_id, flags[1][0], flags[1][1]);
-		maps_there = savedata_read_flag(file_id, flags[2][0], flags[2][1]);
+		town_restore = savedata_read_flag(file_id, flag_type::town, flag_type::out);
+		in_scen = savedata_read_flag(file_id, flag_type::in_scenario, flag_type::not_in_scenario);
+		maps_there = savedata_read_flag(file_id, flag_type::have_maps, flag_type::no_maps);
 
 		// LOAD PARTY
 		stream_read_type(file_id, party);
