@@ -242,7 +242,20 @@ static bool savedata_read_flag(std::istream& file_id, flag_type value_true, flag
 static void savedata_read_all(
 	std::istream& file_id,
 	bool & town_restore,
-	bool & in_scen
+	bool & in_scen,
+	party_record_type & party,
+	setup_save_type & setup_save,
+	std::array<pc_record_type, 6> & adven,
+	unsigned char (&out_e)[96][96],
+	current_town_type& c_town,
+	big_tr_type& t_d,
+	town_item_list& t_i,
+	stored_items_list_type (&stored_items)[3],
+	stored_town_maps_type& town_maps,
+	stored_town_maps_type& town_maps2,
+	stored_outdoor_maps_type& o_maps,
+	unsigned char(&sfx)[64][64],
+	unsigned char (&misc_i)[64][64]
 	)
 {
 	// Eventually this will be hidden by an interface so this kind of
@@ -321,7 +334,10 @@ void load_file()
 	try
 	{
 		file_id.exceptions(std::ios_base::failbit);
-		savedata_read_all(file_id, town_restore, in_scen);
+		savedata_read_all(file_id, town_restore, in_scen,
+			party, setup_save, adven, out_e, c_town, t_d, t_i, stored_items,
+			town_maps, town_maps2, o_maps, sfx, misc_i
+		);
 	}
 	catch (boe_error const& e)
 	{
