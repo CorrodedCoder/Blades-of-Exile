@@ -170,6 +170,7 @@ typedef struct {
 	} town_item_list;
 
 typedef struct {short i;} flag_type;
+static_assert(sizeof(flag_type) == 2);
 
 typedef struct {unsigned char pattern[9][9];} effect_pat_type;
 

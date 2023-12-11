@@ -82,8 +82,6 @@ typedef struct {
 Boolean loaded_yet = FALSE, got_nagged = FALSE, ae_loading = FALSE;
 Boolean cur_scen_is_win = TRUE;
 
-enum class FSOrigin { SET = 1, CUR = 3, END = 2 };
-
 void save_outdoor_maps();
 void add_outdoor_maps();
 
@@ -201,15 +199,6 @@ void file_initialize()
 
 void load_file()
 {
-
-	long file_size;
-	std::ifstream file_id;
-	short i, j, k;
-	Boolean town_restore = FALSE;
-	Boolean maps_there = FALSE;
-	flag_type flag;
-	Boolean in_scen = FALSE;
-
 	short flags[3][2] = { {5790,1342}, // slot 0 ... 5790 - out  1342 - town
 					{100,200}, // slot 1 100  in scenario, 200 not in
 					{3422,5567} }; // slot 2 ... 3422 - no maps  5567 - maps
@@ -222,18 +211,19 @@ void load_file()
 	if (GetOpenFileName(&ofn) == 0)
 		return;
 	// Was: _lopen(szFileName, OF_READ | OF_SHARE_DENY_WRITE);
+	std::ifstream file_id;
 	file_id.open(szFileName, std::ios_base::binary);
 	if (file_id.fail()) {
 		beep();
 		return;
 	}
 
-	file_size = sizeof(party_record_type);
+	Boolean town_restore = FALSE;
+	Boolean maps_there = FALSE;
+	Boolean in_scen = FALSE;
 
-	//	sprintf(debug, "  Len %d               ", (short) len);
-	//	add_string_to_buf( debug);
-
-	for (i = 0; i < 3; i++) {
+	for (short i = 0; i < 3; i++) {
+		flag_type flag;
 		if (!file_read_type(file_id, flag)) {
 			beep();
 			return;
@@ -308,7 +298,7 @@ void load_file()
 		}
 
 		// LOAD STORED ITEMS
-		for (i = 0; i < 3; i++) {
+		for (short i = 0; i < 3; i++) {
 			if (!file_read_type(file_id, stored_items)) {
 				SysBeep(2);
 				FCD(1064, 0);
@@ -400,15 +390,15 @@ void load_file()
 	else {
 		load_town(c_town.town_num, 2, -1, NULL);
 		load_town(c_town.town_num, 1, -1, NULL);
-		for (i = 0; i < T_M; i++)
+		for (short i = 0; i < T_M; i++)
 		{
 			monster_targs[i].x = 0;  monster_targs[i].y = 0;
 		}
 
 		town_type = scenario.town_size[c_town.town_num];
 		// Set up field booleans
-		for (j = 0; j < town_size[town_type]; j++)
-			for (k = 0; k < town_size[town_type]; k++) {
+		for (short j = 0; j < town_size[town_type]; j++)
+			for (short k = 0; k < town_size[town_type]; k++) {
 				// Set up field booleans
 				if (is_web(j, k) == TRUE)
 					web = TRUE;
