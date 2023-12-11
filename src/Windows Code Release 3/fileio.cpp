@@ -168,6 +168,13 @@ static bool file_write_type(auto& file, const auto& type)
 	return !file.fail();
 }
 
+static void stream_write_type(auto& file, const auto& type)
+{
+	assert((file.exceptions() & std::ios_base::failbit) == std::ios_base::failbit);
+	file.write(reinterpret_cast<const char*>(&type), sizeof(type));
+}
+
+
 static void xor_type(auto& type, char xor_value)
 {
 	for (size_t index = 0; index < sizeof(type); ++index)
@@ -485,119 +492,67 @@ void save_file(short mode)
 		return;
 	}
 
-	flag = (town_save == TRUE) ? flag_type::town : flag_type::out;
-	if (!file_write_type(file_id, flag)) {
-		add_string_to_buf("Save: Couldn't write to file.         ");
-		FSClose(file_id);
-		SysBeep(2);
+	try
+	{
+		file_id.exceptions(std::ios_base::failbit);
+
+		flag = (town_save == TRUE) ? flag_type::town : flag_type::out;
+		stream_write_type(file_id, flag);
+
+		flag = (in_startup_mode == FALSE) ? flag_type::in_scenario : flag_type::not_in_scenario;
+		stream_write_type(file_id, flag);
+
+		flag = (save_maps == TRUE) ? flag_type::have_maps : flag_type::no_maps;
+		stream_write_type(file_id, flag);
+
+		// SAVE PARTY
+		stream_write_type(file_id, xor_wrap<0x5C>(party).get());
+
+		// SAVE SETUP
+		stream_write_type(file_id, setup_save);
+
+		// SAVE PCS	
+		for (i = 0; i < 6; i++) {
+			stream_write_type(file_id, xor_wrap<0x6B>(adven[i]).get());
+		}
+
+		if (in_startup_mode == FALSE) {
+
+			// SAVE OUT DATA
+			static_assert(sizeof(out_info_type) == sizeof(out_e));
+			stream_write_type(file_id, out_e);
+
+			if (town_save == TRUE) {
+				stream_write_type(file_id, c_town);
+				stream_write_type(file_id, t_d);
+				stream_write_type(file_id, t_i);
+			}
+
+			// Save stored items 
+			for (i = 0; i < 3; i++) {
+				stream_write_type(file_id, stored_items[i]);
+			}
+
+			// If saving maps, save maps
+			if (save_maps == TRUE) {
+				stream_write_type(file_id, town_maps);
+				stream_write_type(file_id, town_maps2);
+				stream_write_type(file_id, o_maps);
+			}
+
+			// SAVE SFX and MISC_I
+			static_assert(sizeof(sfx) == 64 * 64);
+			stream_write_type(file_id, sfx);
+			static_assert(sizeof(misc_i) == 64 * 64);
+			stream_write_type(file_id, misc_i);
+		}
 	}
-	flag = (in_startup_mode == FALSE) ? flag_type::in_scenario : flag_type::not_in_scenario;
-	if (!file_write_type(file_id, flag)) {
+	catch (std::ios_base::failure const&)
+	{
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		SysBeep(2);
 		return;
 	}
-	flag = (save_maps == TRUE) ? flag_type::have_maps : flag_type::no_maps;
-	if (!file_write_type(file_id, flag)) {
-		add_string_to_buf("Save: Couldn't write to file.         ");
-		SysBeep(2);
-		return;
-	}
-
-	// SAVE PARTY
-	if (!file_write_type(file_id, xor_wrap<0x5C>(party).get())) {
-		add_string_to_buf("Save: Couldn't write to file.         ");
-		SysBeep(2);
-		return;
-	}
-
-	// SAVE SETUP
-	if (!file_write_type(file_id, setup_save)) {
-		add_string_to_buf("Save: Couldn't write to file.         ");
-		SysBeep(2);
-		return;
-	}
-
-	// SAVE PCS	
-	for (i = 0; i < 6; i++) {
-		if (!file_write_type(file_id, xor_wrap<0x6B>(adven[i]).get())) {
-			add_string_to_buf("Save: Couldn't write to file.         ");
-			SysBeep(2);
-			return;
-		}
-	}
-
-	if (in_startup_mode == FALSE) {
-
-		// SAVE OUT DATA
-		static_assert(sizeof(out_info_type) == sizeof(out_e));
-		if (!file_write_type(file_id, out_e)) {
-			add_string_to_buf("Save: Couldn't write to file.         ");
-			SysBeep(2);
-			return;
-		}
-
-		if (town_save == TRUE) {
-			if (!file_write_type(file_id, c_town)) {
-				add_string_to_buf("Save: Couldn't write to file.         ");
-				SysBeep(2);
-				return;
-			}
-			if (!file_write_type(file_id, t_d)) {
-				add_string_to_buf("Save: Couldn't write to file.         ");
-				SysBeep(2);
-				return;
-			}
-			if (!file_write_type(file_id, t_i)) {
-				add_string_to_buf("Save: Couldn't write to file.         ");
-				SysBeep(2);
-				return;
-			}
-		}
-
-		// Save stored items 
-		for (i = 0; i < 3; i++) {
-			if (!file_write_type(file_id, stored_items[i])) {
-				add_string_to_buf("Save: Couldn't write to file.         ");
-				SysBeep(2);
-				return;
-			}
-		}
-
-		// If saving maps, save maps
-		if (save_maps == TRUE) {
-			if (!file_write_type(file_id, town_maps)) {
-				add_string_to_buf("Save: Couldn't write to file.         ");
-				SysBeep(2);
-				return;
-			}
-			if (!file_write_type(file_id, town_maps2)) {
-				add_string_to_buf("Save: Couldn't write to file.         ");
-				SysBeep(2);
-				return;
-			}
-			if (!file_write_type(file_id, o_maps)) {
-				add_string_to_buf("Save: Couldn't write to file.         ");
-				SysBeep(2);
-				return;
-			}
-		}
-
-		// SAVE SFX and MISC_I
-		static_assert(sizeof(sfx) == 64 * 64);
-		if (!file_write_type(file_id, sfx)) {
-			add_string_to_buf("Save: Couldn't write to file.         ");
-			SysBeep(2);
-			return;
-		}
-		static_assert(sizeof(misc_i) == 64 * 64);
-		if (!file_write_type(file_id, misc_i)) {
-			add_string_to_buf("Save: Couldn't write to file.         ");
-			SysBeep(2);
-			return;
-		}
-	}
-
 	if (!FSClose(file_id)) {
 		add_string_to_buf("Save: Couldn't close file.         ");
 		SysBeep(2);
