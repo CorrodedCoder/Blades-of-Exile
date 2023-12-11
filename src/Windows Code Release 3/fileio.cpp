@@ -2,6 +2,8 @@
 #include <Windows.h>
 #include <array>
 #include <fstream>
+#include <exception>
+#include <format>
 #include <cassert>
 #include <commdlg.h>
 
@@ -105,6 +107,21 @@ static const std::array szFilter{ "Blades of Exile Save Files (*.SAV)","*.sav",
 	"Text Files (*.TXT)","*.txt",
 	"All Files (*.*)","*.*",
 	"" };
+
+class boe_error
+	: public std::exception
+{
+	short error_code_;
+
+public:
+	boe_error(short error_code)
+		: std::exception(std::format("BOE ERROR #{}", error_code).c_str())
+		, error_code_(error_code)
+	{
+	}
+	short error_code() const { return error_code_; }
+};
+
 
 static bool FSClose(auto& file)
 {
@@ -237,8 +254,7 @@ void load_file()
 			flag_type flag;
 			stream_read_type(file_id, flag);
 			if ((flag != flags[i][0]) && (flag != flags[i][1])) { // OK Exile II save file?
-				FCD(1063, 0);
-				return;
+				throw boe_error(1063);
 			}
 
 			if ((i == 0) && (flag == flags[0][0]))
@@ -290,6 +306,11 @@ void load_file()
 			static_assert(sizeof(misc_i) == 64 * 64);
 			stream_read_type(file_id, misc_i);
 		}
+	}
+	catch (boe_error const& e)
+	{
+		FCD(e.error_code(), 0);
+		return;
 	}
 	catch (std::ios_base::failure const&)
 	{
