@@ -45,85 +45,6 @@
 #define	CDST	cd_set_text_edit_str
 #define	CDSN	cd_set_text_edit_num
 
-// for game
-typedef struct {
-	short personality;
-	short town_num;
-	short str1,str2;
-	} talk_save_type;
-
-
-
-
-typedef struct {
-	short active,attitude;
-	unsigned char number;
-	location m_loc;
-	monster_record_type m_d;
-	Boolean mobile;
-	short summoned;
-	creature_start_type monst_start;
-	} creature_data_type;
-	
-	
-
-typedef struct {
-	creature_data_type dudes[60];
-	short which_town;
-	short friendly;
-	} creature_list_type;
-
-typedef struct {
-	short town_num, difficulty;
-	town_record_type	town;
-	char explored[64][64];
-	Boolean	hostile;
-	creature_list_type	monst;
-	Boolean	in_boat;
-	location p_loc;
-	}	current_town_type;
-
-typedef struct {
-	Boolean exists;
-	short direction;
-	out_wandering_type what_monst;
-	location which_sector,m_loc;	
-	} outdoor_creature_type;
-	
-typedef struct {
-	long age;
-	short gold,food;
-	unsigned char stuff_done[310][10],item_taken[200][8];
-	short light_level;
-	location outdoor_corner,i_w_c,p_loc,loc_in_sec;
-	boat_record_type boats[30];
-	horse_record_type horses[30];
-	creature_list_type creature_save[4];
-	short in_boat,in_horse;
-	outdoor_creature_type out_c[10];
-	item_record_type magic_store_items[5][10];
-	short imprisoned_monst[4];
-	char m_seen[256];
-	char journal_str[50];
-	short journal_day[50];
-	short special_notes_str[140][2];
-	talk_save_type talk_save[120];
-	short direction,at_which_save_slot;
-	char alchemy[20];
-	Boolean can_find_town[200];
-	short key_times[100];
-	short party_event_timers[30];
-	short global_or_town[30];
-	short node_to_call[30];
-	char spec_items[50],help_received[120];
-	short m_killed[200];
-	long total_m_killed,total_dam_done,total_xp_gained,total_dam_taken;
-	char scen_name[256];
-	} party_record_type;
-
-typedef struct {
-	char town_maps[100][8][64];
-	} stored_town_maps_type;
 typedef struct {
 	char town_strs[180][256];
 	} piles_of_stuff_dumping_type;
@@ -145,40 +66,7 @@ typedef struct {
 char scen_strs[160][256];
 	} piles_of_stuff_dumping_type5;
 
-
-typedef struct {
-	short main_status;
-	char name[20];
-	short skills[30];
-	short max_health,cur_health,max_sp,cur_sp,experience,skill_pts,level;
-	short status[15];
-	item_record_type items[24];
-	Boolean equip[24];
-	Boolean priest_spells[62],mage_spells[62];
-	short which_graphic,weap_poisoned;
-	Boolean advan[15],traits[15];
-	short race,exp_adj,direction;
-	} pc_record_type;
-
-typedef struct {
-	unsigned char setup[4][64][64];
-	} setup_save_type;
-	
-
-typedef struct {
-	item_record_type items[NUM_TOWN_ITEMS];
-	} town_item_list;
-
 typedef struct {unsigned char pattern[9][9];} effect_pat_type;
-
-typedef struct {
-	item_record_type items[NUM_TOWN_ITEMS];
-	} stored_items_list_type;
-
-typedef struct {
-	char outdoor_maps[100][6][48];
-	} stored_outdoor_maps_type; 
-
 
 short s_pow(short x,short y);
 short a_v(short x);
