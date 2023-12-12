@@ -9,7 +9,7 @@
 #include <cmath>
 #include "dlogtool.h"
 #include "edsound.h"
-#include "graphutl.h"
+#include "../graphutl.h"
 #include "../graphutl_helpers.hpp"
 #include "keydlgs.h"
 

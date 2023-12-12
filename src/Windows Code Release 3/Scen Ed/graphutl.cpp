@@ -11,7 +11,7 @@
 
 #include "edsound.h"
 
-#include "graphutl.h"
+#include "../graphutl.h"
 #include "../graphutl_helpers.hpp"
 
 extern HWND mainPtr;

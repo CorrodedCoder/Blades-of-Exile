@@ -10,7 +10,7 @@
 #include <cstring>
 
 #include "global.h"
-#include "graphutl.h"
+#include "../graphutl.h"
 #include "../graphutl_helpers.hpp"
 #include <cstdio>
 #include "graphics.h"

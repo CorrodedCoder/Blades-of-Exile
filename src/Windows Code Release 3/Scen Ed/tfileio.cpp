@@ -9,7 +9,7 @@
 #include "graphics.h"
 #include "scenario.h"
 #include "edsound.h"
-#include "graphutl.h"
+#include "../graphutl.h"
 #include "../endian_adjust.hpp"
 
 extern scenario_data_type scenario;

@@ -39,7 +39,7 @@ Blades of Exile Game/Scenario Editor/Character Editor
 #include "townout.h"
 #include "scenario.h"
 #include "keydlgs.h"
-#include "graphutl.h"
+#include "../graphutl.h"
 
 void check_game_done();
 
