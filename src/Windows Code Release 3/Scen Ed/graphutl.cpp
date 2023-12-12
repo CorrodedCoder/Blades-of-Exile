@@ -401,12 +401,9 @@ short i,last_slash = -1;
 	return bmap;
 }
 
-HBITMAP load_pict(short pict_num)
+HBITMAP load_pict(short pict_num, HDC model_hdc)
 {
 	HBITMAP got_bitmap;
-	HDC model_hdc;
-
-	model_hdc = main_dc;
 
 	switch(pict_num) {
 		case 700: case 701: case 702: got_bitmap = ReadDib("STATAREA.BMP",model_hdc); break;
