@@ -1,17 +1,14 @@
-extern void inflict_palette();
-extern void reset_palette();
-extern void init_palette(BYTE * lpDib);
-extern DWORD GetDibInfoHeaderSize(BYTE * lpDib);
-
-extern WORD GetDibHeight(BYTE * lpDib);
-extern BYTE * GetDibBitsAddr(BYTE * lpDib);
-extern HBITMAP ReadDib(const char * name,HDC hdc);
-
-extern WORD GetDibWidth(BYTE *);
+void inflict_palette();
+void reset_palette();
+void init_palette(BYTE * lpDib);
+DWORD GetDibInfoHeaderSize(BYTE * lpDib);
+WORD GetDibHeight(BYTE * lpDib);
+BYTE * GetDibBitsAddr(BYTE * lpDib);
+HBITMAP ReadDib(const char * name,HDC hdc);
+WORD GetDibWidth(BYTE *);
 HBITMAP load_pict(short pict_num);
-extern void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
-	short trans, short main_win);
-extern void fry_dc(HWND hwnd,HDC dc);
+void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,short trans, short main_win);
+void fry_dc(HWND hwnd,HDC dc);
 HBITMAP load_pict(short pict_num,HDC model_hdc);
 void DisposeGWorld(HBITMAP bitmap);
 Boolean Button();
