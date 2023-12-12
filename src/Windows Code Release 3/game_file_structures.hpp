@@ -285,5 +285,132 @@ typedef struct {
 	short last_town_edited;
 
 } scenario_data_type;
-
 static_assert(sizeof(scenario_data_type) == 41942);
+
+// Game save file related structures
+enum class flag_type : short {
+	out = 5790,
+	town = 1342,
+	in_scenario = 100,
+	not_in_scenario = 200,
+	no_maps = 3422,
+	have_maps = 5567
+};
+static_assert(sizeof(flag_type) == 2);
+
+// for game
+typedef struct {
+	short personality;
+	short town_num;
+	short str1, str2;
+} talk_save_type;
+static_assert(sizeof(talk_save_type) == 8);
+
+typedef struct {
+	short active, attitude;
+	unsigned char number;
+	location m_loc;
+	monster_record_type m_d;
+	Boolean mobile;
+	short summoned;
+	creature_start_type monst_start;
+} creature_data_type;
+static_assert(sizeof(creature_data_type) == 142);
+
+typedef struct {
+	creature_data_type dudes[60];
+	short which_town;
+	short friendly;
+} creature_list_type;
+static_assert(sizeof(creature_list_type) == 8524);
+
+typedef struct {
+	short town_num, difficulty;
+	town_record_type	town;
+	char explored[64][64];
+	Boolean	hostile;
+	creature_list_type	monst;
+	Boolean	in_boat;
+	location p_loc;
+}	current_town_type;
+static_assert(sizeof(current_town_type) == 16136);
+
+typedef struct {
+	Boolean exists;
+	short direction;
+	out_wandering_type what_monst;
+	location which_sector, m_loc;
+} outdoor_creature_type;
+static_assert(sizeof(outdoor_creature_type) == 30);
+
+typedef struct {
+	long age;
+	short gold, food;
+	unsigned char stuff_done[310][10], item_taken[200][8];
+	short light_level;
+	location outdoor_corner, i_w_c, p_loc, loc_in_sec;
+	boat_record_type boats[30];
+	horse_record_type horses[30];
+	creature_list_type creature_save[4];
+	short in_boat, in_horse;
+	outdoor_creature_type out_c[10];
+	item_record_type magic_store_items[5][10];
+	short imprisoned_monst[4];
+	char m_seen[256];
+	char journal_str[50];
+	short journal_day[50];
+	short special_notes_str[140][2];
+	talk_save_type talk_save[120];
+	short direction, at_which_save_slot;
+	char alchemy[20];
+	Boolean can_find_town[200];
+	short key_times[100];
+	short party_event_timers[30];
+	short global_or_town[30];
+	short node_to_call[30];
+	char spec_items[50], help_received[120];
+	short m_killed[200];
+	long total_m_killed, total_dam_done, total_xp_gained, total_dam_taken;
+	char scen_name[256];
+} party_record_type;
+static_assert(sizeof(party_record_type) == 46400);
+
+typedef struct {
+	char town_maps[100][8][64];
+} stored_town_maps_type;
+static_assert(sizeof(stored_town_maps_type) == 51200);
+
+typedef struct {
+	short main_status;
+	char name[20];
+	short skills[30];
+	short max_health, cur_health, max_sp, cur_sp, experience, skill_pts, level;
+	short status[15];
+	item_record_type items[24];
+	Boolean equip[24];
+	Boolean priest_spells[62], mage_spells[62];
+	short which_graphic, weap_poisoned;
+	Boolean advan[15], traits[15];
+	short race, exp_adj, direction;
+} pc_record_type;
+static_assert(sizeof(pc_record_type) == 1898);
+
+typedef struct {
+	unsigned char setup[4][64][64];
+} setup_save_type;
+static_assert(sizeof(setup_save_type) == 16384);
+
+typedef struct {
+	item_record_type items[NUM_TOWN_ITEMS];
+} town_item_list;
+static_assert(sizeof(town_item_list) == 7590);
+
+typedef struct {
+	item_record_type items[NUM_TOWN_ITEMS];
+} stored_items_list_type;
+static_assert(sizeof(stored_items_list_type) == 7590);
+
+typedef struct {
+	char outdoor_maps[100][6][48];
+} stored_outdoor_maps_type;
+static_assert(sizeof(stored_outdoor_maps_type) == 28800);

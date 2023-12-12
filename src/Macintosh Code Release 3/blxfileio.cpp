@@ -29,6 +29,8 @@
 #define IN_FRONT	(WindowPtr)-1L
 #define	NIL		0L
 
+typedef struct { short i; } flag_type;
+
 DialogPtr	the_dialog;
 extern party_record_type	party;
 extern pc_record_type adven[6];

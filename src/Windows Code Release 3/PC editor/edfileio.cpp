@@ -40,7 +40,7 @@ typedef struct {
 	char expl[96][96];
 	}	out_info_type;
 
-extern short store_flags[3];
+static flag_type store_flags[3];
 
 // Big waste!
 out_info_type store_map;
@@ -106,9 +106,9 @@ void load_file()
 	flag_type flag;
 	flag_type *flag_ptr;
 
-	short flags[3][2] = {{5790,1342}, // slot 0 ... 5790 - out  1342 - town
-					{100,200}, // slot 1 100  in scenario, 200 not in
-					{3422,5567}}; // slot 2 ... 3422 - no maps  5567 - maps
+	const flag_type flags[3][2] = {{flag_type::out,flag_type::town}, // slot 0 ... 5790 - out  1342 - town
+					{flag_type::in_scenario,flag_type::not_in_scenario}, // slot 1 100  in scenario, 200 not in
+					{flag_type::no_maps,flag_type::have_maps}}; // slot 2 ... 3422 - no maps  5567 - maps
 
 	ofn.hwndOwner = mainPtr;
 	ofn.lpstrFile = szFileName;
@@ -137,19 +137,19 @@ void load_file()
 			}
 		flag_ptr = (flag_type *) flag_data;
 		flag = *flag_ptr;
-		store_flags[i] = (short) flag.i;
-		if ((flag.i != flags[i][0]) && (flag.i != flags[i][1])) { // OK Exile II save file?
+		store_flags[i] = flag;
+		if ((flag != flags[i][0]) && (flag != flags[i][1])) { // OK Exile II save file?
 			_lclose(file_id);
 			FCD(1063,0);
 			return;
 			} 
 
-		if ((i == 0) && (flag.i == flags[i][1]))
+		if ((i == 0) && (flag == flags[i][1]))
 			town_restore = TRUE;
-		if ((i == 1) && (flag.i == flags[i][0])) {
+		if ((i == 1) && (flag == flags[i][0])) {
 			in_scen = TRUE;
 			}
-		if ((i == 2) && (flag.i == flags[i][1]))
+		if ((i == 2) && (flag == flags[i][1]))
 			maps_there = TRUE;
 		}
 
@@ -337,13 +337,13 @@ void save_file(short mode)
 		return;
 		}
 
-	if (store_flags[0] == 1342)
+	if (store_flags[0] == flag_type::town)
 		town_save = TRUE;
 		else town_save = FALSE;
-	if (store_flags[1] == 100)
+	if (store_flags[1] == flag_type::in_scenario)
 		in_scen = TRUE;
 		else in_scen = FALSE;
-	if (store_flags[2] == 5567)  {
+	if (store_flags[2] == flag_type::have_maps)  {
 		save_maps = TRUE;
   		}
 		else save_maps = FALSE;
@@ -368,20 +368,20 @@ void save_file(short mode)
 
 	len = sizeof(flag_type);
 
-	flag.i = store_flags[0];
+	flag = store_flags[0];
 	if ((error = _lwrite(file_id, (char *) store, len))  == HFILE_ERROR){
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		_lclose(file_id);
 		play_sound(0);
 		}
-	flag.i = store_flags[1];
+	flag = store_flags[1];
 	if ((error = _lwrite(file_id, (char *) store, len)) == HFILE_ERROR) {
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		_lclose(file_id);
 		play_sound(0);
 		return;
 		}
-	flag.i = store_flags[2];
+	flag = store_flags[2];
 	if ((error = _lwrite(file_id, (char *) store, len))  == HFILE_ERROR){
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		_lclose(file_id);
@@ -547,13 +547,13 @@ void save_file(short mode)
 
 void leave_town()
 {
-	store_flags[0] = 5790;
+	store_flags[0] = flag_type::out;
 }
 
 
 void remove_party_from_scen()
 {
-	store_flags[1] = 200;
+	store_flags[1] = flag_type::not_in_scenario;
 	party_in_scen = FALSE;
 }
 

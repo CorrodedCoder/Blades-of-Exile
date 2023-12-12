@@ -20,7 +20,6 @@ extern stored_town_maps_type maps;
 extern stored_outdoor_maps_type o_maps;
 extern short dialog_answer;
 
-extern short store_flags[3];
 extern Boolean dialog_not_toast;
 
 extern short current_active_pc;

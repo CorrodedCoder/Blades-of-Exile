@@ -63,6 +63,7 @@ if (MSVC)
 				/wd4390
 				/wd4554
 				/wd4804
+				/Os
 			)
 		endif()
 
@@ -76,6 +77,7 @@ if (MSVC)
 			add_compile_options(/fsanitize=address)
 		endif()
 	elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+		add_compile_options(/EHsc)
 		if(BOE_WARNINGS_MAX)
 			add_compile_options(-Wall -Wextra -Wpedantic)
 		else()

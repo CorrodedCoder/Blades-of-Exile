@@ -74,7 +74,6 @@ long start_time;
 Boolean registered = FALSE,ed_reg = FALSE;
 long register_flag = 0,ed_flag = 0;
 Boolean game_run_before = TRUE,save_blocked = FALSE;
-short store_flags[3];
 
 short current_active_pc = 0;
 short user_given_password = -1;
