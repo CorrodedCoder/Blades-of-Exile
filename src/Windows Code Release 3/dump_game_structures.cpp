@@ -1,43 +1,69 @@
 #include "dump_game_structures.hpp"
 #include <format>
+#include <ranges>
+#include <algorithm>
 
-template< typename T >
-void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, T t)
+void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const char& t)
 {
-	std::format_to(strm, "{}.{}={}\n", parent, item, t);
+	std::format_to(strm, "{}.{}={:d} ({:x})\n", parent, item, t, t);
 }
 
-template< size_t N >
-void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const char(&arr)[N])
+void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const unsigned char& t)
 {
-	dump_to(strm, parent, item, std::format("\"{}\"", arr));
+	std::format_to(strm, "{}.{}={:d} ({:x})\n", parent, item, t, t);
 }
 
-template< typename T, size_t N >
-void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const T(&arr)[N])
+void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const short& t)
 {
-	for (size_t index=0; index < N; ++index)
+	std::format_to(strm, "{}.{}={:d} ({:x})\n", parent, item, t, t);
+}
+
+void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const int& t)
+{
+	std::format_to(strm, "{}.{}={:d} ({:x})\n", parent, item, t, t);
+}
+
+void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const unsigned int& t)
+{
+	std::format_to(strm, "{}.{}={:d} ({:x})\n", parent, item, t, t);
+}
+
+void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const long& t)
+{
+	std::format_to(strm, "{}.{}={:d} ({:x})\n", parent, item, t, t);
+}
+
+void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const unsigned long& t)
+{
+	std::format_to(strm, "{}.{}={:d} ({:x})\n", parent, item, t, t);
+}
+
+void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const char* t, size_t size)
+{
+	const std::span text(t, t + size);
+	const auto first_not_printable = std::find_if(std::begin(text), std::end(text), [](auto c) { return !isprint((int)(unsigned char)c); });
+	std::format_to(strm, "{}.{}=\"", parent, item);
+	std::copy(std::begin(text), first_not_printable, strm);
+	std::format_to(strm, "\"");
+	if (std::find_if(first_not_printable, std::end(text), [](auto c) { return c != 0; }) != std::end(text))
 	{
-		dump_to(strm, parent, std::format("{}[{}]", item, index), arr[index]);
+		for (const auto c : std::ranges::subrange(first_not_printable, std::end(text)))
+		{
+			std::format_to(strm, "({:d})", c);
+		}
 	}
+	std::format_to(strm, "\n");
 }
 
-template<>
-void dump_to<unsigned char>(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, unsigned char t)
+void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const unsigned char* t, size_t size)
 {
-	dump_to(strm, parent, item, (unsigned int)t);
-}
-
-template<>
-void dump_to<char>(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, char t)
-{
-	dump_to(strm, parent, item, (int)t);
-}
-
-template<>
-void dump_to<short>(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, short t)
-{
-	std::format_to(strm, "{}.{}={} {:x}\n", parent, item, t, t);
+	std::format_to(strm, "{}.{}={{", parent, item);
+	std::format_to(strm, "{:02X}", t[0]);
+	for (size_t index = 1; index < size; ++index)
+	{
+		std::format_to(strm, " {:02X}", t[index]);
+	}
+	std::format_to(strm, "}};\n");
 }
 
 void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const location& t)
@@ -296,4 +322,244 @@ void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::st
 	dump_to(strm, path, "flag_i", t.flag_i);
 	dump_to(strm, path, "last_out_edited", t.last_out_edited);
 	dump_to(strm, path, "last_town_edited", t.last_town_edited);
+}
+
+void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const talk_save_type& t)
+{
+	const auto path{ std::format("{}.{}", parent, item) };
+	dump_to(strm, path, "personality", t.personality);
+	dump_to(strm, path, "town_num", t.town_num);
+	dump_to(strm, path, "str1", t.str1);
+	dump_to(strm, path, "str2", t.str2);
+}
+
+void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const outdoor_creature_type& t)
+{
+	const auto path{ std::format("{}.{}", parent, item) };
+	dump_to(strm, path, "exists", t.exists);
+	dump_to(strm, path, "direction", t.direction);
+	dump_to(strm, path, "what_monst", t.what_monst);
+	dump_to(strm, path, "which_sector", t.which_sector);
+	dump_to(strm, path, "m_loc", t.m_loc);
+}
+
+void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const creature_start_type& t)
+{
+	const auto path{ std::format("{}.{}", parent, item) };
+	dump_to(strm, path, "number", t.number);
+	dump_to(strm, path, "start_attitude", t.start_attitude);
+	dump_to(strm, path, "start_loc", t.start_loc);
+	dump_to(strm, path, "mobile", t.mobile);
+	dump_to(strm, path, "time_flag", t.time_flag);
+	dump_to(strm, path, "extra1", t.extra1);
+	dump_to(strm, path, "extra2", t.extra2);
+	dump_to(strm, path, "spec1", t.spec1);
+	dump_to(strm, path, "spec2", t.spec2);
+	dump_to(strm, path, "spec_enc_code", t.spec_enc_code);
+	dump_to(strm, path, "time_code", t.time_code);
+	dump_to(strm, path, "monster_time", t.monster_time);
+	dump_to(strm, path, "personality", t.personality);
+	dump_to(strm, path, "special_on_kill", t.special_on_kill);
+	dump_to(strm, path, "facial_pic", t.facial_pic);
+}
+
+void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const creature_data_type& t)
+{
+	const auto path{ std::format("{}.{}", parent, item) };
+	dump_to(strm, path, "active", t.active);
+	dump_to(strm, path, "attitude", t.attitude);
+	dump_to(strm, path, "number", t.number);
+	dump_to(strm, path, "m_loc", t.m_loc);
+	dump_to(strm, path, "m_d", t.m_d);
+	dump_to(strm, path, "mobile", t.mobile);
+	dump_to(strm, path, "summoned", t.summoned);
+	dump_to(strm, path, "monst_start", t.monst_start);
+}
+
+void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const creature_list_type& t)
+{
+	const auto path{ std::format("{}.{}", parent, item) };
+	dump_to(strm, path, "dudes", t.dudes);
+	dump_to(strm, path, "which_town", t.which_town);
+	dump_to(strm, path, "friendly", t.friendly);
+}
+
+void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const party_record_type& t)
+{
+	const auto path{ std::format("{}.{}", parent, item) };
+	dump_to(strm, path, "age", t.age);
+	dump_to(strm, path, "gold", t.gold);
+	dump_to(strm, path, "food", t.food);
+	dump_to(strm, path, "stuff_done", t.stuff_done);
+	dump_to(strm, path, "item_taken", t.item_taken);
+	dump_to(strm, path, "light_level", t.light_level);
+	dump_to(strm, path, "outdoor_corner", t.outdoor_corner);
+	dump_to(strm, path, "i_w_c", t.i_w_c);
+	dump_to(strm, path, "p_loc", t.p_loc);
+	dump_to(strm, path, "loc_in_sec", t.loc_in_sec);
+	dump_to(strm, path, "boats", t.boats);
+	dump_to(strm, path, "horses", t.horses);
+	dump_to(strm, path, "creature_save", t.creature_save);
+	dump_to(strm, path, "in_boat", t.in_boat);
+	dump_to(strm, path, "in_horse", t.in_horse);
+	dump_to(strm, path, "out_c", t.out_c);
+	dump_to(strm, path, "magic_store_items", t.magic_store_items);
+	dump_to(strm, path, "imprisoned_monst", t.imprisoned_monst);
+	dump_to(strm, path, "m_seen", t.m_seen);
+	dump_to(strm, path, "journal_str", t.journal_str);
+	dump_to(strm, path, "journal_day", t.journal_day);
+	dump_to(strm, path, "special_notes_str", t.special_notes_str);
+	dump_to(strm, path, "talk_save", t.talk_save);
+	dump_to(strm, path, "direction", t.direction);
+	dump_to(strm, path, "at_which_save_slot", t.at_which_save_slot);
+	dump_to(strm, path, "alchemy", t.alchemy);
+	dump_to(strm, path, "can_find_town", t.can_find_town);
+	dump_to(strm, path, "key_times", t.key_times);
+	dump_to(strm, path, "party_event_timers", t.party_event_timers);
+	dump_to(strm, path, "global_or_town", t.global_or_town);
+	dump_to(strm, path, "node_to_call", t.node_to_call);
+	dump_to(strm, path, "spec_items", t.spec_items);
+	dump_to(strm, path, "help_received", t.help_received);
+	dump_to(strm, path, "m_killed", t.m_killed);
+
+	dump_to(strm, path, "total_m_killed", t.total_m_killed);
+	dump_to(strm, path, "total_dam_done", t.total_dam_done);
+	dump_to(strm, path, "total_xp_gained", t.total_xp_gained);
+	dump_to(strm, path, "total_dam_taken", t.total_dam_taken);
+	dump_to(strm, path, "scen_name", t.scen_name);
+}
+
+void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const setup_save_type& t)
+{
+	const auto path{ std::format("{}.{}", parent, item) };
+	dump_to(strm, path, "setup", t.setup);
+}
+
+void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const pc_record_type& t)
+{
+	const auto path{ std::format("{}.{}", parent, item) };
+	dump_to(strm, path, "main_status", t.main_status);
+	dump_to(strm, path, "name", t.name);
+	dump_to(strm, path, "skills", t.skills);
+	dump_to(strm, path, "max_health", t.max_health);
+	dump_to(strm, path, "cur_health", t.cur_health);
+	dump_to(strm, path, "max_sp", t.max_sp);
+	dump_to(strm, path, "cur_sp", t.cur_sp);
+	dump_to(strm, path, "experience", t.experience);
+	dump_to(strm, path, "skill_pts", t.skill_pts);
+	dump_to(strm, path, "level", t.level);
+	dump_to(strm, path, "status", t.status);
+	dump_to(strm, path, "items", t.items);
+	dump_to(strm, path, "equip", t.equip);
+	dump_to(strm, path, "priest_spells", t.priest_spells);
+	dump_to(strm, path, "mage_spells", t.mage_spells);
+	dump_to(strm, path, "which_graphic", t.which_graphic);
+	dump_to(strm, path, "weap_poisoned", t.weap_poisoned);
+	dump_to(strm, path, "advan", t.advan);
+	dump_to(strm, path, "traits", t.traits);
+	dump_to(strm, path, "race", t.race);
+	dump_to(strm, path, "exp_adj", t.exp_adj);
+	dump_to(strm, path, "direction", t.direction);
+}
+
+void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const preset_item_type& t)
+{
+	const auto path{ std::format("{}.{}", parent, item) };
+	dump_to(strm, path, "item_loc", t.item_loc);
+	dump_to(strm, path, "item_code", t.item_code);
+	dump_to(strm, path, "ability", t.ability);
+	dump_to(strm, path, "charges", t.charges);
+	dump_to(strm, path, "always_there", t.always_there);
+	dump_to(strm, path, "property", t.property);
+	dump_to(strm, path, "contained", t.contained);
+}
+
+void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const preset_field_type& t)
+{
+	const auto path{ std::format("{}.{}", parent, item) };
+	dump_to(strm, path, "field_loc", t.field_loc);
+	dump_to(strm, path, "field_type", t.field_type);
+}
+
+void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const wandering_type& t)
+{
+	const auto path{ std::format("{}.{}", parent, item) };
+	dump_to(strm, path, "monst", t.monst);
+}
+
+void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const town_record_type& t)
+{
+	const auto path{ std::format("{}.{}", parent, item) };
+	dump_to(strm, path, "town_chop_time", t.town_chop_time);
+	dump_to(strm, path, "town_chop_key", t.town_chop_key);
+	dump_to(strm, path, "wandering", t.wandering);
+	dump_to(strm, path, "wandering_locs", t.wandering_locs);
+	dump_to(strm, path, "special_locs", t.special_locs);
+	dump_to(strm, path, "spec_id", t.spec_id);
+	dump_to(strm, path, "sign_locs", t.sign_locs);
+	dump_to(strm, path, "lighting", t.lighting);
+	dump_to(strm, path, "start_locs", t.start_locs);
+	dump_to(strm, path, "exit_locs", t.exit_locs);
+	dump_to(strm, path, "exit_specs", t.exit_specs);
+	dump_to(strm, path, "in_town_rect", t.in_town_rect);
+	dump_to(strm, path, "preset_items", t.preset_items);
+	dump_to(strm, path, "max_num_monst", t.max_num_monst);
+	dump_to(strm, path, "preset_fields", t.preset_fields);
+	dump_to(strm, path, "spec_on_entry", t.spec_on_entry);
+	dump_to(strm, path, "spec_on_entry_if_dead", t.spec_on_entry_if_dead);
+	dump_to(strm, path, "timer_spec_times", t.timer_spec_times);
+	dump_to(strm, path, "timer_specs", t.timer_specs);
+	dump_to(strm, path, "strlens", t.strlens);
+	dump_to(strm, path, "specials", t.specials);
+	dump_to(strm, path, "specials1", t.specials1);
+	dump_to(strm, path, "specials2", t.specials2);
+	dump_to(strm, path, "res1", t.res1);
+	dump_to(strm, path, "res2", t.res2);
+	dump_to(strm, path, "difficulty", t.difficulty);
+}
+
+void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const current_town_type& t)
+{
+	const auto path{ std::format("{}.{}", parent, item) };
+	dump_to(strm, path, "town_num", t.town_num);
+	dump_to(strm, path, "difficulty", t.difficulty);
+	dump_to(strm, path, "town", t.town);
+	dump_to(strm, path, "explored", t.explored);
+	dump_to(strm, path, "hostile", t.hostile);
+	dump_to(strm, path, "monst", t.monst);
+	dump_to(strm, path, "in_boat", t.in_boat);
+	dump_to(strm, path, "p_loc", t.p_loc);
+}
+
+void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const big_tr_type& t)
+{
+	const auto path{ std::format("{}.{}", parent, item) };
+	dump_to(strm, path, "terrain", t.terrain);
+	dump_to(strm, path, "room_rect", t.room_rect);
+	dump_to(strm, path, "creatures", t.creatures);
+	dump_to(strm, path, "lighting", t.lighting);
+}
+
+void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const town_item_list& t)
+{
+	const auto path{ std::format("{}.{}", parent, item) };
+	dump_to(strm, path, "items", t.items);
+}
+
+void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const stored_items_list_type& t)
+{
+	const auto path{ std::format("{}.{}", parent, item) };
+	dump_to(strm, path, "items", t.items);
+}
+
+void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const stored_town_maps_type& t)
+{
+	const auto path{ std::format("{}.{}", parent, item) };
+	dump_to(strm, path, "town_maps", t.town_maps);
+}
+
+void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const stored_outdoor_maps_type& t)
+{
+	const auto path{ std::format("{}.{}", parent, item) };
+	dump_to(strm, path, "outdoor_maps", t.outdoor_maps);
 }

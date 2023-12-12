@@ -54,3 +54,4 @@ add_subdirectory("Scen Ed")
 endif()
 
 add_subdirectory("Dump Scenario")
+add_subdirectory("Dump Savegame")
