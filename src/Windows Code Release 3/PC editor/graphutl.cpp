@@ -615,11 +615,6 @@ void DisposeGWorld(HBITMAP bitmap)
 	DeleteObject(bitmap);
 }
 
-void SectRect(RECT *a, RECT *b, RECT *c) 
-	{
-	IntersectRect(c,a,b);
-	}
-
 Boolean Button()
 {
 	MSG msg;

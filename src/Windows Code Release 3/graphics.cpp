@@ -2297,7 +2297,7 @@ void pre_boom_space(location where,short mode,short type,short damage,short soun
 	terrain_from = dest_rect;
 	source_rect = store_rect = dest_rect;
 	OffsetRect(&dest_rect,x_adj,y_adj);
-	SectRect(&dest_rect,&big_to,&dest_rect);
+	IntersectRect(&dest_rect, &dest_rect, &big_to);
 
 	if (cartoon_happening == FALSE)
 		OffsetRect(&dest_rect,win_to_rects[0].left,win_to_rects[0].top);

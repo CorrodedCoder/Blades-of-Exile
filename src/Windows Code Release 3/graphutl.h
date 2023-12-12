@@ -14,7 +14,6 @@ extern void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest
 extern void fry_dc(HWND hwnd,HDC dc);
 
 void DisposeGWorld(HBITMAP bitmap);
-void SectRect(RECT *a, RECT *b, RECT *c) ;
 Boolean Button();
 HBITMAP load_pict(short pict_num,HDC model_hdc);
 void paint_pattern(HBITMAP dest,short which_mode,RECT dest_rect,short which_pattern);
