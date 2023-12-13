@@ -29,7 +29,9 @@ short dlog_pat_placed = 0;
 short current_pattern = -1;
 HPALETTE syspal = NULL;
 
-void init_palette(BYTE * lpDib)
+static DWORD GetDibInfoHeaderSize(BYTE* lpDib);
+
+static void init_palette(BYTE * lpDib)
 {
 	HDC hdc;
 	short i;
@@ -287,24 +289,11 @@ void reset_palette()
 
 }
 
-DWORD GetDibInfoHeaderSize(BYTE * lpDib)
+static DWORD GetDibInfoHeaderSize(BYTE * lpDib)
 {
-return ((BITMAPINFOHEADER *) lpDib)->biSize;
+	return ((BITMAPINFOHEADER *) lpDib)->biSize;
 }
 
-WORD GetDibWidth(BYTE * lpDib)
-{
-	if (GetDibInfoHeaderSize(lpDib) == sizeof(BITMAPCOREHEADER))
-		return (WORD) (((BITMAPCOREHEADER *) lpDib)->bcWidth);
-		else return (WORD) (((BITMAPINFOHEADER *) lpDib)->biWidth);
-}
-
-WORD GetDibHeight(BYTE * lpDib)
-{
-	if (GetDibInfoHeaderSize(lpDib) == sizeof(BITMAPCOREHEADER))
-		return (WORD) (((BITMAPCOREHEADER *) lpDib)->bcHeight);
-		else return (WORD) (((BITMAPINFOHEADER *) lpDib)->biHeight);
-}
 BYTE * GetDibBitsAddr(BYTE * lpDib)
 {
 	DWORD dwNumColors, dwColorTableSize;
@@ -413,61 +402,62 @@ short i,last_slash = -1;
 	GlobalFreePtr(lpDib);
 	return bmap;
 }
-						  /*
-HBITMAP load_pict(short pict_num,HDC model_hdc)
+
+HBITMAP load_pict(short pict_num, HDC model_hdc)
 {
 	HBITMAP got_bitmap;
 
-	switch(pict_num) {
-		case 700: case 701: case 702: got_bitmap = ReadDib("BLSCENED\STATAREA.BMP",model_hdc); break;
-		case 703: got_bitmap = ReadDib("BLSCENED\TEXTBAR.BMP",model_hdc); break;
-		case 704: got_bitmap = ReadDib("BLSCENED\BUTTONS.BMP",model_hdc); break;
-		case 705: got_bitmap = ReadDib("BLSCENED\TERSCRN.BMP",model_hdc); break;
-		case 800: got_bitmap = ReadDib("BLSCENED\TER1.BMP",model_hdc); break;
-		case 801: got_bitmap = ReadDib("BLSCENED\TER2.BMP",model_hdc); break;
-		case 802: got_bitmap = ReadDib("BLSCENED\TER3.BMP",model_hdc); break;
-		case 803: got_bitmap = ReadDib("BLSCENED\TER4.BMP",model_hdc); break;
-		case 804: got_bitmap = ReadDib("BLSCENED\TER5.BMP",model_hdc); break;
-		case 805: got_bitmap = ReadDib("BLSCENED\TER6.BMP",model_hdc); break;
-		case 820: got_bitmap = ReadDib("BLSCENED\TERANIM.BMP",model_hdc); break;
-		case 821: got_bitmap = ReadDib("BLSCENED\FIELDS.BMP",model_hdc); break;
-		case 830: got_bitmap = ReadDib("BLSCENED\STARTUP.BMP",model_hdc); break;
-		case 831: got_bitmap = ReadDib("BLSCENED\STARTBUT.BMP",model_hdc); break;
-		case 832: got_bitmap = ReadDib("BLSCENED\STANIM.BMP",model_hdc); break;
-		case 850: got_bitmap = ReadDib("BLSCENED\DLOGPICS.BMP",model_hdc); break;
-		case 860: got_bitmap = ReadDib("BLSCENED\TALKPORT.BMP",model_hdc); break;
-		case 875: got_bitmap = ReadDib("BLSCENED\DLOGMAPS.BMP",model_hdc); break;
-		case 880: got_bitmap = ReadDib("BLSCENED\MISSILES.BMP",model_hdc); break;
-		case 900: got_bitmap = ReadDib("BLSCENED\TINYOBJ.BMP",model_hdc); break;
-		case 901: got_bitmap = ReadDib("BLSCENED\OBJECTS.BMP",model_hdc); break;
-		case 902: got_bitmap = ReadDib("BLSCENED\PCS.BMP",model_hdc); break;
-		case 905: got_bitmap = ReadDib("BLSCENED\PCS.BMP",model_hdc); break;
-		case 903: case 904: got_bitmap = ReadDib("BLSCENED\MIXED.BMP",model_hdc); break;
-		case 910: case 911: case 912: got_bitmap = ReadDib("BLSCENED\BIGSCEN.BMP",model_hdc); break;
-		case 1100: case 1200: got_bitmap = ReadDib("BLSCENED\MONST1.BMP",model_hdc); break;
-		case 1101: case 1201: got_bitmap = ReadDib("BLSCENED\MONST2.BMP",model_hdc); break;
-		case 1102: case 1202: got_bitmap = ReadDib("BLSCENED\MONST3.BMP",model_hdc); break;
-		case 1103: case 1203: got_bitmap = ReadDib("BLSCENED\MONST4.BMP",model_hdc); break;
-		case 1104: case 1204: got_bitmap = ReadDib("BLSCENED\MONST5.BMP",model_hdc); break;
-		case 1105: case 1205: got_bitmap = ReadDib("BLSCENED\MONST6.BMP",model_hdc); break;
-		case 1106: case 1206: got_bitmap = ReadDib("BLSCENED\MONST7.BMP",model_hdc); break;
-		case 1107: case 1207: got_bitmap = ReadDib("BLSCENED\MONST8.BMP",model_hdc); break;
-		case 1108: case 1208: got_bitmap = ReadDib("BLSCENED\MONST9.BMP",model_hdc); break;
-		case 1109: case 1209: got_bitmap = ReadDib("BLSCENED\MONST10.BMP",model_hdc); break;
-		case 1400: got_bitmap = ReadDib("BLSCENED\STSCICON.BMP",model_hdc); break;
-		case 1401: got_bitmap = ReadDib("BLSCENED\HELPPICS.BMP",model_hdc); break;
-		case 1402: got_bitmap = ReadDib("BLSCENED\APPIC.BMP",model_hdc); break;
-		case 1500: case 1501: case 1502: case 1503: case 1504: case 1505: case 1506: case 1507:
-			got_bitmap = ReadDib("BLSCENED\BIGMAPS.BMP",model_hdc); break;
-		case 2000: got_bitmap = ReadDib("BLSCENED\DLOGBTNS.BMP",model_hdc); break;
-		case 3000: got_bitmap = ReadDib("BLSCENED\START.BMP",model_hdc); break;
-		case 3001: got_bitmap = ReadDib("BLSCENED\SPIDLOGO.BMP",model_hdc); break;
+	switch (pict_num) {
+	case 700: case 701: case 702: got_bitmap = ReadDib("blscened/STATAREA.BMP", model_hdc); break;
+	case 703: got_bitmap = ReadDib("blscened/TEXTBAR.BMP", model_hdc); break;
+	case 704: got_bitmap = ReadDib("blscened/BUTTONS.BMP", model_hdc); break;
+	case 705: got_bitmap = ReadDib("blscened/TERSCRN.BMP", model_hdc); break;
+	case 800: got_bitmap = ReadDib("blscened/TER1.BMP", model_hdc); break;
+	case 801: got_bitmap = ReadDib("blscened/TER2.BMP", model_hdc); break;
+	case 802: got_bitmap = ReadDib("blscened/TER3.BMP", model_hdc); break;
+	case 803: got_bitmap = ReadDib("blscened/TER4.BMP", model_hdc); break;
+	case 804: got_bitmap = ReadDib("blscened/TER5.BMP", model_hdc); break;
+	case 805: got_bitmap = ReadDib("blscened/TER6.BMP", model_hdc); break;
+	case 820: got_bitmap = ReadDib("blscened/TERANIM.BMP", model_hdc); break;
+	case 821: got_bitmap = ReadDib("blscened/FIELDS.BMP", model_hdc); break;
+	case 830: got_bitmap = ReadDib("blscened/STARTUP.BMP", model_hdc); break;
+	case 831: got_bitmap = ReadDib("blscened/STANIM.BMP", model_hdc); break;
+	case 832: got_bitmap = ReadDib("blscened/STARTBUT.BMP", model_hdc); break;
+	case 850: got_bitmap = ReadDib("blscened/DLOGPICS.BMP", model_hdc); break;
+	case 851: got_bitmap = ReadDib("blscened/SCENPICS.BMP", model_hdc); break;
+	case 860: got_bitmap = ReadDib("blscened/TALKPORT.BMP", model_hdc); break;
+	case 875: got_bitmap = ReadDib("blscened/DLOGMAPS.BMP", model_hdc); break;
+	case 880: got_bitmap = ReadDib("blscened/MISSILES.BMP", model_hdc); break;
+	case 900: got_bitmap = ReadDib("blscened/TINYOBJ.BMP", model_hdc); break;
+	case 901: got_bitmap = ReadDib("blscened/OBJECTS.BMP", model_hdc); break;
+	case 902: got_bitmap = ReadDib("blscened/PCS.BMP", model_hdc); break;
+	case 905: got_bitmap = ReadDib("blscened/PCS.BMP", model_hdc); break;
+	case 903: case 904: got_bitmap = ReadDib("blscened/MIXED.BMP", model_hdc); break;
+		//		case 903: case 904: got_bitmap = ReadDib("blscened/blscened\MIXED.BMP",model_hdc); break;
+	case 910: case 911: case 912: got_bitmap = ReadDib("blscened/BIGSCEN.BMP", model_hdc); break;
+	case 1100: case 1200: got_bitmap = ReadDib("blscened/MONST1.BMP", model_hdc); break;
+	case 1101: case 1201: got_bitmap = ReadDib("blscened/MONST2.BMP", model_hdc); break;
+	case 1102: case 1202: got_bitmap = ReadDib("blscened/MONST3.BMP", model_hdc); break;
+	case 1103: case 1203: got_bitmap = ReadDib("blscened/MONST4.BMP", model_hdc); break;
+	case 1104: case 1204: got_bitmap = ReadDib("blscened/MONST5.BMP", model_hdc); break;
+	case 1105: case 1205: got_bitmap = ReadDib("blscened/MONST6.BMP", model_hdc); break;
+	case 1106: case 1206: got_bitmap = ReadDib("blscened/MONST7.BMP", model_hdc); break;
+	case 1107: case 1207: got_bitmap = ReadDib("blscened/MONST8.BMP", model_hdc); break;
+	case 1108: case 1208: got_bitmap = ReadDib("blscened/MONST9.BMP", model_hdc); break;
+	case 1109: case 1209: got_bitmap = ReadDib("blscened/MONST10.BMP", model_hdc); break;
+	case 1400: got_bitmap = ReadDib("blscened/STSCICON.BMP", model_hdc); break;
+	case 1401: got_bitmap = ReadDib("blscened/HELPPICS.BMP", model_hdc); break;
+	case 1402: got_bitmap = ReadDib("blscened/APPIC.BMP", model_hdc); break;
+	case 1500: case 1501: case 1502: case 1503: case 1504: case 1505: case 1506: case 1507:
+		got_bitmap = ReadDib("blscened/BIGMAPS.BMP", model_hdc); break;
+	case 2000: got_bitmap = ReadDib("blscened/DLOGBTNS.BMP", model_hdc); break;
+	case 3000: got_bitmap = ReadDib("blscened/START.BMP", model_hdc); break;
+	case 3001: got_bitmap = ReadDib("blscened/SPIDLOGO.BMP", model_hdc); break;
 
-		default: got_bitmap = NULL;
-		}
+	default: got_bitmap = NULL;
+	}
 	return got_bitmap;
 }
-*/
 
 void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 	short trans, short main_win) {
@@ -628,26 +618,6 @@ void DisposeGWorld(HBITMAP bitmap)
 	DeleteObject(bitmap);
 }
 
-void SectRect(RECT *a, RECT *b, RECT *c) 
-	{
-	IntersectRect(c,a,b);
-	}
-
-Boolean Button()
-{
-	MSG msg;
-
-				if (PeekMessage(&msg,mainPtr,WM_MOUSEFIRST,WM_MOUSELAST,PM_REMOVE) > 0)
-					if ((msg.message == WM_LBUTTONDOWN) || (msg.message == WM_CHAR)
-					|| (msg.message == WM_KEYDOWN))
-						return TRUE;
-				if (PeekMessage(&msg,mainPtr,WM_KEYFIRST,WM_KEYLAST,PM_REMOVE) > 0)
-					if ((msg.message == WM_LBUTTONDOWN) || (msg.message == WM_CHAR)
-					|| (msg.message == WM_KEYDOWN))
-						return TRUE;
-	return FALSE;
-}
-
 
 // which_mode is 0 ... dest is a bitmap
 // is 1 ... ignore dest ... paint on mainPtr
@@ -721,61 +691,3 @@ void paint_pattern(HBITMAP dest,short which_mode,RECT dest_rect,short which_patt
 	ulx = store_ulx;
 	uly = store_uly;
 }
-
-
-HBITMAP load_pict(short pict_num,HDC model_hdc)
-{
-	HBITMAP got_bitmap;
-
-	switch(pict_num) {
-		case 700: case 701: case 702: got_bitmap = ReadDib("blscened/STATAREA.BMP",model_hdc); break;
-		case 703: got_bitmap = ReadDib("blscened/TEXTBAR.BMP",model_hdc); break;
-		case 704: got_bitmap = ReadDib("blscened/BUTTONS.BMP",model_hdc); break;
-		case 705: got_bitmap = ReadDib("blscened/TERSCRN.BMP",model_hdc); break;
-		case 800: got_bitmap = ReadDib("blscened/TER1.BMP",model_hdc); break;
-		case 801: got_bitmap = ReadDib("blscened/TER2.BMP",model_hdc); break;
-		case 802: got_bitmap = ReadDib("blscened/TER3.BMP",model_hdc); break;
-		case 803: got_bitmap = ReadDib("blscened/TER4.BMP",model_hdc); break;
-		case 804: got_bitmap = ReadDib("blscened/TER5.BMP",model_hdc); break;
-		case 805: got_bitmap = ReadDib("blscened/TER6.BMP",model_hdc); break;
-		case 820: got_bitmap = ReadDib("blscened/TERANIM.BMP",model_hdc); break;
-		case 821: got_bitmap = ReadDib("blscened/FIELDS.BMP",model_hdc); break;
-		case 830: got_bitmap = ReadDib("blscened/STARTUP.BMP",model_hdc); break;
-		case 831: got_bitmap = ReadDib("blscened/STANIM.BMP",model_hdc); break;
-		case 832: got_bitmap = ReadDib("blscened/STARTBUT.BMP",model_hdc); break;
-		case 850: got_bitmap = ReadDib("blscened/DLOGPICS.BMP",model_hdc); break;
-		case 851: got_bitmap = ReadDib("blscened/SCENPICS.BMP",model_hdc); break;
-		case 860: got_bitmap = ReadDib("blscened/TALKPORT.BMP",model_hdc); break;
-		case 875: got_bitmap = ReadDib("blscened/DLOGMAPS.BMP",model_hdc); break;
-		case 880: got_bitmap = ReadDib("blscened/MISSILES.BMP",model_hdc); break;
-		case 900: got_bitmap = ReadDib("blscened/TINYOBJ.BMP",model_hdc); break;
-		case 901: got_bitmap = ReadDib("blscened/OBJECTS.BMP",model_hdc); break;
-		case 902: got_bitmap = ReadDib("blscened/PCS.BMP",model_hdc); break;
-		case 905: got_bitmap = ReadDib("blscened/PCS.BMP",model_hdc); break;
-		case 903: case 904: got_bitmap = ReadDib("blscened/MIXED.BMP",model_hdc); break;
-//		case 903: case 904: got_bitmap = ReadDib("blscened/blscened\MIXED.BMP",model_hdc); break;
-		case 910: case 911: case 912: got_bitmap = ReadDib("blscened/BIGSCEN.BMP",model_hdc); break;
-		case 1100: case 1200: got_bitmap = ReadDib("blscened/MONST1.BMP",model_hdc); break;
-		case 1101: case 1201: got_bitmap = ReadDib("blscened/MONST2.BMP",model_hdc); break;
-		case 1102: case 1202: got_bitmap = ReadDib("blscened/MONST3.BMP",model_hdc); break;
-		case 1103: case 1203: got_bitmap = ReadDib("blscened/MONST4.BMP",model_hdc); break;
-		case 1104: case 1204: got_bitmap = ReadDib("blscened/MONST5.BMP",model_hdc); break;
-		case 1105: case 1205: got_bitmap = ReadDib("blscened/MONST6.BMP",model_hdc); break;
-		case 1106: case 1206: got_bitmap = ReadDib("blscened/MONST7.BMP",model_hdc); break;
-		case 1107: case 1207: got_bitmap = ReadDib("blscened/MONST8.BMP",model_hdc); break;
-		case 1108: case 1208: got_bitmap = ReadDib("blscened/MONST9.BMP",model_hdc); break;
-		case 1109: case 1209: got_bitmap = ReadDib("blscened/MONST10.BMP",model_hdc); break;
-		case 1400: got_bitmap = ReadDib("blscened/STSCICON.BMP",model_hdc); break;
-		case 1401: got_bitmap = ReadDib("blscened/HELPPICS.BMP",model_hdc); break;
-		case 1402: got_bitmap = ReadDib("blscened/APPIC.BMP",model_hdc); break;
-		case 1500: case 1501: case 1502: case 1503: case 1504: case 1505: case 1506: case 1507:
-			got_bitmap = ReadDib("blscened/BIGMAPS.BMP",model_hdc); break;
-		case 2000: got_bitmap = ReadDib("blscened/DLOGBTNS.BMP",model_hdc); break;
-		case 3000: got_bitmap = ReadDib("blscened/START.BMP",model_hdc); break;
-		case 3001: got_bitmap = ReadDib("blscened/SPIDLOGO.BMP",model_hdc); break;
-
-		default: got_bitmap = NULL;
-		}
-	return got_bitmap;
-}
-

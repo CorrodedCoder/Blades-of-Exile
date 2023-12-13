@@ -184,7 +184,7 @@ void apply_unseen_mask()
 
 					to_rect = base_rect;
 					OffsetRect(&to_rect,-28 + i * 28 + 2,-36 + 36 * j);
-					SectRect(&to_rect,&big_to,&to_rect);
+					IntersectRect(&to_rect, &to_rect, &big_to);
 					Rectangle(hdc, to_rect.left,to_rect.top,to_rect.right,to_rect.bottom);
 					//PaintRect(&to_rect);
 					for (k = i - 2; k < i + 1; k++)
@@ -535,7 +535,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 				OffsetRect(&temp_rect,0,
 					-1 * (t * (num_steps - t)) / 100);
 
-				SectRect(&temp_rect,&active_area_rect,&missile_place_rect[i]);
+				IntersectRect(&missile_place_rect[i], &temp_rect, &active_area_rect);
 
 				// Now put terrain in temporary;
 				rect_draw_some_item_bmp(terrain_screen_gworld,missile_place_rect[i],
@@ -705,7 +705,8 @@ void do_explosion_anim(short sound_num,short special_draw)
 				}
 			
 			// eliminate stuff that's too gone. 
-			SectRect(&explode_place_rect[i],&ter_scrn_rect,&temp_rect);
+			IntersectRect(&temp_rect, &explode_place_rect[i], &ter_scrn_rect);
+
 			if (EqualRect(&temp_rect,&explode_place_rect[i]) == FALSE) {
 				store_booms[i].boom_type = -1;
 				}

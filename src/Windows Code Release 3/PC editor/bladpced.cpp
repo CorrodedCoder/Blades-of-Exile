@@ -36,7 +36,7 @@ Blades of Exile Game/Scenario Editor/Character Editor
 #include "edsound.h"
 #include "dlogtool.h"
 #include "edaction.h"
-#include "graphutl.h"
+#include "../graphutl.h"
 
 void check_game_done();
 void load_cursors();

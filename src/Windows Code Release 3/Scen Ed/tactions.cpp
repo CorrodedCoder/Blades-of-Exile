@@ -11,7 +11,7 @@
 #include "tfileio.h"
 #include "keydlgs.h"
 #include "townout.h"
-#include "graphutl.h"
+#include "../graphutl.h"
 #include "buttonmg.h"
 
 

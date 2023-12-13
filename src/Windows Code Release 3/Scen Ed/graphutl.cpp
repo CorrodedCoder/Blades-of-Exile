@@ -11,7 +11,7 @@
 
 #include "edsound.h"
 
-#include "graphutl.h"
+#include "../graphutl.h"
 #include "../graphutl_helpers.hpp"
 
 extern HWND mainPtr;
@@ -38,7 +38,9 @@ short dlog_pat_placed = 0;
 short current_pattern = -1;
 HPALETTE syspal = NULL;
 
-void init_palette(BYTE * lpDib)
+static DWORD GetDibInfoHeaderSize(BYTE* lpDib);
+
+static void init_palette(BYTE * lpDib)
 {
 	HDC hdc;
 	short i;
@@ -283,24 +285,11 @@ void reset_palette()
 
 }
 
-DWORD GetDibInfoHeaderSize(BYTE * lpDib)
+static DWORD GetDibInfoHeaderSize(BYTE * lpDib)
 {
-return ((BITMAPINFOHEADER *) lpDib)->biSize;
+	return ((BITMAPINFOHEADER *) lpDib)->biSize;
 }
 
-WORD GetDibWidth(BYTE * lpDib)
-{
-	if (GetDibInfoHeaderSize(lpDib) == sizeof(BITMAPCOREHEADER))
-		return (WORD) (((BITMAPCOREHEADER *) lpDib)->bcWidth);
-		else return (WORD) (((BITMAPINFOHEADER *) lpDib)->biWidth);
-}
-
-WORD GetDibHeight(BYTE * lpDib)
-{
-	if (GetDibInfoHeaderSize(lpDib) == sizeof(BITMAPCOREHEADER))
-		return (WORD) (((BITMAPCOREHEADER *) lpDib)->bcHeight);
-		else return (WORD) (((BITMAPINFOHEADER *) lpDib)->biHeight);
-}
 BYTE * GetDibBitsAddr(BYTE * lpDib)
 {
 	DWORD dwNumColors, dwColorTableSize;
@@ -412,12 +401,9 @@ short i,last_slash = -1;
 	return bmap;
 }
 
-HBITMAP load_pict(short pict_num)
+HBITMAP load_pict(short pict_num, HDC model_hdc)
 {
 	HBITMAP got_bitmap;
-	HDC model_hdc;
-
-	model_hdc = main_dc;
 
 	switch(pict_num) {
 		case 700: case 701: case 702: got_bitmap = ReadDib("STATAREA.BMP",model_hdc); break;
@@ -647,25 +633,6 @@ void DisposeGWorld(HBITMAP bitmap)
 	DeleteObject(bitmap);
 }
 
-void SectRect(RECT *a, RECT *b, RECT *c) 
-	{
-	IntersectRect(c,a,b);
-	}
-
-Boolean Button()
-{
-	MSG msg;
-
-				if (PeekMessage(&msg,mainPtr,WM_MOUSEFIRST,WM_MOUSELAST,PM_REMOVE) > 0)
-					if ((msg.message == WM_LBUTTONDOWN) || (msg.message == WM_CHAR)
-					|| (msg.message == WM_KEYDOWN))
-						return TRUE;
-				if (PeekMessage(&msg,mainPtr,WM_KEYFIRST,WM_KEYLAST,PM_REMOVE) > 0)
-					if ((msg.message == WM_LBUTTONDOWN) || (msg.message == WM_CHAR)
-					|| (msg.message == WM_KEYDOWN))
-						return TRUE;
-	return FALSE;
-}
 
 // which_mode is 0 ... dest is a bitmap
 // is 1 ... ignore dest ... paint on mainPtr

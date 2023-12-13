@@ -10,7 +10,7 @@
 #include <cstring>
 
 #include "global.h"
-#include "graphutl.h"
+#include "../graphutl.h"
 #include "../graphutl_helpers.hpp"
 #include <cstdio>
 #include "graphics.h"
@@ -1715,7 +1715,7 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 
 	switch (which_g / 100) {
 		case 0: case 1: case 2: // terrain
-			from_gworld = load_pict(800 + which_g / 50);
+			from_gworld = load_pict(800 + which_g / 50, main_dc);
 			which_g = which_g % 50;
 			from_rect = calc_rect(which_g % 10, which_g / 10);
 			if (rect.right - rect.left != 28) {
@@ -1732,7 +1732,7 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 				rect.left += 1;
 				rect.right = rect.left + 28;
 				}
-			from_gworld = load_pict(820);
+			from_gworld = load_pict(820, main_dc);
 			from_rect = calc_rect(4 * (which_g / 5), which_g % 5);
 			rect_draw_some_item_either(from_gworld,from_rect,win_or_gworld,hDlg,hdc
 			  ,rect,0,draw_dest);
@@ -1919,7 +1919,7 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 			break;
 		case 16:
 			which_g -= 1600;
-			from_gworld = load_pict(851);
+			from_gworld = load_pict(851, main_dc);
 			from_rect.right = 32;
 			from_rect.bottom = 32;
 			OffsetRect(&from_rect,32 * (which_g % 5),32 * (which_g / 5));

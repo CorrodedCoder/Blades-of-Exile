@@ -9,7 +9,7 @@
 #include <cmath>
 #include "dlogtool.h"
 #include "edsound.h"
-#include "graphutl.h"
+#include "../graphutl.h"
 #include "../graphutl_helpers.hpp"
 #include "keydlgs.h"
 
@@ -189,7 +189,7 @@ void run_startup_g()
 		pat_rect.right,pat_rect.bottom);
 	SelectObject(main_dc,old_brush);
 
-	start_g = load_pict(3002);
+	start_g = load_pict(3002, main_dc);
 	to_rect = pict_rect;
 	OffsetRect(&to_rect,-18,-30);
 	rect_draw_some_item_bmp(start_g,pict_rect,start_g,to_rect,0,1);
@@ -217,8 +217,8 @@ void load_main_screen()
 
 	ter_draw_gworld = CreateCompatibleBitmap(main_dc,terrain_rect.right,terrain_rect.bottom);
 
-	dlg_buttons_gworld = load_pict(2000);
-	mixed_gworld = load_pict(903);
+	dlg_buttons_gworld = load_pict(2000, main_dc);
+	mixed_gworld = load_pict(903, main_dc);
 
 	run_startup_g();
 
@@ -227,17 +227,17 @@ void load_main_screen()
 	OffsetRect(&world_screen,TER_RECT_UL_X,TER_RECT_UL_Y);
 
 	for (i = 0; i < 10; i++)
-		monst_gworld[i] = load_pict(1100 + i);	
+		monst_gworld[i] = load_pict(1100 + i, main_dc);
 	for (i = 0; i < 6; i++)
-		terrain_gworld[i] = load_pict(800 + i);	
-	small_terrain_gworld = load_pict(904);
-	editor_mixed = load_pict(906);
-	anim_gworld = load_pict(820);
-	field_gworld = load_pict(821);
-	talkfaces_gworld = load_pict(860);
-	items_gworld = load_pict(901);
-	tiny_obj_gworld = load_pict(900);
-	dlogpics_gworld = load_pict(850);
+		terrain_gworld[i] = load_pict(800 + i, main_dc);
+	small_terrain_gworld = load_pict(904, main_dc);
+	editor_mixed = load_pict(906, main_dc);
+	anim_gworld = load_pict(820, main_dc);
+	field_gworld = load_pict(821, main_dc);
+	talkfaces_gworld = load_pict(860, main_dc);
+	items_gworld = load_pict(901, main_dc);
+	tiny_obj_gworld = load_pict(900, main_dc);
+	dlogpics_gworld = load_pict(850, main_dc);
 	dialog_pattern_gworld = CreateCompatibleBitmap(main_dc,192,256);
 	pattern_gworld = CreateCompatibleBitmap(main_dc,192,256);
 	//draw_main_screen();

@@ -34,7 +34,10 @@ add_executable (Blades-of-Exile WIN32
 	GAMESTR.RC
 	)
 
+target_compile_definitions(Blades-of-Exile PRIVATE BOE_DEFAULT_VOLUME=32)
+
 target_link_libraries(Blades-of-Exile Winmm.lib)
+
 
 add_custom_command(
         TARGET Blades-of-Exile POST_BUILD

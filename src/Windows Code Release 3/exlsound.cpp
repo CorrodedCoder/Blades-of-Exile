@@ -92,6 +92,10 @@ void load_sounds ()
 	char snd_name[20];
 	WAVEOUTCAPS wavecaps;
 
+#ifdef BOE_DEFAULT_VOLUME
+	waveOutSetVolume(nullptr, MAKEWORD(BOE_DEFAULT_VOLUME, BOE_DEFAULT_VOLUME));
+#endif
+
 	t = waveOutGetNumDevs();
 	if (t == 0) {
 		sounds_fucked = TRUE;
