@@ -19,6 +19,14 @@
 #include "text.h"
 #include "locutils.h"
 
+// There is no great wisdom to these figures, so consider this a hack rather than anthing more
+// informed. I compared what I was seeing in terms of dialog width/height with the oldest
+// screenshots I could find and adjusted them accordingly. At some point I'd like to try
+// and understand enough about how the dialogs are being formed to do something better.
+const size_t c_boe_dialog_width_adjustment = 14;
+const size_t c_boe_dialog_height_adjustment = 18;
+
+
 extern Boolean play_sounds,cursor_shown,dialog_not_toast,block_erase;
 extern HBITMAP mixed_gworld, pc_stats_gworld, item_stats_gworld, text_area_gworld;
 extern HBITMAP storage_gworld,terrain_screen_gworld,text_bar_gworld,orig_text_bar_gworld,buttons_gworld;
@@ -412,7 +420,8 @@ short cd_create_custom_dialog(HWND parent,
 	
 	//MoveWindow(dlgs[free_slot],(windRect.right - win_width) / 2,(windRect.bottom - win_width) / 2 + 20,FALSE);	
 	//SizeWindow(dlgs[free_slot],win_width,win_height,FALSE);
-	win_height += 18;
+	win_width += c_boe_dialog_width_adjustment;
+	win_height += (18 + c_boe_dialog_height_adjustment);
 
 	MoveWindow(dlgs[free_slot],0,0,win_width,win_height,FALSE);
 	center_window(dlgs[free_slot]);
@@ -725,8 +734,8 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 
 							break;
 						}
-					win_height = max(win_height, item_rect[free_item].bottom + 28);
-					win_width = max(win_width, item_rect[free_item].right + 11);
+					win_height = max(win_height, item_rect[free_item].bottom + 28 + c_boe_dialog_height_adjustment);
+					win_width = max(win_width, item_rect[free_item].right + 11 + c_boe_dialog_width_adjustment);
 
 				}
 
