@@ -120,7 +120,11 @@ plgpl = (LOGPALETTE*) LocalLock(l);
 	LocalFree(l);
 
 	fry_dc(mainPtr,hdc);
-	SendMessage(HWND_BROADCAST,WM_SYSCOLORCHANGE,0,0);
+#ifdef REENABLE_SENDMESSAGE_CALLS
+	SendMessage(HWND_BROADCAST, WM_SYSCOLORCHANGE, 0, 0);
+#else
+	PostMessage(HWND_BROADCAST, WM_SYSCOLORCHANGE, 0, 0);
+#endif
 }
 
 // extracts and inflicts palette from given dib. WARNING ...
@@ -239,8 +243,12 @@ void inflict_palette()
 	SetSystemPaletteUse(main_dc,SYSPAL_NOSTATIC);
 	UnrealizeObject(hpal);
 	RealizePalette(main_dc);
-	SendMessage(HWND_BROADCAST,WM_SYSCOLORCHANGE,0,0);
-/*
+#ifdef REENABLE_SENDMESSAGE_CALLS
+	SendMessage(HWND_BROADCAST, WM_SYSCOLORCHANGE, 0, 0);
+#else
+	PostMessage(HWND_BROADCAST, WM_SYSCOLORCHANGE, 0, 0);
+#endif
+	/*
 	store_element_colors[0] = GetSysColor(elements[0]);
 	store_element_colors[1] = GetSysColor(elements[1]);
 	store_element_colors[2] = GetSysColor(elements[2]);
@@ -279,7 +287,11 @@ void reset_palette()
 	UnrealizeObject(hpal);
 	SelectPalette(main_dc,syspal,0);
 	RealizePalette(main_dc);
-	SendMessage(HWND_BROADCAST,WM_SYSCOLORCHANGE,0,0);
+#ifdef REENABLE_SENDMESSAGE_CALLS
+	SendMessage(HWND_BROADCAST, WM_SYSCOLORCHANGE, 0, 0);
+#else
+	PostMessage(HWND_BROADCAST, WM_SYSCOLORCHANGE, 0, 0);
+#endif
 	SetSysColors(5,elements,store_element_colors);
 
 
@@ -456,7 +468,7 @@ HBITMAP load_pict(short pict_num, HDC model_hdc)
 	return got_bitmap;
 }
 
-void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
+void rect_draw_some_item(HBITMAP src,RECT src_rect, HBITMAP dest,RECT dest_rect,
 	short trans, short main_win) {
 	HDC hdcMem,hdcMem2,hdcMem3,destDC;
 	HBITMAP transbmp;
@@ -478,7 +490,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 	SetStretchBltMode(main_dc3,STRETCH_DELETESCANS);
 
 	if (main_win == 2) {
-		destDC = (HDC) dest;
+		destDC = (HDC)dest;
 		main_win = 1;
 		dlog_draw = TRUE;
 		hdcMem = CreateCompatibleDC(destDC);
@@ -622,9 +634,6 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
  void fry_dc(HWND hwnd,HDC dc) {
 	if (ReleaseDC(hwnd,dc) == 0)
 	  //	add_string_to_buf("xx");
-		PostQuitMessage(0);
-	if (DeleteDC(dc) == 0)
-		//add_string_to_buf("yy");
 		PostQuitMessage(0);
  }
 

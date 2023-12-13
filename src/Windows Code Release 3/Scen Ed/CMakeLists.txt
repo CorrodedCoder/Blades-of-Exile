@@ -13,6 +13,14 @@ add_executable (Scen-Ed WIN32
 	buttonmg.cpp
 	../endian_adjust.cpp
 	BLSCENED.RC
+	GAMEDLOG.RC
+	STRINGS.RC
 	)
 
 target_link_libraries(Scen-Ed Winmm.lib)
+
+add_custom_command(
+        TARGET Scen-Ed POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+               "${CMAKE_CURRENT_SOURCE_DIR}"
+               "${CMAKE_CURRENT_BINARY_DIR}")
