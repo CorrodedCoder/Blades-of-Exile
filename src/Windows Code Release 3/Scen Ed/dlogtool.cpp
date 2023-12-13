@@ -618,7 +618,6 @@ short cd_kill_dialog(short dlog_num,short parent_message)
 		SetWindowPos(dlg_parent[which_dlg],HWND_TOP,0,0,100,100,
 			SWP_NOMOVE | SWP_NOSIZE | SWP_NOREDRAW);
 		// Original code was: cd_set_edit_focus(dlg_parent[which_dlg]);
-		assert(false);
 		cd_set_edit_focus(which_dlg);
 		}
 
