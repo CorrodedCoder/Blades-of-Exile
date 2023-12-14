@@ -807,6 +807,8 @@ const RECT c_source_rects[18] = {
 	BOE_INIT_RECT(115,0,127,12), BOE_INIT_RECT(115,12,127,24), BOE_INIT_RECT(115,24,127,36)
 };
 
+void draw_pc_effects_ex(HBITMAP dest_bmp, short pc, RECT dest_rect, short right_limit, short mode, short dest);
+
 void draw_pc_effects(short pc,HDC dest_dc)
 //short pc; // 10 + x -> draw for pc x, but on spell dialog  
 {
@@ -836,7 +838,11 @@ void draw_pc_effects(short pc,HDC dest_dc)
 			dest_rect.bottom += pc * 13;
 			dest_bmp = pc_stats_gworld;
 			}
-			
+	draw_pc_effects_ex(dest_bmp, pc, dest_rect, right_limit, mode, dest);
+}
+
+void draw_pc_effects_ex(HBITMAP dest_bmp, short pc, RECT dest_rect, short right_limit, short mode, short dest)
+{
 	if (adven[pc].main_status % 10 != 1)
 		return;
 			
