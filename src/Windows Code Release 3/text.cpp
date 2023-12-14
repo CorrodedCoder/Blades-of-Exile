@@ -899,14 +899,16 @@ static void draw_pc_effects_ex(HBITMAP dest_bmp, const pc_record_type& adventure
 void draw_pc_effects(short pc, HDC dest_dc)
 //short pc; // 10 + x -> draw for pc x, but on spell dialog  
 {
-	RECT dest_rect = BOE_INIT_RECT(18, 15, 30, 27), dlog_dest_rect = BOE_INIT_RECT(66, 354, 78, 366);
-	short right_limit = 250;
-	short dest = 0; // 0 - in gworld  2 - on dialog
-	short name_width, mode = 1;
-	HBITMAP dest_bmp;
-
-	if (pc >= 10) {
+	if (pc >= 10)
+	{
 		pc -= 10;
+
+		RECT dest_rect = BOE_INIT_RECT(18, 15, 30, 27), dlog_dest_rect = BOE_INIT_RECT(66, 354, 78, 366);
+		short right_limit = 250;
+		short dest = 0; // 0 - in gworld  2 - on dialog
+		short mode = 1;
+		HBITMAP dest_bmp;
+
 		right_limit = 490;
 		dest_rect = dlog_dest_rect;
 		dest = 2;
@@ -914,8 +916,16 @@ void draw_pc_effects(short pc, HDC dest_dc)
 		dest_rect.top += pc * 24 + 18;
 		dest_rect.bottom += pc * 24 + 18;
 		dest_bmp = (HBITMAP)dest_dc;
+		draw_pc_effects_ex(dest_bmp, adven[pc], dest_rect, right_limit, mode, dest);
 	}
-	else {
+	else
+	{
+		RECT dest_rect = BOE_INIT_RECT(18, 15, 30, 27);
+		short right_limit = 250;
+		short dest = 0; // 0 - in gworld  2 - on dialog
+		short name_width, mode = 1;
+		HBITMAP dest_bmp;
+
 		name_width = string_length(adven[pc].name, main_dc);
 		right_limit = pc_buttons[0][1].left - 5;
 		//dest_rect.left = pc_buttons[i][1].left - 16;
@@ -924,8 +934,8 @@ void draw_pc_effects(short pc, HDC dest_dc)
 		dest_rect.top += pc * 13;
 		dest_rect.bottom += pc * 13;
 		dest_bmp = pc_stats_gworld;
+		draw_pc_effects_ex(dest_bmp, adven[pc], dest_rect, right_limit, mode, dest);
 	}
-	draw_pc_effects_ex(dest_bmp, adven[pc], dest_rect, right_limit, mode, dest);
 }
 
 void print_party_stats() {
