@@ -1325,7 +1325,7 @@ void cd_draw_item(short dlog_num,short item_num)
 
 	// hook in special stuff. kludgy
 	if ((dlog_num == 1098) && ((item_num >= 18) && (item_num <= 23))) {
-		draw_pc_effects(10 + item_num - 18,win_dc);
+		draw_pc_effects_dc(item_num - 18,win_dc);
 		}
 
 	SelectObject(win_dc,old_font);

@@ -118,6 +118,7 @@ static void place_buy_button(short position,short pc_num,short item_num,HDC hdc)
 static void place_item_bottom_buttons();
 static void place_item_button(short which_button_to_put,short which_slot,short which_button_position,short extra_val);
 static short print_terrain(location space);
+static void draw_pc_effects_bmp(short pc, HBITMAP dest_bmp);
 
 
 static void DrawString(const char* string, short x, short y, HDC hdc)
@@ -250,7 +251,7 @@ void put_pc_screen()
 					  to_draw,0,10);
 					SetTextColor(hdc,PALETTEINDEX(c[0]));
 					SelectObject(hdc,store_bmp);
-					draw_pc_effects(i,NULL);
+					draw_pc_effects_bmp(i, pc_stats_gworld);
 					SelectObject(hdc,pc_stats_gworld);
 					break;
 				case 2:
@@ -897,7 +898,7 @@ static void draw_pc_effects_ex(HBITMAP dest_bmp, const pc_record_type& adventure
 		}	
 }
 
-static void draw_pc_effects_dc(short pc, HDC dest_dc)
+void draw_pc_effects_dc(short pc, HDC dest_dc)
 {
 	RECT dest_rect = BOE_INIT_RECT(66, 354, 78, 366);
 	dest_rect.top += pc * 24 + 18;
@@ -914,19 +915,6 @@ static void draw_pc_effects_bmp(short pc, HBITMAP dest_bmp)
 	dest_rect.top += pc * 13;
 	dest_rect.bottom += pc * 13;
 	draw_pc_effects_ex(dest_bmp, adven[pc], dest_rect, pc_buttons[0][1].left - 5, 1, 0);
-}
-
-void draw_pc_effects(short pc, HDC dest_dc)
-//short pc; // 10 + x -> draw for pc x, but on spell dialog  
-{
-	if (pc >= 10)
-	{
-		draw_pc_effects_dc(pc - 10, dest_dc);
-	}
-	else
-	{
-		draw_pc_effects_bmp(pc, pc_stats_gworld);
-	}
 }
 
 void print_party_stats() {
