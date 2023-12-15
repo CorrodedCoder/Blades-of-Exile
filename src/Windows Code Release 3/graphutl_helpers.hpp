@@ -47,8 +47,3 @@ static inline void paint_pattern_dc(HDC dest, RECT dest_rect, short which_patter
 {
 	paint_pattern(reinterpret_cast<HBITMAP>(dest), 2, dest_rect, which_pattern);
 }
-
-static inline void paint_pattern_wnd(HWND dest, RECT dest_rect, short which_pattern)
-{
-	paint_pattern(reinterpret_cast<HBITMAP>(dest), 1, dest_rect, which_pattern);
-}

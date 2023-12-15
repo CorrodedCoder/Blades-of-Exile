@@ -987,7 +987,7 @@ void put_background()
 
 	SelectClipRgn(main_dc,clip_region);
 	GetClientRect(mainPtr,&r);
-	paint_pattern_wnd(mainPtr,r,wp);
+	paint_pattern_main(r,wp);
 	undo_clip();
 
 	//ShowScrollBar(text_sbar,SB_CTL,TRUE);
