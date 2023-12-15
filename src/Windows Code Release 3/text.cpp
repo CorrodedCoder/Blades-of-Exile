@@ -809,7 +809,7 @@ const RECT c_source_rects[18] = {
 };
 
 // dest: 0 - in gworld  2 - on dialog
-static void draw_pc_effects_ex(HBITMAP dest_bmp, const pc_record_type& adventurer, const RECT& dest_rect_start, short right_limit, short mode, short dest)
+static void draw_pc_effects_ex(RectDrawDestination dest_bmp, const pc_record_type& adventurer, const RECT& dest_rect_start, short right_limit, short mode, short dest)
 {
 	RECT dest_rect{ dest_rect_start };
 
@@ -817,82 +817,82 @@ static void draw_pc_effects_ex(HBITMAP dest_bmp, const pc_record_type& adventure
 		return;
 			
 	if ((adventurer.status[0] > 0) && (dest_rect.right < right_limit)) {
-		rect_draw_some_item_bmp(mixed_gworld,c_source_rects[4],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item(mixed_gworld,c_source_rects[4],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if (adventurer.status[1] > 0) {
-		rect_draw_some_item_bmp(mixed_gworld,c_source_rects[2],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item(mixed_gworld,c_source_rects[2],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if (adventurer.status[1] < 0) {
-		rect_draw_some_item_bmp(mixed_gworld,c_source_rects[3],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item(mixed_gworld,c_source_rects[3],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if (adventurer.status[2] > 0) {
-		rect_draw_some_item_bmp(mixed_gworld,c_source_rects[(adventurer.status[2] > 4) ? 1 : 0],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item(mixed_gworld,c_source_rects[(adventurer.status[2] > 4) ? 1 : 0],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if (adventurer.status[4] > 0) {
-		rect_draw_some_item_bmp(mixed_gworld,c_source_rects[5],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item(mixed_gworld,c_source_rects[5],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if (adventurer.status[3] > 0) {
-		rect_draw_some_item_bmp(mixed_gworld,c_source_rects[6],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item(mixed_gworld,c_source_rects[6],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if (adventurer.status[3] < 0) {
-		rect_draw_some_item_bmp(mixed_gworld,c_source_rects[8],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item(mixed_gworld,c_source_rects[8],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if ((adventurer.status[5] > 0) && (dest_rect.right < right_limit)) {
-		rect_draw_some_item_bmp(mixed_gworld,c_source_rects[9],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item(mixed_gworld,c_source_rects[9],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if ((adventurer.status[6] > 0) && (dest_rect.right < right_limit)) {
-		rect_draw_some_item_bmp(mixed_gworld,c_source_rects[10],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item(mixed_gworld,c_source_rects[10],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if ((adventurer.status[7] > 0) && (dest_rect.right < right_limit)){
-		rect_draw_some_item_bmp(mixed_gworld,c_source_rects[11],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item(mixed_gworld,c_source_rects[11],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if ((adventurer.status[8] > 0) && (dest_rect.right < right_limit)){
-		rect_draw_some_item_bmp(mixed_gworld,c_source_rects[12],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item(mixed_gworld,c_source_rects[12],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if ((adventurer.status[9] > 0) && (dest_rect.right < right_limit)){
-		rect_draw_some_item_bmp(mixed_gworld,c_source_rects[13],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item(mixed_gworld,c_source_rects[13],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
 	if ((adventurer.status[10] > 0) && (dest_rect.right < right_limit)){
-		rect_draw_some_item_bmp(mixed_gworld,c_source_rects[14],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item(mixed_gworld,c_source_rects[14],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
 	if ((adventurer.status[11] > 0) && (dest_rect.right < right_limit)){
-		rect_draw_some_item_bmp(mixed_gworld,c_source_rects[15],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item(mixed_gworld,c_source_rects[15],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
 	if ((adventurer.status[12] > 0) && (dest_rect.right < right_limit)){
-		rect_draw_some_item_bmp(mixed_gworld,c_source_rects[16],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item(mixed_gworld,c_source_rects[16],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
 	if ((adventurer.status[13] > 0) && (dest_rect.right < right_limit)){
-		rect_draw_some_item_bmp(mixed_gworld,c_source_rects[17],dest_bmp,dest_rect,mode,dest);
+		rect_draw_some_item(mixed_gworld,c_source_rects[17],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
@@ -903,7 +903,7 @@ void draw_pc_effects_dc(short pc, HDC dest_dc)
 	RECT dest_rect = BOE_INIT_RECT(66, 354, 78, 366);
 	dest_rect.top += pc * 24 + 18;
 	dest_rect.bottom += pc * 24 + 18;
-	draw_pc_effects_ex(reinterpret_cast<HBITMAP>(dest_dc), adven[pc], dest_rect, 490, 0, 2);
+	draw_pc_effects_ex(dest_dc, adven[pc], dest_rect, 490, 0, 2);
 }
 
 static void draw_pc_effects_bmp(short pc, HBITMAP dest_bmp)
