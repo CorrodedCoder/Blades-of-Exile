@@ -1715,7 +1715,7 @@ void frame_dlog_rect(HWND hDlg, RECT rect, short val)
 	DeleteObject(lpen);
 }
 
-void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,short win_or_gworld)
+void draw_dialog_graphic(DialogDrawDestination hDlg, RECT rect, short which_g, Boolean do_frame,short win_or_gworld)
 // win_or_gworld: 0 - window  1 - an HBITMAP
 //    1 means hDlg is actually an HBITMAP variable!
 // 0 - 300   number of terrain graphic
@@ -1767,7 +1767,7 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 	if (win_or_gworld == 0) {
 		if (dlg_force_dc != NULL)
 			hdc = dlg_force_dc;
-			else hdc = GetDC(hDlg);
+			else hdc = GetDC(std::get<HWND>(hDlg));
 		SelectPalette(hdc,hpal,0);
 		}
 	if (which_g == 950) { // Empty. Maybe clear space.
@@ -1780,7 +1780,7 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 			}
 			//FillCRect(&rect,bg[5]);	// don't forget to nail dc!!!
 		if (dlg_force_dc == NULL)
-			fry_dc(hDlg, hdc);
+			fry_dc(std::get<HWND>(hDlg), hdc);
 		return;
 		}
 
@@ -2111,10 +2111,10 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 		}
 
 	if ((win_or_gworld == 0) && (dlg_force_dc == NULL))
-		fry_dc(hDlg, hdc);
+		fry_dc(std::get<HWND>(hDlg), hdc);
 	if ((win_or_gworld == 0) && (do_frame == TRUE)){
 		rect.bottom--; rect.right--;
-		frame_dlog_rect(hDlg,rect,3);
+		frame_dlog_rect(std::get<HWND>(hDlg),rect,3);
 		}
 }
 

@@ -83,6 +83,7 @@ if (MSVC)
 		else()
 			# This is our default settings for the builds
 			add_compile_options(
+				-ferror-limit=1000
 				# default to all warnings
 				-Wall
 
