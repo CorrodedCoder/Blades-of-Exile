@@ -14,7 +14,7 @@ static inline void rect_draw_some_item_wnd(HBITMAP src,RECT src_rect,HWND dest,R
 
 static inline void rect_draw_some_item_dc(HBITMAP src,RECT src_rect,HDC dest,RECT dest_rect, short trans, short main_win)
 {
-	rect_draw_some_item(src, src_rect, reinterpret_cast<HBITMAP>(dest), dest_rect, trans, main_win);
+	rect_draw_some_item(src, src_rect, dest, dest_rect, trans, main_win);
 }
 
 static inline void rect_draw_some_item_either(HBITMAP src,RECT src_rect,short win_or_gworld, HWND hWnd, HDC hDC,RECT dest_rect, short trans, short main_win)
