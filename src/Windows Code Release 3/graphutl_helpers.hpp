@@ -16,18 +16,6 @@ static inline void rect_draw_some_item_dc(HBITMAP src,RECT src_rect,HDC dest,REC
 	rect_draw_some_item(src, src_rect, dest, dest_rect, trans, main_win);
 }
 
-static inline void rect_draw_some_item_either(HBITMAP src,RECT src_rect,short win_or_gworld, DialogDrawDestination hWnd, HDC hDC,RECT dest_rect, short trans, short main_win)
-{
-	if(win_or_gworld == 1)
-	{
-		rect_draw_some_item_bmp(src, src_rect, std::get<HBITMAP>(hWnd), dest_rect, trans, main_win);
-	}
-	else
-	{
-		rect_draw_some_item_dc(src, src_rect, hDC, dest_rect, trans, main_win);
-	}
-}
-
 // which_mode is 0 ... dest is a bitmap
 // is 1 ... ignore dest ... paint on mainPtr
 // is 2 ... dest is a dialog, use the dialog pattern
