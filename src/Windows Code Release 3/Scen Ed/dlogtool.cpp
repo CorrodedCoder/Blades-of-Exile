@@ -1673,13 +1673,12 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 	RECT item_info_from = {174,0,312,112};
 
 	HBITMAP from_gworld;
-	short draw_dest = 2,m_start_pic;
+	short m_start_pic;
 	HDC hdc;
 	HGDIOBJ old_brush;
 	RECT small_monst_rect = {0,0,14,18};
 
-	if (win_or_gworld == 1)
-		draw_dest = 0;
+	const short draw_dest = (win_or_gworld == 1) ? 0 : 2;
 
 	if (which_g < 0)
 		return;
