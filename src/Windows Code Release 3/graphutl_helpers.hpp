@@ -40,10 +40,10 @@ static inline void paint_pattern_bmp(HBITMAP dest, RECT dest_rect, short which_p
 
 static inline void paint_pattern_main(RECT dest_rect, short which_pattern)
 {
-	paint_pattern(nullptr, 1, dest_rect, which_pattern);
+	paint_pattern(std::monostate{}, 1, dest_rect, which_pattern);
 }
 
 static inline void paint_pattern_dc(HDC dest, RECT dest_rect, short which_pattern)
 {
-	paint_pattern(reinterpret_cast<HBITMAP>(dest), 2, dest_rect, which_pattern);
+	paint_pattern(dest, 2, dest_rect, which_pattern);
 }

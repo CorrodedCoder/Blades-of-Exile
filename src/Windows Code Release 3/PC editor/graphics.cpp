@@ -318,7 +318,7 @@ void draw_main_screen()
 
 
 	// TODO: Oddity: should probably be changed to 1, but currently benign
-	paint_pattern(NULL,3,whole_win_rect,3);
+	paint_pattern(std::monostate{}, 3, whole_win_rect, 3);
 
 	dest_rec = source_rect = title_from;
 	OffsetRect(&dest_rec,20,6);

@@ -623,7 +623,7 @@ void DisposeGWorld(HBITMAP bitmap)
 // is 1 ... ignore dest ... paint on mainPtr
 // is 2 ... dest is a dialog, use the dialog pattern
 // both pattern gworlds are 192 x 256
-void paint_pattern(HBITMAP dest,short which_mode,RECT dest_rect,short which_pattern)
+void paint_pattern(PaintDrawDestination dest,short which_mode,RECT dest_rect,short which_pattern)
 {
 	HBITMAP source_pat;
 	RECT pattern_source = {32,168,96,232}, pat_dest_orig = {0,0,64,64},pat_dest;
@@ -678,13 +678,13 @@ void paint_pattern(HBITMAP dest,short which_mode,RECT dest_rect,short which_patt
 				switch (which_mode) {
 					case 0:
 						rect_draw_some_item_bmp(source_pat,draw_from,
-							dest,draw_to,0,0); break;
+							std::get<HBITMAP>(dest),draw_to,0,0); break;
 					case 1:
 						rect_draw_some_item_bmp(source_pat,draw_from,
 							source_pat,draw_to,0,1); break;
 					case 2:
-						rect_draw_some_item_bmp(source_pat,draw_from,
-							dest,draw_to,0,2); break;
+						rect_draw_some_item_dc(source_pat,draw_from,
+							std::get<HDC>(dest),draw_to,0,2); break;
 					}
 				}
 			}
