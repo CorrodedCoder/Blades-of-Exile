@@ -118,6 +118,7 @@ static void place_buy_button(short position,short pc_num,short item_num,HDC hdc)
 static void place_item_bottom_buttons();
 static void place_item_button(short which_button_to_put,short which_slot,short which_button_position,short extra_val);
 static short print_terrain(location space);
+static void draw_pc_effects_bmp(short pc, HBITMAP dest_bmp);
 
 
 static void DrawString(const char* string, short x, short y, HDC hdc)
@@ -250,7 +251,7 @@ void put_pc_screen()
 					  to_draw,0,10);
 					SetTextColor(hdc,PALETTEINDEX(c[0]));
 					SelectObject(hdc,store_bmp);
-					draw_pc_effects(i,NULL);
+					draw_pc_effects_bmp(i, pc_stats_gworld);
 					SelectObject(hdc,pc_stats_gworld);
 					break;
 				case 2:
@@ -798,130 +799,123 @@ short get_tnl(pc_record_type *pc)
 }
 
 
+const RECT c_source_rects[18] = {
+	BOE_INIT_RECT(55,0,67,12), BOE_INIT_RECT(55,12,67,24), BOE_INIT_RECT(55,24,67,36),
+	BOE_INIT_RECT(67,0,79,12), BOE_INIT_RECT(67,12,79,24), BOE_INIT_RECT(67,24,79,36),
+	BOE_INIT_RECT(79,0,91,12), BOE_INIT_RECT(79,12,91,24), BOE_INIT_RECT(79,24,91,36),
+	BOE_INIT_RECT(91,0,103,12), BOE_INIT_RECT(91,12,103,24), BOE_INIT_RECT(91,24,103,36),
+	BOE_INIT_RECT(103,0,115,12), BOE_INIT_RECT(103,12,115,24), BOE_INIT_RECT(103,24,115,36),
+	BOE_INIT_RECT(115,0,127,12), BOE_INIT_RECT(115,12,127,24), BOE_INIT_RECT(115,24,127,36)
+};
 
-void draw_pc_effects(short pc,HDC dest_dc)
-//short pc; // 10 + x -> draw for pc x, but on spell dialog  
+// dest: 0 - in gworld  2 - on dialog
+static void draw_pc_effects_ex(RectDrawDestination dest_bmp, const pc_record_type& adventurer, const RECT& dest_rect_start, short right_limit, short mode, short dest)
 {
-	const RECT source_rects[18] = {
-		BOE_INIT_RECT(55,0,67,12), BOE_INIT_RECT(55,12,67,24), BOE_INIT_RECT(55,24,67,36),
-		BOE_INIT_RECT(67,0,79,12), BOE_INIT_RECT(67,12,79,24), BOE_INIT_RECT(67,24,79,36),
-		BOE_INIT_RECT(79,0,91,12), BOE_INIT_RECT(79,12,91,24), BOE_INIT_RECT(79,24,91,36),
-		BOE_INIT_RECT(91,0,103,12), BOE_INIT_RECT(91,12,103,24), BOE_INIT_RECT(91,24,103,36),
-		BOE_INIT_RECT(103,0,115,12), BOE_INIT_RECT(103,12,115,24), BOE_INIT_RECT(103,24,115,36),
-		BOE_INIT_RECT(115,0,127,12), BOE_INIT_RECT(115,12,127,24), BOE_INIT_RECT(115,24,127,36)
-	};
-	RECT dest_rect = BOE_INIT_RECT(18, 15, 30, 27), dlog_dest_rect = BOE_INIT_RECT(66, 354, 78, 366);
-	short right_limit = 250;
-	short dest = 0; // 0 - in gworld  2 - on dialog
-	short name_width,mode = 1;
-	HBITMAP dest_bmp;
+	RECT dest_rect{ dest_rect_start };
 
-	if (pc >= 10) {
-		pc -= 10;
-		right_limit = 490;
-		dest_rect = dlog_dest_rect;
-		dest = 2;
-      mode = 0;
-		dest_rect.top += pc * 24 + 18;
-		dest_rect.bottom += pc * 24 + 18;
-		dest_bmp = (HBITMAP) dest_dc;
-		}
-		else {
-			name_width = string_length(adven[pc].name,main_dc);
-			right_limit = pc_buttons[0][1].left - 5;
-			//dest_rect.left = pc_buttons[i][1].left - 16;
-			dest_rect.left = name_width + 33;
-			dest_rect.right = dest_rect.left + 12;
-			dest_rect.top += pc * 13;
-			dest_rect.bottom += pc * 13;
-			dest_bmp = pc_stats_gworld;
-			}
-			
-	if (adven[pc].main_status % 10 != 1)
+	if (adventurer.main_status % 10 != 1)
 		return;
 			
-	if ((adven[pc].status[0] > 0) && (dest_rect.right < right_limit)) { 
-		rect_draw_some_item_bmp(mixed_gworld,source_rects[4],dest_bmp,dest_rect,mode,dest);
+	if ((adventurer.status[0] > 0) && (dest_rect.right < right_limit)) {
+		rect_draw_some_item(mixed_gworld,c_source_rects[4],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (adven[pc].status[1] > 0) { 
-		rect_draw_some_item_bmp(mixed_gworld,source_rects[2],dest_bmp,dest_rect,mode,dest);
+	if (adventurer.status[1] > 0) {
+		rect_draw_some_item(mixed_gworld,c_source_rects[2],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (adven[pc].status[1] < 0) { 
-		rect_draw_some_item_bmp(mixed_gworld,source_rects[3],dest_bmp,dest_rect,mode,dest);
+	if (adventurer.status[1] < 0) {
+		rect_draw_some_item(mixed_gworld,c_source_rects[3],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (adven[pc].status[2] > 0) { 
-		rect_draw_some_item_bmp(mixed_gworld,source_rects[(adven[pc].status[2] > 4) ? 1 : 0],dest_bmp,dest_rect,mode,dest);
+	if (adventurer.status[2] > 0) {
+		rect_draw_some_item(mixed_gworld,c_source_rects[(adventurer.status[2] > 4) ? 1 : 0],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (adven[pc].status[4] > 0) { 
-		rect_draw_some_item_bmp(mixed_gworld,source_rects[5],dest_bmp,dest_rect,mode,dest);
+	if (adventurer.status[4] > 0) {
+		rect_draw_some_item(mixed_gworld,c_source_rects[5],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (adven[pc].status[3] > 0) { 
-		rect_draw_some_item_bmp(mixed_gworld,source_rects[6],dest_bmp,dest_rect,mode,dest);
+	if (adventurer.status[3] > 0) {
+		rect_draw_some_item(mixed_gworld,c_source_rects[6],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (adven[pc].status[3] < 0) { 
-		rect_draw_some_item_bmp(mixed_gworld,source_rects[8],dest_bmp,dest_rect,mode,dest);
+	if (adventurer.status[3] < 0) {
+		rect_draw_some_item(mixed_gworld,c_source_rects[8],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((adven[pc].status[5] > 0) && (dest_rect.right < right_limit)) { 
-		rect_draw_some_item_bmp(mixed_gworld,source_rects[9],dest_bmp,dest_rect,mode,dest);
+	if ((adventurer.status[5] > 0) && (dest_rect.right < right_limit)) {
+		rect_draw_some_item(mixed_gworld,c_source_rects[9],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((adven[pc].status[6] > 0) && (dest_rect.right < right_limit)) { 
-		rect_draw_some_item_bmp(mixed_gworld,source_rects[10],dest_bmp,dest_rect,mode,dest);
+	if ((adventurer.status[6] > 0) && (dest_rect.right < right_limit)) {
+		rect_draw_some_item(mixed_gworld,c_source_rects[10],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((adven[pc].status[7] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item_bmp(mixed_gworld,source_rects[11],dest_bmp,dest_rect,mode,dest);
+	if ((adventurer.status[7] > 0) && (dest_rect.right < right_limit)){
+		rect_draw_some_item(mixed_gworld,c_source_rects[11],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((adven[pc].status[8] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item_bmp(mixed_gworld,source_rects[12],dest_bmp,dest_rect,mode,dest);
+	if ((adventurer.status[8] > 0) && (dest_rect.right < right_limit)){
+		rect_draw_some_item(mixed_gworld,c_source_rects[12],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((adven[pc].status[9] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item_bmp(mixed_gworld,source_rects[13],dest_bmp,dest_rect,mode,dest);
+	if ((adventurer.status[9] > 0) && (dest_rect.right < right_limit)){
+		rect_draw_some_item(mixed_gworld,c_source_rects[13],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
-	if ((adven[pc].status[10] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item_bmp(mixed_gworld,source_rects[14],dest_bmp,dest_rect,mode,dest);
+	if ((adventurer.status[10] > 0) && (dest_rect.right < right_limit)){
+		rect_draw_some_item(mixed_gworld,c_source_rects[14],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
-	if ((adven[pc].status[11] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item_bmp(mixed_gworld,source_rects[15],dest_bmp,dest_rect,mode,dest);
+	if ((adventurer.status[11] > 0) && (dest_rect.right < right_limit)){
+		rect_draw_some_item(mixed_gworld,c_source_rects[15],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
-	if ((adven[pc].status[12] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item_bmp(mixed_gworld,source_rects[16],dest_bmp,dest_rect,mode,dest);
+	if ((adventurer.status[12] > 0) && (dest_rect.right < right_limit)){
+		rect_draw_some_item(mixed_gworld,c_source_rects[16],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
-	if ((adven[pc].status[13] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item_bmp(mixed_gworld,source_rects[17],dest_bmp,dest_rect,mode,dest);
+	if ((adventurer.status[13] > 0) && (dest_rect.right < right_limit)){
+		rect_draw_some_item(mixed_gworld,c_source_rects[17],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
 }
 
+void draw_pc_effects_dc(short pc, HDC dest_dc)
+{
+	RECT dest_rect = BOE_INIT_RECT(66, 354, 78, 366);
+	dest_rect.top += pc * 24 + 18;
+	dest_rect.bottom += pc * 24 + 18;
+	draw_pc_effects_ex(dest_dc, adven[pc], dest_rect, 490, 0, 2);
+}
+
+static void draw_pc_effects_bmp(short pc, HBITMAP dest_bmp)
+{
+	const short name_width = string_length(adven[pc].name, main_dc);
+	RECT dest_rect = BOE_INIT_RECT(18, 15, 30, 27);
+	dest_rect.left = name_width + 33;
+	dest_rect.right = dest_rect.left + 12;
+	dest_rect.top += pc * 13;
+	dest_rect.bottom += pc * 13;
+	draw_pc_effects_ex(dest_bmp, adven[pc], dest_rect, pc_buttons[0][1].left - 5, 1, 0);
+}
 
 void print_party_stats() {
 	add_string_to_buf("PARTY STATS:");

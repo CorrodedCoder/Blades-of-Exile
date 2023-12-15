@@ -1,3 +1,9 @@
+#pragma once
+
+#include <variant>
+
+using DialogDrawDestination = std::variant<HWND, HBITMAP>;
+
 void cd_set_flag(short dlog_num,short item_num,short flag);
 void cd_erase_rect(short dlog_num,RECT to_fry);
 short cd_get_led(short dlog_num,short item_num);
@@ -39,7 +45,7 @@ short cd_get_item_id(short dlg_num, short item_num);
 void center_window(HWND window);
 RECT get_item_rect(HWND hDlg, short item_num);
 void frame_dlog_rect(HWND hDlg, RECT rect, short val);
-void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,short win_or_gworld);
+void draw_dialog_graphic(DialogDrawDestination hDlg, RECT rect, short which_g, Boolean do_frame,short win_or_gworld);
 
 inline void draw_dialog_graphic_wnd(HWND hDlg, RECT rect, short which_g, Boolean do_frame)
 {

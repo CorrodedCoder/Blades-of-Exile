@@ -459,7 +459,7 @@ HBITMAP load_pict(short pict_num, HDC model_hdc)
 	return got_bitmap;
 }
 
-void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
+void rect_draw_some_item(HBITMAP src,RECT src_rect, RectDrawDestination dest,RECT dest_rect,
 	short trans, short main_win) {
 	HDC hdcMem,hdcMem2,hdcMem3,destDC;
 	HBITMAP transbmp;
@@ -471,7 +471,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 	Boolean dlog_draw = FALSE;
 
 	if (main_win == 2) {
-		destDC = (HDC) dest;
+		destDC = std::get<HDC>(dest);
 		main_win = 1;
 		dlog_draw = TRUE;
 		hdcMem = CreateCompatibleDC(destDC);
@@ -488,7 +488,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 	if (trans != 1) {
 		if (main_win == 0) { // Not transparent, into bitmap
 			hdcMem2 = main_dc3;
-			store2 = SelectObject(hdcMem2, dest);
+			store2 = SelectObject(hdcMem2, std::get<HBITMAP>(dest));
 			/*CreateCompatibleDC(hdcMem);
 			SelectObject(hdcMem2, dest);
 			SetMapMode(hdcMem2,GetMapMode(mainPtr));
@@ -529,7 +529,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 		else {
 		if (main_win == 0) {
 			hdcMem3 = CreateCompatibleDC(hdcMem);
-			SelectObject(hdcMem3, dest);
+			SelectObject(hdcMem3, std::get<HBITMAP>(dest));
 			SetMapMode(hdcMem3,GetMapMode(GetDC(mainPtr)));
 			SelectPalette(hdcMem3,hpal,0);
 			if ((src_rect.right - src_rect.left < 72) &&
@@ -623,7 +623,7 @@ void DisposeGWorld(HBITMAP bitmap)
 // is 1 ... ignore dest ... paint on mainPtr
 // is 2 ... dest is a dialog, use the dialog pattern
 // both pattern gworlds are 192 x 256
-void paint_pattern(HBITMAP dest,short which_mode,RECT dest_rect,short which_pattern)
+void paint_pattern(PaintDrawDestination dest,short which_mode,RECT dest_rect,short which_pattern)
 {
 	HBITMAP source_pat;
 	RECT pattern_source = {32,168,96,232}, pat_dest_orig = {0,0,64,64},pat_dest;
@@ -678,13 +678,13 @@ void paint_pattern(HBITMAP dest,short which_mode,RECT dest_rect,short which_patt
 				switch (which_mode) {
 					case 0:
 						rect_draw_some_item_bmp(source_pat,draw_from,
-							dest,draw_to,0,0); break;
+							std::get<HBITMAP>(dest),draw_to,0,0); break;
 					case 1:
 						rect_draw_some_item_bmp(source_pat,draw_from,
 							source_pat,draw_to,0,1); break;
 					case 2:
-						rect_draw_some_item_bmp(source_pat,draw_from,
-							dest,draw_to,0,2); break;
+						rect_draw_some_item_dc(source_pat,draw_from,
+							std::get<HDC>(dest),draw_to,0,2); break;
 					}
 				}
 			}
