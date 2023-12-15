@@ -1724,8 +1724,6 @@ void draw_dialog_graphic(DialogDrawDestination hDlg, RECT rect, short which_g, B
 	HBITMAP from_gworld;
 	HDC hdc;
 
-	const short draw_dest = (win_or_gworld == 1) ? 0 : 2;
-
 	if (which_g < 0)
 		return;
 
@@ -1760,21 +1758,21 @@ void draw_dialog_graphic(DialogDrawDestination hDlg, RECT rect, short which_g, B
 			from_gworld = dlogpics_gworld;
 			OffsetRect(&from2,36 * (which_g % 4),36 * (which_g / 4));
 			rect_draw_some_item_either(from_gworld,from2,win_or_gworld,hDlg,hdc
-			  ,rect,0,draw_dest);
+			  ,rect,0, (win_or_gworld == 1) ? 0 : 2);
 			break;
 		case 11: // item info help
 			from_rect = item_info_from;
 			rect.right = rect.left + from_rect.right - from_rect.left;
 			rect.bottom = rect.top + from_rect.bottom - from_rect.top;
 			rect_draw_some_item_either(mixed_gworld,from_rect,win_or_gworld,hDlg,hdc
-			  ,rect,0,draw_dest);
+			  ,rect,0, (win_or_gworld == 1) ? 0 : 2);
 			break;
 		case 12: // item info help
 			from_rect = pc_info_from;
 			rect.right = rect.left + pc_info_from.right - pc_info_from.left;
 			rect.bottom = rect.top + pc_info_from.bottom - pc_info_from.top;
 			rect_draw_some_item_either(mixed_gworld,from_rect,win_or_gworld,hDlg,hdc
-			  ,rect,0,draw_dest);
+			  ,rect,0, (win_or_gworld == 1) ? 0 : 2);
 			break;
 		case 14: // button help
 			which_g -= 1400;
@@ -1783,7 +1781,7 @@ void draw_dialog_graphic(DialogDrawDestination hDlg, RECT rect, short which_g, B
 				from_rect = large_scen_from;
 				OffsetRect(&from_rect,64 * (which_g % 10),0);
 				rect_draw_some_item_either(from_gworld,from_rect,win_or_gworld,hDlg,hdc
-				  ,rect,0,draw_dest);
+				  ,rect,0, (win_or_gworld == 1) ? 0 : 2);
 				DeleteObject(from_gworld);
 				break;
 				}
@@ -1794,7 +1792,7 @@ void draw_dialog_graphic(DialogDrawDestination hDlg, RECT rect, short which_g, B
 			rect.bottom = rect.top + from_rect.bottom;
 			OffsetRect(&from_rect,0,100 * which_g);
 			rect_draw_some_item_either(from_gworld,from_rect,win_or_gworld,hDlg,hdc
-			  ,rect,0,draw_dest);
+			  ,rect,0, (win_or_gworld == 1) ? 0 : 2);
 			DeleteObject(from_gworld);
 			break;
 
@@ -1808,7 +1806,7 @@ void draw_dialog_graphic(DialogDrawDestination hDlg, RECT rect, short which_g, B
 			rect.right = rect.left + 32;
 			rect.bottom = rect.top + 32;
 			rect_draw_some_item_either(from_gworld,from_rect,win_or_gworld,hDlg,hdc
-			  ,rect,0,draw_dest);
+			  ,rect,0, (win_or_gworld == 1) ? 0 : 2);
 			DeleteObject(from_gworld);
 			break;
 
