@@ -1749,9 +1749,7 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 					Rectangle(hdc,rect.left,rect.top,rect.right,rect.bottom);
 					SelectObject(hdc,old_brush);
 					}
-				if (win_or_gworld == 1)
-					rect_draw_some_item_wnd(from_gworld,from_rect,hDlg,rect,0,0);
-					else rect_draw_some_item_dc(from_gworld,from_rect,hdc,rect,0, (win_or_gworld == 1) ? 0 : 2);
+				rect_draw_some_item_either(from_gworld,from_rect,win_or_gworld,hDlg,hdc,rect,0, (win_or_gworld == 1) ? 0 : 2);
 				}
 			if ((m_pic_index_x[which_g] == 2) && (m_pic_index_y[which_g] == 1)) {
 				rect.right = rect.left + 28; rect.bottom = rect.top + 36;
@@ -1764,19 +1762,13 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 				m_start_pic = m_start_pic % 20;
 				from_rect = calc_rect(2 * (m_start_pic / 10), m_start_pic % 10);
 				OffsetRect(&small_monst_rect,rect.left,rect.top + 7);
-
-				if (win_or_gworld == 1)
-					rect_draw_some_item_wnd(from_gworld,from_rect,hDlg,small_monst_rect,0,0);
-					else rect_draw_some_item_dc(from_gworld,from_rect,hdc,small_monst_rect,0, (win_or_gworld == 1) ? 0 : 2);
-
+				rect_draw_some_item_either(from_gworld,from_rect,win_or_gworld,hDlg,hdc,small_monst_rect,0, (win_or_gworld == 1) ? 0 : 2);
 				m_start_pic = m_pic_index[which_g] + 1;
 				from_gworld = monst_gworld[m_start_pic / 20];
 				m_start_pic = m_start_pic % 20;
 				from_rect = calc_rect(2 * (m_start_pic / 10), m_start_pic % 10);
 				OffsetRect(&small_monst_rect,14,0);
-				if (win_or_gworld == 1)
-					rect_draw_some_item_wnd(from_gworld,from_rect,hDlg,small_monst_rect,0,0);
-					else rect_draw_some_item_dc(from_gworld,from_rect,hdc,small_monst_rect,0, (win_or_gworld == 1) ? 0 : 2);
+				rect_draw_some_item_either(from_gworld,from_rect,win_or_gworld,hDlg,hdc, small_monst_rect,0, (win_or_gworld == 1) ? 0 : 2);
 				}
 			if ((m_pic_index_x[which_g] == 1) && (m_pic_index_y[which_g] == 2)) {
 				rect.right = rect.left + 28; rect.bottom = rect.top + 36;
@@ -1789,19 +1781,13 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 				m_start_pic = m_start_pic % 20;
 				from_rect = calc_rect(2 * (m_start_pic / 10), m_start_pic % 10);
 				OffsetRect(&small_monst_rect,rect.left + 7,rect.top);
-
-				if (win_or_gworld == 1)
-					rect_draw_some_item_wnd(from_gworld,from_rect,hDlg,small_monst_rect,0,0);
-					else rect_draw_some_item_dc(from_gworld,from_rect,hdc,small_monst_rect,0, (win_or_gworld == 1) ? 0 : 2);
+				rect_draw_some_item_either(from_gworld,from_rect,win_or_gworld,hDlg,hdc,small_monst_rect,0, (win_or_gworld == 1) ? 0 : 2);
 				m_start_pic = m_pic_index[which_g] + 1;
 				from_gworld = monst_gworld[m_start_pic / 20];
 				m_start_pic = m_start_pic % 20;
 				from_rect = calc_rect(2 * (m_start_pic / 10), m_start_pic % 10);
 				OffsetRect(&small_monst_rect,0,18);
-
-				if (win_or_gworld == 1)
-					rect_draw_some_item_wnd(from_gworld,from_rect,hDlg,small_monst_rect,0,0);
-					else rect_draw_some_item_dc(from_gworld,from_rect,hdc,small_monst_rect,0, (win_or_gworld == 1) ? 0 : 2);
+				rect_draw_some_item_either(from_gworld,from_rect,win_or_gworld,hDlg,hdc,small_monst_rect,0, (win_or_gworld == 1) ? 0 : 2);
 				}
 
 			if ((m_pic_index_x[which_g] == 2) && (m_pic_index_y[which_g] == 2)) {
@@ -1815,39 +1801,25 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 				m_start_pic = m_start_pic % 20;
 				from_rect = calc_rect(2 * (m_start_pic / 10), m_start_pic % 10);
 				OffsetRect(&small_monst_rect,rect.left,rect.top);
-
-				if (win_or_gworld == 1)
-					rect_draw_some_item_wnd(from_gworld,from_rect,hDlg,small_monst_rect,0,0);
-					else rect_draw_some_item_dc(from_gworld,from_rect,hdc,small_monst_rect,0, (win_or_gworld == 1) ? 0 : 2);
-
+				rect_draw_some_item_either(from_gworld,from_rect,win_or_gworld,hDlg,hdc,small_monst_rect,0, (win_or_gworld == 1) ? 0 : 2);
 				m_start_pic = m_pic_index[which_g] + 1;
 				from_gworld = monst_gworld[m_start_pic / 20];
 				m_start_pic = m_start_pic % 20;
 				from_rect = calc_rect(2 * (m_start_pic / 10), m_start_pic % 10);
 				OffsetRect(&small_monst_rect,14,0);
-
-				if (win_or_gworld == 1)
-					rect_draw_some_item_wnd(from_gworld,from_rect,hDlg,small_monst_rect,0,0);
-					else rect_draw_some_item_dc(from_gworld,from_rect,hdc,small_monst_rect,0, (win_or_gworld == 1) ? 0 : 2);
-
+				rect_draw_some_item_either(from_gworld,from_rect,win_or_gworld,hDlg,hdc,small_monst_rect,0, (win_or_gworld == 1) ? 0 : 2);
 				m_start_pic = m_pic_index[which_g] + 2;
 				from_gworld = monst_gworld[m_start_pic / 20];
 				m_start_pic = m_start_pic % 20;
 				from_rect = calc_rect(2 * (m_start_pic / 10), m_start_pic % 10);
 				OffsetRect(&small_monst_rect,-14,18);
-
-				if (win_or_gworld == 1)
-					rect_draw_some_item_wnd(from_gworld,from_rect,hDlg,small_monst_rect,0,0);
-					else rect_draw_some_item_dc(from_gworld,from_rect,hdc,small_monst_rect,0, (win_or_gworld == 1) ? 0 : 2);
+				rect_draw_some_item_either(from_gworld,from_rect,win_or_gworld,hDlg,hdc,small_monst_rect,0, (win_or_gworld == 1) ? 0 : 2);
 				m_start_pic = m_pic_index[which_g] + 3;
 				from_gworld = monst_gworld[m_start_pic / 20];
 				m_start_pic = m_start_pic % 20;
 				from_rect = calc_rect(2 * (m_start_pic / 10), m_start_pic % 10);
 				OffsetRect(&small_monst_rect,14,0);
-
-				if (win_or_gworld == 1)
-					rect_draw_some_item_wnd(from_gworld,from_rect,hDlg,small_monst_rect,0,0);
-					else rect_draw_some_item_dc(from_gworld,from_rect,hdc,small_monst_rect,0, (win_or_gworld == 1) ? 0 : 2);
+				rect_draw_some_item_either(from_gworld,from_rect,win_or_gworld,hDlg,hdc,small_monst_rect,0, (win_or_gworld == 1) ? 0 : 2);
 				}
 
 			break;
@@ -1895,9 +1867,7 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 			from_gworld = talkfaces_gworld;
 			from_rect = face_from;
 			OffsetRect(&from_rect,32 * ((which_g - 1) % 10),32 * ((which_g - 1) / 10));
-			if (win_or_gworld == 1)
-				 rect_draw_some_item_wnd(from_gworld,from_rect,hDlg,rect,0,0);
-				else rect_draw_some_item_dc(from_gworld,from_rect,hdc,rect,0, (win_or_gworld == 1) ? 0 : 2);
+			rect_draw_some_item_either(from_gworld,from_rect,win_or_gworld,hDlg,hdc,rect,0, (win_or_gworld == 1) ? 0 : 2);
 			break;
 		case 11: // item info help
 			from_rect = item_info_from;

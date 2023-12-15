@@ -11,11 +11,6 @@ static inline void rect_draw_some_item_bmp(HBITMAP src, RECT src_rect, HBITMAP d
 	rect_draw_some_item(src, src_rect, dest, dest_rect, trans, main_win);
 }
 
-static inline void rect_draw_some_item_wnd(HBITMAP src,RECT src_rect, DialogDrawDestination dest,RECT dest_rect, short trans, short main_win)
-{
-	rect_draw_some_item(src, src_rect, std::get<HBITMAP>(dest), dest_rect, trans, main_win);
-}
-
 static inline void rect_draw_some_item_dc(HBITMAP src,RECT src_rect,HDC dest,RECT dest_rect, short trans, short main_win)
 {
 	rect_draw_some_item(src, src_rect, dest, dest_rect, trans, main_win);
@@ -25,7 +20,7 @@ static inline void rect_draw_some_item_either(HBITMAP src,RECT src_rect,short wi
 {
 	if(win_or_gworld == 1)
 	{
-		rect_draw_some_item_wnd(src, src_rect, hWnd, dest_rect, trans, main_win);
+		rect_draw_some_item_bmp(src, src_rect, std::get<HBITMAP>(hWnd), dest_rect, trans, main_win);
 	}
 	else
 	{
