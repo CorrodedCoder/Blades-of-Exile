@@ -1,4 +1,3 @@
-
 if (MSVC)
 
 add_executable (Blades-of-Exile WIN32
