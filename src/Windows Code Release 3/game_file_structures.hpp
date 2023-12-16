@@ -344,7 +344,7 @@ typedef struct {
 static_assert(sizeof(outdoor_creature_type) == 30);
 
 typedef struct {
-	long age;
+	int age;
 	short gold, food;
 	unsigned char stuff_done[310][10], item_taken[200][8];
 	short light_level;
@@ -370,7 +370,7 @@ typedef struct {
 	short node_to_call[30];
 	char spec_items[50], help_received[120];
 	short m_killed[200];
-	long total_m_killed, total_dam_done, total_xp_gained, total_dam_taken;
+	int total_m_killed, total_dam_done, total_xp_gained, total_dam_taken;
 	char scen_name[256];
 } party_record_type;
 static_assert(sizeof(party_record_type) == 46400);

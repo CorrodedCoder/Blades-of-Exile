@@ -4,6 +4,7 @@
 
 #include <format>
 #include <vector>
+#include <bit>
 
 bool dump_scenario(std::ostream_iterator<char> strm, std::istream & input)
 {
