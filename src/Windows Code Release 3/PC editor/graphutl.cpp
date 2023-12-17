@@ -477,7 +477,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect, RectDrawDestination dest,REC
 		dlog_draw = TRUE;
 		hdcMem = CreateCompatibleDC(destDC);
 		SelectObject(hdcMem, src);
-		SetMapMode(hdcMem,GetMapMode(GetDC(mainPtr)));
+		SetMapMode(hdcMem,GetMapMode(destDC));
 		SelectPalette(hdcMem,hpal,0);
 		}
 		else {
@@ -531,7 +531,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect, RectDrawDestination dest,REC
 		if (main_win == 0) {
 			hdcMem3 = CreateCompatibleDC(hdcMem);
 			SelectObject(hdcMem3, std::get<HBITMAP>(dest));
-			SetMapMode(hdcMem3,GetMapMode(GetDC(mainPtr)));
+			SetMapMode(hdcMem3,GetMapMode(hdcMem));
 			SelectPalette(hdcMem3,hpal,0);
 			transbmp = CreateBitmap(src_rect.right - src_rect.left,
 						src_rect.bottom - src_rect.top,1,1,NULL);
