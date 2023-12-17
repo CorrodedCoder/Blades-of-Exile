@@ -1,4 +1,4 @@
-#include "game_file_structures.hpp"
+#include "boe/game_file_structures.hpp"
 
 #define T_M 	60
 

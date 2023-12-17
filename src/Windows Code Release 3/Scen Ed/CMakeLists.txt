@@ -11,7 +11,7 @@ add_executable (Scen-Ed WIN32
 	townout_stub.cpp
 	global.cpp
 	buttonmg.cpp
-	../endian_adjust.cpp
+	../../boe/endian_adjust.cpp
 	BLSCENED.RC
 	GAMEDLOG.RC
 	STRINGS.RC

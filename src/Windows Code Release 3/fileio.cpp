@@ -23,8 +23,8 @@
 #include "infodlgs.h"
 #include "graphutl.h"
 #include "exlsound.h"
-#include "endian_adjust.hpp"
-#include "savedata_serialization.hpp"
+#include "boe/endian_adjust.hpp"
+#include "boe/savedata_serialization.hpp"
 
 
 HWND	the_dialog;
