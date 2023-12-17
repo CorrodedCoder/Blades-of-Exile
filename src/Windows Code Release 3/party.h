@@ -1,3 +1,5 @@
+#include "boe/adventurers.hpp"
+
 void init_party(short mode);
 void init_party_scen_data();
 void make_boats() ;
@@ -27,7 +29,6 @@ Boolean spend_xp_event_filter (short item_hit);
 void do_xp_draw();
 void draw_xp_skills();
 Boolean spend_xp(short pc_num, short mode, short parent);
-short mage_lore_total();
 Boolean poison_weapon( short pc_num, short how_much,short safe);
 Boolean is_weapon(short pc_num,short item);
 void cast_spell(short type,short situation);
@@ -67,11 +68,8 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 void kill_pc(short which_pc,short type);
 void set_pc_moves();
 void take_ap(short num);
-short cave_lore_present();
-short woodsman_present();
 void init_spell_menus();
 void adjust_spell_menus();
 void print_spell_cast(short spell_num,short which);
 void update_gold_skills();
 void put_party_in_scen();
-

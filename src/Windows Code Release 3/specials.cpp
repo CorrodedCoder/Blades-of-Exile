@@ -2404,7 +2404,7 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 					*next_spec = spec.ex1b;
 			break;
 		case 153:
-			if (mage_lore_total() >= spec.ex1a)
+			if (mage_lore_total(adven) >= spec.ex1a)
 					*next_spec = spec.ex1b;
 			break;
 		case 154: // text response

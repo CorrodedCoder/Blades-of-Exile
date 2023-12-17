@@ -1412,18 +1412,6 @@ Boolean spend_xp(short pc_num, short mode, short parent)
 }
 
 
-short mage_lore_total()
-{
-	short total = 0,i;
-	
-	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == 1)
-			total += adven[i].skills[11];
-
-	return total;
-}
-
-
 Boolean poison_weapon( short pc_num, short how_much,short safe)
 //short safe; // 1 - always succeeds
 {
@@ -3625,24 +3613,6 @@ void set_pc_moves()
 void take_ap(short num)
 {
 	pc_moves[current_pc] = max(0,pc_moves[current_pc] - num);
-}
-
-short cave_lore_present()
-{
-	short i,ret = 0;
-	for (i = 0; i < 6; i++)
-		if ((adven[i].main_status == 1) && (adven[i].traits[4] > 0))
-			ret += 1;
-	return ret;
-}
-
-short woodsman_present()
-{
-	short i,ret = 0;
-	for (i = 0; i < 6; i++)
-		if ((adven[i].main_status == 1) && (adven[i].traits[5] > 0))
-			ret += 1;
-	return ret;
 }
 
 void init_spell_menus()
