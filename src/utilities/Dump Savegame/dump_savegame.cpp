@@ -1,6 +1,6 @@
 #include "dump_savegame.hpp"
-#include "../dump_game_structures.hpp"
-#include "../savedata_serialization.hpp"
+#include "boe/dump_game_structures.hpp"
+#include "boe/savedata_serialization.hpp"
 
 #include <format>
 #include <vector>

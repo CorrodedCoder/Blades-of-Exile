@@ -1,9 +1,10 @@
 #include "dump_scenario.hpp"
-#include "../dump_game_structures.hpp"
-#include "../endian_adjust.hpp"
+#include "boe/dump_game_structures.hpp"
+#include "boe/endian_adjust.hpp"
 
 #include <format>
 #include <vector>
+#include <bit>
 
 bool dump_scenario(std::ostream_iterator<char> strm, std::istream & input)
 {
@@ -69,7 +70,6 @@ bool dump_scenario(std::ostream_iterator<char> strm, std::istream & input)
 		}
 		dump_to(strm, "", "outdoor_record_type", outdoors);
 		const auto string_start_pos{ input.tellg() };
-		std::vector<char> storage;
 		for (size_t index = 0; index < std::size(outdoors.strlens); ++index)
 		{
 			const auto len = outdoors.strlens[index];

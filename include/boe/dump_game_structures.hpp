@@ -4,6 +4,8 @@
 
 #include <string>
 #include <ostream>
+#include <iterator>
+#include <format>
 
 void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const char& t);
 void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const unsigned char& t);

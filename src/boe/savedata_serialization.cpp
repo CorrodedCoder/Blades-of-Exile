@@ -1,4 +1,4 @@
-#include "savedata_serialization.hpp"
+#include "boe/savedata_serialization.hpp"
 #include <format>
 #include <cassert>
 
@@ -7,10 +7,16 @@ typedef struct {
 }	out_info_type;
 
 boe_error::boe_error(short error_code)
-	: std::exception(std::format("BOE ERROR #{}", error_code).c_str())
-	, error_code_(error_code)
+	: error_code_(error_code)
+	, what_(std::format("BOE ERROR #{}", error_code))
 {
 }
+
+const char* boe_error::what() const noexcept
+{
+	return what_.c_str();
+}
+
 
 
 static void stream_read_type(std::istream& file, auto& type)

@@ -29,6 +29,8 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 # set(BOE_DEBUG_SYMBOLS ON)
 # set(BOE_ADDRESS_SANITIZER ON)
 
+include_directories(include)
+
 if (MSVC)
 	# Disable complaints about not using MS's "secure" versions of CRT functions,
 	# largely because they aren't portable and in any case we'll be migrating such
@@ -36,36 +38,35 @@ if (MSVC)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 
 	if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+		# See the following for an explanation of this warning model:
+		#   https://stackoverflow.com/a/76990741/5751627
+
+		# Define a target property which will contain desired warning level
+		# for a target (library or executable)
+		define_property(TARGET PROPERTY MY_VS_WARNING_LEVEL
+		  BRIEF_DOCS "Warning level"
+		  FULL_DOCS "Warning level for Visual Studio compiler: 1, 2, ..."
+		  INHERITED # The property will be initialized from the directory property.
+		)
+		# Define a **directory** property with the same name
+		# It will be used via inheritance and provide default value for the target property.
+		define_property(DIRECTORY PROPERTY MY_VS_WARNING_LEVEL
+		  BRIEF_DOCS "Warning level"
+		  FULL_DOCS "Warning level for Visual Studio compiler: 1, 2, ..."
+		  INHERITED # The property will be initialized from the parent property.
+		)
+
 		if(BOE_WARNINGS_MAX)
-			add_compile_options(
-				/W4
-				# For now these are just creating too many hits for these to be practical
-				/wd4100
-				/wd4244
-			)
+			set_directory_properties(PROPERTIES MY_VS_WARNING_LEVEL 4)
 		else()
+			set_directory_properties(PROPERTIES MY_VS_WARNING_LEVEL 3)
 			# This is our default settings for the builds
-			add_compile_options(
-				# Warnings as errors
-				/WX
-				# Limit warning level to 3.
-				/W3 
-				# For now also disable the following which generate hundreds of warnings:
-				/wd4244
-				/wd4018
-				/wd4060
-				/wd4065
-				/wd4267
-				/wd4302
-				/wd4305
-				/wd4309
-				/wd4311
-				/wd4390
-				/wd4554
-				/wd4804
-				/Os
-			)
+			# Warnings as errors
+			add_compile_options(/WX /Os)
 		endif()
+
+		# Add compiler options which depends on the target property
+		add_compile_options(/W$<TARGET_PROPERTY:MY_VS_WARNING_LEVEL>)
 
 		if(BOE_DEBUG_SYMBOLS)
 			# Enable debug symbols even in release builds
@@ -77,58 +78,25 @@ if (MSVC)
 			add_compile_options(/fsanitize=address)
 		endif()
 	elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-		add_compile_options(/EHsc)
+		add_compile_options(
+			# Support C++ exceptions when using Clang under MSVC, this is not the default.
+			/EHsc
+
+			# Default warning level
+			-Wall
+			-ferror-limit=1000
+
+			# It seems required to disable this warning, but not sure why
+			# as it should know it's irrelevant to anyone specifying
+			# a later C++ standard.
+			-Wno-c++98-compat-pedantic
+			-Wno-c++20-compat
+		)
 		if(BOE_WARNINGS_MAX)
-			add_compile_options(-Wall -Wextra -Wpedantic)
+			add_compile_options(-Wextra -Wpedantic)
 		else()
-			# This is our default settings for the builds
-			add_compile_options(
-				-ferror-limit=1000
-				# default to all warnings
-				-Wall
-
-				# Warnings as errors
-				-Werror
-
-				# It seems required to disable this warning, but not sure why
-				# as it should know it's irrelevant to anyone specifying
-				# a later C++ standard.
-				-Wno-c++98-compat-pedantic
-				-Wno-c++20-compat
-
-				# Disable selective warnings from -Wall
-				-Wno-missing-variable-declarations
-				-Wno-unused-parameter
-				-Wno-old-style-cast
-				-Wno-cast-align
-				-Wno-unreachable-code-break
-				-Wno-implicit-int-conversion
-				-Wno-sign-conversion
-				-Wno-unused-but-set-variable
-				-Wno-conditional-uninitialized
-				-Wno-shadow
-				-Wno-tautological-unsigned-zero-compare
-				-Wno-sign-compare
-				-Wno-unreachable-code
-				-Wno-shorten-64-to-32
-				-Wno-tautological-value-range-compare
-				-Wno-unsafe-buffer-usage
-				-Wno-implicit-fallthrough
-
-				# Replace NULL with nullptr and we can remove the following item
-				-Wno-zero-as-null-pointer-constant
-
-				# Disable warnings that come out even without -Wall
-				-Wno-extern-initializer
-				-Wno-char-subscripts
-				-Wno-misleading-indentation
-				-Wno-constant-conversion
-				-Wno-sometimes-uninitialized
-				-Wno-empty-body
-				-Wno-parentheses
-				-Wno-tautological-overlap-compare
-				-Wno-tautological-constant-compare
-			)
+			# Warnings as errors
+			add_compile_options(-Werror)
 		endif()
 	endif()
 endif()

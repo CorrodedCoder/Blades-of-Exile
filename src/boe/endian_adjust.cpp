@@ -1,4 +1,4 @@
-#include "endian_adjust.hpp"
+#include "boe/endian_adjust.hpp"
 
 #include <bit>
 #include <utility>
@@ -79,10 +79,7 @@ static void endian_adjust(talking_node_type& talk_node)
 	endian_adjust(
 		talk_node.personality,
 		talk_node.type,
-		talk_node.extras[0],
-		talk_node.extras[1],
-		talk_node.extras[2],
-		talk_node.extras[3]
+		talk_node.extras
 		);
 }
 
@@ -167,9 +164,7 @@ static void endian_adjust(monster_record_type& monster)
 		monster.m_health,
 		monster.max_mp,
 		monster.mp,
-		monster.a[1],
-		monster.a[0],
-		monster.a[2],
+		monster.a,
 		monster.morale,
 		monster.m_morale,
 		monster.corpse_item,

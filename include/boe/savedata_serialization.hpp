@@ -5,15 +5,19 @@
 #include <ostream>
 #include <exception>
 #include <array>
+#include <string>
 
 class boe_error
 	: public std::exception
 {
-	short error_code_;
+	const short error_code_;
+	const std::string what_;
 
 public:
 	boe_error(short error_code);
-	short error_code() const { return error_code_; }
+	short error_code() const noexcept { return error_code_; }
+
+	const char* what() const noexcept override;
 };
 
 void savedata_read_all(

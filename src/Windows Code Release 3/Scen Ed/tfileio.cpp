@@ -10,7 +10,7 @@
 #include "scenario.h"
 #include "edsound.h"
 #include "../graphutl.h"
-#include "../endian_adjust.hpp"
+#include "boe/endian_adjust.hpp"
 
 extern scenario_data_type scenario;
 extern HDC main_dc;

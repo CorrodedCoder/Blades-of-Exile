@@ -919,17 +919,17 @@ static void draw_pc_effects_bmp(short pc, HBITMAP dest_bmp)
 
 void print_party_stats() {
 	add_string_to_buf("PARTY STATS:");
-	sprintf(store_string, "  Number of kills: %ld                   ", party.total_m_killed);
+	sprintf(store_string, "  Number of kills: %d                   ", party.total_m_killed);
 	add_string_to_buf( store_string);
 	if ((is_town()) || ((is_combat()) && (which_combat_type == 1))) {
 		sprintf(store_string, "  Kills in this town: %d                   ", party.m_killed[c_town.town_num]);
 		add_string_to_buf( store_string);
 		}
-	sprintf(store_string, "  Total experience: %ld                   ", party.total_xp_gained);
+	sprintf(store_string, "  Total experience: %d                   ", party.total_xp_gained);
 	add_string_to_buf( store_string);
-	sprintf(store_string, "  Total damage done: %ld                   ", party.total_dam_done);
+	sprintf(store_string, "  Total damage done: %d                   ", party.total_dam_done);
 	add_string_to_buf( store_string);
-	sprintf(store_string, "  Total damage taken: %ld                   ", party.total_dam_taken);
+	sprintf(store_string, "  Total damage taken: %d                   ", party.total_dam_taken);
 	add_string_to_buf( store_string);
 	print_buf();
 }
