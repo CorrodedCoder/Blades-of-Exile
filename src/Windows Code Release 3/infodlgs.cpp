@@ -31,7 +31,7 @@ extern const short spell_level[62];
 extern const short skill_cost[20];
 extern short skill_max[20];
 extern const short skill_g_cost[20];
-extern std::array<pc_record_type, 6> adven;
+extern Adventurers adven;
 extern short which_pc_displayed;
 extern party_record_type party;
 extern short mage_range[66];

@@ -43,7 +43,7 @@ extern long register_flag;
 extern long ed_flag,ed_key;
 extern Boolean registered,ed_reg,save_maps;
 extern short give_delays;
-extern std::array<pc_record_type, 6> adven;
+extern Adventurers adven;
 extern location center;
 extern HWND text_sbar,item_sbar,shop_sbar;
 extern Boolean modeless_exists[18];

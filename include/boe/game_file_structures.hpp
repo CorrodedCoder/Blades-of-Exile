@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+
 const auto NUM_TOWN_ITEMS = 115;
 
 typedef char Boolean;
@@ -414,3 +416,5 @@ typedef struct {
 	char outdoor_maps[100][6][48];
 } stored_outdoor_maps_type;
 static_assert(sizeof(stored_outdoor_maps_type) == 28800);
+
+using Adventurers = std::array<pc_record_type, 6>;

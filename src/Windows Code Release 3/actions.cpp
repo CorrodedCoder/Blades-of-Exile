@@ -99,7 +99,7 @@ extern party_record_type party;
 extern talking_record_type talking;
 extern scenario_data_type scenario;
 
-extern std::array<pc_record_type, 6> adven;
+extern Adventurers adven;
 extern outdoor_record_type outdoors[2][2];
 extern current_town_type	c_town;
 extern big_tr_type t_d;

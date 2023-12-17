@@ -21,7 +21,7 @@ extern party_record_type party;
 extern talking_record_type talking;
 extern scenario_data_type scenario;
 
-extern std::array<pc_record_type, 6> adven;
+extern Adventurers adven;
 extern current_town_type c_town;
 extern big_tr_type t_d;
 extern town_item_list t_i;

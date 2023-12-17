@@ -100,7 +100,7 @@ char empty_string[256] = "                                           ";
 
 extern Boolean fast_bang;
 extern party_record_type far	party;
-extern std::array<pc_record_type, 6> adven;
+extern Adventurers adven;
 extern short stat_window,overall_mode,current_pc,town_size[3],town_type;
 extern current_town_type	c_town;
 extern big_tr_type  t_d;

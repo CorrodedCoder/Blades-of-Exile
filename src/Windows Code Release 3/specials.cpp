@@ -38,7 +38,7 @@ extern outdoor_record_type outdoors[2][2];
 extern location pc_pos[6],center;
 extern Boolean in_scen_debug,belt_present,registered,processing_fields,monsters_going,suppress_stat_screen,boom_anim_active;
 extern big_tr_type  t_d;
-extern std::array<pc_record_type, 6> adven;
+extern Adventurers adven;
 extern effect_pat_type current_pat;
 extern town_item_list 	t_i;
 extern out_wandering_type store_wandering_special;
