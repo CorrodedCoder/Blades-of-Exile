@@ -2829,7 +2829,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 					update_explored(party.p_loc);
 					initiate_redraw();
 					print_buf();
-					if ((cave_lore_present(adven) > 0) && (get_ran(1,0,1) == 0))
+					if (cave_lore_present(adven) && (get_ran(1,0,1) == 0))
 						add_string_to_buf("  (No supplies lost.)");
 						else if (party.food > 1800)
 							party.food -= 50;

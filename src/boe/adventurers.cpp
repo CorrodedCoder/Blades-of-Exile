@@ -1,21 +1,21 @@
 #include "boe/adventurers.hpp"
 
-short cave_lore_present(const Adventurers& adven)
+bool cave_lore_present(const Adventurers& adven)
 {
-	short i, ret = 0;
+	short i;
 	for (i = 0; i < 6; i++)
 		if ((adven[i].main_status == 1) && (adven[i].traits[4] > 0))
-			ret += 1;
-	return ret;
+			return true;
+	return false;
 }
 
-short woodsman_present(const Adventurers& adven)
+bool woodsman_present(const Adventurers& adven)
 {
-	short i, ret = 0;
+	short i;
 	for (i = 0; i < 6; i++)
 		if ((adven[i].main_status == 1) && (adven[i].traits[5] > 0))
-			ret += 1;
-	return ret;
+			return true;
+	return false;
 }
 
 short mage_lore_total(const Adventurers& adven)
