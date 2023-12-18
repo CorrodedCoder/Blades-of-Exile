@@ -10,12 +10,7 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(Catch2)
 
-add_executable(tests
-	../src/boe/adventurers.cpp
-	unit/test_adventurers.cpp
-)
-target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
-
 include(CTest)
 include(Catch)
-catch_discover_tests(tests)
+
+add_subdirectory(unit)
