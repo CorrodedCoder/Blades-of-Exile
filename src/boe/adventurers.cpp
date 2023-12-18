@@ -1,30 +1,23 @@
 #include "boe/adventurers.hpp"
+#include <algorithm>
+#include <numeric>
 
 bool cave_lore_present(const Adventurers& adven)
 {
-	short i;
-	for (i = 0; i < 6; i++)
-		if ((adven[i].main_status == 1) && (adven[i].traits[4] > 0))
-			return true;
-	return false;
+	return std::ranges::any_of(adven, [](const auto& adventurer) { return (adventurer.main_status == 1) && (adventurer.traits[4] > 0); });
 }
 
 bool woodsman_present(const Adventurers& adven)
 {
-	short i;
-	for (i = 0; i < 6; i++)
-		if ((adven[i].main_status == 1) && (adven[i].traits[5] > 0))
-			return true;
-	return false;
+	return std::ranges::any_of(adven, [](const auto& adventurer) { return (adventurer.main_status == 1) && (adventurer.traits[5] > 0); });
 }
 
 short mage_lore_total(const Adventurers& adven)
 {
-	short total = 0, i;
-
-	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == 1)
-			total += adven[i].skills[11];
-
-	return total;
+	auto pc_mage_lore = [](short total, const auto& adventurer) { return (adventurer.main_status == 1) ? adventurer.skills[11] + total : total; };
+#if __cpp_lib_ranges_fold
+	return std::ranges::fold_left(adven, static_cast<short>(0), pc_mage_lore);
+#else
+	return std::reduce(std::begin(adven), std::end(adven), static_cast<short>(0), pc_mage_lore);
+#endif
 }
