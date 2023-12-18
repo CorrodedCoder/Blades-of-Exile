@@ -122,3 +122,68 @@ TEST_CASE("pc_cure", "[pc]")
 		}
 	}
 }
+
+TEST_CASE("pc_restore_sp", "[pc]")
+{
+	SECTION("Restoring zero spellpoints has no effect") {
+		pc_record_type pc{};
+		pc.main_status = 1; pc.cur_sp = 4; pc.max_sp = 8;
+		const pc_record_type before{ pc };
+		pc_restore_sp(pc, 0);
+		REQUIRE(before == pc);
+	}
+	SECTION("Restoring spellpoints when already at max spellpoints has no effect") {
+		pc_record_type pc{};
+		pc.main_status = 1; pc.cur_sp = 8; pc.max_sp = 8;
+		const pc_record_type before{ pc };
+		pc_restore_sp(pc, 5);
+		REQUIRE(before == pc);
+	}
+	SECTION("Restoring spellpoints when at more than max spellpoints has no effect") {
+		pc_record_type pc{};
+		pc.main_status = 1; pc.cur_sp = 9; pc.max_sp = 8;
+		const pc_record_type before{ pc };
+		pc_restore_sp(pc, 1);
+		REQUIRE(before == pc);
+	}
+	SECTION("Restoring spellpoints by two increases the amount correctly") {
+		pc_record_type pc{};
+		pc.main_status = 1; pc.cur_sp = 4; pc.max_sp = 8;
+		pc_restore_sp(pc, 2);
+		pc_record_type expected{};
+		expected.main_status = 1; expected.cur_sp = 6; expected.max_sp = 8;
+		REQUIRE(expected == pc);
+	}
+	SECTION("Restoring spellpoints by two does not increases the amount even if status is not 1") {
+		pc_record_type pc{};
+		pc.cur_sp = 4; pc.max_sp = 8;
+		pc_restore_sp(pc, 2);
+		pc_record_type expected{};
+		expected.cur_sp = 6; expected.max_sp = 8;
+		REQUIRE(expected == pc);
+	}
+	SECTION("Restoring spellpoints by more than max increases the amount only up to max") {
+		pc_record_type pc{};
+		pc.main_status = 1; pc.cur_sp = 4; pc.max_sp = 8;
+		pc_restore_sp(pc, 6);
+		pc_record_type expected{};
+		expected.main_status = 1; expected.cur_sp = 8; expected.max_sp = 8;
+		REQUIRE(expected == pc);
+	}
+	SECTION("Restoring spellpoints for pc with different levels of spellpoints") {
+		for (size_t index = 0; index < 6; ++index)
+		{
+			pc_record_type pc{};
+			pc.main_status = 1;
+			pc.cur_sp = static_cast<short>(4 + index);
+			pc.max_sp = static_cast<short>(8 + index);
+			pc_restore_sp(pc, 7);
+			pc_record_type expected{};
+			expected.main_status = 1;
+			expected.max_sp = static_cast<short>(8 + index);
+			expected.cur_sp = std::min(static_cast<short>(7 + 4 + index), pc.max_sp);
+			REQUIRE(expected == pc);
+		}
+	}
+}
+

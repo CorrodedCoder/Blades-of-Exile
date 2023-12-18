@@ -207,3 +207,72 @@ TEST_CASE("adventurers_cure", "[adventurers]")
 		REQUIRE(before == adventurers);
 	}
 }
+
+TEST_CASE("adventurers_restore_sp", "[adventurers]")
+{
+	SECTION("Restoring zero spellpoints has no effect") {
+		Adventurers adventurers{};
+		for (auto& pc : adventurers) { pc.main_status = 1; pc.cur_sp = 4; pc.max_sp = 8; }
+		const Adventurers before{ adventurers };
+		adventurers_restore_sp(adventurers, 0);
+		REQUIRE(before == adventurers);
+	}
+	SECTION("Restoring spellpoints when already at max spellpoints has no effect") {
+		Adventurers adventurers{};
+		for (auto& pc : adventurers) { pc.main_status = 1; pc.cur_sp = 8; pc.max_sp = 8; }
+		const Adventurers before{ adventurers };
+		adventurers_restore_sp(adventurers, 5);
+		REQUIRE(before == adventurers);
+	}
+	SECTION("Restoring spellpoints when at more than max spellpoints has no effect") {
+		Adventurers adventurers{};
+		for (auto& pc : adventurers) { pc.main_status = 1; pc.cur_sp = 9; pc.max_sp = 8; }
+		const Adventurers before{ adventurers };
+		adventurers_restore_sp(adventurers, 1);
+		REQUIRE(before == adventurers);
+	}
+	SECTION("Restoring spellpoints by two increases the amount correctly") {
+		Adventurers adventurers{};
+		for (auto& pc : adventurers) { pc.main_status = 1; pc.cur_sp = 4; pc.max_sp = 8; }
+		adventurers_restore_sp(adventurers, 2);
+		Adventurers expected{};
+		for (auto& pc : expected) { pc.main_status = 1; pc.cur_sp = 6; pc.max_sp = 8; }
+		REQUIRE(expected == adventurers);
+	}
+	SECTION("Restoring spellpoints by two does not increases the amount if status is not 1") {
+		Adventurers adventurers{};
+		for (auto& pc : adventurers) { pc.cur_sp = 4; pc.max_sp = 8; }
+		adventurers_restore_sp(adventurers, 2);
+		Adventurers expected{};
+		for (auto& pc : expected) { pc.cur_sp = 4; pc.max_sp = 8; }
+		REQUIRE(expected == adventurers);
+	}
+	SECTION("Restoring spellpoints by more than max increases the amount only up to max") {
+		Adventurers adventurers{};
+		for (auto& pc : adventurers) { pc.main_status = 1; pc.cur_sp = 4; pc.max_sp = 8; }
+		adventurers_restore_sp(adventurers, 6);
+		Adventurers expected{};
+		for (auto& pc : expected) { pc.main_status = 1; pc.cur_sp = 8; pc.max_sp = 8; }
+		REQUIRE(expected == adventurers);
+	}
+	SECTION("Restoring spellpoints for adventurers with different levels of spellpoints") {
+		Adventurers adventurers{};
+		for (size_t index = 0; index < std::size(adventurers); ++index)
+		{
+			auto& pc = adventurers[index];
+			pc.main_status = 1;
+			pc.cur_sp = static_cast<short>(4 + index);
+			pc.max_sp = static_cast<short>(8 + index);
+		}
+		adventurers_restore_sp(adventurers, 7);
+		Adventurers expected{};
+		for (size_t index = 0; index < std::size(expected); ++index)
+		{
+			auto& pc = expected[index];
+			pc.main_status = 1;
+			pc.max_sp = static_cast<short>(8 + index);
+			pc.cur_sp = std::min(static_cast<short>(7 + 4 + index), pc.max_sp);
+		}
+		REQUIRE(expected == adventurers);
+	}
+}

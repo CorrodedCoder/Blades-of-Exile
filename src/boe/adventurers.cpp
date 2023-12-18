@@ -38,10 +38,12 @@ bool adventurers_cure(Adventurers& adventurers, short amt)
 
 void adventurers_restore_sp(Adventurers& adventurers, short amt)
 {
-	short i;
-
-	for (i = 0; i < 6; i++)
-		if (adventurers[i].main_status == 1)
-			pc_restore_sp(adventurers[i], amt);
+	for (auto& pc : adventurers)
+	{
+		if (pc.main_status == 1)
+		{
+			pc_restore_sp(pc, amt);
+		}
+	}
 }
 
