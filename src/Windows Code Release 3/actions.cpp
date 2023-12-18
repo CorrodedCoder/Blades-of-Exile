@@ -2403,7 +2403,7 @@ void increase_age()
 	for (i = 0; i < 6; i++) 
 		if (adven[i].main_status == 1) {
 			if ((adven[i].traits[9] > 0) && (get_ran(1,0,10) == 1) && (adven[i].cur_health < adven[i].max_health)) {
-				heal_pc(adven[i],2);
+				pc_heal(adven[i],2);
 				update_stat = TRUE;
 				}
 			if ((adven[i].traits[13] > 0) && (get_ran(1,0,110) == 1)) {
@@ -2428,7 +2428,7 @@ void increase_age()
 					if (adven[i].items[item].ability_strength / 3 == 0)
 						j = get_ran(1,0,1);
 					if (is_out()) j = j * 4;
-					heal_pc(adven[i],j);	
+					pc_heal(adven[i],j);	
 					update_stat = TRUE;
 					}
 			}

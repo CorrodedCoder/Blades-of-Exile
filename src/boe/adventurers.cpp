@@ -27,7 +27,7 @@ void heal_party(Adventurers& adventurers, short amt)
 {
 	for (auto& pc : adventurers)
 	{
-		heal_pc(pc, amt);
+		pc_heal(pc, amt);
 	}
 }
 

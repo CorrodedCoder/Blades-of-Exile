@@ -1869,7 +1869,7 @@ void do_priest_spell(short pc_num,short spell_num)
 						r1 = get_ran(2 + 2 * (spell_num / 6), 1, 4);
 						sprintf(c_line, "  %s healed %d.   ",
 						 adven[target].name,r1);
-						heal_pc(adven[target],r1);
+						pc_heal(adven[target],r1);
 					one_sound(52);
 					break;
 
@@ -1972,7 +1972,7 @@ void do_priest_spell(short pc_num,short spell_num)
 				if (spell_num == 47) {
 						sprintf(c_line, "  %s healed.         ",
 							adven[target].name);
-						heal_pc(adven[target],250);
+						pc_heal(adven[target],250);
 						adven[target].status[2] = 0;
 						one_sound(-53); one_sound(52);
 					}
@@ -3520,7 +3520,7 @@ void kill_pc(short which_pc,short type)
 			else {
 				add_string_to_buf("  Life saved!              ");
 				take_item(which_pc,i);
-				heal_pc(adven[which_pc],200);
+				pc_heal(adven[which_pc],200);
 			}
 	if (adven[current_pc].main_status != 1)
 		current_pc = first_active_pc();

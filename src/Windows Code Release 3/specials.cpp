@@ -662,10 +662,10 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 			case 84:
 				switch (type) {
 					case 0: 
-					case 1: ASB("  You feel wonderful!"); heal_pc(adven[pc],str * 20); affect_pc(pc,1,str); break;
+					case 1: ASB("  You feel wonderful!"); pc_heal(adven[pc],str * 20); affect_pc(pc,1,str); break;
 					case 2:
 					case 3: ASB("  Everyone feels wonderful!"); for (i = 0; i < 6; i++) {
-								heal_pc(adven[i],str * 20); affect_pc(i,1,str); } break;
+								pc_heal(adven[i],str * 20); affect_pc(i,1,str); } break;
 					}
 				break;
 			case 85:
@@ -687,7 +687,7 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 				break;
 			case 87:
 				switch (type) {
-					case 0: ASB("  You feel better."); heal_pc(adven[pc],str * 20); break;
+					case 0: ASB("  You feel better."); pc_heal(adven[pc],str * 20); break;
 					case 1: ASB("  You feel sick."); damage_pc(pc,20 * str,4,0); break;
 					case 2: ASB("  You all feel better."); heal_party(adven, str * 20); break;
 					case 3: ASB("  You all feel sick."); hit_party(20 * str,4); break;
@@ -735,7 +735,7 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 			case 94:
 				switch (type) {
 					case 0: 
-					case 1: ASB("  You feel wonderful."); heal_pc(adven[pc],200); cure_pc(adven[pc],8); break;
+					case 1: ASB("  You feel wonderful."); pc_heal(adven[pc],200); cure_pc(adven[pc],8); break;
 					case 2:
 					case 3: ASB("  You all feel wonderful."); heal_party(adven, 200); cure_party(adven, 8); break;
 					}

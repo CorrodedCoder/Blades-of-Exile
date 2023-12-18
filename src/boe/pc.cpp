@@ -1,7 +1,7 @@
 #include "boe/pc.hpp"
 #include <algorithm>
 
-void heal_pc(pc_record_type& pc, short amt)
+void pc_heal(pc_record_type& pc, short amt)
 {
 	if ((pc.main_status == 1) && (pc.cur_health < pc.max_health))
 	{

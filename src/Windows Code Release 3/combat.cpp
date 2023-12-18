@@ -704,7 +704,7 @@ void pc_attack(short who_att,short target)
 				}
 			if ((adven[who_att].items[weap1].ability == 10) && (get_ran(1,0,1) == 1)) {
 				add_string_to_buf("  Blade drains life.             ");
-				heal_pc(adven[who_att],adven[who_att].items[weap1].ability_strength / 2);
+				pc_heal(adven[who_att],adven[who_att].items[weap1].ability_strength / 2);
 				}
 			}
 			else {
@@ -764,7 +764,7 @@ void pc_attack(short who_att,short target)
 				}
 			if ((adven[who_att].items[weap2].ability == 10) && (get_ran(1,0,1) == 1)) {
 				add_string_to_buf("  Blade drains life.             ");
-				heal_pc(adven[who_att],adven[who_att].items[weap2].ability_strength / 2);
+				pc_heal(adven[who_att],adven[who_att].items[weap2].ability_strength / 2);
 				}
 
 			}
@@ -1709,7 +1709,7 @@ void combat_run_monst()
 				party.stuff_done[305][0] = move_to_zero(party.stuff_done[305][0]);
 				if ((item = pc_has_abil_equip(i,50)) < 24) {
 					update_stat = TRUE;
-					heal_pc(adven[i],get_ran(1,0,adven[i].items[item].item_level + 1));
+					pc_heal(adven[i],get_ran(1,0,adven[i].items[item].item_level + 1));
 					}	
 				}
 		for (i = 0; i < 6; i++) 
@@ -4364,7 +4364,7 @@ Boolean combat_cast_priest_spell()
 							sprintf(c_line, "  %s is an avatar! ",
 								 adven[current_pc].name);
 							add_string_to_buf( c_line);	
-							heal_pc(adven[current_pc],200);
+							pc_heal(adven[current_pc],200);
 							cure_pc(adven[current_pc],8);
 							adven[current_pc].status[1] = 8;
 							adven[current_pc].status[3] = 8;
