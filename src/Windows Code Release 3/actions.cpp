@@ -532,7 +532,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 							if (i == 50) {
 								party.age += 1200;////
 								add_string_to_buf("  Rest successful.                ");
-								heal_party(get_ran(5,1,10));
+								heal_party(adven, get_ran(5,1,10));
 								restore_sp_party(50);
 								put_pc_screen();
 								}
@@ -2371,7 +2371,7 @@ void increase_age()
 				for (i = 0; i < 6; i++)
 					if ((adven[i].main_status == 1) && (adven[i].cur_health < adven[i].max_health))
 						update_stat = TRUE;
-				heal_party(2);
+				heal_party(adven, 2);
 				}
 			}
 		else {
@@ -2379,7 +2379,7 @@ void increase_age()
 				for (i = 0; i < 6; i++)
 					if ((adven[i].main_status == 1) && (adven[i].cur_health < adven[i].max_health))
 						update_stat = TRUE;
-				heal_party(1);
+				heal_party(adven, 1);
 				}
 			}
 	if (is_out()) {
@@ -2403,7 +2403,7 @@ void increase_age()
 	for (i = 0; i < 6; i++) 
 		if (adven[i].main_status == 1) {
 			if ((adven[i].traits[9] > 0) && (get_ran(1,0,10) == 1) && (adven[i].cur_health < adven[i].max_health)) {
-				heal_pc(i,2);
+				heal_pc(adven[i],2);
 				update_stat = TRUE;
 				}
 			if ((adven[i].traits[13] > 0) && (get_ran(1,0,110) == 1)) {
@@ -2428,7 +2428,7 @@ void increase_age()
 					if (adven[i].items[item].ability_strength / 3 == 0)
 						j = get_ran(1,0,1);
 					if (is_out()) j = j * 4;
-					heal_pc(i,j);	
+					heal_pc(adven[i],j);	
 					update_stat = TRUE;
 					}
 			}

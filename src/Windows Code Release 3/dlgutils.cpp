@@ -782,7 +782,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 					talk_end_forced = TRUE;
 					party.gold -= a;
 					put_pc_screen();
-					heal_party(30 * b);
+					heal_party(adven, 30 * b);
 					restore_sp_party(25 * b);
 					party.age += 700;
 					c_town.p_loc.x = c;

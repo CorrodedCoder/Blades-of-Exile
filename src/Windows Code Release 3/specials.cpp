@@ -662,10 +662,10 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 			case 84:
 				switch (type) {
 					case 0: 
-					case 1: ASB("  You feel wonderful!"); heal_pc(pc,str * 20); affect_pc(pc,1,str); break;
+					case 1: ASB("  You feel wonderful!"); heal_pc(adven[pc],str * 20); affect_pc(pc,1,str); break;
 					case 2:
 					case 3: ASB("  Everyone feels wonderful!"); for (i = 0; i < 6; i++) {
-								heal_pc(i,str * 20); affect_pc(i,1,str); } break;
+								heal_pc(adven[i],str * 20); affect_pc(i,1,str); } break;
 					}
 				break;
 			case 85:
@@ -687,9 +687,9 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 				break;
 			case 87:
 				switch (type) {
-					case 0: ASB("  You feel better."); heal_pc(pc,str * 20); break;
+					case 0: ASB("  You feel better."); heal_pc(adven[pc],str * 20); break;
 					case 1: ASB("  You feel sick."); damage_pc(pc,20 * str,4,0); break;
-					case 2: ASB("  You all feel better."); heal_party(str * 20); break;
+					case 2: ASB("  You all feel better."); heal_party(adven, str * 20); break;
 					case 3: ASB("  You all feel sick."); hit_party(20 * str,4); break;
 					}
 				break;
@@ -735,9 +735,9 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 			case 94:
 				switch (type) {
 					case 0: 
-					case 1: ASB("  You feel wonderful."); heal_pc(pc,200); cure_pc(pc,8); break;
+					case 1: ASB("  You feel wonderful."); heal_pc(adven[pc],200); cure_pc(pc,8); break;
 					case 2:
-					case 3: ASB("  You all feel wonderful."); heal_party(200); cure_party(8); break;
+					case 3: ASB("  You all feel wonderful."); heal_party(adven, 200); cure_party(8); break;
 					}
 				break;
 				
@@ -1828,7 +1828,7 @@ void general_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 		case 25:
 					check_mess = TRUE;
 					party.age += spec.ex1a;
-					heal_party(spec.ex1b); restore_sp_party(spec.ex1b);
+					heal_party(adven, spec.ex1b); restore_sp_party(spec.ex1b);
 			break;
 		case 26:
 			if (which_mode != 13)
