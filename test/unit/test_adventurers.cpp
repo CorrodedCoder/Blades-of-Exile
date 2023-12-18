@@ -120,33 +120,33 @@ TEST_CASE("mage_lore_total", "[adventurers]")
 	}
 }
 
-TEST_CASE("heal_party", "[adventurers]")
+TEST_CASE("adventurers_heal", "[adventurers]")
 {
 	SECTION("Healing zero has no effect") {
 		Adventurers adventurers{};
 		for (auto& pc : adventurers) { pc.main_status = 1; pc.cur_health = 4; pc.max_health = 8; }
 		const Adventurers before{ adventurers };
-		heal_party(adventurers, 0);
+		adventurers_heal(adventurers, 0);
 		REQUIRE(before == adventurers);
 	}
 	SECTION("Healing when already at max health has no effect") {
 		Adventurers adventurers{};
 		for (auto& pc : adventurers) { pc.main_status = 1; pc.cur_health = 8; pc.max_health = 8; }
 		const Adventurers before{ adventurers };
-		heal_party(adventurers, 5);
+		adventurers_heal(adventurers, 5);
 		REQUIRE(before == adventurers);
 	}
 	SECTION("Healing when at more than max health has no effect") {
 		Adventurers adventurers{};
 		for (auto& pc : adventurers) { pc.main_status = 1; pc.cur_health = 9; pc.max_health = 8; }
 		const Adventurers before{ adventurers };
-		heal_party(adventurers, 1);
+		adventurers_heal(adventurers, 1);
 		REQUIRE(before == adventurers);
 	}
 	SECTION("Healing by two increases the amount correctly") {
 		Adventurers adventurers{};
 		for (auto& pc : adventurers) { pc.main_status = 1; pc.cur_health = 4; pc.max_health = 8; }
-		heal_party(adventurers, 2);
+		adventurers_heal(adventurers, 2);
 		Adventurers expected{};
 		for (auto& pc : expected) { pc.main_status = 1; pc.cur_health = 6; pc.max_health = 8; }
 		REQUIRE(expected == adventurers);
@@ -154,7 +154,7 @@ TEST_CASE("heal_party", "[adventurers]")
 	SECTION("Healing by two does not increases the amount if status is not 1") {
 		Adventurers adventurers{};
 		for (auto& pc : adventurers) { pc.cur_health = 4; pc.max_health = 8; }
-		heal_party(adventurers, 2);
+		adventurers_heal(adventurers, 2);
 		Adventurers expected{};
 		for (auto& pc : expected) { pc.cur_health = 4; pc.max_health = 8; }
 		REQUIRE(expected == adventurers);
@@ -162,7 +162,7 @@ TEST_CASE("heal_party", "[adventurers]")
 	SECTION("Healing by more than max increases the amount only up to max") {
 		Adventurers adventurers{};
 		for (auto& pc : adventurers) { pc.main_status = 1; pc.cur_health = 4; pc.max_health = 8; }
-		heal_party(adventurers, 6);
+		adventurers_heal(adventurers, 6);
 		Adventurers expected{};
 		for (auto& pc : expected) { pc.main_status = 1; pc.cur_health = 8; pc.max_health = 8; }
 		REQUIRE(expected == adventurers);
@@ -176,7 +176,7 @@ TEST_CASE("heal_party", "[adventurers]")
 			pc.cur_health = static_cast<short>(4 + index);
 			pc.max_health = static_cast<short>(8 + index);
 		}
-		heal_party(adventurers, 7);
+		adventurers_heal(adventurers, 7);
 		Adventurers expected{};
 		for (size_t index = 0; index < std::size(expected); ++index)
 		{

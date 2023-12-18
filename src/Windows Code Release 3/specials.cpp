@@ -689,7 +689,7 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 				switch (type) {
 					case 0: ASB("  You feel better."); pc_heal(adven[pc],str * 20); break;
 					case 1: ASB("  You feel sick."); damage_pc(pc,20 * str,4,0); break;
-					case 2: ASB("  You all feel better."); heal_party(adven, str * 20); break;
+					case 2: ASB("  You all feel better."); adventurers_heal(adven, str * 20); break;
 					case 3: ASB("  You all feel sick."); hit_party(20 * str,4); break;
 					}
 				break;
@@ -737,7 +737,7 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 					case 0: 
 					case 1: ASB("  You feel wonderful."); pc_heal(adven[pc],200); cure_pc(adven[pc],8); break;
 					case 2:
-					case 3: ASB("  You all feel wonderful."); heal_party(adven, 200); cure_party(adven, 8); break;
+					case 3: ASB("  You all feel wonderful."); adventurers_heal(adven, 200); cure_party(adven, 8); break;
 					}
 				break;
 				
@@ -1828,7 +1828,7 @@ void general_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 		case 25:
 					check_mess = TRUE;
 					party.age += spec.ex1a;
-					heal_party(adven, spec.ex1b); restore_sp_party(spec.ex1b);
+					adventurers_heal(adven, spec.ex1b); restore_sp_party(spec.ex1b);
 			break;
 		case 26:
 			if (which_mode != 13)

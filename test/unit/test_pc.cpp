@@ -3,7 +3,7 @@
 
 #include "boe/pc.hpp"
 
-TEST_CASE("heal_pc", "[pc]")
+TEST_CASE("pc_heal", "[pc]")
 {
 	SECTION("Healing zero has no effect") {
 		pc_record_type pc{};

@@ -2049,14 +2049,14 @@ void do_priest_spell(short pc_num,short spell_num)
 			if (spell_num < 54) {
 				sprintf(c_line, "  Party healed %d.       ", r1);
 				add_string_to_buf( c_line);	
-				heal_party(adven, r1);
+				adventurers_heal(adven, r1);
 				play_sound(52);
 				}
 				else if (spell_num == 54) {
 				sprintf(c_line, "  Party revived.     ");
 				add_string_to_buf( c_line);	
 				r1 = r1 * 2;
-				heal_party(adven, r1);
+				adventurers_heal(adven, r1);
 				play_sound(-53);	
 				play_sound(-52);
 				cure_party(adven, 3 + adj);

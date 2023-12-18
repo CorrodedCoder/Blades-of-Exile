@@ -23,7 +23,7 @@ short mage_lore_total(const Adventurers& adven)
 #endif
 }
 
-void heal_party(Adventurers& adventurers, short amt)
+void adventurers_heal(Adventurers& adventurers, short amt)
 {
 	for (auto& pc : adventurers)
 	{
