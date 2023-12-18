@@ -15,7 +15,7 @@ bool pc_cure(pc_record_type& pc, short amt)
 	{
 		return false;
 	}
-	pc.status[2] = std::max(pc.status[2] - amt, 0);
+	pc.status[2] = std::max(static_cast<short>(pc.status[2] - amt), static_cast<short>(0));
 	return true;
 }
 

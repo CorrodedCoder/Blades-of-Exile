@@ -15,7 +15,7 @@ bool woodsman_present(const Adventurers& adven)
 
 short mage_lore_total(const Adventurers& adven)
 {
-	auto pc_mage_lore = [](short total, const auto& adventurer) { return (adventurer.main_status == 1) ? adventurer.skills[11] + total : total; };
+	auto pc_mage_lore = [](short total, const auto& adventurer) { return (adventurer.main_status == 1) ? static_cast<short>(adventurer.skills[11] + total) : total; };
 #if __cpp_lib_ranges_fold
 	return std::ranges::fold_left(adven, static_cast<short>(0), pc_mage_lore);
 #else
