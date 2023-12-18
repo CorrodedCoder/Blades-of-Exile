@@ -7,7 +7,6 @@ pc_record_type return_dummy_pc();
 pc_record_type create_debug_pc(short num);
 pc_record_type create_prefab_pc(short num);
 Boolean create_pc(short spot,short parent_num);
-Boolean take_sp(short pc_num,short amt);
 void heal_pc(short pc_num,short amt);
 void heal_party(short amt);
 void cure_pc(short pc_num,short amt);

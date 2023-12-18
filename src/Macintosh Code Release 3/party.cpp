@@ -755,16 +755,6 @@ Boolean create_pc(short spot,short parent_num)
 	return TRUE;
 }
 
-Boolean take_sp(short pc_num,short amt)
-{
-	if (adven[pc_num].cur_sp < amt)
-		return FALSE;
-	adven[pc_num].cur_sp -= amt;
-	return TRUE;
-}
-
-
-
 
 void heal_pc(short pc_num,short amt)
 {
