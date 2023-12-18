@@ -188,3 +188,22 @@ TEST_CASE("heal_party", "[adventurers]")
 		REQUIRE(expected == adventurers);
 	}
 }
+
+TEST_CASE("adventurers_cure", "[adventurers]")
+{
+	SECTION("Curing when only one person in the party needs it") {
+		Adventurers adventurers{};
+		for (auto& pc : adventurers) { pc.main_status = 1; }
+		adventurers[2].status[2] = 4;
+		REQUIRE(adventurers_cure(adventurers, 5));
+		REQUIRE(adventurers[2].status[2] == 0);
+	}
+	SECTION("Curing when party members have no status has no effect") {
+		Adventurers adventurers{};
+		for (auto& pc : adventurers) { pc.main_status = 0; }
+		adventurers[2].status[2] = 4;
+		const Adventurers before{ adventurers };
+		REQUIRE(!adventurers_cure(adventurers, 5));
+		REQUIRE(before == adventurers);
+	}
+}

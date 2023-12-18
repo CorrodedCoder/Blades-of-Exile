@@ -66,3 +66,59 @@ TEST_CASE("heal_pc", "[pc]")
 		}
 	}
 }
+
+TEST_CASE("pc_cure", "[pc]")
+{
+	SECTION("Curing zero has no effect") {
+		pc_record_type pc{};
+		pc.main_status = 1; pc.status[2] = 2;
+		const pc_record_type before{ pc };
+		// Existing logic returns true on zero change
+		REQUIRE(pc_cure(pc, 0));
+		REQUIRE(before == pc);
+	}
+	SECTION("Curing when already at zero has no effect") {
+		pc_record_type pc{};
+		pc.main_status = 1; pc.status[2] = 0;
+		const pc_record_type before{ pc };
+		// Existing logic returns true on zero change
+		REQUIRE(pc_cure(pc, 5));
+		REQUIRE(before == pc);
+	}
+	SECTION("Curing by two decreases the amount correctly") {
+		pc_record_type pc{};
+		pc.main_status = 1; pc.status[2] = 5;
+		REQUIRE(pc_cure(pc, 2));
+		pc_record_type expected{};
+		expected.main_status = 1; expected.status[2] = 3;
+		REQUIRE(expected == pc);
+	}
+	SECTION("Curing by two does not decrease the amount if status is not 1") {
+		pc_record_type pc{};
+		pc.main_status = 0; pc.status[2] = 5;
+		pc_record_type before{pc};
+		REQUIRE(!pc_cure(pc, 2));
+		REQUIRE(before == pc);
+	}
+	SECTION("Curing by more than total decreases the amount only down to zero") {
+		pc_record_type pc{};
+		pc.main_status = 1; pc.status[2] = 5;
+		REQUIRE(pc_cure(pc, 9));
+		pc_record_type expected{};
+		expected.main_status = 1; expected.status[2] = 0;
+		REQUIRE(expected == pc);
+	}
+	SECTION("Curing for pc with different levels of illness") {
+		for (size_t index = 0; index < 6; ++index)
+		{
+			pc_record_type pc{};
+			pc.main_status = 1;
+			pc.status[2] = static_cast<short>(4 + index);
+			REQUIRE(pc_cure(pc, 7));
+			pc_record_type expected{};
+			expected.main_status = 1;
+			expected.status[2] = std::max(static_cast<short>(4 + index - 7), static_cast<short>(0));
+			REQUIRE(expected == pc);
+		}
+	}
+}

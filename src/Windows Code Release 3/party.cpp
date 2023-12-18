@@ -759,22 +759,18 @@ Boolean create_pc(short spot,short parent_num)
 
 void cure_pc(pc_record_type& pc,short amt)
 {
-	if (pc.main_status != 1)
-		return;
-	if (pc.status[2] <= amt)
-		pc.status[2] = 0;
-		else pc.status[2] -= amt;
-	one_sound(51);
+	if (pc_cure(pc, amt))
+	{
+		one_sound(51);
+	}
 }
 
 void cure_party(Adventurers& adventurers, short amt)
 {
-	short i;
-	
-	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == 1)
-			cure_pc(adven[i],amt);
-
+	if (adventurers_cure(adventurers, amt))
+	{
+		one_sound(51);
+	}
 }
 
 void curse_pc(short which_pc,short how_much)
