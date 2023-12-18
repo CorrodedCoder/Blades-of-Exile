@@ -777,13 +777,14 @@ void curse_pc(short which_pc,short how_much)
 {
 	if (adven[which_pc].main_status != 1)
 		return;
-	if (adven[which_pc].main_status == 1) {
+	if (adven[which_pc].main_status == 1)
+	{
 		adven[which_pc].status[1] = max(adven[which_pc].status[1] - how_much,-8);
 		sprintf(c_line, "  %s cursed.", adven[which_pc].name);
 		add_string_to_buf( c_line);
-		}
+	}
 	put_pc_screen();
-		give_help(59,0,0);
+	give_help(59,0,0);
 }
 
 void dumbfound_pc(short which_pc,short how_much)
@@ -957,22 +958,22 @@ void increase_light(short amt)
 	put_pc_screen();
 }
 
-void restore_sp_pc(short pc_num,short amt)
+void restore_sp_pc(pc_record_type& pc,short amt)
 {
-	if (adven[pc_num].cur_sp > adven[pc_num].max_sp)
+	if (pc.cur_sp > pc.max_sp)
 		return;
-	adven[pc_num].cur_sp += amt;
-	if (adven[pc_num].cur_sp > adven[pc_num].max_sp)
-		adven[pc_num].cur_sp = adven[pc_num].max_sp;
+	pc.cur_sp += amt;
+	if (pc.cur_sp > pc.max_sp)
+		pc.cur_sp = pc.max_sp;
 }
 
-void restore_sp_party(short amt)
+void restore_sp_party(Adventurers& adventurers, short amt)
 {
 	short i;
 	
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == 1)
-			restore_sp_pc(i,amt);
+		if (adventurers[i].main_status == 1)
+			restore_sp_pc(adventurers[i],amt);
 }
 
 void award_party_xp(short amt)

@@ -533,7 +533,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 								party.age += 1200;////
 								add_string_to_buf("  Rest successful.                ");
 								adventurers_heal(adven, get_ran(5,1,10));
-								restore_sp_party(50);
+								restore_sp_party(adven, 50);
 								put_pc_screen();
 								}
 							need_reprint = TRUE;
@@ -2387,7 +2387,7 @@ void increase_age()
 			for (i = 0; i < 6; i++)
 				if ((adven[i].main_status == 1) && (adven[i].cur_sp < adven[i].max_sp))
 					update_stat = TRUE;
-				restore_sp_party(2);
+				restore_sp_party(adven, 2);
 				}
 			}
 		else {	
@@ -2395,7 +2395,7 @@ void increase_age()
 			for (i = 0; i < 6; i++)
 				if ((adven[i].main_status == 1) && (adven[i].cur_sp < adven[i].max_sp))
 					update_stat = TRUE;
-				restore_sp_party(1);
+				restore_sp_party(adven, 1);
 				}
 			}
 

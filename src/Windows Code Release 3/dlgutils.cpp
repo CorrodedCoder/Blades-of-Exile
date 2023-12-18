@@ -783,7 +783,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 					party.gold -= a;
 					put_pc_screen();
 					adventurers_heal(adven, 30 * b);
-					restore_sp_party(25 * b);
+					restore_sp_party(adven, 25 * b);
 					party.age += 700;
 					c_town.p_loc.x = c;
 					c_town.p_loc.y = d;
