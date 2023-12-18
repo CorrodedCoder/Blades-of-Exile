@@ -695,9 +695,9 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 				break;
 			case 88:
 				switch (type) {
-					case 0: ASB("  You feel energized."); restore_sp_pc(adven[pc],str * 5); break;
+					case 0: ASB("  You feel energized."); pc_restore_sp(adven[pc],str * 5); break;
 					case 1: ASB("  You feel drained."); adven[pc].cur_sp = max(0,adven[pc].cur_sp - str * 5); break;
-					case 2: ASB("  You all feel energized."); restore_sp_party(adven, str * 5); break;
+					case 2: ASB("  You all feel energized."); adventurers_restore_sp(adven, str * 5); break;
 					case 3: ASB("  You all feel drained."); for (i = 0; i < 6; i++) adven[i].cur_sp = max(0,adven[i].cur_sp - str * 5); break;
 					}
 				break;
@@ -1828,7 +1828,7 @@ void general_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 		case 25:
 					check_mess = TRUE;
 					party.age += spec.ex1a;
-					adventurers_heal(adven, spec.ex1b); restore_sp_party(adven, spec.ex1b);
+					adventurers_heal(adven, spec.ex1b); adventurers_restore_sp(adven, spec.ex1b);
 			break;
 		case 26:
 			if (which_mode != 13)

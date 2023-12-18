@@ -36,12 +36,12 @@ bool adventurers_cure(Adventurers& adventurers, short amt)
 	return 0 != std::ranges::count_if(adventurers, [amt](auto& pc) { return pc_cure(pc, amt); });
 }
 
-void restore_sp_party(Adventurers& adventurers, short amt)
+void adventurers_restore_sp(Adventurers& adventurers, short amt)
 {
 	short i;
 
 	for (i = 0; i < 6; i++)
 		if (adventurers[i].main_status == 1)
-			restore_sp_pc(adventurers[i], amt);
+			pc_restore_sp(adventurers[i], amt);
 }
 

@@ -19,7 +19,7 @@ bool pc_cure(pc_record_type& pc, short amt)
 	return true;
 }
 
-void restore_sp_pc(pc_record_type& pc, short amt)
+void pc_restore_sp(pc_record_type& pc, short amt)
 {
 	if (pc.cur_sp > pc.max_sp)
 		return;
