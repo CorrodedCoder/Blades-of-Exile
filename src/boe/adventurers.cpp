@@ -25,9 +25,8 @@ short mage_lore_total(const Adventurers& adven)
 
 void heal_party(Adventurers& adventurers, short amt)
 {
-	short i;
-
-	for (i = 0; i < 6; i++)
-		if (adventurers[i].main_status == 1)
-			heal_pc(adventurers[i], amt);
+	for (auto& pc : adventurers)
+	{
+		heal_pc(pc, amt);
+	}
 }
