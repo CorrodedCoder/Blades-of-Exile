@@ -12,10 +12,9 @@ void heal_pc(pc_record_type& pc, short amt)
 bool pc_cure(pc_record_type& pc, short amt)
 {
 	if (pc.main_status != 1)
+	{
 		return false;
-	if (pc.status[2] <= amt)
-		pc.status[2] = 0;
-	else
-		pc.status[2] -= amt;
+	}
+	pc.status[2] = std::max(pc.status[2] - amt, 0);
 	return true;
 }

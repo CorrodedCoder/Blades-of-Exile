@@ -33,13 +33,5 @@ void heal_party(Adventurers& adventurers, short amt)
 
 bool adventurers_cure(Adventurers& adventurers, short amt)
 {
-	bool anyone_cured = false;
-	short i;
-	for (i = 0; i < 6; i++)
-		if (adventurers[i].main_status == 1)
-			if (pc_cure(adventurers[i], amt))
-			{
-				anyone_cured = true;
-			}
-	return anyone_cured;
+	return 0 != std::ranges::count_if(adventurers, [amt](auto& pc) { return pc_cure(pc, amt); });
 }
