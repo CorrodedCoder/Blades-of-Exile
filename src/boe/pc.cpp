@@ -9,5 +9,4 @@ void heal_pc(pc_record_type& pc, short amt)
 	pc.cur_health += amt;
 	if (pc.cur_health > pc.max_health)
 		pc.cur_health = pc.max_health;
-
 }

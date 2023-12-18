@@ -1,5 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
-
+#include <compare>
+#include <algorithm>
 
 #include "boe/adventurers.hpp"
 
@@ -118,5 +119,74 @@ TEST_CASE("mage_lore_total", "[adventurers]")
 		Adventurers adventurers{};
 		for (auto& adventurer : adventurers) { adventurer.main_status = 1; adventurer.skills[11] = 2; }
 		REQUIRE(mage_lore_total(adventurers) == 12);
+	}
+}
+
+TEST_CASE("heal_party", "[adventurers]")
+{
+	SECTION("Healing zero has no effect") {
+		Adventurers adventurers{};
+		for (auto& pc : adventurers) { pc.main_status = 1; pc.cur_health = 4; pc.max_health = 8; }
+		const Adventurers before{ adventurers };
+		heal_party(adventurers, 0);
+		REQUIRE(before == adventurers);
+	}
+	SECTION("Healing when already at max health has no effect") {
+		Adventurers adventurers{};
+		for (auto& pc : adventurers) { pc.main_status = 1; pc.cur_health = 8; pc.max_health = 8; }
+		const Adventurers before{ adventurers };
+		heal_party(adventurers, 5);
+		REQUIRE(before == adventurers);
+	}
+	SECTION("Healing when at more than max health has no effect") {
+		Adventurers adventurers{};
+		for (auto& pc : adventurers) { pc.main_status = 1; pc.cur_health = 9; pc.max_health = 8; }
+		const Adventurers before{ adventurers };
+		heal_party(adventurers, 1);
+		REQUIRE(before == adventurers);
+	}
+	SECTION("Healing by two increases the amount correctly") {
+		Adventurers adventurers{};
+		for (auto& pc : adventurers) { pc.main_status = 1; pc.cur_health = 4; pc.max_health = 8; }
+		heal_party(adventurers, 2);
+		Adventurers expected{};
+		for (auto& pc : expected) { pc.main_status = 1; pc.cur_health = 6; pc.max_health = 8; }
+		REQUIRE(expected == adventurers);
+	}
+	SECTION("Healing by two does not increases the amount if status is not 1") {
+		Adventurers adventurers{};
+		for (auto& pc : adventurers) { pc.cur_health = 4; pc.max_health = 8; }
+		heal_party(adventurers, 2);
+		Adventurers expected{};
+		for (auto& pc : expected) { pc.cur_health = 4; pc.max_health = 8; }
+		REQUIRE(expected == adventurers);
+	}
+	SECTION("Healing by more than max increases the amount only up to max") {
+		Adventurers adventurers{};
+		for (auto& pc : adventurers) { pc.main_status = 1; pc.cur_health = 4; pc.max_health = 8; }
+		heal_party(adventurers, 6);
+		Adventurers expected{};
+		for (auto& pc : expected) { pc.main_status = 1; pc.cur_health = 8; pc.max_health = 8; }
+		REQUIRE(expected == adventurers);
+	}
+	SECTION("Healing for adventurers with different levels of health") {
+		Adventurers adventurers{};
+		for (size_t index = 0; index < std::size(adventurers); ++index)
+		{
+			auto& pc = adventurers[index];
+			pc.main_status = 1;
+			pc.cur_health = static_cast<short>(4 + index);
+			pc.max_health = static_cast<short>(8 + index);
+		}
+		heal_party(adventurers, 7);
+		Adventurers expected{};
+		for (size_t index = 0; index < std::size(expected); ++index)
+		{
+			auto& pc = expected[index];
+			pc.main_status = 1;
+			pc.max_health = static_cast<short>(8 + index);
+			pc.cur_health = std::min(static_cast<short>(7 + 4 + index), pc.max_health);
+		}
+		REQUIRE(expected == adventurers);
 	}
 }
