@@ -613,9 +613,9 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 				break;
 			case 72:
 				switch (type) {
-					case 0: ASB("  You feel better."); cure_pc(pc,str); break;
+					case 0: ASB("  You feel better."); cure_pc(adven[pc],str); break;
 					case 1: ASB("  You feel ill."); poison_pc(pc,str); break;
-					case 2: ASB("  You all feel better."); cure_party(str); break;
+					case 2: ASB("  You all feel better."); cure_party(adven, str); break;
 					case 3: ASB("  You all feel ill."); poison_party(str); break;
 					}
 				break;
@@ -735,9 +735,9 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 			case 94:
 				switch (type) {
 					case 0: 
-					case 1: ASB("  You feel wonderful."); heal_pc(adven[pc],200); cure_pc(pc,8); break;
+					case 1: ASB("  You feel wonderful."); heal_pc(adven[pc],200); cure_pc(adven[pc],8); break;
 					case 2:
-					case 3: ASB("  You all feel wonderful."); heal_party(adven, 200); cure_party(8); break;
+					case 3: ASB("  You all feel wonderful."); heal_party(adven, 200); cure_party(adven, 8); break;
 					}
 				break;
 				
@@ -2112,7 +2112,7 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i)) {
 					if (spec.ex1b == 0) {
-						cure_pc(i,spec.ex1a);
+						cure_pc(adven[i],spec.ex1a);
 						}
 						else poison_pc(i,spec.ex1a);
 					}

@@ -4365,7 +4365,7 @@ Boolean combat_cast_priest_spell()
 								 adven[current_pc].name);
 							add_string_to_buf( c_line);	
 							heal_pc(adven[current_pc],200);
-							cure_pc(current_pc,8);	
+							cure_pc(adven[current_pc],8);
 							adven[current_pc].status[1] = 8;
 							adven[current_pc].status[3] = 8;
 							adven[current_pc].status[4] = 3;
