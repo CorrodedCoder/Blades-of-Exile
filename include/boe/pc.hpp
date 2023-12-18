@@ -4,3 +4,4 @@
 
 void pc_heal(pc_record_type& pc, short amt);
 bool pc_cure(pc_record_type& pc, short amt);
+void restore_sp_pc(pc_record_type& pc, short amt);

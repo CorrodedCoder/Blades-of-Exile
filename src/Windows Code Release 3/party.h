@@ -17,8 +17,6 @@ void sleep_pc(short which_pc,short how_much,short what_type,short adjust);
 void slow_pc(short which_pc,short how_much);
 void web_pc(short which_pc,short how_much);
 void increase_light(short amt);
-void restore_sp_pc(pc_record_type& pc,short amt);
-void restore_sp_party(Adventurers& adventurers, short amt);
 void award_party_xp(short amt);
 void award_xp(short pc_num,short amt);
 void drain_pc(short which_pc,short how_much);

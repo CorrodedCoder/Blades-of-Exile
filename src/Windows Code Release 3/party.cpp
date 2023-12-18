@@ -958,24 +958,6 @@ void increase_light(short amt)
 	put_pc_screen();
 }
 
-void restore_sp_pc(pc_record_type& pc,short amt)
-{
-	if (pc.cur_sp > pc.max_sp)
-		return;
-	pc.cur_sp += amt;
-	if (pc.cur_sp > pc.max_sp)
-		pc.cur_sp = pc.max_sp;
-}
-
-void restore_sp_party(Adventurers& adventurers, short amt)
-{
-	short i;
-	
-	for (i = 0; i < 6; i++)
-		if (adventurers[i].main_status == 1)
-			restore_sp_pc(adventurers[i],amt);
-}
-
 void award_party_xp(short amt)
 {
 	short i;
