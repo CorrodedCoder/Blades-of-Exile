@@ -1,4 +1,5 @@
 add_executable(tests
+	../../src/boe/pc.cpp
 	../../src/boe/adventurers.cpp
 	test_adventurers.cpp
 )

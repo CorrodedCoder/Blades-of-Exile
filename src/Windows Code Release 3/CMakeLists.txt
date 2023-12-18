@@ -90,6 +90,7 @@ add_executable (Blades-of-Exile WIN32
 	specials.cpp
 	../boe/endian_adjust.cpp
 	../boe/savedata_serialization.cpp
+	../boe/pc.cpp
 	../boe/adventurers.cpp
 	
 	BLADES.RC

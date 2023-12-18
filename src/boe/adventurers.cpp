@@ -1,4 +1,5 @@
 #include "boe/adventurers.hpp"
+#include "boe/pc.hpp"
 #include <algorithm>
 #include <numeric>
 
@@ -20,4 +21,13 @@ short mage_lore_total(const Adventurers& adven)
 #else
 	return std::reduce(std::begin(adven), std::end(adven), static_cast<short>(0), pc_mage_lore);
 #endif
+}
+
+void heal_party(Adventurers& adventurers, short amt)
+{
+	short i;
+
+	for (i = 0; i < 6; i++)
+		if (adventurers[i].main_status == 1)
+			heal_pc(adventurers[i], amt);
 }
