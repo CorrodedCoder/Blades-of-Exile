@@ -770,7 +770,7 @@ void refresh_stat_areas(short mode)
 }
 
 
-short total_encumberance(short pc_num)
+short pc_encumberance(short pc_num)
 {
 	short store = 0,i,what_val;
 	
