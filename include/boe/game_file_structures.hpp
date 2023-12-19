@@ -379,6 +379,25 @@ enum class flag_type : short {
 };
 static_assert(sizeof(flag_type) == 2);
 
+enum trait {
+	Toughness = 0,
+	MagicallyApt = 1,
+	Ambidextrous = 2,
+	NimbleFingers = 3,
+	CaveLore = 4,
+	Woodsman = 5,
+	GoodConstitution = 6,
+	HighlyAlert = 7,
+	ExceptionalStr = 8,
+	Recuperation = 9,
+	Sluggish = 10,
+	MagicallyInept = 11,
+	Frail = 12,
+	ChronicDisease = 13,
+	BadBack = 14,
+};
+
+
 // for game
 struct talk_save_type {
 	short personality;
@@ -497,6 +516,11 @@ struct pc_record_type {
 
 	auto operator<=>(const pc_record_type&) const = default;
 	bool operator==(const pc_record_type&) const = default;
+
+	bool has_trait(trait trait) const
+	{
+		return traits[static_cast<int>(trait)];
+	}
 };
 static_assert(sizeof(pc_record_type) == 1898);
 

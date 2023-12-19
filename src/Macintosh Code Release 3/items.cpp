@@ -300,8 +300,8 @@ Boolean party_check_class(short item_class,short mode) ////
 }
 short amount_pc_can_carry(short pc_num)
 {
-	return 100 + (15 * min(adven[pc_num].skills[0],20)) + ((adven[pc_num].traits[8] == 0) ? 0 : 30)
-		+ ((adven[pc_num].traits[14] == 0) ? 0 : -50);
+	return 100 + (15 * min(adven[pc_num].skills[0],20)) + ((adven[pc_num].traits[trait::ExceptionalStr] == 0) ? 0 : 30)
+		+ ((adven[pc_num].traits[trait::BadBack] == 0) ? 0 : -50);
 }
 short pc_carry_weight(short pc_num)
 {

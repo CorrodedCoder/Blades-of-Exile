@@ -613,7 +613,7 @@ void pc_attack(short who_att,short target)////
 		 - 5 * adven[who_att].items[weap1].bonus;
 		r1 += 5 * (adven[current_pc].status[6] / 3);
 		
-		if ((weap2 < 24) && (adven[who_att].traits[2] == FALSE))
+		if ((weap2 < 24) && (adven[who_att].traits[trait::Ambidextrous] == FALSE))
 			r1 += 25;
 
 		// race adj.
@@ -694,7 +694,7 @@ void pc_attack(short who_att,short target)////
 		r1 = get_ran(1,0,100) + hit_adj - 5 * adven[who_att].items[weap2].bonus;
 		
 		// Ambidextrous?
-		if (adven[who_att].traits[2] == FALSE)
+		if (adven[who_att].traits[trait::Ambidextrous] == FALSE)
 			r1 += 25;
 
 		r1 += 5 * (adven[current_pc].status[6] / 3);
@@ -3871,7 +3871,7 @@ void do_poison()
 					if (get_ran(1,0,8) < 6)
 						adven[i].status[2] = move_to_zero(adven[i].status[2]);
 					if (get_ran(1,0,8) < 6)
-						if (adven[i].traits[6] == TRUE)
+						if (adven[i].traits[trait::GoodConstitution] == TRUE)
 							adven[i].status[2] = move_to_zero(adven[i].status[2]);
 				}
 		put_pc_screen();
@@ -3920,7 +3920,7 @@ void handle_disease()
 							break;
 						}
 					r1 = get_ran(1,0,7);
-					if (adven[i].traits[6] == TRUE)
+					if (adven[i].traits[trait::GoodConstitution] == TRUE)
 						r1 -= 2;
 					if ((get_ran(1,0,7) <= 0) || (pc_has_abil_equip(i,67) < 24))
 						adven[i].status[7] = move_to_zero(adven[i].status[7]);

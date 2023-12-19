@@ -5,12 +5,12 @@
 
 bool cave_lore_present(const Adventurers& adven)
 {
-	return std::ranges::any_of(adven, [](const auto& adventurer) { return (adventurer.main_status == 1) && (adventurer.traits[4] > 0); });
+	return std::ranges::any_of(adven, [](const auto& adventurer) { return (adventurer.main_status == 1) && (adventurer.traits[trait::CaveLore] > 0); });
 }
 
 bool woodsman_present(const Adventurers& adven)
 {
-	return std::ranges::any_of(adven, [](const auto& adventurer) { return (adventurer.main_status == 1) && (adventurer.traits[5] > 0); });
+	return std::ranges::any_of(adven, [](const auto& adventurer) { return (adventurer.main_status == 1) && (adventurer.traits[trait::Woodsman] > 0); });
 }
 
 short mage_lore_total(const Adventurers& adven)

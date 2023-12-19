@@ -1108,7 +1108,7 @@ void pick_lock(location where,short pc_num)
 	 - 5 * adven[pc_num].skills[15] - adven[pc_num].items[which_item].ability_strength * 7;
 
 	// Nimble?
-	if (adven[pc_num].traits[3] == FALSE)
+	if (adven[pc_num].traits[trait::NimbleFingers] == FALSE)
 		r1 -= 8;
 
 	if (pc_has_abil_equip(pc_num,42) < 24)

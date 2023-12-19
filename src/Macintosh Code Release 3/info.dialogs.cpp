@@ -878,7 +878,7 @@ void display_pc_info()
 				
 	hit_adj = stat_adj(pc,1) * 5 - (total_encumberance(pc)) * 5 
 		+ 5 * minmax(-8,8,adven[pc].status[1]);
-	if ((adven[pc].traits[2] == FALSE) && (weap2 < 24))
+	if ((adven[pc].traits[trait::Ambidextrous] == FALSE) && (weap2 < 24))
 		hit_adj -= 25;
 
 	dam_adj = stat_adj(pc,0) + minmax(-8,8,adven[pc].status[1]);

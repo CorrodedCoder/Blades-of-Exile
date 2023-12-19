@@ -657,10 +657,10 @@ void disease_pc(short which_pc,short how_much)
 		}
 	if ((level = get_prot_level(which_pc,62)) > 0)////
 		how_much -= level / 2;
-	if ((adven[which_pc].traits[12] == TRUE) && 
+	if ((adven[which_pc].traits[trait::Frail] == TRUE) && 
 		(how_much > 1))
 			how_much++;
-	if ((adven[which_pc].traits[12] == TRUE) && 
+	if ((adven[which_pc].traits[trait::Frail] == TRUE) && 
 		(how_much == 1) && (get_ran(1,0,1) == 0))
 			how_much++;
 	if (adven[which_pc].main_status == 1) {
@@ -691,7 +691,7 @@ void sleep_pc(short which_pc,short how_much,short what_type,short adjust)
 	r1 = get_ran(1,0,100) + adjust;
 	if (r1 < 30 + adven[which_pc].level * 2)
 		how_much = -1;
-	if ((what_type == 11) && ((adven[which_pc].traits[7] > 0) || (adven[which_pc].status[11] < 0)))
+	if ((what_type == 11) && ((adven[which_pc].traits[trait::HighlyAlert] > 0) || (adven[which_pc].status[11] < 0)))
 		how_much = -1;
 	if (how_much <= 0) {
 		sprintf(c_line, "  %s resisted.", adven[which_pc].name);
@@ -1206,7 +1206,7 @@ Boolean poison_weapon( short pc_num, short how_much,short safe)
 				add_string_to_buf("  You poison your weapon.       ");
 				r1 = get_ran(1,0,100);
 				// Nimble?
-				if (adven[pc_num].traits[3] == FALSE)
+				if (adven[pc_num].traits[trait::NimbleFingers] == FALSE)
 					r1 -= 6;
 				if ((r1 > p_chance[adven[pc_num].skills[17]]) && (safe == 0)) {
 					add_string_to_buf("  Poison put on badly.         ");
@@ -2719,13 +2719,13 @@ short stat_adj(short pc_num,short which)
 	
 	tr = skill_bonus[adven[pc_num].skills[which]];
 	if (which == 2) {
-		if (adven[pc_num].traits[1] == TRUE)
+		if (adven[pc_num].traits[trait::MagicallyApt] == TRUE)
 			tr++;
 		if (pc_has_abil_equip(pc_num,99) < 16) 
 			tr++;
 		}
 	if (which == 0) {
-		if (adven[pc_num].traits[8] == TRUE)
+		if (adven[pc_num].traits[trait::ExceptionalStr] == TRUE)
 			tr++;
 		}
 	return tr;
@@ -3015,10 +3015,10 @@ void poison_pc(short which_pc,short how_much)
 			how_much -= level / 2;
 		if ((level = get_prot_level(which_pc,31)) > 0)////
 			how_much -= level / 3;
-			if ((adven[which_pc].traits[12] == TRUE) && 
+			if ((adven[which_pc].traits[trait::Frail] == TRUE) && 
 				(how_much > 1))
 					how_much++;
-			if ((adven[which_pc].traits[12] == TRUE) && 
+			if ((adven[which_pc].traits[trait::Frail] == TRUE) && 
 				(how_much == 1) && (get_ran(1,0,1) == 0))
 					how_much++;
 			
@@ -3171,7 +3171,7 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 		if (PSD[306][7] > 0)
 			how_much -= 3;
 		// toughness
-		if (adven[which_pc].traits[0] == TRUE)
+		if (adven[which_pc].traits[trait::Toughness] == TRUE)
 			how_much--;
 		// luck
 		if (get_ran(1,0,100) < 2 * (hit_chance[adven[which_pc].skills[18]] - 20))
@@ -3353,7 +3353,7 @@ void set_pc_moves()
 		if (adven[i].main_status != 1)
 			pc_moves[i] = 0;
 			else {
-				pc_moves[i] = (adven[i].traits[10] == TRUE) ? 3 : 4;
+				pc_moves[i] = (adven[i].traits[trait::Sluggish] == TRUE) ? 3 : 4;
 				r = get_encumberance(i);
 				pc_moves[i] = minmax(1,8,pc_moves[i] - (r / 3));
 				

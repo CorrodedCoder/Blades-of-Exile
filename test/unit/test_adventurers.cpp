@@ -23,19 +23,19 @@ TEST_CASE("cave_lore_present", "[adventurers]")
 		for (auto& adventurer : adventurers)
 		{
 			adventurer.main_status = 1;
-			adventurer.traits[4] = 1;
+			adventurer.traits[trait::CaveLore] = 1;
 			REQUIRE(cave_lore_present(adventurers));
 			adventurer.main_status = 0;
-			adventurer.traits[4] = 0;
+			adventurer.traits[trait::CaveLore] = 0;
 		}
 	}
 	{
 		Adventurers adventurers{};
 		for (auto& adventurer : adventurers)
 		{
-			adventurer.traits[4] = 1;
+			adventurer.traits[trait::CaveLore] = 1;
 			REQUIRE(!cave_lore_present(adventurers));
-			adventurer.traits[4] = 0;
+			adventurer.traits[trait::CaveLore] = 0;
 		}
 	}
 }
@@ -60,19 +60,19 @@ TEST_CASE("woodsman_present", "[adventurers]")
 		for (auto& adventurer : adventurers)
 		{
 			adventurer.main_status = 1;
-			adventurer.traits[5] = 1;
+			adventurer.traits[trait::Woodsman] = 1;
 			REQUIRE(woodsman_present(adventurers));
 			adventurer.main_status = 0;
-			adventurer.traits[5] = 0;
+			adventurer.traits[trait::Woodsman] = 0;
 		}
 	}
 	{
 		Adventurers adventurers{};
 		for (auto& adventurer : adventurers)
 		{
-			adventurer.traits[5] = 1;
+			adventurer.traits[trait::Woodsman] = 1;
 			REQUIRE(!woodsman_present(adventurers));
-			adventurer.traits[5] = 0;
+			adventurer.traits[trait::Woodsman] = 0;
 		}
 	}
 }

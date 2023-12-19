@@ -2278,11 +2278,11 @@ void increase_age()////
 	// Recuperation and chronic disease disads
 	for (i = 0; i < 6; i++) 
 		if (adven[i].main_status == 1) {
-			if ((adven[i].traits[9] > 0) && (get_ran(1,0,10) == 1) && (adven[i].cur_health < adven[i].max_health)) {
+			if ((adven[i].traits[trait::Recuperation] > 0) && (get_ran(1,0,10) == 1) && (adven[i].cur_health < adven[i].max_health)) {
 				heal_pc(i,2);
 				update_stat = TRUE;
 				}
-			if ((adven[i].traits[13] > 0) && (get_ran(1,0,110) == 1)) {
+			if ((adven[i].traits[trait::ChronicDisease] > 0) && (get_ran(1,0,110) == 1)) {
 				disease_pc(i,4);
 				update_stat = TRUE;
 				}
@@ -2342,7 +2342,7 @@ void handle_cave_lore()////
 	ter = out[party.p_loc.x][party.p_loc.y];
 	pic = scenario.ter_types[ter].picture;
 	for (i = 0; i < 6; i++)
-		if ((adven[i].main_status == 1) && (adven[i].traits[4] > 0) && (get_ran(1,0,12) == 5)
+		if ((adven[i].main_status == 1) && (adven[i].traits[trait::CaveLore] > 0) && (get_ran(1,0,12) == 5)
 			&& (((pic >= 0) && (pic <= 1)) || ((pic >= 70) && (pic <= 76))) ) {
 			sprintf(str,"%s hunts.",adven[i].name);
 			party.food += get_ran(2,1,6);
@@ -2351,7 +2351,7 @@ void handle_cave_lore()////
 			}
 	for (i = 0; i < 6; i++)
 		if (
-		(adven[i].main_status == 1) && (adven[i].traits[5] > 0) && (get_ran(1,0,12) == 5)
+		(adven[i].main_status == 1) && (adven[i].traits[trait::Woodsman] > 0) && (get_ran(1,0,12) == 5)
 			&& (((pic >= 2) && (pic <= 4)) || ((pic >= 79) && (pic <= 84)))) {
 			sprintf(str,"%s hunts.",adven[i].name);
 			party.food += get_ran(2,1,6);

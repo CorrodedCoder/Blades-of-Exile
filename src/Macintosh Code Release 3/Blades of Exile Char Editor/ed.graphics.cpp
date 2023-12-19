@@ -712,78 +712,78 @@ void display_party(short mode,short clear_first)
 								TextSize(9);
 								TextFace(0);	
 								cur_rect=0;
-								if (adven[i].traits[0] == 1) 
+								if (adven[i].traits[trait::Toughness] == 1) 
 										if(cur_rect <= 15) {
 											char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Toughness",0,9);
 											cur_rect++;
 										}
-								if (adven[i].traits[1] == 1) 
+								if (adven[i].traits[trait::MagicallyApt] == 1) 
 										if(cur_rect <= 15) {
 											char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Magically Apt",0,9);
 											cur_rect++;
 										}		
-								if (adven[i].traits[2] == 1) 
+								if (adven[i].traits[trait::Ambidextrous] == 1) 
 										if(cur_rect <= 15) {
 											char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Ambidextrous",0,9);
 											cur_rect++;
 										}
-								if (adven[i].traits[3] == 1) 
+								if (adven[i].traits[trait::NimbleFingers] == 1) 
 										if(cur_rect <= 15) {
 											char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Nimble Fingers",0,9);
 											cur_rect++;
 										}
-								if (adven[i].traits[4] == 1) 
+								if (adven[i].traits[trait::CaveLore] == 1) 
 										if(cur_rect <= 15) {
 											char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Cave Lore",0,9);
 											cur_rect++;
 										}
 										
-								if (adven[i].traits[5] == 1) 
+								if (adven[i].traits[trait::Woodsman] == 1) 
 										if(cur_rect <= 15) {
 											char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Woodsman",0,9);
 											cur_rect++;
 										}
-								if (adven[i].traits[6] == 1) 
+								if (adven[i].traits[trait::GoodConstitution] == 1) 
 										if(cur_rect <= 15) {
 											char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Good Constitution",0,9);
 											cur_rect++;
 										}		
-								if (adven[i].traits[7] == 1) 
+								if (adven[i].traits[trait::HighlyAlert] == 1) 
 										if(cur_rect <= 15) {
 											char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Highly Alert",0,9);
 											cur_rect++;
 										}
-								if (adven[i].traits[8] == 1) 
+								if (adven[i].traits[trait::ExceptionalStr] == 1) 
 										if(cur_rect <= 15) {
 											char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Exceptional Str.",0,9);
 											cur_rect++;
 										}
-								if (adven[i].traits[9] == 1) 
+								if (adven[i].traits[trait::Recuperation] == 1) 
 										if(cur_rect <= 15) {
 											char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Recuperation",0,9);
 											cur_rect++;
 										}
-								if (adven[i].traits[10] == 1) 
+								if (adven[i].traits[trait::Sluggish] == 1) 
 										if(cur_rect <= 15) {
 											char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Sluggish",0,9);
 											cur_rect++;
 										}
-								if (adven[i].traits[11] == 1) 
+								if (adven[i].traits[trait::MagicallyInept] == 1) 
 										if(cur_rect <= 15) {
 											char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Magically Inept",0,9);
 											cur_rect++;
 										}		
-								if (adven[i].traits[12] == 1) 
+								if (adven[i].traits[trait::Frail] == 1) 
 										if(cur_rect <= 15) {
 											char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Frail",0,9);
 											cur_rect++;
 										}
-								if (adven[i].traits[13] == 1) 
+								if (adven[i].traits[trait::ChronicDisease] == 1) 
 										if(cur_rect <= 15) {
 											char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Chronic Disease",0,9);
 											cur_rect++;
 										}
-								if (adven[i].traits[14] == 1) 
+								if (adven[i].traits[trait::BadBack] == 1) 
 										if(cur_rect <= 15) {
 											char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Bad Back",0,9);
 											cur_rect++;

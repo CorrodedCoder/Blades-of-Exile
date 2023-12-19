@@ -532,7 +532,7 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 		add_string_to_buf("Use: Can't use this item.       ");
 		take_charge = FALSE;
 		}
-	if ((adven[pc].traits[11] == TRUE) && (inept_ok == FALSE)){
+	if ((adven[pc].traits[trait::MagicallyInept] == TRUE) && (inept_ok == FALSE)){
 		add_string_to_buf("Use: Can't - magically inept.       ");
 		take_charge = FALSE;
 		}
@@ -2410,12 +2410,12 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 			break;
 		case 151:
 			for (i = 0; i < 6; i++)
-				if ((adven[i].main_status == 1) && (adven[i].traits[4] > 0))
+				if ((adven[i].main_status == 1) && (adven[i].traits[trait::CaveLore] > 0))
 					*next_spec = spec.ex1b;
 			break;
 		case 152:
 			for (i = 0; i < 6; i++)
-				if ((adven[i].main_status == 1) && (adven[i].traits[5] > 0))
+				if ((adven[i].main_status == 1) && (adven[i].traits[trait::Woodsman] > 0))
 					*next_spec = spec.ex1b;
 			break;
 		case 153:
