@@ -352,3 +352,60 @@ TEST_CASE("pc_setup_prefab", "[pc]")
 		REQUIRE(c_pc_prefab[index] == pc);
 	}
 }
+
+/*
+short pc_encumberance(const pc_record_type& pc)
+{
+	short store = 0, i, what_val;
+
+	for (i = 0; i < 24; i++)
+		if (pc.equip[i] == BOE_TRUE) {
+			what_val = pc.items[i].awkward;
+			store += what_val;
+		}
+	return store;
+}
+*/
+
+TEST_CASE("pc_encumberance", "[pc]")
+{
+	SECTION("No encumberance") {
+		pc_record_type pc{};
+		REQUIRE(pc_encumberance(pc) == 0);
+	}
+	SECTION("Awkward items not equipped should have no encumberance") {
+		pc_record_type pc{};
+		for (auto& item : pc.items) { item.awkward = 1; }
+		REQUIRE(pc_encumberance(pc) == 0);
+	}
+	SECTION("Equipped non awkward items should have no encumberance") {
+		pc_record_type pc{};
+		for (auto& equipped : pc.equip) { equipped = BOE_TRUE; }
+		REQUIRE(pc_encumberance(pc) == 0);
+	}
+	SECTION("Equipped awkward items of should have encumberance") {
+		pc_record_type pc{};
+		for (auto& equipped : pc.equip) { equipped = BOE_TRUE; }
+		for (size_t index = 0; index < std::size(pc.items); ++index)
+		{
+			INFO("Checking at index: " << index);
+			pc.items[index].awkward = 1;
+			REQUIRE(pc_encumberance(pc) == index + 1);
+		}
+	}
+	SECTION("Equipped awkward items of different values should have encumberance") {
+		pc_record_type pc{};
+		pc.equip[0] = BOE_TRUE; pc.items[0].awkward = 1;
+		REQUIRE(pc_encumberance(pc) == 1);
+		pc.equip[4] = BOE_TRUE; pc.items[4].awkward = 3;
+		REQUIRE(pc_encumberance(pc) == 4);
+		pc.equip[7] = BOE_FALSE; pc.items[7].awkward = 5;
+		REQUIRE(pc_encumberance(pc) == 4);
+		pc.equip[9] = BOE_TRUE; pc.items[9].awkward = 0;
+		REQUIRE(pc_encumberance(pc) == 4);
+		pc.equip[11] = BOE_TRUE; pc.items[11].awkward = 4;
+		REQUIRE(pc_encumberance(pc) == 8);
+		pc.equip[11] = BOE_FALSE; pc.items[11].awkward = 4;
+		REQUIRE(pc_encumberance(pc) == 4);
+	}
+}

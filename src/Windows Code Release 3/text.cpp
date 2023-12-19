@@ -770,18 +770,6 @@ void refresh_stat_areas(short mode)
 }
 
 
-short pc_encumberance(const pc_record_type& pc)
-{
-	short store = 0,i,what_val;
-	
-	for (i = 0; i < 24; i++)
-		if (pc.equip[i] == TRUE) {
-			what_val = pc.items[i].awkward;
-			store += what_val;
-			}
-	return store;
-}
-
 short get_tnl(pc_record_type *pc)
 {
 	short tnl = 100,i,store_per = 100;

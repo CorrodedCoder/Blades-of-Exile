@@ -6,7 +6,6 @@ RECT get_party_template_rect(short pc_num,short mode);
 void set_stat_window(short new_stat);
 short first_active_pc();
 void refresh_stat_areas(short mode);
-short pc_encumberance(const pc_record_type& pc);
 short get_tnl(pc_record_type *pc);
 void draw_pc_effects_dc(short pc,HDC dest_dc);
 void print_party_stats() ;

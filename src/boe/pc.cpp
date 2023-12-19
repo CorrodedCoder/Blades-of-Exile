@@ -170,3 +170,15 @@ void pc_setup_prefab(pc_record_type& pc, short num)
 	std::ranges::copy(prefab.traits, pc.traits);
 	pc.which_graphic = prefab.graphics;
 }
+
+short pc_encumberance(const pc_record_type& pc)
+{
+	short store = 0, i, what_val;
+
+	for (i = 0; i < 24; i++)
+		if (pc.equip[i] == BOE_TRUE) {
+			what_val = pc.items[i].awkward;
+			store += what_val;
+		}
+	return store;
+}
