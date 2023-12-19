@@ -113,5 +113,8 @@ endif()
 
 add_subdirectory(src)
 
-enable_testing()
-add_subdirectory(test)
+option(ENABLE_TESTS "Enable tests" ON)
+if (${ENABLE_TESTS})
+    enable_testing()
+	add_subdirectory(test)
+endif()
