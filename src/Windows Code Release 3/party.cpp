@@ -269,11 +269,11 @@ void init_party(short mode)
 	refresh_store_items();
 	
 		for (i = 0; i < 6; i++) {
-//			adven[i] = create_debug_pc(i);
-			adven[i] = return_dummy_pc();
+			// pc_setup_debug(adven[i], i);
+			pc_setup_blank(adven[i]);
 			if (mode != 1)
-				//adven[i] = create_debug_pc(i);
-				adven[i] = create_prefab_pc(i);
+				// pc_setup_debug(adven[i], i);
+				pc_setup_prefab(adven[i], i);
 			}
 		
 	for (i = 0; i < 96; i++)
@@ -526,7 +526,7 @@ void put_party_in_scen()
 }
 
 
-pc_record_type return_dummy_pc()
+void pc_setup_blank(pc_record_type& pc)
 {
 	pc_record_type	dummy_pc;
 	short i;
@@ -565,10 +565,10 @@ pc_record_type return_dummy_pc()
 	dummy_pc.exp_adj = 100;
 	dummy_pc.direction = 0; 	
 	
-	return dummy_pc;
+	pc = dummy_pc;
 }
 
-pc_record_type create_debug_pc(short num)
+void pc_setup_debug(pc_record_type& pc, short num)
 {
 	pc_record_type	dummy_pc;
 	short i;
@@ -623,12 +623,11 @@ pc_record_type create_debug_pc(short num)
 	dummy_pc.exp_adj = 100;
 	dummy_pc.direction = 0; 	
 	
-	return dummy_pc;
+	pc = dummy_pc;
 }
 
-pc_record_type create_prefab_pc(short num)
+void pc_setup_prefab(pc_record_type& pc, short num)
 {
-
 	pc_record_type	dummy_pc;
 	short i;
 	short pc_stats[6][19] = {{8,6,2, 6,0,0,0,0,0, 0,0,0,0,1, 0,0,2,0,0},
@@ -697,7 +696,7 @@ pc_record_type create_prefab_pc(short num)
 		
 	dummy_pc.which_graphic = pc_graphics[num];
 	
-	return dummy_pc;
+	pc = dummy_pc;
 }
 
 Boolean create_pc(short spot,short parent_num)
@@ -713,7 +712,7 @@ Boolean create_pc(short spot,short parent_num)
 	if (spot == 6)
 		return FALSE;
 
-	adven[spot] = return_dummy_pc();
+	pc_setup_blank(adven[spot]);
 
 	pick_race_abil(&adven[spot],0,parent_num);
 	
