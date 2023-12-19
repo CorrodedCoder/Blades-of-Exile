@@ -4,9 +4,6 @@
 void init_party(short mode);
 void init_party_scen_data();
 void make_boats() ;
-void pc_setup_blank(pc_record_type& pc);
-void pc_setup_debug(pc_record_type& pc, short num);
-void pc_setup_prefab(pc_record_type& pc, short num);
 Boolean create_pc(short spot,short parent_num);
 void cure_pc(pc_record_type & pc,short amt);
 void cure_party(Adventurers& adventurers, short amt);

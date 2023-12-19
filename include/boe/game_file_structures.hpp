@@ -8,6 +8,9 @@ const auto NUM_TOWN_ITEMS = 115;
 using Boolean = char;
 static_assert(sizeof(Boolean) == 1);
 
+#define BOE_FALSE static_cast<Boolean>(0)
+#define BOE_TRUE static_cast<Boolean>(1)
+
 struct BoeRect
 {
 	short left;
