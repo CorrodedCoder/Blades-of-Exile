@@ -430,7 +430,7 @@ void start_town_mode(short which_town, short entry_dir)
 		
 	// Set up items, maybe place items already there
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
-		t_i.items[i] = return_dummy_item();
+		t_i.items[i] = item_record_type{};
 	
 							
 	for (j = 0; j < 3; j++)

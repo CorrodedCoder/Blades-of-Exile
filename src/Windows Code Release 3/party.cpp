@@ -283,7 +283,7 @@ void init_party(short mode)
 
 	for (i = 0; i < 3;i++)
 		for (j = 0; j < NUM_TOWN_ITEMS; j++) {
-			stored_items[i].items[j] = return_dummy_item();  
+			stored_items[i].items[j] = item_record_type{};
 			}
 
 	for (i = 0; i < 100; i++)
@@ -414,7 +414,7 @@ void init_party_scen_data()
 			}
 	for (i = 0; i < 3;i++)
 		for (j = 0; j < NUM_TOWN_ITEMS; j++) {
-			stored_items[i].items[j] = return_dummy_item();  
+			stored_items[i].items[j] = item_record_type{};
 			}
 
 	for (i = 0; i < 100; i++)
@@ -546,7 +546,7 @@ void pc_setup_blank(pc_record_type& pc)
  	for (i = 0; i < 15; i++)
  		dummy_pc.status[i] = 0;
 	for (i = 0; i < 24; i++)
-		dummy_pc.items[i] = return_dummy_item();
+		dummy_pc.items[i] = item_record_type{};
 	for (i = 0; i < 24; i++)
 		dummy_pc.equip[i] = FALSE;
 
@@ -602,7 +602,7 @@ void pc_setup_debug(pc_record_type& pc, short num)
  	for (i = 0; i < 15; i++)
  		dummy_pc.status[i] = 0;
 	for (i = 0; i < 24; i++)
-		dummy_pc.items[i] = return_dummy_item();
+		dummy_pc.items[i] = item_record_type{};
 	for (i = 0; i < 24; i++)
 		dummy_pc.equip[i] = FALSE;
 
@@ -676,7 +676,7 @@ void pc_setup_prefab(pc_record_type& pc, short num)
  	for (i = 0; i < 15; i++)
  		dummy_pc.status[i] = 0;
 	for (i = 0; i < 24; i++)
-		dummy_pc.items[i] = return_dummy_item();
+		dummy_pc.items[i] = item_record_type{};
 	for (i = 0; i < 24; i++)
 		dummy_pc.equip[i] = FALSE;
  	dummy_pc.cur_sp = pc_sp[num]; 

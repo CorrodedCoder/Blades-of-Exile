@@ -1,4 +1,3 @@
-item_record_type	return_dummy_item();
 item_record_type get_stored_item(short which);
 item_record_type get_food();
 item_record_type	get_weapon(short loot,short level);

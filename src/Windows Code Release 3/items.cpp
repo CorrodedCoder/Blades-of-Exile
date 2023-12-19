@@ -405,7 +405,7 @@ void take_item(short pc_num,short which_item)
 		adven[pc_num].items[i] = adven[pc_num].items[i + 1];
 		adven[pc_num].equip[i] = adven[pc_num].equip[i + 1];
 		}
-	adven[pc_num].items[23] = return_dummy_item();
+	adven[pc_num].items[23] = item_record_type{};
 	adven[pc_num].equip[23] = FALSE;
 	
 	if ((stat_window == pc_num) && (do_print == TRUE))
@@ -997,7 +997,7 @@ void display_item_event_filter (short item_hit)
 					force_play_sound(0);
 					give_to_pc(current_getting_pc, item, 0);
 					}
-				t_i.items[item_array[item_hit]] = return_dummy_item();
+				t_i.items[item_array[item_hit]] = item_record_type{};
 				for (i = item_hit; i < 125; i++)
 					item_array[i] = item_array[i + 1];
 				total_items_gettable--;
@@ -1549,7 +1549,7 @@ void refresh_store_items()
 			party.magic_store_items[i][j] = return_treasure(loot_index[j],7,1);
 			if ((party.magic_store_items[i][j].variety == 3) ||
 				(party.magic_store_items[i][j].variety == 11))
-				party.magic_store_items[i][j] = return_dummy_item();
+				party.magic_store_items[i][j] = item_record_type{};
 			party.magic_store_items[i][j].item_properties =
 				party.magic_store_items[i][j].item_properties | 1;
 			}
