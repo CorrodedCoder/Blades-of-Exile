@@ -81,24 +81,40 @@ if (MSVC)
 		add_compile_options(
 			# Support C++ exceptions when using Clang under MSVC, this is not the default.
 			/EHsc
-
-			# Default warning level
-			-Wall
-			-ferror-limit=1000
-
-			# It seems required to disable this warning, but not sure why
-			# as it should know it's irrelevant to anyone specifying
-			# a later C++ standard.
-			-Wno-c++98-compat-pedantic
-			-Wno-c++20-compat
 		)
-		if(BOE_WARNINGS_MAX)
-			add_compile_options(-Wextra -Wpedantic)
-		else()
-			# Warnings as errors
-			add_compile_options(-Werror)
-		endif()
+	endif()
+endif()
+
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+	include(CheckCXXCompilerFlag)
+	check_cxx_compiler_flag("-Wno-unsafe-buffer-usage" BOE_FLAG_HAS_NO_UNSAFE_BUFFER_USAGE)
+	if(BOE_FLAG_HAS_NO_UNSAFE_BUFFER_USAGE)
+		set(BOE_WNO_UNSAFE_BUFFER_USAGE -Wno-unsafe-buffer-usage)
+	endif()
+
+	add_compile_options(
+		# Default warning level
+		-Wall
+		-ferror-limit=1000
+
+		# It seems required to disable this warning, but not sure why
+		# as it should know it's irrelevant to anyone specifying
+		# a later C++ standard.
+		-Wno-c++98-compat-pedantic
+		-Wno-c++20-compat
+	)
+	if(BOE_WARNINGS_MAX)
+		add_compile_options(-Wextra -Wpedantic)
+	else()
+		# Warnings as errors
+		add_compile_options(-Werror)
 	endif()
 endif()
 
 add_subdirectory(src)
+
+option(ENABLE_TESTS "Enable tests" ON)
+if (${ENABLE_TESTS})
+    enable_testing()
+	add_subdirectory(test)
+endif()

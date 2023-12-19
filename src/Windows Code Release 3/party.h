@@ -1,3 +1,6 @@
+#include "boe/pc.hpp"
+#include "boe/adventurers.hpp"
+
 void init_party(short mode);
 void init_party_scen_data();
 void make_boats() ;
@@ -5,11 +8,8 @@ pc_record_type return_dummy_pc();
 pc_record_type create_debug_pc(short num);
 pc_record_type create_prefab_pc(short num);
 Boolean create_pc(short spot,short parent_num);
-Boolean take_sp(short pc_num,short amt);
-void heal_pc(short pc_num,short amt);
-void heal_party(short amt);
-void cure_pc(short pc_num,short amt);
-void cure_party(short amt);
+void cure_pc(pc_record_type & pc,short amt);
+void cure_party(Adventurers& adventurers, short amt);
 void curse_pc(short which_pc,short how_much);
 void dumbfound_pc(short which_pc,short how_much);
 void disease_pc(short which_pc,short how_much);
@@ -17,8 +17,6 @@ void sleep_pc(short which_pc,short how_much,short what_type,short adjust);
 void slow_pc(short which_pc,short how_much);
 void web_pc(short which_pc,short how_much);
 void increase_light(short amt);
-void restore_sp_pc(short pc_num,short amt);
-void restore_sp_party(short amt);
 void award_party_xp(short amt);
 void award_xp(short pc_num,short amt);
 void drain_pc(short which_pc,short how_much);
@@ -27,7 +25,6 @@ Boolean spend_xp_event_filter (short item_hit);
 void do_xp_draw();
 void draw_xp_skills();
 Boolean spend_xp(short pc_num, short mode, short parent);
-short mage_lore_total();
 Boolean poison_weapon( short pc_num, short how_much,short safe);
 Boolean is_weapon(short pc_num,short item);
 void cast_spell(short type,short situation);
@@ -67,11 +64,8 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 void kill_pc(short which_pc,short type);
 void set_pc_moves();
 void take_ap(short num);
-short cave_lore_present();
-short woodsman_present();
 void init_spell_menus();
 void adjust_spell_menus();
 void print_spell_cast(short spell_num,short which);
 void update_gold_skills();
 void put_party_in_scen();
-

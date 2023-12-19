@@ -1,63 +1,82 @@
 #pragma once
 
+#include <array>
+#include <compare>
+
 const auto NUM_TOWN_ITEMS = 115;
 
-typedef char Boolean;
+using Boolean = char;
 static_assert(sizeof(Boolean) == 1);
 
-typedef struct BoeRect
+struct BoeRect
 {
 	short left;
 	short top;
 	short right;
 	short bottom;
-} BoeRect;
+	auto operator<=>(const BoeRect&) const = default;
+	bool operator==(const BoeRect&) const = default;
+};
 static_assert(sizeof(BoeRect) == 8);
 
-typedef struct {
+struct location {
 	char x, y;
-} location;
+	auto operator<=>(const location&) const = default;
+	bool operator==(const location&) const = default;
+};
 static_assert(sizeof(location) == 2);
 
-typedef struct {
+struct special_node_type {
 	short type, sd1, sd2, pic, m1, m2, ex1a, ex1b, ex2a, ex2b, jumpto;
-} special_node_type;
+	auto operator<=>(const special_node_type&) const = default;
+	bool operator==(const special_node_type&) const = default;
+};
 static_assert(sizeof(special_node_type) == 22);
 
-typedef struct {
+struct talking_node_type {
 	short personality, type;
 	char link1[4], link2[4];
 	short extras[4];
-} talking_node_type;
+	auto operator<=>(const talking_node_type&) const = default;
+	bool operator==(const talking_node_type&) const = default;
+};
 static_assert(sizeof(talking_node_type) == 20);
 
-typedef struct {
+struct talking_record_type {
 	unsigned char strlens[200];
 	talking_node_type talk_nodes[60];
-} talking_record_type;
+	auto operator<=>(const talking_record_type&) const = default;
+	bool operator==(const talking_record_type&) const = default;
+};
 static_assert(sizeof(talking_record_type) == 1400);
 
-typedef struct {
+struct terrain_type_type {
 	short picture;
 	unsigned char blockage, flag1, flag2, special, trans_to_what, fly_over, boat_over;
 	unsigned char block_horse, light_radius, step_sound, shortcut_key, res1, res2, res3;
-} terrain_type_type;
+	auto operator<=>(const terrain_type_type&) const = default;
+	bool operator==(const terrain_type_type&) const = default;
+};
 static_assert(sizeof(terrain_type_type) == 16);
 
-typedef	struct {
+struct wandering_type {
 	unsigned char monst[4];
-} wandering_type;
+	auto operator<=>(const wandering_type&) const = default;
+	bool operator==(const wandering_type&) const = default;
+};
 static_assert(sizeof(wandering_type) == 4);
 
-typedef struct {
+struct out_wandering_type {
 	unsigned char monst[7];
 	unsigned char friendly[3];
 	short spec_on_meet, spec_on_win, spec_on_flee, cant_flee;
 	short end_spec1, end_spec2;
-} out_wandering_type;
+	auto operator<=>(const out_wandering_type&) const = default;
+	bool operator==(const out_wandering_type&) const = default;
+};
 static_assert(sizeof(out_wandering_type) == 22);
 
-typedef struct {
+struct outdoor_record_type {
 	unsigned char	terrain[48][48];
 	location	special_locs[18];
 	unsigned char		special_id[18];
@@ -69,10 +88,13 @@ typedef struct {
 	BoeRect info_rect[8];
 	unsigned char strlens[180];
 	special_node_type specials[60];
-} outdoor_record_type;
+
+	auto operator<=>(const outdoor_record_type&) const = default;
+	bool operator==(const outdoor_record_type&) const = default;
+};
 static_assert(sizeof(outdoor_record_type) == 4146);
 
-typedef struct {
+struct creature_start_type {
 	unsigned char number;
 	unsigned char start_attitude;
 	location start_loc;
@@ -83,10 +105,13 @@ typedef struct {
 	char spec_enc_code, time_code;
 	short monster_time, personality;
 	short special_on_kill, facial_pic;
-} creature_start_type;
+
+	auto operator<=>(const creature_start_type&) const = default;
+	bool operator==(const creature_start_type&) const = default;
+};
 static_assert(sizeof(creature_start_type) == 22);
 
-typedef struct {
+struct short_item_record_type {
 	short variety, item_level;
 	char awkward, bonus, protection, charges, type;
 	unsigned char graphic_num, ability, type_flag, is_special;
@@ -96,10 +121,13 @@ typedef struct {
 	char full_name[25], name[15];
 	unsigned char reserved1, reserved2;
 	unsigned char magic_use_type, ability_strength, treas_class, real_abil;
-} short_item_record_type;
+
+	auto operator<=>(const short_item_record_type&) const = default;
+	bool operator==(const short_item_record_type&) const = default;
+};
 static_assert(sizeof(short_item_record_type) == 66);
 
-typedef struct {
+struct item_record_type {
 	short variety, item_level;
 	char awkward, bonus, protection, charges, type, magic_use_type;
 	unsigned char graphic_num, ability, ability_strength, type_flag, is_special, a;
@@ -108,23 +136,32 @@ typedef struct {
 	location item_loc;
 	char full_name[25], name[15];
 	unsigned char treas_class, item_properties, reserved1, reserved2;
-} item_record_type;
+
+	auto operator<=>(const item_record_type&) const = default;
+	bool operator==(const item_record_type&) const = default;
+};
 static_assert(sizeof(item_record_type) == 66);
 
-typedef struct {
+struct preset_item_type {
 	location item_loc;
 	short item_code, ability;
 	unsigned char charges, always_there, property, contained;
-} preset_item_type;
+
+	auto operator<=>(const preset_item_type&) const = default;
+	bool operator==(const preset_item_type&) const = default;
+};
 static_assert(sizeof(preset_item_type) == 10);
 
-typedef struct {
+struct preset_field_type {
 	location field_loc;
 	short field_type;
-} preset_field_type;
+
+	auto operator<=>(const preset_field_type&) const = default;
+	bool operator==(const preset_field_type&) const = default;
+};
 static_assert(sizeof(preset_field_type) == 4);
 
-typedef struct {
+struct town_record_type {
 	short town_chop_time, town_chop_key;
 	wandering_type	wandering[4];
 	location	wandering_locs[4];
@@ -146,70 +183,97 @@ typedef struct {
 	special_node_type specials[100];
 	unsigned char specials1, specials2, res1, res2;
 	short difficulty;
-} town_record_type;
+
+	auto operator<=>(const town_record_type&) const = default;
+	bool operator==(const town_record_type&) const = default;
+};
 static_assert(sizeof(town_record_type) == 3506);
 
-typedef struct {
+struct big_tr_type {
 	unsigned char terrain[64][64];
 	BoeRect room_rect[16];
 	creature_start_type creatures[60];
 	unsigned char lighting[8][64];
-} big_tr_type;
+
+	auto operator<=>(const big_tr_type&) const = default;
+	bool operator==(const big_tr_type&) const = default;
+};
 static_assert(sizeof(big_tr_type) == 6056);
 
-typedef struct {
+struct ave_tr_type {
 	unsigned char terrain[48][48];
 	BoeRect room_rect[16];
 	creature_start_type creatures[40];
 	unsigned char lighting[6][48];
-} ave_tr_type;
+
+	auto operator<=>(const ave_tr_type&) const = default;
+	bool operator==(const ave_tr_type&) const = default;
+};
 static_assert(sizeof(ave_tr_type) == 3600);
 
-typedef struct {
+struct tiny_tr_type {
 	unsigned char terrain[32][32];
 	BoeRect room_rect[16];
 	creature_start_type creatures[30];
 	unsigned char lighting[4][32];
-} tiny_tr_type;
+
+	auto operator<=>(const tiny_tr_type&) const = default;
+	bool operator==(const tiny_tr_type&) const = default;
+};
 static_assert(sizeof(tiny_tr_type) == 1940);
 
-typedef struct {
+struct city_block_type {
 	short block_type;
 	short block_destroy_time;
 	char block_alignment;
 	char block_key_time;
 	location block_loc;
-} city_block_type;
+
+	auto operator<=>(const city_block_type&) const = default;
+	bool operator==(const city_block_type&) const = default;
+};
 static_assert(sizeof(city_block_type) == 8);
 
-typedef struct {
+struct city_ter_rect_type {
 	BoeRect what_rect;
 	unsigned char ter_type;
 	unsigned char hollow;
-} city_ter_rect_type;
+
+	auto operator<=>(const city_ter_rect_type&) const = default;
+	bool operator==(const city_ter_rect_type&) const = default;
+};
 static_assert(sizeof(city_ter_rect_type) == 10);
 
-typedef struct {
+struct template_town_type {
 	creature_start_type creatures[30];
 	city_block_type city_block[15];
 	city_ter_rect_type city_ter_rect[10];
-} template_town_type;
+
+	auto operator<=>(const template_town_type&) const = default;
+	bool operator==(const template_town_type&) const = default;
+};
 static_assert(sizeof(template_town_type) == 880);
 
-typedef struct {
+struct scen_item_data_type {
 	item_record_type scen_items[400];
 	char monst_names[256][20];
 	char ter_names[256][30];
-} scen_item_data_type;
+
+	auto operator<=>(const scen_item_data_type&) const = default;
+	bool operator==(const scen_item_data_type&) const = default;
+};
 static_assert(sizeof(scen_item_data_type) == 39200);
 
 
-typedef struct {
+struct item_storage_shortcut_type {
 	short ter_type, item_num[10], item_odds[10], property;
-} item_storage_shortcut_type;
+
+	auto operator<=>(const item_storage_shortcut_type&) const = default;
+	bool operator==(const item_storage_shortcut_type&) const = default;
+};
 static_assert(sizeof(item_storage_shortcut_type) == 44);
 
-typedef struct {
+struct monster_record_type {
 	unsigned char m_num, level, m_name[26];
 	short health, m_health, mp, max_mp;
 	unsigned char armor, skill;
@@ -221,31 +285,43 @@ typedef struct {
 	unsigned char direction, immunities, x_width, y_width, radiate_1, radiate_2;
 	unsigned char default_attitude, summon_type, default_facial_pic, res1, res2, res3;
 	short picture_num;
-} monster_record_type;
+
+	auto operator<=>(const monster_record_type&) const = default;
+	bool operator==(const monster_record_type&) const = default;
+};
 static_assert(sizeof(monster_record_type) == 108);
 
-typedef struct {
+struct horse_record_type {
 	location horse_loc, horse_loc_in_sec, horse_sector;
 	short which_town;
 	Boolean exists, property;
-} horse_record_type;
+
+	auto operator<=>(const horse_record_type&) const = default;
+	bool operator==(const horse_record_type&) const = default;
+};
 static_assert(sizeof(horse_record_type) == 10);
 
-typedef struct {
+struct boat_record_type {
 	location boat_loc, boat_loc_in_sec, boat_sector;
 	short which_town;
 	Boolean exists, property;
-} boat_record_type;
+
+	auto operator<=>(const boat_record_type&) const = default;
+	bool operator==(const boat_record_type&) const = default;
+};
 static_assert(sizeof(boat_record_type) == 10);
 
-typedef struct {
+struct scen_header_type {
 	unsigned char flag1, flag2, flag3, flag4;
 	unsigned char ver[3], min_run_ver, prog_make_ver[3], num_towns;
 	unsigned char out_width, out_height, difficulty, intro_pic, default_ground;
-} scen_header_type;
+
+	auto operator<=>(const scen_header_type&) const = default;
+	bool operator==(const scen_header_type&) const = default;
+};
 static_assert(sizeof(scen_header_type) == 17);
 
-typedef struct {
+struct scenario_data_type {
 	unsigned char flag1, flag2, flag3, flag4;
 	unsigned char ver[3], min_run_ver, prog_make_ver[3], num_towns;
 	unsigned char out_width, out_height, difficulty, intro_pic, default_ground;
@@ -284,7 +360,9 @@ typedef struct {
 	location last_out_edited;
 	short last_town_edited;
 
-} scenario_data_type;
+	auto operator<=>(const scenario_data_type&) const = default;
+	bool operator==(const scenario_data_type&) const = default;
+};
 static_assert(sizeof(scenario_data_type) == 41942);
 
 // Game save file related structures
@@ -299,14 +377,17 @@ enum class flag_type : short {
 static_assert(sizeof(flag_type) == 2);
 
 // for game
-typedef struct {
+struct talk_save_type {
 	short personality;
 	short town_num;
 	short str1, str2;
-} talk_save_type;
+
+	auto operator<=>(const talk_save_type&) const = default;
+	bool operator==(const talk_save_type&) const = default;
+};
 static_assert(sizeof(talk_save_type) == 8);
 
-typedef struct {
+struct creature_data_type {
 	short active, attitude;
 	unsigned char number;
 	location m_loc;
@@ -314,17 +395,23 @@ typedef struct {
 	Boolean mobile;
 	short summoned;
 	creature_start_type monst_start;
-} creature_data_type;
+
+	auto operator<=>(const creature_data_type&) const = default;
+	bool operator==(const creature_data_type&) const = default;
+};
 static_assert(sizeof(creature_data_type) == 142);
 
-typedef struct {
+struct creature_list_type {
 	creature_data_type dudes[60];
 	short which_town;
 	short friendly;
-} creature_list_type;
+
+	auto operator<=>(const creature_list_type&) const = default;
+	bool operator==(const creature_list_type&) const = default;
+};
 static_assert(sizeof(creature_list_type) == 8524);
 
-typedef struct {
+struct current_town_type {
 	short town_num, difficulty;
 	town_record_type	town;
 	char explored[64][64];
@@ -332,18 +419,24 @@ typedef struct {
 	creature_list_type	monst;
 	Boolean	in_boat;
 	location p_loc;
-}	current_town_type;
+
+	auto operator<=>(const current_town_type&) const = default;
+	bool operator==(const current_town_type&) const = default;
+};
 static_assert(sizeof(current_town_type) == 16136);
 
-typedef struct {
+struct outdoor_creature_type {
 	Boolean exists;
 	short direction;
 	out_wandering_type what_monst;
 	location which_sector, m_loc;
-} outdoor_creature_type;
+
+	auto operator<=>(const outdoor_creature_type&) const = default;
+	bool operator==(const outdoor_creature_type&) const = default;
+};
 static_assert(sizeof(outdoor_creature_type) == 30);
 
-typedef struct {
+struct party_record_type {
 	int age;
 	short gold, food;
 	unsigned char stuff_done[310][10], item_taken[200][8];
@@ -372,15 +465,21 @@ typedef struct {
 	short m_killed[200];
 	int total_m_killed, total_dam_done, total_xp_gained, total_dam_taken;
 	char scen_name[256];
-} party_record_type;
+
+	auto operator<=>(const party_record_type&) const = default;
+	bool operator==(const party_record_type&) const = default;
+};
 static_assert(sizeof(party_record_type) == 46400);
 
-typedef struct {
+struct stored_town_maps_type {
 	char town_maps[100][8][64];
-} stored_town_maps_type;
+
+	auto operator<=>(const stored_town_maps_type&) const = default;
+	bool operator==(const stored_town_maps_type&) const = default;
+};
 static_assert(sizeof(stored_town_maps_type) == 51200);
 
-typedef struct {
+struct pc_record_type {
 	short main_status;
 	char name[20];
 	short skills[30];
@@ -392,25 +491,42 @@ typedef struct {
 	short which_graphic, weap_poisoned;
 	Boolean advan[15], traits[15];
 	short race, exp_adj, direction;
-} pc_record_type;
+
+	auto operator<=>(const pc_record_type&) const = default;
+	bool operator==(const pc_record_type&) const = default;
+};
 static_assert(sizeof(pc_record_type) == 1898);
 
-typedef struct {
+struct setup_save_type {
 	unsigned char setup[4][64][64];
-} setup_save_type;
+
+	auto operator<=>(const setup_save_type&) const = default;
+	bool operator==(const setup_save_type&) const = default;
+};
 static_assert(sizeof(setup_save_type) == 16384);
 
-typedef struct {
+struct town_item_list {
 	item_record_type items[NUM_TOWN_ITEMS];
-} town_item_list;
+
+	auto operator<=>(const town_item_list&) const = default;
+	bool operator==(const town_item_list&) const = default;
+};
 static_assert(sizeof(town_item_list) == 7590);
 
-typedef struct {
+struct stored_items_list_type {
 	item_record_type items[NUM_TOWN_ITEMS];
-} stored_items_list_type;
+
+	auto operator<=>(const stored_items_list_type&) const = default;
+	bool operator==(const stored_items_list_type&) const = default;
+};
 static_assert(sizeof(stored_items_list_type) == 7590);
 
-typedef struct {
+struct stored_outdoor_maps_type {
 	char outdoor_maps[100][6][48];
-} stored_outdoor_maps_type;
+
+	auto operator<=>(const stored_outdoor_maps_type&) const = default;
+	bool operator==(const stored_outdoor_maps_type&) const = default;
+};
 static_assert(sizeof(stored_outdoor_maps_type) == 28800);
+
+using Adventurers = std::array<pc_record_type, 6>;

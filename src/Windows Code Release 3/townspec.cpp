@@ -27,7 +27,7 @@ extern short current_pc,stat_window;
 extern outdoor_record_type outdoors[2][2];
 extern location pc_pos[6],center;
 extern town_item_list 	t_i;
-extern std::array<pc_record_type, 6> adven;
+extern Adventurers adven;
 extern big_tr_type  t_d;
 extern Boolean registered;
 

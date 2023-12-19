@@ -38,7 +38,7 @@ extern outdoor_record_type outdoors[2][2];
 extern location pc_pos[6],center;
 extern Boolean in_scen_debug,belt_present,registered,processing_fields,monsters_going,suppress_stat_screen,boom_anim_active;
 extern big_tr_type  t_d;
-extern std::array<pc_record_type, 6> adven;
+extern Adventurers adven;
 extern effect_pat_type current_pat;
 extern town_item_list 	t_i;
 extern out_wandering_type store_wandering_special;
@@ -613,9 +613,9 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 				break;
 			case 72:
 				switch (type) {
-					case 0: ASB("  You feel better."); cure_pc(pc,str); break;
+					case 0: ASB("  You feel better."); cure_pc(adven[pc],str); break;
 					case 1: ASB("  You feel ill."); poison_pc(pc,str); break;
-					case 2: ASB("  You all feel better."); cure_party(str); break;
+					case 2: ASB("  You all feel better."); cure_party(adven, str); break;
 					case 3: ASB("  You all feel ill."); poison_party(str); break;
 					}
 				break;
@@ -662,10 +662,10 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 			case 84:
 				switch (type) {
 					case 0: 
-					case 1: ASB("  You feel wonderful!"); heal_pc(pc,str * 20); affect_pc(pc,1,str); break;
+					case 1: ASB("  You feel wonderful!"); pc_heal(adven[pc],str * 20); affect_pc(pc,1,str); break;
 					case 2:
 					case 3: ASB("  Everyone feels wonderful!"); for (i = 0; i < 6; i++) {
-								heal_pc(i,str * 20); affect_pc(i,1,str); } break;
+								pc_heal(adven[i],str * 20); affect_pc(i,1,str); } break;
 					}
 				break;
 			case 85:
@@ -687,17 +687,17 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 				break;
 			case 87:
 				switch (type) {
-					case 0: ASB("  You feel better."); heal_pc(pc,str * 20); break;
+					case 0: ASB("  You feel better."); pc_heal(adven[pc],str * 20); break;
 					case 1: ASB("  You feel sick."); damage_pc(pc,20 * str,4,0); break;
-					case 2: ASB("  You all feel better."); heal_party(str * 20); break;
+					case 2: ASB("  You all feel better."); adventurers_heal(adven, str * 20); break;
 					case 3: ASB("  You all feel sick."); hit_party(20 * str,4); break;
 					}
 				break;
 			case 88:
 				switch (type) {
-					case 0: ASB("  You feel energized."); restore_sp_pc(pc,str * 5); break;
+					case 0: ASB("  You feel energized."); pc_restore_sp(adven[pc],str * 5); break;
 					case 1: ASB("  You feel drained."); adven[pc].cur_sp = max(0,adven[pc].cur_sp - str * 5); break;
-					case 2: ASB("  You all feel energized."); restore_sp_party(str * 5); break;
+					case 2: ASB("  You all feel energized."); adventurers_restore_sp(adven, str * 5); break;
 					case 3: ASB("  You all feel drained."); for (i = 0; i < 6; i++) adven[i].cur_sp = max(0,adven[i].cur_sp - str * 5); break;
 					}
 				break;
@@ -735,9 +735,9 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 			case 94:
 				switch (type) {
 					case 0: 
-					case 1: ASB("  You feel wonderful."); heal_pc(pc,200); cure_pc(pc,8); break;
+					case 1: ASB("  You feel wonderful."); pc_heal(adven[pc],200); cure_pc(adven[pc],8); break;
 					case 2:
-					case 3: ASB("  You all feel wonderful."); heal_party(200); cure_party(8); break;
+					case 3: ASB("  You all feel wonderful."); adventurers_heal(adven, 200); cure_party(adven, 8); break;
 					}
 				break;
 				
@@ -1828,7 +1828,7 @@ void general_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 		case 25:
 					check_mess = TRUE;
 					party.age += spec.ex1a;
-					heal_party(spec.ex1b); restore_sp_party(spec.ex1b);
+					adventurers_heal(adven, spec.ex1b); adventurers_restore_sp(adven, spec.ex1b);
 			break;
 		case 26:
 			if (which_mode != 13)
@@ -2112,7 +2112,7 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i)) {
 					if (spec.ex1b == 0) {
-						cure_pc(i,spec.ex1a);
+						cure_pc(adven[i],spec.ex1a);
 						}
 						else poison_pc(i,spec.ex1a);
 					}
@@ -2404,7 +2404,7 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 					*next_spec = spec.ex1b;
 			break;
 		case 153:
-			if (mage_lore_total() >= spec.ex1a)
+			if (mage_lore_total(adven) >= spec.ex1a)
 					*next_spec = spec.ex1b;
 			break;
 		case 154: // text response

@@ -13,7 +13,7 @@ bool dump_savegame(std::ostream_iterator<char> strm, std::istream & input)
 	bool in_scen = false;
 	party_record_type party{};
 	setup_save_type setup_save{};
-	std::array<pc_record_type, 6> adven{};
+	Adventurers adven{};
 	unsigned char out_e[96][96]{};
 	current_town_type c_town{};
 	big_tr_type t_d{};

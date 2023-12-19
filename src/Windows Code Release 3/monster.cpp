@@ -22,7 +22,7 @@ extern outdoor_record_type outdoors[2][2];
 extern unsigned char out[96][96];
 extern unsigned char combat_terrain[64][64];
 extern short which_combat_type;
-extern std::array<pc_record_type, 6> adven;
+extern Adventurers adven;
 extern big_tr_type  t_d;
 extern short monst_target[T_M]; // 0-5 target that pc   6 - no target  100 + x - target monster x
 extern short spell_caster, missile_firer,current_monst_tactic;

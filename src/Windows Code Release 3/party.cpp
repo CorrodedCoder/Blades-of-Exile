@@ -100,7 +100,7 @@ char empty_string[256] = "                                           ";
 
 extern Boolean fast_bang;
 extern party_record_type far	party;
-extern std::array<pc_record_type, 6> adven;
+extern Adventurers adven;
 extern short stat_window,overall_mode,current_pc,town_size[3],town_type;
 extern current_town_type	c_town;
 extern big_tr_type  t_d;
@@ -757,69 +757,34 @@ Boolean create_pc(short spot,short parent_num)
 	return TRUE;
 }
 
-Boolean take_sp(short pc_num,short amt)
+void cure_pc(pc_record_type& pc,short amt)
 {
-	if (adven[pc_num].cur_sp < amt)
-		return FALSE;
-	adven[pc_num].cur_sp -= amt;
-	return TRUE;
+	if (pc_cure(pc, amt))
+	{
+		one_sound(51);
+	}
 }
 
-
-
-
-void heal_pc(short pc_num,short amt)
+void cure_party(Adventurers& adventurers, short amt)
 {
-	if (adven[pc_num].cur_health > adven[pc_num].max_health)
-		return;
-	if (adven[pc_num].main_status != 1)
-		return;
-	adven[pc_num].cur_health += amt;
-	if (adven[pc_num].cur_health > adven[pc_num].max_health)
-		adven[pc_num].cur_health = adven[pc_num].max_health;
-
-}
-
-void heal_party(short amt)
-{
-	short i;
-	
-	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == 1)
-			heal_pc(i,amt);
-}
-
-void cure_pc(short pc_num,short amt)
-{
-	if (adven[pc_num].main_status != 1)
-		return;
-	if (adven[pc_num].status[2] <= amt)
-		adven[pc_num].status[2] = 0;
-		else adven[pc_num].status[2] -= amt;
-	one_sound(51);
-}
-
-void cure_party(short amt)
-{
-	short i;
-	
-	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == 1)
-			cure_pc(i,amt);
-
+	if (adventurers_cure(adventurers, amt))
+	{
+		one_sound(51);
+	}
 }
 
 void curse_pc(short which_pc,short how_much)
 {
 	if (adven[which_pc].main_status != 1)
 		return;
-	if (adven[which_pc].main_status == 1) {
+	if (adven[which_pc].main_status == 1)
+	{
 		adven[which_pc].status[1] = max(adven[which_pc].status[1] - how_much,-8);
 		sprintf(c_line, "  %s cursed.", adven[which_pc].name);
 		add_string_to_buf( c_line);
-		}
+	}
 	put_pc_screen();
-		give_help(59,0,0);
+	give_help(59,0,0);
 }
 
 void dumbfound_pc(short which_pc,short how_much)
@@ -991,24 +956,6 @@ void increase_light(short amt)
 			update_explored(where);
 			}
 	put_pc_screen();
-}
-
-void restore_sp_pc(short pc_num,short amt)
-{
-	if (adven[pc_num].cur_sp > adven[pc_num].max_sp)
-		return;
-	adven[pc_num].cur_sp += amt;
-	if (adven[pc_num].cur_sp > adven[pc_num].max_sp)
-		adven[pc_num].cur_sp = adven[pc_num].max_sp;
-}
-
-void restore_sp_party(short amt)
-{
-	short i;
-	
-	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == 1)
-			restore_sp_pc(i,amt);
 }
 
 void award_party_xp(short amt)
@@ -1409,18 +1356,6 @@ Boolean spend_xp(short pc_num, short mode, short parent)
 	cd_kill_dialog(1010,0);
 
 	return dialog_answer;
-}
-
-
-short mage_lore_total()
-{
-	short total = 0,i;
-	
-	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == 1)
-			total += adven[i].skills[11];
-
-	return total;
 }
 
 
@@ -1917,7 +1852,7 @@ void do_priest_spell(short pc_num,short spell_num)
 						r1 = get_ran(2 + 2 * (spell_num / 6), 1, 4);
 						sprintf(c_line, "  %s healed %d.   ",
 						 adven[target].name,r1);
-						heal_pc(target,r1);
+						pc_heal(adven[target],r1);
 					one_sound(52);
 					break;
 
@@ -1925,7 +1860,7 @@ void do_priest_spell(short pc_num,short spell_num)
 						sprintf(c_line, "  %s cured.    "
 							, adven[target].name);
 						r1 = ((spell_num == 2) ? 1 : 3) + get_ran(1,0,2) + stat_adj(pc_num,2) / 2;
-						cure_pc(target,r1);
+						cure_pc(adven[target],r1);
 					break;
 					
 					case 19: // awaken
@@ -2020,7 +1955,7 @@ void do_priest_spell(short pc_num,short spell_num)
 				if (spell_num == 47) {
 						sprintf(c_line, "  %s healed.         ",
 							adven[target].name);
-						heal_pc(target,250);
+						pc_heal(adven[target],250);
 						adven[target].status[2] = 0;
 						one_sound(-53); one_sound(52);
 					}
@@ -2097,17 +2032,17 @@ void do_priest_spell(short pc_num,short spell_num)
 			if (spell_num < 54) {
 				sprintf(c_line, "  Party healed %d.       ", r1);
 				add_string_to_buf( c_line);	
-				heal_party(r1);	
+				adventurers_heal(adven, r1);
 				play_sound(52);
 				}
 				else if (spell_num == 54) {
 				sprintf(c_line, "  Party revived.     ");
 				add_string_to_buf( c_line);	
 				r1 = r1 * 2;
-				heal_party(r1);
+				adventurers_heal(adven, r1);
 				play_sound(-53);	
 				play_sound(-52);
-				cure_party(3 + adj);
+				cure_party(adven, 3 + adj);
 				}
 			break;
 			
@@ -2115,7 +2050,7 @@ void do_priest_spell(short pc_num,short spell_num)
 				adven[pc_num].cur_sp -= spell_cost[1][spell_num];			
 				sprintf(c_line, "  Party cured.  ");
 				add_string_to_buf( c_line);		
-				cure_party(3 + stat_adj(pc_num,2));
+				cure_party(adven, 3 + stat_adj(pc_num,2));
 			break;
 			
 		case 42: case 61: case 48:
@@ -3568,7 +3503,7 @@ void kill_pc(short which_pc,short type)
 			else {
 				add_string_to_buf("  Life saved!              ");
 				take_item(which_pc,i);
-				heal_pc(which_pc,200);
+				pc_heal(adven[which_pc],200);
 			}
 	if (adven[current_pc].main_status != 1)
 		current_pc = first_active_pc();
@@ -3625,24 +3560,6 @@ void set_pc_moves()
 void take_ap(short num)
 {
 	pc_moves[current_pc] = max(0,pc_moves[current_pc] - num);
-}
-
-short cave_lore_present()
-{
-	short i,ret = 0;
-	for (i = 0; i < 6; i++)
-		if ((adven[i].main_status == 1) && (adven[i].traits[4] > 0))
-			ret += 1;
-	return ret;
-}
-
-short woodsman_present()
-{
-	short i,ret = 0;
-	for (i = 0; i < 6; i++)
-		if ((adven[i].main_status == 1) && (adven[i].traits[5] > 0))
-			ret += 1;
-	return ret;
 }
 
 void init_spell_menus()

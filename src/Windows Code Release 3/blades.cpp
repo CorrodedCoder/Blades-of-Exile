@@ -95,7 +95,7 @@ Boolean debug_on = FALSE,give_intro_hint = TRUE;
 
 /* Adventure globals */
 party_record_type party;
-std::array<pc_record_type, 6> adven;
+Adventurers adven;
 outdoor_record_type outdoors[2][2];
 current_town_type c_town;
 big_tr_type t_d;

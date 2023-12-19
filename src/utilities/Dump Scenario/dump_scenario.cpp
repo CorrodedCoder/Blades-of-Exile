@@ -59,7 +59,7 @@ bool dump_scenario(std::ostream_iterator<char> strm, std::istream & input)
 		std::format_to(strm, "scen_str[{}]: ({}) \"{}\"\n", index, len, storage.data());
 	}
 
-	for (size_t outdoors_index = 0; outdoors_index < (scenario.out_width * scenario.out_height); ++outdoors_index)
+	for (int outdoors_index = 0; outdoors_index < (scenario.out_width * scenario.out_height); ++outdoors_index)
 	{
 		std::format_to(strm, "Start position: {} {:x}\n", outdoors_index, static_cast<std::size_t>(input.tellg()));
 		outdoor_record_type outdoors;

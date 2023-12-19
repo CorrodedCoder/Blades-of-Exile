@@ -80,7 +80,7 @@ extern current_town_type c_town;
 extern outdoor_record_type outdoors[2][2];
 extern town_item_list 	t_i;
 extern unsigned char out[96][96];
-extern std::array<pc_record_type, 6> adven;
+extern Adventurers adven;
 extern big_tr_type  t_d;
 extern short ulx,uly;
 extern Boolean play_sounds,suppress_stat_screen,cartoon_happening;

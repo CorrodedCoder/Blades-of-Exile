@@ -99,7 +99,7 @@ extern party_record_type party;
 extern talking_record_type talking;
 extern scenario_data_type scenario;
 
-extern std::array<pc_record_type, 6> adven;
+extern Adventurers adven;
 extern outdoor_record_type outdoors[2][2];
 extern current_town_type	c_town;
 extern big_tr_type t_d;
@@ -532,8 +532,8 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 							if (i == 50) {
 								party.age += 1200;////
 								add_string_to_buf("  Rest successful.                ");
-								heal_party(get_ran(5,1,10));
-								restore_sp_party(50);
+								adventurers_heal(adven, get_ran(5,1,10));
+								adventurers_restore_sp(adven, 50);
 								put_pc_screen();
 								}
 							need_reprint = TRUE;
@@ -2371,7 +2371,7 @@ void increase_age()
 				for (i = 0; i < 6; i++)
 					if ((adven[i].main_status == 1) && (adven[i].cur_health < adven[i].max_health))
 						update_stat = TRUE;
-				heal_party(2);
+				adventurers_heal(adven, 2);
 				}
 			}
 		else {
@@ -2379,7 +2379,7 @@ void increase_age()
 				for (i = 0; i < 6; i++)
 					if ((adven[i].main_status == 1) && (adven[i].cur_health < adven[i].max_health))
 						update_stat = TRUE;
-				heal_party(1);
+				adventurers_heal(adven, 1);
 				}
 			}
 	if (is_out()) {
@@ -2387,7 +2387,7 @@ void increase_age()
 			for (i = 0; i < 6; i++)
 				if ((adven[i].main_status == 1) && (adven[i].cur_sp < adven[i].max_sp))
 					update_stat = TRUE;
-				restore_sp_party(2);
+				adventurers_restore_sp(adven, 2);
 				}
 			}
 		else {	
@@ -2395,7 +2395,7 @@ void increase_age()
 			for (i = 0; i < 6; i++)
 				if ((adven[i].main_status == 1) && (adven[i].cur_sp < adven[i].max_sp))
 					update_stat = TRUE;
-				restore_sp_party(1);
+				adventurers_restore_sp(adven, 1);
 				}
 			}
 
@@ -2403,7 +2403,7 @@ void increase_age()
 	for (i = 0; i < 6; i++) 
 		if (adven[i].main_status == 1) {
 			if ((adven[i].traits[9] > 0) && (get_ran(1,0,10) == 1) && (adven[i].cur_health < adven[i].max_health)) {
-				heal_pc(i,2);
+				pc_heal(adven[i],2);
 				update_stat = TRUE;
 				}
 			if ((adven[i].traits[13] > 0) && (get_ran(1,0,110) == 1)) {
@@ -2428,7 +2428,7 @@ void increase_age()
 					if (adven[i].items[item].ability_strength / 3 == 0)
 						j = get_ran(1,0,1);
 					if (is_out()) j = j * 4;
-					heal_pc(i,j);	
+					pc_heal(adven[i],j);	
 					update_stat = TRUE;
 					}
 			}
@@ -2829,7 +2829,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 					update_explored(party.p_loc);
 					initiate_redraw();
 					print_buf();
-					if ((cave_lore_present() > 0) && (get_ran(1,0,1) == 0))
+					if (cave_lore_present(adven) && (get_ran(1,0,1) == 0))
 						add_string_to_buf("  (No supplies lost.)");
 						else if (party.food > 1800)
 							party.food -= 50;

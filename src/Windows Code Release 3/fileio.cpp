@@ -29,7 +29,7 @@
 
 HWND	the_dialog;
 extern party_record_type far	party;
-extern std::array<pc_record_type, 6> adven;
+extern Adventurers adven;
 extern outdoor_record_type outdoors[2][2];
 extern unsigned char out[96][96];
 extern unsigned char out_e[96][96];

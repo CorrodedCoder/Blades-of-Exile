@@ -51,7 +51,7 @@ extern party_record_type party;
 extern talking_record_type talking;
 extern scenario_data_type scenario;
 
-extern std::array<pc_record_type, 6> adven;
+extern Adventurers adven;
 extern RECT sbar_rect,item_sbar_rect,shop_sbar_rect;
 extern HWND text_sbar,item_sbar,shop_sbar;
 extern location center;

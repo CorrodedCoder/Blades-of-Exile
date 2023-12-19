@@ -27,7 +27,7 @@
 extern HBITMAP mixed_gworld,spec_scen_g;
 extern current_town_type c_town;
 extern party_record_type far	party;
-extern std::array<pc_record_type, 6> adven;
+extern Adventurers adven;
 extern town_item_list  t_i;
 extern short stat_window,overall_mode,store_spell_target,which_combat_type,current_pc,combat_active_pc;
 extern location center;

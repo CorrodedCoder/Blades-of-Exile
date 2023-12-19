@@ -61,7 +61,7 @@ extern unsigned char out[96][96];
 extern unsigned char out_e[96][96];
 extern unsigned char combat_terrain[64][64];
 extern location pc_pos[6],center;
-extern std::array<pc_record_type, 6> adven;
+extern Adventurers adven;
 extern Boolean belt_present,web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern unsigned char map_graphic_placed[8][64]; // keeps track of what's been filled on map
 

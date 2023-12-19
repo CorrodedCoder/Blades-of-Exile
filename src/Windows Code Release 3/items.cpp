@@ -29,7 +29,7 @@ extern HWND mainPtr;
 extern Boolean in_startup_mode,boom_anim_active;
 extern HINSTANCE store_hInstance;
 
-extern std::array<pc_record_type, 6> adven;
+extern Adventurers adven;
 extern big_tr_type  t_d;
 extern location pc_pos[6];
 
