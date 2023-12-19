@@ -29,7 +29,7 @@ void pc_restore_sp(pc_record_type& pc, short amt)
 
 void pc_setup_blank(pc_record_type& pc)
 {
-	pc_record_type	dummy_pc;
+	pc_record_type	dummy_pc{};
 	short i;
 
 	dummy_pc.main_status = 0;
@@ -72,7 +72,7 @@ void pc_setup_blank(pc_record_type& pc)
 
 void pc_setup_debug(pc_record_type& pc, short num)
 {
-	pc_record_type	dummy_pc;
+	pc_record_type	dummy_pc{};
 	short i;
 
 	dummy_pc.main_status = 1;
@@ -130,7 +130,7 @@ void pc_setup_debug(pc_record_type& pc, short num)
 
 void pc_setup_prefab(pc_record_type& pc, short num)
 {
-	pc_record_type	dummy_pc;
+	pc_record_type	dummy_pc{};
 	short i;
 	short pc_stats[6][19] = { {8,6,2, 6,0,0,0,0,0, 0,0,0,0,1, 0,0,2,0,0},
 						{8,7,2, 0,0,6,3,0,3, 0,0,0,0,0, 0,0,0,2,0},

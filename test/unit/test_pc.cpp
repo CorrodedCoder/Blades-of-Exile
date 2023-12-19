@@ -3,6 +3,7 @@
 
 #include "boe/pc.hpp"
 
+
 TEST_CASE("pc_heal", "[pc]")
 {
 	SECTION("Healing zero has no effect") {
@@ -187,3 +188,167 @@ TEST_CASE("pc_restore_sp", "[pc]")
 	}
 }
 
+const pc_record_type c_pc_blank{
+	.name={'\n'},
+	.skills = {1, 1, 1},
+	.max_health = 6,
+	.cur_health = 6,
+	.skill_pts = 60,
+	.level = 1,
+	.priest_spells = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+	.mage_spells = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+	.weap_poisoned = 24,
+	.exp_adj = 100,
+};
+
+const std::array c_debug_names{
+	"Gunther",
+	"Yanni",
+	"Mandolin",
+	"Pete",
+	"Vraiment",
+	"Goo"
+};
+
+const pc_record_type c_pc_debug{
+	.main_status = 1,
+	.skills = {20,20,20,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8},
+	.max_health = 60,
+	.cur_health = 60,
+	.max_sp = 90,
+	.cur_sp = 90,
+	.skill_pts = 60,
+	.level = 1,
+	.priest_spells = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+	.mage_spells = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+	.weap_poisoned = 16,
+	.exp_adj = 100,
+};
+
+
+const std::array<pc_record_type, 6> c_pc_prefab{ {
+	{
+		.main_status = 1,
+		.name = "Jenneke",
+		.skills = {8, 6, 2, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 2},
+		.max_health = 22,
+		.cur_health = 22,
+		.level = 1,
+		.priest_spells = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+		.mage_spells = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+		.which_graphic = 3,
+		.traits = {0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0},
+		.exp_adj = 100,
+	},
+	{
+		.main_status = 1,
+		.name = "Thissa",
+		.skills = {8,7,2, 0,0,6,3,0,3, 0,0,0,0,0, 0,0,0,2,0},
+		.max_health = 24,
+		.cur_health = 24,
+		.level = 1,
+		.priest_spells = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+		.mage_spells = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+		.which_graphic = 32,
+		.traits = {1,0,0,0,0,1,0,0,0,0, 1,0,0,0,0},
+		.race = 2,
+		.exp_adj = 100,
+	},
+	{
+		.main_status = 1,
+		.name = "Frrrrrr",
+		.skills = {8,6,2, 3,3,0,0,2,0, 0,0,0,0,0, 4,4,0,2,1},
+		.max_health = 24,
+		.cur_health = 24,
+		.level = 1,
+		.priest_spells = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+		.mage_spells = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+		.which_graphic = 29,
+		.traits = {0,0,0,1,0,0,0,0,0,0, 0,0,1,0,0},
+		.race = 1,
+		.exp_adj = 100,
+	},
+	{
+		.main_status = 1,
+		.name = "Adrianna",
+		.skills = {3,2,6, 2,0,0,2,0,0, 3,0,3,0,1, 0,0,0,0,0},
+		.max_health = 16,
+		.cur_health = 16,
+		.max_sp = 20,
+		.cur_sp = 20,
+		.level = 1,
+		.priest_spells = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+		.mage_spells = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+		.which_graphic = 16,
+		.traits = {0,1,0,0,0,0,0,0,0,0, 0,0,0,0,0},
+		.race = 0,
+		.exp_adj = 100,
+	},
+	{
+		.main_status = 1,
+		.name = "Feodoric",
+		.skills = {2,2,6, 3,0,0,2,0,0,  2,1,4,0,0, 0,0,0,0,1},
+		.max_health = 16,
+		.cur_health = 16,
+		.max_sp = 20,
+		.cur_sp = 20,
+		.level = 1,
+		.priest_spells = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+		.mage_spells = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+		.which_graphic = 23,
+		.traits = {0,0,0,0,1,0,1,1,0,0, 0,0,0,0,1},
+		.race = 0,
+		.exp_adj = 100,
+	},
+	{
+		.main_status = 1,
+		.name = "Michael",
+		.skills = {2,2,6, 0,2,0,2,0,1, 0,3,3,2,0, 0,0,0,0,0},
+		.max_health = 18,
+		.cur_health = 18,
+		.max_sp = 21,
+		.cur_sp = 21,
+		.level = 1,
+		.priest_spells = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+		.mage_spells = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+		.which_graphic = 14,
+		.traits = {0,1,0,0,0,0,0,0,0,0, 0,0,0,0,0},
+		.race = 0,
+		.exp_adj = 100,
+	},
+} };
+
+
+TEST_CASE("pc_setup_blank", "[pc]")
+{
+	pc_record_type pc{};
+	pc_setup_blank(pc);
+	REQUIRE(c_pc_blank == pc);
+}
+
+
+TEST_CASE("pc_setup_debug", "[pc]")
+{
+	for (size_t index = 0; index < 6; ++index)
+	{
+		INFO("Checking debug at index: " << index);
+		pc_record_type pc{};
+		pc_setup_debug(pc, static_cast<short>(index));
+		pc_record_type expected{ c_pc_debug };
+		std::ranges::copy(std::string_view(c_debug_names.at(index)), expected.name);
+		expected.which_graphic = static_cast<short>(index + 4);
+		REQUIRE(expected == pc);
+	}
+}
+
+
+TEST_CASE("pc_setup_prefab", "[pc]")
+{
+	for( size_t index = 0; index < std::size(c_pc_prefab); ++index )
+	{
+		INFO("Checking prefab at index: " << index);
+		pc_record_type pc{};
+		pc_setup_prefab(pc, static_cast<short>(index));
+		REQUIRE(c_pc_prefab[index] == pc);
+	}
+}
