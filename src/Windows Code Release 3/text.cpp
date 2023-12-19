@@ -770,13 +770,13 @@ void refresh_stat_areas(short mode)
 }
 
 
-short pc_encumberance(short pc_num)
+short pc_encumberance(const pc_record_type& pc)
 {
 	short store = 0,i,what_val;
 	
 	for (i = 0; i < 24; i++)
-		if (adven[pc_num].equip[i] == TRUE) {
-			what_val = adven[pc_num].items[i].awkward;
+		if (pc.equip[i] == TRUE) {
+			what_val = pc.items[i].awkward;
 			store += what_val;
 			}
 	return store;

@@ -791,7 +791,7 @@ void display_pc_info()
 	for (i = 0; i < 19; i++) {
 		cdsin(1019,18 + i * 2,adven[pc].skills[i]);
 		}
-	store = pc_encumberance(pc);
+	store = pc_encumberance(adven[pc]);
 	cdsin(1019,62,store);
 	csit(1019,9,adven[pc].name);
 	cdsin(1019,11,adven[pc].level);
@@ -810,7 +810,7 @@ void display_pc_info()
 						else weap2 = i;
 					}
 				
-	hit_adj = stat_adj(pc,1) * 5 - (pc_encumberance(pc)) * 5 
+	hit_adj = stat_adj(pc,1) * 5 - (pc_encumberance(adven[pc])) * 5
 		+ (5 * minmax(-8,8,adven[pc].status[1]));
 	if ((adven[pc].traits[trait::Ambidextrous] == FALSE) && (weap2 < 24))
 		hit_adj -= 25;
