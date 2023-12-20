@@ -1,8 +1,10 @@
 #include "boe/pc.hpp"
 #include <algorithm>
 #include <ranges>
+#include <utility>
 #include <array>
 #include <string_view>
+#include <numeric>
 
 namespace
 {
@@ -173,12 +175,19 @@ void pc_setup_prefab(pc_record_type& pc, short num)
 
 short pc_encumberance(const pc_record_type& pc)
 {
-	short store = 0, i, what_val;
+#if defined(__cpp_lib_ranges_zip) && __cpp_lib_ranges_zip
+	auto v = std::views::zip(pc.equip, pc.items)
+		| std::views::filter([](const auto& pair) { return std::get<0>(pair) == BOE_TRUE; })
+		| std::views::transform([](const auto& pair) { return std::get<1>(pair).awkward; });
+#else
+	auto v = std::views::iota(0, static_cast<int>(std::size(pc.equip)))
+		| std::views::filter([pc](int i) { return pc.equip[i] == BOE_TRUE; })
+		| std::views::transform([pc](int i) { return static_cast<short>(pc.items[i].awkward); });
+#endif
 
-	for (i = 0; i < 24; i++)
-		if (pc.equip[i] == BOE_TRUE) {
-			what_val = pc.items[i].awkward;
-			store += what_val;
-		}
-	return store;
+#if defined(__cpp_lib_ranges_fold) && __cpp_lib_ranges_fold
+	return static_cast<short>(std::ranges::fold_left(v, 0, std::plus<int>()));
+#else
+	return static_cast<short>(std::reduce(std::begin(v), std::end(v), 0));
+#endif
 }

@@ -4,7 +4,7 @@
 #include <utility>
 #include <cstddef>
 
-#if __cpp_lib_byteswap
+#if defined(__cpp_lib_byteswap) && __cpp_lib_byteswap
 
 // C++23
 using std::byteswap;

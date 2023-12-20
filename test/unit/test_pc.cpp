@@ -390,7 +390,7 @@ TEST_CASE("pc_encumberance", "[pc]")
 		{
 			INFO("Checking at index: " << index);
 			pc.items[index].awkward = 1;
-			REQUIRE(pc_encumberance(pc) == index + 1);
+			CHECK(pc_encumberance(pc) == static_cast<short>(index + 1));
 		}
 	}
 	SECTION("Equipped awkward items of different values should have encumberance") {
