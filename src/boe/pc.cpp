@@ -129,8 +129,8 @@ void pc_setup_blank(pc_record_type& pc)
 	pc.level = 1;
 	pc.weap_poisoned = 24;
 	pc.exp_adj = 100;
-	std::fill(std::begin(pc.priest_spells), std::begin(pc.priest_spells) + 30, BOE_TRUE);
-	std::fill(std::begin(pc.mage_spells), std::begin(pc.mage_spells) + 30, BOE_TRUE);
+	std::ranges::fill(std::views::counted(pc.priest_spells, 30), BOE_TRUE);
+	std::ranges::fill(std::views::counted(pc.mage_spells, 30), BOE_TRUE);
 }
 
 void pc_setup_debug(pc_record_type& pc, short num)
@@ -162,8 +162,8 @@ void pc_setup_prefab(pc_record_type& pc, short num)
 	pc.main_status = status::Normal;
 	pc.level = 1;
 	pc.exp_adj = 100;
-	std::fill(std::begin(pc.priest_spells), std::begin(pc.priest_spells) + 30, BOE_TRUE);
-	std::fill(std::begin(pc.mage_spells), std::begin(pc.mage_spells) + 30, BOE_TRUE);
+	std::ranges::fill(std::views::counted(pc.priest_spells, 30), BOE_TRUE);
+	std::ranges::fill(std::views::counted(pc.mage_spells, 30), BOE_TRUE);
 
 	const auto& prefab{ c_prefabs.at(num) };
 
@@ -217,14 +217,8 @@ short pc_get_tnl(const pc_record_type& pc)
 
 short pc_has_space(const pc_record_type& pc)
 {
-	short i = 0;
-
-	while (i < 24) {
-		if (pc.items[i].variety == 0)
-			return i;
-		i++;
-	}
-	return 24;
+	auto it = std::ranges::find_if(pc.items, [](const auto& item) { return item.variety == 0; });
+	return static_cast<short>(std::distance(std::begin(pc.items), it));
 }
 
 // returnes equipped protection level of specified abil, or -1 if no such abil is equipped
