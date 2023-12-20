@@ -2,6 +2,7 @@
 #include <array>
 #include <cstdio>
 
+#include "boe/pc.hpp"
 #include "graphics.h"
 #include "../global.h"
 #include "editors.h"

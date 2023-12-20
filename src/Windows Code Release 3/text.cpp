@@ -770,23 +770,6 @@ void refresh_stat_areas(short mode)
 }
 
 
-short pc_get_tnl(const pc_record_type& pc)
-{
-	short tnl = 100,i,store_per = 100;
-	short rp[3] = {0,12,20};
-	short ap[15] = {10,20,8,10,4, 6,10,7,12,15, -10,-8,-8,-20,-8};
-	
-	tnl = (tnl * (100 + rp[pc.race])) / 100;
-	for (i = 0; i < 15; i++)
-		if (pc.traits[i] == TRUE) 
-			store_per = store_per + ap[i];
-
-	tnl = (tnl * store_per) / 100;	
-	
-	return tnl;
-}
-
-
 const RECT c_source_rects[18] = {
 	BOE_INIT_RECT(55,0,67,12), BOE_INIT_RECT(55,12,67,24), BOE_INIT_RECT(55,24,67,36),
 	BOE_INIT_RECT(67,0,79,12), BOE_INIT_RECT(67,12,79,24), BOE_INIT_RECT(67,24,79,36),

@@ -9,3 +9,4 @@ void pc_heal(pc_record_type& pc, short amt);
 bool pc_cure(pc_record_type& pc, short amt);
 void pc_restore_sp(pc_record_type& pc, short amt);
 short pc_encumberance(const pc_record_type& pc);
+short pc_get_tnl(const pc_record_type& pc);

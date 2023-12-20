@@ -191,3 +191,19 @@ short pc_encumberance(const pc_record_type& pc)
 	return static_cast<short>(std::reduce(std::begin(v), std::end(v), 0));
 #endif
 }
+
+short pc_get_tnl(const pc_record_type& pc)
+{
+	short tnl = 100, i, store_per = 100;
+	short rp[3] = { 0,12,20 };
+	short ap[15] = { 10,20,8,10,4, 6,10,7,12,15, -10,-8,-8,-20,-8 };
+
+	tnl = (tnl * (100 + rp[pc.race])) / 100;
+	for (i = 0; i < 15; i++)
+		if (pc.traits[i] == BOE_TRUE)
+			store_per = store_per + ap[i];
+
+	tnl = (tnl * store_per) / 100;
+
+	return tnl;
+}

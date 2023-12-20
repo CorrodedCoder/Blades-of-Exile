@@ -17,6 +17,5 @@ short luck_total();
 void display_traits_graphics();
 void pick_race_abil_event_filter(short item_hit);
 void pick_race_abil(pc_record_type *pc,short mode,short parent_num);
-short pc_get_tnl(const pc_record_type& pc);
 void reset_boats();
 void combine_things(short pc_num);

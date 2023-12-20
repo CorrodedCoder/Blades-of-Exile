@@ -1,6 +1,7 @@
 #include <Windows.h>
 #include <array>
 
+#include "boe/pc.hpp"
 #include "graphics.h"
 #include "../global.h"
 #include "editors.h"
@@ -375,21 +376,4 @@ void pick_race_abil(pc_record_type *pc,short mode,short parent_num)
 	
 	cd_kill_dialog(1013,0);
 	dialog_not_toast = TRUE;
-}
-
-
-short pc_get_tnl(const pc_record_type& pc)
-{
-	short tnl = 100,i,store_per = 100;
-	short rp[3] = {0,12,20};
-	short ap[15] = {10,20,8,10,4, 6,10,7,12,15, -10,-8,-8,-20,-8};
-	
-	tnl = (tnl * (100 + rp[pc.race])) / 100;
-	for (i = 0; i < 15; i++)
-		if (pc.traits[i] == TRUE) 
-			store_per = store_per + ap[i];
-
-	tnl = (tnl * store_per) / 100;	
-	
-	return tnl;
 }
