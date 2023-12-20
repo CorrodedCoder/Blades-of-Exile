@@ -1433,7 +1433,7 @@ void do_mage_spell(short pc_num,short spell_num)
 			break;
 
 		case 33:  // Magic map
-			item = pc_has_abil(pc_num,158);////
+			item = pc_has_abil(adven[pc_num],158);////
 			if (item == 24)
 				add_string_to_buf("  You need a sapphire.        ");
 				else if (c_town.town.specials2 % 10 == 1)
@@ -1808,7 +1808,7 @@ void do_priest_spell(short pc_num,short spell_num)
 	  					}
 
 				if ((spell_num == 40) || (spell_num == 56))
-					if ((item = pc_has_abil(pc_num,13)) == 16) {
+					if ((item = pc_has_abil(adven[pc_num],13)) == 16) {
 						add_string_to_buf("  Need resurrection balm.        ");
 						spell_num = 500;
 						}
@@ -2765,12 +2765,12 @@ void do_alchemy()
 		
 	which_p = alch_choice(pc_num);
 	if (which_p < 20) {
-			if (pc_has_space(pc_num) == 24) {
+			if (pc_has_space(adven[pc_num]) == 24) {
 				add_string_to_buf("Alchemy: Can't carry another item.");
 				return;
 				}
-			if (((which_item = pc_has_abil(pc_num,abil1_needed[which_p])) == 24) ||
-				((abil2_needed[which_p] > 0) && ((which_item2 = pc_has_abil(pc_num,abil2_needed[which_p])) == 24))) {
+			if (((which_item = pc_has_abil(adven[pc_num],abil1_needed[which_p])) == 24) ||
+				((abil2_needed[which_p] > 0) && ((which_item2 = pc_has_abil(adven[pc_num],abil2_needed[which_p])) == 24))) {
 				add_string_to_buf("Alchemy: Don't have ingredients.");
 				return;
 				}

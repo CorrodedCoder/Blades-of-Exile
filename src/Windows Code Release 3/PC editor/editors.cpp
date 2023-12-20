@@ -87,7 +87,7 @@ Boolean give_to_pc(short pc_num,item_record_type  item, short print_result)
 
 	if (item.variety == 0)
 		return TRUE;
-	if (((free_space = pc_has_space(pc_num)) == 24 ) || (adven[pc_num].main_status != status::Normal))
+	if (((free_space = pc_has_space(adven[pc_num])) == 24 ) || (adven[pc_num].main_status != status::Normal))
 		return FALSE;
 		else {
 			adven[pc_num].items[free_space] = item;
@@ -123,12 +123,12 @@ Boolean take_gold(short amount,Boolean print_result)
 }
 
 
-short pc_has_space(short pc_num)
+short pc_has_space(const pc_record_type& pc)
 {
 	short i = 0;
 	
 	while (i < 24) {
-	if (adven[pc_num].items[i].variety == 0)
+	if (pc.items[i].variety == 0)
 		return i;
 	i++;
 	}
@@ -210,7 +210,7 @@ short char_select_pc(short active_only,short free_inv_only, const char * title)
 	for (i = 0; i < 6; i++) {
 		if ((adven[i].main_status == status::Absent) ||
 			((active_only == TRUE) && (adven[i].main_status > status::Normal)) ||
-			((free_inv_only == 1) && (pc_has_space(i) == 24)) || (adven[i].main_status == status::Fled)) {
+			((free_inv_only == 1) && (pc_has_space(adven[i]) == 24)) || (adven[i].main_status == status::Fled)) {
 				cd_activate_item(1018, 3 + i, 0);
 				}
 		if (adven[i].main_status != status::Absent) {

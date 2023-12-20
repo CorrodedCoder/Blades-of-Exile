@@ -2,7 +2,7 @@ Boolean give_to_pc(short pc_num,item_record_type  item, short print_result);
 Boolean give_to_party(item_record_type item,short print_result);
 void give_gold(short amount,Boolean print_result);
 Boolean take_gold(short amount,Boolean print_result);
-short pc_has_space(short pc_num);
+short pc_has_space(const pc_record_type& pc);
 void take_item(short pc_num,short which_item);
 void fancy_choice_dialog_event_filter (short item_hit);
 short fancy_choice_dialog(short which_dlog,short parent);

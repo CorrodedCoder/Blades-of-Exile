@@ -119,14 +119,14 @@ Boolean give_to_pc(short pc_num,item_record_type  item,short  print_result)
 		return TRUE;
 		}
 	if (item_weight(item) > 
-	  amount_pc_can_carry(pc_num) - pc_carry_weight(pc_num)) {
+	  amount_pc_can_carry(adven[pc_num]) - pc_carry_weight(adven[pc_num])) {
 	  	if (print_result == TRUE) {
 		  	SysBeep(20);
 			ASB("Item too heavy to carry.");
 			}
 		return FALSE;
 	  	}
-	if (((free_space = pc_has_space(pc_num)) == 24) || (adven[pc_num].main_status != status::Normal))
+	if (((free_space = pc_has_space(adven[pc_num])) == 24) || (adven[pc_num].main_status != status::Normal))
 		return FALSE;
 		else {
 			item.item_properties = item.item_properties & 253; // not property
@@ -248,23 +248,21 @@ short pc_has_abil_equip(const pc_record_type& pc,short abil)
 				
 }
 
-short pc_has_abil(short pc_num,short abil)
+short pc_has_abil(const pc_record_type& pc,short abil)
 {
 	short i = 0;
 	
-	while (((adven[pc_num].items[i].variety == 0) || (adven[pc_num].items[i].ability != abil)
+	while (((pc.items[i].variety == 0) || (pc.items[i].ability != abil)
 			) && (i < 24))
 				i++;
 	return i;
 }
 
-Boolean party_has_abil(short abil)
+Boolean party_has_abil(const Adventurers& adventurers, short abil)
 {
-	short i;
-	
-	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == status::Normal)
-			if (pc_has_abil(i,abil) < 24)
+	for (const auto& pc: adventurers)
+		if (pc.main_status == status::Normal)
+			if (pc_has_abil(pc,abil) < 24)
 				return TRUE;
 	return FALSE;
 }
@@ -275,7 +273,7 @@ Boolean party_take_abil(short abil)
 	
 	for (i = 0; i < 6; i++)
 		if (adven[i].main_status == status::Normal)
-			if ((item = pc_has_abil(i,abil)) < 24) {
+			if ((item = pc_has_abil(adven[i],abil)) < 24) {
 				if (adven[i].items[item].charges > 1)
 					adven[i].items[item].charges--;
 					else take_item(i,item);
@@ -284,22 +282,22 @@ Boolean party_take_abil(short abil)
 	return FALSE;
 }
 
-short amount_pc_can_carry(short pc_num)
+short amount_pc_can_carry(const pc_record_type& pc)
 {
-	return 100 + (15 * min(adven[pc_num].skills[0],20)) + ((adven[pc_num].traits[trait::ExceptionalStr] == 0) ? 0 : 30)
-		+ ((adven[pc_num].traits[trait::BadBack] == 0) ? 0 : -50);
+	return 100 + (15 * min(pc.skills[0],20)) + ((pc.traits[trait::ExceptionalStr] == 0) ? 0 : 30)
+		+ ((pc.traits[trait::BadBack] == 0) ? 0 : -50);
 }
-short pc_carry_weight(short pc_num)
+short pc_carry_weight(const pc_record_type& pc)
 {
 	short i,storage = 0;
 	Boolean airy = FALSE,heavy = FALSE;
 	
 	for (i = 0; i < 24; i++) 
-		if (adven[pc_num].items[i].variety > 0) {
-		storage += item_weight(adven[pc_num].items[i]);
-		if (adven[pc_num].items[i].ability == 44)
+		if (pc.items[i].variety > 0) {
+		storage += item_weight(pc.items[i]);
+		if (pc.items[i].ability == 44)
 			airy = TRUE;
-		if (adven[pc_num].items[i].ability == 45)
+		if (pc.items[i].ability == 45)
 			heavy = TRUE;
 		}
 	if (airy == TRUE)
@@ -346,12 +344,12 @@ short take_food(short amount,Boolean print_result)
 	return 0;	
 }
 
-short pc_has_space(short pc_num)
+short pc_has_space(const pc_record_type& pc)
 {
 	short i = 0;
 	
 	while (i < 24) {
-	if (adven[pc_num].items[i].variety == 0)
+	if (pc.items[i].variety == 0)
 		return i;
 	i++;
 	}
@@ -369,10 +367,10 @@ short pc_ok_to_buy(short pc_num,short cost,item_record_type item)
 				&& (adven[pc_num].items[i].charges > 123))
 					return 5;
 
-		if (pc_has_space(pc_num) == 24)
+		if (pc_has_space(adven[pc_num]) == 24)
 			return 2;
 		if (item_weight(item) > 
-		  amount_pc_can_carry(pc_num) - pc_carry_weight(pc_num)) {
+		  amount_pc_can_carry(adven[pc_num]) - pc_carry_weight(adven[pc_num])) {
 	  		return 4;
 	  		}	
 	  	}
@@ -699,7 +697,7 @@ void give_thing(short pc_num, short item_num)
 							take_item(pc_num,item_num);	
 						}
 						else {
-							if (pc_has_space(who_to) == 24)
+							if (pc_has_space(adven[who_to]) == 24)
 								ASB("Can't give: PC has max. # of items.");
 								else ASB("Can't give: PC carrying too much.");
 							if (how_many > 0)
@@ -857,12 +855,12 @@ void put_item_graphics()
 
 	// First make sure all arrays for who can get stuff are in order.
 	if ((current_getting_pc < 6) && ((adven[current_getting_pc].main_status != status::Normal) 
-	 || (pc_has_space(current_getting_pc) == 24))) {
+	 || (pc_has_space(adven[current_getting_pc]) == 24))) {
 	 	current_getting_pc = 6;
 	 	
 	 	}
 	for (i = 0; i < 6; i++)
-		if ((adven[i].main_status == status::Normal) && (pc_has_space(i) < 24)
+		if ((adven[i].main_status == status::Normal) && (pc_has_space(adven[i]) < 24)
 		 && ((!is_combat()) || (current_pc == i))) {
 			if (current_getting_pc == 6)
 				current_getting_pc = i;
@@ -915,8 +913,8 @@ void put_item_graphics()
 		}
 	
 	if (current_getting_pc < 6) {
-		i = amount_pc_can_carry(current_getting_pc);
-		storage = pc_carry_weight(current_getting_pc);
+		i = amount_pc_can_carry(adven[current_getting_pc]);
+		storage = pc_carry_weight(adven[current_getting_pc]);
 		sprintf(message, "%s is carrying %d out of %d.",adven[current_getting_pc].name,storage,i);
 		csit(987,52,(char *) message);
 		}
@@ -986,7 +984,7 @@ void display_item_event_filter (short item_hit)
 					}
   				else {
 					if (item_weight(item) >
-					  amount_pc_can_carry(current_getting_pc) - pc_carry_weight(current_getting_pc)) {
+					  amount_pc_can_carry(adven[current_getting_pc]) - pc_carry_weight(adven[current_getting_pc])) {
 						SysBeep(20);
 						csit(987,52,"It's too heavy to carry.");
 						give_help(38,0,987);
@@ -1164,7 +1162,7 @@ short char_select_pc(short active_only,short free_inv_only, const char * title)
 	for (i = 0; i < 6; i++) {
 		if ((adven[i].main_status == status::Absent) ||
 			((active_only == TRUE) && (adven[i].main_status > status::Normal)) ||
-			((free_inv_only == 1) && (pc_has_space(i) == 24)) || (adven[i].main_status == status::Fled)) {
+			((free_inv_only == 1) && (pc_has_space(adven[i]) == 24)) || (adven[i].main_status == status::Fled)) {
 				cd_activate_item(1018, 3 + i, 0);
 				}
 		if (adven[i].main_status != status::Absent) {

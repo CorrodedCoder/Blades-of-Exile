@@ -1231,7 +1231,7 @@ void do_combat_cast(location target)
 									if ((cur_monst->m_d.mu == 0) && (cur_monst->m_d.cl == 0))
 										add_string_to_buf("  Can't duel: no magic.");
 										else {
-											item = pc_has_abil(current_pc,159);
+											item = pc_has_abil(adven[current_pc],159);
 											if (item >= 24)
 												add_string_to_buf("  You need a smoky crystal.   ");
 												else {

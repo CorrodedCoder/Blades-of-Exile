@@ -776,8 +776,8 @@ void display_pc_info()
 
 	pc = store_pc_num;
 	
-	store = pc_carry_weight(pc);
-	i = amount_pc_can_carry(pc);
+	store = pc_carry_weight(adven[pc]);
+	i = amount_pc_can_carry(adven[pc]);
 	sprintf(to_draw, "%s is carrying %d stones out of %d.",adven[pc].name,store,i);
 	csit(1019,69,(char *) to_draw);
 
