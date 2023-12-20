@@ -1,5 +1,5 @@
-short get_prot_level(short pc_num,short abil) ;
-void sort_pc_items(short pc_num);
+short get_prot_level(const pc_record_type& pc, short abil) ;
+void sort_pc_items(pc_record_type& pc);
 Boolean give_to_pc(short pc_num,item_record_type  item,short  print_result);
 Boolean give_to_party(item_record_type item,short print_result);
 Boolean forced_give(short item_num,short abil);

@@ -74,7 +74,7 @@ DLGPROC dlog_proc1;
 short being_created;
 short procinst_exists[18] = {0,0,0,0,0, 0,0,0,0,0 ,0,0,0,0,0, 0,0,0};
 
-void sort_pc_items(short pc_num)
+void sort_pc_items(pc_record_type& pc)
 {
 	item_record_type store_item;
 	short item_priority[26] = {20,8,8,20,9, 9,3,2,1,0, 7,20,10,10,10, 10,10,10,5,6, 4,11,12,9,9, 9};
@@ -84,19 +84,19 @@ void sort_pc_items(short pc_num)
 	while (no_swaps == FALSE) {
 		no_swaps = TRUE;
 		for (i = 0; i < 23; i++)
-			if (item_priority[adven[pc_num].items[i + 1].variety] < 
-			  item_priority[adven[pc_num].items[i].variety]) {
+			if (item_priority[pc.items[i + 1].variety] <
+			  item_priority[pc.items[i].variety]) {
 			  	no_swaps = FALSE;
-			  	store_item = adven[pc_num].items[i + 1];
-			  	adven[pc_num].items[i + 1] = adven[pc_num].items[i];
-			  	adven[pc_num].items[i] = store_item;
-			  	store_equip = adven[pc_num].equip[i + 1];
-	 			adven[pc_num].equip[i + 1] = adven[pc_num].equip[i];
-				adven[pc_num].equip[i] = store_equip;
-				if (adven[pc_num].weap_poisoned == i + 1)
-					adven[pc_num].weap_poisoned--;
-					else if (adven[pc_num].weap_poisoned == i)
-						adven[pc_num].weap_poisoned++;
+			  	store_item = pc.items[i + 1];
+				pc.items[i + 1] = pc.items[i];
+				pc.items[i] = store_item;
+			  	store_equip = pc.equip[i + 1];
+				pc.equip[i + 1] = pc.equip[i];
+				pc.equip[i] = store_equip;
+				if (pc.weap_poisoned == i + 1)
+					pc.weap_poisoned--;
+					else if (pc.weap_poisoned == i)
+					pc.weap_poisoned++;
 			  	}
 		}
 }
@@ -146,7 +146,7 @@ Boolean give_to_pc(short pc_num,item_record_type  item,short  print_result)
 				}
 
 			combine_things(pc_num);
-			sort_pc_items(pc_num);
+			sort_pc_items(adven[pc_num]);
 			return TRUE;
 			}
 	return FALSE;
@@ -186,7 +186,7 @@ Boolean forced_give(short item_num,short abil)
 					else sprintf(announce_string,"  %s gets %s.",adven[i].name,item.full_name);
 				add_string_to_buf(announce_string);
 				combine_things(i);
-				sort_pc_items(i);
+				sort_pc_items(adven[i]);
 				return TRUE;
 				}
 	return FALSE;
@@ -225,14 +225,14 @@ Boolean take_gold(short amount,Boolean print_result)
 }
 
 // returnes equipped protection level of specified abil, or -1 if no such abil is equipped
-short get_prot_level(short pc_num,short abil) ////
+short get_prot_level(const pc_record_type& pc, short abil) ////
 {
 	short i = 0;
 	
 	for (i = 0; i < 24; i++)
-		if ((adven[pc_num].items[i].variety != 0) && (adven[pc_num].items[i].ability == abil)
-			&& (adven[pc_num].equip[i] == TRUE))
-				return adven[pc_num].items[i].ability_strength;
+		if ((pc.items[i].variety != 0) && (pc.items[i].ability == abil)
+			&& (pc.equip[i] == TRUE))
+				return pc.items[i].ability_strength;
 	return -1;
 				
 }
