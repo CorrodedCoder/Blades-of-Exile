@@ -16,6 +16,7 @@
 #include "exlsound.h"
 #include "graphutl.h"
 #include "graphutl_helpers.hpp"
+#include "boe/hacks.hpp"
 
 static const std::array m_mage_sp{"Spark","Minor Haste","Strength","Flame Cloud","Flame",
 						"Minor Poison","Slow","Dumbfound","Stinking Cloud","Summon Beast",
@@ -157,8 +158,8 @@ void put_pc_screen()
 	Boolean right_buttons_same = TRUE;
 
 	for (i = 0; i < 6; i++)
-		if (((adven[i].main_status != 0) && (pc_button_state[i] != 1)) ||
-			((adven[i].main_status == 0) && (pc_button_state[i] != 0)))
+		if (((adven[i].main_status != status::Absent) && (pc_button_state[i] != 1)) ||
+			((adven[i].main_status == status::Absent) && (pc_button_state[i] != 0)))
 				right_buttons_same = FALSE;
 
 	// First refresh gworld with the pc info
@@ -215,7 +216,7 @@ void put_pc_screen()
 	SetTextColor(hdc,PALETTEINDEX(c[0]));
 
 	for (i = 0; i < 6; i++) {
-		if (adven[i].main_status != 0) {
+		if (adven[i].main_status != status::Absent) {
 			for (j = 0; j < 5; j++)
 				pc_area_button_active[i][j] = 1;
 			if (i == current_pc) {
@@ -236,7 +237,7 @@ void put_pc_screen()
 			to_draw_rect = pc_buttons[i][1];      
 			to_draw_rect.right += 20;
 			switch (adven[i].main_status) {
-				case 1:
+				case status::Normal:
 					if (adven[i].cur_health == adven[i].max_health)
 						SetTextColor(hdc,PALETTEINDEX(c[3]));
 						else SetTextColor(hdc,PALETTEINDEX(c[1]));
@@ -254,29 +255,29 @@ void put_pc_screen()
 					draw_pc_effects_bmp(i, pc_stats_gworld);
 					SelectObject(hdc,pc_stats_gworld);
 					break;
-				case 2:
+				case status::Dead:
 					sprintf(to_draw, "Dead");
 					break;
-				case 3:
+				case status::Dust:
 					sprintf(to_draw, "Dust");
 					break;
-				case 4:
+				case status::Stone:
 					sprintf(to_draw, "Stone");
 					break;
-				case 5:
+				case status::Fled:
 					sprintf(to_draw, "Fled");
 					break;
-				case 6:
+				case status::Surface:
 					sprintf(to_draw, "Surface");
 					break;
-				case 7:
+				case status::Won:
 					sprintf(to_draw, "Won");
 					break;
 				default:
 					sprintf(to_draw, "Absent");
 					break;
 				}
-			if (adven[i].main_status != 1)
+			if (adven[i].main_status != status::Normal)
 				win_draw_string(hdc,to_draw_rect,
 				 to_draw,0,10);
 
@@ -312,7 +313,7 @@ void put_pc_screen()
 
 	// Sometimes this gets called when character is slain. when that happens, if items for
 	// that PC are up, switch item page.
-	if ((current_pc < 6) && (adven[current_pc].main_status != 1) && (stat_window == current_pc)) {
+	if ((current_pc < 6) && (adven[current_pc].main_status != status::Normal) && (stat_window == current_pc)) {
 		set_stat_window(current_pc);
 		}
 }
@@ -353,7 +354,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 		item_stats_gworld,erase_rect,0,0);
 	if (suppress_buttons == 0)
 		for (i = 0; i < 6; i++)
-			if ((adven[i].main_status != 1) && (current_item_button[i] != -1)) {
+			if ((adven[i].main_status != status::Normal) && (current_item_button[i] != -1)) {
 			current_item_button[i] = -1;
 			//FillCRECT(&item_screen_button_rects[i],bg[7]);
 			from_rect = item_screen_button_rects[i];
@@ -674,7 +675,7 @@ static void place_item_bottom_buttons()
 	short i;
 
 	for (i = 0; i < 6; i++) {
-		if (adven[i].main_status == 1) {
+		if (adven[i].main_status == status::Normal) {
 			item_bottom_button_active[i] = TRUE;
 			to_rect = item_screen_button_rects[i];
 			//if (current_item_button[i] != adven[i].which_graphic) {
@@ -708,7 +709,7 @@ void set_stat_window(short new_stat)
 	short i,array_pos = 0;
 	
 	stat_window = new_stat;
-	if ((stat_window < 6) && (adven[stat_window].main_status != 1))
+	if ((stat_window < 6) && (adven[stat_window].main_status != status::Normal))
 		stat_window = first_active_pc();
 	switch (stat_window) {
 		case 6:
@@ -741,7 +742,7 @@ short first_active_pc()
 	short i = 0;
 	
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == 1)
+		if (adven[i].main_status == status::Normal)
 			return i;
 	return 6;
 }
@@ -784,7 +785,7 @@ static void draw_pc_effects_ex(RectDrawDestination dest_bmp, const pc_record_typ
 {
 	RECT dest_rect{ dest_rect_start };
 
-	if (adventurer.main_status % 10 != 1)
+	if (hacks_adventurer_without_split_status(adventurer) != status::Normal)
 		return;
 			
 	if ((adventurer.status[0] > 0) && (dest_rect.right < right_limit)) {
@@ -920,7 +921,7 @@ short do_look(location space)
 			add_string_to_buf("    Your party");
 	if (is_combat())
 		for (i = 0; i < 6; i++)
-			if ((same_point(space,pc_pos[i]) == TRUE) && (adven[i].main_status == 1)
+			if ((same_point(space,pc_pos[i]) == TRUE) && (adven[i].main_status == status::Normal)
 				&& (is_lit == TRUE) && (can_see(pc_pos[current_pc],space,0) < 5)) {
 				sprintf(store_string, "    %s", adven[i].name);
 				add_string_to_buf( store_string);

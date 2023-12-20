@@ -464,7 +464,7 @@ Boolean pc_combat_move(location destination)
 		}
 	else if ((combat_terrain[destination.x][destination.y] == 90) && (which_combat_type == 0)) {
 			if (get_ran(1,1,10) < 3) {
-				adven[current_pc].main_status = 5;
+				adven[current_pc].main_status = status::Fled;
 				if (combat_active_pc == current_pc)
 					combat_active_pc = 6;
 				sprintf(create_line, "Moved: Fled.                    ");
@@ -529,7 +529,7 @@ Boolean pc_combat_move(location destination)
 					}
 				
 				// move if still alive
-				if (adven[current_pc].main_status == 1) {
+				if (adven[current_pc].main_status == status::Normal) {
 						pc_dir[current_pc] = set_direction(pc_pos[current_pc],destination);
 						pc_pos[current_pc] = destination;
 						adven[current_pc].direction = dir;
@@ -571,7 +571,7 @@ void pc_attack(short who_att,short target)
 	short hit_adj, dam_adj, spec_dam = 0,poison_amt;
 
 	// slice out bad attacks
-	if (adven[who_att].main_status != 1)
+	if (adven[who_att].main_status != status::Normal)
 		return;
 	if ((adven[who_att].status[11] > 0) || (adven[who_att].status[12] > 0))
 		return;
@@ -1618,7 +1618,7 @@ Boolean combat_next_step()
 	// In case running monsters affected active PC...
 /*	if (adven[current_pc].status[3] < 0)
 		this_pc_hasted = FALSE;
-	if ((adven[current_pc].main_status != 1) || 
+	if ((adven[current_pc].main_status != status::Normal) || 
 		((adven[current_pc].status[3] < 0) && (party.age % 2 == 0)))
 		pick_next_pc();
 	center = pc_pos[current_pc];		*/
@@ -1713,7 +1713,7 @@ void combat_run_monst()
 					}	
 				}
 		for (i = 0; i < 6; i++) 
-			if (adven[i].main_status == 1) {
+			if (adven[i].main_status == status::Normal) {
 			if ((adven[i].status[4] != 0) || (adven[i].status[5] != 0)
 			 || (adven[i].status[8] != 0)|| (adven[i].status[10] != 0)
 			 || (adven[i].status[11] != 0)|| (adven[i].status[12] != 0))
@@ -1869,7 +1869,7 @@ void do_monster_turn()
 		
 		
 		for (j = 0; j < 6; j++)
-			if ((adven[j].main_status == 1) && (monst_adjacent(pc_pos[j],i) == TRUE))
+			if ((adven[j].main_status == status::Normal) && (monst_adjacent(pc_pos[j],i) == TRUE))
 				pc_adj[j] = TRUE;
 				else pc_adj[j] = FALSE; 
 
@@ -1956,7 +1956,7 @@ void do_monster_turn()
 						r1 = get_ran(1,1,6);
 						if (r1 == 3)
 							cur_monst->m_d.morale++;
-/*crash*/			if ((adven[monst_target[i]].main_status == 1)	&& (cur_monst->mobile == TRUE)) {
+/*crash*/			if ((adven[monst_target[i]].main_status == status::Normal)	&& (cur_monst->mobile == TRUE)) {
 							acted_yet = flee_party (i,cur_monst->m_loc,targ_space);
 							if (acted_yet == TRUE) take_m_ap(1,cur_monst);
 							}
@@ -2030,7 +2030,7 @@ void do_monster_turn()
 						} // Special attacks
 						
 					// Attack pc
-					if ((monst_target[i] < 6) && (adven[monst_target[i]].main_status == 1) 
+					if ((monst_target[i] < 6) && (adven[monst_target[i]].main_status == status::Normal) 
 						&& (monst_adjacent(targ_space,i) == TRUE)  && (cur_monst->attitude % 2 == 1)
 						 && (acted_yet == FALSE)) {
 							monster_attack_pc(i,monst_target[i]);
@@ -2062,7 +2062,7 @@ void do_monster_turn()
 								seek_party (i,cur_monst->m_loc,move_targ);
 								else { // spot is OK, so go nuts
 								if ((cur_monst->attitude % 2 == 1) && (move_target < 6)) // Monsters seeking party do so
-									if (adven[move_target].main_status == 1) {
+									if (adven[move_target].main_status == status::Normal) {
 										seek_party (i,cur_monst->m_loc,pc_pos[move_target]);
 										for (k = 0; k < 6; k++)
 											if ((pc_parry[k] > 99) && (monst_adjacent(pc_pos[k],i) == TRUE)
@@ -2103,7 +2103,7 @@ void do_monster_turn()
 					// pcs attack any fleeing monsters
 					if ((overall_mode >= 10) && (overall_mode < 20))
 						for (k = 0; k < 6; k++)
-							if ((adven[k].main_status == 1) && (monst_adjacent(pc_pos[k],i) == FALSE)
+							if ((adven[k].main_status == status::Normal) && (monst_adjacent(pc_pos[k],i) == FALSE)
 								&& (pc_adj[k] == TRUE) && (cur_monst->attitude % 2 == 1) && (cur_monst->active > 0) &&
 								(adven[k].status[8] == 0)) {
 									combat_posing_monster = current_working_monster = k;
@@ -2276,7 +2276,7 @@ void monster_attack_pc(short who_att,short target)
 		}
 
 	for (i = 0; i < 3; i++) {
-		if ((attacker->m_d.a[i] > 0) && (adven[target].main_status == 1)) {
+		if ((attacker->m_d.a[i] > 0) && (adven[target].main_status == status::Normal)) {
 //			sprintf(create_line, "  Attacks %s.", adven[target].name);
 //			add_string_to_buf( create_line);
 
@@ -2415,7 +2415,7 @@ void monster_attack_pc(short who_att,short target)
 		
 		
 		}
-		if (adven[target].main_status != 1)
+		if (adven[target].main_status != status::Normal)
 			i = 3;
 	}
 
@@ -2564,7 +2564,7 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 		}
 		else {
 			targ_space = (is_combat()) ? pc_pos[target] : c_town.p_loc;
-			if (adven[target].main_status != 1)
+			if (adven[target].main_status != status::Normal)
 				return;
 			}
 		
@@ -2641,7 +2641,7 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 					else {
 						sprintf(create_line, "  %s is turned to stone.                  ", adven[target].name);
 						add_string_to_buf( create_line);
-						kill_pc(target,4);
+						kill_pc(target, status::Stone);
 						}
 				}
 				else {
@@ -2661,7 +2661,7 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 				if (adven[target].cur_sp < 4) {
 					for (i = 0; i < 8; i++) {
 						j = get_ran(1,0,5);
-						if ((adven[j].main_status == 1) && (adven[j].cur_sp > 4) &&
+						if ((adven[j].main_status == status::Normal) && (adven[j].cur_sp > 4) &&
 							(can_see(source,pc_pos[j],0) < 5) && (dist(source,pc_pos[j]) <= 8)) {
 								target = j;
 								i = 8;
@@ -2873,7 +2873,7 @@ Boolean monst_cast_mage(creature_data_type *caster,short targ)
 		return FALSE;
 		}
 	// is target dead?
-	if ((targ < 6) && (adven[targ].main_status != 1))
+	if ((targ < 6) && (adven[targ].main_status != status::Normal))
 		return FALSE;
 	if ((targ >= 100) && (c_town.monst.dudes[targ - 100].active == 0))
 		return FALSE;
@@ -3187,7 +3187,7 @@ Boolean monst_cast_priest(creature_data_type *caster,short targ)
 	location ashes_loc = {0,0};
 	
 	
-	if ((targ < 6) && (adven[targ].main_status != 1))
+	if ((targ < 6) && (adven[targ].main_status != status::Normal))
 		return FALSE;
 	if ((targ >= 100) && (c_town.monst.dudes[targ - 100].active == 0))
 		return FALSE;
@@ -3498,7 +3498,7 @@ location closest_pc_loc(location where)
 	location pc_where = {120,120};
 	
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == 1)
+		if (adven[i].main_status == status::Normal)
 			if ((dist(where,pc_pos[i])) < (dist(where,pc_where)))
 				pc_where = pc_pos[i];
 	return pc_where;
@@ -3530,11 +3530,11 @@ Boolean pc_near(short pc_num,location where,short radius)
 {
 	// Assuming not looking
 	if (overall_mode >= 10) {
-		if ((adven[pc_num].main_status == 1) && (vdist(pc_pos[pc_num],where) <= radius))
+		if ((adven[pc_num].main_status == status::Normal) && (vdist(pc_pos[pc_num],where) <= radius))
 			return TRUE;
 			else return FALSE;
 		}
-	if ((adven[pc_num].main_status == 1) && (vdist(c_town.p_loc,where) <= radius))
+	if ((adven[pc_num].main_status == status::Normal) && (vdist(c_town.p_loc,where) <= radius))
 		return TRUE;
 		else return FALSE;
 }
@@ -3545,7 +3545,7 @@ location where;
 	short i;
 	
 	for (i = 0; i < 6; i++)
-		if ((adven[i].main_status == 1) && (pc_pos[i].x == where.x) && (pc_pos[i].y == where.y))
+		if ((adven[i].main_status == status::Normal) && (pc_pos[i].x == where.x) && (pc_pos[i].y == where.y))
 			return i;
 	return 6;
 } */
@@ -3666,7 +3666,7 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,Boolean 
 			for (j = minmax(0,town_size[town_type] - 1,center.y - 4); j <= minmax(0,town_size[town_type] - 1,center.y + 4); j++) {
 				spot_hit.x = i;
 				spot_hit.y = j;
-				if ((get_obscurity(i,j) < 5) && (adven[k].main_status == 1)
+				if ((get_obscurity(i,j) < 5) && (adven[k].main_status == status::Normal)
 					&& (((is_combat()) &&(same_point(pc_pos[k],spot_hit) == TRUE)) ||
 					((is_town()) && (same_point(c_town.p_loc,spot_hit) == TRUE)))) {
 					effect = pat.pattern[i - center.x + 4][j - center.y + 4];
@@ -3794,7 +3794,7 @@ void do_shockwave(location target)
 	start_missile_anim();
 	for (i = 0; i < 6; i++)
 		if ((dist(target,pc_pos[i]) > 0) && (dist(target,pc_pos[i]) < 11)
-			&& (adven[i].main_status == 1))
+			&& (adven[i].main_status == status::Normal))
 				damage_pc(i, get_ran(2 + dist(target,pc_pos[i]) / 2, 1, 6), 4,-1);
   	for (i = 0; i < T_M; i++)
 		if ((c_town.monst.dudes[i].active != 0) && (dist(target,c_town.monst.dudes[i].m_loc) > 0)
@@ -3813,7 +3813,7 @@ void radius_damage(location target,short radius, short dam, short type)////
 	if (is_town()) {
 		for (i = 0; i < 6; i++)
 			if ((dist(target,c_town.p_loc) > 0) && (dist(target,c_town.p_loc) <= radius)
-				&& (adven[i].main_status == 1))
+				&& (adven[i].main_status == status::Normal))
 					damage_pc(i, dam, type,-1);
 		for (i = 0; i < T_M; i++)
 			if ((c_town.monst.dudes[i].active != 0) && (dist(target,c_town.monst.dudes[i].m_loc) > 0)
@@ -3826,7 +3826,7 @@ void radius_damage(location target,short radius, short dam, short type)////
 	start_missile_anim();
 	for (i = 0; i < 6; i++)
 		if ((dist(target,pc_pos[i]) > 0) && (dist(target,pc_pos[i]) <= radius)
-			&& (adven[i].main_status == 1))
+			&& (adven[i].main_status == status::Normal))
 				damage_pc(i, dam, type,-1);
 	for (i = 0; i < T_M; i++)
 		if ((c_town.monst.dudes[i].active != 0) && (dist(target,c_town.monst.dudes[i].m_loc) > 0)
@@ -3891,7 +3891,7 @@ void hit_space(location target,short dam,short type,short report,short hit_all)
 	
 	if (overall_mode >= 10)
 		for (i = 0; i < 6; i++)
-			if ((adven[i].main_status == 1) && (stop_hitting == FALSE))
+			if ((adven[i].main_status == status::Normal) && (stop_hitting == FALSE))
 				if (same_point(pc_pos[i],target) == TRUE) {
 						damage_pc(i,dam,type,-1);					
 						stop_hitting = (hit_all == 1) ? FALSE : TRUE;				
@@ -3917,13 +3917,13 @@ void do_poison()
 	Boolean some_poison = FALSE;
 		
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == 1)
+		if (adven[i].main_status == status::Normal)
 			if (adven[i].status[2] > 0)
 				some_poison = TRUE;
 	if (some_poison == TRUE) {
 		add_string_to_buf("Poison:                        ");
 		for (i = 0; i < 6; i++)
-			if (adven[i].main_status == 1)
+			if (adven[i].main_status == status::Normal)
 				if (adven[i].status[2] > 0) {
 					r1 = get_ran(adven[i].status[2],1,6);
 					damage_pc(i,r1,2,-1);
@@ -3946,14 +3946,14 @@ void handle_disease()
 	Boolean disease = FALSE;
 		
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == 1)
+		if (adven[i].main_status == status::Normal)
 			if (adven[i].status[7] > 0)
 				disease = TRUE;
 				
 	if (disease == TRUE) {
 		add_string_to_buf("Disease:                        ");
 		for (i = 0; i < 6; i++)
-			if (adven[i].main_status == 1)
+			if (adven[i].main_status == status::Normal)
 				if (adven[i].status[7] > 0) {
 					r1 = get_ran(1,1,10);
 					switch (r1) {
@@ -3994,14 +3994,14 @@ void handle_acid()
 	Boolean some_acid = FALSE;
 		
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == 1)
+		if (adven[i].main_status == status::Normal)
 			if (adven[i].status[13] > 0)
 				some_acid = TRUE;
 				
 	if (some_acid == TRUE) {
 		add_string_to_buf("Acid:                        ");
 		for (i = 0; i < 6; i++)
-			if (adven[i].main_status == 1)
+			if (adven[i].main_status == status::Normal)
 				if (adven[i].status[13] > 0) {
 					r1 = get_ran(adven[i].status[13],1,6);
 					damage_pc(i,r1,3,-1);
@@ -4017,7 +4017,7 @@ Boolean no_pcs_left()
 	short i = 0;
 	
 	while (i < 6) {
-		if (adven[i].main_status == 1)
+		if (adven[i].main_status == status::Normal)
 			return FALSE;
 		i++;
 		}
@@ -4055,8 +4055,8 @@ void end_combat()
 	short i;
 	
 	for (i = 0; i < 6; i++) {
-		if (adven[i].main_status == 5)
-			adven[i].main_status = 1;
+		if (adven[i].main_status == status::Fled)
+			adven[i].main_status = status::Normal;
 		adven[i].status[0] = 0;
 		adven[i].status[1] = 0;			
 		adven[i].status[3] = 0;		
@@ -4067,7 +4067,7 @@ void end_combat()
 		}
 	combat_active_pc = 6;
 	current_pc = store_current_pc;
-	if (adven[current_pc].main_status != 1)
+	if (adven[current_pc].main_status != status::Normal)
 		current_pc = first_active_pc();
 	put_item_screen(stat_window,0);
 	draw_buttons(0);
@@ -4195,7 +4195,7 @@ Boolean combat_cast_mage_spell()
 								
 										
 								for (i = 0; i < 6; i++) 
-									if (adven[i].main_status == 1) {
+									if (adven[i].main_status == status::Normal) {
 									adven[i].status[3] = min(8,
 										adven[i].status[3] + ((spell_num == 39) ? 1 + adven[current_pc].level / 8 + bonus : 3 + bonus));		
 									if (spell_num == 55) {
@@ -4350,7 +4350,7 @@ Boolean combat_cast_priest_spell()
 						case 38:
 							adven[current_pc].cur_sp -= s_cost[1][spell_num];		
 							for (i = 0; i < 6; i++) 
-								if (adven[i].main_status == 1) {
+								if (adven[i].main_status == status::Normal) {
 									adven[i].status[1] += adven[current_pc].level / 3;										
 								add_missile(pc_pos[i],8,0,0,0);
 								}
@@ -4708,14 +4708,14 @@ void scloud_space(short m,short n)
 	
 	if (overall_mode >= 10)
 		for (i = 0; i < 6; i++)
-			if (adven[i].main_status == 1)
+			if (adven[i].main_status == status::Normal)
 				if (same_point(pc_pos[i],target) == TRUE) {
 						curse_pc(i,get_ran(1,1,2));					
 					}
 	if (overall_mode < 10)
 		if (same_point(target,c_town.p_loc) == TRUE) {
 			for (i = 0; i < 6; i++)
-				if (adven[i].main_status == 1)
+				if (adven[i].main_status == status::Normal)
 					curse_pc(i,get_ran(1,1,2));					
 			}
 }
@@ -4732,7 +4732,7 @@ void web_space(short m,short n)
 
 	if (overall_mode >= 10)
 		for (i = 0; i < 6; i++)
-			if (adven[i].main_status == 1)
+			if (adven[i].main_status == status::Normal)
 				if (same_point(pc_pos[i],target) == TRUE) {
 						web_pc(i,3);					
 					}
@@ -4754,7 +4754,7 @@ void sleep_cloud_space(short m,short n)
 
 	if (overall_mode >= 10)
 		for (i = 0; i < 6; i++)
-			if (adven[i].main_status == 1)
+			if (adven[i].main_status == status::Normal)
 				if (same_point(pc_pos[i],target) == TRUE) {
 					sleep_pc(i,3,11,0);
 					}

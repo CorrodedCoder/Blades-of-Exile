@@ -324,7 +324,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 			one_sound(17);
 			if (mode < 2) {
 				for (i = 0; i < 6; i++) 
-					if (adven[i].main_status == 1) 
+					if (adven[i].main_status == status::Normal) 
 						{
 						if (get_ran(1,1,100) <= ter_flag2) {
 							if (ter_special == 5)
@@ -1491,7 +1491,7 @@ void push_things()////
 		}
 	if (is_combat()) {
 		for (i = 0; i < 6; i++)
-			if (adven[i].main_status == 1) {
+			if (adven[i].main_status == status::Normal) {
 				ter = t_d.terrain[pc_pos[i].x][pc_pos[i].y];
 				l = pc_pos[i];
 				switch (scenario.ter_types[ter].special) {
@@ -2117,7 +2117,7 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 				if ((pc < 0) || (pc == i)) {
 					if (spec.ex1b == 0) {
 						if ((adven[i].main_status > 0) && (adven[i].main_status < 10))
-							adven[i].main_status = 1;
+							adven[i].main_status = status::Normal;
 						}
 						else kill_pc(i,spec.ex1a + 2 + 10);
 					}
@@ -2343,7 +2343,7 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 			break;
 		case 141:
 			for (i = 0; i < 6; i++)
-				if (adven[i].main_status == 1)
+				if (adven[i].main_status == status::Normal)
 					for (j = 0; j < 24; j++)
 						if ((adven[i].items[j].variety > 0) && (adven[i].items[j].special_class == spec.ex1a)
 							&& (adven[i].equip[j] == TRUE)) 
@@ -2379,7 +2379,7 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 			break;
 		case 146:
 			for (i = 0; i < 6; i++)
-				if (adven[i].main_status == 1)
+				if (adven[i].main_status == status::Normal)
 					for (j = 0; j < 24; j++)
 						if ((adven[i].items[j].variety > 0) && (adven[i].items[j].special_class == spec.ex1a)
 							&& (adven[i].equip[j] == TRUE)) {
@@ -2410,12 +2410,12 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 			break;
 		case 151:
 			for (i = 0; i < 6; i++)
-				if ((adven[i].main_status == 1) && (adven[i].traits[trait::CaveLore] > 0))
+				if ((adven[i].main_status == status::Normal) && (adven[i].traits[trait::CaveLore] > 0))
 					*next_spec = spec.ex1b;
 			break;
 		case 152:
 			for (i = 0; i < 6; i++)
-				if ((adven[i].main_status == 1) && (adven[i].traits[trait::Woodsman] > 0))
+				if ((adven[i].main_status == status::Normal) && (adven[i].traits[trait::Woodsman] > 0))
 					*next_spec = spec.ex1b;
 			break;
 		case 153:

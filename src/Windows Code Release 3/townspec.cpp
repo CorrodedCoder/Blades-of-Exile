@@ -14,6 +14,7 @@
 #include "itemdata.h"
 #include "townspec.h"
 #include "exlsound.h"
+#include "boe/hacks.hpp"
 
 extern short overall_mode;
 extern party_record_type party;
@@ -260,7 +261,7 @@ void start_split(short a,short b,short noise)
 	c_town.p_loc.y = b;
 	for (i = 0; i < 6; i++)
 		if (i != party.stuff_done[304][3])
-			adven[i].main_status += 10;
+			hacks_adventurer_set_split_status(adven[i]);
 	current_pc = party.stuff_done[304][3];
 	update_explored(c_town.p_loc);
 	center = c_town.p_loc;
@@ -280,8 +281,7 @@ void end_split(short noise)
 	c_town.p_loc.y = party.stuff_done[304][2];
 	party.stuff_done[304][0] = 0;
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status >= 10)
-			adven[i].main_status -= 10;
+		hacks_adventurer_reset_split_status(adven[i]);
 	update_explored(c_town.p_loc);
 	center = c_town.p_loc;
 	if (noise > 0)

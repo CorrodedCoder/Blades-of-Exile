@@ -45,6 +45,7 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 			-Wno-tautological-value-range-compare
 			-Wno-unsafe-buffer-usage
 			-Wno-implicit-fallthrough
+			-Wno-switch-enum
 
 			# Replace NULL with nullptr and we can remove the following item
 			-Wno-zero-as-null-pointer-constant

@@ -92,7 +92,7 @@ namespace
 
 void pc_heal(pc_record_type& pc, short amt)
 {
-	if ((pc.main_status == 1) && (pc.cur_health < pc.max_health))
+	if ((pc.main_status == status::Normal) && (pc.cur_health < pc.max_health))
 	{
 		pc.cur_health = std::min(static_cast<short>(pc.cur_health + amt), pc.max_health);
 	}
@@ -100,7 +100,7 @@ void pc_heal(pc_record_type& pc, short amt)
 
 bool pc_cure(pc_record_type& pc, short amt)
 {
-	if (pc.main_status != 1)
+	if (pc.main_status != status::Normal)
 	{
 		return false;
 	}
@@ -136,7 +136,7 @@ void pc_setup_blank(pc_record_type& pc)
 void pc_setup_debug(pc_record_type& pc, short num)
 {
 	pc = pc_record_type{};
-	pc.main_status = 1;
+	pc.main_status = status::Normal;
 	std::ranges::copy(std::string_view(c_debug_names.at(num)), pc.name);
 	std::ranges::fill(pc.skills, static_cast<short>(8));
 	pc.skills[0] = 20;
@@ -159,7 +159,7 @@ void pc_setup_debug(pc_record_type& pc, short num)
 void pc_setup_prefab(pc_record_type& pc, short num)
 {
 	pc = pc_record_type{};
-	pc.main_status = 1;
+	pc.main_status = status::Normal;
 	pc.level = 1;
 	pc.exp_adj = 100;
 	std::fill(std::begin(pc.priest_spells), std::begin(pc.priest_spells) + 30, BOE_TRUE);

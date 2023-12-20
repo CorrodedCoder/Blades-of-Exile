@@ -6,7 +6,7 @@
 
 namespace
 {
-	auto is_active = [](const auto& adventurer) { return adventurer.main_status == 1; };
+	auto is_active = [](const auto& adventurer) { return adventurer.main_status == status::Normal; };
 }
 
 bool cave_lore_present(const Adventurers& adven)

@@ -728,7 +728,7 @@ Boolean handle_menu (short item, HMENU menu)
 				if (choice == 1)
 					return FALSE;
 				for (i = 0; i < 6; i++)
-					adven[i].main_status = 0;
+					adven[i].main_status = status::Absent;
 				party_in_memory = FALSE;
 				reload_startup();
 				in_startup_mode = TRUE;
@@ -780,7 +780,7 @@ Boolean handle_menu (short item, HMENU menu)
 					choice = char_select_pc(0,0,"Delete who?");
 					if (choice < 6) {
 						if ((i = FCD(1053,0)) == 2)
-							kill_pc(choice,0);
+							kill_pc(choice, status::Absent);
 						}
 					update_pc_graphics();
 					initiate_redraw();
@@ -804,7 +804,7 @@ Boolean handle_menu (short item, HMENU menu)
 				break;
 				}
 			for (i = 0; i < 6; i++)
-				if (adven[i].main_status == 0)
+				if (adven[i].main_status == status::Absent)
 					i = 20;
 			if (i == 6) {
 				ASB("Add PC: You already have 6 PCs.");

@@ -397,6 +397,19 @@ enum trait {
 	BadBack = 14,
 };
 
+// See put_pc_screen for details
+enum class status: short {
+	Absent = 0,
+	Normal = 1,
+	Dead = 2,
+	Dust = 3,
+	Stone = 4,
+	Fled = 5,
+	Surface = 6,
+	Won = 7,
+};
+static_assert(sizeof(status) == 2);
+
 
 // for game
 struct talk_save_type {
@@ -502,7 +515,7 @@ struct stored_town_maps_type {
 static_assert(sizeof(stored_town_maps_type) == 51200);
 
 struct pc_record_type {
-	short main_status;
+	status main_status;
 	char name[20];
 	short skills[30];
 	short max_health, cur_health, max_sp, cur_sp, experience, skill_pts, level;

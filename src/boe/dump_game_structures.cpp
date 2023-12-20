@@ -66,6 +66,15 @@ void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::st
 	std::format_to(strm, "}};\n");
 }
 
+void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const status& t)
+{
+#if defined(__cpp_lib_to_underlying) && __cpp_lib_to_underlying
+	dump_to(strm, parent, item, std::to_underlying(t));
+#else
+	dump_to(strm, parent, item, static_cast<short>(t));
+#endif
+}
+
 void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const location& t)
 {
 	const auto path{ std::format("{}.{}", parent, item) };

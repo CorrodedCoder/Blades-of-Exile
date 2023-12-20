@@ -25,6 +25,7 @@
 #include "text.h"
 #include "exlsound.h"
 #include "graphutl.h"
+#include "boe/hacks.hpp"
 
 extern const short skill_cost[20] = {3,3,3,2,2,2, 1,2,2,6,
 						5, 1,2,4,2,1, 4,2,5,0};
@@ -445,8 +446,7 @@ void put_party_in_scen()
 		for (i = 0; i < 15; i++)
 			adven[j].status[i] = 0;
 	for (j = 0; j < 6; j++) {
-		if (adven[j].main_status >= 10)
-			adven[j].main_status -= 10;
+		hacks_adventurer_reset_split_status(adven[j]);
 		adven[j].cur_health = adven[j].max_health;
 		adven[j].cur_sp = adven[j].max_sp;
 		}
@@ -533,7 +533,7 @@ Boolean create_pc(short spot,short parent_num)
 
 	if (spot == 6) {
 		for (spot = 0; spot < 6; spot++)
-			if (adven[spot].main_status == 0)
+			if (adven[spot].main_status == status::Absent)
 				break;
 		}
 	if (spot == 6)
@@ -560,7 +560,7 @@ Boolean create_pc(short spot,short parent_num)
 		cd_initial_draw(989);
 	pick_pc_name(spot,parent_num);
 
-	adven[spot].main_status = 1;
+	adven[spot].main_status = status::Normal;
 	
 	if (in_startup_mode == FALSE) {
 			adven[spot].items[0] = start_items[adven[spot].race * 2];
@@ -601,9 +601,9 @@ void cure_party(Adventurers& adventurers, short amt)
 
 void curse_pc(short which_pc,short how_much)
 {
-	if (adven[which_pc].main_status != 1)
+	if (adven[which_pc].main_status != status::Normal)
 		return;
-	if (adven[which_pc].main_status == 1)
+	if (adven[which_pc].main_status == status::Normal)
 	{
 		adven[which_pc].status[1] = max(adven[which_pc].status[1] - how_much,-8);
 		sprintf(c_line, "  %s cursed.", adven[which_pc].name);
@@ -617,7 +617,7 @@ void dumbfound_pc(short which_pc,short how_much)
 {
 	short r1;
 
-	if (adven[which_pc].main_status != 1)
+	if (adven[which_pc].main_status != status::Normal)
 		return;
 	r1 = get_ran(1,0,90);
 	if (pc_has_abil_equip(which_pc,53) < 24) {
@@ -631,7 +631,7 @@ void dumbfound_pc(short which_pc,short how_much)
 		add_string_to_buf( c_line);
 		return;
 		}
-	if (adven[which_pc].main_status == 1) {
+	if (adven[which_pc].main_status == status::Normal) {
 		adven[which_pc].status[9] = min(adven[which_pc].status[9] + how_much,8);
 		sprintf(c_line, "  %s dumbfounded.", adven[which_pc].name);
 		add_string_to_buf( c_line);
@@ -645,7 +645,7 @@ void disease_pc(short which_pc,short how_much)
 {
 	short r1,level;
 
-	if (adven[which_pc].main_status != 1)
+	if (adven[which_pc].main_status != status::Normal)
 		return;
 	r1 = get_ran(1,0,100);
 	if (r1 < adven[which_pc].level * 2)
@@ -663,7 +663,7 @@ void disease_pc(short which_pc,short how_much)
 	if ((adven[which_pc].traits[trait::Frail] == TRUE) && 
 		(how_much == 1) && (get_ran(1,0,1) == 0))
 			how_much++;
-	if (adven[which_pc].main_status == 1) {
+	if (adven[which_pc].main_status == status::Normal) {
 		adven[which_pc].status[7] = min(adven[which_pc].status[7] + how_much,8);
 		sprintf(c_line, "  %s diseased.", adven[which_pc].name);
 		add_string_to_buf( c_line);
@@ -676,7 +676,7 @@ void sleep_pc(short which_pc,short how_much,short what_type,short adjust)
 // higher adjust, less chance of saving
 {
 	short r1,level;
-	if (adven[which_pc].main_status != 1)
+	if (adven[which_pc].main_status != status::Normal)
 		return;
 	if (how_much == 0)
 		return;
@@ -698,7 +698,7 @@ void sleep_pc(short which_pc,short how_much,short what_type,short adjust)
 		add_string_to_buf( c_line);
 		return;
 		}
-	if (adven[which_pc].main_status == 1) {
+	if (adven[which_pc].main_status == status::Normal) {
 		adven[which_pc].status[what_type] = how_much;
 		if (what_type == 11)
 			sprintf(c_line, "  %s falls asleep.", adven[which_pc].name);
@@ -718,9 +718,9 @@ void sleep_pc(short which_pc,short how_much,short what_type,short adjust)
 
 void slow_pc(short which_pc,short how_much)
 {
-	if (adven[which_pc].main_status != 1)
+	if (adven[which_pc].main_status != status::Normal)
 		return;
-	if (adven[which_pc].main_status == 1) {
+	if (adven[which_pc].main_status == status::Normal) {
 
 		adven[which_pc].status[3] = minmax(-8,8,adven[which_pc].status[3] - how_much);
 		if (how_much < 0)
@@ -735,9 +735,9 @@ void slow_pc(short which_pc,short how_much)
 
 void web_pc(short which_pc,short how_much)
 {
-	if (adven[which_pc].main_status != 1)
+	if (adven[which_pc].main_status != status::Normal)
 		return;
-	if (adven[which_pc].main_status == 1) {
+	if (adven[which_pc].main_status == status::Normal) {
 		adven[which_pc].status[6] = min(adven[which_pc].status[6] + how_much,8);
 		sprintf(c_line, "  %s webbed.", adven[which_pc].name);
 		add_string_to_buf( c_line);
@@ -749,14 +749,14 @@ void web_pc(short which_pc,short how_much)
 
 void acid_pc(short which_pc,short how_much)
 {
-	if (adven[which_pc].main_status != 1)
+	if (adven[which_pc].main_status != status::Normal)
 		return;
 	if (pc_has_abil_equip(which_pc,122) < 24) {
 		sprintf(c_line, "  %s resists acid.", adven[which_pc].name);
 		add_string_to_buf( c_line);
 		return;
 		}
-	if (adven[which_pc].main_status == 1) {
+	if (adven[which_pc].main_status == status::Normal) {
 		adven[which_pc].status[13] += how_much;
 		sprintf(c_line, "  %s covered with acid!", adven[which_pc].name);
 		add_string_to_buf( c_line);
@@ -773,7 +773,7 @@ void increase_light(short amt)
 	party.light_level += amt;
 	if (is_combat()) {
 		for (i = 0; i < 6; i++)
-			if (adven[i].main_status == 1) {
+			if (adven[i].main_status == status::Normal) {
 				update_explored(pc_pos[i]);
 				}
 		}
@@ -789,7 +789,7 @@ void award_party_xp(short amt)
 	short i;
 	
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == 1)
+		if (adven[i].main_status == status::Normal)
 			award_xp(i,amt);
 }
 
@@ -815,7 +815,7 @@ void award_xp(short pc_num,short amt)
 		ASB("Report this!");
 		return;
 		}
-	if (adven[pc_num].main_status != 1)
+	if (adven[pc_num].main_status != status::Normal)
 		return;
 
 	if (adven[pc_num].level >= 40)
@@ -872,7 +872,7 @@ void award_xp(short pc_num,short amt)
 
 void drain_pc(short which_pc,short how_much)
 {
-	if (adven[which_pc].main_status == 1) {
+	if (adven[which_pc].main_status == status::Normal) {
 		adven[which_pc].experience = max(adven[which_pc].experience - how_much,0);
 		sprintf(c_line, "  %s drained.", adven[which_pc].name);
 		add_string_to_buf( c_line);
@@ -925,7 +925,7 @@ void do_xp_draw()
 	mode = store_train_mode;
 	pc_num = store_train_pc;
 	if (mode == 0) {
-		if (adven[pc_num].main_status == 1)
+		if (adven[pc_num].main_status == status::Normal)
 			sprintf(get_text, "%s", adven[pc_num].name);
 			else sprintf(get_text, "New PC");
 		}
@@ -956,8 +956,8 @@ Boolean spend_xp_event_filter (short item_hit)
 
 		switch (item_hit) {
 			case 73:
-				if ((mode == 0) && (adven[pc_num].main_status < 0))
-					adven[pc_num].main_status = 0;
+				if ((mode == 0) && (adven[pc_num].main_status < status::Absent))
+					adven[pc_num].main_status = status::Absent;
 				dialog_answer = 0;
 				talk_done = TRUE;
 				break;
@@ -1045,7 +1045,7 @@ Boolean spend_xp_event_filter (short item_hit)
 						do_xp_keep(pc_num,mode);
 						do {
 							pc_num = (pc_num == 0) ? 5 : pc_num - 1;
-						} while (adven[pc_num].main_status != 1);
+						} while (adven[pc_num].main_status != status::Normal);
 						store_train_pc = pc_num;
 						do_xp_draw();
 						}
@@ -1060,7 +1060,7 @@ Boolean spend_xp_event_filter (short item_hit)
 						do_xp_keep(pc_num,mode);
 						do {
 							pc_num = (pc_num == 5) ? 0 : pc_num + 1;
-						} while (adven[pc_num].main_status != 1);
+						} while (adven[pc_num].main_status != status::Normal);
 						store_train_pc = pc_num;
 						do_xp_draw();
 						}
@@ -1292,13 +1292,13 @@ Boolean repeat_cast_ok(short type)
 					return FALSE;
 					}
 				if ((store_select == 2) &&
-					 ((adven[store_spell_target].main_status == 0) ||
-						(adven[store_spell_target].main_status > 4))) {
+					 ((adven[store_spell_target].main_status == status::Absent) ||
+						(adven[store_spell_target].main_status > status::Stone))) {
 					add_string_to_buf("Repeat cast: No target stored.");
 					return FALSE;
 					}
 				if ((store_select == 1) &&
-					 (adven[store_spell_target].main_status != 1)) {
+					 (adven[store_spell_target].main_status != status::Normal)) {
 					add_string_to_buf("Repeat cast: No target stored.");
 					return FALSE;
 					}
@@ -1322,7 +1322,7 @@ void give_party_spell(short which)
 		for (i = 0; i < 6; i++)
 			if (adven[i].mage_spells[which] == FALSE) {
 				adven[i].mage_spells[which] = TRUE;
-				if (adven[i].main_status == 1)
+				if (adven[i].main_status == status::Normal)
 					sprintf(str,"%s learns spell.",adven[i].name);
 				give_help(41,0,0);
 				if (sound_done == FALSE) {sound_done = TRUE; play_sound(62);}
@@ -1331,7 +1331,7 @@ void give_party_spell(short which)
 		for (i = 0; i < 6; i++)
 			if (adven[i].priest_spells[which - 100] == FALSE) {
 				adven[i].priest_spells[which - 100] = TRUE;
-				if (adven[i].main_status == 1)
+				if (adven[i].main_status == status::Normal)
 					sprintf(str,"%s learns spell.",adven[i].name);
 				give_help(41,0,0);
 				if (sound_done == FALSE) {sound_done = TRUE; play_sound(62);}
@@ -1502,7 +1502,7 @@ void do_mage_spell(short pc_num,short spell_num)
 				if ((spell_num == 57) && (target < 6)) {
 						adven[target].status[4] += 2 + stat_adj(pc_num,2) + get_ran(2,1,2);
 						for (i = 0; i < 6; i++)
-							if (adven[i].main_status == 1) {
+							if (adven[i].main_status == status::Normal) {
 								adven[i].status[5] += 4 + adven[pc_num].level / 3 + stat_adj(pc_num,2);										
 								}
 						sprintf(c_line, "  Party protected.                         ");
@@ -1786,8 +1786,8 @@ void do_priest_spell(short pc_num,short spell_num)
 						one_sound(-53); one_sound(52);
 					}
 				if (spell_num == 49) {
-						if (adven[target].main_status == 4) {
-							adven[target].main_status = 1;
+						if (adven[target].main_status == status::Stone) {
+							adven[target].main_status = status::Normal;
 							sprintf(c_line, "  %s destoned.                                  ",
 									adven[target].name);							
 							play_sound(53);
@@ -1814,15 +1814,15 @@ void do_priest_spell(short pc_num,short spell_num)
 						}
 						else take_item(pc_num,item);
 				if (spell_num == 40) {
-						if (adven[target].main_status == 2) 
+						if (adven[target].main_status == status::Dead) 
 								if (get_ran(1,1,adven[pc_num].level / 2) == 1) {
 										sprintf(c_line, "  %s now dust.                          ",
 											adven[target].name);									
 										play_sound(5);
-										adven[target].main_status = 3;								
+										adven[target].main_status = status::Dust;
 									}
 									else {
-									adven[target].main_status = 1;
+									adven[target].main_status = status::Normal;
 									for (i = 0; i < 3; i++)
 										if (get_ran(1,0,2) < 2)
 											adven[target].skills[i] -= (adven[target].skills[i] > 1) ? 1 : 0;
@@ -1835,8 +1835,8 @@ void do_priest_spell(short pc_num,short spell_num)
 				
 					}
 				if (spell_num == 56) {
-						if (adven[target].main_status != 1) {
-							adven[target].main_status = 1;
+						if (adven[target].main_status != status::Normal) {
+							adven[target].main_status = status::Normal;
 							for (i = 0; i < 3; i++)
 								if (get_ran(1,0,2) < 1)
 									adven[target].skills[i] -= (adven[target].skills[i] > 1) ? 1 : 0;
@@ -1888,7 +1888,7 @@ void do_priest_spell(short pc_num,short spell_num)
 				}		
 
 			for (i = 0; i < 6; i++)
-				if (adven[i].main_status == 1) {
+				if (adven[i].main_status == status::Normal) {
 					if (spell_num == 42) {
 						store = get_ran(0,1,3) + adven[pc_num].level / 6 + stat_adj(pc_num,2);
 						r1 = max(0,store);
@@ -2083,7 +2083,7 @@ void do_mindduel(short pc_num,creature_data_type *monst)
 	monst->attitude = 1;
 	
 	add_string_to_buf("Mindduel!");
-	while ((adven[pc_num].main_status == 1) && (monst->active > 0) && (i < 10)) {
+	while ((adven[pc_num].main_status == status::Normal) && (monst->active > 0) && (i < 10)) {
 		play_sound(1);
 		r1 = get_ran(1,0,100) + adjust;
 		r1 += 5 * (monst->m_d.status[9] - adven[pc_num].status[9]);
@@ -2101,7 +2101,7 @@ void do_mindduel(short pc_num,creature_data_type *monst)
 				if (adven[pc_num].status[9] > 7) {
 					sprintf(c_line,"  %s is killed!",adven[pc_num].name);
 					add_string_to_buf( c_line);
-					kill_pc(pc_num,2);
+					kill_pc(pc_num, status::Dead);
 					}
 					
 				}
@@ -2179,7 +2179,7 @@ Boolean pc_can_cast_spell(short pc_num,short type,short spell_num)
 		return FALSE;
 	if (adven[pc_num].skills[9 + type] < level)
 		return FALSE;
-	if (adven[pc_num].main_status != 1)
+	if (adven[pc_num].main_status != status::Normal)
 		return FALSE;
 	if (adven[pc_num].cur_sp < spell_cost[type][spell_num])
 		return FALSE;
@@ -2261,7 +2261,7 @@ void draw_spell_info()
 						cd_activate_item(1098,10 + i,0);
 						break;
 					case 1:
-						if (adven[i].main_status != 1) {
+						if (adven[i].main_status != status::Normal) {
 							cd_activate_item(1098,10 + i,0);
 							}
 							else {
@@ -2269,7 +2269,7 @@ void draw_spell_info()
 								}
 						break;
 					case 2:
-						if (adven[i].main_status > 0) {
+						if (adven[i].main_status > status::Absent) {
 							cd_activate_item(1098,10 + i,1);
 							}
 							else {
@@ -2288,13 +2288,13 @@ void draw_spell_pc_info()
 	short i;
 
 	for (i = 0; i < 6; i++) {
-		if (adven[i].main_status != 0) {
+		if (adven[i].main_status != status::Absent) {
 				cd_set_item_text(1098,18 + i,adven[i].name);
 				//if (pc_casting == i)
 				//	cd_text_frame(1098,24 + store_spell_target,11);
 				//	else cd_text_frame(1098,24 + store_spell_target,1);
 
-				if (adven[i].main_status == 1) {
+				if (adven[i].main_status == status::Normal) {
 					cd_set_item_num(1098,24 + i, adven[i].cur_health);
 					cd_set_item_num(1098,30 + i, adven[i].cur_sp);			
 					}
@@ -2409,7 +2409,7 @@ void put_pick_spell_graphics()
 	put_pc_target_buttons();
 	put_spell_led_buttons();
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == 1)
+		if (adven[i].main_status == status::Normal)
 			cd_draw_item(1098,18 + i); // draws effects graphics
 }
 
@@ -2649,7 +2649,7 @@ short pick_spell(short pc_num,short type,short situation)  // 70 - no spell OW s
 	// If a target is needed, keep the same target if that PC still targetable
 	if (((type == 0) && (mage_need_select[store_mage] > 0)) ||
 		((type == 1) && (priest_need_select[store_priest] > 0))) {
-		if (adven[store_spell_target].main_status != 1)
+		if (adven[store_spell_target].main_status != status::Normal)
 			store_spell_target = 6;
 		}
 		else store_spell_target = 6;
@@ -2874,8 +2874,8 @@ void pc_graphic_event_filter (short item_hit)
 		case 4:
 			update_pc_graphics();
 			if (store_graphic_mode == 0) {
-				if (adven[store_graphic_pc_num].main_status < 0)
-				   adven[store_graphic_pc_num].main_status = 0;
+				if (adven[store_graphic_pc_num].main_status < status::Absent)
+				   adven[store_graphic_pc_num].main_status = status::Absent;
 					dialog_not_toast = FALSE;
 				}
 				else {
@@ -3010,7 +3010,7 @@ void poison_pc(short which_pc,short how_much)
 {
 	short level = 0;
 
-	if (adven[which_pc].main_status == 1) {
+	if (adven[which_pc].main_status == status::Normal) {
 		if ((level = get_prot_level(which_pc,34)) > 0)////
 			how_much -= level / 2;
 		if ((level = get_prot_level(which_pc,31)) > 0)////
@@ -3046,7 +3046,7 @@ void affect_pc(short which_pc,short type,short how_much)////
 //type; // which status to affect
 {
 
-		if (adven[which_pc].main_status != 1)
+		if (adven[which_pc].main_status != status::Normal)
 			return;
 			adven[which_pc].status[type] = minmax (-8,8,adven[which_pc].status[type] + how_much);
 	if (((type >= 4) && (type <= 10)) || (type == 12) || (type == 13))
@@ -3060,7 +3060,7 @@ void affect_party(short type,short how_much)
 	short i;
 
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == 1)
+		if (adven[i].main_status == status::Normal)
 			adven[i].status[type] = minmax (-8,8,adven[i].status[type] + how_much);
 	put_pc_screen(); 
 
@@ -3080,19 +3080,19 @@ void hit_party(short how_much,short damage_type)
 	Boolean dummy;
 	
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == 1)
+		if (adven[i].main_status == status::Normal)
 			dummy = damage_pc(i,how_much,damage_type,-1);
 		//			dummy = damage_pc(i,how_much,damage_type + 30);
 	put_pc_screen(); 
 }
 
-void slay_party(short mode)
+void slay_party(status mode)
 { 
 	short i;
 	
 		boom_anim_active = FALSE;
 					for (i = 0; i < 6; i++)
-						if (adven[i].main_status == 1)
+						if (adven[i].main_status == status::Normal)
 							adven[i].main_status = mode;
 	put_pc_screen();
 }
@@ -3107,7 +3107,7 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 	short i, r1,sound_type,level;
 	Boolean do_print = TRUE;
 	
-	if (adven[which_pc].main_status != 1)
+	if (adven[which_pc].main_status != status::Normal)
 		return FALSE;
 	
 	sound_type = damage_type / 100;
@@ -3269,39 +3269,39 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 			 if (how_much > 25) {
 				sprintf(c_line, "  %s is obliterated.  ", adven[which_pc].name);
 				add_string_to_buf( c_line);					
-				kill_pc(which_pc, 3);
+				kill_pc(which_pc, status::Dust);
 				}
 				else {
 				sprintf(c_line, "  %s is killed.", adven[which_pc].name);
 				add_string_to_buf( c_line);					
-				kill_pc(which_pc,2);
+				kill_pc(which_pc, status::Dead);
 				}
-	if ((adven[which_pc].cur_health == 0) && (adven[which_pc].main_status == 1))
+	if ((adven[which_pc].cur_health == 0) && (adven[which_pc].main_status == status::Normal))
 		play_sound(3);
 	put_pc_screen();
 	return TRUE;
 }
 
-void kill_pc(short which_pc, short type)
+void kill_pc(short which_pc, status type)
 {
 	kill_pc(which_pc, type, false);
 }
 
-void kill_pc(short which_pc, short type, bool no_save)
+void kill_pc(short which_pc, status type, bool no_save)
 {
 	short i = 24;
 	Boolean dummy;
 	location item_loc;
 	
-	if (type != 4)
+	if (type != status::Stone)
 		i = pc_has_abil_equip(which_pc,9);
 
-	if ((no_save == false) && (type != 0) && (adven[which_pc].skills[18] > 0) && 
+	if ((no_save == false) && (type != status::Absent) && (adven[which_pc].skills[18] > 0) && 
 		(get_ran(1,0,100) < hit_chance[adven[which_pc].skills[18]])) {
 			add_string_to_buf("  But you luck out!          ");
 			adven[which_pc].cur_health = 0;
 			}
-		else if ((i == 24) || (type == 0)) {
+		else if ((i == 24) || (type == status::Absent)) {
 			if (combat_active_pc == which_pc)
 				combat_active_pc = 6;
 	
@@ -3310,9 +3310,9 @@ void kill_pc(short which_pc, short type, bool no_save)
 
 			item_loc = (overall_mode >= 10) ? pc_pos[which_pc] : c_town.p_loc;
 	
-			if (type == 2)
+			if (type == status::Dead)
 				make_sfx(item_loc.x,item_loc.y,3);
-				else if (type == 3)
+				else if (type == status::Dust)
 					make_sfx(item_loc.x,item_loc.y,6);
 		
 			if (overall_mode != 0)	
@@ -3321,7 +3321,7 @@ void kill_pc(short which_pc, short type, bool no_save)
 						dummy = place_item(adven[which_pc].items[i],item_loc,TRUE);
 						adven[which_pc].items[i].variety = 0;
 						}
-				if ((type == 2) || (type == 3))
+				if ((type == status::Dead) || (type == status::Dust))
 					play_sound(21);
 				adven[which_pc].main_status = type;
 				pc_moves[which_pc] = 0;
@@ -3331,14 +3331,14 @@ void kill_pc(short which_pc, short type, bool no_save)
 				take_item(which_pc,i);
 				pc_heal(adven[which_pc],200);
 			}
-	if (adven[current_pc].main_status != 1)
+	if (adven[current_pc].main_status != status::Normal)
 		current_pc = first_active_pc();
 	if (current_pc > 5) {
 		for (i = 0; i < 6; i++)
 			// Original line read: if (adven[i].status > 0)
 			// But status is an array of shorts, so lets assume they meant main_status and check later
 			assert(false);
-			if (adven[i].main_status > 0)
+			if (adven[i].main_status > status::Absent)
 				current_pc = i;
 		}
 	put_pc_screen();
@@ -3350,7 +3350,7 @@ void set_pc_moves()
 	short i,r,i_level;
 	
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status != 1)
+		if (adven[i].main_status != status::Normal)
 			pc_moves[i] = 0;
 			else {
 				pc_moves[i] = (adven[i].traits[trait::Sluggish] == TRUE) ? 3 : 4;
