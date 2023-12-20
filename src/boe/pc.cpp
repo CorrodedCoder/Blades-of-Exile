@@ -197,13 +197,20 @@ short pc_encumberance(const pc_record_type& pc)
 
 short pc_get_tnl(const pc_record_type& pc)
 {
-	short store_per = 100;
-	for (size_t index = 0; index < std::size(pc.traits); ++index)
-	{
-		if (pc.traits[index] == BOE_TRUE)
-		{
-			store_per += c_ap[index];
-		}
-	}
+#if defined(__cpp_lib_ranges_zip) && __cpp_lib_ranges_zip
+	auto v = std::views::zip(pc.traits, c_ap)
+		| std::views::filter([](const auto& pair) { return std::get<0>(pair) == BOE_TRUE; })
+		| std::views::transform([](const auto& pair) { return std::get<1>(pair); });
+#else
+	auto v = std::views::iota(0, static_cast<int>(std::size(pc.traits)))
+		| std::views::filter([pc](int i) { return pc.traits[i] == BOE_TRUE; })
+		| std::views::transform([](int i) { return c_ap[i]; });
+#endif
+
+#if defined(__cpp_lib_ranges_fold) && __cpp_lib_ranges_fold
+	const short store_per = static_cast<short>(std::ranges::fold_left(v, 100, std::plus<int>()));
+#else
+	const short store_per = static_cast<short>(std::reduce(std::begin(v), std::end(v), 100));
+#endif
 	return ((100 + c_rp.at(pc.race)) * store_per) / 100;
 }
