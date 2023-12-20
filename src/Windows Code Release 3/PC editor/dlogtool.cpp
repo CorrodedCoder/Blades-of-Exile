@@ -41,9 +41,6 @@ extern short terrain_pic[256];
 extern short ulx,uly;
 
 extern HACCEL accel;
-extern unsigned char m_pic_index_x[200];
-extern unsigned char m_pic_index_y[200];
-extern unsigned char m_pic_index[200];
 
 short current_key = 0;
 short dlg_keys[ND];

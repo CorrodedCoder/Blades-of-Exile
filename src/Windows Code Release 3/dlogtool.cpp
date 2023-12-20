@@ -54,9 +54,9 @@ extern short terrain_pic[256];
 
 
 extern HACCEL accel;
-extern unsigned char m_pic_index_x[200];
-extern unsigned char m_pic_index_y[200];
-extern unsigned char m_pic_index[200];
+extern const std::array<unsigned char, 200> m_pic_index_x;
+extern const std::array<unsigned char, 200> m_pic_index_y;
+extern const std::array<unsigned char, 200> m_pic_index;
 
 short current_key = 0;
 short dlg_keys[ND];

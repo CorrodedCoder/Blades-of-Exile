@@ -71,7 +71,7 @@ extern short modeless_key[18];
 extern HWND modeless_dialogs[18];
 extern piles_of_stuff_dumping_type4 data_store4;
 
-extern unsigned char m_pic_index[200];
+extern const std::array<unsigned char, 200> m_pic_index;
 
 extern HBRUSH bg[14];
 HBITMAP bg_bitmap[14];

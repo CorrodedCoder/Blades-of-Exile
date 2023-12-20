@@ -534,7 +534,7 @@ unsigned char m_poison_r[200] = {
 0,0,2,2,0,0,0,2,0,0,
 0,0,0,0,0,0,0,0,0,0};  // 190
 
-unsigned char m_pic_index[200] = {
+extern const std::array<unsigned char, 200> m_pic_index{
 1,2,3,4,5,6,7,8,9,10,
 11,12,13,14,15,16,17,18,19,20,
 
@@ -565,7 +565,7 @@ unsigned char m_pic_index[200] = {
 0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0};
  
-unsigned char m_pic_index_x[200] = {
+extern const std::array<unsigned char, 200> m_pic_index_x{
 
 1,1,1,1,1,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1,
@@ -590,7 +590,7 @@ unsigned char m_pic_index_x[200] = {
 1,1,1,1,1,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1};
 
-unsigned char m_pic_index_y[200] = {
+extern const std::array<unsigned char, 200> m_pic_index_y{
 1,1,1,1,1,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1,
