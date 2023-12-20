@@ -214,3 +214,83 @@ short pc_get_tnl(const pc_record_type& pc)
 #endif
 	return ((100 + c_rp.at(pc.race)) * store_per) / 100;
 }
+
+short pc_has_space(const pc_record_type& pc)
+{
+	short i = 0;
+
+	while (i < 24) {
+		if (pc.items[i].variety == 0)
+			return i;
+		i++;
+	}
+	return 24;
+}
+
+// returnes equipped protection level of specified abil, or -1 if no such abil is equipped
+short get_prot_level(const pc_record_type& pc, short abil)
+{
+	short i = 0;
+
+	for (i = 0; i < 24; i++)
+		if ((pc.items[i].variety != 0) && (pc.items[i].ability == abil)
+			&& (pc.equip[i] == BOE_TRUE))
+			return pc.items[i].ability_strength;
+	return -1;
+
+}
+
+short pc_has_abil_equip(const pc_record_type& pc, short abil)
+{
+	short i = 0;
+
+	while (((pc.items[i].variety == 0) || (pc.items[i].ability != abil)
+		|| (pc.equip[i] == BOE_FALSE)) && (i < 24))
+		i++;
+	return i;
+
+}
+
+short pc_has_abil(const pc_record_type& pc, short abil)
+{
+	short i = 0;
+
+	while (((pc.items[i].variety == 0) || (pc.items[i].ability != abil)
+		) && (i < 24))
+		i++;
+	return i;
+}
+
+short amount_pc_can_carry(const pc_record_type& pc)
+{
+	return 100 + (15 * std::min(pc.skills[0], static_cast<short>(20))) + ((pc.traits[trait::ExceptionalStr] == 0) ? 0 : 30)
+		+ ((pc.traits[trait::BadBack] == 0) ? 0 : -50);
+}
+
+void sort_pc_items(pc_record_type& pc)
+{
+	item_record_type store_item;
+	short item_priority[26] = { 20,8,8,20,9, 9,3,2,1,0, 7,20,10,10,10, 10,10,10,5,6, 4,11,12,9,9, 9 };
+	Boolean no_swaps = BOE_FALSE, store_equip;
+	short i;
+
+	while (no_swaps == BOE_FALSE) 
+	{
+		no_swaps = BOE_TRUE;
+		for (i = 0; i < 23; i++)
+			if (item_priority[pc.items[i + 1].variety] < item_priority[pc.items[i].variety])
+			{
+				no_swaps = BOE_FALSE;
+				store_item = pc.items[i + 1];
+				pc.items[i + 1] = pc.items[i];
+				pc.items[i] = store_item;
+				store_equip = pc.equip[i + 1];
+				pc.equip[i + 1] = pc.equip[i];
+				pc.equip[i] = store_equip;
+				if (pc.weap_poisoned == i + 1)
+					pc.weap_poisoned--;
+				else if (pc.weap_poisoned == i)
+					pc.weap_poisoned++;
+			}
+	}
+}

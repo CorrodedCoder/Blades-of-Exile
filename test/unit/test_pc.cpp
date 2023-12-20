@@ -353,20 +353,6 @@ TEST_CASE("pc_setup_prefab", "[pc]")
 	}
 }
 
-/*
-short pc_encumberance(const pc_record_type& pc)
-{
-	short store = 0, i, what_val;
-
-	for (i = 0; i < 24; i++)
-		if (pc.equip[i] == BOE_TRUE) {
-			what_val = pc.items[i].awkward;
-			store += what_val;
-		}
-	return store;
-}
-*/
-
 TEST_CASE("pc_encumberance", "[pc]")
 {
 	SECTION("No encumberance") {

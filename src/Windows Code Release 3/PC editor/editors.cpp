@@ -123,19 +123,6 @@ Boolean take_gold(short amount,Boolean print_result)
 }
 
 
-short pc_has_space(const pc_record_type& pc)
-{
-	short i = 0;
-	
-	while (i < 24) {
-	if (pc.items[i].variety == 0)
-		return i;
-	i++;
-	}
-	return 24;
-}
-
-
 void take_item(short pc_num,short which_item)
 //short pc_num,which_item;  // if which_item > 20, don't update stat win, item is which_item - 20
 {

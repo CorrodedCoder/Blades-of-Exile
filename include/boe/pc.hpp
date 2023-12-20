@@ -10,3 +10,10 @@ bool pc_cure(pc_record_type& pc, short amt);
 void pc_restore_sp(pc_record_type& pc, short amt);
 short pc_encumberance(const pc_record_type& pc);
 short pc_get_tnl(const pc_record_type& pc);
+
+short pc_has_space(const pc_record_type& pc);
+short get_prot_level(const pc_record_type& pc, short abil);
+short pc_has_abil_equip(const pc_record_type& pc, short abil);
+short pc_has_abil(const pc_record_type& pc, short abil);
+short amount_pc_can_carry(const pc_record_type& pc);
+void sort_pc_items(pc_record_type& pc);

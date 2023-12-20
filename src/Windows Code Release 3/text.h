@@ -1,4 +1,3 @@
-
 short text_pc_has_abil_equip(short pc_num,short abil);
 void put_pc_screen();
 void put_item_screen(short screen_num,short suppress_buttons);

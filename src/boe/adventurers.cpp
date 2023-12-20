@@ -55,3 +55,11 @@ void adventurers_restore_sp(Adventurers& adventurers, short amt)
 	}
 }
 
+Boolean party_has_abil(const Adventurers& adventurers, short abil)
+{
+	for (const auto& pc : adventurers)
+		if (pc.main_status == status::Normal)
+			if (pc_has_abil(pc, abil) < 24)
+				return BOE_TRUE;
+	return BOE_FALSE;
+}
