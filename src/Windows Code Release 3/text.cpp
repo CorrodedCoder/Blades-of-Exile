@@ -770,7 +770,7 @@ void refresh_stat_areas(short mode)
 }
 
 
-short get_tnl(const pc_record_type& pc)
+short pc_get_tnl(const pc_record_type& pc)
 {
 	short tnl = 100,i,store_per = 100;
 	short rp[3] = {0,12,20};

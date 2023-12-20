@@ -310,7 +310,7 @@ void display_traits_graphics()
 		cd_set_led(1013,36 + i,(store_pc->traits[10 + i] > 0) ? 1 : 0);
 		}
 
-	store = get_tnl(*store_pc);
+	store = pc_get_tnl(*store_pc);
 	cdsin(1013,18,store);
 }
 
@@ -378,7 +378,7 @@ void pick_race_abil(pc_record_type *pc,short mode,short parent_num)
 }
 
 
-short get_tnl(const pc_record_type& pc)
+short pc_get_tnl(const pc_record_type& pc)
 {
 	short tnl = 100,i,store_per = 100;
 	short rp[3] = {0,12,20};
