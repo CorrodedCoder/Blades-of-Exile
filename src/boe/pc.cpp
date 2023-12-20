@@ -8,6 +8,9 @@
 
 namespace
 {
+	const std::array<short, 3> c_rp{ 0,12,20 };
+	const std::array<short, 15> c_ap{ 10,20,8,10,4, 6,10,7,12,15, -10,-8,-8,-20,-8 };
+
 	const std::array c_debug_names{
 		"Gunther",
 		"Yanni",
@@ -194,16 +197,13 @@ short pc_encumberance(const pc_record_type& pc)
 
 short pc_get_tnl(const pc_record_type& pc)
 {
-	short tnl = 100, i, store_per = 100;
-	short rp[3] = { 0,12,20 };
-	short ap[15] = { 10,20,8,10,4, 6,10,7,12,15, -10,-8,-8,-20,-8 };
-
-	tnl = (tnl * (100 + rp[pc.race])) / 100;
-	for (i = 0; i < 15; i++)
-		if (pc.traits[i] == BOE_TRUE)
-			store_per = store_per + ap[i];
-
-	tnl = (tnl * store_per) / 100;
-
-	return tnl;
+	short store_per = 100;
+	for (size_t index = 0; index < std::size(pc.traits); ++index)
+	{
+		if (pc.traits[index] == BOE_TRUE)
+		{
+			store_per += c_ap[index];
+		}
+	}
+	return ((100 + c_rp.at(pc.race)) * store_per) / 100;
 }
