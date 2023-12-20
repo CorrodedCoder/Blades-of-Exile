@@ -36,7 +36,7 @@ extern long register_flag;
 
 extern HBITMAP pc_gworld;
 extern HCURSOR sword_curs;
-extern Boolean diff_depth_ok,registered,save_blocked;
+extern Boolean save_blocked;
 extern RECT edit_rect[5][2];
 
 

@@ -7,7 +7,7 @@ Boolean GTP(short item_num);
 Boolean silent_GTP(short item_num);
 void give_gold(short amount,Boolean print_result);
 Boolean take_gold(short amount,Boolean print_result);
-short pc_has_abil_equip(short pc_num,short abil);
+short pc_has_abil_equip(const pc_record_type& pc,short abil);
 short pc_has_abil(short pc_num,short abil);
 Boolean party_has_abil(short abil);
 Boolean party_take_abil(short abil);

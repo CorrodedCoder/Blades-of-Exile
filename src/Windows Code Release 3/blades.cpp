@@ -727,8 +727,10 @@ Boolean handle_menu (short item, HMENU menu)
 				choice = FCD(1091,0);
 				if (choice == 1)
 					return FALSE;
-				for (i = 0; i < 6; i++)
-					adven[i].main_status = status::Absent;
+				for (auto& pc : adven)
+				{
+					pc.main_status = status::Absent;
+				}
 				party_in_memory = FALSE;
 				reload_startup();
 				in_startup_mode = TRUE;

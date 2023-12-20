@@ -2422,7 +2422,7 @@ void increase_age()
 				update_stat = TRUE;
 			adven[i].status[1] = move_to_zero(adven[i].status[1]);
 			adven[i].status[3] = move_to_zero(adven[i].status[3]);	
-			if (((item = pc_has_abil_equip(i,50)) < 24) 
+			if (((item = pc_has_abil_equip(adven[i],50)) < 24) 
 				&& (adven[i].cur_health < adven[i].max_health)
 				&& ((overall_mode > 0) || (get_ran(1,0,10) == 5))){
 					j = get_ran(1,0,adven[i].items[item].ability_strength / 3);

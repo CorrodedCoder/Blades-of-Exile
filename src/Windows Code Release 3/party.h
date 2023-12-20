@@ -37,7 +37,7 @@ void dispel_fields(short i,short j,short mode);
 Boolean pc_can_cast_spell(short pc_num,short type,short spell_num);
 void pick_spell_event_filter (short item_hit);
 short pick_spell(short pc_num,short type,short situation) ;
-short stat_adj(short pc_num,short which);
+short stat_adj(pc_record_type& pc,short which);
 void set_town_spell(short s_num,short who_c);
 void alch_choice_event_filter (short item_hit);
 void do_alchemy();

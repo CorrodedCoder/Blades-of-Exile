@@ -620,7 +620,7 @@ void dumbfound_pc(short which_pc,short how_much)
 	if (adven[which_pc].main_status != status::Normal)
 		return;
 	r1 = get_ran(1,0,90);
-	if (pc_has_abil_equip(which_pc,53) < 24) {
+	if (pc_has_abil_equip(adven[which_pc],53) < 24) {
 		add_string_to_buf("  Ring of Will glows.");
 		r1 -= 10;
 		}
@@ -751,7 +751,7 @@ void acid_pc(short which_pc,short how_much)
 {
 	if (adven[which_pc].main_status != status::Normal)
 		return;
-	if (pc_has_abil_equip(which_pc,122) < 24) {
+	if (pc_has_abil_equip(adven[which_pc],122) < 24) {
 		sprintf(c_line, "  %s resists acid.", adven[which_pc].name);
 		add_string_to_buf( c_line);
 		return;
@@ -1347,7 +1347,7 @@ void do_mage_spell(short pc_num,short spell_num)
 	play_sound(25);
 	current_spell_range = 8;
 	
-	adj = stat_adj(who_cast,2);
+	adj = stat_adj(adven[who_cast],2);
 	
 	switch (spell_num) {
 		case 0:  // Light
@@ -1381,7 +1381,7 @@ void do_mage_spell(short pc_num,short spell_num)
 				add_string_to_buf("  Summon failed.");
 			break;
 		case 26: // summon 1
-			store = adven[who_cast].level / 5 + stat_adj(who_cast,2) / 3 + get_ran(1,0,2);
+			store = adven[who_cast].level / 5 + stat_adj(adven[who_cast],2) / 3 + get_ran(1,0,2);
 			j = minmax(1,7,store);
 			r1 = get_summon_monster(1); ////
 			if (r1 < 0) break;
@@ -1392,7 +1392,7 @@ void do_mage_spell(short pc_num,short spell_num)
 					add_string_to_buf("  Summon failed.");
 			break;
 		case 43: // summon 2
-			store = adven[who_cast].level / 7 + stat_adj(who_cast,2) / 3 + get_ran(1,0,1);
+			store = adven[who_cast].level / 7 + stat_adj(adven[who_cast],2) / 3 + get_ran(1,0,1);
 			j = minmax(1,6,store);
 			r1 = get_summon_monster(2); ////
 			if (r1 < 0) break;
@@ -1403,18 +1403,18 @@ void do_mage_spell(short pc_num,short spell_num)
 					add_string_to_buf("  Summon failed.");
 			break;
 		case 58: // summon 3
-			store = adven[who_cast].level / 10 + stat_adj(who_cast,2) / 3 + get_ran(1,0,1);
+			store = adven[who_cast].level / 10 + stat_adj(adven[who_cast],2) / 3 + get_ran(1,0,1);
 			j = minmax(1,5,store);
 			r1 = get_summon_monster(3); ////
 			if (r1 < 0) break;
 			adven[pc_num].cur_sp -= spell_cost[0][spell_num];
-			store = get_ran(7,1,4) + stat_adj(who_cast,2);
+			store = get_ran(7,1,4) + stat_adj(adven[who_cast],2);
 			for (i = 0; i < j; i++)
 				if (summon_monster(r1,where,store,2) == FALSE)
 					add_string_to_buf("  Summon failed.");
 			break;
 		case 50:
-			store = get_ran(5,1,4) + 2 * stat_adj(who_cast,2);
+			store = get_ran(5,1,4) + 2 * stat_adj(adven[who_cast],2);
 			if (summon_monster(85,where,store,2) == FALSE)
 				add_string_to_buf("  Summon failed.");		
 				else adven[pc_num].cur_sp -= spell_cost[0][spell_num];
@@ -1500,15 +1500,15 @@ void do_mage_spell(short pc_num,short spell_num)
 				if (target < 6)
 					adven[pc_num].cur_sp -= spell_cost[0][spell_num];
 				if ((spell_num == 57) && (target < 6)) {
-						adven[target].status[4] += 2 + stat_adj(pc_num,2) + get_ran(2,1,2);
+						adven[target].status[4] += 2 + stat_adj(adven[pc_num],2) + get_ran(2,1,2);
 						for (i = 0; i < 6; i++)
 							if (adven[i].main_status == status::Normal) {
-								adven[i].status[5] += 4 + adven[pc_num].level / 3 + stat_adj(pc_num,2);										
+								adven[i].status[5] += 4 + adven[pc_num].level / 3 + stat_adj(adven[pc_num],2);
 								}
 						sprintf(c_line, "  Party protected.                         ");
 					}
 				if ((spell_num == 29) && (target < 6)) {
-						adven[target].status[5] += 2 + stat_adj(pc_num,2) + get_ran(2,1,2);
+						adven[target].status[5] += 2 + stat_adj(adven[pc_num],2) + get_ran(2,1,2);
 						sprintf(c_line, "  %s protected.",adven[target].name);
 					}
 				add_string_to_buf( c_line);	
@@ -1526,7 +1526,7 @@ void do_priest_spell(short pc_num,short spell_num)
 
 	where = c_town.p_loc;
 
-	adj = stat_adj(pc_num,2);
+	adj = stat_adj(adven[pc_num],2);
 
 	play_sound(24);
 	current_spell_range = 8;
@@ -1552,7 +1552,7 @@ void do_priest_spell(short pc_num,short spell_num)
 	
 		case 7: case 25: // manna spells
 			adven[pc_num].cur_sp -= spell_cost[1][spell_num];
-			store = adven[pc_num].level / 3 + 2 * stat_adj(who_cast,2) + get_ran(2,1,4);
+			store = adven[pc_num].level / 3 + 2 * stat_adj(adven[who_cast],2) + get_ran(2,1,4);
 			r1 = max(0,store);
 			if (spell_num == 7)
 				r1 = r1 / 3 + 1;
@@ -1574,34 +1574,34 @@ void do_priest_spell(short pc_num,short spell_num)
 			break;
 			
 		case 15:
-			store = stat_adj(who_cast,2);
+			store = stat_adj(adven[who_cast],2);
 			if (summon_monster(125,where,get_ran(2,1,4) + store,2) == FALSE)
 				add_string_to_buf("  Summon failed.");		
 				else adven[pc_num].cur_sp -= spell_cost[1][spell_num];
 			break;
 		case 34:
 			adven[pc_num].cur_sp -= spell_cost[1][spell_num];
-			r1 = adven[who_cast].level / 6 + stat_adj(who_cast,2) / 3 + get_ran(1,0,1);
+			r1 = adven[who_cast].level / 6 + stat_adj(adven[who_cast],2) / 3 + get_ran(1,0,1);
 			for (i = 0; i < r1; i++) {
 				r2 = get_ran(1,0,7);
-				store = get_ran(2,1,5) + stat_adj(who_cast,2);
+				store = get_ran(2,1,5) + stat_adj(adven[who_cast],2);
 				if (summon_monster((r2 == 1) ? 100 : 99,where,store,2 ) == FALSE)
 					add_string_to_buf("  Summon failed.");
 				}	
 			break;
 		case 43:
 			adven[pc_num].cur_sp -= spell_cost[1][spell_num];
-			store = get_ran(2,1,4) + stat_adj(who_cast,2);
+			store = get_ran(2,1,4) + stat_adj(adven[who_cast],2);
 			if (summon_monster(126,where,store,2) == FALSE)
 				add_string_to_buf("  Summon failed.");	
 			for (i = 0; i < 4; i++)	{
-				store = get_ran(2,1,4) + stat_adj(who_cast,2);
+				store = get_ran(2,1,4) + stat_adj(adven[who_cast],2);
 				if (summon_monster(125,where,store,2) == FALSE)
 					add_string_to_buf("  Summon failed.");		
 				}
 			break;
 		case 50:
-			store = get_ran(6,1,4) + stat_adj(who_cast,2);
+			store = get_ran(6,1,4) + stat_adj(adven[who_cast],2);
 			if (summon_monster(122,where,store,2) == FALSE)
 				add_string_to_buf("  Summon failed.");		
 				else adven[pc_num].cur_sp -= spell_cost[1][spell_num];
@@ -1685,7 +1685,7 @@ void do_priest_spell(short pc_num,short spell_num)
 					case 2: case 11:
 						sprintf(c_line, "  %s cured.    "
 							, adven[target].name);
-						r1 = ((spell_num == 2) ? 1 : 3) + get_ran(1,0,2) + stat_adj(pc_num,2) / 2;
+						r1 = ((spell_num == 2) ? 1 : 3) + get_ran(1,0,2) + stat_adj(adven[pc_num],2) / 2;
 						cure_pc(adven[target],r1);
 					break;
 					
@@ -1713,14 +1713,14 @@ void do_priest_spell(short pc_num,short spell_num)
 					case 27:
 						sprintf(c_line, "  %s recovers.      "
 							, adven[target].name);
-						r1 = 2 + get_ran(1,0,2) + stat_adj(pc_num,2) / 2;
+						r1 = 2 + get_ran(1,0,2) + stat_adj(adven[pc_num],2) / 2;
 						adven[target].status[7] = max(0,adven[target].status[7] - r1);
 						break;
 
 					case 28:
 						sprintf(c_line, "  %s restored.      "
 							, adven[target].name);
-						r1 = 1 + get_ran(1,0,2) + stat_adj(pc_num,2) / 2;
+						r1 = 1 + get_ran(1,0,2) + stat_adj(adven[pc_num],2) / 2;
 						adven[target].status[9] = max(0,adven[target].status[9] - r1);
 						break;
 						
@@ -1797,7 +1797,7 @@ void do_priest_spell(short pc_num,short spell_num)
 				if (spell_num == 33) {
 						for (i = 0; i < 24; i++) 
 							if (is_cursed(adven[target].items[i]) == TRUE){
-									r1 = get_ran(1,0,200) - 10 * stat_adj(pc_num,2);
+									r1 = get_ran(1,0,200) - 10 * stat_adj(adven[pc_num],2);
 									if (r1 < 60) {
 										adven[target].items[i].item_properties = 
 											adven[target].items[i].item_properties & 239;
@@ -1876,7 +1876,7 @@ void do_priest_spell(short pc_num,short spell_num)
 				adven[pc_num].cur_sp -= spell_cost[1][spell_num];			
 				sprintf(c_line, "  Party cured.  ");
 				add_string_to_buf( c_line);		
-				cure_party(adven, 3 + stat_adj(pc_num,2));
+				cure_party(adven, 3 + stat_adj(adven[pc_num],2));
 			break;
 			
 		case 42: case 61: case 48:
@@ -1890,7 +1890,7 @@ void do_priest_spell(short pc_num,short spell_num)
 			for (i = 0; i < 6; i++)
 				if (adven[i].main_status == status::Normal) {
 					if (spell_num == 42) {
-						store = get_ran(0,1,3) + adven[pc_num].level / 6 + stat_adj(pc_num,2);
+						store = get_ran(0,1,3) + adven[pc_num].level / 6 + stat_adj(adven[pc_num],2);
 						r1 = max(0,store);
 						adven[i].status[8] += r1;					
 						}
@@ -1899,7 +1899,7 @@ void do_priest_spell(short pc_num,short spell_num)
 						adven[i].status[7] = 0;	
 						}
 					if (spell_num == 48) { // Hyperactivity
-						adven[i].status[11] -= 6 + 2 * stat_adj(pc_num,2);
+						adven[i].status[11] -= 6 + 2 * stat_adj(adven[pc_num],2);
 						adven[i].status[3] = max(0,adven[i].status[3]);
 						}
 				}
@@ -1995,7 +1995,7 @@ void cast_town_spell(location where)
 			case 20:
 				switch (scenario.ter_types[ter].special) { ////
 					case 9: case 10:
-						r1 = get_ran(1,0,100) - 5 * stat_adj(who_cast,2) + 5 * c_town.difficulty;
+						r1 = get_ran(1,0,100) - 5 * stat_adj(adven[who_cast],2) + 5 * c_town.difficulty;
 						r1 += scenario.ter_types[ter].flag2 * 7;
 						if (scenario.ter_types[ter].flag2 == 10)
 							r1 = 10000;
@@ -2018,7 +2018,7 @@ void cast_town_spell(location where)
 				
 			case 41:
 				if ((is_fire_barrier(where.x,where.y)) || (is_force_barrier(where.x,where.y))) {
-						r1 = get_ran(1,0,100) - 5 * stat_adj(who_cast,2) + 5 * (c_town.difficulty / 10);
+						r1 = get_ran(1,0,100) - 5 * stat_adj(adven[who_cast],2) + 5 * (c_town.difficulty / 10);
 						if (is_fire_barrier(where.x,where.y))
 							r1 -= 8;
 						if (r1 < (120 - combat_percent[min(19,adven[who_cast].level)])) {
@@ -2076,7 +2076,7 @@ void do_mindduel(short pc_num,creature_data_type *monst)
 	short i = 0,adjust,r1,r2,balance = 0;
 	
 	adjust = (adven[pc_num].level + adven[pc_num].skills[2]) / 2 - monst->m_d.level * 2;
-	if (pc_has_abil_equip(pc_num,75) < 16)
+	if (pc_has_abil_equip(adven[pc_num],75) < 16)
 		adjust += 20;
 	if (monst->attitude % 2 != 1)
 		make_town_hostile();
@@ -2713,19 +2713,19 @@ void print_spell_cast(short spell_num,short which)
 	add_string_to_buf( c_line);		
 }
 
-short stat_adj(short pc_num,short which)
+short stat_adj(pc_record_type& pc,short which)
 {
 	short tr;
 	
-	tr = skill_bonus[adven[pc_num].skills[which]];
+	tr = skill_bonus[pc.skills[which]];
 	if (which == 2) {
-		if (adven[pc_num].traits[trait::MagicallyApt] == TRUE)
+		if (pc.traits[trait::MagicallyApt] == TRUE)
 			tr++;
-		if (pc_has_abil_equip(pc_num,99) < 16) 
+		if (pc_has_abil_equip(pc,99) < 16) 
 			tr++;
 		}
 	if (which == 0) {
-		if (adven[pc_num].traits[trait::ExceptionalStr] == TRUE)
+		if (pc.traits[trait::ExceptionalStr] == TRUE)
 			tr++;
 		}
 	return tr;
@@ -3294,7 +3294,7 @@ void kill_pc(short which_pc, status type, bool no_save)
 	location item_loc;
 	
 	if (type != status::Stone)
-		i = pc_has_abil_equip(which_pc,9);
+		i = pc_has_abil_equip(adven[which_pc],9);
 
 	if ((no_save == false) && (type != status::Absent) && (adven[which_pc].skills[18] > 0) && 
 		(get_ran(1,0,100) < hit_chance[adven[which_pc].skills[18]])) {
@@ -3354,7 +3354,7 @@ void set_pc_moves()
 			pc_moves[i] = 0;
 			else {
 				pc_moves[i] = (adven[i].traits[trait::Sluggish] == TRUE) ? 3 : 4;
-				r = get_encumberance(i);
+				r = get_encumberance(adven[i]);
 				pc_moves[i] = minmax(1,8,pc_moves[i] - (r / 3));
 				
 				if ((i_level = get_prot_level(i,55)) > 0)

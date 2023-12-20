@@ -554,7 +554,7 @@ Boolean pc_combat_move(location destination)
 void char_parry()
 {
 	pc_parry[current_pc] = (pc_moves[current_pc] / 4) * 
-		(2 + stat_adj(current_pc,1) + adven[current_pc].skills[8]);
+		(2 + stat_adj(adven[current_pc],1) + adven[current_pc].skills[8]);
 	pc_moves[current_pc] = 0;
 }
 
@@ -587,10 +587,10 @@ void pc_attack(short who_att,short target)
 					else weap2 = i;
 
 	hit_adj = (-5 * minmax(-8,8,adven[who_att].status[1])) + 5 * minmax(-8,8,which_m->m_d.status[1])
-			- stat_adj(who_att,1) * 5 + (get_encumberance(who_att)) * 5;
+			- stat_adj(adven[who_att],1) * 5 + (get_encumberance(adven[who_att])) * 5;
 
 	dam_adj = minmax(-8,8,adven[who_att].status[1]) - minmax(-8,8,which_m->m_d.status[1])
-			+ stat_adj(who_att,0);
+			+ stat_adj(adven[who_att],0);
 
 	if ((which_m->m_d.status[11] > 0) || (which_m->m_d.status[12] > 0)) {
 		hit_adj -= 80;
@@ -689,7 +689,7 @@ void pc_attack(short who_att,short target)
 			// poison			
 			if ((adven[who_att].status[0] > 0) && (adven[who_att].weap_poisoned == weap1)) {
 					poison_amt = adven[who_att].status[0];
-					if (pc_has_abil_equip(who_att,51) < 24)
+					if (pc_has_abil_equip(adven[who_att],51) < 24)
 						poison_amt += 2;
 					poison_monst(which_m,poison_amt);
 					adven[who_att].status[0] = move_to_zero(adven[who_att].status[0]);
@@ -927,7 +927,7 @@ void do_combat_cast(location target)
 		}
 		else {
 			level = 1 + adven[current_pc].level / 2;
-			bonus = stat_adj(current_pc,2);
+			bonus = stat_adj(adven[current_pc],2);
 			}
 	force_wall_position = 10;
 	s_num = spell_being_cast % 100;
@@ -1134,32 +1134,32 @@ void do_combat_cast(location target)
 			do_missile_anim(50,pc_pos[current_pc],61); 
 			switch (spell_being_cast) {
 			case 35: // Simulacrum
-				r2 = get_ran(3,1,4) + stat_adj(current_pc,2);
+				r2 = get_ran(3,1,4) + stat_adj(adven[current_pc],2);
 				if (summon_monster(store_sum_monst,target,r2,2) == FALSE)
 					add_string_to_buf("  Summon failed.");
 				break;
 			case 16: // summon beast
-				r2 = get_ran(3,1,4) + stat_adj(current_pc,2);
+				r2 = get_ran(3,1,4) + stat_adj(adven[current_pc],2);
 				if ((summon < 0) || (summon_monster(summon,target,r2,2) == FALSE))
 					add_string_to_buf("  Summon failed.");
 				break;
 			case 26: // summon 1
-				r2 = get_ran(4,1,4) + stat_adj(current_pc,2);
+				r2 = get_ran(4,1,4) + stat_adj(adven[current_pc],2);
 				if ((summon < 0) || (summon_monster(summon,target,r2,2) == FALSE))
 					add_string_to_buf("  Summon failed.");
 				break;
 			case 43: // summon 2
-				r2 = get_ran(5,1,4) + stat_adj(current_pc,2);
+				r2 = get_ran(5,1,4) + stat_adj(adven[current_pc],2);
 				if ((summon < 0) || (summon_monster(summon,target,r2,2) == FALSE))
 					add_string_to_buf("  Summon failed.");
 				break;
 			case 58: // summon 3
-				r2 = get_ran(7,1,4) + stat_adj(current_pc,2);
+				r2 = get_ran(7,1,4) + stat_adj(adven[current_pc],2);
 				if ((summon < 0) || (summon_monster(summon,target,r2,2) == FALSE))
 					add_string_to_buf("  Summon failed.");
 				break;
 			case 50: // Daemon
-				r2 = get_ran(5,1,4) + stat_adj(current_pc,2);
+				r2 = get_ran(5,1,4) + stat_adj(adven[current_pc],2);
 				if (summon_monster(85,target,r2,2) == FALSE)
 					add_string_to_buf("  Summon failed.");
 				break;
@@ -1170,23 +1170,23 @@ void do_combat_cast(location target)
 				break;
 			
 			case 115: // summon spirit
-				r2 = get_ran(2,1,5) + stat_adj(current_pc,2);
+				r2 = get_ran(2,1,5) + stat_adj(adven[current_pc],2);
 				if (summon_monster(125,target,r2,2) == FALSE)
 					add_string_to_buf("  Summon failed.");		
 				break;
 			case 134: // s to s
 				r1 = get_ran(1,0,7);
-				r2 = get_ran(2,1,5) + stat_adj(current_pc,2);
+				r2 = get_ran(2,1,5) + stat_adj(adven[current_pc],2);
 				if (summon_monster((r1 == 1) ? 100 : 99,target,r2,2) == FALSE)
 					add_string_to_buf("  Summon failed.");
 				break;
 			case 143: // host
-				r2 = get_ran(2,1,4) + stat_adj(current_pc,2);
+				r2 = get_ran(2,1,4) + stat_adj(adven[current_pc],2);
 				if (summon_monster((i == 0) ? 126 : 125,target,r2,2) == FALSE)
 					add_string_to_buf("  Summon failed.");		
 				break;
 			case 150: // guardian
-				r2 = get_ran(6,1,4) + stat_adj(current_pc,2);
+				r2 = get_ran(6,1,4) + stat_adj(adven[current_pc],2);
 				if (summon_monster(122,target,r2,2) == FALSE)
 					add_string_to_buf("  Summon failed.");		
 				break;
@@ -1483,9 +1483,9 @@ void fire_missile(location target)
 	dam = adven[current_pc].items[ammo_inv_slot].item_level;
 	dam_bonus = adven[current_pc].items[ammo_inv_slot].bonus + minmax(-8,8,adven[current_pc].status[1]);
 	hit_bonus = (overall_mode == 12) ? adven[current_pc].items[missile_inv_slot].bonus : 0;
-	hit_bonus += stat_adj(current_pc,1) - can_see(pc_pos[current_pc],target,0) 
+	hit_bonus += stat_adj(adven[current_pc],1) - can_see(pc_pos[current_pc],target,0)
 		+ minmax(-8,8,adven[current_pc].status[1]);
-	if ((skill_item = pc_has_abil_equip(current_pc,41)) < 24) {
+	if ((skill_item = pc_has_abil_equip(adven[current_pc],41)) < 24) {
 		hit_bonus += adven[current_pc].items[skill_item].ability_strength / 2;
 		dam_bonus += adven[current_pc].items[skill_item].ability_strength / 2;
 		}
@@ -1500,7 +1500,7 @@ void fire_missile(location target)
 		if (adven[current_pc].items[ammo_inv_slot].ability != 170)
 			adven[current_pc].items[ammo_inv_slot].charges--;
 			else adven[current_pc].items[ammo_inv_slot].charges = 1;
-		if ((pc_has_abil_equip(current_pc,11) < 24) && (adven[current_pc].items[ammo_inv_slot].ability != 170))
+		if ((pc_has_abil_equip(adven[current_pc],11) < 24) && (adven[current_pc].items[ammo_inv_slot].ability != 170))
 			adven[current_pc].items[ammo_inv_slot].charges--;
 		if (adven[current_pc].items[ammo_inv_slot].charges <= 0)
 			take_item(current_pc,ammo_inv_slot);
@@ -1575,7 +1575,7 @@ void fire_missile(location target)
 						// poison			
 						if ((adven[current_pc].status[0] > 0) && (adven[current_pc].weap_poisoned == ammo_inv_slot)) {
 								poison_amt = adven[current_pc].status[0];
-								if (pc_has_abil_equip(current_pc,51) < 24)
+								if (pc_has_abil_equip(adven[current_pc],51) < 24)
 									poison_amt++;
 								poison_monst(cur_monst,poison_amt);
 							}
@@ -1707,7 +1707,7 @@ void combat_run_monst()
 				adven[i].status[1] = move_to_zero(adven[i].status[1]);
 				adven[i].status[3] = move_to_zero(adven[i].status[3]);	
 				party.stuff_done[305][0] = move_to_zero(party.stuff_done[305][0]);
-				if ((item = pc_has_abil_equip(i,50)) < 24) {
+				if ((item = pc_has_abil_equip(adven[i],50)) < 24) {
 					update_stat = TRUE;
 					pc_heal(adven[i],get_ran(1,0,adven[i].items[item].item_level + 1));
 					}	
@@ -2282,7 +2282,7 @@ void monster_attack_pc(short who_att,short target)
 
 			// Attack roll
 			r1 = get_ran(1,0,100) - 5 * min(8,attacker->m_d.status[1]) + 5 * adven[target].status[1]
-					+ 5 * stat_adj(target,1) - 15;
+					+ 5 * stat_adj(adven[target],1) - 15;
 			r1 += 5 * (attacker->m_d.status[6] / 3);
 			if (pc_parry[target] < 100)
 				r1 += 5 * pc_parry[target];
@@ -2345,14 +2345,14 @@ void monster_attack_pc(short who_att,short target)
 							
 						// Undead xp drain							
 						if (((attacker->m_d.spec_skill == 16) || (attacker->m_d.spec_skill == 17))
-						  && (pc_has_abil_equip(target,48) == 24)) {
+						  && (pc_has_abil_equip(adven[target],48) == 24)) {
 							add_string_to_buf("  Drains life!                 ");
 							drain_pc(target,(attacker->m_d.level * 3) / 2);
 							put_pc_screen();
 							}
 
 						// Undead slow
-						if ((attacker->m_d.spec_skill == 18) && (get_ran(1,0,8) < 6) && (pc_has_abil_equip(target,48) == 24)) {
+						if ((attacker->m_d.spec_skill == 18) && (get_ran(1,0,8) < 6) && (pc_has_abil_equip(adven[target],48) == 24)) {
 							add_string_to_buf("  Stuns! ");
 							slow_pc(target,2);
 							put_pc_screen();
@@ -2390,7 +2390,7 @@ void monster_attack_pc(short who_att,short target)
 
 						// Freezing touch
 						if (((attacker->m_d.spec_skill == 15) || (attacker->m_d.spec_skill == 17))
-						 && (get_ran(1,0,8) < 6) && (pc_has_abil_equip(target,48) == 24)) {
+						 && (get_ran(1,0,8) < 6) && (pc_has_abil_equip(adven[target],48) == 24)) {
 							add_string_to_buf("  Freezing touch!");
 							r1 = get_ran(3,1,10);
 							damage_pc(target,r1,5,-1);
@@ -2632,7 +2632,7 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 				sprintf(create_line, "  Gazes at %s.                  ", adven[target].name);
 				add_string_to_buf( create_line);
 				r1 = get_ran(1,0,20) + adven[target].level / 4 + adven[target].status[1];
-				if (pc_has_abil_equip(target,49) < 24)
+				if (pc_has_abil_equip(adven[target],49) < 24)
 					r1 = 20;
 				if (r1 > 14) {
 						sprintf(create_line, "  %s resists.                  ", adven[target].name);
@@ -3981,7 +3981,7 @@ void handle_disease()
 					r1 = get_ran(1,0,7);
 					if (adven[i].traits[trait::GoodConstitution] == TRUE)
 						r1 -= 2;
-					if ((get_ran(1,0,7) <= 0) || (pc_has_abil_equip(i,67) < 24))
+					if ((get_ran(1,0,7) <= 0) || (pc_has_abil_equip(adven[i],67) < 24))
 						adven[i].status[7] = move_to_zero(adven[i].status[7]);
 				}
 		put_pc_screen();
@@ -4090,7 +4090,7 @@ Boolean combat_cast_mage_spell()
 		add_string_to_buf("Cast: No spell points.        ");		
 	else if (adven[current_pc].skills[9] == 0)
 		add_string_to_buf("Cast: No mage skill.        ");		
-	else if (get_encumberance(current_pc) > 1) { 
+	else if (get_encumberance(adven[current_pc]) > 1) { 
 		add_string_to_buf("Cast: Too encumbered.        ");
 		take_ap(6);
 		give_help(40,0,0);
@@ -4119,7 +4119,7 @@ Boolean combat_cast_mage_spell()
 		store_sum_monst_cost = get_monst.level;
 		}
 
-	bonus = stat_adj(current_pc,2);
+	bonus = stat_adj(adven[current_pc],2);
 	combat_posing_monster = current_working_monster = current_pc;
 	if (spell_num >= 70)
 		return FALSE;
@@ -4308,7 +4308,7 @@ Boolean combat_cast_priest_spell()
 	
 	if (spell_num >= 70)
 		return FALSE;
-	bonus = stat_adj(current_pc,2);
+	bonus = stat_adj(adven[current_pc],2);
 
 	combat_posing_monster = current_working_monster = current_pc;
 
@@ -4491,35 +4491,35 @@ void start_fancy_spell_targeting(short num)
 	
 	switch (num) { // Assign special targeting shapes and number of targets
 		case 129: // smite
-			num_targets_left = minmax(1,8,adven[current_pc].level / 4 + stat_adj(current_pc,2) / 2);
+			num_targets_left = minmax(1,8,adven[current_pc].level / 4 + stat_adj(adven[current_pc],2) / 2);
 			break; 
 		case 134: // sticks to snakes
-			num_targets_left = adven[current_pc].level / 5 + stat_adj(current_pc,2) / 2;
+			num_targets_left = adven[current_pc].level / 5 + stat_adj(adven[current_pc],2) / 2;
 			break;
 		case 143: // summon host
 			num_targets_left = 5;
 			break;
 		case 27: // flame arrows
-			num_targets_left = adven[current_pc].level / 4 + stat_adj(current_pc,2) / 2;
+			num_targets_left = adven[current_pc].level / 4 + stat_adj(adven[current_pc],2) / 2;
 			break;
 		case 36: // venom arrows
-			num_targets_left = adven[current_pc].level / 5 + stat_adj(current_pc,2) / 2;
+			num_targets_left = adven[current_pc].level / 5 + stat_adj(adven[current_pc],2) / 2;
 			break;
 		case 61: case 49: // paralysis, death arrows
-			num_targets_left = adven[current_pc].level / 8 + stat_adj(current_pc,2) / 3;
+			num_targets_left = adven[current_pc].level / 8 + stat_adj(adven[current_pc],2) / 3;
 			break;
 		case 45: // spray fields
-			num_targets_left = adven[current_pc].level / 5 + stat_adj(current_pc,2) / 2;
+			num_targets_left = adven[current_pc].level / 5 + stat_adj(adven[current_pc],2) / 2;
 			current_pat = t;
 			break;
 		case 26: // summon 1
-			num_targets_left = minmax(1,7,adven[current_pc].level / 4 + stat_adj(current_pc,2) / 2);
+			num_targets_left = minmax(1,7,adven[current_pc].level / 4 + stat_adj(adven[current_pc],2) / 2);
 			break;
 		case 43: // summon 2
-			num_targets_left = minmax(1,6,adven[current_pc].level / 6 + stat_adj(current_pc,2) / 2);
+			num_targets_left = minmax(1,6,adven[current_pc].level / 6 + stat_adj(adven[current_pc],2) / 2);
 			break;
 		case 58: // summon 3
-			num_targets_left = minmax(1,5,adven[current_pc].level / 8 + stat_adj(current_pc,2) / 2);
+			num_targets_left = minmax(1,5,adven[current_pc].level / 8 + stat_adj(adven[current_pc],2) / 2);
 			break;
 		}	
 	

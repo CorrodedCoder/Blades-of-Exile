@@ -27,7 +27,7 @@ extern stored_town_maps_type maps;
 extern stored_outdoor_maps_type o_maps;
 
 extern HWND	mainPtr;
-extern Boolean registered,play_sounds,file_in_mem;
+extern Boolean file_in_mem;
 
 extern HBITMAP button_num_gworld;
 extern short current_active_pc,ulx,uly;

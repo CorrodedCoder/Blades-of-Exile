@@ -608,7 +608,7 @@ short switch_target_to_adjacent(short which_m,short orig_target)
 	if (is_combat())
 		for (i = 0; i < 6; i++)
 			if ((adven[i].main_status == status::Normal) && (monst_adjacent(pc_pos[i],which_m) == TRUE) && 
-			 (get_encumberance(i) < 2))
+			 (get_encumberance(adven[i]) < 2))
 		 		return i; 
 
 	// Check for a nice, adjacent, friendly monster and maybe attack
@@ -1452,16 +1452,16 @@ void activate_monsters(short code,short attitude)
 			}
 }
 
-short get_encumberance(short pc_num)
+short get_encumberance(const pc_record_type& pc)
 {
 	short store = 0,i,what_val;
 	
 	for (i = 0; i < 16; i++)
-		if (adven[pc_num].equip[i] == TRUE) {
-			what_val = adven[pc_num].items[i].awkward;
-			if ((what_val == 1) && (get_ran(1,0,130) < hit_chance[adven[pc_num].skills[8]]))
+		if (pc.equip[i] == TRUE) {
+			what_val = pc.items[i].awkward;
+			if ((what_val == 1) && (get_ran(1,0,130) < hit_chance[pc.skills[8]]))
 				what_val--;
-			if ((what_val > 1) && (get_ran(1,0,70) < hit_chance[adven[pc_num].skills[8]]))
+			if ((what_val > 1) && (get_ran(1,0,70) < hit_chance[pc.skills[8]]))
 				what_val--;
 			store += what_val;
 			}

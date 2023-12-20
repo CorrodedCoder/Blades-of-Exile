@@ -37,7 +37,7 @@ extern unsigned char sfx[64][64];
 extern short which_combat_type,current_pc,stat_window;
 extern outdoor_record_type outdoors[2][2];
 extern location pc_pos[6],center;
-extern Boolean in_scen_debug,belt_present,registered,processing_fields,monsters_going,suppress_stat_screen,boom_anim_active;
+extern Boolean in_scen_debug,belt_present,processing_fields,monsters_going,suppress_stat_screen,boom_anim_active;
 extern big_tr_type  t_d;
 extern Adventurers adven;
 extern effect_pat_type current_pat;

@@ -237,12 +237,12 @@ short get_prot_level(short pc_num,short abil) ////
 				
 }
 
-short pc_has_abil_equip(short pc_num,short abil)
+short pc_has_abil_equip(const pc_record_type& pc,short abil)
 {
 	short i = 0;
 	
-	while (((adven[pc_num].items[i].variety == 0) || (adven[pc_num].items[i].ability != abil)
-			|| (adven[pc_num].equip[i] == FALSE)) && (i < 24))
+	while (((pc.items[i].variety == 0) || (pc.items[i].ability != abil)
+			|| (pc.equip[i] == FALSE)) && (i < 24))
 				i++;
 	return i;
 				

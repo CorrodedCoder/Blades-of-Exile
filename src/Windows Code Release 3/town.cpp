@@ -1102,7 +1102,7 @@ void pick_lock(location where,short pc_num)
 	short unlock_adjust;
 	
 	terrain = t_d.terrain[where.x][where.y];
-	which_item = pc_has_abil_equip(pc_num,161);
+	which_item = pc_has_abil_equip(adven[pc_num],161);
 	if (which_item == 24) {
 		add_string_to_buf("  Need lockpick equipped.        ");
 		return;
@@ -1113,14 +1113,14 @@ void pick_lock(location where,short pc_num)
 	if (r1 < 75)
 		will_break = TRUE;
 
-	r1 = get_ran(1,0,100) - 5 * stat_adj(pc_num,1) + c_town.difficulty * 7
+	r1 = get_ran(1,0,100) - 5 * stat_adj(adven[pc_num],1) + c_town.difficulty * 7
 	 - 5 * adven[pc_num].skills[15] - adven[pc_num].items[which_item].ability_strength * 7;
 
 	// Nimble?
 	if (adven[pc_num].traits[trait::NimbleFingers] == FALSE)
 		r1 -= 8;
 
-	if (pc_has_abil_equip(pc_num,42) < 24)
+	if (pc_has_abil_equip(adven[pc_num],42) < 24)
 		r1 = r1 - 12;	
 
 	if ((scenario.ter_types[terrain].special < 9) || (scenario.ter_types[terrain].special > 10)) {
@@ -1149,7 +1149,7 @@ void bash_door(location where,short pc_num)
 	short r1,unlock_adjust;
 
 	terrain = t_d.terrain[where.x][where.y];
-	r1 = get_ran(1,0,100) - 15 * stat_adj(pc_num,0) + c_town.difficulty * 4;
+	r1 = get_ran(1,0,100) - 15 * stat_adj(adven[pc_num],0) + c_town.difficulty * 4;
 	
 	if ((scenario.ter_types[terrain].special < 9) || (scenario.ter_types[terrain].special > 10)) {
 		add_string_to_buf("  Wrong terrain type.           ");

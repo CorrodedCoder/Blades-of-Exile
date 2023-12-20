@@ -30,7 +30,6 @@ extern location pc_pos[6],center;
 extern town_item_list 	t_i;
 extern Adventurers adven;
 extern big_tr_type  t_d;
-extern Boolean registered;
 
 item_record_type	null_thing = {0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
 char answer[256];
@@ -138,7 +137,7 @@ Boolean run_trap(short pc_num,short trap_type,short trap_level,short diff)
 		return TRUE;
 		
 	if (pc_num < 6) {
-			i = stat_adj(pc_num,1);
+			i = stat_adj(adven[pc_num],1);
 			if ((i_level = get_prot_level(pc_num,42)) > 0)
 				i = i + i_level / 2;
 			skill = minmax(0,20,adven[pc_num].skills[14] + 
