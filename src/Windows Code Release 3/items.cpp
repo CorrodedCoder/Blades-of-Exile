@@ -126,7 +126,7 @@ Boolean give_to_pc(short pc_num,item_record_type  item,short  print_result)
 			}
 		return FALSE;
 	  	}
-	if (((free_space = pc_has_space(pc_num)) == 24) || (adven[pc_num].main_status != 1))
+	if (((free_space = pc_has_space(pc_num)) == 24) || (adven[pc_num].main_status != status::Normal))
 		return FALSE;
 		else {
 			item.item_properties = item.item_properties & 253; // not property
@@ -178,7 +178,7 @@ Boolean forced_give(short item_num,short abil)
 		item.ability = abil;
 	for (i = 0; i < 6; i++)
 		for (j = 0; j < 24; j++)
-			if ((adven[i].main_status == 1) && (adven[i].items[j].variety == 0)) {
+			if ((adven[i].main_status == status::Normal) && (adven[i].items[j].variety == 0)) {
 				adven[i].items[j] = item;
 
 				if (is_ident(item) == 0)
@@ -263,7 +263,7 @@ Boolean party_has_abil(short abil)
 	short i;
 	
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == 1)
+		if (adven[i].main_status == status::Normal)
 			if (pc_has_abil(i,abil) < 24)
 				return TRUE;
 	return FALSE;
@@ -274,7 +274,7 @@ Boolean party_take_abil(short abil)
 	short i,item;
 	
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == 1)
+		if (adven[i].main_status == status::Normal)
 			if ((item = pc_has_abil(i,abil)) < 24) {
 				if (adven[i].items[item].charges > 1)
 					adven[i].items[item].charges--;
@@ -286,8 +286,8 @@ Boolean party_take_abil(short abil)
 
 short amount_pc_can_carry(short pc_num)
 {
-	return 100 + (15 * min(adven[pc_num].skills[0],20)) + ((adven[pc_num].traits[8] == 0) ? 0 : 30)
-		+ ((adven[pc_num].traits[14] == 0) ? 0 : -50);
+	return 100 + (15 * min(adven[pc_num].skills[0],20)) + ((adven[pc_num].traits[trait::ExceptionalStr] == 0) ? 0 : 30)
+		+ ((adven[pc_num].traits[trait::BadBack] == 0) ? 0 : -50);
 }
 short pc_carry_weight(short pc_num)
 {
@@ -405,7 +405,7 @@ void take_item(short pc_num,short which_item)
 		adven[pc_num].items[i] = adven[pc_num].items[i + 1];
 		adven[pc_num].equip[i] = adven[pc_num].equip[i + 1];
 		}
-	adven[pc_num].items[23] = return_dummy_item();
+	adven[pc_num].items[23] = item_record_type{};
 	adven[pc_num].equip[23] = FALSE;
 	
 	if ((stat_window == pc_num) && (do_print == TRUE))
@@ -746,7 +746,7 @@ short dist_from_party(location where)
 	
 	if ((overall_mode >= 10) && (overall_mode < 20)) {
 		for (i = 0; i < 6; i++)
-			if (adven[i].main_status == 1)
+			if (adven[i].main_status == status::Normal)
 				store = min(store,dist(pc_pos[i],where));
 		}
 		else store = dist(c_town.p_loc,where);
@@ -841,8 +841,8 @@ void make_town_hostile()
 
 	if (fry_party == TRUE) {
 		for (i = 0; i < 6; i++)
-			if (adven[i].main_status > 0)
-				adven[i].main_status = 0;
+			if (adven[i].main_status > status::Absent)
+				adven[i].main_status = status::Absent;
 		stat_window = 6;
 		boom_anim_active = FALSE;	
 		}
@@ -856,13 +856,13 @@ void put_item_graphics()
 	char message[256];
 
 	// First make sure all arrays for who can get stuff are in order.
-	if ((current_getting_pc < 6) && ((adven[current_getting_pc].main_status != 1) 
+	if ((current_getting_pc < 6) && ((adven[current_getting_pc].main_status != status::Normal) 
 	 || (pc_has_space(current_getting_pc) == 24))) {
 	 	current_getting_pc = 6;
 	 	
 	 	}
 	for (i = 0; i < 6; i++)
-		if ((adven[i].main_status == 1) && (pc_has_space(i) < 24)
+		if ((adven[i].main_status == status::Normal) && (pc_has_space(i) < 24)
 		 && ((!is_combat()) || (current_pc == i))) {
 			if (current_getting_pc == 6)
 				current_getting_pc = i;
@@ -922,7 +922,7 @@ void put_item_graphics()
 		}
 		
 	for (i = 0; i < 6; i++) 
-		if (adven[i].main_status == 1) {
+		if (adven[i].main_status == status::Normal) {
 			csp(987,11 + i,800 + adven[i].which_graphic);
 			}
 }
@@ -997,7 +997,7 @@ void display_item_event_filter (short item_hit)
 					force_play_sound(0);
 					give_to_pc(current_getting_pc, item, 0);
 					}
-				t_i.items[item_array[item_hit]] = return_dummy_item();
+				t_i.items[item_array[item_hit]] = item_record_type{};
 				for (i = item_hit; i < 125; i++)
 					item_array[i] = item_array[i + 1];
 				total_items_gettable--;
@@ -1162,12 +1162,12 @@ short char_select_pc(short active_only,short free_inv_only, const char * title)
 		else csit(	1018,15,title);
 	
 	for (i = 0; i < 6; i++) {
-		if ((adven[i].main_status == 0) ||
-			((active_only == TRUE) && (adven[i].main_status > 1)) ||
-			((free_inv_only == 1) && (pc_has_space(i) == 24)) || (adven[i].main_status == 5)) {
+		if ((adven[i].main_status == status::Absent) ||
+			((active_only == TRUE) && (adven[i].main_status > status::Normal)) ||
+			((free_inv_only == 1) && (pc_has_space(i) == 24)) || (adven[i].main_status == status::Fled)) {
 				cd_activate_item(1018, 3 + i, 0);
 				}
-		if (adven[i].main_status != 0) {
+		if (adven[i].main_status != status::Absent) {
 				csit(1018,9 + i,adven[i].name);		
 			}		
 			else cd_activate_item(1018, 9 + i, 0);
@@ -1359,7 +1359,7 @@ short party_total_level()
 	short i,j = 0;
 	
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == 1)
+		if (adven[i].main_status == status::Normal)
 			j += adven[i].level;
 	return j;
 }
@@ -1479,7 +1479,7 @@ void place_treasure(location where,short level,short loot,short mode)
 							
 			if (new_item.variety != 0) {
 				for (i = 0; i < 6; i++)
-					if ((adven[i].main_status == 1) 
+					if ((adven[i].main_status == status::Normal) 
 						&& (get_ran(1,0,100) < id_odds[adven[i].skills[13]]))
 							new_item.item_properties = new_item.item_properties | 1;
 				place_item(new_item,where,FALSE);
@@ -1494,7 +1494,7 @@ short luck_total()
 	short i = 0;
 	
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == 1)
+		if (adven[i].main_status == status::Normal)
 			i += adven[i].skills[18];
 	return i;
 }
@@ -1549,7 +1549,7 @@ void refresh_store_items()
 			party.magic_store_items[i][j] = return_treasure(loot_index[j],7,1);
 			if ((party.magic_store_items[i][j].variety == 3) ||
 				(party.magic_store_items[i][j].variety == 11))
-				party.magic_store_items[i][j] = return_dummy_item();
+				party.magic_store_items[i][j] = item_record_type{};
 			party.magic_store_items[i][j].item_properties =
 				party.magic_store_items[i][j].item_properties | 1;
 			}
@@ -1595,7 +1595,7 @@ Boolean party_check_class(short item_class,short mode) ////
 	if (item_class == 0)
 		return FALSE;
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == 1)
+		if (adven[i].main_status == status::Normal)
 			for (j = 23; j >= 0; j--)
 				if ((adven[i].items[j].variety > 0) && (adven[i].items[j].special_class == item_class)) {
 					if (mode == 0) {

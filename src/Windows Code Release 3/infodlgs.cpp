@@ -21,7 +21,7 @@
 #include "fileio.h"
 
 short mage_spell_pos = 0,priest_spell_pos = 0,skill_pos = 0;
-pc_record_type *store_pc;
+static pc_record_type *store_pc;
 creature_data_type *store_m;
 short store_trait_mode,store_item_pc,store_pc_num;
 item_record_type store_i;
@@ -236,14 +236,14 @@ Boolean display_pc_event_filter (short item_hit)
 				case 66:
 					do {
 						pc_num = (pc_num == 0) ? 5 : pc_num - 1;
-						} while (adven[pc_num].main_status == 0);
+						} while (adven[pc_num].main_status == status::Absent);
 					which_pc_displayed = pc_num;
 					put_pc_graphics();
 					break;
 				case 67:
 					do {
 						pc_num = (pc_num == 5) ? 0 : pc_num + 1;
-						} while (adven[pc_num].main_status == 0);
+						} while (adven[pc_num].main_status == status::Absent);
 					which_pc_displayed = pc_num;
 					put_pc_graphics();	
 					break;
@@ -260,9 +260,9 @@ void display_pc(short pc_num,short mode,short parent)
 	short i;
 	char label_str[256];
 	
-	if (adven[pc_num].main_status == 0) {
+	if (adven[pc_num].main_status == status::Absent) {
 		for (pc_num = 0; pc_num < 6; pc_num++)
-			if (adven[pc_num].main_status == 1)
+			if (adven[pc_num].main_status == status::Normal)
 				break;
 		}
 	which_pc_displayed = pc_num;
@@ -702,7 +702,7 @@ void display_traits_graphics()
 		cd_set_led(1013,36 + i,(store_pc->traits[10 + i] > 0) ? 1 : 0);
 		}
 
-	store = get_tnl(store_pc);
+	store = pc_get_tnl(*store_pc);
 	cdsin(1013,18,store);
 }
 
@@ -791,13 +791,13 @@ void display_pc_info()
 	for (i = 0; i < 19; i++) {
 		cdsin(1019,18 + i * 2,adven[pc].skills[i]);
 		}
-	store = total_encumberance(pc);
+	store = pc_encumberance(adven[pc]);
 	cdsin(1019,62,store);
 	csit(1019,9,adven[pc].name);
 	cdsin(1019,11,adven[pc].level);
 	cdsin(1019,13,adven[pc].experience);
 	cdsin(1019,71,adven[pc].skill_pts);
-	store = adven[pc].level * get_tnl(&adven[pc]);
+	store = adven[pc].level * pc_get_tnl(adven[pc]);
 	cdsin(1019,15,store);
 	csp(1019,7,800 + adven[pc].which_graphic);
 
@@ -810,9 +810,9 @@ void display_pc_info()
 						else weap2 = i;
 					}
 				
-	hit_adj = stat_adj(pc,1) * 5 - (total_encumberance(pc)) * 5 
+	hit_adj = stat_adj(pc,1) * 5 - (pc_encumberance(adven[pc])) * 5
 		+ (5 * minmax(-8,8,adven[pc].status[1]));
-	if ((adven[pc].traits[2] == FALSE) && (weap2 < 24))
+	if ((adven[pc].traits[trait::Ambidextrous] == FALSE) && (weap2 < 24))
 		hit_adj -= 25;
 
 	dam_adj = stat_adj(pc,0) + minmax(-8,8,adven[pc].status[1]);
@@ -876,13 +876,13 @@ void give_pc_info_event_filter(short item_hit)
 		case 2: 
 			do				
 				store_pc_num = (store_pc_num == 0) ? 5 : store_pc_num - 1;
-				while (adven[store_pc_num].main_status != 1);
+				while (adven[store_pc_num].main_status != status::Normal);
 			display_pc_info();
 			break;
 		case 3: 
 			do 
 				store_pc_num = (store_pc_num + 1) % 6;
-				while (adven[store_pc_num].main_status != 1);
+				while (adven[store_pc_num].main_status != status::Normal);
 			display_pc_info();
 			break;
 		case 4:

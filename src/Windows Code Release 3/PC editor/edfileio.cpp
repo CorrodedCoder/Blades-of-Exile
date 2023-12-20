@@ -291,7 +291,7 @@ void load_file()
 
 	
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status > 0) {
+		if (adven[i].main_status > status::Absent) {
 			current_active_pc = i;
 			i = 6;
 			}

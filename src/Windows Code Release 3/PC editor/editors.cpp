@@ -1,6 +1,7 @@
 #include <Windows.h>
 #include <array>
 
+#include "boe/pc.hpp"
 #include "graphics.h"
 #include "../global.h"
 #include "editors.h"
@@ -86,7 +87,7 @@ Boolean give_to_pc(short pc_num,item_record_type  item, short print_result)
 
 	if (item.variety == 0)
 		return TRUE;
-	if (((free_space = pc_has_space(pc_num)) == 24 ) || (adven[pc_num].main_status != 1))
+	if (((free_space = pc_has_space(pc_num)) == 24 ) || (adven[pc_num].main_status != status::Normal))
 		return FALSE;
 		else {
 			adven[pc_num].items[free_space] = item;
@@ -207,12 +208,12 @@ short char_select_pc(short active_only,short free_inv_only, const char * title)
 		else csit(	1018,15,title);
 	
 	for (i = 0; i < 6; i++) {
-		if ((adven[i].main_status == 0) ||
-			((active_only == TRUE) && (adven[i].main_status > 1)) ||
-			((free_inv_only == 1) && (pc_has_space(i) == 24)) || (adven[i].main_status == 5)) {
+		if ((adven[i].main_status == status::Absent) ||
+			((active_only == TRUE) && (adven[i].main_status > status::Normal)) ||
+			((free_inv_only == 1) && (pc_has_space(i) == 24)) || (adven[i].main_status == status::Fled)) {
 				cd_activate_item(1018, 3 + i, 0);
 				}
-		if (adven[i].main_status != 0) {
+		if (adven[i].main_status != status::Absent) {
 				csit(1018,9 + i,adven[i].name);		
 			}		
 			else cd_activate_item(1018, 9 + i, 0);
@@ -279,7 +280,7 @@ short party_total_level()
 	short i,j = 0;
 	
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == 1)
+		if (adven[i].main_status == status::Normal)
 			j += adven[i].level;
 	return j;
 }
@@ -291,7 +292,7 @@ short luck_total()
 	short i = 0;
 	
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == 1)
+		if (adven[i].main_status == status::Normal)
 			i += adven[i].skills[18];
 	return i;
 }
@@ -310,7 +311,7 @@ void display_traits_graphics()
 		cd_set_led(1013,36 + i,(store_pc->traits[10 + i] > 0) ? 1 : 0);
 		}
 
-	store = get_tnl(store_pc);
+	store = pc_get_tnl(*store_pc);
 	cdsin(1013,18,store);
 }
 
@@ -375,21 +376,4 @@ void pick_race_abil(pc_record_type *pc,short mode,short parent_num)
 	
 	cd_kill_dialog(1013,0);
 	dialog_not_toast = TRUE;
-}
-
-
-short get_tnl(pc_record_type *pc)
-{
-	short tnl = 100,i,store_per = 100;
-	short rp[3] = {0,12,20};
-	short ap[15] = {10,20,8,10,4, 6,10,7,12,15, -10,-8,-8,-20,-8};
-	
-	tnl = (tnl * (100 + rp[pc->race])) / 100;
-	for (i = 0; i < 15; i++)
-		if (pc->traits[i] == TRUE) 
-			store_per = store_per + ap[i];
-
-	tnl = (tnl * store_per) / 100;	
-	
-	return tnl;
 }

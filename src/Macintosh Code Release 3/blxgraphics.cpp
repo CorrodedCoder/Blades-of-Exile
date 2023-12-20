@@ -2543,7 +2543,7 @@ Boolean party_toast()
 	short i;
 	
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == 1)
+		if (adven[i].main_status == status::Normal)
 			return FALSE;
 	return TRUE;
 }

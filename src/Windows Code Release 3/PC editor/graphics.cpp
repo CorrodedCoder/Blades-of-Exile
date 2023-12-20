@@ -415,7 +415,7 @@ void draw_items(short clear_first)
 		}
 	
 	// frame_dlog_rect(mainPtr,frame_rect,0);
-	if (adven[current_active_pc].main_status != 1){
+	if (adven[current_active_pc].main_status != status::Normal){
 		frame_dlog_rect(mainPtr,pc_info_rect,0); // re draw entire frame 
 		frame_dlog_rect(mainPtr,info_area_rect,0); // draw the frame
 		frame_dlog_rect(mainPtr,pc_race_rect,0); // draw the frame
@@ -507,7 +507,7 @@ void display_party(short mode,short clear_first)
 				
 				// pc_record_type adven[6] is the records that contains chaarcters
 				// main_status determins 0 - not exist, 1 - alive, OK, 2 - dead, 3 - stoned, 4 - dust
-				if (adven[i].main_status != 0) { // PC exists?
+				if (adven[i].main_status != status::Absent) { // PC exists?
 					from_rect = from_base;
 					// draw PC graphic
 					OffsetRect(&from_rect,56 * (adven[i].which_graphic / 8),36 * (adven[i].which_graphic % 8));
@@ -546,7 +546,7 @@ void display_party(short mode,short clear_first)
 					if ((current_pressed_button < 0) || (current_pressed_button == i))
 					switch (adven[i].main_status) {
 						// draw statistics
-						case 1:
+						case status::Normal:
 							if (i == current_active_pc) {
 								//Draw in race
 								if (adven[i].race == 0)
@@ -681,78 +681,78 @@ void display_party(short mode,short clear_first)
 									//frame_dlog_rect((GrafPtr) mainPtr,pc_traits_rect[k],0);
 								SelectObject(main_dc,font);
 								cur_rect=0;
-								if (adven[i].traits[0] == 1) 
+								if (adven[i].traits[trait::Toughness] == 1) 
 										if(cur_rect <= 15) {
 											char_win_draw_string(main_dc,pc_traits_rect[cur_rect],"Toughness",0,9);
 											cur_rect++;
 										}
-								if (adven[i].traits[1] == 1) 
+								if (adven[i].traits[trait::MagicallyApt] == 1) 
 										if(cur_rect <= 15) {
 											char_win_draw_string(main_dc,pc_traits_rect[cur_rect],"Magically Apt",0,9);
 											cur_rect++;
 										}		
-								if (adven[i].traits[2] == 1) 
+								if (adven[i].traits[trait::Ambidextrous] == 1) 
 										if(cur_rect <= 15) {
 											char_win_draw_string(main_dc,pc_traits_rect[cur_rect],"Ambidextrous",0,9);
 											cur_rect++;
 										}
-								if (adven[i].traits[3] == 1) 
+								if (adven[i].traits[trait::NimbleFingers] == 1) 
 										if(cur_rect <= 15) {
 											char_win_draw_string(main_dc,pc_traits_rect[cur_rect],"Nimble Fingers",0,9);
 											cur_rect++;
 										}
-								if (adven[i].traits[4] == 1) 
+								if (adven[i].traits[trait::CaveLore] == 1) 
 										if(cur_rect <= 15) {
 											char_win_draw_string(main_dc,pc_traits_rect[cur_rect],"Cave Lore",0,9);
 											cur_rect++;
 										}
 										
-								if (adven[i].traits[5] == 1) 
+								if (adven[i].traits[trait::Woodsman] == 1) 
 										if(cur_rect <= 15) {
 											char_win_draw_string(main_dc,pc_traits_rect[cur_rect],"Woodsman",0,9);
 											cur_rect++;
 										}
-								if (adven[i].traits[6] == 1) 
+								if (adven[i].traits[trait::GoodConstitution] == 1) 
 										if(cur_rect <= 15) {
 											char_win_draw_string(main_dc,pc_traits_rect[cur_rect],"Good Constitution",0,9);
 											cur_rect++;
 										}		
-								if (adven[i].traits[7] == 1) 
+								if (adven[i].traits[trait::HighlyAlert] == 1) 
 										if(cur_rect <= 15) {
 											char_win_draw_string(main_dc,pc_traits_rect[cur_rect],"Highly Alert",0,9);
 											cur_rect++;
 										}
-								if (adven[i].traits[8] == 1) 
+								if (adven[i].traits[trait::ExceptionalStr] == 1) 
 										if(cur_rect <= 15) {
 											char_win_draw_string(main_dc,pc_traits_rect[cur_rect],"Exceptional Str.",0,9);
 											cur_rect++;
 										}
-								if (adven[i].traits[9] == 1) 
+								if (adven[i].traits[trait::Recuperation] == 1) 
 										if(cur_rect <= 15) {
 											char_win_draw_string(main_dc,pc_traits_rect[cur_rect],"Recuperation",0,9);
 											cur_rect++;
 										}
-								if (adven[i].traits[10] == 1) 
+								if (adven[i].traits[trait::Sluggish] == 1) 
 										if(cur_rect <= 15) {
 											char_win_draw_string(main_dc,pc_traits_rect[cur_rect],"Sluggish",0,9);
 											cur_rect++;
 										}
-								if (adven[i].traits[11] == 1) 
+								if (adven[i].traits[trait::MagicallyInept] == 1) 
 										if(cur_rect <= 15) {
 											char_win_draw_string(main_dc,pc_traits_rect[cur_rect],"Magically Inept",0,9);
 											cur_rect++;
 										}		
-								if (adven[i].traits[12] == 1) 
+								if (adven[i].traits[trait::Frail] == 1) 
 										if(cur_rect <= 14) {
 											char_win_draw_string(main_dc,pc_traits_rect[cur_rect],"Frail",0,9);
 											cur_rect++;
 										}
-								if (adven[i].traits[13] == 1)
+								if (adven[i].traits[trait::ChronicDisease] == 1)
 										if(cur_rect <= 14) {
 											char_win_draw_string(main_dc,pc_traits_rect[cur_rect],"Chronic Disease",0,9);
 											cur_rect++;
 										}
-								if (adven[i].traits[14] == 1)
+								if (adven[i].traits[trait::BadBack] == 1)
 										if(cur_rect <= 13) {
 											char_win_draw_string(main_dc,pc_traits_rect[cur_rect],"Bad Back",0,9);
 											cur_rect++;
@@ -766,31 +766,31 @@ void display_party(short mode,short clear_first)
 							char_win_draw_string(main_dc,pc_area_buttons[i][3],"Alive ",1,10);
 							SelectObject(main_dc,bold_font);
 							break;
-						case 2:
+						case status::Dead:
 							SetTextColor(main_dc,PALETTEINDEX(c[0]));
 							SelectObject(main_dc,bold_font);
 							char_win_draw_string(main_dc,pc_area_buttons[i][3],"Dead ",1,10);
 							SelectObject(main_dc,bold_font);
 							break;
-						case 3:
+						case status::Dust:
 							SetTextColor(main_dc,PALETTEINDEX(c[0]));
 							SelectObject(main_dc,bold_font);
 							char_win_draw_string(main_dc,pc_area_buttons[i][3],"Dust ",1,10);
 							SelectObject(main_dc,bold_font);
 							break;
-						case 4:
+						case status::Stone:
 							SetTextColor(main_dc,PALETTEINDEX(c[0]));
 							SelectObject(main_dc,bold_font);
 							char_win_draw_string(main_dc,pc_area_buttons[i][3],"Stone ",1,10);
 							SelectObject(main_dc,bold_font);
 							break;
-						case 5:
+						case status::Fled:
 							SetTextColor(main_dc,PALETTEINDEX(c[0]));
 							SelectObject(main_dc,bold_font);
 							char_win_draw_string(main_dc,pc_area_buttons[i][3],"Fled ",1,10);
 							SelectObject(main_dc,bold_font);
 							break;
-						case 6:
+						case status::Surface:
 							SetTextColor(main_dc,PALETTEINDEX(c[0]));
 							SelectObject(main_dc,bold_font);
 							char_win_draw_string(main_dc,pc_area_buttons[i][3],"Surface ",1,10);

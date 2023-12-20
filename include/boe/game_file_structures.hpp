@@ -8,6 +8,9 @@ const auto NUM_TOWN_ITEMS = 115;
 using Boolean = char;
 static_assert(sizeof(Boolean) == 1);
 
+#define BOE_FALSE static_cast<Boolean>(0)
+#define BOE_TRUE static_cast<Boolean>(1)
+
 struct BoeRect
 {
 	short left;
@@ -376,6 +379,38 @@ enum class flag_type : short {
 };
 static_assert(sizeof(flag_type) == 2);
 
+enum trait {
+	Toughness = 0,
+	MagicallyApt = 1,
+	Ambidextrous = 2,
+	NimbleFingers = 3,
+	CaveLore = 4,
+	Woodsman = 5,
+	GoodConstitution = 6,
+	HighlyAlert = 7,
+	ExceptionalStr = 8,
+	Recuperation = 9,
+	Sluggish = 10,
+	MagicallyInept = 11,
+	Frail = 12,
+	ChronicDisease = 13,
+	BadBack = 14,
+};
+
+// See put_pc_screen for details
+enum class status: short {
+	Absent = 0,
+	Normal = 1,
+	Dead = 2,
+	Dust = 3,
+	Stone = 4,
+	Fled = 5,
+	Surface = 6,
+	Won = 7,
+};
+static_assert(sizeof(status) == 2);
+
+
 // for game
 struct talk_save_type {
 	short personality;
@@ -480,7 +515,7 @@ struct stored_town_maps_type {
 static_assert(sizeof(stored_town_maps_type) == 51200);
 
 struct pc_record_type {
-	short main_status;
+	status main_status;
 	char name[20];
 	short skills[30];
 	short max_health, cur_health, max_sp, cur_sp, experience, skill_pts, level;
@@ -494,6 +529,11 @@ struct pc_record_type {
 
 	auto operator<=>(const pc_record_type&) const = default;
 	bool operator==(const pc_record_type&) const = default;
+
+	bool has_trait(trait trait) const
+	{
+		return traits[static_cast<int>(trait)];
+	}
 };
 static_assert(sizeof(pc_record_type) == 1898);
 

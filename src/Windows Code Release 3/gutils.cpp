@@ -16,48 +16,36 @@
 #include "graphutl_helpers.hpp"
 
 extern HWND	mainPtr;
-extern RECT	windRect;
-extern short stat_window,give_delays,overall_mode;
-extern short current_spell_range,town_type;
-extern Boolean in_startup_mode,anim_onscreen,registered,play_sounds,frills_on,cartoon_happening;
+extern short overall_mode;
+extern short town_type;
+extern Boolean in_startup_mode,cartoon_happening;
 extern short town_size[3];
 extern party_record_type party;
 extern piles_of_stuff_dumping_type2 data_store2;
-extern talking_record_type talking;
 extern scenario_data_type scenario;
 
 extern Adventurers adven;
 extern big_tr_type  t_d;
-extern outdoor_record_type outdoors[2][2];
 extern current_town_type c_town;
 extern town_item_list  t_i;
 extern unsigned char out[96][96];
 extern unsigned char combat_terrain[64][64];
-extern effect_pat_type current_pat;
 extern Boolean web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern Boolean sleep_field;
 extern unsigned char misc_i[64][64],sfx[64][64];
 extern short on_monst_menu[256];
-extern HWND modeless_dialogs[18];
 extern short monst_target[T_M]; // 0-5 target that pc   6 - no target  100 + x - target monster x
-extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
-extern Boolean cat,cow,chicken,dog,sheep;
+extern short combat_posing_monster; // 0-5 PC 100 + x - monster x
 
 extern HBITMAP storage_gworld,terrain_screen_gworld,party_template_gworld,items_gworld,tiny_obj_gworld;
 extern HBITMAP fields_gworld,mixed_gworld,small_temp_gworld,spec_scen_g;
 extern short which_g_stored[STORED_GRAPHICS];
-extern short wish_list[STORED_GRAPHICS];
-extern short storage_status[STORED_GRAPHICS]; // 0 - empty 1 - in use 2 - there, not in use
 extern short terrain_there[9][9];
 
 extern short ulx,uly;
 extern location pc_pos[6],center;
-extern short which_combat_type,pc_dir[6],current_pc;
+extern short pc_dir[6],current_pc;
 extern Boolean monsters_going,anim_onscreen;
-
-extern short num_targets_left;
-extern location spell_targets[8];
-extern short display_mode;
 
 extern long anim_ticks;
 
@@ -65,23 +53,19 @@ extern short terrain_pic[256];
 extern char spot_seen[9][9];
 extern char out_trim[96][96];
 extern char town_trim[64][64];
-extern short monster_index[21];
 
 extern Boolean supressing_some_spaces;
 extern location ok_space[4];
 extern Boolean can_draw_pcs;
 
 extern HPALETTE hpal;
-extern PALETTEENTRY ape[256];
-extern HDC main_dc,main_dc2,main_dc3;
-
-extern HFONT font,small_bold_font,italic_font,underline_font,bold_font;
+extern HDC main_dc;
 
 
-RECT boat_rects[4] = {{0,0,28,36}, {28,0,56,36},{56,0,84,36},{84,0,112,36}}; /**/
-Boolean gave_no_g_error = FALSE;
+static const std::array<RECT, 4> boat_rects{ {{0,0,28,36}, {28,0,56,36},{56,0,84,36},{84,0,112,36}} };
+static Boolean gave_no_g_error = FALSE;
 
-unsigned char m_pic_index[200] = {////
+extern const std::array<unsigned char, 200> m_pic_index{
 1,2,3,4,5,6,7,8,9,10,
 11,12,13,14,15,16,17,18,19,20,
 
@@ -112,8 +96,7 @@ unsigned char m_pic_index[200] = {////
 0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0};
  
-unsigned char m_pic_index_x[200] = {
-
+extern const std::array<unsigned char, 200> m_pic_index_x{
 1,1,1,1,1,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1,
@@ -137,7 +120,7 @@ unsigned char m_pic_index_x[200] = {
 1,1,1,1,1,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1};
 
-unsigned char m_pic_index_y[200] = {
+extern const std::array<unsigned char, 200> m_pic_index_y{
 1,1,1,1,1,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1,
@@ -404,7 +387,7 @@ void draw_pcs(location center,short mode)
 		return;
 	
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == 1)
+		if (adven[i].main_status == status::Normal)
 			if (((point_onscreen(center, pc_pos[i])) == TRUE) && 
 				((cartoon_happening == TRUE) || (party_can_see(pc_pos[i]) < 6))){
 				where_draw.x = pc_pos[i].x - center.x + 4;
@@ -426,7 +409,7 @@ void draw_pcs(location center,short mode)
 		return;
       }
 	// Draw current pc on top
-	if ((current_pc < 6) && ((point_onscreen(center, pc_pos[current_pc])) == TRUE) && (adven[current_pc].main_status == 1)) {
+	if ((current_pc < 6) && ((point_onscreen(center, pc_pos[current_pc])) == TRUE) && (adven[current_pc].main_status == status::Normal)) {
 		where_draw.x = pc_pos[current_pc].x - center.x + 4;
 		where_draw.y = pc_pos[current_pc].y - center.y + 4;
 		source_rect = get_party_template_rect(current_pc,(pc_dir[current_pc] < 4) ? 0 : 1);

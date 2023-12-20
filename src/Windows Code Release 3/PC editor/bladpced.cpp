@@ -37,6 +37,7 @@ Blades of Exile Game/Scenario Editor/Character Editor
 #include "dlogtool.h"
 #include "edaction.h"
 #include "../graphutl.h"
+#include "boe/hacks.hpp"
 
 void check_game_done();
 void load_cursors();
@@ -479,8 +480,7 @@ Boolean handle_menu (short item, HMENU menu)
 			c_town.p_loc.y = party.stuff_done[304][2];
 			party.stuff_done[304][0] = 0;
 			for (i = 0; i < 6; i++)
-				if (adven[i].main_status >= 10)
-					adven[i].main_status -= 10;				
+				hacks_adventurer_reset_split_status(adven[i]);
 			redraw_screen();
 			break;
 			
@@ -505,9 +505,9 @@ Boolean handle_menu (short item, HMENU menu)
 		case 53: // raise dead
 			display_strings(20,3,0,0,"Editing party",57,715,0);
 			for (i = 0; i < 6; i++)
-				if ((adven[i].main_status == 2) || (adven[i].main_status == 3) ||
-					(adven[i].main_status == 4))
-						adven[i].main_status = 1;
+				if ((adven[i].main_status == status::Dead) || (adven[i].main_status == status::Dust) ||
+					(adven[i].main_status == status::Stone))
+						adven[i].main_status = status::Normal;
 			redraw_screen();
 			break;
 		case 54: // conditions

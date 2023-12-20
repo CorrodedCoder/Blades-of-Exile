@@ -162,7 +162,7 @@ Boolean run_trap(short pc_num,short trap_type,short trap_level,short diff)
 	
 			r1 = get_ran(1,0,100) + diff;
 			// Nimble?
-			if (adven[pc_num].traits[3] == FALSE)
+			if (adven[pc_num].traits[trait::NimbleFingers] == FALSE)
 				r1 -= 6;
 
 

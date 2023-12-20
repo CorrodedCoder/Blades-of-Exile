@@ -2,6 +2,7 @@
 #include <array>
 #include <cstdio>
 
+#include "boe/pc.hpp"
 #include "graphics.h"
 #include "../global.h"
 #include "editors.h"
@@ -91,7 +92,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 
 	for (i = 0; i < 6; i++)
 		if ((PtInRect(&pc_area_buttons[i][0],the_point) == TRUE) &&
-			(adven[i].main_status > 0)) {
+			(adven[i].main_status > status::Absent)) {
 			do_button_action(0,i);
 			current_active_pc = i;
 			display_party(6,1);
@@ -99,7 +100,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 			}
 	for (i = 0; i < 5; i++)
 		if ((PtInRect(&edit_rect[i][0],the_point) == TRUE) &&
-			(adven[current_active_pc].main_status > 0)) {
+			(adven[current_active_pc].main_status > status::Absent)) {
 			do_button_action(0,i + 10);
 			if ((ed_reg == FALSE) && (save_blocked == FALSE))
 				if ((choice = FCD(904,0)) == 1)
@@ -258,14 +259,14 @@ Boolean display_pc_event_filter (short item_hit)
 				case 66:
 					do {
 						pc_num = (pc_num == 0) ? 5 : pc_num - 1;
-						} while (adven[pc_num].main_status == 0);
+						} while (adven[pc_num].main_status == status::Absent);
 					which_pc_displayed = pc_num;
 					put_pc_graphics();
 					break;
 				case 67:
 					do {
 						pc_num = (pc_num == 5) ? 0 : pc_num + 1;
-						} while (adven[pc_num].main_status == 0);
+						} while (adven[pc_num].main_status == status::Absent);
 					which_pc_displayed = pc_num;
 					put_pc_graphics();	
 					break;
@@ -288,9 +289,9 @@ void display_pc(short pc_num,short mode,short parent)
 	short i;
 	char label_str[256];
 	
-	if (adven[pc_num].main_status == 0) {
+	if (adven[pc_num].main_status == status::Absent) {
 		for (pc_num = 0; pc_num < 6; pc_num++)
-			if (adven[pc_num].main_status == 1)
+			if (adven[pc_num].main_status == status::Normal)
 				break;
 		}
 	which_pc_displayed = pc_num;
@@ -504,7 +505,7 @@ Boolean spend_xp_event_filter (short item_hit)
 						do_xp_keep(pc_num,0);
 						do {
 							pc_num = (pc_num == 0) ? 5 : pc_num - 1;
-						} while (adven[pc_num].main_status != 1);
+						} while (adven[pc_num].main_status != status::Normal);
 						store_train_pc = pc_num;
 						do_xp_draw();
 				break;
@@ -514,7 +515,7 @@ Boolean spend_xp_event_filter (short item_hit)
 						do_xp_keep(pc_num,0);
 						do {
 							pc_num = (pc_num == 5) ? 0 : pc_num + 1;
-						} while (adven[pc_num].main_status != 1);
+						} while (adven[pc_num].main_status != status::Normal);
 						store_train_pc = pc_num;
 						do_xp_draw();
 				break;
@@ -696,7 +697,7 @@ void edit_xp(pc_record_type *pc)
 		
 	sprintf(sign_text,"%d",(short)pc->experience);
 	cd_set_text_edit_str(1024,(char *) sign_text);
-	item_hit = get_tnl(store_xp_pc);
+	item_hit = pc_get_tnl(*store_xp_pc);
 	cdsin(1024,8,item_hit);
 	
 	while (dialog_not_toast)

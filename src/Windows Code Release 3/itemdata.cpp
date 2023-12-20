@@ -13,21 +13,13 @@ extern piles_of_stuff_dumping_type2 data_store2;
 short loot_min[5] = {0,0,5,50,400};
 short loot_max[5] = {3,8,40,800,4000};
 //// whole file
-item_record_type	return_dummy_item()
-{
-	item_record_type	dummy_item = {0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
-
-	return dummy_item;
-}
-
-
 
 item_record_type get_stored_item(short which)
 {
 	item_record_type s_item;
 
 	if ((which >= 400) || (which < 0)) {
-		s_item = return_dummy_item();
+		s_item = item_record_type{};
 		return s_item;
 		}
 	
@@ -73,7 +65,7 @@ item_record_type pull_item_of_type(short loot_max,short min_val,short max_val,sh
 				return temp_i;
 			}
 		}
-	temp_i = return_dummy_item();
+	temp_i = item_record_type{};
 	return temp_i;
 }
 
@@ -82,7 +74,7 @@ item_record_type	get_weapon(short loot,short level)
 	item_record_type weapon;
 
 	if (loot == 0)
-		return return_dummy_item();
+		return item_record_type{};
 	weapon = pull_item_of_type(loot,loot_min[loot],loot_max[loot],1,2,-1); 
 
 	return weapon;
@@ -95,7 +87,7 @@ item_record_type	get_armor(short loot,short level)
 	item_record_type armor;
 
 	if (loot == 0)
-		return return_dummy_item();
+		return item_record_type{};
 	r1 = get_ran(1,(loot - 1) * 5 + 124,142);
 	
 	armor = pull_item_of_type(loot,loot_min[loot],loot_max[loot],13,-1,-1); 

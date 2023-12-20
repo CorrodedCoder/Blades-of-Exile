@@ -51,7 +51,7 @@ extern HWND right_sbar;
 extern Boolean left_buttons_active,right_buttons_active;
 extern short left_button_status[NLS]; // 0 - clear, 1 - text, 2 - title text, +10 - button
 extern short right_button_status[NRS]; 
-extern unsigned char m_pic_index[200];
+extern const std::array<unsigned char, 200> m_pic_index;
 extern location cur_out;
 extern short ulx,uly;
 extern HINSTANCE store_hInstance;

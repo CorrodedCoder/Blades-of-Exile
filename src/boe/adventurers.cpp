@@ -2,24 +2,35 @@
 #include "boe/pc.hpp"
 #include <algorithm>
 #include <numeric>
+#include <ranges>
+
+namespace
+{
+	auto is_active = [](const auto& adventurer) { return adventurer.main_status == status::Normal; };
+}
 
 bool cave_lore_present(const Adventurers& adven)
 {
-	return std::ranges::any_of(adven, [](const auto& adventurer) { return (adventurer.main_status == 1) && (adventurer.traits[4] > 0); });
+	auto has_cavelore = [](const auto& adventurer) { return adventurer.traits[trait::CaveLore] > 0; };
+	auto v = adven | std::views::filter(is_active);
+	return std::ranges::any_of(v, has_cavelore);
 }
 
 bool woodsman_present(const Adventurers& adven)
 {
-	return std::ranges::any_of(adven, [](const auto& adventurer) { return (adventurer.main_status == 1) && (adventurer.traits[5] > 0); });
+	auto has_woodsman = [](const auto& adventurer) { return adventurer.traits[trait::Woodsman] > 0; };
+	auto v = adven | std::views::filter(is_active);
+	return std::ranges::any_of(v, has_woodsman);
 }
 
 short mage_lore_total(const Adventurers& adven)
 {
-	auto pc_mage_lore = [](short total, const auto& adventurer) { return (adventurer.main_status == 1) ? static_cast<short>(adventurer.skills[11] + total) : total; };
-#if __cpp_lib_ranges_fold
-	return std::ranges::fold_left(adven, static_cast<short>(0), pc_mage_lore);
+	auto pc_mage_lore = [](const auto& adventurer) { return adventurer.skills[11]; };
+	auto v = adven | std::views::filter(is_active) | std::views::transform(pc_mage_lore);
+#if defined(__cpp_lib_ranges_fold) && __cpp_lib_ranges_fold
+	return static_cast<short>(std::ranges::fold_left(v, 0, std::plus<int>()));
 #else
-	return std::reduce(std::begin(adven), std::end(adven), static_cast<short>(0), pc_mage_lore);
+	return static_cast<short>(std::reduce(std::begin(v), std::end(v), 0));
 #endif
 }
 
@@ -38,12 +49,9 @@ bool adventurers_cure(Adventurers& adventurers, short amt)
 
 void adventurers_restore_sp(Adventurers& adventurers, short amt)
 {
-	for (auto& pc : adventurers)
+	for (auto& pc : adventurers | std::views::filter(is_active))
 	{
-		if (pc.main_status == 1)
-		{
-			pc_restore_sp(pc, amt);
-		}
+		pc_restore_sp(pc, amt);
 	}
 }
 
