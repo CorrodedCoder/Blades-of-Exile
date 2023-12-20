@@ -2280,7 +2280,7 @@ void increase_age()
 
 
 	// Specials countdowns
-	if ((party.age % 500 == 0) && (get_ran(1,0,5) == 3) && (party_has_abil(adven, 52) == TRUE)) {
+	if ((party.age % 500 == 0) && (get_ran(1,0,5) == 3) && adventurers_has_ability(adven, 52)) {
 			update_stat = TRUE;
 			display_enc_string(52,39,3);
 			for (i = 0; i < 6; i++)

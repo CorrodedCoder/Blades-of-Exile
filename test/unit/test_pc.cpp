@@ -2150,3 +2150,21 @@ TEST_CASE("pc_get_tnl", "[pc]")
 		}
 	}
 }
+
+TEST_CASE("pc_has_space", "[pc]")
+{
+	SECTION("No items yields zero") {
+		pc_record_type pc{};
+		REQUIRE(pc_has_space(pc) == 0);
+	}
+	SECTION("Fill up items") {
+		pc_record_type pc{};
+		short item_count = 0;
+		for (auto & item: pc.items)
+		{
+			++item_count;
+			item.variety = 1;
+			REQUIRE(pc_has_space(pc) == item_count);
+		}
+	}
+}
