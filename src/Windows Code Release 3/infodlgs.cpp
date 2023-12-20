@@ -21,7 +21,7 @@
 #include "fileio.h"
 
 short mage_spell_pos = 0,priest_spell_pos = 0,skill_pos = 0;
-pc_record_type *store_pc;
+static pc_record_type *store_pc;
 creature_data_type *store_m;
 short store_trait_mode,store_item_pc,store_pc_num;
 item_record_type store_i;

@@ -1,6 +1,7 @@
 
 #include <Windows.h>
 #include <array>
+#include <algorithm>
 #include <cstdio>
 
 #include "global.h"
@@ -2488,14 +2489,10 @@ void handle_cave_lore()
 
 void switch_pc(short which)
 {
-	pc_record_type store_pc;
-
 	if (current_switch < 6) {
 		if (current_switch != which) {
 			add_string_to_buf("Switch: OK.");
-			store_pc = adven[which];
-			adven[which] = adven[current_switch];
-			adven[current_switch] = store_pc;
+			std::swap(adven[which], adven[current_switch]);
 			if (current_pc == current_switch)
 				current_pc = which;
 				else if (current_pc == which)
