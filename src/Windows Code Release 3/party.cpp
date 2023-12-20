@@ -3282,21 +3282,21 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 	return TRUE;
 }
 
-void kill_pc(short which_pc,short type)
+void kill_pc(short which_pc, short type)
+{
+	kill_pc(which_pc, type, false);
+}
+
+void kill_pc(short which_pc, short type, bool no_save)
 {
 	short i = 24;
-	Boolean dummy,no_save = FALSE;
+	Boolean dummy;
 	location item_loc;
-	
-	if (type >= 10) {
-		type -= 10;
-		no_save = TRUE;
-		}
 	
 	if (type != 4)
 		i = pc_has_abil_equip(which_pc,9);
 
-	if ((no_save == FALSE) && (type != 0) && (adven[which_pc].skills[18] > 0) && 
+	if ((no_save == false) && (type != 0) && (adven[which_pc].skills[18] > 0) && 
 		(get_ran(1,0,100) < hit_chance[adven[which_pc].skills[18]])) {
 			add_string_to_buf("  But you luck out!          ");
 			adven[which_pc].cur_health = 0;

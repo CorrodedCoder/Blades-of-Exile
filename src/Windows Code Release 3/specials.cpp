@@ -2104,7 +2104,7 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 						if ((adven[i].main_status > 0) && (adven[i].main_status < 10))
 							adven[i].main_status = 1;
 						}
-						else kill_pc(i,spec.ex1a + 2 + 10);
+						else kill_pc(i,spec.ex1a + 2, true);
 					}
 			*redraw = 1;
 			break;
