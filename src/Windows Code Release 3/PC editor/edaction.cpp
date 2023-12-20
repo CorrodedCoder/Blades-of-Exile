@@ -696,7 +696,7 @@ void edit_xp(pc_record_type *pc)
 		
 	sprintf(sign_text,"%d",(short)pc->experience);
 	cd_set_text_edit_str(1024,(char *) sign_text);
-	item_hit = get_tnl(store_xp_pc);
+	item_hit = get_tnl(*store_xp_pc);
 	cdsin(1024,8,item_hit);
 	
 	while (dialog_not_toast)

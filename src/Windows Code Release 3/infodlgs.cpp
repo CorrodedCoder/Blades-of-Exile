@@ -702,7 +702,7 @@ void display_traits_graphics()
 		cd_set_led(1013,36 + i,(store_pc->traits[10 + i] > 0) ? 1 : 0);
 		}
 
-	store = get_tnl(store_pc);
+	store = get_tnl(*store_pc);
 	cdsin(1013,18,store);
 }
 
@@ -797,7 +797,7 @@ void display_pc_info()
 	cdsin(1019,11,adven[pc].level);
 	cdsin(1019,13,adven[pc].experience);
 	cdsin(1019,71,adven[pc].skill_pts);
-	store = adven[pc].level * get_tnl(&adven[pc]);
+	store = adven[pc].level * get_tnl(adven[pc]);
 	cdsin(1019,15,store);
 	csp(1019,7,800 + adven[pc].which_graphic);
 

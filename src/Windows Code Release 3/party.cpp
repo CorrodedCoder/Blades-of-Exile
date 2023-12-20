@@ -841,7 +841,7 @@ void award_xp(short pc_num,short amt)
 		SysBeep(50); SysBeep(50);
 		ASB("Oops! Xp became negative somehow!");
 		ASB("Report this!");
-		adven[pc_num].experience = adven[pc_num].level * (get_tnl(&adven[pc_num])) - 1;
+		adven[pc_num].experience = adven[pc_num].level * (get_tnl(adven[pc_num])) - 1;
 		return;
 		}
 	if (adven[pc_num].experience > 15000) {
@@ -849,7 +849,7 @@ void award_xp(short pc_num,short amt)
 		return;
 		}
 	
-	while (adven[pc_num].experience >= (adven[pc_num].level * (get_tnl(&adven[pc_num])))) {
+	while (adven[pc_num].experience >= (adven[pc_num].level * (get_tnl(adven[pc_num])))) {
 			play_sound(7);
 			adven[pc_num].level++;
 			sprintf(c_line, "  %s is level %d!  ", adven[pc_num].name,adven[pc_num].level);
