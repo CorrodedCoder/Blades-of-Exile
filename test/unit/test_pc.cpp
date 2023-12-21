@@ -1,4 +1,5 @@
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/benchmark/catch_benchmark.hpp>
 #include <algorithm>
 
 #include "boe/pc.hpp"
@@ -2205,6 +2206,9 @@ TEST_CASE("get_prot_level", "[pc]")
 		pc.items[4].ability_strength = 7;
 		pc.equip[4] = BOE_TRUE;
 		REQUIRE(get_prot_level(pc, 4) == 7);
+		BENCHMARK("get_prot_level performance") {
+			return get_prot_level(pc, 4);
+		};
 	}
 	SECTION("Item that is equipped of different ability type gives no protection") {
 		pc_record_type pc{};

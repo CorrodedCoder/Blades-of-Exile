@@ -224,14 +224,17 @@ short pc_has_space(const pc_record_type& pc)
 // returnes equipped protection level of specified abil, or -1 if no such abil is equipped
 short get_prot_level(const pc_record_type& pc, short abil)
 {
-	short i = 0;
-
-	for (i = 0; i < 24; i++)
-		if ((pc.items[i].variety != 0) && (pc.items[i].ability == abil)
-			&& (pc.equip[i] == BOE_TRUE))
-			return pc.items[i].ability_strength;
+	static_assert(std::size(pc_record_type().items) == std::size(pc_record_type().equip));
+	for (size_t i = 0; i < std::size(pc.items); i++)
+	{
+		const auto equip = pc.equip[i];
+		const auto& item = pc.items[i];
+		if ((equip == BOE_TRUE) && (item.variety != 0) && (item.ability == abil))
+		{
+			return item.ability_strength;
+		}
+	}
 	return -1;
-
 }
 
 short pc_has_abil_equip(const pc_record_type& pc, short abil)
