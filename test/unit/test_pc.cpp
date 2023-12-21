@@ -2168,3 +2168,59 @@ TEST_CASE("pc_has_space", "[pc]")
 		}
 	}
 }
+
+TEST_CASE("get_prot_level", "[pc]")
+{
+	SECTION("No items yields zero") {
+		pc_record_type pc{};
+		REQUIRE(get_prot_level(pc, 0) == -1);
+	}
+	SECTION("Try each item") {
+		pc_record_type pc{};
+		for (unsigned char index = 0; index < std::size(pc.items); ++index)
+		{
+			INFO("Checking at index: " << index);
+			pc.items[index].variety = 1;
+			pc.items[index].ability = index;
+			pc.items[index].ability_strength = index + 1;
+			pc.equip[index] = BOE_TRUE;
+			REQUIRE(get_prot_level(pc, index) == index + 1);
+			pc.items[index].variety = 0;
+			pc.items[index].ability = 0;
+			pc.equip[index] = BOE_FALSE;
+			pc.items[index].ability_strength = 0;
+		}
+	}
+	SECTION("Item that is not equipped gives no protection") {
+		pc_record_type pc{};
+		pc.items[4].variety = 6;
+		pc.items[4].ability = 4;
+		pc.items[4].ability_strength = 7;
+		REQUIRE(get_prot_level(pc, 4) == -1);
+	}
+	SECTION("Item that is equipped gives correct protection") {
+		pc_record_type pc{};
+		pc.items[4].variety = 6;
+		pc.items[4].ability = 4;
+		pc.items[4].ability_strength = 7;
+		pc.equip[4] = BOE_TRUE;
+		REQUIRE(get_prot_level(pc, 4) == 7);
+	}
+	SECTION("Item that is equipped of different ability type gives no protection") {
+		pc_record_type pc{};
+		pc.items[4].variety = 6;
+		pc.items[4].ability = 4;
+		pc.items[4].ability_strength = 7;
+		pc.equip[4] = BOE_TRUE;
+		REQUIRE(get_prot_level(pc, 8) == -1);
+	}
+	// Don't think this is necessarily a valid test case, but it is the behaviour all the same.
+	SECTION("Item that is equipped of variety type zero gives no protection") {
+		pc_record_type pc{};
+		pc.items[4].variety = 0;
+		pc.items[4].ability = 4;
+		pc.items[4].ability_strength = 7;
+		pc.equip[4] = BOE_TRUE;
+		REQUIRE(get_prot_level(pc, 4) == -1);
+	}
+}
