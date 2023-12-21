@@ -2443,4 +2443,13 @@ TEST_CASE("sort_pc_items", "[pc]")
 		sort_pc_items(pc);
 		REQUIRE(get_item_order(pc) == c_expected_order);
 	}
+	SECTION("Benchmark") {
+		pc_record_type pc{};
+		std::ranges::copy(c_items, pc.items);
+		BENCHMARK("Curious") {
+			pc_record_type pc2{pc};
+			sort_pc_items(pc2);
+			return pc2.items[0].variety;
+		};
+	}
 }

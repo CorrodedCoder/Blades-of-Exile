@@ -10,6 +10,7 @@ namespace
 {
 	const std::array<short, 3> c_rp{ 0,12,20 };
 	const std::array<short, 15> c_ap{ 10,20,8,10,4, 6,10,7,12,15, -10,-8,-8,-20,-8 };
+	const std::array<short, 26> c_item_priority{ 20,8,8,20,9, 9,3,2,1,0, 7,20,10,10,10, 10,10,10,5,6, 4,11,12,9,9, 9 };
 
 	const std::array c_debug_names{
 		"Gunther",
@@ -266,28 +267,22 @@ short amount_pc_can_carry(const pc_record_type& pc)
 
 void sort_pc_items(pc_record_type& pc)
 {
-	item_record_type store_item;
-	short item_priority[26] = { 20,8,8,20,9, 9,3,2,1,0, 7,20,10,10,10, 10,10,10,5,6, 4,11,12,9,9, 9 };
-	Boolean no_swaps = BOE_FALSE, store_equip;
-	short i;
-
-	while (no_swaps == BOE_FALSE) 
+	bool no_swaps = false;
+	while (!no_swaps)
 	{
-		no_swaps = BOE_TRUE;
-		for (i = 0; i < 23; i++)
-			if (item_priority[pc.items[i + 1].variety] < item_priority[pc.items[i].variety])
+		no_swaps = true;
+		for (short i = 0; i < 23; i++)
+		{
+			if (c_item_priority[pc.items[i + 1].variety] < c_item_priority[pc.items[i].variety])
 			{
-				no_swaps = BOE_FALSE;
-				store_item = pc.items[i + 1];
-				pc.items[i + 1] = pc.items[i];
-				pc.items[i] = store_item;
-				store_equip = pc.equip[i + 1];
-				pc.equip[i + 1] = pc.equip[i];
-				pc.equip[i] = store_equip;
+				no_swaps = false;
+				std::swap(pc.items[i], pc.items[i + 1]);
+				std::swap(pc.equip[i], pc.equip[i + 1]);
 				if (pc.weap_poisoned == i + 1)
 					pc.weap_poisoned--;
 				else if (pc.weap_poisoned == i)
 					pc.weap_poisoned++;
 			}
+		}
 	}
 }
