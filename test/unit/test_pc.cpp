@@ -1,6 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/benchmark/catch_benchmark.hpp>
 #include <algorithm>
+#include <ranges>
 
 #include "boe/pc.hpp"
 
@@ -2226,5 +2227,220 @@ TEST_CASE("get_prot_level", "[pc]")
 		pc.items[4].ability_strength = 7;
 		pc.equip[4] = BOE_TRUE;
 		REQUIRE(get_prot_level(pc, 4) == -1);
+	}
+}
+
+const item_record_type c_items[]{
+{
+	.variety = 10,
+	.item_level = 8,
+	.charges = 1,
+	.type = 1,
+	.graphic_num = 103,
+	.ability = 90,
+	.ability_strength = 7,
+	.value = 8,
+	.weight = 14,
+	.item_loc = {.x = 10,.y = 8},
+	.full_name = "Lamp", // (0)(101)(0)(-20)(-88)(-8)(0)(0)(82)(0)(0)(-20)(-88)(-24)(0)(0)(30)(0)(0)(0)(1)
+	.name = "Lamp", // (0)(101)(0)(1)(24)(53)(78)(0)(0)(0)(0)
+	.item_properties = 1
+},
+{
+	.variety = 10,
+	.charges = 4,
+	.type = 1,
+	.graphic_num = 56,
+	.ability = 161,
+	.ability_strength = 3,
+	.type_flag = 14,
+	.value = 8,
+	.weight = 1,
+	.item_loc = {.x = 18, .y = 10},
+	.full_name = "Lockpicks", //(0)(32)(66)(111)(111)(116)(115)(0)(0)(0)(0)(0)(0)(0)(0)(1)
+	.name = "Lockpicks", //(0)(0)(0)(114)(0)(99)
+	.treas_class = 1,
+},
+{
+	.variety = 1,
+	.item_level = 4,
+	.bonus = 1,
+	.type = 1,
+	.graphic_num = 45,
+	.value = 2,
+	.weight = 7,
+	.full_name = "Bronze Knife",
+	.name = "Knife",
+	.item_properties = 1,
+},
+{
+	.variety = 1,
+	.item_level = 6,
+	.type = 1,
+	.value = 5,
+	.weight = 15,
+	.item_loc = {.x = 15, .y = 8},
+	.full_name = "Stone Short Sword", //(0)(0)(0)(30)(0)(0)(0)(1)
+	.name = "Short Sword",
+	.item_properties = 1,
+},
+{
+	.variety = 1,
+	.item_level = 7,
+	.bonus = 1,
+	.type = 2,
+	.graphic_num = 2,
+	.value = 22,
+	.weight = 18,
+	.item_loc = {.x = 17, .y = 8},
+	.full_name = "Bronze Mace", //(0)(32)(83)(119)(111)(114)(100)(0)(0)(30)(0)(0)(0)(1)
+	.name = "Mace", //(0)(32)(83)(119)(111)(114)(100)(0)(0)(0)(0)
+	.treas_class = 1,
+},
+{
+	.variety = 4,
+	.type = 1,
+	.graphic_num = 10,
+	.value = 30,
+	.weight = 20,
+	.item_loc = {.x = 15, .y = 10},
+	.full_name = "Cavewood Bow", //(0)(0)(75)(110)(105)(118)(101)(115)(0)(0)(0)(0)(1)
+	.name = "Bow", //(0)(108)(105)(110)(115)(0)(75)(110)(105)(118)(101)(115)
+	.treas_class = 1,
+},
+{
+	.variety = 5,
+	.item_level = 12,
+	.charges = 12,
+	.type = 1,
+	.graphic_num = 47,
+	.type_flag = 6,
+	.value = 1,
+	.weight = 1,
+	.item_loc = {.x = 16, .y = 10},
+	.full_name = "Arrows", //(0)(114)(111)(119)(105)(110)(103)(32)(75)(110)(105)(118)(101)(115)(0)(0)(0)(0)(1)
+	.name = "Arrows", //(0)(103)(32)(75)(110)(105)(118)(101)(115)
+	.treas_class = 1,
+	.item_properties = 1,
+},
+{
+	.variety = 12,
+	.item_level = 1,
+	.awkward = 1,
+	.graphic_num = 65,
+	.value = 2,
+	.weight = 20,
+	.full_name = "Crude Buckler",
+	.name = "Buckler",
+	.item_properties = 1,
+},
+{
+	.variety = 12,
+	.item_level = 4,
+	.awkward = 2,
+	.type = 1,
+	.graphic_num = 13,
+	.value = 8,
+	.weight = 30,
+	.item_loc = {.x = 15, .y = 6},
+	.full_name = "Crude Shield", //(0)(0)(0)(97)(105)(108)(0)(0)(0)(0)(0)(0)(1)
+	.name = "Shield", //(0)(0)(105)(108)(0)(0)(114)(0)(99)
+	.treas_class = 2,
+},
+{
+	.variety = 17,
+	.item_level = 1,
+	.type = 1,
+	.graphic_num = 111,
+	.value = 10,
+	.weight = 8,
+	.item_loc = {.x = 17, .y = 10},
+	.full_name = "Boots", //(0)(71)(97)(117)(110)(116)(108)(101)(116)(115)(0)(0)(0)(0)(0)(0)(0)(0)(0)(1)
+	.name = "Boots", //(0)(101)(116)(115)(0)(0)(0)(114)(0)(99)
+	.treas_class = 2,
+},
+{
+	.variety = 13,
+	.item_level = 3,
+	.awkward = 1,
+	.protection = 1,
+	.type = 1,
+	.graphic_num = 14,
+	.value = 30,
+	.weight = 70,
+	.item_loc = {.x = 14, .y = 10},
+	.full_name = "Bronze Studded Armor", //(0)(0)(0)(0)(1)
+	.name = "Studded Armor", //(0)(99)
+	.treas_class = 1,
+},
+};
+
+#include <print>
+
+void output_item_order(const pc_record_type& pc)
+{
+	std::print("{{");
+	for (unsigned char index = 0; index < std::size(c_items); ++index)
+	{
+		auto it = std::ranges::find(c_items, pc.items[index]);
+		std::print("{:d}, ", std::distance(std::begin(c_items), it));
+	}
+	std::println("}}");
+}
+
+std::vector<size_t> get_item_order(const pc_record_type& pc)
+{
+	std::vector<size_t> res;
+	for (unsigned char index = 0; index < std::size(c_items); ++index)
+	{
+		auto it = std::ranges::find(c_items, pc.items[index]);
+		res.push_back(std::distance(std::begin(c_items), it));
+	}
+	return res;
+}
+
+TEST_CASE("sort_pc_items", "[pc]")
+{
+	SECTION("Sorting empty pc yields no change") {
+		pc_record_type pc{};
+		const pc_record_type before{ pc };
+		sort_pc_items(pc);
+		REQUIRE(before == pc);
+	}
+	SECTION("A") {
+		pc_record_type pc{};
+		for (unsigned char index = 0; index < std::size(pc.items); ++index)
+		{
+			pc.items[index].variety = index + 1;
+			pc.equip[index] = BOE_TRUE;
+		}
+		sort_pc_items(pc);
+		for (unsigned char index = 0; index < std::size(pc.items); ++index)
+		{
+			//std::println("{{ {:d}, {:d} }}", pc_items[]);
+		}
+	}
+	SECTION("B") {
+		const std::vector<size_t> c_expected_order{ 1, 0, 4, 3, 2, 6, 5, 10, 9, 8, 7, };
+		pc_record_type pc{};
+		std::ranges::copy(std::views::reverse(c_items), pc.items);
+		sort_pc_items(pc);
+		REQUIRE(get_item_order(pc) == c_expected_order);
+	}
+	SECTION("C") {
+		const std::vector<size_t> c_expected_order{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+		pc_record_type pc{};
+		std::ranges::copy(c_items, pc.items);
+		sort_pc_items(pc);
+		//output_item_order(pc);
+		REQUIRE(get_item_order(pc) == c_expected_order);
+	}
+	SECTION("D") {
+		const std::vector<size_t> c_expected_order{ 0, 1, 2, 3, 4, 5, 6, 10, 7, 8, 9 };
+		pc_record_type pc{};
+		std::ranges::copy(c_items, pc.items);
+		std::swap(pc.items[1], pc.items[10]);
+		sort_pc_items(pc);
+		REQUIRE(get_item_order(pc) == c_expected_order);
 	}
 }
