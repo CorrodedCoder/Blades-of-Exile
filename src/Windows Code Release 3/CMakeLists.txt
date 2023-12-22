@@ -89,11 +89,6 @@ add_executable (Blades-of-Exile WIN32
 	combat.cpp
 	townspec.cpp
 	specials.cpp
-	../boe/endian_adjust.cpp
-	../boe/savedata_serialization.cpp
-	../boe/pc.cpp
-	../boe/adventurers.cpp
-	../boe/utility.cpp
 	
 	BLADES.RC
 	GAMEDLOG.RC
@@ -102,7 +97,7 @@ add_executable (Blades-of-Exile WIN32
 
 target_compile_definitions(Blades-of-Exile PRIVATE BOE_DEFAULT_VOLUME=32)
 
-target_link_libraries(Blades-of-Exile Winmm.lib)
+target_link_libraries(Blades-of-Exile boe Winmm.lib)
 
 
 add_custom_command(

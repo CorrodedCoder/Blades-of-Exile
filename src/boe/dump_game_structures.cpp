@@ -41,7 +41,7 @@ void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::st
 void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const char* t, size_t size)
 {
 	const std::span text(t, t + size);
-	const auto first_not_printable = std::find_if(std::begin(text), std::end(text), [](auto c) { return !isprint((int)(unsigned char)c); });
+	const auto first_not_printable = std::find_if(std::begin(text), std::end(text), [](auto c) { return !isprint(static_cast<int>(static_cast<unsigned char>(c))); });
 	std::format_to(strm, "{}.{}=\"", parent, item);
 	std::copy(std::begin(text), first_not_printable, strm);
 	std::format_to(strm, "\"");
@@ -158,10 +158,10 @@ void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::st
 void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const BoeRect& t)
 {
 	const auto path{ std::format("{}.{}", parent, item) };
-	dump_to(strm, path, "left", (unsigned int)t.left);
-	dump_to(strm, path, "top", (unsigned int)t.top);
-	dump_to(strm, path, "right", (unsigned int)t.right);
-	dump_to(strm, path, "bottom", (unsigned int)t.bottom);
+	dump_to(strm, path, "left", static_cast<unsigned int>(t.left));
+	dump_to(strm, path, "top", static_cast<unsigned int>(t.top));
+	dump_to(strm, path, "right", static_cast<unsigned int>(t.right));
+	dump_to(strm, path, "bottom", static_cast<unsigned int>(t.bottom));
 }
 
 void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const horse_record_type& t)

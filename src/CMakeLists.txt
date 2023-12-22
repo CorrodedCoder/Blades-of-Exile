@@ -1,3 +1,5 @@
+add_subdirectory("boe")
+
 if (MSVC)
 	add_subdirectory("Windows Code Release 3")
 endif()

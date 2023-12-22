@@ -11,15 +11,13 @@ add_executable (Scen-Ed WIN32
 	townout_stub.cpp
 	global.cpp
 	buttonmg.cpp
-	../../boe/endian_adjust.cpp
-	../../boe/utility.cpp
 
 	BLSCENED.RC
 	GAMEDLOG.RC
 	STRINGS.RC
 	)
 
-target_link_libraries(Scen-Ed Winmm.lib)
+target_link_libraries(Scen-Ed boe Winmm.lib)
 
 add_custom_command(
         TARGET Scen-Ed POST_BUILD

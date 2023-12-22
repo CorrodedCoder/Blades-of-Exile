@@ -3043,7 +3043,7 @@ void poison_party(short how_much)
 		poison_pc(i,how_much);
 }
 
-static bool pc_affect(pc_record_type& pc, short type, short how_much)
+bool pc_affect(pc_record_type& pc, short type, short how_much)
 //type; // which status to affect
 {
 	if (pc.main_status != status::Normal)

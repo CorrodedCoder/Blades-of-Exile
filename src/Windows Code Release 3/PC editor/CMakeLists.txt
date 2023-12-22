@@ -8,13 +8,11 @@ add_executable (PC-editor WIN32
 	edfileio.cpp
 	edaction.cpp
 	global.cpp
-	../../boe/pc.cpp
-	../../boe/utility.cpp
 
 	BLADPCED.RC
 	)
 
-target_link_libraries(PC-editor Winmm.lib)
+target_link_libraries(PC-editor boe Winmm.lib)
 
 add_custom_command(
         TARGET PC-editor POST_BUILD

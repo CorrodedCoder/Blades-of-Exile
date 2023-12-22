@@ -138,7 +138,7 @@ void pc_setup_debug(pc_record_type& pc, short num)
 {
 	pc = pc_record_type{};
 	pc.main_status = status::Normal;
-	std::ranges::copy(std::string_view(c_debug_names.at(num)), pc.name);
+	std::ranges::copy(std::string_view(c_debug_names.at(static_cast<size_t>(num))), pc.name);
 	std::ranges::fill(pc.skills, static_cast<short>(8));
 	pc.skills[0] = 20;
 	pc.skills[1] = 20;
@@ -166,7 +166,7 @@ void pc_setup_prefab(pc_record_type& pc, short num)
 	std::ranges::fill(std::views::counted(pc.priest_spells, 30), BOE_TRUE);
 	std::ranges::fill(std::views::counted(pc.mage_spells, 30), BOE_TRUE);
 
-	const auto& prefab{ c_prefabs.at(num) };
+	const auto& prefab{ c_prefabs.at(static_cast<size_t>(num)) };
 
 	std::ranges::copy(std::string_view(prefab.name), pc.name);
 	std::ranges::copy(prefab.skills, pc.skills);
@@ -205,7 +205,7 @@ short pc_get_tnl(const pc_record_type& pc)
 #else
 	auto v = std::views::iota(0, static_cast<int>(std::size(pc.traits)))
 		| std::views::filter([pc](int i) { return pc.traits[i] == BOE_TRUE; })
-		| std::views::transform([](int i) { return c_ap[i]; });
+		| std::views::transform([](int i) { return c_ap[static_cast<size_t>(i)]; });
 #endif
 
 #if defined(__cpp_lib_ranges_fold) && __cpp_lib_ranges_fold
@@ -213,7 +213,7 @@ short pc_get_tnl(const pc_record_type& pc)
 #else
 	const short store_per = static_cast<short>(std::reduce(std::begin(v), std::end(v), 100));
 #endif
-	return ((100 + c_rp.at(pc.race)) * store_per) / 100;
+	return ((100 + c_rp.at(static_cast<size_t>(pc.race))) * store_per) / 100;
 }
 
 short pc_has_space(const pc_record_type& pc)
@@ -276,7 +276,7 @@ void pc_sort_items(pc_record_type& pc)
 		items_swapped = false;
 		for (size_t index = 0; index < std::size(pc.items) - 1; ++index)
 		{
-			if (c_item_priority[pc.items[index + 1].variety] < c_item_priority[pc.items[index].variety])
+			if (c_item_priority[static_cast<size_t>(pc.items[index + 1].variety)] < c_item_priority[static_cast<size_t>(pc.items[index].variety)])
 			{
 				items_swapped = true;
 				std::swap(pc.items[index], pc.items[index + 1]);
