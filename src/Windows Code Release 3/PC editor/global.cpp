@@ -35,15 +35,6 @@ short move_to_zero(short val)
 	return val;
 }
 
-short minmax(short min,short max,short k)
-{
-	if (k < min)
-		return min;
-	if (k > max)
-		return max;
-	return k;
-}
-
 short s_pow(short x,short y)
 {
 	return (short) pow((double) x, (double) y);
