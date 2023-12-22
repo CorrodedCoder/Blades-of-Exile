@@ -5,6 +5,7 @@
 
 #include "boe/pc.hpp"
 
+namespace {
 
 TEST_CASE("pc_heal", "[pc]")
 {
@@ -2375,19 +2376,6 @@ const item_record_type c_items[]{
 },
 };
 
-#include <print>
-
-void output_item_order(const pc_record_type& pc)
-{
-	std::print("{{");
-	for (unsigned char index = 0; index < std::size(c_items); ++index)
-	{
-		auto it = std::ranges::find(c_items, pc.items[index]);
-		std::print("{:d}, ", std::distance(std::begin(c_items), it));
-	}
-	std::println("}}");
-}
-
 std::vector<size_t> get_item_order(const pc_record_type& pc)
 {
 	std::vector<size_t> res;
@@ -2407,41 +2395,33 @@ TEST_CASE("sort_pc_items", "[pc]")
 		sort_pc_items(pc);
 		REQUIRE(before == pc);
 	}
-	SECTION("A") {
-		pc_record_type pc{};
-		for (unsigned char index = 0; index < std::size(pc.items); ++index)
-		{
-			pc.items[index].variety = index + 1;
-			pc.equip[index] = BOE_TRUE;
-		}
-		sort_pc_items(pc);
-		for (unsigned char index = 0; index < std::size(pc.items); ++index)
-		{
-			//std::println("{{ {:d}, {:d} }}", pc_items[]);
-		}
-	}
-	SECTION("B") {
+	SECTION("Reverse sorted") {
 		const std::vector<size_t> c_expected_order{ 1, 0, 4, 3, 2, 6, 5, 10, 9, 8, 7, };
 		pc_record_type pc{};
 		std::ranges::copy(std::views::reverse(c_items), pc.items);
+		pc.weap_poisoned = 9;
 		sort_pc_items(pc);
 		REQUIRE(get_item_order(pc) == c_expected_order);
+		REQUIRE(pc.weap_poisoned == 0);
 	}
-	SECTION("C") {
+	SECTION("Already sorted") {
 		const std::vector<size_t> c_expected_order{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 		pc_record_type pc{};
 		std::ranges::copy(c_items, pc.items);
+		pc.weap_poisoned = 4;
 		sort_pc_items(pc);
-		//output_item_order(pc);
 		REQUIRE(get_item_order(pc) == c_expected_order);
+		REQUIRE(pc.weap_poisoned == 4);
 	}
 	SECTION("D") {
 		const std::vector<size_t> c_expected_order{ 0, 1, 2, 3, 4, 5, 6, 10, 7, 8, 9 };
 		pc_record_type pc{};
 		std::ranges::copy(c_items, pc.items);
 		std::swap(pc.items[1], pc.items[10]);
+		pc.weap_poisoned = 10;
 		sort_pc_items(pc);
 		REQUIRE(get_item_order(pc) == c_expected_order);
+		REQUIRE(pc.weap_poisoned == 1);
 	}
 	SECTION("Benchmark") {
 		pc_record_type pc{};
@@ -2453,3 +2433,5 @@ TEST_CASE("sort_pc_items", "[pc]")
 		};
 	}
 }
+
+} // Unnamed namespace

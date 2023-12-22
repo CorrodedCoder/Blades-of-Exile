@@ -267,22 +267,29 @@ short amount_pc_can_carry(const pc_record_type& pc)
 
 void sort_pc_items(pc_record_type& pc)
 {
-	bool no_swaps = false;
-	while (!no_swaps)
+	// This is pretty much the same algorithm as std::sort, but the way
+	// the poisoned weapon index is recorded makes it hard to substitute
+	// without paying a performance penalty.
+	bool items_swapped = false;
+	do
 	{
-		no_swaps = true;
-		for (short i = 0; i < 23; i++)
+		items_swapped = false;
+		for (size_t index = 0; index < std::size(pc.items) - 1; ++index)
 		{
-			if (c_item_priority[pc.items[i + 1].variety] < c_item_priority[pc.items[i].variety])
+			if (c_item_priority[pc.items[index + 1].variety] < c_item_priority[pc.items[index].variety])
 			{
-				no_swaps = false;
-				std::swap(pc.items[i], pc.items[i + 1]);
-				std::swap(pc.equip[i], pc.equip[i + 1]);
-				if (pc.weap_poisoned == i + 1)
-					pc.weap_poisoned--;
-				else if (pc.weap_poisoned == i)
-					pc.weap_poisoned++;
+				items_swapped = true;
+				std::swap(pc.items[index], pc.items[index + 1]);
+				std::swap(pc.equip[index], pc.equip[index + 1]);
+				if (pc.weap_poisoned == static_cast<short>(index + 1))
+				{
+					--pc.weap_poisoned;
+				}
+				else if (pc.weap_poisoned == static_cast<short>(index))
+				{
+					++pc.weap_poisoned;
+				}
 			}
 		}
-	}
+	} while(items_swapped);
 }
