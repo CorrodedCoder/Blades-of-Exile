@@ -3042,16 +3042,28 @@ void poison_party(short how_much)
 		poison_pc(i,how_much);
 }
 
-void affect_pc(short which_pc,short type,short how_much)////
+static bool pc_affect(pc_record_type& pc, short type, short how_much)
 //type; // which status to affect
 {
-
-		if (adven[which_pc].main_status != status::Normal)
-			return;
-			adven[which_pc].status[type] = minmax (-8,8,adven[which_pc].status[type] + how_much);
+	if (pc.main_status != status::Normal)
+	{
+		return false;
+	}
+	pc.status[type] = minmax(-8, 8, pc.status[type] + how_much);
 	if (((type >= 4) && (type <= 10)) || (type == 12) || (type == 13))
-		adven[which_pc].status[type] = max(adven[which_pc].status[type],0);
-	put_pc_screen(); 
+	{
+		pc.status[type] = max(pc.status[type], 0);
+	}
+	return true;
+}
+
+void affect_pc(short which_pc,short type,short how_much)
+//type; // which status to affect
+{
+	if (pc_affect(adven[which_pc], type, how_much))
+	{
+		put_pc_screen();
+	}
 }
 
 void affect_party(short type,short how_much)
