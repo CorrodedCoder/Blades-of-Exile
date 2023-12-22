@@ -650,7 +650,7 @@ void right_sbar_action(ControlHandle bar, short part)
 		case inPageUp: new_setting -= NRSONPAGE - 1; break;
 		case inPageDown: new_setting += NRSONPAGE - 1; break;
 		}
-	new_setting = boe_clamp(0,max,new_setting);
+	new_setting = boe_clamp(new_setting,0,max);
 	SetControlValue(bar,new_setting);
 	if (new_setting != old_setting)
 		draw_rb();

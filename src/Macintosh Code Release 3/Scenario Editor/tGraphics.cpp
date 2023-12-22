@@ -748,8 +748,8 @@ void draw_monsts()
 				
 				for (k = 0; k < width * height; k++) {
 					store_loc = where_draw;
-					if ((where_draw.x == boe_clamp(0,8,where_draw.x)) && 
-					(where_draw.y == boe_clamp(0,8,where_draw.y)) && 
+					if ((where_draw.x == boe_clamp(where_draw.x,0,8)) && 
+					(where_draw.y == boe_clamp(where_draw.y,0,8)) && 
 						(scenario.scen_monsters[t_d.creatures[i].number].picture_num >= 1000)) {
 						source_rect = get_custom_rect((scenario.scen_monsters[t_d.creatures[i].number].picture_num + k) % 1000);
 						store_loc.x += k % width;

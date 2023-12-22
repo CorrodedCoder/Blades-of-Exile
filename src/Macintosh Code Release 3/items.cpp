@@ -1291,7 +1291,7 @@ short get_num_of_items(short max_num)
 	
 	cd_kill_dialog(1012,0);
 	
-	dialog_answer = boe_clamp(0,max_num,dialog_answer);
+	dialog_answer = boe_clamp(dialog_answer,0,max_num);
 	
 	return dialog_answer;
 }

@@ -1192,7 +1192,7 @@ void poison_monst(creature_data_type *which_m,short how_much)
 void acid_monst(creature_data_type *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
-	which_m->m_d.status[13] = boe_clamp(-8,8, which_m->m_d.status[13] + how_much);
+	which_m->m_d.status[13] = boe_clamp(which_m->m_d.status[13] + how_much,-8,8);
 	monst_spell_note(which_m->number,31);
 
 }
@@ -1200,21 +1200,21 @@ void acid_monst(creature_data_type *which_m,short how_much)
 void slow_monst(creature_data_type *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
-	which_m->m_d.status[3] = boe_clamp(-8,8, which_m->m_d.status[3] - how_much);
+	which_m->m_d.status[3] = boe_clamp(which_m->m_d.status[3] - how_much,-8,8);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 2);
 
 }
 void curse_monst(creature_data_type *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
-	which_m->m_d.status[1] = boe_clamp(-8,8, which_m->m_d.status[1] - how_much);
+	which_m->m_d.status[1] = boe_clamp(which_m->m_d.status[1] - how_much,-8,8);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 5);
 
 }
 void web_monst(creature_data_type *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
-	which_m->m_d.status[6] = boe_clamp(-8,8, which_m->m_d.status[6] + how_much);
+	which_m->m_d.status[6] = boe_clamp(which_m->m_d.status[6] + how_much,-8,8);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 19);
 
 }
@@ -1228,7 +1228,7 @@ void scare_monst(creature_data_type *which_m,short how_much)
 void disease_monst(creature_data_type *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
-	which_m->m_d.status[7] = boe_clamp(-8,8, which_m->m_d.status[7] + how_much);
+	which_m->m_d.status[7] = boe_clamp(which_m->m_d.status[7] + how_much,-8,8);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 25);
 
 }
@@ -1236,7 +1236,7 @@ void disease_monst(creature_data_type *which_m,short how_much)
 void dumbfound_monst(creature_data_type *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
-	which_m->m_d.status[9] = boe_clamp(-8,8, which_m->m_d.status[9] + how_much);
+	which_m->m_d.status[9] = boe_clamp(which_m->m_d.status[9] + how_much,-8,8);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 22);
 
 }

@@ -477,7 +477,7 @@ void set_up_shop_array()
 			break;
 		case 10:
 			for (i = store_shop_min; i < store_shop_max + 1; i++) 
-				if (i == boe_clamp(0,31,i)) {
+				if (i == boe_clamp(i,0,31)) {
 				store_i = store_mage_spells(i);
 				store_shop_costs[shop_pos] = store_i.value;
 				store_shop_items[shop_pos] = 800 + i + 30;
@@ -486,7 +486,7 @@ void set_up_shop_array()
 			break;
 		case 11:
 			for (i = store_shop_min; i < store_shop_max + 1; i++) 
-				if (i == boe_clamp(0,31,i)) {
+				if (i == boe_clamp(i,0,31)) {
 				store_i = store_priest_spells(i);
 				store_shop_costs[shop_pos] = store_i.value;
 				store_shop_items[shop_pos] = 900 + i + 30;
@@ -495,7 +495,7 @@ void set_up_shop_array()
 			break;
 		case 12:
 			for (i = store_shop_min; i < store_shop_max + 1; i++) 
-				if (i == boe_clamp(0,19,i)) {
+				if (i == boe_clamp(i,0,19)) {
 				store_i = store_alchemy(i);
 				store_shop_costs[shop_pos] = store_i.value;
 				store_shop_items[shop_pos] = 500 + i;
@@ -823,7 +823,7 @@ void handle_talk_event(Point p)
 			strnum2 = 0;
 			break;
 		case 7: 
-			c = boe_clamp(1,30,c);
+			c = boe_clamp(c,1,30);
 			start_shop_mode(2,b,
 				b + c - 1,a,(char *)place_string1);
 			strnum1 = -1;
@@ -837,7 +837,7 @@ void handle_talk_event(Point p)
 			return;
 		
 		case 9: case 10: case 11: 
-			c = boe_clamp(1,30,c);
+			c = boe_clamp(c,1,30);
 			start_shop_mode(ttype + 1,b,
 				b + c - 1,a,(char *)place_string1);
 			strnum1 = -1;
