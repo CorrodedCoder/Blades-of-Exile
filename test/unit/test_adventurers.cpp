@@ -194,14 +194,14 @@ TEST_CASE("adventurers_cure", "[adventurers]")
 	SECTION("Curing when only one person in the party needs it") {
 		Adventurers adventurers{};
 		for (auto& pc : adventurers) { pc.main_status = status::Normal; }
-		adventurers[2].status[2] = 4;
+		adventurers[2].status[affect::Poisoned] = 4;
 		REQUIRE(adventurers_cure(adventurers, 5));
-		REQUIRE(adventurers[2].status[2] == 0);
+		REQUIRE(adventurers[2].status[affect::Poisoned] == 0);
 	}
 	SECTION("Curing when party members have no status has no effect") {
 		Adventurers adventurers{};
 		for (auto& pc : adventurers) { pc.main_status = status::Absent; }
-		adventurers[2].status[2] = 4;
+		adventurers[2].status[affect::Poisoned] = 4;
 		const Adventurers before{ adventurers };
 		REQUIRE(!adventurers_cure(adventurers, 5));
 		REQUIRE(before == adventurers);

@@ -877,11 +877,11 @@ void display_pc_info()
 					}
 				
 	hit_adj = stat_adj(pc,1) * 5 - (total_encumberance(pc)) * 5 
-		+ 5 * boe_clamp(adven[pc].status[1],-8,8);
+		+ 5 * boe_clamp(adven[pc].status[affect::CursedBlessed],-8,8);
 	if ((adven[pc].traits[trait::Ambidextrous] == FALSE) && (weap2 < 24))
 		hit_adj -= 25;
 
-	dam_adj = stat_adj(pc,0) + boe_clamp(adven[pc].status[1],-8,8);
+	dam_adj = stat_adj(pc,0) + boe_clamp(adven[pc].status[affect::CursedBlessed],-8,8);
 	if ((skill_item = text_pc_has_abil_equip(pc,37)) < 24) {
 		hit_adj += 5 * (adven[pc].items[skill_item].item_level / 2 + 1);
 		dam_adj += adven[pc].items[skill_item].item_level / 2;

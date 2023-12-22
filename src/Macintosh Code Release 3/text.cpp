@@ -722,82 +722,82 @@ void draw_pc_effects(short pc)
 	if (adven[pc].main_status % 10 != 1)
 		return;
 			
-	if ((adven[pc].status[0] > 0) && (dest_rect.right < right_limit)) { 
+	if ((adven[pc].status[affect::PoisonedWeapon] > 0) && (dest_rect.right < right_limit)) { 
 		rect_draw_some_item (mixed_gworld,source_rects[4],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (adven[pc].status[1] > 0) { 
+	if (adven[pc].status[affect::CursedBlessed] > 0) { 
 		rect_draw_some_item (mixed_gworld,source_rects[2],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (adven[pc].status[1] < 0) { 
+	if (adven[pc].status[affect::CursedBlessed] < 0) { 
 		rect_draw_some_item (mixed_gworld,source_rects[3],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (adven[pc].status[2] > 0) { 
-		rect_draw_some_item (mixed_gworld,source_rects[(adven[pc].status[2] > 4) ? 1 : 0],pc_stats_gworld,dest_rect,1,dest);
+	if (adven[pc].status[affect::Poisoned] > 0) { 
+		rect_draw_some_item (mixed_gworld,source_rects[(adven[pc].status[affect::Poisoned] > 4) ? 1 : 0],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (adven[pc].status[4] > 0) { 
+	if (adven[pc].status[affect::Invulnerable] > 0) { 
 		rect_draw_some_item (mixed_gworld,source_rects[5],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (adven[pc].status[3] > 0) { 
+	if (adven[pc].status[affect::Speed] > 0) { 
 		rect_draw_some_item (mixed_gworld,source_rects[6],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (adven[pc].status[3] < 0) { 
+	if (adven[pc].status[affect::Speed] < 0) { 
 		rect_draw_some_item (mixed_gworld,source_rects[8],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((adven[pc].status[5] > 0) && (dest_rect.right < right_limit)) { 
+	if ((adven[pc].status[affect::MagicResistant] > 0) && (dest_rect.right < right_limit)) { 
 		rect_draw_some_item (mixed_gworld,source_rects[9],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((adven[pc].status[6] > 0) && (dest_rect.right < right_limit)) { 
+	if ((adven[pc].status[affect::Webbed] > 0) && (dest_rect.right < right_limit)) { 
 		rect_draw_some_item (mixed_gworld,source_rects[10],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((adven[pc].status[7] > 0) && (dest_rect.right < right_limit)){ 
+	if ((adven[pc].status[affect::Diseased] > 0) && (dest_rect.right < right_limit)){ 
 		rect_draw_some_item (mixed_gworld,source_rects[11],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((adven[pc].status[8] > 0) && (dest_rect.right < right_limit)){ 
+	if ((adven[pc].status[affect::Sanctuary] > 0) && (dest_rect.right < right_limit)){ 
 		rect_draw_some_item (mixed_gworld,source_rects[12],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((adven[pc].status[9] > 0) && (dest_rect.right < right_limit)){ 
+	if ((adven[pc].status[affect::Dumbfounded] > 0) && (dest_rect.right < right_limit)){ 
 		rect_draw_some_item (mixed_gworld,source_rects[13],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
-	if ((adven[pc].status[10] > 0) && (dest_rect.right < right_limit)){ 
+	if ((adven[pc].status[affect::MartyrsShield] > 0) && (dest_rect.right < right_limit)){ 
 		rect_draw_some_item (mixed_gworld,source_rects[14],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
-	if ((adven[pc].status[11] > 0) && (dest_rect.right < right_limit)){ 
+	if ((adven[pc].status[affect::Asleep] > 0) && (dest_rect.right < right_limit)){ 
 		rect_draw_some_item (mixed_gworld,source_rects[15],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
-	if ((adven[pc].status[12] > 0) && (dest_rect.right < right_limit)){ 
+	if ((adven[pc].status[affect::Paralyzed] > 0) && (dest_rect.right < right_limit)){ 
 		rect_draw_some_item (mixed_gworld,source_rects[16],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
-	if ((adven[pc].status[13] > 0) && (dest_rect.right < right_limit)){ 
+	if ((adven[pc].status[affect::Acid] > 0) && (dest_rect.right < right_limit)){ 
 		rect_draw_some_item (mixed_gworld,source_rects[17],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;

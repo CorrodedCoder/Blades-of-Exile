@@ -411,7 +411,7 @@ enum class status: short {
 };
 static_assert(sizeof(status) == 2);
 
-enum class affect : short {
+enum affect {
 	PoisonedWeapon = 0,
 	CursedBlessed = 1,
 	Poisoned = 2,
@@ -427,7 +427,7 @@ enum class affect : short {
 	Paralyzed = 12,
 	Acid = 13,
 };
-static_assert(sizeof(affect) == 2);
+
 
 
 // for game

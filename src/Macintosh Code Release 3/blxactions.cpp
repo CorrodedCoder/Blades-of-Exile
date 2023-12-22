@@ -698,10 +698,10 @@ Boolean handle_action(EventRecord event)
 			if (overall_mode == 10) {
 				char_stand_ready();
 				add_string_to_buf("Stand ready.  ");
-				if (adven[current_pc].status[6] > 0) {
+				if (adven[current_pc].status[affect::Webbed] > 0) {
 					add_string_to_buf("You clean webs.  ");
-					adven[current_pc].status[6] = move_to_zero(adven[current_pc].status[6]);	
-					adven[current_pc].status[6] = move_to_zero(adven[current_pc].status[6]);
+					adven[current_pc].status[affect::Webbed] = move_to_zero(adven[current_pc].status[affect::Webbed]);	
+					adven[current_pc].status[affect::Webbed] = move_to_zero(adven[current_pc].status[affect::Webbed]);
 					put_pc_screen();	
 					}
 				check_fields(pc_pos[current_pc],2,current_pc);
@@ -709,11 +709,11 @@ Boolean handle_action(EventRecord event)
 				else {
 					add_string_to_buf("Pause.");
 					for (k = 0; k < 6; k++)
-						if ((adven[k].main_status == status::Normal) && (adven[k].status[6] > 0)) {
+						if ((adven[k].main_status == status::Normal) && (adven[k].status[affect::Webbed] > 0)) {
 							sprintf(str,"%s cleans webs.",adven[k].name);
 							add_string_to_buf( str);
-							adven[k].status[6] = move_to_zero(adven[k].status[6]);
-							adven[k].status[6] = move_to_zero(adven[k].status[6]);
+							adven[k].status[affect::Webbed] = move_to_zero(adven[k].status[affect::Webbed]);
+							adven[k].status[affect::Webbed] = move_to_zero(adven[k].status[affect::Webbed]);
 							}
 					if (party.in_horse >= 0) {
 						if (overall_mode == 0) {
@@ -1268,7 +1268,7 @@ Boolean handle_action(EventRecord event)
 				pause(10);
 				for (i = 0; i < 6; i++) {
 					store_sp[i] = adven[i].cur_health;
-					adven[i].status[6] = 0;
+					adven[i].status[affect::Webbed] = 0;
 					}
 				}
 		i = 0;			
@@ -1453,7 +1453,7 @@ Boolean someone_awake()
 	short i;
 	
 	for (i = 0; i < 6; i++)
-		if ((adven[i].main_status == status::Normal) && (adven[i].status[11] <= 0) && (adven[i].status[12] <= 0))
+		if ((adven[i].main_status == status::Normal) && (adven[i].status[affect::Asleep] <= 0) && (adven[i].status[affect::Paralyzed] <= 0))
 			return TRUE;
 	return FALSE;
 }
@@ -2179,18 +2179,18 @@ void increase_age()////
 	// Protection, etc.
 	for (i = 0; i < 6; i++) { // Process some status things, and check if stats updated
 	
-			if ((adven[i].status[4] == 1) || (adven[i].status[5] == 1) || (adven[i].status[8] == 1)
-			|| (adven[i].status[11] == 1)|| (adven[i].status[12] == 1))
+			if ((adven[i].status[affect::Invulnerable] == 1) || (adven[i].status[affect::MagicResistant] == 1) || (adven[i].status[affect::Sanctuary] == 1)
+			|| (adven[i].status[affect::Asleep] == 1)|| (adven[i].status[affect::Paralyzed] == 1))
 				update_stat = TRUE;
- 			adven[i].status[4] = move_to_zero(adven[i].status[4]);
-			adven[i].status[5] = move_to_zero(adven[i].status[5]);	
-			adven[i].status[8] = move_to_zero(adven[i].status[8]);	
-			adven[i].status[10] = move_to_zero(adven[i].status[10]);	
-			adven[i].status[11] = move_to_zero(adven[i].status[11]);	
-			adven[i].status[12] = move_to_zero(adven[i].status[12]);	
-			if ((party.age % 40 == 0) && (adven[i].status[0] > 0)) {
+ 			adven[i].status[affect::Invulnerable] = move_to_zero(adven[i].status[affect::Invulnerable]);
+			adven[i].status[affect::MagicResistant] = move_to_zero(adven[i].status[affect::MagicResistant]);	
+			adven[i].status[affect::Sanctuary] = move_to_zero(adven[i].status[affect::Sanctuary]);	
+			adven[i].status[affect::MartyrsShield] = move_to_zero(adven[i].status[affect::MartyrsShield]);	
+			adven[i].status[affect::Asleep] = move_to_zero(adven[i].status[affect::Asleep]);	
+			adven[i].status[affect::Paralyzed] = move_to_zero(adven[i].status[affect::Paralyzed]);	
+			if ((party.age % 40 == 0) && (adven[i].status[affect::PoisonedWeapon] > 0)) {
 				update_stat = TRUE;
- 				adven[i].status[0] = move_to_zero(adven[i].status[0]);
+ 				adven[i].status[affect::PoisonedWeapon] = move_to_zero(adven[i].status[affect::PoisonedWeapon]);
  				}
 
 		}
@@ -2219,7 +2219,7 @@ void increase_age()////
 
 	// Poison, acid, disease damage
 	for (i = 0; i < 6; i++) // Poison
-		if (adven[i].status[2] > 0) {
+		if (adven[i].status[affect::Poisoned] > 0) {
 			i = 6;
 			if (((overall_mode == 0) && (party.age % 50 == 0)) || ((overall_mode == 1) && (party.age % 20 == 0))) {
 				update_stat = TRUE;
@@ -2227,7 +2227,7 @@ void increase_age()////
 				}
 			}
 	for (i = 0; i < 6; i++) // Disease
-		if (adven[i].status[7] > 0) {
+		if (adven[i].status[affect::Diseased] > 0) {
 			i = 6;
 			if (((overall_mode == 0) && (party.age % 100 == 0)) || ((overall_mode == 1) && (party.age % 25 == 0))) {
 				update_stat = TRUE;
@@ -2235,7 +2235,7 @@ void increase_age()////
 				}
 			}
 	for (i = 0; i < 6; i++) // Acid
-		if (adven[i].status[13] > 0) {
+		if (adven[i].status[affect::Acid] > 0) {
 			i = 6;
 			update_stat = TRUE;
 			handle_acid();
@@ -2293,10 +2293,10 @@ void increase_age()////
 	// Blessing, slowed,etc.
 	if (party.age % 4 == 0) 
 		for (i = 0; i < 6; i++) {
-			if ((adven[i].status[1] != 0) || (adven[i].status[3] != 0))
+			if ((adven[i].status[affect::CursedBlessed] != 0) || (adven[i].status[affect::Speed] != 0))
 				update_stat = TRUE;
-			adven[i].status[1] = move_to_zero(adven[i].status[1]);
-			adven[i].status[3] = move_to_zero(adven[i].status[3]);	
+			adven[i].status[affect::CursedBlessed] = move_to_zero(adven[i].status[affect::CursedBlessed]);
+			adven[i].status[affect::Speed] = move_to_zero(adven[i].status[affect::Speed]);	
 			if (((item = pc_has_abil_equip(i,50)) < 24) 
 				&& (adven[i].cur_health < adven[i].max_health)
 				&& ((overall_mode > 0) || (get_ran(1,0,10) == 5))){
@@ -2886,7 +2886,7 @@ Boolean someone_poisoned()
 	short i;
 	
 	for (i = 0; i < 6; i++)
-		if ((adven[i].main_status == status::Normal) && (adven[i].status[2] > 0))
+		if ((adven[i].main_status == status::Normal) && (adven[i].status[affect::Poisoned] > 0))
 			return TRUE;
 	return FALSE;
 }

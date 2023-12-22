@@ -611,15 +611,15 @@ void handle_extra_menu(int item_hit)
 		case 11: // conditions
 			display_strings(20,4,0,0,"Editing party",57,715,0);
 			for (i = 0; i < 6; i++) {
-				adven[i].status[2] = 0;
-				if (adven[i].status[3] < 0)
-					adven[i].status[3] = 0;
-				adven[i].status[6] = 0;
-				adven[i].status[7] = 0;
-				adven[i].status[9] = 0;
-				adven[i].status[11] = 0;
-				adven[i].status[12] = 0;
-				adven[i].status[13] = 0;
+				adven[i].status[affect::Poisoned] = 0;
+				if (adven[i].status[affect::Speed] < 0)
+					adven[i].status[affect::Speed] = 0;
+				adven[i].status[affect::Webbed] = 0;
+				adven[i].status[affect::Diseased] = 0;
+				adven[i].status[affect::Dumbfounded] = 0;
+				adven[i].status[affect::Asleep] = 0;
+				adven[i].status[affect::Paralyzed] = 0;
+				adven[i].status[affect::Acid] = 0;
 				}
 			break;
 			

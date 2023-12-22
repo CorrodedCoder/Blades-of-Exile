@@ -574,7 +574,7 @@ void pc_attack(short who_att,short target)
 	// slice out bad attacks
 	if (adven[who_att].main_status != status::Normal)
 		return;
-	if ((adven[who_att].status[11] > 0) || (adven[who_att].status[12] > 0))
+	if ((adven[who_att].status[affect::Asleep] > 0) || (adven[who_att].status[affect::Paralyzed] > 0))
 		return;
 
 	last_attacked[who_att] = target;	
@@ -587,10 +587,10 @@ void pc_attack(short who_att,short target)
 					weap1 = i;
 					else weap2 = i;
 
-	hit_adj = (-5 * boe_clamp(adven[who_att].status[1],-8,8)) + 5 * boe_clamp(which_m->m_d.mstatus[1],-8,8)
+	hit_adj = (-5 * boe_clamp(adven[who_att].status[affect::CursedBlessed],-8,8)) + 5 * boe_clamp(which_m->m_d.mstatus[1],-8,8)
 			- stat_adj(adven[who_att],1) * 5 + (get_encumberance(adven[who_att])) * 5;
 
-	dam_adj = boe_clamp(adven[who_att].status[1],-8,8) - boe_clamp(which_m->m_d.mstatus[1],-8,8)
+	dam_adj = boe_clamp(adven[who_att].status[affect::CursedBlessed],-8,8) - boe_clamp(which_m->m_d.mstatus[1],-8,8)
 			+ stat_adj(adven[who_att],0);
 
 	if ((which_m->m_d.mstatus[11] > 0) || (which_m->m_d.mstatus[12] > 0)) {
@@ -620,7 +620,7 @@ void pc_attack(short who_att,short target)
 		add_string_to_buf( create_line);
 
 		r1 = get_ran(1,0,100) + hit_adj - 20;
-		r1 += 5 * (adven[current_pc].status[6] / 3);
+		r1 += 5 * (adven[current_pc].status[affect::Webbed] / 3);
 		r2 = get_ran(1,1,4) + dam_adj;
 		
 		if (r1 <= hit_chance[adven[who_att].skills[what_skill1]]) {
@@ -647,7 +647,7 @@ void pc_attack(short who_att,short target)
 		
 		r1 = get_ran(1,0,100) - 5 + hit_adj
 		 - 5 * adven[who_att].items[weap1].bonus;
-		r1 += 5 * (adven[current_pc].status[6] / 3);
+		r1 += 5 * (adven[current_pc].status[affect::Webbed] / 3);
 		
 		if ((weap2 < 24) && (adven[who_att].traits[trait::Ambidextrous] == FALSE))
 			r1 += 25;
@@ -688,12 +688,12 @@ void pc_attack(short who_att,short target)
 					break;	
 				}
 			// poison			
-			if ((adven[who_att].status[0] > 0) && (adven[who_att].weap_poisoned == weap1)) {
-					poison_amt = adven[who_att].status[0];
+			if ((adven[who_att].status[affect::PoisonedWeapon] > 0) && (adven[who_att].weap_poisoned == weap1)) {
+					poison_amt = adven[who_att].status[affect::PoisonedWeapon];
 					if (pc_has_abil_equip(adven[who_att],51) < 24)
 						poison_amt += 2;
 					poison_monst(which_m,poison_amt);
-					adven[who_att].status[0] = move_to_zero(adven[who_att].status[0]);
+					adven[who_att].status[affect::PoisonedWeapon] = move_to_zero(adven[who_att].status[affect::PoisonedWeapon]);
 				}
 			if ((adven[who_att].items[weap1].ability == 14) && (get_ran(1,0,1) == 1)) {
 				add_string_to_buf("  Blade drips venom.             ");
@@ -733,7 +733,7 @@ void pc_attack(short who_att,short target)
 		if (adven[who_att].traits[trait::Ambidextrous] == FALSE)
 			r1 += 25;
 
-		r1 += 5 * (adven[current_pc].status[6] / 3);
+		r1 += 5 * (adven[current_pc].status[affect::Webbed] / 3);
 		r2 = get_ran(1,1,adven[who_att].items[weap2].item_level) + dam_adj - 1 + adven[who_att].items[weap2].bonus;
 		if (adven[who_att].items[weap2].ability == 12) 
 			r2 = (r2 * (10 - adven[who_att].items[weap2].ability_strength)) / 10;
@@ -778,7 +778,7 @@ void pc_attack(short who_att,short target)
 					else play_sound(2);
 			}
 		}
-	adven[who_att].status[0] = move_to_zero(adven[who_att].status[0]);
+	adven[who_att].status[affect::PoisonedWeapon] = move_to_zero(adven[who_att].status[affect::PoisonedWeapon]);
 	take_ap(4);
 
 	if (((c_town.monst.dudes[target].m_d.mstatus[10] > 0) || (c_town.monst.dudes[target].m_d.spec_skill == 22))
@@ -1482,10 +1482,10 @@ void fire_missile(location target)
 	skill = (overall_mode == 12) ? adven[current_pc].skills[7] : adven[current_pc].skills[8];
 	range = (overall_mode == 12) ? 12 : 8;
 	dam = adven[current_pc].items[ammo_inv_slot].item_level;
-	dam_bonus = adven[current_pc].items[ammo_inv_slot].bonus + boe_clamp(adven[current_pc].status[1],-8,8);
+	dam_bonus = adven[current_pc].items[ammo_inv_slot].bonus + boe_clamp(adven[current_pc].status[affect::CursedBlessed],-8,8);
 	hit_bonus = (overall_mode == 12) ? adven[current_pc].items[missile_inv_slot].bonus : 0;
 	hit_bonus += stat_adj(adven[current_pc],1) - can_see(pc_pos[current_pc],target,0)
-		+ boe_clamp(adven[current_pc].status[1],-8,8);
+		+ boe_clamp(adven[current_pc].status[affect::CursedBlessed],-8,8);
 	if ((skill_item = pc_has_abil_equip(adven[current_pc],41)) < 24) {
 		hit_bonus += adven[current_pc].items[skill_item].ability_strength / 2;
 		dam_bonus += adven[current_pc].items[skill_item].ability_strength / 2;
@@ -1536,7 +1536,7 @@ void fire_missile(location target)
 				take_ap((overall_mode == 12) ? 3 : 2);
 				missile_firer = current_pc;			
 				r1 = get_ran(1,0,100) - 5 * hit_bonus - 10;
-				r1 += 5 * (adven[current_pc].status[6] / 3);
+				r1 += 5 * (adven[current_pc].status[affect::Webbed] / 3);
 				r2 = get_ran(1,1,dam) + dam_bonus;
 				sprintf(create_line, "%s fires.", adven[current_pc].name); // debug
 				add_string_to_buf( create_line);
@@ -1574,8 +1574,8 @@ void fire_missile(location target)
 						//	hit_space(cur_monst->m_loc,get_ran(3,1,6),1,1,1);
 
 						// poison			
-						if ((adven[current_pc].status[0] > 0) && (adven[current_pc].weap_poisoned == ammo_inv_slot)) {
-								poison_amt = adven[current_pc].status[0];
+						if ((adven[current_pc].status[affect::PoisonedWeapon] > 0) && (adven[current_pc].weap_poisoned == ammo_inv_slot)) {
+								poison_amt = adven[current_pc].status[affect::PoisonedWeapon];
 								if (pc_has_abil_equip(adven[current_pc],51) < 24)
 									poison_amt++;
 								poison_monst(cur_monst,poison_amt);
@@ -1587,7 +1587,7 @@ void fire_missile(location target)
 				}	
 
 	combat_posing_monster = current_working_monster = -1;
-	adven[current_pc].status[0] = move_to_zero(adven[current_pc].status[0]);
+	adven[current_pc].status[affect::PoisonedWeapon] = move_to_zero(adven[current_pc].status[affect::PoisonedWeapon]);
 	print_buf();////
 }
 
@@ -1617,10 +1617,10 @@ Boolean combat_next_step()
 	adjust_spell_menus();
 	
 	// In case running monsters affected active PC...
-/*	if (adven[current_pc].status[3] < 0)
+/*	if (adven[current_pc].status[affect::Speed] < 0)
 		this_pc_hasted = FALSE;
 	if ((adven[current_pc].main_status != status::Normal) || 
-		((adven[current_pc].status[3] < 0) && (party.age % 2 == 0)))
+		((adven[current_pc].status[affect::Speed] < 0) && (party.age % 2 == 0)))
 		pick_next_pc();
 	center = pc_pos[current_pc];		*/
 
@@ -1703,10 +1703,10 @@ void combat_run_monst()
 		party.age++;		
 		if (party.age % 4 == 0)
 			for (i = 0; i < 6; i++) {
-			if ((adven[i].status[1] != 0) || (adven[i].status[3] != 0))
+			if ((adven[i].status[affect::CursedBlessed] != 0) || (adven[i].status[affect::Speed] != 0))
 				update_stat = TRUE;
-				adven[i].status[1] = move_to_zero(adven[i].status[1]);
-				adven[i].status[3] = move_to_zero(adven[i].status[3]);	
+				adven[i].status[affect::CursedBlessed] = move_to_zero(adven[i].status[affect::CursedBlessed]);
+				adven[i].status[affect::Speed] = move_to_zero(adven[i].status[affect::Speed]);	
 				party.stuff_done[305][0] = move_to_zero(party.stuff_done[305][0]);
 				if ((item = pc_has_abil_equip(adven[i],50)) < 24) {
 					update_stat = TRUE;
@@ -1715,29 +1715,29 @@ void combat_run_monst()
 				}
 		for (i = 0; i < 6; i++) 
 			if (adven[i].main_status == status::Normal) {
-			if ((adven[i].status[4] != 0) || (adven[i].status[5] != 0)
-			 || (adven[i].status[8] != 0)|| (adven[i].status[10] != 0)
-			 || (adven[i].status[11] != 0)|| (adven[i].status[12] != 0))
+			if ((adven[i].status[affect::Invulnerable] != 0) || (adven[i].status[affect::MagicResistant] != 0)
+			 || (adven[i].status[affect::Sanctuary] != 0)|| (adven[i].status[affect::MartyrsShield] != 0)
+			 || (adven[i].status[affect::Asleep] != 0)|| (adven[i].status[affect::Paralyzed] != 0))
 				update_stat = TRUE;
 
-				adven[i].status[4] = move_to_zero(adven[i].status[4]);
-				adven[i].status[5] = move_to_zero(adven[i].status[5]);		
-				adven[i].status[8] = move_to_zero(adven[i].status[8]);	
-				adven[i].status[10] = move_to_zero(adven[i].status[10]);	
-				adven[i].status[11] = move_to_zero(adven[i].status[11]);	
-				adven[i].status[12] = move_to_zero(adven[i].status[12]);	
+				adven[i].status[affect::Invulnerable] = move_to_zero(adven[i].status[affect::Invulnerable]);
+				adven[i].status[affect::MagicResistant] = move_to_zero(adven[i].status[affect::MagicResistant]);		
+				adven[i].status[affect::Sanctuary] = move_to_zero(adven[i].status[affect::Sanctuary]);	
+				adven[i].status[affect::MartyrsShield] = move_to_zero(adven[i].status[affect::MartyrsShield]);	
+				adven[i].status[affect::Asleep] = move_to_zero(adven[i].status[affect::Asleep]);	
+				adven[i].status[affect::Paralyzed] = move_to_zero(adven[i].status[affect::Paralyzed]);	
 
 				// Do special items
 				if (((item_level = pc_prot_level(adven[i],47)) > 0)
 					&& (get_ran(1,0,10) == 5)) {
 						update_stat = TRUE;
-						adven[i].status[3] += item_level / 2;
+						adven[i].status[affect::Speed] += item_level / 2;
 						add_string_to_buf("An item hastes you!");
 						}
 				if ((item_level = pc_prot_level(adven[i],46)) > 0) {
 					if (get_ran(1,0,10) == 5) {
 						update_stat = TRUE;
-						adven[i].status[1] += item_level / 2;
+						adven[i].status[affect::CursedBlessed] += item_level / 2;
 						add_string_to_buf("An item blesses you!");
 						}
 					}
@@ -2106,7 +2106,7 @@ void do_monster_turn()
 						for (k = 0; k < 6; k++)
 							if ((adven[k].main_status == status::Normal) && (monst_adjacent(pc_pos[k],i) == FALSE)
 								&& (pc_adj[k] == TRUE) && (cur_monst->attitude % 2 == 1) && (cur_monst->active > 0) &&
-								(adven[k].status[8] == 0)) {
+								(adven[k].status[affect::Sanctuary] == 0)) {
 									combat_posing_monster = current_working_monster = k;
 									pc_attack(k,i);
 									combat_posing_monster = current_working_monster = 100 + i;
@@ -2268,7 +2268,7 @@ void monster_attack_pc(short who_att,short target)
 			print_monst_attacks(attacker->number,target);
 
 	// Check sanctuary
-	if (adven[target].status[8] > 0) {
+	if (adven[target].status[affect::Sanctuary] > 0) {
 		r1 = get_ran(1,0,100);
 		if (r1 > hit_chance[attacker->m_d.level / 2]) {
 			add_string_to_buf("  Can't find target!                 ");		
@@ -2282,7 +2282,7 @@ void monster_attack_pc(short who_att,short target)
 //			add_string_to_buf( create_line);
 
 			// Attack roll
-			r1 = get_ran(1,0,100) - 5 * min(8,attacker->m_d.mstatus[1]) + 5 * adven[target].status[1]
+			r1 = get_ran(1,0,100) - 5 * min(8,attacker->m_d.mstatus[1]) + 5 * adven[target].status[affect::CursedBlessed]
 					+ 5 * stat_adj(adven[target],1) - 15;
 			r1 += 5 * (attacker->m_d.mstatus[6] / 3);
 			if (pc_parry[target] < 100)
@@ -2290,13 +2290,13 @@ void monster_attack_pc(short who_att,short target)
 			
 			// Damage roll
 			r2 = get_ran(attacker->m_d.a[i] / 100 + 1,1,attacker->m_d.a[i] % 100) 
-				+ min(8,attacker->m_d.mstatus[1]) - adven[target].status[1] + 1;
+				+ min(8,attacker->m_d.mstatus[1]) - adven[target].status[affect::CursedBlessed] + 1;
 			if (difficulty_adjust() > 2)
 				r2 = r2 * 2;
 			if (difficulty_adjust() == 2)
 				r2 = (r2 * 3) / 2;
 				
-			if ((adven[target].status[11] > 0) || (adven[target].status[12] > 0)) {
+			if ((adven[target].status[affect::Asleep] > 0) || (adven[target].status[affect::Paralyzed] > 0)) {
 				r1 -= 80;
 				r2 = r2 * 2;
 				}
@@ -2318,7 +2318,7 @@ void monster_attack_pc(short who_att,short target)
 						damaged_message(store_hp - adven[target].cur_health,
 						 (i > 0) ? attacker->m_d.a23_type : attacker->m_d.a1_type);
 						 
-						if (adven[target].status[10] > 0) {
+						if (adven[target].status[affect::MartyrsShield] > 0) {
 							add_string_to_buf("  Shares damage!                 ");
 							damage_monst(who_att, 6, store_hp - adven[target].cur_health, 0, 3);
 							}
@@ -2632,7 +2632,7 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 			if (target < 100) { // on PC
 				sprintf(create_line, "  Gazes at %s.                  ", adven[target].name);
 				add_string_to_buf( create_line);
-				r1 = get_ran(1,0,20) + adven[target].level / 4 + adven[target].status[1];
+				r1 = get_ran(1,0,20) + adven[target].level / 4 + adven[target].status[affect::CursedBlessed];
 				if (pc_has_abil_equip(adven[target],49) < 24)
 					r1 = 20;
 				if (r1 > 14) {
@@ -2744,7 +2744,7 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 			add_string_to_buf( create_line);
 
 			// Check sanctuary
-			if (adven[target].status[8] > 0) {
+			if (adven[target].status[affect::Sanctuary] > 0) {
 				r1 = get_ran(1,0,100);
 				if (r1 > hit_chance[level]) {
 					add_string_to_buf("  Can't find target!                 ");		
@@ -2752,7 +2752,7 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 				return;
 				}
 
-			r1 = get_ran(1,0,100) - 5 * min(10,bless) + 5 * adven[target].status[1]
+			r1 = get_ran(1,0,100) - 5 * min(10,bless) + 5 * adven[target].status[affect::CursedBlessed]
 				- 5 * (can_see(source, pc_pos[target],0));
 			if (pc_parry[target] < 100)
 				r1 += 5 * pc_parry[target];
@@ -3919,20 +3919,20 @@ void do_poison()
 		
 	for (i = 0; i < 6; i++)
 		if (adven[i].main_status == status::Normal)
-			if (adven[i].status[2] > 0)
+			if (adven[i].status[affect::Poisoned] > 0)
 				some_poison = TRUE;
 	if (some_poison == TRUE) {
 		add_string_to_buf("Poison:                        ");
 		for (i = 0; i < 6; i++)
 			if (adven[i].main_status == status::Normal)
-				if (adven[i].status[2] > 0) {
-					r1 = get_ran(adven[i].status[2],1,6);
+				if (adven[i].status[affect::Poisoned] > 0) {
+					r1 = get_ran(adven[i].status[affect::Poisoned],1,6);
 					damage_pc(i,r1,2,-1);
 					if (get_ran(1,0,8) < 6)
-						adven[i].status[2] = move_to_zero(adven[i].status[2]);
+						adven[i].status[affect::Poisoned] = move_to_zero(adven[i].status[affect::Poisoned]);
 					if (get_ran(1,0,8) < 6)
 						if (adven[i].traits[trait::GoodConstitution] == TRUE)
-							adven[i].status[2] = move_to_zero(adven[i].status[2]);
+							adven[i].status[affect::Poisoned] = move_to_zero(adven[i].status[affect::Poisoned]);
 				}
 		put_pc_screen();
 		//if (overall_mode < 10)
@@ -3948,14 +3948,14 @@ void handle_disease()
 		
 	for (i = 0; i < 6; i++)
 		if (adven[i].main_status == status::Normal)
-			if (adven[i].status[7] > 0)
+			if (adven[i].status[affect::Diseased] > 0)
 				disease = TRUE;
 				
 	if (disease == TRUE) {
 		add_string_to_buf("Disease:                        ");
 		for (i = 0; i < 6; i++)
 			if (adven[i].main_status == status::Normal)
-				if (adven[i].status[7] > 0) {
+				if (adven[i].status[affect::Diseased] > 0) {
 					r1 = get_ran(1,1,10);
 					switch (r1) {
 						case 1: case 2:
@@ -3983,7 +3983,7 @@ void handle_disease()
 					if (adven[i].traits[trait::GoodConstitution] == TRUE)
 						r1 -= 2;
 					if ((get_ran(1,0,7) <= 0) || (pc_has_abil_equip(adven[i],67) < 24))
-						adven[i].status[7] = move_to_zero(adven[i].status[7]);
+						adven[i].status[affect::Diseased] = move_to_zero(adven[i].status[affect::Diseased]);
 				}
 		put_pc_screen();
 		}	
@@ -3996,17 +3996,17 @@ void handle_acid()
 		
 	for (i = 0; i < 6; i++)
 		if (adven[i].main_status == status::Normal)
-			if (adven[i].status[13] > 0)
+			if (adven[i].status[affect::Acid] > 0)
 				some_acid = TRUE;
 				
 	if (some_acid == TRUE) {
 		add_string_to_buf("Acid:                        ");
 		for (i = 0; i < 6; i++)
 			if (adven[i].main_status == status::Normal)
-				if (adven[i].status[13] > 0) {
-					r1 = get_ran(adven[i].status[13],1,6);
+				if (adven[i].status[affect::Acid] > 0) {
+					r1 = get_ran(adven[i].status[affect::Acid],1,6);
 					damage_pc(i,r1,3,-1);
-					adven[i].status[13] = move_to_zero(adven[i].status[13]);
+					adven[i].status[affect::Acid] = move_to_zero(adven[i].status[affect::Acid]);
 				}
 		if (overall_mode < 10)
 			boom_space(party.p_loc,overall_mode,3,r1,8);
@@ -4058,9 +4058,9 @@ void end_combat()
 	for (i = 0; i < 6; i++) {
 		if (adven[i].main_status == status::Fled)
 			adven[i].main_status = status::Normal;
-		adven[i].status[0] = 0;
-		adven[i].status[1] = 0;			
-		adven[i].status[3] = 0;		
+		adven[i].status[affect::PoisonedWeapon] = 0;
+		adven[i].status[affect::CursedBlessed] = 0;			
+		adven[i].status[affect::Speed] = 0;		
 		}
 	if (which_combat_type == 0) {
 		overall_mode = 0;
@@ -4166,20 +4166,20 @@ Boolean combat_cast_mage_spell()
 										case  3:
 											sprintf(c_line, "  %s stronger.                     ",
 												 adven[target].name);
-											adven[target].status[1] = adven[target].status[1] + 3;		
+											adven[target].status[affect::CursedBlessed] = adven[target].status[affect::CursedBlessed] + 3;		
 											store_m_type = 8;
 											break;
 										case 29:			
 											sprintf(c_line, "  %s resistant.                     ",
 												 adven[target].name);
-											adven[target].status[5] = adven[target].status[5] + 5 + bonus;		
+											adven[target].status[affect::MagicResistant] = adven[target].status[affect::MagicResistant] + 5 + bonus;		
 											store_m_type = 15;
 											break;
 										
 										default:
 											i = (spell_num == 2) ? 2 : max(2,adven[current_pc].level / 2 + bonus);
-											adven[target].status[3] = min(8,
-												adven[target].status[3] + i);
+											adven[target].status[affect::Speed] = min(8,
+												adven[target].status[affect::Speed] + i);
 											sprintf(c_line, "  %s hasted.                       ",
 												 adven[target].name);
 											store_m_type = 8;
@@ -4197,11 +4197,11 @@ Boolean combat_cast_mage_spell()
 										
 								for (i = 0; i < 6; i++) 
 									if (adven[i].main_status == status::Normal) {
-									adven[i].status[3] = min(8,
-										adven[i].status[3] + ((spell_num == 39) ? 1 + adven[current_pc].level / 8 + bonus : 3 + bonus));		
+									adven[i].status[affect::Speed] = min(8,
+										adven[i].status[affect::Speed] + ((spell_num == 39) ? 1 + adven[current_pc].level / 8 + bonus : 3 + bonus));		
 									if (spell_num == 55) {
 										poison_weapon(i,2,1);
-										adven[i].status[1] += 4;										
+										adven[i].status[affect::CursedBlessed] += 4;										
 										add_missile(pc_pos[i],14,0,0,0);
 										}
 										else add_missile(pc_pos[i],8,0,0,0);
@@ -4339,7 +4339,7 @@ Boolean combat_cast_priest_spell()
 							if (target < 6) {
 								store_sound = 4;
 								adven[current_pc].cur_sp -= s_cost[1][spell_num];
-								adven[target].status[1] += (spell_num == 0) ? 2 : 
+								adven[target].status[affect::CursedBlessed] += (spell_num == 0) ? 2 : 
 									max(2,(adven[current_pc].level * 3) / 4 + 1 + bonus);
 								sprintf(c_line, "  %s blessed.              ",
 									 adven[target].name);
@@ -4352,7 +4352,7 @@ Boolean combat_cast_priest_spell()
 							adven[current_pc].cur_sp -= s_cost[1][spell_num];		
 							for (i = 0; i < 6; i++) 
 								if (adven[i].main_status == status::Normal) {
-									adven[i].status[1] += adven[current_pc].level / 3;										
+									adven[i].status[affect::CursedBlessed] += adven[current_pc].level / 3;										
 								add_missile(pc_pos[i],8,0,0,0);
 								}
 								sprintf(c_line, "  Party blessed.                    ");
@@ -4367,14 +4367,14 @@ Boolean combat_cast_priest_spell()
 							add_string_to_buf( c_line);	
 							pc_heal(adven[current_pc],200);
 							cure_pc(adven[current_pc],8);
-							adven[current_pc].status[1] = 8;
-							adven[current_pc].status[3] = 8;
-							adven[current_pc].status[4] = 3;
-							adven[current_pc].status[5] = 8;
-							adven[current_pc].status[6] = 0;
-							adven[current_pc].status[7] = 0;
-							adven[current_pc].status[9] = 0;
-							adven[current_pc].status[10] = 8;
+							adven[current_pc].status[affect::CursedBlessed] = 8;
+							adven[current_pc].status[affect::Speed] = 8;
+							adven[current_pc].status[affect::Invulnerable] = 3;
+							adven[current_pc].status[affect::MagicResistant] = 8;
+							adven[current_pc].status[affect::Webbed] = 0;
+							adven[current_pc].status[affect::Diseased] = 0;
+							adven[current_pc].status[affect::Dumbfounded] = 0;
+							adven[current_pc].status[affect::MartyrsShield] = 8;
 							break;
 							
 						case 31: case 51: case 53:			
