@@ -1658,21 +1658,21 @@ special_node_type get_node(short cur_spec,short cur_spec_type)
 	dummy_node = scenario.scen_specials[0];
 	dummy_node.type = -1;
 	if (cur_spec_type == 0) {
-		if (cur_spec != boe_clamp(0,255,cur_spec)) {
+		if (cur_spec != boe_clamp(cur_spec,0,255)) {
 			give_error("The scenario called a scenario special node out of range.","",0);
 			return dummy_node;
 			}
 		return scenario.scen_specials[cur_spec];
 		}
 	if (cur_spec_type == 1) {
-		if (cur_spec != boe_clamp(0,59,cur_spec)) {
+		if (cur_spec != boe_clamp(cur_spec,0,59)) {
 			give_error("The scenario called an outdoor special node out of range.","",0);
 			return dummy_node;
 			}
 		return outdoors[party.i_w_c.x][party.i_w_c.y].specials[cur_spec];
 		}
 	if (cur_spec_type == 2) {
-		if (cur_spec != boe_clamp(0,99,cur_spec)) {
+		if (cur_spec != boe_clamp(cur_spec,0,99)) {
 			give_error("The scenario called a town special node out of range.","",0);
 			return dummy_node;
 			}
@@ -1767,26 +1767,26 @@ void general_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 			break;
 		case 15:
 			check_mess = TRUE;
-			if (spec.ex1a != boe_clamp(0,29,spec.ex1a))
+			if (spec.ex1a != boe_clamp(spec.ex1a,0,29))
 				give_error("Horse out of range.","",0);
 				else party.horses[spec.ex1a].property = (spec.ex2a == 0) ? 1 : 0;
 			break;
 		case 16:
 			check_mess = TRUE;
-			if (spec.ex1a != boe_clamp(0,29,spec.ex1a))
+			if (spec.ex1a != boe_clamp(spec.ex1a,0,29))
 				give_error("Boat out of range.","",0);
 				else party.boats[spec.ex1a].property = (spec.ex2a == 0) ? 1 : 0;
 			break;
 		case 17:
 			check_mess = TRUE;
-			if (spec.ex1a != boe_clamp(0,scenario.num_towns - 1,spec.ex1a))
+			if (spec.ex1a != boe_clamp(spec.ex1a,0,scenario.num_towns - 1))
 				give_error("Town out of range.","",0);
 				else party.can_find_town[spec.ex1a] = (spec.ex2a == 0) ? 0 : 1;
 			*redraw = TRUE;
 			break;
 		case 18:
 			check_mess = TRUE;
-			if (spec.ex1a != boe_clamp(1,10,spec.ex1a))
+			if (spec.ex1a != boe_clamp(spec.ex1a,1,10))
 				give_error("Event code out of range.","",0);
 				else if (party.key_times[spec.ex1a] == 30000)
 					party.key_times[spec.ex1a] = calc_day();
@@ -1813,7 +1813,7 @@ void general_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 			*next_spec_type = 0;
 			break;
 		case 22:
-			if (spec.sd1 != boe_clamp(0,299,spec.sd1))
+			if (spec.sd1 != boe_clamp(spec.sd1,0,299))
 				give_error("Stuff Done flag out of range.","",0);
 				else for (i = 0; i < 10; i++) PSD[spec.sd1][i] = spec.ex1a;
 			break;
@@ -1896,7 +1896,7 @@ void oneshot_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 					}
 			break;
 		case 51:
-			if (spec.ex1a != boe_clamp(0,49,spec.ex1a)) {
+			if (spec.ex1a != boe_clamp(spec.ex1a,0,49)) {
 				give_error("Special item is out of range.","",0);
 				set_sd = FALSE;
 				}
@@ -1990,7 +1990,7 @@ void oneshot_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 					}
 			break;
 		case 61:
-			if (spec.ex1a != boe_clamp(0,3,spec.ex1a)) {
+			if (spec.ex1a != boe_clamp(spec.ex1a,0,3)) {
 				give_error("Special outdoor enc. is out of range. Must be 0-3.","",0);
 				set_sd = FALSE;
 				}
@@ -2077,14 +2077,14 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 		case 82:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					adven[i].cur_health = boe_clamp(0,	adven[i].max_health,
-						adven[i].cur_health + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					adven[i].cur_health = boe_clamp(adven[i].cur_health + spec.ex1a * ((spec.ex1b != 0) ? -1: 1),	0,
+						adven[i].max_health);
 			break;
 		case 83:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					adven[i].cur_sp = boe_clamp(0,	adven[i].max_sp,
-						adven[i].cur_sp + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					adven[i].cur_sp = boe_clamp(adven[i].cur_sp + spec.ex1a * ((spec.ex1b != 0) ? -1: 1),	0,
+						adven[i].max_sp);
 			break;
 		case 84:
 			for (i = 0; i < 6; i++)
@@ -2095,8 +2095,8 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 		case 85:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					adven[i].skill_pts = boe_clamp(0,	100,
-						adven[i].skill_pts + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					adven[i].skill_pts = boe_clamp(adven[i].skill_pts + spec.ex1a * ((spec.ex1b != 0) ? -1: 1),	0,
+						100);
 			break;
 		case 86:
 			for (i = 0; i < 6; i++)
@@ -2181,17 +2181,17 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 					}
 			break;
 		case 98:
-			if (spec.ex2a != boe_clamp(0,18,spec.ex2a)) {
+			if (spec.ex2a != boe_clamp(spec.ex2a,0,18)) {
 				give_error("Skill is out of range.","",0);
 				break;
 				}
 			for (i = 0; i < 6; i++)
 				if (((pc < 0) || (pc == i)) && (get_ran(1,0,100) < spec.pic))
-					adven[i].skills[spec.ex2a] = boe_clamp(0, skill_max[spec.ex2a],
-						adven[i].skills[spec.ex2a] + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					adven[i].skills[spec.ex2a] = boe_clamp(adven[i].skills[spec.ex2a] + spec.ex1a * ((spec.ex1b != 0) ? -1: 1), 0,
+						skill_max[spec.ex2a]);
 			break;
 		case 99:
-			if (spec.ex1a != boe_clamp(0,31,spec.ex1a)) {
+			if (spec.ex1a != boe_clamp(spec.ex1a,0,31)) {
 				give_error("Mage spell is out of range (0 - 31). See docs.","",0);
 				break;
 				}
@@ -2200,7 +2200,7 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 					adven[i].mage_spells[spec.ex1a + 30] = TRUE;
 			break;
 		case 100:
-			if (spec.ex1a != boe_clamp(0,31,spec.ex1a)) {
+			if (spec.ex1a != boe_clamp(spec.ex1a,0,31)) {
 				give_error("Priest spell is out of range (0 - 31). See docs.","",0);
 				break;
 				}
@@ -2223,7 +2223,7 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 					else take_food(spec.ex1a,FALSE);
 			break;
 		case 103:
-			if (spec.ex1a != boe_clamp(0,19,spec.ex1a)) {
+			if (spec.ex1a != boe_clamp(spec.ex1a,0,19)) {
 				give_error("Alchemy is out of range.","",0);
 				break;
 				}
@@ -2231,12 +2231,12 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 			break;
 		case 104:
 			r1 = (short) party.stuff_done[305][0];
-			r1 = boe_clamp(0,250,r1 + spec.ex1a);
+			r1 = boe_clamp(r1 + spec.ex1a,0,250);
 			party.stuff_done[305][0] = r1;
 			break;
 		case 105:
 			r1 = (short) party.stuff_done[305][3];
-			r1 = boe_clamp(0,250,r1 + spec.ex1a);
+			r1 = boe_clamp(r1 + spec.ex1a,0,250);
 			party.stuff_done[305][3] = r1;
 			break;
 		case 106:
@@ -2246,7 +2246,7 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 				add_string_to_buf("  Can't fly when on a horse.  "); 
 			else {
 				r1 = (short) party.stuff_done[305][1];
-				r1 = boe_clamp(0,250,r1 + spec.ex1a);
+				r1 = boe_clamp(r1 + spec.ex1a,0,250);
 				party.stuff_done[305][1] = r1;
 				}
 			break;
@@ -2283,7 +2283,7 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 				*next_spec = spec.ex1b;
 			break;
 		case 133:
-			if (spec.ex1a != boe_clamp(0,49,spec.ex1a)) {
+			if (spec.ex1a != boe_clamp(spec.ex1a,0,49)) {
 				give_error("Special item is out of range.","",0);		
 				}
 				else if (party.spec_items[spec.ex1a] > 0)
@@ -2412,7 +2412,7 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 			check_mess = FALSE;
 			get_text_response(873,str3,0);
 			j = 1; k = 1;
-			spec.pic = boe_clamp(0,8,spec.pic);
+			spec.pic = boe_clamp(spec.pic,0,8);
 			get_strs((char *) str1,(char *) str2,0,spec.ex1a,spec.ex2a);
 			for (i = 0; i < spec.pic;i++) {
 				if ((spec.ex1a < 0) || (str3[i] != str1[i]))
@@ -2864,7 +2864,7 @@ void outdoor_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 			check_mess = TRUE;
 			break;		
 		case 227:
-			if (spec.ex1a != boe_clamp(0,3,spec.ex1a)) {
+			if (spec.ex1a != boe_clamp(spec.ex1a,0,3)) {
 				give_error("Special outdoor enc. is out of range. Must be 0-3.","",0);
 				//set_sd = FALSE;
 				}
@@ -2887,7 +2887,7 @@ void outdoor_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 				spec.ex2a = 39;
 			if (spec.ex2a < 1)
 				spec.ex2a = 1;
-			spec.ex2b = boe_clamp(0,6,spec.ex2b);
+			spec.ex2b = boe_clamp(spec.ex2b,0,6);
 			switch (spec.ex1b) {
 				case 0: start_shop_mode(0,spec.ex1a,spec.ex1a + spec.ex2a - 1,spec.ex2b,(char *) str1); break;
 				case 1: start_shop_mode(10,spec.ex1a,spec.ex1a + spec.ex2a - 1,spec.ex2b,(char *) str1); break;
@@ -2946,8 +2946,8 @@ void get_strs(char *str1,char *str2,short cur_type,short which_str1,short which_
 {
 	short num_strs[3] = {260,108,135};
 		
-	if (((which_str1 >= 0) && (which_str1 != boe_clamp(0,num_strs[cur_type],which_str1))) ||
-		((which_str2 >= 0) && (which_str2 != boe_clamp(0,num_strs[cur_type],which_str2)))) {
+	if (((which_str1 >= 0) && (which_str1 != boe_clamp(which_str1,0,num_strs[cur_type]))) ||
+		((which_str2 >= 0) && (which_str2 != boe_clamp(which_str2,0,num_strs[cur_type])))) {
 		give_error("The scenario attempted to access a message out of range.","",0);
 		return;
 		}

@@ -81,7 +81,7 @@ void pause(short length)
 // stuff done legit, i.e. flags are within proper ranges for stuff done flag
 Boolean sd_legit(short a, short b)
 {
-	if ((boe_clamp(0,299,a) == a) && (boe_clamp(0,9,b) == b))
+	if ((boe_clamp(a,0,299) == a) && (boe_clamp(b,0,9) == b))
 		return TRUE;
 	return FALSE;
 }

@@ -22,7 +22,7 @@ extern scenario_data_type scenario;
 Boolean is_explored(short i,short j)
 {
 	if (is_out())  {
-		if ((i != boe_clamp(0,95,i)) || (j != boe_clamp(0,95,j)))
+		if ((i != boe_clamp(i,0,95)) || (j != boe_clamp(j,0,95)))
       	return FALSE;
 		return (out_e[i][j] != 0) ? TRUE : FALSE;
 		}

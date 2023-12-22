@@ -380,7 +380,7 @@ void update_explored(location dest)
 		out_e[dest.x][dest.y] = 2;
 		for (look.x = shortdest.x - 4; look.x < shortdest.x + 5; look.x++)
 			for (look.y = shortdest.y - 4; look.y < shortdest.y + 5; look.y++) {
-			if ((look.x == boe_clamp(0,95,look.x)) && (look.y == boe_clamp(0,95,look.y))) {
+			if ((look.x == boe_clamp(look.x,0,95)) && (look.y == boe_clamp(look.y,0,95))) {
 				if (out_e[look.x][look.y] == 0)
 					if (short_can_see(shortdest, look) < 5)
 						out_e[look.x][look.y] = 1;
