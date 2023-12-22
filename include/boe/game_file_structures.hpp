@@ -572,7 +572,7 @@ static_assert(sizeof(stored_outdoor_maps_type) == 28800);
 
 using Adventurers = std::array<pc_record_type, 6>;
 
-static inline short minmax(short min, short max, short k)
+static inline short boe_clamp(short min, short max, short k)
 {
 	return std::clamp(k, min, max);
 }

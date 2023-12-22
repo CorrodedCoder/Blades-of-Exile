@@ -995,7 +995,7 @@ item_record_type store_mage_spells(short which_s)
 
 	Str255 str;
 	
-	if (which_s != minmax(0,31,which_s))
+	if (which_s != boe_clamp(0,31,which_s))
 		which_s = 0;
 	spell.item_level = which_s + 30;
 	spell.value = cost[which_s];
@@ -1017,7 +1017,7 @@ short cost[32] = {100,150,75,400,200, 100,80,250,
 2500,2000,4500,4500,3000,3000,2000,2000};
 	Str255 str;
 
-	if (which_s != minmax(0,31,which_s))
+	if (which_s != boe_clamp(0,31,which_s))
 		which_s = 0;
 	spell.item_level = which_s + 30;
 	spell.value = cost[which_s];
@@ -1031,7 +1031,7 @@ item_record_type store_alchemy(short which_s)
 short val[20] = {50,75,30,130,100,150, 200,200,300,250,300, 500,600,750,700,1000,10000,5000,7000,12000};
 	Str255 str;
 	
-	if (which_s != minmax(0,19,which_s))
+	if (which_s != boe_clamp(0,19,which_s))
 		which_s = 0;
 	spell.item_level = which_s;
 	spell.value = val[which_s];

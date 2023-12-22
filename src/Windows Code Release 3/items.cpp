@@ -1135,7 +1135,7 @@ short get_num_of_items(short max_num)
 		ModalDialog();	
 	cd_kill_dialog(1012,0);
 	
-	dialog_answer = minmax(0,max_num,dialog_answer);
+	dialog_answer = boe_clamp(0,max_num,dialog_answer);
 	
 	return dialog_answer;
 }

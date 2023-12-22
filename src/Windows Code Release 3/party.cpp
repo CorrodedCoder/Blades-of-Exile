@@ -722,7 +722,7 @@ void slow_pc(short which_pc,short how_much)
 		return;
 	if (adven[which_pc].main_status == status::Normal) {
 
-		adven[which_pc].status[3] = minmax(-8,8,adven[which_pc].status[3] - how_much);
+		adven[which_pc].status[3] = boe_clamp(-8,8,adven[which_pc].status[3] - how_much);
 		if (how_much < 0)
 			sprintf(c_line, "  %s hasted.", adven[which_pc].name);
 			else sprintf(c_line, "  %s slowed.", adven[which_pc].name);
@@ -1382,7 +1382,7 @@ void do_mage_spell(short pc_num,short spell_num)
 			break;
 		case 26: // summon 1
 			store = adven[who_cast].level / 5 + stat_adj(adven[who_cast],2) / 3 + get_ran(1,0,2);
-			j = minmax(1,7,store);
+			j = boe_clamp(1,7,store);
 			r1 = get_summon_monster(1); ////
 			if (r1 < 0) break;
 			adven[pc_num].cur_sp -= spell_cost[0][spell_num];
@@ -1393,7 +1393,7 @@ void do_mage_spell(short pc_num,short spell_num)
 			break;
 		case 43: // summon 2
 			store = adven[who_cast].level / 7 + stat_adj(adven[who_cast],2) / 3 + get_ran(1,0,1);
-			j = minmax(1,6,store);
+			j = boe_clamp(1,6,store);
 			r1 = get_summon_monster(2); ////
 			if (r1 < 0) break;
 			adven[pc_num].cur_sp -= spell_cost[0][spell_num];
@@ -1404,7 +1404,7 @@ void do_mage_spell(short pc_num,short spell_num)
 			break;
 		case 58: // summon 3
 			store = adven[who_cast].level / 10 + stat_adj(adven[who_cast],2) / 3 + get_ran(1,0,1);
-			j = minmax(1,5,store);
+			j = boe_clamp(1,5,store);
 			r1 = get_summon_monster(3); ////
 			if (r1 < 0) break;
 			adven[pc_num].cur_sp -= spell_cost[0][spell_num];
@@ -3049,7 +3049,7 @@ static bool pc_affect(pc_record_type& pc, short type, short how_much)
 	{
 		return false;
 	}
-	pc.status[type] = minmax(-8, 8, pc.status[type] + how_much);
+	pc.status[type] = boe_clamp(-8, 8, pc.status[type] + how_much);
 	if (((type >= 4) && (type <= 10)) || (type == 12) || (type == 13))
 	{
 		pc.status[type] = max(pc.status[type], 0);
@@ -3073,7 +3073,7 @@ void affect_party(short type,short how_much)
 
 	for (i = 0; i < 6; i++)
 		if (adven[i].main_status == status::Normal)
-			adven[i].status[type] = minmax (-8,8,adven[i].status[type] + how_much);
+			adven[i].status[type] = boe_clamp(-8,8,adven[i].status[type] + how_much);
 	put_pc_screen(); 
 
 }
@@ -3143,7 +3143,7 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 		
 	// armor	
 	if ((damage_type == 0) || (damage_type == 6) ||(damage_type == 7)) {
-		how_much -= minmax(-5,5,adven[which_pc].status[1]);
+		how_much -= boe_clamp(-5,5,adven[which_pc].status[1]);
 		for (i = 0; i < 24; i++)
 			if ((adven[which_pc].items[i].variety != 0) && (adven[which_pc].equip[i] == TRUE)) {
 				if ((adven[which_pc].items[i].variety >= 12) && (adven[which_pc].items[i].variety <= 17)) {
@@ -3367,7 +3367,7 @@ void set_pc_moves()
 			else {
 				pc_moves[i] = (adven[i].traits[trait::Sluggish] == TRUE) ? 3 : 4;
 				r = get_encumberance(adven[i]);
-				pc_moves[i] = minmax(1,8,pc_moves[i] - (r / 3));
+				pc_moves[i] = boe_clamp(1,8,pc_moves[i] - (r / 3));
 				
 				if ((i_level = pc_prot_level(adven[i],55)) > 0)
 					pc_moves[i] += i_level / 7 + 1;

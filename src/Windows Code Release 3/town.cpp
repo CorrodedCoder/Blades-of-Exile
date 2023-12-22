@@ -1224,8 +1224,8 @@ void erase_out_specials()
 			if (quadrant_legal(k,l) == TRUE) {
 			for (m = 0; m < 8; m++)
 				if ((outdoors[k][l].exit_dests[m] >= 0) &&
-						(outdoors[k][l].exit_locs[m].x == minmax(0,47,outdoors[k][l].exit_locs[m].x)) &&
-						(outdoors[k][l].exit_locs[m].y == minmax(0,47,outdoors[k][l].exit_locs[m].y))) {
+						(outdoors[k][l].exit_locs[m].x == boe_clamp(0,47,outdoors[k][l].exit_locs[m].x)) &&
+						(outdoors[k][l].exit_locs[m].y == boe_clamp(0,47,outdoors[k][l].exit_locs[m].y))) {
 					if (party.can_find_town[outdoors[k][l].exit_dests[m]] == 0) {
 					out[48 * k + outdoors[k][l].exit_locs[m].x][48 * l + outdoors[k][l].exit_locs[m].y] = 
 						scenario.ter_types[outdoors[k][l].terrain[outdoors[k][l].exit_locs[m].x][outdoors[k][l].exit_locs[m].y]].flag1;
@@ -1381,18 +1381,18 @@ void draw_map (HWND the_dialog, short the_item)
 	if ((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
 		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
 		((overall_mode == 21) && (store_pre_shop_mode == 0))) {
-		view_rect.left = minmax(0,8,party.loc_in_sec.x - 20);
+		view_rect.left = boe_clamp(0,8,party.loc_in_sec.x - 20);
 		view_rect.right = view_rect.left + 40;
-		view_rect.top = minmax(0,8,party.loc_in_sec.y - 20);
+		view_rect.top = boe_clamp(0,8,party.loc_in_sec.y - 20);
 		view_rect.bottom = view_rect.top + 40;
 		redraw_rect = view_rect;
 		}
 		else {
 			switch (town_type) {
 				case 0:
-					view_rect.left = minmax(0,24,c_town.p_loc.x - 20);
+					view_rect.left = boe_clamp(0,24,c_town.p_loc.x - 20);
 					view_rect.right = view_rect.left + 40;
-					view_rect.top = minmax(0,24,c_town.p_loc.y - 20);
+					view_rect.top = boe_clamp(0,24,c_town.p_loc.y - 20);
 					view_rect.bottom = view_rect.top + 40;
 					if (the_item == 5)
 						redraw_rect = view_rect;
@@ -1400,9 +1400,9 @@ void draw_map (HWND the_dialog, short the_item)
 					total_size = 64;
 					break;
 				case 1:
-					view_rect.left = minmax(0,8,c_town.p_loc.x - 20);
+					view_rect.left = boe_clamp(0,8,c_town.p_loc.x - 20);
 					view_rect.right = view_rect.left + 40;
-					view_rect.top = minmax(0,8,c_town.p_loc.y - 20);
+					view_rect.top = boe_clamp(0,8,c_town.p_loc.y - 20);
 					view_rect.bottom = view_rect.top + 40;
 					redraw_rect = view_rect;
 					break;

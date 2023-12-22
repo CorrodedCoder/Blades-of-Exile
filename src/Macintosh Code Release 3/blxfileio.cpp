@@ -790,7 +790,7 @@ void load_town(short town_num,short mode,short extra,char *str)
 	OSErr error;
 	Str255 start_name,file_name;
 	
-	if (town_num != minmax(0,scenario.num_towns - 1,town_num)) {
+	if (town_num != boe_clamp(0,scenario.num_towns - 1,town_num)) {
 		give_error("The scenario tried to place you into a non-existant town.","",0);
 		return;
 		}
@@ -1128,8 +1128,8 @@ void position_party(short out_x,short out_y,short pc_pos_x,short pc_pos_y) ////
 {
 	short i,j;
 
-	if ((pc_pos_x != minmax(0,47,pc_pos_x)) || (pc_pos_y != minmax(0,47,pc_pos_y)) ||
-		(out_x != minmax(0,scenario.out_width - 1,out_x)) || (out_y != minmax(0,scenario.out_height - 1,out_y))) {
+	if ((pc_pos_x != boe_clamp(0,47,pc_pos_x)) || (pc_pos_y != boe_clamp(0,47,pc_pos_y)) ||
+		(out_x != boe_clamp(0,scenario.out_width - 1,out_x)) || (out_y != boe_clamp(0,scenario.out_height - 1,out_y))) {
 			give_error("The scenario has tried to place you in an out of bounds outdoor location.","",0);
 			return;
 			}
@@ -1310,8 +1310,8 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 	long store_dir,len_to_jump = 0,store = 0;
 	OSErr error;
 	
-	if ((to_create_x != minmax(0,scenario.out_width - 1,to_create_x)) ||
-		(to_create_y != minmax(0,scenario.out_height - 1,to_create_y))) { // not exist
+	if ((to_create_x != boe_clamp(0,scenario.out_width - 1,to_create_x)) ||
+		(to_create_y != boe_clamp(0,scenario.out_height - 1,to_create_y))) { // not exist
 			for (i = 0; i < 48; i++)
 				for (j = 0; j < 48; j++)
 					outdoors[targ_x][targ_y].terrain[i][j] = 5;

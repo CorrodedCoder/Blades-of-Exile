@@ -63,7 +63,7 @@ void pause(short length)
 // stuff done legit, i.e. flags are within proper ranges for stuff done flag
 Boolean sd_legit(short a, short b)
 {
-	if ((minmax(0,299,a) == a) && (minmax(0,9,b) == b))
+	if ((boe_clamp(0,299,a) == a) && (boe_clamp(0,9,b) == b))
 		return TRUE;
 	return FALSE;
 }

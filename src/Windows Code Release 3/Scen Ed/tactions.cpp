@@ -801,8 +801,8 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 			case 47: //edit out start loc
 				if (fancy_choice_dialog(864,0) == 2)
 					break;
-				if ((spot_hit.x != minmax(4,43,spot_hit.x)) ||
-					(spot_hit.y != minmax(4,43,spot_hit.y))) {
+				if ((spot_hit.x != boe_clamp(4,43,spot_hit.x)) ||
+					(spot_hit.y != boe_clamp(4,43,spot_hit.y))) {
 						give_error("You can't put the starting location this close to the edge of an outdoor section. It has to be at least 4 spaces away.","",0);
 						break;
 						}

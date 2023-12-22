@@ -454,7 +454,7 @@ void load_town(short town_num, short mode, short extra, char* str)
 	short which_town;
 	char file_name[256];
 
-	if (town_num != minmax(0, scenario.num_towns - 1, town_num)) {
+	if (town_num != boe_clamp(0, scenario.num_towns - 1, town_num)) {
 		give_error("The scenario tried to place you into a non-existant town.", "", 0);
 		return;
 	}
@@ -960,8 +960,8 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 	char file_name[256];
 	long len_to_jump = 0, store = 0;
 
-	if ((to_create_x != minmax(0, scenario.out_width - 1, to_create_x)) ||
-		(to_create_y != minmax(0, scenario.out_height - 1, to_create_y))) { // not exist
+	if ((to_create_x != boe_clamp(0, scenario.out_width - 1, to_create_x)) ||
+		(to_create_y != boe_clamp(0, scenario.out_height - 1, to_create_y))) { // not exist
 		for (i = 0; i < 48; i++)
 			for (j = 0; j < 48; j++)
 				outdoors[targ_x][targ_y].terrain[i][j] = 5;

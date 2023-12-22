@@ -586,10 +586,10 @@ void pc_attack(short who_att,short target)
 					weap1 = i;
 					else weap2 = i;
 
-	hit_adj = (-5 * minmax(-8,8,adven[who_att].status[1])) + 5 * minmax(-8,8,which_m->m_d.status[1])
+	hit_adj = (-5 * boe_clamp(-8,8,adven[who_att].status[1])) + 5 * boe_clamp(-8,8,which_m->m_d.status[1])
 			- stat_adj(adven[who_att],1) * 5 + (get_encumberance(adven[who_att])) * 5;
 
-	dam_adj = minmax(-8,8,adven[who_att].status[1]) - minmax(-8,8,which_m->m_d.status[1])
+	dam_adj = boe_clamp(-8,8,adven[who_att].status[1]) - boe_clamp(-8,8,which_m->m_d.status[1])
 			+ stat_adj(adven[who_att],0);
 
 	if ((which_m->m_d.status[11] > 0) || (which_m->m_d.status[12] > 0)) {
@@ -923,7 +923,7 @@ void do_combat_cast(location target)
 		spell_being_cast -= 1000;
 		freebie = TRUE;
 		level = store_item_spell_level;
-		level = minmax(2,20,level);
+		level = boe_clamp(2,20,level);
 		}
 		else {
 			level = 1 + adven[current_pc].level / 2;
@@ -1325,7 +1325,7 @@ void do_combat_cast(location target)
 										}
 									store_m_type = 8;
 									r1 = get_ran(1,0,90);
-									if (r1 > hit_chance[minmax(0,19,bonus * 2 + level * 4 - (cur_monst->m_d.level / 2) + 3)])
+									if (r1 > hit_chance[boe_clamp(0,19,bonus * 2 + level * 4 - (cur_monst->m_d.level / 2) + 3)])
 										add_string_to_buf("  Monster resisted.                  ");
 										else {
 										r1 = get_ran((spell_being_cast == 103) ? 2 : 6, 1, 14);	
@@ -1341,7 +1341,7 @@ void do_combat_cast(location target)
 										break;
 										}
 									r1 = get_ran(1,0,100);
-									if (r1 > hit_chance[minmax(0,19,level * 4 - cur_monst->m_d.level + 10)])
+									if (r1 > hit_chance[boe_clamp(0,19,level * 4 - cur_monst->m_d.level + 10)])
 										add_string_to_buf("  Demon resisted.                  ");
 										else {
 										r1 = get_ran(8 + bonus * 2, 1, 11);	
@@ -1481,10 +1481,10 @@ void fire_missile(location target)
 	skill = (overall_mode == 12) ? adven[current_pc].skills[7] : adven[current_pc].skills[8];
 	range = (overall_mode == 12) ? 12 : 8;
 	dam = adven[current_pc].items[ammo_inv_slot].item_level;
-	dam_bonus = adven[current_pc].items[ammo_inv_slot].bonus + minmax(-8,8,adven[current_pc].status[1]);
+	dam_bonus = adven[current_pc].items[ammo_inv_slot].bonus + boe_clamp(-8,8,adven[current_pc].status[1]);
 	hit_bonus = (overall_mode == 12) ? adven[current_pc].items[missile_inv_slot].bonus : 0;
 	hit_bonus += stat_adj(adven[current_pc],1) - can_see(pc_pos[current_pc],target,0)
-		+ minmax(-8,8,adven[current_pc].status[1]);
+		+ boe_clamp(-8,8,adven[current_pc].status[1]);
 	if ((skill_item = pc_has_abil_equip(adven[current_pc],41)) < 24) {
 		hit_bonus += adven[current_pc].items[skill_item].ability_strength / 2;
 		dam_bonus += adven[current_pc].items[skill_item].ability_strength / 2;
@@ -3621,10 +3621,10 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,Boolean 
 
 	active = c_town.town.in_town_rect;
 	// eliminate barriers that can't be seen
-		for (i = minmax(active.left + 1,active.right - 1,center.x - 4); 
-		 i <= minmax(active.left + 1,active.right - 1,center.x + 4); i++)
-			for (j = minmax(active.top + 1,active.bottom - 1,center.y - 4);
-			 j <= minmax(active.top + 1,active.bottom - 1,center.y + 4); j++) {
+		for (i = boe_clamp(active.left + 1,active.right - 1,center.x - 4); 
+		 i <= boe_clamp(active.left + 1,active.right - 1,center.x + 4); i++)
+			for (j = boe_clamp(active.top + 1,active.bottom - 1,center.y - 4);
+			 j <= boe_clamp(active.top + 1,active.bottom - 1,center.y + 4); j++) {
 				s_loc.x = i; s_loc.y = j;
 				if (can_see(center,s_loc,0) == 5)
 					 pat.pattern[i - center.x + 4][j - center.y + 4] = 0;
@@ -3632,8 +3632,8 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,Boolean 
 
 
 	// First actually make barriers, then draw them, then inflict damaging effects.
-	for (i = minmax(0,town_size[town_type] - 1,center.x - 4); i <= minmax(0,town_size[town_type] - 1,center.x + 4); i++)
-		for (j = minmax(0,town_size[town_type] - 1,center.y - 4); j <= minmax(0,town_size[town_type] - 1,center.y + 4); j++)
+	for (i = boe_clamp(0,town_size[town_type] - 1,center.x - 4); i <= boe_clamp(0,town_size[town_type] - 1,center.x + 4); i++)
+		for (j = boe_clamp(0,town_size[town_type] - 1,center.y - 4); j <= boe_clamp(0,town_size[town_type] - 1,center.y + 4); j++)
 			if (get_obscurity(i,j) < 5) {
 				effect = pat.pattern[i - center.x + 4][j - center.y + 4];
 				switch (effect) {
@@ -3662,8 +3662,8 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,Boolean 
 		
 	// Damage to pcs
 	for (k = 0; k < 6; k++) 
-		for (i = minmax(0,town_size[town_type] - 1,center.x - 4); i <= minmax(0,town_size[town_type] - 1,center.x + 4); i++)
-			for (j = minmax(0,town_size[town_type] - 1,center.y - 4); j <= minmax(0,town_size[town_type] - 1,center.y + 4); j++) {
+		for (i = boe_clamp(0,town_size[town_type] - 1,center.x - 4); i <= boe_clamp(0,town_size[town_type] - 1,center.x + 4); i++)
+			for (j = boe_clamp(0,town_size[town_type] - 1,center.y - 4); j <= boe_clamp(0,town_size[town_type] - 1,center.y + 4); j++) {
 				spot_hit.x = i;
 				spot_hit.y = j;
 				if ((get_obscurity(i,j) < 5) && (adven[k].main_status == status::Normal)
@@ -3712,8 +3712,8 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,Boolean 
 		if ((c_town.monst.dudes[k].active > 0) && (dist(center,c_town.monst.dudes[k].m_loc) <= 5)) {
 		monster_hit = FALSE;
 		// First actually make barriers, then draw them, then inflict damaging effects.
-		for (i = minmax(0,town_size[town_type] - 1,center.x - 4); i <= minmax(0,town_size[town_type] - 1,center.x + 4); i++)
-			for (j = minmax(0,town_size[town_type] - 1,center.y - 4); j <= minmax(0,town_size[town_type] - 1,center.y + 4); j++) {
+		for (i = boe_clamp(0,town_size[town_type] - 1,center.x - 4); i <= boe_clamp(0,town_size[town_type] - 1,center.x + 4); i++)
+			for (j = boe_clamp(0,town_size[town_type] - 1,center.y - 4); j <= boe_clamp(0,town_size[town_type] - 1,center.y + 4); j++) {
 				spot_hit.x = i;
 				spot_hit.y = j;
 
@@ -4491,7 +4491,7 @@ void start_fancy_spell_targeting(short num)
 	
 	switch (num) { // Assign special targeting shapes and number of targets
 		case 129: // smite
-			num_targets_left = minmax(1,8,adven[current_pc].level / 4 + stat_adj(adven[current_pc],2) / 2);
+			num_targets_left = boe_clamp(1,8,adven[current_pc].level / 4 + stat_adj(adven[current_pc],2) / 2);
 			break; 
 		case 134: // sticks to snakes
 			num_targets_left = adven[current_pc].level / 5 + stat_adj(adven[current_pc],2) / 2;
@@ -4513,17 +4513,17 @@ void start_fancy_spell_targeting(short num)
 			current_pat = t;
 			break;
 		case 26: // summon 1
-			num_targets_left = minmax(1,7,adven[current_pc].level / 4 + stat_adj(adven[current_pc],2) / 2);
+			num_targets_left = boe_clamp(1,7,adven[current_pc].level / 4 + stat_adj(adven[current_pc],2) / 2);
 			break;
 		case 43: // summon 2
-			num_targets_left = minmax(1,6,adven[current_pc].level / 6 + stat_adj(adven[current_pc],2) / 2);
+			num_targets_left = boe_clamp(1,6,adven[current_pc].level / 6 + stat_adj(adven[current_pc],2) / 2);
 			break;
 		case 58: // summon 3
-			num_targets_left = minmax(1,5,adven[current_pc].level / 8 + stat_adj(adven[current_pc],2) / 2);
+			num_targets_left = boe_clamp(1,5,adven[current_pc].level / 8 + stat_adj(adven[current_pc],2) / 2);
 			break;
 		}	
 	
-	num_targets_left = minmax(1,8,num_targets_left);
+	num_targets_left = boe_clamp(1,8,num_targets_left);
 }
 
 void spell_cast_hit_return()

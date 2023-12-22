@@ -190,7 +190,7 @@ void edit_gold_or_food(short which_to_edit)
 
 	if (dialog_answer < 0)
 		dialog_answer = -1;
-		else dialog_answer = minmax(0,25000,dialog_answer);
+		else dialog_answer = boe_clamp(0,25000,dialog_answer);
 	
 	if (dialog_answer >= 0) {
 		if (which_to_edit == 0) 
@@ -227,7 +227,7 @@ void edit_day()
 	
 	cd_kill_dialog(917,0);
 	
-	dialog_answer = minmax(0,500,dialog_answer);
+	dialog_answer = boe_clamp(0,500,dialog_answer);
 	
 	party.age = (long) (3700) * (long) (dialog_answer);
 }
@@ -707,7 +707,7 @@ void edit_xp(pc_record_type *pc)
 	
 	if (dialog_answer < 0)
 		dialog_answer = dialog_answer * -1;
-	dialog_answer = minmax(0,10000,dialog_answer);
+	dialog_answer = boe_clamp(0,10000,dialog_answer);
 	
 	pc->experience = dialog_answer;
 }
