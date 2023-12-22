@@ -1,5 +1,6 @@
 #include <Windows.h>
 #include "global.h"
+#include "boe/utility.hpp"
 #include <cmath>
 #include <cstdlib>
 

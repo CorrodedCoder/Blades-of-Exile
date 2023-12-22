@@ -25,6 +25,7 @@
 #include "exlsound.h"
 #include "boe/endian_adjust.hpp"
 #include "boe/savedata_serialization.hpp"
+#include "boe/utility.hpp"
 
 
 HWND	the_dialog;

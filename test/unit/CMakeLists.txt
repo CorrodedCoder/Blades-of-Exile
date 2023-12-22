@@ -11,6 +11,7 @@ endif()
 add_executable(tests
 	../../src/boe/pc.cpp
 	../../src/boe/adventurers.cpp
+	../../src/boe/utility.cpp
 	test_pc.cpp
 	test_adventurers.cpp
 )

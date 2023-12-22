@@ -16,6 +16,7 @@
 #include "town.h"
 #include "specials.h"
 #include "gutils.h"
+#include "boe/utility.hpp"
 
 extern party_record_type party;
 extern talking_record_type talking;

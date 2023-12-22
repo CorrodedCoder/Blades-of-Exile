@@ -9,6 +9,8 @@ add_executable (PC-editor WIN32
 	edaction.cpp
 	global.cpp
 	../../boe/pc.cpp
+	../../boe/utility.cpp
+
 	BLADPCED.RC
 	)
 

@@ -6,6 +6,7 @@
 #include "text.h"
 #include "monster.h"
 #include "fields.h"
+#include "boe/utility.hpp"
 
 typedef struct {
 	short x, y;

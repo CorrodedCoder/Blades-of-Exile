@@ -11,6 +11,7 @@
 #include "exlsound.h"
 #include "graphics.h"
 #include "newgraph.h"
+#include "boe/utility.hpp"
 
 extern current_town_type c_town;
 extern party_record_type party;

@@ -13,6 +13,7 @@
 #include "townout.h"
 #include "../graphutl.h"
 #include "buttonmg.h"
+#include "boe/utility.hpp"
 
 
 RECT world_screen;

@@ -12,6 +12,7 @@
 #include "../graphutl.h"
 #include "../graphutl_helpers.hpp"
 #include "keydlgs.h"
+#include "boe/utility.hpp"
 
 extern char scen_strs[160][256];
 extern char scen_strs2[110][256];

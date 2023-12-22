@@ -3,6 +3,7 @@
 #include "global.h"
 #include "locutils.h"
 #include "fields.h"
+#include "boe/utility.hpp"
 
 extern current_town_type c_town;
 extern short overall_mode,which_combat_type,current_pc,town_type;

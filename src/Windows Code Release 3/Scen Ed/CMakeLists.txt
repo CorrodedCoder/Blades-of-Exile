@@ -12,6 +12,8 @@ add_executable (Scen-Ed WIN32
 	global.cpp
 	buttonmg.cpp
 	../../boe/endian_adjust.cpp
+	../../boe/utility.cpp
+
 	BLSCENED.RC
 	GAMEDLOG.RC
 	STRINGS.RC

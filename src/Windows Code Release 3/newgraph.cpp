@@ -17,6 +17,7 @@
 #include "exlsound.h"
 #include "graphutl.h"
 #include "graphutl_helpers.hpp"
+#include "boe/utility.hpp"
 
 static const std::array heal_types{"Heal Damage","Cure Poison","Cure Disease","Cure Paralysis",
 		"Uncurse Items","Cure Stoned Character","Raise Dead","Resurrection","Cure Dumbfounding"};

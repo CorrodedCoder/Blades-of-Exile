@@ -15,6 +15,7 @@
 #include "townspec.h"
 #include "exlsound.h"
 #include "boe/hacks.hpp"
+#include "boe/utility.hpp"
 
 extern short overall_mode;
 extern party_record_type party;

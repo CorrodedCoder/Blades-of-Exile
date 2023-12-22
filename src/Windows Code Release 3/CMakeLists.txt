@@ -93,6 +93,7 @@ add_executable (Blades-of-Exile WIN32
 	../boe/savedata_serialization.cpp
 	../boe/pc.cpp
 	../boe/adventurers.cpp
+	../boe/utility.cpp
 	
 	BLADES.RC
 	GAMEDLOG.RC

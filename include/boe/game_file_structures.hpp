@@ -571,8 +571,3 @@ struct stored_outdoor_maps_type {
 static_assert(sizeof(stored_outdoor_maps_type) == 28800);
 
 using Adventurers = std::array<pc_record_type, 6>;
-
-static inline short boe_clamp(short k, short min, short max)
-{
-	return std::clamp(k, min, max);
-}

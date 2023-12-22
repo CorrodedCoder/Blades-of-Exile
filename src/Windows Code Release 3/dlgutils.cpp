@@ -23,6 +23,7 @@
 #include "newgraph.h"
 #include "infodlgs.h"
 #include "graphutl.h"
+#include "boe/utility.hpp"
 
 #define	NUM_HINTS	30
 

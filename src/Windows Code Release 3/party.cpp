@@ -26,6 +26,7 @@
 #include "exlsound.h"
 #include "graphutl.h"
 #include "boe/hacks.hpp"
+#include "boe/utility.hpp"
 
 extern const short skill_cost[20] = {3,3,3,2,2,2, 1,2,2,6,
 						5, 1,2,4,2,1, 4,2,5,0};

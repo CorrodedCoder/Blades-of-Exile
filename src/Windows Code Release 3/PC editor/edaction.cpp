@@ -11,6 +11,7 @@
 #include "edsound.h" 
 #include "dlogtool.h" 
 #include "../graphutl.h"
+#include "boe/utility.hpp"
 
 /* Adventure globals */
 extern party_record_type party;

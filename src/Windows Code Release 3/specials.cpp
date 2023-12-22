@@ -22,6 +22,7 @@
 #include "newgraph.h"
 #include "dlgutils.h"
 #include "boe/hacks.hpp"
+#include "boe/utility.hpp"
 
 extern short overall_mode;
 extern party_record_type party;
