@@ -285,7 +285,7 @@ struct monster_record_type {
 	unsigned char a1_type, a23_type, m_type, speed, ap, mu, cl, breath, breath_type, treasure, spec_skill, poison;
 	short morale, m_morale;
 	short corpse_item, corpse_item_chance;
-	short status[15];
+	short mstatus[15];
 	unsigned char direction, immunities, x_width, y_width, radiate_1, radiate_2;
 	unsigned char default_attitude, summon_type, default_facial_pic, res1, res2, res3;
 	short picture_num;
@@ -410,6 +410,24 @@ enum class status: short {
 	Won = 7,
 };
 static_assert(sizeof(status) == 2);
+
+enum class affect : short {
+	PoisonedWeapon = 0,
+	CursedBlessed = 1,
+	Poisoned = 2,
+	Speed = 3,
+	Invulnerable = 4,
+	MagicResistant = 5,
+	Webbed = 6,
+	Diseased = 7,
+	Sanctuary = 8,
+	Dumbfounded = 9,
+	MartyrsShield = 10,
+	Asleep = 11,
+	Paralyzed = 12,
+	Acid = 13,
+};
+static_assert(sizeof(affect) == 2);
 
 
 // for game

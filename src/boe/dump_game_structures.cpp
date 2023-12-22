@@ -260,7 +260,7 @@ void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::st
 	dump_to(strm, path, "m_morale", t.m_morale);
 	dump_to(strm, path, "corpse_item", t.corpse_item);
 	dump_to(strm, path, "corpse_item_chance", t.corpse_item_chance);
-	dump_to(strm, path, "status", t.status);
+	dump_to(strm, path, "status", t.mstatus);
 	dump_to(strm, path, "direction", t.direction);
 	dump_to(strm, path, "immunities", t.immunities);
 	dump_to(strm, path, "x_width", t.x_width);

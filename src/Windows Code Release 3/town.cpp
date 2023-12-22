@@ -253,7 +253,7 @@ void start_town_mode(short which_town, short entry_dir)
 				c_town.monst.dudes[j].m_d.mp = c_town.monst.dudes[j].m_d.max_mp; 			
 				c_town.monst.dudes[j].m_d.morale = c_town.monst.dudes[j].m_d.m_morale;
 				for (k = 0; k < 15; k++)
-					c_town.monst.dudes[j].m_d.status[k] = 0;
+					c_town.monst.dudes[j].m_d.mstatus[k] = 0;
 				if (c_town.monst.dudes[j].summoned > 0)
 					c_town.monst.dudes[j].active = 0;
 				monst_target[j] = 6;

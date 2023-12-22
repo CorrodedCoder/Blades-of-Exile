@@ -2087,7 +2087,7 @@ void do_mindduel(short pc_num,creature_data_type *monst)
 	while ((adven[pc_num].main_status == status::Normal) && (monst->active > 0) && (i < 10)) {
 		play_sound(1);
 		r1 = get_ran(1,0,100) + adjust;
-		r1 += 5 * (monst->m_d.status[9] - adven[pc_num].status[9]);
+		r1 += 5 * (monst->m_d.mstatus[9] - adven[pc_num].status[9]);
 		r1 += 5 * balance;
 		r2 = get_ran(1,1,6);
 		if (r1 < 30) {
@@ -2116,9 +2116,9 @@ void do_mindduel(short pc_num,creature_data_type *monst)
 			adven[pc_num].cur_sp += r2;
 			balance--;
 			if (monst->m_d.mp == 0) {
-				monst->m_d.status[9] += 2;
+				monst->m_d.mstatus[9] += 2;
 				monst_spell_note(monst->number,22);
-				if (monst->m_d.status[9] > 7) {
+				if (monst->m_d.mstatus[9] > 7) {
 					kill_monst(monst,pc_num);
 					}
 					

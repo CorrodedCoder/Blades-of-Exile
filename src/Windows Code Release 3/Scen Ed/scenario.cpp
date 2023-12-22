@@ -754,7 +754,7 @@ monster_record_type return_monster_template(unsigned char store)
 	monst.corpse_item = -1;
 	monst.corpse_item_chance = -1;
 	for (i = 0; i < 15; i++)
-		monst.status[i] = 0;
+		monst.mstatus[i] = 0;
 	monst.x_width = monst.y_width = 1;
 	for (i = 0; i < 200; i++)
 		if (m_pict[m_num] == m_pic_index[i]) {

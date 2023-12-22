@@ -73,7 +73,7 @@ monster_record_type return_monster_template(unsigned char store)
 	monst.morale = monst.m_morale;
 	monst.direction = 0;
 	for (i = 0; i < 15; i++)
-		monst.status[i] = 0;
+		monst.mstatus[i] = 0;
 		
 	return monst;
 }
@@ -281,8 +281,8 @@ void do_monsters()
 	
 	if (overall_mode == 1) 
 		for (i = 0; i < T_M; i++) 
-		if ((c_town.monst.dudes[i].active != 0) && (c_town.monst.dudes[i].m_d.status[11] <= 0)
-			&& (c_town.monst.dudes[i].m_d.status[12] <= 0)) {
+		if ((c_town.monst.dudes[i].active != 0) && (c_town.monst.dudes[i].m_d.mstatus[11] <= 0)
+			&& (c_town.monst.dudes[i].m_d.mstatus[12] <= 0)) {
 			// have to pick targets
 			if (c_town.monst.dudes[i].active == 1)
 				target = 6;
@@ -1180,7 +1180,7 @@ void poison_monst(creature_data_type *which_m,short how_much)
 		monst_spell_note(which_m->number,10);
 		return;
 		}
-	which_m->m_d.status[2] = min(8, which_m->m_d.status[2] + how_much);
+	which_m->m_d.mstatus[2] = min(8, which_m->m_d.mstatus[2] + how_much);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 4);
 
 }
@@ -1191,7 +1191,7 @@ void acid_monst(creature_data_type *which_m,short how_much)
 	i = how_much;
 	magic_adjust(which_m,&i);
 	how_much = i;
-	which_m->m_d.status[13] = boe_clamp(which_m->m_d.status[13] + how_much,-8, 8);
+	which_m->m_d.mstatus[13] = boe_clamp(which_m->m_d.mstatus[13] + how_much,-8, 8);
 	monst_spell_note(which_m->number,31);
 
 }
@@ -1203,7 +1203,7 @@ void slow_monst(creature_data_type *which_m,short how_much)
 	i = how_much;
 	magic_adjust(which_m,&i);
 	how_much = i;
-	which_m->m_d.status[3] = boe_clamp(which_m->m_d.status[3] - how_much,-8, 8);
+	which_m->m_d.mstatus[3] = boe_clamp(which_m->m_d.mstatus[3] - how_much,-8, 8);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 2);
 
 }
@@ -1216,7 +1216,7 @@ void curse_monst(creature_data_type *which_m,short how_much)
 	how_much = i;
 
 
-	which_m->m_d.status[1] = boe_clamp(which_m->m_d.status[1] - how_much,-8, 8);
+	which_m->m_d.mstatus[1] = boe_clamp(which_m->m_d.mstatus[1] - how_much,-8, 8);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 5);
 
 }
@@ -1227,7 +1227,7 @@ void web_monst(creature_data_type *which_m,short how_much)
 	i = how_much;
 	magic_adjust(which_m,&i);
 	how_much = i;
-	which_m->m_d.status[6] = boe_clamp(which_m->m_d.status[6] + how_much,-8, 8);
+	which_m->m_d.mstatus[6] = boe_clamp(which_m->m_d.mstatus[6] + how_much,-8, 8);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 19);
 
 }
@@ -1249,7 +1249,7 @@ void disease_monst(creature_data_type *which_m,short how_much)
 	i = how_much;
 	magic_adjust(which_m,&i);
 	how_much = i;
-	which_m->m_d.status[7] = boe_clamp(which_m->m_d.status[7] + how_much,-8, 8);
+	which_m->m_d.mstatus[7] = boe_clamp(which_m->m_d.mstatus[7] + how_much,-8, 8);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 25);
 
 }
@@ -1261,7 +1261,7 @@ void dumbfound_monst(creature_data_type *which_m,short how_much)
 	i = how_much;
 	magic_adjust(which_m,&i);
 	how_much = i;
-	which_m->m_d.status[9] = boe_clamp(which_m->m_d.status[9] + how_much,-8, 8);
+	which_m->m_d.mstatus[9] = boe_clamp(which_m->m_d.mstatus[9] + how_much,-8, 8);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 22);
 
 }
@@ -1298,7 +1298,7 @@ void charm_monst(creature_data_type *which_m,short penalty,short which_status,sh
 				monst_spell_note(which_m->number,23);
 				}
 				else {
-					which_m->m_d.status[which_status] = amount;
+					which_m->m_d.mstatus[which_status] = amount;
 					if (which_status == 11)
 						monst_spell_note(which_m->number,28);
 					if (which_status == 12)
