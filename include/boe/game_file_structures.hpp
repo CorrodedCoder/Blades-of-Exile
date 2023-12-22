@@ -2,6 +2,7 @@
 
 #include <array>
 #include <compare>
+#include <algorithm>
 
 const auto NUM_TOWN_ITEMS = 115;
 
@@ -573,9 +574,5 @@ using Adventurers = std::array<pc_record_type, 6>;
 
 static inline short minmax(short min, short max, short k)
 {
-	if (k < min)
-		return min;
-	if (k > max)
-		return max;
-	return k;
+	return std::clamp(k, min, max);
 }
