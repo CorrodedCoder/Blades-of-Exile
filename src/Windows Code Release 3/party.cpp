@@ -655,7 +655,7 @@ void disease_pc(short which_pc,short how_much)
 		add_string_to_buf( c_line);
 		return;
 		}
-	if ((level = get_prot_level(adven[which_pc],62)) > 0)////
+	if ((level = pc_prot_level(adven[which_pc],62)) > 0)////
 		how_much -= level / 2;
 	if ((adven[which_pc].traits[trait::Frail] == TRUE) && 
 		(how_much > 1))
@@ -681,9 +681,9 @@ void sleep_pc(short which_pc,short how_much,short what_type,short adjust)
 	if (how_much == 0)
 		return;
 	if ((what_type == 11) || (what_type == 12)) { ////
-		if ((level = get_prot_level(adven[which_pc],53)) > 0)
+		if ((level = pc_prot_level(adven[which_pc],53)) > 0)
 			how_much -= level / 2;
-		if ((level = get_prot_level(adven[which_pc], 54)) > 0)
+		if ((level = pc_prot_level(adven[which_pc], 54)) > 0)
 			how_much -= (what_type == 11) ? level : level * 300;
 
 		}
@@ -3011,9 +3011,9 @@ void poison_pc(short which_pc,short how_much)
 	short level = 0;
 
 	if (adven[which_pc].main_status == status::Normal) {
-		if ((level = get_prot_level(adven[which_pc],34)) > 0)////
+		if ((level = pc_prot_level(adven[which_pc],34)) > 0)////
 			how_much -= level / 2;
-		if ((level = get_prot_level(adven[which_pc],31)) > 0)////
+		if ((level = pc_prot_level(adven[which_pc],31)) > 0)////
 			how_much -= level / 3;
 			if ((adven[which_pc].traits[trait::Frail] == TRUE) && 
 				(how_much > 1))
@@ -3178,17 +3178,17 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 			how_much -= 1;
 		}
 
-	if ((damage_type == 0) && ((level = get_prot_level(adven[which_pc],30)) > 0))
+	if ((damage_type == 0) && ((level = pc_prot_level(adven[which_pc],30)) > 0))
 		how_much = how_much - level;
-	if ((damage_type == 6) && ((level = get_prot_level(adven[which_pc],57)) > 0))
+	if ((damage_type == 6) && ((level = pc_prot_level(adven[which_pc],57)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
-	if ((damage_type == 7) && ((level = get_prot_level(adven[which_pc],58)) > 0))
+	if ((damage_type == 7) && ((level = pc_prot_level(adven[which_pc],58)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
-	if ((type_of_attacker == 6) && ((level = get_prot_level(adven[which_pc],59)) > 0))
+	if ((type_of_attacker == 6) && ((level = pc_prot_level(adven[which_pc],59)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
-	if ((type_of_attacker == 1) && ((level = get_prot_level(adven[which_pc],60)) > 0))
+	if ((type_of_attacker == 1) && ((level = pc_prot_level(adven[which_pc],60)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
-	if ((type_of_attacker == 9) && ((level = get_prot_level(adven[which_pc],61)) > 0))
+	if ((type_of_attacker == 9) && ((level = pc_prot_level(adven[which_pc],61)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	
 
@@ -3197,7 +3197,7 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 		how_much = 0;
 		
 	// magic resistance
-	if ((damage_type == 3) && ((level = get_prot_level(adven[which_pc],35)) > 0))
+	if ((damage_type == 3) && ((level = pc_prot_level(adven[which_pc],35)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	
 	// Mag. res helps w. fire and cold
@@ -3206,16 +3206,16 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 			how_much = how_much / 2;
 			
 	// fire res.
-	if ((damage_type == 1) && ((level = get_prot_level(adven[which_pc],32)) > 0))
+	if ((damage_type == 1) && ((level = pc_prot_level(adven[which_pc],32)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 		
 	// cold res.
-	if ((damage_type == 5) && ((level = get_prot_level(adven[which_pc],33)) > 0))
+	if ((damage_type == 5) && ((level = pc_prot_level(adven[which_pc],33)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	
 	// major resistance
 	if (((damage_type == 1) || (damage_type == 2) || (damage_type == 3) || (damage_type == 5))
-	 && ((level = get_prot_level(adven[which_pc],31)) > 0))
+	 && ((level = pc_prot_level(adven[which_pc],31)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	
 	if (boom_anim_active == TRUE) {
@@ -3357,9 +3357,9 @@ void set_pc_moves()
 				r = get_encumberance(adven[i]);
 				pc_moves[i] = minmax(1,8,pc_moves[i] - (r / 3));
 				
-				if ((i_level = get_prot_level(adven[i],55)) > 0)
+				if ((i_level = pc_prot_level(adven[i],55)) > 0)
 					pc_moves[i] += i_level / 7 + 1;
-				if ((i_level = get_prot_level(adven[i],56)) > 0)
+				if ((i_level = pc_prot_level(adven[i],56)) > 0)
 					pc_moves[i] -= i_level / 5;
 
 				if ((adven[i].status[3] < 0) && (party.age % 2 == 1)) // slowed?

@@ -223,7 +223,7 @@ short pc_has_space(const pc_record_type& pc)
 }
 
 // returnes equipped protection level of specified abil, or -1 if no such abil is equipped
-short get_prot_level(const pc_record_type& pc, short abil)
+short pc_prot_level(const pc_record_type& pc, short abil)
 {
 	static_assert(std::size(pc_record_type().items) == std::size(pc_record_type().equip));
 	for (size_t i = 0; i < std::size(pc.items); i++)
@@ -259,13 +259,13 @@ short pc_has_abil(const pc_record_type& pc, short abil)
 	return i;
 }
 
-short amount_pc_can_carry(const pc_record_type& pc)
+short pc_amount_can_carry(const pc_record_type& pc)
 {
 	return 100 + (15 * std::min(pc.skills[0], static_cast<short>(20))) + ((pc.traits[trait::ExceptionalStr] == 0) ? 0 : 30)
 		+ ((pc.traits[trait::BadBack] == 0) ? 0 : -50);
 }
 
-void sort_pc_items(pc_record_type& pc)
+void pc_sort_items(pc_record_type& pc)
 {
 	// This is pretty much the same algorithm as std::sort, but the way
 	// the poisoned weapon index is recorded makes it hard to substitute

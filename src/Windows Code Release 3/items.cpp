@@ -92,7 +92,7 @@ Boolean give_to_pc(short pc_num,item_record_type  item,short  print_result)
 		return TRUE;
 		}
 	if (item_weight(item) > 
-	  amount_pc_can_carry(adven[pc_num]) - pc_carry_weight(adven[pc_num])) {
+	  pc_amount_can_carry(adven[pc_num]) - pc_carry_weight(adven[pc_num])) {
 	  	if (print_result == TRUE) {
 		  	SysBeep(20);
 			ASB("Item too heavy to carry.");
@@ -119,7 +119,7 @@ Boolean give_to_pc(short pc_num,item_record_type  item,short  print_result)
 				}
 
 			combine_things(pc_num);
-			sort_pc_items(adven[pc_num]);
+			pc_sort_items(adven[pc_num]);
 			return TRUE;
 			}
 	return FALSE;
@@ -159,7 +159,7 @@ Boolean forced_give(short item_num,short abil)
 					else sprintf(announce_string,"  %s gets %s.",adven[i].name,item.full_name);
 				add_string_to_buf(announce_string);
 				combine_things(i);
-				sort_pc_items(adven[i]);
+				pc_sort_items(adven[i]);
 				return TRUE;
 				}
 	return FALSE;
@@ -284,7 +284,7 @@ short pc_ok_to_buy(short pc_num,short cost,item_record_type item)
 		if (pc_has_space(adven[pc_num]) == 24)
 			return 2;
 		if (item_weight(item) > 
-		  amount_pc_can_carry(adven[pc_num]) - pc_carry_weight(adven[pc_num])) {
+		  pc_amount_can_carry(adven[pc_num]) - pc_carry_weight(adven[pc_num])) {
 	  		return 4;
 	  		}	
 	  	}
@@ -827,7 +827,7 @@ void put_item_graphics()
 		}
 	
 	if (current_getting_pc < 6) {
-		i = amount_pc_can_carry(adven[current_getting_pc]);
+		i = pc_amount_can_carry(adven[current_getting_pc]);
 		storage = pc_carry_weight(adven[current_getting_pc]);
 		sprintf(message, "%s is carrying %d out of %d.",adven[current_getting_pc].name,storage,i);
 		csit(987,52,(char *) message);
@@ -898,7 +898,7 @@ void display_item_event_filter (short item_hit)
 					}
   				else {
 					if (item_weight(item) >
-					  amount_pc_can_carry(adven[current_getting_pc]) - pc_carry_weight(adven[current_getting_pc])) {
+					  pc_amount_can_carry(adven[current_getting_pc]) - pc_carry_weight(adven[current_getting_pc])) {
 						SysBeep(20);
 						csit(987,52,"It's too heavy to carry.");
 						give_help(38,0,987);

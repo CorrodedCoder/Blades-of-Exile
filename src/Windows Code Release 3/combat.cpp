@@ -1727,13 +1727,13 @@ void combat_run_monst()
 				adven[i].status[12] = move_to_zero(adven[i].status[12]);	
 
 				// Do special items
-				if (((item_level = get_prot_level(adven[i],47)) > 0)
+				if (((item_level = pc_prot_level(adven[i],47)) > 0)
 					&& (get_ran(1,0,10) == 5)) {
 						update_stat = TRUE;
 						adven[i].status[3] += item_level / 2;
 						add_string_to_buf("An item hastes you!");
 						}
-				if ((item_level = get_prot_level(adven[i],46)) > 0) {
+				if ((item_level = pc_prot_level(adven[i],46)) > 0) {
 					if (get_ran(1,0,10) == 5) {
 						update_stat = TRUE;
 						adven[i].status[1] += item_level / 2;

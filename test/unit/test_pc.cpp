@@ -2172,11 +2172,11 @@ TEST_CASE("pc_has_space", "[pc]")
 	}
 }
 
-TEST_CASE("get_prot_level", "[pc]")
+TEST_CASE("pc_prot_level", "[pc]")
 {
 	SECTION("No items yields zero") {
 		pc_record_type pc{};
-		REQUIRE(get_prot_level(pc, 0) == -1);
+		REQUIRE(pc_prot_level(pc, 0) == -1);
 	}
 	SECTION("Try each item") {
 		pc_record_type pc{};
@@ -2187,7 +2187,7 @@ TEST_CASE("get_prot_level", "[pc]")
 			pc.items[index].ability = index;
 			pc.items[index].ability_strength = index + 1;
 			pc.equip[index] = BOE_TRUE;
-			REQUIRE(get_prot_level(pc, index) == index + 1);
+			REQUIRE(pc_prot_level(pc, index) == index + 1);
 			pc.items[index].variety = 0;
 			pc.items[index].ability = 0;
 			pc.equip[index] = BOE_FALSE;
@@ -2199,7 +2199,7 @@ TEST_CASE("get_prot_level", "[pc]")
 		pc.items[4].variety = 6;
 		pc.items[4].ability = 4;
 		pc.items[4].ability_strength = 7;
-		REQUIRE(get_prot_level(pc, 4) == -1);
+		REQUIRE(pc_prot_level(pc, 4) == -1);
 	}
 	SECTION("Item that is equipped gives correct protection") {
 		pc_record_type pc{};
@@ -2207,9 +2207,9 @@ TEST_CASE("get_prot_level", "[pc]")
 		pc.items[4].ability = 4;
 		pc.items[4].ability_strength = 7;
 		pc.equip[4] = BOE_TRUE;
-		REQUIRE(get_prot_level(pc, 4) == 7);
-		BENCHMARK("get_prot_level performance") {
-			return get_prot_level(pc, 4);
+		REQUIRE(pc_prot_level(pc, 4) == 7);
+		BENCHMARK("pc_prot_level performance") {
+			return pc_prot_level(pc, 4);
 		};
 	}
 	SECTION("Item that is equipped of different ability type gives no protection") {
@@ -2218,7 +2218,7 @@ TEST_CASE("get_prot_level", "[pc]")
 		pc.items[4].ability = 4;
 		pc.items[4].ability_strength = 7;
 		pc.equip[4] = BOE_TRUE;
-		REQUIRE(get_prot_level(pc, 8) == -1);
+		REQUIRE(pc_prot_level(pc, 8) == -1);
 	}
 	// Don't think this is necessarily a valid test case, but it is the behaviour all the same.
 	SECTION("Item that is equipped of variety type zero gives no protection") {
@@ -2227,7 +2227,7 @@ TEST_CASE("get_prot_level", "[pc]")
 		pc.items[4].ability = 4;
 		pc.items[4].ability_strength = 7;
 		pc.equip[4] = BOE_TRUE;
-		REQUIRE(get_prot_level(pc, 4) == -1);
+		REQUIRE(pc_prot_level(pc, 4) == -1);
 	}
 }
 
@@ -2387,12 +2387,12 @@ std::vector<size_t> get_item_order(const pc_record_type& pc)
 	return res;
 }
 
-TEST_CASE("sort_pc_items", "[pc]")
+TEST_CASE("pc_sort_items", "[pc]")
 {
 	SECTION("Sorting empty pc yields no change") {
 		pc_record_type pc{};
 		const pc_record_type before{ pc };
-		sort_pc_items(pc);
+		pc_sort_items(pc);
 		REQUIRE(before == pc);
 	}
 	SECTION("Reverse sorted") {
@@ -2400,7 +2400,7 @@ TEST_CASE("sort_pc_items", "[pc]")
 		pc_record_type pc{};
 		std::ranges::copy(std::views::reverse(c_items), pc.items);
 		pc.weap_poisoned = 9;
-		sort_pc_items(pc);
+		pc_sort_items(pc);
 		REQUIRE(get_item_order(pc) == c_expected_order);
 		REQUIRE(pc.weap_poisoned == 0);
 	}
@@ -2409,7 +2409,7 @@ TEST_CASE("sort_pc_items", "[pc]")
 		pc_record_type pc{};
 		std::ranges::copy(c_items, pc.items);
 		pc.weap_poisoned = 4;
-		sort_pc_items(pc);
+		pc_sort_items(pc);
 		REQUIRE(get_item_order(pc) == c_expected_order);
 		REQUIRE(pc.weap_poisoned == 4);
 	}
@@ -2419,7 +2419,7 @@ TEST_CASE("sort_pc_items", "[pc]")
 		std::ranges::copy(c_items, pc.items);
 		std::swap(pc.items[1], pc.items[10]);
 		pc.weap_poisoned = 10;
-		sort_pc_items(pc);
+		pc_sort_items(pc);
 		REQUIRE(get_item_order(pc) == c_expected_order);
 		REQUIRE(pc.weap_poisoned == 1);
 	}
@@ -2428,7 +2428,7 @@ TEST_CASE("sort_pc_items", "[pc]")
 		std::ranges::copy(c_items, pc.items);
 		BENCHMARK("Curious") {
 			pc_record_type pc2{pc};
-			sort_pc_items(pc2);
+			pc_sort_items(pc2);
 			return pc2.items[0].variety;
 		};
 	}
