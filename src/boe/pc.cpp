@@ -293,3 +293,18 @@ void pc_sort_items(pc_record_type& pc)
 		}
 	} while(items_swapped);
 }
+
+bool pc_affect(pc_record_type& pc, short type, short how_much)
+//type; // which status to affect
+{
+	if (pc.main_status != status::Normal)
+	{
+		return false;
+	}
+	pc.status[type] = std::clamp<short>(pc.status[type] + how_much, -8, 8);
+	if (((type >= 4) && (type <= 10)) || (type == 12) || (type == 13))
+	{
+		pc.status[type] = std::max(pc.status[type], static_cast<short>(0));
+	}
+	return true;
+}

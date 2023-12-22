@@ -3043,21 +3043,6 @@ void poison_party(short how_much)
 		poison_pc(i,how_much);
 }
 
-bool pc_affect(pc_record_type& pc, short type, short how_much)
-//type; // which status to affect
-{
-	if (pc.main_status != status::Normal)
-	{
-		return false;
-	}
-	pc.status[type] = boe_clamp(pc.status[type] + how_much, -8, 8);
-	if (((type >= 4) && (type <= 10)) || (type == 12) || (type == 13))
-	{
-		pc.status[type] = max(pc.status[type], 0);
-	}
-	return true;
-}
-
 void affect_pc(short which_pc,short type,short how_much)
 //type; // which status to affect
 {
