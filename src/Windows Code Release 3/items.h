@@ -38,7 +38,7 @@ short choice_dialog(short pic,short num);
 void create_modeless_dialog(short which_dlog);
 void make_cursor_watch() ;
 void place_glands(location where,unsigned char m_type);
-short party_total_level() ;
+short party_total_level(const Adventurers& adventurers) ;
 void reset_item_max();
 short item_val(item_record_type item);
 void place_treasure(location where,short level,short loot,short mode);
