@@ -795,58 +795,6 @@ monster_record_type return_monster_template(unsigned char store)
 	return monst;
 }
 
-item_record_type convert_item (short_item_record_type s_item) {
-	item_record_type i;
-	location l = {0,0};
-	short temp_val;
-	
-	i.variety = (short) s_item.variety;
-	i.item_level = (short) s_item.item_level;
-	i.awkward = (short) s_item.awkward;
-	i.bonus = (short) s_item.bonus;
-	i.protection = (short) s_item.protection;
-	i.charges = (short) s_item.charges;
-	i.type = (short) s_item.type;
-	i.graphic_num = (short) s_item.graphic_num;
-	if (i.graphic_num >= 25)
-		i.graphic_num += 20;
-	i.ability = (short) s_item.real_abil;
-	i.type_flag = (short) s_item.type_flag;
-	i.is_special = (short) s_item.is_special;
-	i.value = (short) s_item.value;
-	i.weight = s_item.weight;
-	i.special_class = 0;
-	i.item_loc = l;
-	strcpy(i.full_name, s_item.full_name);
-	strcpy(i.name, s_item.name);
-
-	if (i.charges > 0)
-		temp_val = i.value * i.charges;
-		else temp_val = i.value;
-	if (temp_val >= 15)
-		i.treas_class = 1;
-	if (temp_val >= 100)
-		i.treas_class = 2;
-	if (temp_val >= 900)
-		i.treas_class = 3;
-	if (temp_val >= 2400)
-		i.treas_class = 4;
-		
-	i.magic_use_type = s_item.magic_use_type;
-	i.ability_strength = s_item.ability_strength;
-	i.reserved1 = 0;
-	i.reserved2 = 0;
-	i.item_properties = 0;
-	if (s_item.identified == TRUE)
-		i.item_properties = i.item_properties | 1;
-	if ((s_item.ability == 14) || (s_item.ability == 129) || (s_item.ability == 95))
-		i.item_properties = i.item_properties | 16;
-	if (s_item.magic == TRUE)
-		i.item_properties = i.item_properties | 4;
-
-	return i;
-}
-
 void init_scenario()
 {
 	short i;

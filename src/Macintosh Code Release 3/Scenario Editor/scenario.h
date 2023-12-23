@@ -1,5 +1,4 @@
 monster_record_type return_monster_template(unsigned char store);
-item_record_type convert_item (short_item_record_type s_item) ;
 void init_scenario();
 short edit_ter_type(short which_ter);
 void edit_ter_type_event_filter (short item_hit);

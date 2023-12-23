@@ -795,7 +795,7 @@ monster_record_type return_monster_template(unsigned char store)
 	return monst;
 }
 
-item_record_type convert_item (short_item_record_type s_item) {
+static item_record_type convert_item (short_item_record_type s_item) {
 	item_record_type i;
 	location l = {0,0};
 	short temp_val;

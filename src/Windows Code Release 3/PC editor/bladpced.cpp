@@ -53,7 +53,7 @@ void check_cd_event(HWND hwnd,UINT message,UINT wparam,LONG lparam);
 
 
 
-item_record_type convert_item (short_item_record_type s_item);
+static item_record_type convert_item (short_item_record_type s_item);
 
 
 /* Mac stuff globals */
@@ -666,7 +666,7 @@ Boolean verify_restore_quit(short mode)
 }
 
 
-item_record_type convert_item (short_item_record_type s_item) {
+static item_record_type convert_item (short_item_record_type s_item) {
 	item_record_type i;
 	location l = {0,0};
 	short temp_val;

@@ -143,7 +143,6 @@ void set_up_apple_events();
 Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit);
 void set_pixel_depth();
 void handle_item_menu(int item_hit);
-item_record_type convert_item (short_item_record_type s_item);
 
 // File io
 short specials_res_id;
@@ -704,7 +703,7 @@ void handle_edit_menu(int item_hit)
 		}
 }
 
-item_record_type convert_item (short_item_record_type s_item) {
+static item_record_type convert_item (short_item_record_type s_item) {
 	item_record_type i;
 	location l = {0,0};
 	short temp_val;
