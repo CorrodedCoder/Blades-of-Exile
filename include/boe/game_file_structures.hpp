@@ -411,7 +411,7 @@ enum class status: short {
 };
 static_assert(sizeof(status) == 2);
 
-enum affect {
+enum class affect: short {
 	PoisonedWeapon = 0,
 	CursedBlessed = 1,
 	Poisoned = 2,
@@ -552,6 +552,16 @@ struct pc_record_type {
 	bool has_trait(trait trait) const
 	{
 		return traits[static_cast<int>(trait)];
+	}
+
+	short gaffect(affect type) const
+	{
+		return status[static_cast<int>(type)];
+	}
+
+	short& gaffect(affect type)
+	{
+		return status[static_cast<int>(type)];
 	}
 };
 static_assert(sizeof(pc_record_type) == 1898);

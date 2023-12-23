@@ -75,7 +75,7 @@ TEST_CASE("pc_cure", "[pc]")
 {
 	SECTION("Curing zero has no effect") {
 		pc_record_type pc{};
-		pc.main_status = status::Normal; pc.status[2] = 2;
+		pc.main_status = status::Normal; pc.gaffect(affect::Poisoned) = 2;
 		const pc_record_type before{ pc };
 		// Existing logic returns true on zero change
 		REQUIRE(pc_cure(pc, 0));
@@ -83,7 +83,7 @@ TEST_CASE("pc_cure", "[pc]")
 	}
 	SECTION("Curing when already at zero has no effect") {
 		pc_record_type pc{};
-		pc.main_status = status::Normal; pc.status[2] = 0;
+		pc.main_status = status::Normal; pc.gaffect(affect::Poisoned) = 0;
 		const pc_record_type before{ pc };
 		// Existing logic returns true on zero change
 		REQUIRE(pc_cure(pc, 5));
@@ -91,25 +91,25 @@ TEST_CASE("pc_cure", "[pc]")
 	}
 	SECTION("Curing by two decreases the amount correctly") {
 		pc_record_type pc{};
-		pc.main_status = status::Normal; pc.status[2] = 5;
+		pc.main_status = status::Normal; pc.gaffect(affect::Poisoned) = 5;
 		REQUIRE(pc_cure(pc, 2));
 		pc_record_type expected{};
-		expected.main_status = status::Normal; expected.status[2] = 3;
+		expected.main_status = status::Normal; expected.gaffect(affect::Poisoned) = 3;
 		REQUIRE(expected == pc);
 	}
 	SECTION("Curing by two does not decrease the amount if status is not 1") {
 		pc_record_type pc{};
-		pc.main_status = status::Absent; pc.status[2] = 5;
+		pc.main_status = status::Absent; pc.gaffect(affect::Poisoned) = 5;
 		pc_record_type before{pc};
 		REQUIRE(!pc_cure(pc, 2));
 		REQUIRE(before == pc);
 	}
 	SECTION("Curing by more than total decreases the amount only down to zero") {
 		pc_record_type pc{};
-		pc.main_status = status::Normal; pc.status[2] = 5;
+		pc.main_status = status::Normal; pc.gaffect(affect::Poisoned) = 5;
 		REQUIRE(pc_cure(pc, 9));
 		pc_record_type expected{};
-		expected.main_status = status::Normal; expected.status[2] = 0;
+		expected.main_status = status::Normal; expected.gaffect(affect::Poisoned) = 0;
 		REQUIRE(expected == pc);
 	}
 	SECTION("Curing for pc with different levels of illness") {
@@ -117,11 +117,11 @@ TEST_CASE("pc_cure", "[pc]")
 		{
 			pc_record_type pc{};
 			pc.main_status = status::Normal;
-			pc.status[2] = static_cast<short>(4 + index);
+			pc.gaffect(affect::Poisoned) = static_cast<short>(4 + index);
 			REQUIRE(pc_cure(pc, 7));
 			pc_record_type expected{};
 			expected.main_status = status::Normal;
-			expected.status[2] = std::max(static_cast<short>(4 + index - 7), static_cast<short>(0));
+			expected.gaffect(affect::Poisoned) = std::max(static_cast<short>(4 + index - 7), static_cast<short>(0));
 			REQUIRE(expected == pc);
 		}
 	}

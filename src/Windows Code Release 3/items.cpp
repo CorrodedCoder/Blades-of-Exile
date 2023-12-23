@@ -307,11 +307,11 @@ void take_item(short pc_num,short which_item)
 		which_item -= 30;
 		}
 		
-	if ((adven[pc_num].weap_poisoned == which_item) && (adven[pc_num].status[affect::PoisonedWeapon] > 0)) {
+	if ((adven[pc_num].weap_poisoned == which_item) && (adven[pc_num].gaffect(affect::PoisonedWeapon) > 0)) {
 			add_string_to_buf("  Poison lost.           ");
-			adven[pc_num].status[affect::PoisonedWeapon] = 0;
+			adven[pc_num].gaffect(affect::PoisonedWeapon) = 0;
 		}
-	if ((adven[pc_num].weap_poisoned > which_item) && (adven[pc_num].status[affect::PoisonedWeapon] > 0)) 
+	if ((adven[pc_num].weap_poisoned > which_item) && (adven[pc_num].gaffect(affect::PoisonedWeapon) > 0)) 
 		adven[pc_num].weap_poisoned--;
 		
 	for (i = which_item; i < 23; i++) {
@@ -419,9 +419,9 @@ if ((overall_mode == 10) && (adven[pc_num].items[item_num].variety == 11))
   			else {
 				adven[pc_num].equip[item_num] = FALSE;
 				add_string_to_buf("Equip: Unequipped");
-				if ((adven[pc_num].weap_poisoned == item_num) && (adven[pc_num].status[affect::PoisonedWeapon] > 0)) {
+				if ((adven[pc_num].weap_poisoned == item_num) && (adven[pc_num].gaffect(affect::PoisonedWeapon) > 0)) {
 						add_string_to_buf("  Poison lost.           ");
-						adven[pc_num].status[affect::PoisonedWeapon] = 0;
+						adven[pc_num].gaffect(affect::PoisonedWeapon) = 0;
 					}
 			}
 		}

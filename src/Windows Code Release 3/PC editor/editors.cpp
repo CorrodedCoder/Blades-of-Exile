@@ -128,11 +128,11 @@ void take_item(short pc_num,short which_item)
 {
 	short i;
 
-	if ((adven[pc_num].weap_poisoned == which_item) && (adven[pc_num].status[affect::PoisonedWeapon] > 0)) {
+	if ((adven[pc_num].weap_poisoned == which_item) && (adven[pc_num].gaffect(affect::PoisonedWeapon) > 0)) {
 //			add_string_to_buf("  Poison lost.           ");
-			adven[pc_num].status[affect::PoisonedWeapon] = 0;
+			adven[pc_num].gaffect(affect::PoisonedWeapon) = 0;
 		}
-	if ((adven[pc_num].weap_poisoned > which_item) && (adven[pc_num].status[affect::PoisonedWeapon] > 0)) 
+	if ((adven[pc_num].weap_poisoned > which_item) && (adven[pc_num].gaffect(affect::PoisonedWeapon) > 0)) 
 		adven[pc_num].weap_poisoned--;
 		
 	for (i = which_item; i < 23; i++) {

@@ -279,12 +279,12 @@ void handle_sale(short what_chosen,short cost)
 							adven[current_pc].cur_health = adven[current_pc].max_health;
 							break;
 						case 1:
-							adven[current_pc].status[affect::Poisoned] = 0;
+							adven[current_pc].gaffect(affect::Poisoned) = 0;
 							break;
 						case 2:
-							adven[current_pc].status[affect::Diseased] = 0; break;
+							adven[current_pc].gaffect(affect::Diseased) = 0; break;
 						case 3:
-							adven[current_pc].status[affect::Paralyzed] = 0; break;
+							adven[current_pc].gaffect(affect::Paralyzed) = 0; break;
 						case 4: 
 							for (i = 0; i < 24; i++)
 								if ((adven[current_pc].equip[i] == TRUE) && 
@@ -295,7 +295,7 @@ void handle_sale(short what_chosen,short cost)
 						case 5: case 6: case 7:
 							adven[current_pc].main_status = status::Normal; break;
 						case 8:
-							adven[current_pc].status[affect::Dumbfounded] = 0; break;
+							adven[current_pc].gaffect(affect::Dumbfounded) = 0; break;
 						}
 					}
 			break;
@@ -414,22 +414,22 @@ void set_up_shop_array()
 				store_shop_costs[shop_pos] = heal_costs[0];
 				shop_pos++;
 				}
-			if (adven[current_pc].status[affect::Poisoned] > 0) {
+			if (adven[current_pc].gaffect(affect::Poisoned) > 0) {
 				store_shop_items[shop_pos] = 701;
 				store_shop_costs[shop_pos] = heal_costs[1];
 				shop_pos++;
 				}
-			if (adven[current_pc].status[affect::Diseased] > 0) {
+			if (adven[current_pc].gaffect(affect::Diseased) > 0) {
 				store_shop_items[shop_pos] = 702;
 				store_shop_costs[shop_pos] = heal_costs[2];
 				shop_pos++;
 				}
-			if (adven[current_pc].status[affect::Paralyzed] > 0) {
+			if (adven[current_pc].gaffect(affect::Paralyzed) > 0) {
 				store_shop_items[shop_pos] = 703;
 				store_shop_costs[shop_pos] = heal_costs[3];
 				shop_pos++;
 				}
-			if (adven[current_pc].status[affect::Dumbfounded] > 0) {
+			if (adven[current_pc].gaffect(affect::Dumbfounded) > 0) {
 				store_shop_items[shop_pos] = 708;
 				store_shop_costs[shop_pos] = heal_costs[8];
 				shop_pos++;

@@ -788,82 +788,82 @@ static void draw_pc_effects_ex(RectDrawDestination dest_bmp, const pc_record_typ
 	if (hacks_adventurer_without_split_status(adventurer) != status::Normal)
 		return;
 			
-	if ((adventurer.status[0] > 0) && (dest_rect.right < right_limit)) {
+	if ((adventurer.gaffect(affect::PoisonedWeapon) > 0) && (dest_rect.right < right_limit)) {
 		rect_draw_some_item(mixed_gworld,c_source_rects[4],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (adventurer.status[1] > 0) {
+	if (adventurer.gaffect(affect::CursedBlessed) > 0) {
 		rect_draw_some_item(mixed_gworld,c_source_rects[2],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (adventurer.status[1] < 0) {
+	if (adventurer.gaffect(affect::CursedBlessed) < 0) {
 		rect_draw_some_item(mixed_gworld,c_source_rects[3],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (adventurer.status[2] > 0) {
-		rect_draw_some_item(mixed_gworld,c_source_rects[(adventurer.status[2] > 4) ? 1 : 0],dest_bmp,dest_rect,mode,dest);
+	if (adventurer.gaffect(affect::Poisoned) > 0) {
+		rect_draw_some_item(mixed_gworld,c_source_rects[(adventurer.gaffect(affect::Poisoned) > 4) ? 1 : 0],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (adventurer.status[4] > 0) {
+	if (adventurer.gaffect(affect::Invulnerable) > 0) {
 		rect_draw_some_item(mixed_gworld,c_source_rects[5],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (adventurer.status[3] > 0) {
+	if (adventurer.gaffect(affect::Speed) > 0) {
 		rect_draw_some_item(mixed_gworld,c_source_rects[6],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (adventurer.status[3] < 0) {
+	if (adventurer.gaffect(affect::Speed) < 0) {
 		rect_draw_some_item(mixed_gworld,c_source_rects[8],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((adventurer.status[5] > 0) && (dest_rect.right < right_limit)) {
+	if ((adventurer.gaffect(affect::MagicResistant) > 0) && (dest_rect.right < right_limit)) {
 		rect_draw_some_item(mixed_gworld,c_source_rects[9],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((adventurer.status[6] > 0) && (dest_rect.right < right_limit)) {
+	if ((adventurer.gaffect(affect::Webbed) > 0) && (dest_rect.right < right_limit)) {
 		rect_draw_some_item(mixed_gworld,c_source_rects[10],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((adventurer.status[7] > 0) && (dest_rect.right < right_limit)){
+	if ((adventurer.gaffect(affect::Diseased) > 0) && (dest_rect.right < right_limit)){
 		rect_draw_some_item(mixed_gworld,c_source_rects[11],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((adventurer.status[8] > 0) && (dest_rect.right < right_limit)){
+	if ((adventurer.gaffect(affect::Sanctuary) > 0) && (dest_rect.right < right_limit)){
 		rect_draw_some_item(mixed_gworld,c_source_rects[12],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((adventurer.status[9] > 0) && (dest_rect.right < right_limit)){
+	if ((adventurer.gaffect(affect::Dumbfounded) > 0) && (dest_rect.right < right_limit)){
 		rect_draw_some_item(mixed_gworld,c_source_rects[13],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
-	if ((adventurer.status[10] > 0) && (dest_rect.right < right_limit)){
+	if ((adventurer.gaffect(affect::MartyrsShield) > 0) && (dest_rect.right < right_limit)){
 		rect_draw_some_item(mixed_gworld,c_source_rects[14],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
-	if ((adventurer.status[11] > 0) && (dest_rect.right < right_limit)){
+	if ((adventurer.gaffect(affect::Asleep) > 0) && (dest_rect.right < right_limit)){
 		rect_draw_some_item(mixed_gworld,c_source_rects[15],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
-	if ((adventurer.status[12] > 0) && (dest_rect.right < right_limit)){
+	if ((adventurer.gaffect(affect::Paralyzed) > 0) && (dest_rect.right < right_limit)) {
 		rect_draw_some_item(mixed_gworld,c_source_rects[16],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
-	if ((adventurer.status[13] > 0) && (dest_rect.right < right_limit)){
+	if ((adventurer.gaffect(affect::Acid) > 0) && (dest_rect.right < right_limit)){
 		rect_draw_some_item(mixed_gworld,c_source_rects[17],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;

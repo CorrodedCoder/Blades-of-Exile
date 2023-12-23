@@ -105,7 +105,7 @@ bool pc_cure(pc_record_type& pc, short amt)
 	{
 		return false;
 	}
-	pc.status[2] = std::max(static_cast<short>(pc.status[2] - amt), static_cast<short>(0));
+	pc.gaffect(affect::Poisoned) = std::max(static_cast<short>(pc.gaffect(affect::Poisoned) - amt), static_cast<short>(0));
 	return true;
 }
 
@@ -294,17 +294,17 @@ void pc_sort_items(pc_record_type& pc)
 	} while(items_swapped);
 }
 
-bool pc_affect(pc_record_type& pc, short type, short how_much)
+bool pc_affect(pc_record_type& pc, affect type, short how_much)
 //type; // which status to affect
 {
 	if (pc.main_status != status::Normal)
 	{
 		return false;
 	}
-	pc.status[type] = std::clamp<short>(pc.status[type] + how_much, -8, 8);
-	if (((type >= 4) && (type <= 10)) || (type == 12) || (type == 13))
+	pc.gaffect(type) = std::clamp<short>(pc.gaffect(type) + how_much, -8, 8);
+	if (((type >= affect::Invulnerable) && (type <= affect::MartyrsShield)) || (type == affect::Paralyzed) || (type == affect::Acid))
 	{
-		pc.status[type] = std::max(pc.status[type], static_cast<short>(0));
+		pc.gaffect(type) = std::max(pc.gaffect(type), static_cast<short>(0));
 	}
 	return true;
 }

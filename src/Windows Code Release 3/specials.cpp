@@ -461,12 +461,12 @@ void check_fields(location where_check,short mode,short which_pc)
 		if (mode < 2) {
 			suppress_stat_screen = TRUE;
 			for (i = 0; i < 6; i++) {
-				sleep_pc(i,3,11,0);
+				sleep_pc(i,3, affect::Asleep,0);
 				}
 			suppress_stat_screen = FALSE;
 			put_pc_screen();
 			}
-			else sleep_pc(current_pc,3,11,0);
+			else sleep_pc(current_pc,3, affect::Asleep,0);
 		}
 	if (is_fire_barrier(where_check.x,where_check.y)) {
 			add_string_to_buf("  Magic barrier!               ");
@@ -483,7 +483,8 @@ void check_fields(location where_check,short mode,short which_pc)
 void use_item(short pc,short item)
 {
 	Boolean take_charge = TRUE,inept_ok = FALSE;
-	short abil,level,i,j,item_use_code,str,type,which_stat,r1;
+	short abil,level,i,j,item_use_code,str,type,r1;
+	affect which_stat;
 	char to_draw[60];
 	location user_loc;
 creature_data_type *which_m;
@@ -561,34 +562,34 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 				switch (abil) {
 					case 71: 
 						play_sound(4);
-						which_stat = 1;
+						which_stat = affect::CursedBlessed;
 						if (type % 2 == 1) {
 							ASB("  You feel awkward."); str = str * -1;}
 							else ASB("  You feel blessed.");
 						break;
 					case 73: 
 						play_sound(75);
-						which_stat = 3;
+						which_stat = affect::Speed;
 						if (type % 2 == 1) {
 							ASB("  You feel sluggish."); str = str * -1;}
 							else ASB("  You feel speedy.");
 						break;
 					case 74:
 						play_sound(68);
-						which_stat = 4;
+						which_stat = affect::Invulnerable;
 						if (type % 2 == 1) {
 							ASB("  You feel odd."); str = str * -1;}
 							else ASB("  You feel protected.");
 						break;
 					case 75: 
 						play_sound(51);
-						which_stat = 5;
+						which_stat = affect::MagicResistant;
 						if (type % 2 == 1) {
 							ASB("  You feel odd."); str = str * -1;}
 							else ASB("  You feel protected.");
 						break;
 					case 76: 
-						which_stat = 6;
+						which_stat = affect::Webbed;
 						if (type % 2 == 1)
 							ASB("  You feel sticky.");
 							else {
@@ -596,14 +597,14 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 						break;
 					case 78: 
 						play_sound(43);
-						which_stat = 8;
+						which_stat = affect::Sanctuary;
 						if (type % 2 == 1) {
 							ASB("  You feel exposed."); str = str * -1;}
 							else ASB("  You feel obscure.");
 						break;
 					case 80: 
 						play_sound(43);
-						which_stat = 10;
+						which_stat = affect::MartyrsShield;
 						if (type % 2 == 1) {
 							ASB("  You feel dull."); str = str * -1;}
 							else ASB("  You start to glow slightly.");
@@ -623,51 +624,51 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 				break;
 			case 77:
 				switch (type) {
-					case 0: ASB("  You feel healthy."); affect_pc(pc,7,-1 * str); break;
+					case 0: ASB("  You feel healthy."); affect_pc(pc, affect::Diseased,-1 * str); break;
 					case 1: ASB("  You feel sick."); disease_pc(pc,str); break;
-					case 2: ASB("  You all feel healthy."); affect_party(7,-1 * str); break;
+					case 2: ASB("  You all feel healthy."); affect_party(affect::Diseased,-1 * str); break;
 					case 3: ASB("  You all feel sick."); for (i = 0; i < 6; i++) disease_pc(i,str); break;
 					}
 				break;
 			case 79:
 				switch (type) {
-					case 0: ASB("  You feel clear headed."); affect_pc(pc,9,-1 * str); break;
+					case 0: ASB("  You feel clear headed."); affect_pc(pc, affect::Dumbfounded,-1 * str); break;
 					case 1: ASB("  You feel confused."); dumbfound_pc(pc,str); break;
-					case 2: ASB("  You all feel clear headed."); affect_party(9,-1 * str); break;
+					case 2: ASB("  You all feel clear headed."); affect_party(affect::Dumbfounded,-1 * str); break;
 					case 3: ASB("  You all feel confused."); for (i = 0; i < 6; i++) dumbfound_pc(i,str); break;
 					}
 				break;
 			case 81:
 				switch (type) {
-					case 0: ASB("  You feel alert."); affect_pc(pc,11,-1 * str); break;
-					case 1: ASB("  You feel very tired."); sleep_pc(pc,str + 1,11,200); break;
-					case 2: ASB("  You all feel alert."); affect_party(11,-1 * str); break;
-					case 3: ASB("  You all feel very tired."); for (i = 0; i < 6; i++) sleep_pc(i,str + 1,11,200); break;
+					case 0: ASB("  You feel alert."); affect_pc(pc, affect::Asleep,-1 * str); break;
+					case 1: ASB("  You feel very tired."); sleep_pc(pc,str + 1, affect::Asleep,200); break;
+					case 2: ASB("  You all feel alert."); affect_party(affect::Asleep,-1 * str); break;
+					case 3: ASB("  You all feel very tired."); for (i = 0; i < 6; i++) sleep_pc(i,str + 1, affect::Asleep,200); break;
 					}
 				break;
 			case 82:
 				switch (type) {
-					case 0: ASB("  You find it easier to move."); affect_pc(pc,12,-1 * str * 100); break;
-					case 1: ASB("  You feel very stiff."); sleep_pc(pc,str * 20 + 10,12,200); break;
-					case 2: ASB("  You all find it easier to move."); affect_party(12,-1 * str * 100); break;
-					case 3: ASB("  You all feel very stiff."); for (i = 0; i < 6; i++) sleep_pc(i,str * 20 + 10,12,200); break;
+					case 0: ASB("  You find it easier to move."); affect_pc(pc, affect::Paralyzed,-1 * str * 100); break;
+					case 1: ASB("  You feel very stiff."); sleep_pc(pc,str * 20 + 10, affect::Paralyzed,200); break;
+					case 2: ASB("  You all find it easier to move."); affect_party(affect::Paralyzed,-1 * str * 100); break;
+					case 3: ASB("  You all feel very stiff."); for (i = 0; i < 6; i++) sleep_pc(i,str * 20 + 10, affect::Paralyzed,200); break;
 					}
 				break;
 			case 83:
 				switch (type) {
-					case 0: ASB("  Your skin tingles pleasantly."); affect_pc(pc,13,-1 * str); break;
+					case 0: ASB("  Your skin tingles pleasantly."); affect_pc(pc, affect::Acid,-1 * str); break;
 					case 1: ASB("  Your skin burns!"); acid_pc(pc,str); break;
-					case 2: ASB("  You all tingle pleasantly."); affect_party(13,-1 * str); break;
+					case 2: ASB("  You all tingle pleasantly."); affect_party(affect::Acid,-1 * str); break;
 					case 3: ASB("  Everyone's skin burns!"); for (i = 0; i < 6; i++) acid_pc(i,str); break;
 					}
 				break;
 			case 84:
 				switch (type) {
 					case 0: 
-					case 1: ASB("  You feel wonderful!"); pc_heal(adven[pc],str * 20); affect_pc(pc,1,str); break;
+					case 1: ASB("  You feel wonderful!"); pc_heal(adven[pc],str * 20); affect_pc(pc, affect::CursedBlessed,str); break;
 					case 2:
 					case 3: ASB("  Everyone feels wonderful!"); for (i = 0; i < 6; i++) {
-								pc_heal(adven[i],str * 20); affect_pc(i,1,str); } break;
+								pc_heal(adven[i],str * 20); affect_pc(i, affect::CursedBlessed,str); } break;
 					}
 				break;
 			case 85:
@@ -2131,54 +2132,54 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 		case 89:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					affect_pc(i,4,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					affect_pc(i, affect::Invulnerable,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case 90:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					affect_pc(i,5,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					affect_pc(i, affect::MagicResistant,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case 91:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					affect_pc(i,6,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					affect_pc(i, affect::Webbed,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case 92:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					affect_pc(i,7,spec.ex1a * ((spec.ex1b != 0) ? 1: -1));
+					affect_pc(i, affect::Diseased,spec.ex1a * ((spec.ex1b != 0) ? 1: -1));
 			break;
 		case 93:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					affect_pc(i,8,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					affect_pc(i, affect::Sanctuary,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case 94:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					affect_pc(i,1,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					affect_pc(i, affect::CursedBlessed,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case 95:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					affect_pc(i,9,spec.ex1a * ((spec.ex1b == 0) ? -1: 1));
+					affect_pc(i, affect::Dumbfounded,spec.ex1a * ((spec.ex1b == 0) ? -1: 1));
 			break;
 		case 96:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i)) {
 					if (spec.ex1b == 0) {
-						affect_pc(i,11,-1 * spec.ex1a);
+						affect_pc(i, affect::Asleep,-1 * spec.ex1a);
 						}
-						else sleep_pc(i,spec.ex1a,11,10);
+						else sleep_pc(i,spec.ex1a, affect::Asleep,10);
 					}
 			break;
 		case 97:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i)) {
 					if (spec.ex1b == 0) {
-						affect_pc(i,12,-1 * spec.ex1a);
+						affect_pc(i, affect::Paralyzed,-1 * spec.ex1a);
 						}
-						else sleep_pc(i,spec.ex1a,12,10);
+						else sleep_pc(i,spec.ex1a, affect::Paralyzed,10);
 					}
 			break;
 		case 98:

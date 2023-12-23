@@ -193,7 +193,7 @@ Boolean run_trap(short pc_num,short trap_type,short trap_level,short diff)
 			add_string_to_buf("  A purple ray flies out.          ");
 			r1 = 200 + c_town.difficulty * 100;
 			r1 = r1 + trap_level * 400;
-			sleep_pc(pc_num,r1,12,50);
+			sleep_pc(pc_num,r1, affect::Paralyzed,50);
 			break;
 		case 7:
 			add_string_to_buf("  You feel weak.            ");
