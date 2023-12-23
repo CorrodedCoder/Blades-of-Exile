@@ -285,10 +285,15 @@ void display_pc(short pc_num,short mode,short parent)
 		ModalDialog();	cd_kill_dialog(991,0);
 }
 
-static const std::array item_types{ "","1-Handed weapon","2-Handed weapon","","Bow","Arrows","Thrown missile",
+static const std::array c_item_types{ "","1-Handed weapon","2-Handed weapon","","Bow","Arrows","Thrown missile",
 		"Potion/Magic Item","Scroll/Magic Item","Wand","Tool","","Shield","Armor","Helm",
 		"Gloves","Shield","Boots","Ring","Necklace",
 		"Weapon Poison","Gem, Stone, Etc.","Pants","Crossbow","Bolts","Missile Weapon" };
+
+static const char * item_types(item_variety variety)
+{
+	return c_item_types[static_cast<short>(variety)];
+}
 
 void put_item_info(short pc,short item)
 {
@@ -311,7 +316,7 @@ void put_item_info(short pc,short item)
 	if (is_ident(store_i))
 		cd_set_led(998,16,1);
 		else cd_set_led(998,16,0);
-	cd_set_item_text(998,4,	item_types[s_i.variety]);
+	cd_set_item_text(998,4,	item_types(s_i.variety));
 	
 	// Clear fields
 	for (i = 5; i < 13; i++) {
@@ -340,7 +345,8 @@ void put_item_info(short pc,short item)
 		cd_set_item_num(998,8,s_i.protection);
 
 	switch (s_i.variety) {
-		case 1: case 2:
+		case item_variety::OneHandedWeapon:
+		case item_variety::TwoHandedWeapon:
 			cd_set_item_num(998,6,s_i.item_level);
 			cd_set_item_num(998,7,s_i.bonus);
 		
@@ -355,24 +361,37 @@ void put_item_info(short pc,short item)
 			if (s_i.ability == 0)
 				cd_set_item_text(998,12,store_text);
 			break;
-		case 4: case 23:
+		case item_variety::Bow:
+		case item_variety::Crossbow:
 			cd_set_item_num(998,6,s_i.item_level);
 			cd_set_item_num(998,7,s_i.bonus);
 			break;
-		case 5:	case 6: case 24: case 25:
+		case item_variety::Arrows:
+		case item_variety::ThrownMissile:
+		case item_variety::Bolts:
+		case item_variety::MissileWeapon:
 			cd_set_item_num(998,6,s_i.item_level);
 			cd_set_item_num(998,7,s_i.bonus);	
 			break;
-		case 7: case 18:
+		case item_variety::PotionOrMagicItem:
+		case item_variety::Ring:
 			cd_set_item_num(998,11,s_i.item_level);
 			break;
-		case 12: case 13: case 14: case 15: case 16: case 17: 			
+		case item_variety::Shield:
+		case item_variety::Armor:
+		case item_variety::Helm:
+		case item_variety::Gloves:
+		case item_variety::Shield2:
+		case item_variety::Boots:
 			cd_set_item_num(998,7,s_i.bonus + s_i.protection);	
 			cd_set_item_num(998,8,s_i.item_level);	
 			cd_set_item_num(998,9,s_i.awkward);
 			break;	
-		case 20:
+		case item_variety::WeaponPoison:
 			cd_set_item_num(998,11,s_i.item_level);
+			break;
+		default:
+			// CC: This was not present in the original code
 			break;
 		}	
 
@@ -393,7 +412,7 @@ Boolean display_pc_item_event_filter (short item_hit)
 				case 14:
 					do {
 						item = (item == 0) ? 23 : item - 1;
-						} while (adven[pc_num].items[item].variety == 0);
+						} while (adven[pc_num].items[item].variety == item_variety::None);
 					store_displayed_item = item;
 					store_i = adven[pc_num].items[item];
 					put_item_info(pc_num,item);
@@ -401,7 +420,7 @@ Boolean display_pc_item_event_filter (short item_hit)
 				case 15:
 					do {
 						item = (item == 23) ? 0 : item + 1;
-						} while (adven[pc_num].items[item].variety == 0);
+						} while (adven[pc_num].items[item].variety == item_variety::None);
 					store_displayed_item = item;
 					store_i = adven[pc_num].items[item];
 					put_item_info(pc_num,item);
@@ -805,7 +824,7 @@ void display_pc_info()
 
 	// Fight bonuses
 	for (i = 0; i < 24; i++)
-		if (((adven[pc].items[i].variety == 1) || (adven[pc].items[i].variety == 2)) &&
+		if (((adven[pc].items[i].variety == item_variety::OneHandedWeapon) || (adven[pc].items[i].variety == item_variety::TwoHandedWeapon)) &&
 			(adven[pc].equip[i] == TRUE)) {
 					if (weap1 == 24)
 						weap1 = i;

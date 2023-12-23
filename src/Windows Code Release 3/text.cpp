@@ -134,7 +134,7 @@ short text_pc_has_abil_equip(short pc_num,short abil)
 {
 	short i = 0;
 
-	while (((adven[pc_num].items[i].variety == 0) || (adven[pc_num].items[i].ability != abil)
+	while (((adven[pc_num].items[i].variety == item_variety::None) || (adven[pc_num].items[i].ability != abil)
 			|| (adven[pc_num].equip[i] == FALSE)) && (i < 24))
 				i++;
 	return i;
@@ -445,22 +445,22 @@ void put_item_screen(short screen_num,short suppress_buttons)
 				dest_rect = item_buttons[i][0];
 				dest_rect.left += 36;
 
-				if (adven[pc].items[i_num].variety == 0) {
+				if (adven[pc].items[i_num].variety == item_variety::None) {
 
 					}
 					else {
 						if (adven[pc].equip[i_num] == TRUE) {
 							//TextFace(italic | bold);
 							SelectObject(hdc,italic_font);
-							if (adven[pc].items[i_num].variety < 3)
+							if (adven[pc].items[i_num].variety < item_variety::Gold)
 								SetTextColor(hdc,PALETTEINDEX(c[1]));
-								else if ((adven[pc].items[i_num].variety >= 12) && (adven[pc].items[i_num].variety <= 17))
+								else if ((adven[pc].items[i_num].variety >= item_variety::Shield) && (adven[pc].items[i_num].variety <= item_variety::Boots))
 									SetTextColor(hdc,PALETTEINDEX(c[3]));
 									else SetTextColor(hdc,PALETTEINDEX(c[4]));
 							}
 							else SetTextColor(hdc,PALETTEINDEX(c[0]));
 					// Place object graphic here
-					//if (adven[pc].items[i_num].variety != 0)
+					//if (adven[pc].items[i_num].variety != item_variety::None)
 					//	draw_obj_graphic(i + ((which_item_page[pc] == 1) ? 1 : 0),adven[pc].items[i_num].graphic_num,text_panel_rect); // rect is space holder
 
 							if (!is_ident(adven[pc].items[i_num]))
@@ -534,7 +534,7 @@ static void place_buy_button(short position,short pc_num,short item_num,HDC hdc)
 	short aug_cost[10] = {4,7,10,8, 15,15,10, 0,0,0};
 	HGDIOBJ store_bmp;
 
-	if (adven[pc_num].items[item_num].variety == 0)
+	if (adven[pc_num].items[item_num].variety == item_variety::None)
 		return;
 
 	dest_rect = item_buttons[position][5];
@@ -553,9 +553,9 @@ static void place_buy_button(short position,short pc_num,short item_num,HDC hdc)
 				}
 			break;
 		case 3: // sell weapons 
-			if (((adven[pc_num].items[item_num].variety < 7) || (adven[pc_num].items[item_num].variety == 23) ||
+			if (((adven[pc_num].items[item_num].variety < item_variety::PotionOrMagicItem) || (adven[pc_num].items[item_num].variety == item_variety::Crossbow) ||
 				(adven[pc_num].equip[item_num] == FALSE) &&
-				(adven[pc_num].items[item_num].variety == 24)) &&
+				(adven[pc_num].items[item_num].variety == item_variety::Bolts)) &&
 				is_ident(adven[pc_num].items[item_num]) && (val_to_place > 0) &&
 				 !is_cursed(adven[pc_num].items[item_num])) { 
 				item_area_button_active[position][5] = TRUE;
@@ -563,7 +563,7 @@ static void place_buy_button(short position,short pc_num,short item_num,HDC hdc)
 				}
 			break;
 		case 4: // sell armor
-			if ((adven[pc_num].items[item_num].variety >= 12) && (adven[pc_num].items[item_num].variety <= 17) &&
+			if ((adven[pc_num].items[item_num].variety >= item_variety::Shield) && (adven[pc_num].items[item_num].variety <= item_variety::Boots) &&
 				(adven[pc_num].equip[item_num] == FALSE) &&
 				is_ident(adven[pc_num].items[item_num]) && (val_to_place > 0) &&
 				!is_cursed(adven[pc_num].items[item_num])) { 
@@ -580,7 +580,7 @@ static void place_buy_button(short position,short pc_num,short item_num,HDC hdc)
 				}
 			break;
 		case 6: // augment weapons 
-			if ((adven[pc_num].items[item_num].variety < 3) &&
+			if ((adven[pc_num].items[item_num].variety < item_variety::Gold) &&
 				is_ident(adven[pc_num].items[item_num]) &&
 				(adven[pc_num].items[item_num].ability == 0) &&
 				!is_magic(adven[pc_num].items[item_num])) { 
@@ -1023,11 +1023,11 @@ short do_look(location space)
 			add_string_to_buf("    Rubble               ");
 
 		for (i = 0; i < NUM_TOWN_ITEMS; i++) {
-			if ((t_i.items[i].variety != 0) && (same_point(space,t_i.items[i].item_loc) == TRUE)
+			if ((t_i.items[i].variety != item_variety::None) && (same_point(space,t_i.items[i].item_loc) == TRUE)
 				&& (is_lit == TRUE)) {
-				if (t_i.items[i].variety == 3)
+				if (t_i.items[i].variety == item_variety::Gold)
 					gold_here = TRUE;
-				else if (t_i.items[i].variety == 11)
+				else if (t_i.items[i].variety == item_variety::Food)
 					food_here = TRUE;
 					else num_items++;
 				}
@@ -1039,7 +1039,7 @@ short do_look(location space)
 		if (num_items > 8)
 			add_string_to_buf("    Many items");
 			else for (i = 0; i < NUM_TOWN_ITEMS; i++) {
-				if ((t_i.items[i].variety != 0) && (t_i.items[i].variety != 3) &&(t_i.items[i].variety != 11) &&
+				if ((t_i.items[i].variety != item_variety::None) && (t_i.items[i].variety != item_variety::Gold) &&(t_i.items[i].variety != item_variety::Food) &&
 					 (same_point(space,t_i.items[i].item_loc) == TRUE) && !is_contained(t_i.items[i])) {
 					if (is_ident(t_i.items[i]))
 						sprintf(store_string, "    %s",t_i.items[i].full_name);

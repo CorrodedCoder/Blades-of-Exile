@@ -36,11 +36,6 @@ extern Boolean modeless_exists[12],diff_depth_ok,current_file_has_maps;
 extern short modeless_key[12];
 extern DialogPtr modeless_dialogs[12];
 
-Boolean equippable[18] = {FALSE,TRUE,TRUE,FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,
-							TRUE,TRUE,TRUE,FALSE,FALSE,TRUE};
-short num_hands_to_use[18] = {0,1,2,0,1,1,1,0,0,1,1,0,0,0,0,0,0,0};
-short num_that_can_equip[18] = {0,2,1,0,1,1,1,0,0,2,1,1,1,2,1,0,0,1}; 
-short selected,item_max = 0;
 Boolean choice_active[6];
 
 

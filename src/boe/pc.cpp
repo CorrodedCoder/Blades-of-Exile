@@ -219,7 +219,7 @@ short pc_get_tnl(const pc_record_type& pc)
 
 short pc_has_space(const pc_record_type& pc)
 {
-	auto it = std::ranges::find_if(pc.items, [](const auto& item) { return item.variety == 0; });
+	auto it = std::ranges::find_if(pc.items, [](const auto& item) { return item.variety == item_variety::None; });
 	return static_cast<short>(std::distance(std::begin(pc.items), it));
 }
 
@@ -231,7 +231,7 @@ short pc_prot_level(const pc_record_type& pc, short abil)
 	{
 		const auto equip = pc.equip[i];
 		const auto& item = pc.items[i];
-		if ((equip == BOE_TRUE) && (item.variety != 0) && (item.ability == abil))
+		if ((equip == BOE_TRUE) && (item.variety != item_variety::None) && (item.ability == abil))
 		{
 			return item.ability_strength;
 		}
@@ -243,7 +243,7 @@ short pc_has_abil_equip(const pc_record_type& pc, short abil)
 {
 	short i = 0;
 
-	while (((pc.items[i].variety == 0) || (pc.items[i].ability != abil)
+	while (((pc.items[i].variety == item_variety::None) || (pc.items[i].ability != abil)
 		|| (pc.equip[i] == BOE_FALSE)) && (i < 24))
 		i++;
 	return i;
@@ -254,7 +254,7 @@ short pc_has_abil(const pc_record_type& pc, short abil)
 {
 	short i = 0;
 
-	while (((pc.items[i].variety == 0) || (pc.items[i].ability != abil)
+	while (((pc.items[i].variety == item_variety::None) || (pc.items[i].ability != abil)
 		) && (i < 24))
 		i++;
 	return i;
@@ -316,7 +316,7 @@ short pc_carry_weight(const pc_record_type& pc)
 	Boolean airy = BOE_FALSE, heavy = BOE_FALSE;
 
 	for (i = 0; i < 24; i++)
-		if (pc.items[i].variety > 0) {
+		if (pc.items[i].variety > item_variety::None) {
 			storage += item_weight(pc.items[i]);
 			if (pc.items[i].ability == 44)
 				airy = BOE_TRUE;

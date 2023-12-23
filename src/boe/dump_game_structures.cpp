@@ -118,7 +118,7 @@ void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::st
 void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const item_record_type& t)
 {
 	const auto path{ std::format("{}.{}", parent, item) };
-	dump_to(strm, path, "variety", t.variety);
+	dump_to(strm, path, "variety", static_cast<short>(t.variety));
 	dump_to(strm, path, "item_level", t.item_level);
 
 	dump_to(strm, path, "awkward", t.awkward);

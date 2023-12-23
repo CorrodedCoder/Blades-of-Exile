@@ -431,7 +431,7 @@ void draw_items()
 	
 	
 	for (i = 0; i < NUM_TOWN_ITEMS; i++) {
-		if (t_i.items[i].variety != 0) {
+		if (t_i.items[i].variety != item_variety::None) {
 			where_draw.x = t_i.items[i].item_loc.x - center.x + 4;
 			where_draw.y = t_i.items[i].item_loc.y - center.y + 4;
 

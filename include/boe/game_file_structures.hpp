@@ -116,8 +116,42 @@ struct creature_start_type {
 };
 static_assert(sizeof(creature_start_type) == 22);
 
+enum class item_variety : short {
+	Invalid = -1,
+	None = 0,
+	OneHandedWeapon = 1,
+	TwoHandedWeapon = 2,
+	Gold = 3,
+	Bow = 4,
+	Arrows = 5,
+	ThrownMissile = 6,
+	PotionOrMagicItem = 7,
+	ScrollOrMagicItem = 8,
+	Wand = 9,
+	Tool = 10,
+	Food = 11,
+	Shield = 12,
+	Armor = 13,
+	Helm = 14,
+	Gloves = 15,
+	Shield2 = 16,
+	Boots = 17,
+	Ring = 18,
+	Necklace = 19,
+	WeaponPoison = 20,
+	GemStoneEtc = 21,
+	Pants = 22,
+	Crossbow = 23,
+	Bolts = 24,
+	MissileWeapon = 25
+	// missile = 5,6,4,23,24,25
+};
+static_assert(sizeof(item_variety) == 2);
+
+
 struct short_item_record_type {
-	short variety, item_level;
+	item_variety variety;
+	short item_level;
 	char awkward, bonus, protection, charges, type;
 	unsigned char graphic_num, ability, type_flag, is_special;
 	short value;
@@ -133,7 +167,8 @@ struct short_item_record_type {
 static_assert(sizeof(short_item_record_type) == 66);
 
 struct item_record_type {
-	short variety, item_level;
+	item_variety variety;
+	short item_level;
 	char awkward, bonus, protection, charges, type, magic_use_type;
 	unsigned char graphic_num, ability, ability_strength, type_flag, is_special, a;
 	short value;
@@ -428,24 +463,6 @@ enum class affect: short {
 	Paralyzed = 12,
 	Acid = 13,
 };
-
-enum class item_type
-{
-	// weapon = 1,2
-	Potion = 7,
-	Scroll = 8,
-	Wand = 9,
-	Shield = 12,
-	Armor = 13,
-	Helm = 14,
-	Gloves = 15,
-	Boots = 17,
-	// missile = 5,6,4,23,24,25
-	Ring = 18,
-	Necklace = 19,
-	Poison = 20,
-};
-
 
 // for game
 struct talk_save_type {

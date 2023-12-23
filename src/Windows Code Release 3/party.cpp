@@ -227,7 +227,7 @@ void init_party(short mode)
 		 party.out_c[i].exists = FALSE;
 	for (i = 0; i < 5; i++)
 		for (j = 0; j < 10; j++)
-			 party.magic_store_items[i][j].variety = 0;
+			 party.magic_store_items[i][j].variety = item_variety::None;
 	for (i = 0; i < 4; i++)
 	 party.imprisoned_monst[i] = 0;
 	for (i = 0; i < 256; i++)
@@ -363,7 +363,7 @@ void init_party_scen_data()
 		 party.out_c[i].exists = FALSE;
 	for (i = 0; i < 5; i++)
 		for (j = 0; j < 10; j++)
-			 party.magic_store_items[i][j].variety = 0;
+			 party.magic_store_items[i][j].variety = item_variety::None;
 	for (i = 0; i < 4; i++)
 	 party.imprisoned_monst[i] = 0;
 	for (i = 0; i < 256; i++)
@@ -403,13 +403,13 @@ void init_party_scen_data()
 
 	for (i = 0; i < 3;i++)
 		for (j = 0; j < NUM_TOWN_ITEMS; j++) 
-			if (stored_items[i].items[j].variety != 0)
+			if (stored_items[i].items[j].variety != item_variety::None)
 				stored_item = TRUE;
 	if (stored_item == TRUE)
 		if (FCD(911,0) == 1) {
 			for (i = 0; i < 3;i++)
 				for (j = 0; j < NUM_TOWN_ITEMS; j++) 
-					if (stored_items[i].items[j].variety != 0)
+					if (stored_items[i].items[j].variety != item_variety::None)
 						if (give_to_party(stored_items[i].items[j],FALSE) == FALSE) {
 							i = 20; j = NUM_TOWN_ITEMS + 1;
 							}
@@ -2737,7 +2737,7 @@ void do_alchemy()
 	short fail_chance[20] = {50,40,30,20,10,8,6,4,2,0,0,0,0,0,0,0,0,0,0,0};
 	short which_p,which_item,which_item2,r1;
 	short pc_num;
-	item_record_type store_i = {7,0, 0,0,0,1,0,0, 50,0,0,0,0,0, 0, 8,0, {0,0},"Potion","Potion",0,5,0,0};
+	item_record_type store_i = { item_variety::PotionOrMagicItem,0, 0,0,0,1,0,0, 50,0,0,0,0,0, 0, 8,0, {0,0},"Potion","Potion",0,5,0,0};
 
 	//	{7,0,0,0,0,1,1,30,59,0,0,250,1,0,1,{0,0},"Graymold Salve","Potion"},
 	//	{7,0,0,0,0,1,1,30,13,0,0,250,1,0,1,{0,0},"Resurrection Balm","Potion"},
@@ -2786,7 +2786,7 @@ void do_alchemy()
 						store_i.charges++;
 					if (adven[pc_num].skills[12] - difficulty[which_p] >= 11)
 						store_i.charges++;
-					if (store_i.variety == 7)
+					if (store_i.variety == item_variety::PotionOrMagicItem)
 						store_i.graphic_num += get_ran(1,0,2);
 					if (give_to_pc(pc_num,store_i,0) == FALSE) {
 						ASB("No room in inventory.");
@@ -3120,8 +3120,8 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 	if ((damage_type == 0) || (damage_type == 6) ||(damage_type == 7)) {
 		how_much -= boe_clamp(adven[which_pc].gaffect(affect::CursedBlessed),-5,5);
 		for (i = 0; i < 24; i++)
-			if ((adven[which_pc].items[i].variety != 0) && (adven[which_pc].equip[i] == TRUE)) {
-				if ((adven[which_pc].items[i].variety >= 12) && (adven[which_pc].items[i].variety <= 17)) {
+			if ((adven[which_pc].items[i].variety != item_variety::None) && (adven[which_pc].equip[i] == TRUE)) {
+				if ((adven[which_pc].items[i].variety >= item_variety::Shield) && (adven[which_pc].items[i].variety <= item_variety::Boots)) {
 						r1 = get_ran(1,1,adven[which_pc].items[i].item_level);
 						how_much -= r1;
 						
@@ -3304,9 +3304,9 @@ void kill_pc(short which_pc, status type, bool no_save)
 		
 			if (overall_mode != 0)	
 				for (i = 0; i < 24; i++)
-					if (adven[which_pc].items[i].variety != 0) {
+					if (adven[which_pc].items[i].variety != item_variety::None) {
 						dummy = place_item(adven[which_pc].items[i],item_loc,TRUE);
-						adven[which_pc].items[i].variety = 0;
+						adven[which_pc].items[i].variety = item_variety::None;
 						}
 				if ((type == status::Dead) || (type == status::Dust))
 					play_sound(21);

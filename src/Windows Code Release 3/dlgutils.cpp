@@ -336,7 +336,7 @@ void handle_sale(short what_chosen,short cost)
 			base_item.item_properties = base_item.item_properties | 1;
 			switch (pc_ok_to_buy(current_pc,cost,base_item)) {
 				case 1: play_sound(-38); give_to_pc(current_pc,base_item,TRUE); 
-					party.magic_store_items[what_magic_shop][what_magic_shop_item].variety = 0;
+					party.magic_store_items[what_magic_shop][what_magic_shop_item].variety = item_variety::None;
 					break;
 				case 2: ASB("Can't carry any more items."); break;
 				case 3: ASB("Not enough cash."); break;
@@ -467,7 +467,7 @@ void set_up_shop_array()
 			break;
 		case 5: case 6: case 7: case 8: case 9:
 			for (i = 0; i < 10; i++)
-				if (party.magic_store_items[store_shop_type - 5][i].variety != 0) {
+				if (party.magic_store_items[store_shop_type - 5][i].variety != item_variety::None) {
 					store_shop_items[shop_pos] = (store_shop_type - 4) * 1000 + i;
 					store_i = party.magic_store_items[store_shop_type - 5][i];
 					store_shop_costs[shop_pos] = (store_i.charges == 0) ? 

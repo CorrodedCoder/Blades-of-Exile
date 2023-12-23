@@ -2166,7 +2166,7 @@ TEST_CASE("pc_has_space", "[pc]")
 		for (auto & item: pc.items)
 		{
 			++item_count;
-			item.variety = 1;
+			item.variety = item_variety::OneHandedWeapon;
 			REQUIRE(pc_has_space(pc) == item_count);
 		}
 	}
@@ -2183,12 +2183,12 @@ TEST_CASE("pc_prot_level", "[pc]")
 		for (unsigned char index = 0; index < std::size(pc.items); ++index)
 		{
 			INFO("Checking at index: " << index);
-			pc.items[index].variety = 1;
+			pc.items[index].variety = item_variety::OneHandedWeapon;
 			pc.items[index].ability = index;
 			pc.items[index].ability_strength = index + 1;
 			pc.equip[index] = BOE_TRUE;
 			REQUIRE(pc_prot_level(pc, index) == index + 1);
-			pc.items[index].variety = 0;
+			pc.items[index].variety = item_variety::None;
 			pc.items[index].ability = 0;
 			pc.equip[index] = BOE_FALSE;
 			pc.items[index].ability_strength = 0;
@@ -2196,14 +2196,14 @@ TEST_CASE("pc_prot_level", "[pc]")
 	}
 	SECTION("Item that is not equipped gives no protection") {
 		pc_record_type pc{};
-		pc.items[4].variety = 6;
+		pc.items[4].variety = item_variety::ThrownMissile;
 		pc.items[4].ability = 4;
 		pc.items[4].ability_strength = 7;
 		REQUIRE(pc_prot_level(pc, 4) == -1);
 	}
 	SECTION("Item that is equipped gives correct protection") {
 		pc_record_type pc{};
-		pc.items[4].variety = 6;
+		pc.items[4].variety = item_variety::ThrownMissile;
 		pc.items[4].ability = 4;
 		pc.items[4].ability_strength = 7;
 		pc.equip[4] = BOE_TRUE;
@@ -2214,7 +2214,7 @@ TEST_CASE("pc_prot_level", "[pc]")
 	}
 	SECTION("Item that is equipped of different ability type gives no protection") {
 		pc_record_type pc{};
-		pc.items[4].variety = 6;
+		pc.items[4].variety = item_variety::ThrownMissile;
 		pc.items[4].ability = 4;
 		pc.items[4].ability_strength = 7;
 		pc.equip[4] = BOE_TRUE;
@@ -2223,7 +2223,7 @@ TEST_CASE("pc_prot_level", "[pc]")
 	// Don't think this is necessarily a valid test case, but it is the behaviour all the same.
 	SECTION("Item that is equipped of variety type zero gives no protection") {
 		pc_record_type pc{};
-		pc.items[4].variety = 0;
+		pc.items[4].variety = item_variety::None;
 		pc.items[4].ability = 4;
 		pc.items[4].ability_strength = 7;
 		pc.equip[4] = BOE_TRUE;
@@ -2233,7 +2233,7 @@ TEST_CASE("pc_prot_level", "[pc]")
 
 const item_record_type c_items[]{
 {
-	.variety = 10,
+	.variety = item_variety::Tool,
 	.item_level = 8,
 	.charges = 1,
 	.type = 1,
@@ -2248,7 +2248,7 @@ const item_record_type c_items[]{
 	.item_properties = 1
 },
 {
-	.variety = 10,
+	.variety = item_variety::Tool,
 	.charges = 4,
 	.type = 1,
 	.graphic_num = 56,
@@ -2263,7 +2263,7 @@ const item_record_type c_items[]{
 	.treas_class = 1,
 },
 {
-	.variety = 1,
+	.variety = item_variety::OneHandedWeapon,
 	.item_level = 4,
 	.bonus = 1,
 	.type = 1,
@@ -2275,7 +2275,7 @@ const item_record_type c_items[]{
 	.item_properties = 1,
 },
 {
-	.variety = 1,
+	.variety = item_variety::OneHandedWeapon,
 	.item_level = 6,
 	.type = 1,
 	.value = 5,
@@ -2286,7 +2286,7 @@ const item_record_type c_items[]{
 	.item_properties = 1,
 },
 {
-	.variety = 1,
+	.variety = item_variety::OneHandedWeapon,
 	.item_level = 7,
 	.bonus = 1,
 	.type = 2,
@@ -2299,7 +2299,7 @@ const item_record_type c_items[]{
 	.treas_class = 1,
 },
 {
-	.variety = 4,
+	.variety = item_variety::Bow,
 	.type = 1,
 	.graphic_num = 10,
 	.value = 30,
@@ -2310,7 +2310,7 @@ const item_record_type c_items[]{
 	.treas_class = 1,
 },
 {
-	.variety = 5,
+	.variety = item_variety::Arrows,
 	.item_level = 12,
 	.charges = 12,
 	.type = 1,
@@ -2325,7 +2325,7 @@ const item_record_type c_items[]{
 	.item_properties = 1,
 },
 {
-	.variety = 12,
+	.variety = item_variety::Shield,
 	.item_level = 1,
 	.awkward = 1,
 	.graphic_num = 65,
@@ -2336,7 +2336,7 @@ const item_record_type c_items[]{
 	.item_properties = 1,
 },
 {
-	.variety = 12,
+	.variety = item_variety::Shield,
 	.item_level = 4,
 	.awkward = 2,
 	.type = 1,
@@ -2349,7 +2349,7 @@ const item_record_type c_items[]{
 	.treas_class = 2,
 },
 {
-	.variety = 17,
+	.variety = item_variety::Boots,
 	.item_level = 1,
 	.type = 1,
 	.graphic_num = 111,
@@ -2361,7 +2361,7 @@ const item_record_type c_items[]{
 	.treas_class = 2,
 },
 {
-	.variety = 13,
+	.variety = item_variety::Armor,
 	.item_level = 3,
 	.awkward = 1,
 	.protection = 1,

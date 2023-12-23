@@ -450,16 +450,19 @@ void start_town_mode(short which_town, short entry_dir)
 			for (j = 0; j < NUM_TOWN_ITEMS; j++) 
 			
 				// place the preset item, if party hasn't gotten it already
-				if (t_i.items[j].variety == 0) {
+				if (t_i.items[j].variety == item_variety::None) {
 					t_i.items[j] = get_stored_item(c_town.town.preset_items[i].item_code);
 					t_i.items[j].item_loc = c_town.town.preset_items[i].item_loc;
 
 					// Not use the items data flags, starting with forcing an ability
 					if (c_town.town.preset_items[i].ability >= 0) {
 		 				switch (t_i.items[j].variety) {
-							case 3: case 11: // If gold or food, this value is amount
+							case item_variety::Gold: case item_variety::Food: // If gold or food, this value is amount
 								if (c_town.town.preset_items[i].ability > 0)
 									t_i.items[j].item_level = c_town.town.preset_items[i].ability;
+								break;
+							default:
+								// CC: This was not present in the original source
 								break;
 		 					}
 		 				}
@@ -482,7 +485,7 @@ void start_town_mode(short which_town, short entry_dir)
 			c_town.monst.dudes[i].active = 0;
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
 		if (loc_off_act_area(t_i.items[i].item_loc) == TRUE)
-				t_i.items[i].variety = 0;		
+				t_i.items[i].variety = item_variety::None;
 				
 	// Clean out unwanted monsters
 	for (i = 0; i < T_M; i++) 
@@ -530,9 +533,9 @@ void start_town_mode(short which_town, short entry_dir)
 	// If a PC dead, drop his items
 	for (m = 0; m < 6; m++)
 		for (n = 0; n < 24; n++)
-			if ((adven[m].main_status != status::Normal) && (adven[m].items[n].variety != 0)) {
+			if ((adven[m].main_status != status::Normal) && (adven[m].items[n].variety != item_variety::None)) {
 				place_item(adven[m].items[n],c_town.p_loc,TRUE);
-				adven[m].items[n].variety = 0;
+				adven[m].items[n].variety = item_variety::None;
 				}
 
 	for (i = 0; i < T_M; i++)
@@ -595,14 +598,14 @@ location end_town_mode(short switching_level,location destination)  // returns n
 		for (j = 0; j < 3; j++)
 			if (scenario.store_item_towns[j] == c_town.town_num) {
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
-				if ((t_i.items[i].variety != 0) && (t_i.items[i].is_special == 0) &&
+				if ((t_i.items[i].variety != item_variety::None) && (t_i.items[i].is_special == 0) &&
 				((t_i.items[i].item_loc.x >= scenario.store_item_rects[j].left) &&
 				 (t_i.items[i].item_loc.x <= scenario.store_item_rects[j].right) && 
 				 (t_i.items[i].item_loc.y >= scenario.store_item_rects[j].top) &&
 				 (t_i.items[i].item_loc.y <= scenario.store_item_rects[j].bottom)) ) {
 				 	stored_items[j].items[i] = t_i.items[i];
 				 	}
-				 	else stored_items[j].items[i].variety = 0;			
+				 	else stored_items[j].items[i].variety = item_variety::None;
 				}
 				
 			
@@ -718,11 +721,11 @@ Boolean abil_exists(short abil) // use when outdoors
 
 	for (i = 0; i < 6; i++)
 		for (j = 0; j < 24; j++)
-			if ((adven[i].items[j].variety != 0) && (adven[i].items[j].ability == abil))
+			if ((adven[i].items[j].variety != item_variety::None) && (adven[i].items[j].ability == abil))
 				return TRUE;
 	for (i = 0; i < 3; i++)
 		for (j = 0; j < NUM_TOWN_ITEMS; j++)
-			if ((stored_items[i].items[j].variety != 0) && (stored_items[i].items[j].ability == abil))
+			if ((stored_items[i].items[j].variety != item_variety::None) && (stored_items[i].items[j].ability == abil))
 				return TRUE;
 
 	return FALSE;

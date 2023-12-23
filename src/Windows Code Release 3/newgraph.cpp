@@ -1039,7 +1039,7 @@ void click_talk_rect(char *str_to_place,char *str_to_place2,RECT c_rect)
 
 item_record_type store_mage_spells(short which_s) 
 {
-	item_record_type spell = {21,0, 0,0,0,0,0,0, 53,0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
+	item_record_type spell = { item_variety::GemStoneEtc,0, 0,0,0,0,0,0, 53,0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
 
  short cost[32] = {150,200,150,1000,1200,400,300,200,
  200,250,500,1500,300,  250,125,150, 
@@ -1060,7 +1060,7 @@ item_record_type store_mage_spells(short which_s)
 // which_s = 0 means that it returns first 4th level spell
 item_record_type store_priest_spells(short which_s)
 {
-	item_record_type spell = {21,0, 0,0,0,0,0,0, 53,0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
+	item_record_type spell = { item_variety::GemStoneEtc,0, 0,0,0,0,0,0, 53,0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
 
 short cost[32] = {100,150,75,400,200, 100,80,250,
 
@@ -1080,7 +1080,7 @@ short cost[32] = {100,150,75,400,200, 100,80,250,
 }
 item_record_type store_alchemy(short which_s)
 {
-	item_record_type spell = {21,0, 0,0,0,0,0,0, 53,0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
+	item_record_type spell = { item_variety::GemStoneEtc,0, 0,0,0,0,0,0, 53,0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
 short val[20] = {50,75,30,130,100,150, 200,200,300,250,300, 500,600,750,700,1000,10000,5000,7000,12000};
 	char str[256];
 	
@@ -1108,25 +1108,36 @@ void get_item_interesting_string(const item_record_type& item,char *message)
 		return;
 		}
 	switch (item.variety) {
-		case 1: case 2: case 5: case 6: case 24: case 25: ////
+		case item_variety::OneHandedWeapon:
+		case item_variety::TwoHandedWeapon:
+		case item_variety::Arrows:
+		case item_variety::ThrownMissile:
+		case item_variety::Bolts:
+		case item_variety::MissileWeapon:
 			if (item.bonus != 0)
 				sprintf(message,"Damage: 1-%d + %d.",item.item_level,item.bonus);
 				else sprintf(message,"Damage: 1-%d.",item.item_level);
 			break;
-		case 12: case 13: case 14: case 15: case 16: case 17:
+		case item_variety::Shield:
+		case item_variety::Armor:
+		case item_variety::Helm:
+		case item_variety::Gloves:
+		case item_variety::Shield2:
+		case item_variety::Boots:
 			sprintf(message,"Blocks %d-%d damage.",item.item_level + (item.protection > 0) ? 1 : 0,
 				item.item_level + item.protection);
 			break;
-		case 4: case 23:
+		case item_variety::Bow:
+		case item_variety::Crossbow:
 			sprintf(message,"Bonus : +%d to hit.",item.bonus);
 			break;
-		case 3:
+		case item_variety::Gold:
 			sprintf(message,"%d gold pieces.",item.item_level);
 			break;
-		case 11:
+		case item_variety::Food:
 			sprintf(message,"%d food.",item.item_level);
 			break;
-		case 20:
+		case item_variety::WeaponPoison:
 			sprintf(message,"Poison: Does %d-%d damage.",item.item_level,item.item_level * 6);
 			break;
 		default:

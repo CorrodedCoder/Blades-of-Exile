@@ -32,7 +32,7 @@ extern town_item_list 	t_i;
 extern Adventurers adven;
 extern big_tr_type  t_d;
 
-item_record_type	null_thing = {0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
+item_record_type	null_thing = { item_variety::None,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
 char answer[256];
 
 

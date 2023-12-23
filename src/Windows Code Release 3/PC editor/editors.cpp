@@ -31,11 +31,6 @@ extern short current_cursor;
 extern HCURSOR sword_curs;
 extern Boolean diff_depth_ok,current_file_has_maps;
 
-Boolean equippable[18] = {FALSE,TRUE,TRUE,FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,
-							TRUE,TRUE,TRUE,FALSE,FALSE,TRUE};
-short num_hands_to_use[18] = {0,1,2,0,1,1,1,0,0,1,1,0,0,0,0,0,0,0};
-short num_that_can_equip[18] = {0,2,1,0,1,1,1,0,0,2,1,1,1,2,1,0,0,1}; 
-short selected,item_max = 0;
 Boolean choice_active[6];
 
 
@@ -56,10 +51,10 @@ void combine_things(short pc_num)
 	short i,j,test;
 	
 	for (i = 0; i < 24; i++) {
-		if ((adven[pc_num].items[i].variety > 0) &&
+		if ((adven[pc_num].items[i].variety > item_variety::None) &&
 			(adven[pc_num].items[i].type_flag > 0) && (adven[pc_num].items[i].item_properties & 254 != 0)) {
 			for (j = i + 1; j < 24; j++)
-				if ((adven[pc_num].items[j].variety > 0) &&
+				if ((adven[pc_num].items[j].variety > item_variety::None) &&
 				(adven[pc_num].items[j].type_flag == adven[pc_num].items[i].type_flag) 
 				 && (adven[pc_num].items[j].item_properties & 254 != 0)) {
 					add_string_to_buf("(items combined)");
@@ -76,7 +71,7 @@ void combine_things(short pc_num)
 					take_item(pc_num,j);
 				 	}
 			}		
-		if ((adven[pc_num].items[i].variety > 0) && (adven[pc_num].items[i].charges < 0))
+		if ((adven[pc_num].items[i].variety > item_variety::None) && (adven[pc_num].items[i].charges < 0))
 			adven[pc_num].items[i].charges = 1;
 		}
 }
@@ -85,7 +80,7 @@ Boolean give_to_pc(short pc_num,item_record_type  item, short print_result)
 {
 	short free_space;
 
-	if (item.variety == 0)
+	if (item.variety == item_variety::None)
 		return TRUE;
 	if (((free_space = pc_has_space(adven[pc_num])) == 24 ) || (adven[pc_num].main_status != status::Normal))
 		return FALSE;
@@ -139,7 +134,7 @@ void take_item(short pc_num,short which_item)
 		adven[pc_num].items[i] = adven[pc_num].items[i + 1];
 		adven[pc_num].equip[i] = adven[pc_num].equip[i + 1];
 		}
-	adven[pc_num].items[23].variety = 0;
+	adven[pc_num].items[23].variety = item_variety::None;
 	adven[pc_num].equip[23] = FALSE;
 
 }

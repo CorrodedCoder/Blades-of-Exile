@@ -58,7 +58,7 @@ Boolean can_draw_pcs = TRUE;
 short store_item_spell_level = 10;
 Boolean special_in_progress = FALSE;
 
-item_record_type	null_item = {0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
+item_record_type	null_item = { item_variety::None,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
 short spec_str_offset[3] = {160,10,20};
 short current_pc_picked_in_spec_enc = -1; // pc that's been selected, -1 if none
 location store_special_loc;
@@ -256,7 +256,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 		if (to_loc.x > 0)
 			make_crate((short) to_loc.x,(short) to_loc.y);
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
-			if ((t_i.items[i].variety > 0) && (same_point(t_i.items[i].item_loc,where_check))
+			if ((t_i.items[i].variety > item_variety::None) && (same_point(t_i.items[i].item_loc,where_check))
 			 && is_contained(t_i.items[i]))
 			 	t_i.items[i].item_loc = to_loc;
 		}
@@ -267,7 +267,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 		if (to_loc.x > 0)
 			make_barrel((short) to_loc.x,(short) to_loc.y);
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
-			if ((t_i.items[i].variety > 0) && (same_point(t_i.items[i].item_loc,where_check))
+			if ((t_i.items[i].variety > item_variety::None) && (same_point(t_i.items[i].item_loc,where_check))
 			 && is_contained(t_i.items[i]))
 			 	t_i.items[i].item_loc = to_loc;
 		}
@@ -547,7 +547,7 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 			else sprintf(to_draw, "Use: %s",adven[pc].items[item].full_name);
 		add_string_to_buf( to_draw);
 
-		if ((adven[pc].items[item].variety == 7) &&
+		if ((adven[pc].items[item].variety == item_variety::PotionOrMagicItem) &&
 		      (adven[pc].items[item].graphic_num >= 50) && (adven[pc].items[item].graphic_num <= 52))
 		      	play_sound(56);
 		
@@ -919,7 +919,7 @@ Boolean use_space(location where)
 		take_crate((short) where.x,(short) where.y);
 		make_crate((short) to_loc.x,(short) to_loc.y);
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
-			if ((t_i.items[i].variety > 0) && (same_point(t_i.items[i].item_loc,where))
+			if ((t_i.items[i].variety > item_variety::None) && (same_point(t_i.items[i].item_loc,where))
 			 && is_contained(t_i.items[i]))
 			 	t_i.items[i].item_loc = to_loc;
 		}
@@ -933,7 +933,7 @@ Boolean use_space(location where)
 		take_barrel((short) where.x,(short) where.y);
 		make_barrel((short) to_loc.x,(short) to_loc.y);
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
-			if ((t_i.items[i].variety > 0) && (same_point(t_i.items[i].item_loc,where))
+			if ((t_i.items[i].variety > item_variety::None) && (same_point(t_i.items[i].item_loc,where))
 			 && is_contained(t_i.items[i]))
 			 	t_i.items[i].item_loc = to_loc;
 		}
@@ -968,7 +968,7 @@ Boolean adj_town_look(location where)
 	short i = 0,s1 = 0, s2 = 0, s3 = 0;
 
 	for (i = 0; i < NUM_TOWN_ITEMS; i++) 
-		if ((t_i.items[i].variety > 0) && is_contained(t_i.items[i]) &&
+		if ((t_i.items[i].variety > item_variety::None) && is_contained(t_i.items[i]) &&
 			(same_point(where,t_i.items[i].item_loc) == TRUE))
 				item_there = TRUE;
 
@@ -1429,7 +1429,7 @@ void push_things()
 				}
 			}
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
-		if (t_i.items[i].variety > 0) {
+		if (t_i.items[i].variety > item_variety::None) {
 			l = t_i.items[i].item_loc;
 			ter = t_d.terrain[l.x][l.y];
 			switch (scenario.ter_types[ter].special) {
@@ -1473,7 +1473,7 @@ void push_things()
 				ASB("You smash the crate.");			
 				}
 			for (k = 0; k < NUM_TOWN_ITEMS; k++)
-				if ((t_i.items[k].variety > 0) && is_contained(t_i.items[k])
+				if ((t_i.items[k].variety > item_variety::None) && is_contained(t_i.items[k])
 				&& (same_point(t_i.items[k].item_loc,c_town.p_loc) == TRUE))
 					t_i.items[k].item_properties = t_i.items[k].item_properties & 247;				
 			redraw = TRUE;
@@ -1507,7 +1507,7 @@ void push_things()
 						ASB("You smash the crate.");			
 						}
 					for (k = 0; k < NUM_TOWN_ITEMS; k++)
-						if ((t_i.items[k].variety > 0) && is_contained(t_i.items[k])
+						if ((t_i.items[k].variety > item_variety::None) && is_contained(t_i.items[k])
 						&& (same_point(t_i.items[k].item_loc,pc_pos[i]) == TRUE))
 							t_i.items[k].item_properties = t_i.items[k].item_properties & 247;		
 					redraw = TRUE;
@@ -2322,7 +2322,7 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 				break;
 			l.x = spec.ex1a; l.y = spec.ex1b;
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
-				if ((t_i.items[i].variety > 0) && (t_i.items[i].special_class == spec.ex2a)
+				if ((t_i.items[i].variety > item_variety::None) && (t_i.items[i].special_class == spec.ex2a)
 					&& (same_point(l,t_i.items[i].item_loc) == TRUE))
 						*next_spec = spec.ex2b;
 			break;
@@ -2334,7 +2334,7 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 			for (i = 0; i < 6; i++)
 				if (adven[i].main_status == status::Normal)
 					for (j = 0; j < 24; j++)
-						if ((adven[i].items[j].variety > 0) && (adven[i].items[j].special_class == spec.ex1a)
+						if ((adven[i].items[j].variety > item_variety::None) && (adven[i].items[j].special_class == spec.ex1a)
 							&& (adven[i].equip[j] == TRUE)) 
 							*next_spec = spec.ex1b;			
 			break;
@@ -2355,11 +2355,11 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 				break;
 			l.x = spec.ex1a; l.y = spec.ex1b;
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
-				if ((t_i.items[i].variety > 0) && (t_i.items[i].special_class == spec.ex2a)
+				if ((t_i.items[i].variety > item_variety::None) && (t_i.items[i].special_class == spec.ex2a)
 					&& (same_point(l,t_i.items[i].item_loc) == TRUE)) {
 						*next_spec = spec.ex2b;
 						*redraw = 1;
-						t_i.items[i].variety = 0;
+						t_i.items[i].variety = item_variety::None;
 						}
 			break;
 		case 145:
@@ -2370,7 +2370,7 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 			for (i = 0; i < 6; i++)
 				if (adven[i].main_status == status::Normal)
 					for (j = 0; j < 24; j++)
-						if ((adven[i].items[j].variety > 0) && (adven[i].items[j].special_class == spec.ex1a)
+						if ((adven[i].items[j].variety > item_variety::None) && (adven[i].items[j].special_class == spec.ex1a)
 							&& (adven[i].equip[j] == TRUE)) {
 							*next_spec = spec.ex1b;			
 							*redraw = 1;
@@ -2800,15 +2800,15 @@ void rect_spec(short which_mode,special_node_type cur_node,short cur_spec_type,
 					} break;
 		case 212:
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
-				if ((t_i.items[i].variety > 0) && (same_point(t_i.items[i].item_loc,l) == TRUE)) {
+				if ((t_i.items[i].variety > item_variety::None) && (same_point(t_i.items[i].item_loc,l) == TRUE)) {
 					t_i.items[i].item_loc.x = spec.sd1;
 					t_i.items[i].item_loc.y = spec.sd2;
 					}					
 			break;
 		case 213:
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
-				if ((t_i.items[i].variety > 0) && (same_point(t_i.items[i].item_loc,l) == TRUE)) {
-					t_i.items[i].variety = 0;
+				if ((t_i.items[i].variety > item_variety::None) && (same_point(t_i.items[i].item_loc,l) == TRUE)) {
+					t_i.items[i].variety = item_variety::None;
 					}					
 			break;
 		case 214:

@@ -671,7 +671,7 @@ static item_record_type convert_item (short_item_record_type s_item) {
 	location l = {0,0};
 	short temp_val;
 	
-	i.variety = (short) s_item.variety;
+	i.variety = static_cast<item_variety>(s_item.variety);
 	i.item_level = (short) s_item.item_level;
 	i.awkward = (short) s_item.awkward;
 	i.bonus = (short) s_item.bonus;

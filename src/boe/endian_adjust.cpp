@@ -42,6 +42,11 @@ void endian_adjust(short& value)
 	value = byteswap(value);
 }
 
+static void endian_adjust(item_variety& value)
+{
+	value = static_cast<item_variety>(byteswap(static_cast<short>(value)));
+}
+
 static void endian_adjust(BoeRect& r)
 {
 	auto tmp = r.top;

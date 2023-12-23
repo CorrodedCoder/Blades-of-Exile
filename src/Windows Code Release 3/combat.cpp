@@ -422,7 +422,7 @@ void start_outdoor_combat(outdoor_creature_type encounter,unsigned char in_which
 		}
 		
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
-		t_i.items[i].variety = 0;
+		t_i.items[i].variety = item_variety::None;
 	store_current_pc = current_pc;
 	current_pc = 0;
 	set_pc_moves();
@@ -582,7 +582,7 @@ void pc_attack(short who_att,short target)
 	which_m = &c_town.monst.dudes[target];
 	
 	for (i = 0; i < 24; i++)
-		if (((adven[who_att].items[i].variety == 1) || (adven[who_att].items[i].variety == 2)) &&
+		if (((adven[who_att].items[i].variety == item_variety::OneHandedWeapon) || (adven[who_att].items[i].variety == item_variety::TwoHandedWeapon)) &&
 			(adven[who_att].equip[i] == TRUE))
 				if (weap1 == 24)
 					weap1 = i;
@@ -1410,22 +1410,22 @@ void load_missile()
 		
 	for (i = 0; i < 24; i++) {
 		if ((adven[current_pc].equip[i] == TRUE) &&
-			(adven[current_pc].items[i].variety == 6)) 
+			(adven[current_pc].items[i].variety == item_variety::ThrownMissile))
 				thrown = i;
 		if ((adven[current_pc].equip[i] == TRUE) &&
-			(adven[current_pc].items[i].variety == 4)) 
+			(adven[current_pc].items[i].variety == item_variety::Bow))
 				bow = i;
 		if ((adven[current_pc].equip[i] == TRUE) &&
-			(adven[current_pc].items[i].variety == 5)) 
+			(adven[current_pc].items[i].variety == item_variety::Arrows))
 				arrow = i;
 		if ((adven[current_pc].equip[i] == TRUE) &&
-			(adven[current_pc].items[i].variety == 23)) 
+			(adven[current_pc].items[i].variety == item_variety::Crossbow))
 				crossbow = i;
 		if ((adven[current_pc].equip[i] == TRUE) &&
-			(adven[current_pc].items[i].variety == 24)) 
+			(adven[current_pc].items[i].variety == item_variety::Bolts))
 				bolts = i;
 		if ((adven[current_pc].equip[i] == TRUE) &&
-			(adven[current_pc].items[i].variety == 25)) 
+			(adven[current_pc].items[i].variety == item_variety::MissileWeapon))
 				no_ammo = i;
 		}
 
@@ -1498,7 +1498,7 @@ void fire_missile(location target)
 	
 	if (adven[current_pc].items[ammo_inv_slot].ability == 172) 
 		exploding = TRUE;
-	if (adven[current_pc].items[ammo_inv_slot].variety != 25) {
+	if (adven[current_pc].items[ammo_inv_slot].variety != item_variety::MissileWeapon) {
 		if (adven[current_pc].items[ammo_inv_slot].ability != 170)
 			adven[current_pc].items[ammo_inv_slot].charges--;
 			else adven[current_pc].items[ammo_inv_slot].charges = 1;

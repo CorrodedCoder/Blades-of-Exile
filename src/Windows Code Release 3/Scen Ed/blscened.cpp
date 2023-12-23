@@ -683,7 +683,7 @@ Boolean handle_menu (short item, HMENU menu)
 				}
 			if ((item_hit >= 600) && (item_hit < 1000)) {
 				item_hit -= 600;
-				if (scen_item_list.scen_items[item_hit].variety == 0) {
+				if (scen_item_list.scen_items[item_hit].variety == item_variety::None) {
 					give_error("This item has its Variety set to No Item. You can only place items with a Variety set to an actual item type.","",0);
 					return to_return;
 					}

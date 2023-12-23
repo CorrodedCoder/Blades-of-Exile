@@ -422,7 +422,7 @@ void draw_items(short clear_first)
 		return; // If PC is dead, it has no items
 	}
 	for (i = 0; i < 24; i++) // Loop through items and draw each
-		if (adven[current_active_pc].items[i].variety > 0) { // i.e. does item exist
+		if (adven[current_active_pc].items[i].variety > item_variety::None) { // i.e. does item exist
 			sprintf(to_draw, "");
 			if (adven[current_active_pc].items[i].item_properties % 2 == 0)
 				sprintf(to_draw, "%d. %s  ",i + 1,adven[current_active_pc].items[i].name);

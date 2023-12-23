@@ -144,12 +144,12 @@ Boolean unreg_party_in_scen_not_check = FALSE;
 
 extern const item_record_type start_items[6] =
 {
-{1,4, 0,1,0,0,1,0, 45,0,0,0,0,0, 2, 7,0, {0,0},"Bronze Knife","Knife",0,1,0,0},
-{12,1,1,0,0,0,0,0, 65,0,0,0,0,0, 2, 20,0, {0,0},"Crude Buckler","Buckler",0,1,0,0},
-{4,0,0,0,0,0,0,0, 10,0,0,0,0,0, 15, 20,0, {0,0},"Cavewood Bow","Bow",0,1,0,0},
-{5,12,0,0,0,12,0,0, 47,0,0,0,0,0, 1, 1,0, {0,0},"Arrows","Arrows",0,1,0,0},
-{2,9,0,0,0,0,3,0, 4,0,0,0,0,0, 10, 30,0, {0,0},"Stone Spear","Spear",0,1,0,0},
-{14,1,0,0,0,0,0,0, 66,0,0,0,0,0, 6, 15,0, {0,0},"Leather Helm","Helm",0,1,0,0}
+{item_variety::OneHandedWeapon,4, 0,1,0,0,1,0, 45,0,0,0,0,0, 2, 7,0, {0,0},"Bronze Knife","Knife",0,1,0,0},
+{item_variety::Shield,1,1,0,0,0,0,0, 65,0,0,0,0,0, 2, 20,0, {0,0},"Crude Buckler","Buckler",0,1,0,0},
+{item_variety::Bow,0,0,0,0,0,0,0, 10,0,0,0,0,0, 15, 20,0, {0,0},"Cavewood Bow","Bow",0,1,0,0},
+{item_variety::Arrows,12,0,0,0,12,0,0, 47,0,0,0,0,0, 1, 1,0, {0,0},"Arrows","Arrows",0,1,0,0},
+{item_variety::TwoHandedWeapon,9,0,0,0,0,3,0, 4,0,0,0,0,0, 10, 30,0, {0,0},"Stone Spear","Spear",0,1,0,0},
+{item_variety::Helm,1,0,0,0,0,0,0, 66,0,0,0,0,0, 6, 15,0, {0,0},"Leather Helm","Helm",0,1,0,0}
 };
 
 // 0 - whole area, 1 - active area 2 - graphic 3 - item name
@@ -1657,9 +1657,9 @@ void button_flash_rect(RECT to_flash)
 			to_place = pc_pos[m];
 	for (m = 0; m < 6; m++)
 		for (n = 0; n < 24; n++)
-			if ((adven[m].main_status != status::Normal) && (adven[m].items[n].variety != 0)) {
+			if ((adven[m].main_status != status::Normal) && (adven[m].items[n].variety != item_variety::None)) {
 				place_item(adven[m].items[n],to_place,TRUE);
-				adven[m].items[n].variety = 0;
+				adven[m].items[n].variety = item_variety::None;
 				}
 							
 	overall_mode = 10;

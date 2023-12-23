@@ -128,14 +128,14 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 		}
 	for (i = 0; i < 24; i++)
 		if ((PtInRect(&item_string_rects[i][1],the_point) == TRUE) && // drop item
-			(adven[current_active_pc].items[i].variety > 0)) { // variety = 0 no item in slot/ non 0 item exists
+			(adven[current_active_pc].items[i].variety > item_variety::None)) { // variety = 0 no item in slot/ non 0 item exists
 				flash_rect(item_string_rects[i][1]);
 				take_item(current_active_pc,i);
 				draw_items(1);
 				}
 	for (i = 0; i < 24; i++)
 		if ((PtInRect(&item_string_rects[i][2],the_point) == TRUE) && // identify item
-			(adven[current_active_pc].items[i].variety > 0)) {
+			(adven[current_active_pc].items[i].variety > item_variety::None)) {
 				flash_rect(item_string_rects[i][2]);
 				adven[current_active_pc].items[i].item_properties = adven[current_active_pc].items[i].item_properties | 1;
 				draw_items(1);

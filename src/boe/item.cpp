@@ -2,12 +2,12 @@
 
 short item_weight(const item_record_type& item)
 {
-	if (item.variety == 0)
+	if (item.variety == item_variety::None)
 	{
 		return 0;
 	}
-	if ((item.variety == 5) || (item.variety == 6) || (item.variety == 24) || (item.variety == 7)
-		|| ((item.variety == 21) && (item.charges > 0)))
+	if ((item.variety == item_variety::Arrows) || (item.variety == item_variety::ThrownMissile) || (item.variety == item_variety::Bolts) || (item.variety == item_variety::PotionOrMagicItem)
+		|| ((item.variety == item_variety::GemStoneEtc) && (item.charges > 0)))
 	{
 		return static_cast<short>(item.charges) * static_cast<short>(item.weight);
 	}
@@ -23,7 +23,7 @@ short item_val(const item_record_type& item)
 
 bool item_is_weapon(const item_record_type& item)
 {
-	return (item.variety == 1) || (item.variety == 2) || (item.variety == 5) || (item.variety == 24);
+	return (item.variety == item_variety::OneHandedWeapon) || (item.variety == item_variety::TwoHandedWeapon) || (item.variety == item_variety::Arrows) || (item.variety == item_variety::Bolts);
 }
 
 bool is_ident(const item_record_type& item)

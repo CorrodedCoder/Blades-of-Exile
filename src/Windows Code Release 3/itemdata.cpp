@@ -24,7 +24,7 @@ item_record_type get_stored_item(short which)
 item_record_type get_food()
 {
 	item_record_type food = 
-		{11,0, 0,0,0,0,0,0, 62,0,0,0,0,0, 0, 0,0, {0,0},"Food", "Food",0,0,0,0};
+		{ item_variety::Food,0, 0,0,0,0,0,0, 62,0,0,0,0,0, 0, 0,0, {0,0},"Food", "Food",0,0,0,0};
 	food.graphic_num += get_ran(1,0,2);
 	food.item_level = get_ran(1,5,10);
 	if (get_ran(1,0,9) == 5)
@@ -33,12 +33,12 @@ item_record_type get_food()
 		food.graphic_num = 114;
 	// food doesn't always appear
 	if (get_ran(1,0,2) != 1)
-		food.variety = 0;
+		food.variety = item_variety::None;
 	return food;
 }
 
 
-item_record_type pull_item_of_type(short loot_max,short min_val,short max_val,short t1, short t2, short t3)
+item_record_type pull_item_of_type(short loot_max,short min_val,short max_val, item_variety t1, item_variety t2, item_variety t3)
 {
 	short i,j,val;
 	item_record_type temp_i;
@@ -65,71 +65,71 @@ item_record_type get_weapon(short loot,short level)
 {
 	if (loot == 0)
 		return item_record_type{};
-	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],1,2,-1);
+	return pull_item_of_type(loot,loot_min[loot],loot_max[loot], item_variety::OneHandedWeapon, item_variety::TwoHandedWeapon, item_variety::Invalid);
 }
 
 item_record_type get_armor(short loot,short level)
 {
 	if (loot == 0)
 		return item_record_type{};
-	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],13,-1,-1); 
+	return pull_item_of_type(loot,loot_min[loot],loot_max[loot], item_variety::Armor, item_variety::Invalid, item_variety::Invalid);
 }
 
 item_record_type get_helm(short loot)
 {
-	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],14,-1,-1); 
+	return pull_item_of_type(loot,loot_min[loot],loot_max[loot], item_variety::Helm, item_variety::Invalid, item_variety::Invalid);
 }
 
 item_record_type get_gloves(short loot)
 {
-	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],15,-1,-1); 
+	return pull_item_of_type(loot,loot_min[loot],loot_max[loot], item_variety::Gloves, item_variety::Invalid, item_variety::Invalid);
 }
 
 item_record_type get_boots(short loot)
 {
-	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],17,-1,-1); 
+	return pull_item_of_type(loot,loot_min[loot],loot_max[loot], item_variety::Boots, item_variety::Invalid, item_variety::Invalid);
 }
 
 item_record_type get_shield(short loot)
 {
-	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],12,-1,-1); 
+	return pull_item_of_type(loot,loot_min[loot],loot_max[loot], item_variety::Shield, item_variety::Invalid, item_variety::Invalid);
 }
 
 item_record_type get_potion(short loot)
 {
 	if (get_ran(1,0,80) < 20 * (4 - loot))
-		return pull_item_of_type(loot,loot_min[loot],loot_max[loot] / 2,7,-1,-1);
-	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],7,-1,-1); 
+		return pull_item_of_type(loot,loot_min[loot],loot_max[loot] / 2, item_variety::PotionOrMagicItem, item_variety::Invalid, item_variety::Invalid);
+	return pull_item_of_type(loot,loot_min[loot],loot_max[loot], item_variety::PotionOrMagicItem, item_variety::Invalid, item_variety::Invalid);
 }
 
 item_record_type get_scroll(short loot)
 {
-	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],8,-1,-1); 
+	return pull_item_of_type(loot,loot_min[loot],loot_max[loot], item_variety::ScrollOrMagicItem, item_variety::Invalid, item_variety::Invalid);
 }
 
 item_record_type get_missile(short loot)
 {
 	if (get_ran(1,0,2) < 2)
-		return pull_item_of_type(loot,loot_min[loot],loot_max[loot],5,6,4); 
-	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],23,24,25); 
+		return pull_item_of_type(loot,loot_min[loot],loot_max[loot], item_variety::Arrows, item_variety::ThrownMissile, item_variety::Bow);
+	return pull_item_of_type(loot,loot_min[loot],loot_max[loot], item_variety::Crossbow, item_variety::Bolts, item_variety::MissileWeapon);
 }
 
 item_record_type get_poison(short loot,short level)
 {
-	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],20,-1,-1); 
+	return pull_item_of_type(loot,loot_min[loot],loot_max[loot], item_variety::WeaponPoison, item_variety::Invalid, item_variety::Invalid);
 }
 
 item_record_type get_wand(short loot)
 {
-	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],9,-1,-1); 
+	return pull_item_of_type(loot,loot_min[loot],loot_max[loot], item_variety::Wand, item_variety::Invalid, item_variety::Invalid);
 }
 
 item_record_type get_ring(short loot)
 {
-	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],18,-1,-1); 
+	return pull_item_of_type(loot,loot_min[loot],loot_max[loot], item_variety::Ring, item_variety::Invalid, item_variety::Invalid);
 }
 
 item_record_type get_necklace(short loot)
 {
-	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],19,-1,-1); 
+	return pull_item_of_type(loot,loot_min[loot],loot_max[loot], item_variety::Necklace, item_variety::Invalid, item_variety::Invalid);
 } 

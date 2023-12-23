@@ -13,4 +13,4 @@ item_record_type	get_poison(short loot,short level);
 item_record_type get_wand(short loot);
 item_record_type get_ring(short loot);
 item_record_type get_necklace(short loot);
-item_record_type pull_item_of_type(short loot_max,short min_val,short max_val,short t1, short t2, short t3);
+item_record_type pull_item_of_type(short loot_max,short min_val,short max_val, item_variety t1, item_variety t2, item_variety t3);
