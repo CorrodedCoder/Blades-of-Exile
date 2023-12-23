@@ -313,16 +313,6 @@ short party_total_level()
 
 
 
-short luck_total()
-{
-	short i = 0;
-	
-	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == status::Normal)
-			i += adven[i].skills[18];
-	return i;
-}
-
 void display_traits_graphics()
 {
 	short i,store;

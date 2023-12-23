@@ -12,7 +12,6 @@ short choice_dialog(short pic,short num);
 Boolean give_spec_items_event_filter (short item_hit);
 void give_spec_items();
 short party_total_level(); 
-short luck_total();
 void display_traits_graphics();
 void pick_race_abil_event_filter(short item_hit);
 void pick_race_abil(pc_record_type *pc,short mode,short parent_num);
