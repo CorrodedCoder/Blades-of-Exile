@@ -1,4 +1,3 @@
-
 #include <Windows.h>
 #include <array>
 #include <cassert>
@@ -27,6 +26,7 @@
 #include "graphutl.h"
 #include "boe/hacks.hpp"
 #include "boe/utility.hpp"
+#include "boe/item.hpp"
 
 extern const short skill_cost[20] = {3,3,3,2,2,2, 1,2,2,6,
 						5, 1,2,4,2,1, 4,2,5,0};
@@ -1194,7 +1194,7 @@ Boolean poison_weapon( short pc_num, short how_much,short safe)
 							91,92,93,94,94,95,95,96,97,98,100,100,100,100};
 
 	for (i = 0; i < 24; i++)
-		if ((adven[pc_num].equip[i] == TRUE) && (is_weapon(pc_num,i) == TRUE)) {
+		if ((adven[pc_num].equip[i] == TRUE) && item_is_weapon(adven[pc_num].items[i])) {
 			weap = i;
 			i = 30;
 			}
@@ -1226,17 +1226,6 @@ Boolean poison_weapon( short pc_num, short how_much,short safe)
 
 				return TRUE;
 			}
-}
-
-Boolean is_weapon(short pc_num,short item)
-{
-	if ((adven[pc_num].items[item].variety  == 1) ||
-		(adven[pc_num].items[item].variety  == 2) ||
-		(adven[pc_num].items[item].variety  == 5) ||
-		(adven[pc_num].items[item].variety  == 24))
-			return TRUE;
-			else return FALSE;
-
 }
 
 void cast_spell(short type,short situation)

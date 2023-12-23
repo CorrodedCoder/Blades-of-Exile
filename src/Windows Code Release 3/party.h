@@ -23,7 +23,6 @@ void do_xp_draw();
 void draw_xp_skills();
 Boolean spend_xp(short pc_num, short mode, short parent);
 Boolean poison_weapon( short pc_num, short how_much,short safe);
-Boolean is_weapon(short pc_num,short item);
 void cast_spell(short type,short situation);
 Boolean repeat_cast_ok(short type);
 void give_party_spell(short which);
