@@ -11,6 +11,7 @@ add_library(boe STATIC
 	adventurers.cpp
 	dump_game_structures.cpp
 	endian_adjust.cpp
+	item.cpp
 	pc.cpp
 	savedata_serialization.cpp
 	utility.cpp

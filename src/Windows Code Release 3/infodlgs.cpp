@@ -20,6 +20,7 @@
 #include "infodlgs.h"
 #include "fileio.h"
 #include "boe/utility.hpp"
+#include "boe/item.hpp"
 
 short mage_spell_pos = 0,priest_spell_pos = 0,skill_pos = 0;
 static pc_record_type *store_pc;

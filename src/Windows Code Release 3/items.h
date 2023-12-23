@@ -6,7 +6,6 @@ Boolean silent_GTP(short item_num);
 void give_gold(short amount,Boolean print_result);
 Boolean take_gold(short amount,Boolean print_result);
 Boolean party_take_abil(short abil);
-short item_weight(item_record_type item);
 short pc_carry_weight(const pc_record_type& pc);
 void give_food(short amount,Boolean print_result);
 short take_food(short amount,Boolean print_result);

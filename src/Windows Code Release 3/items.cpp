@@ -18,6 +18,7 @@
 #include "graphutl.h"
 #include "monster.h"
 #include "boe/utility.hpp"
+#include "boe/item.hpp"
 
 extern short stat_window,overall_mode,current_cursor,which_combat_type,current_pc;
 extern party_record_type party;
@@ -211,38 +212,6 @@ Boolean party_take_abil(short abil)
 				return TRUE;
 				}
 	return FALSE;
-}
-
-short pc_carry_weight(const pc_record_type& pc)
-{
-	short i,storage = 0;
-	Boolean airy = FALSE,heavy = FALSE;
-	
-	for (i = 0; i < 24; i++) 
-		if (pc.items[i].variety > 0) {
-		storage += item_weight(pc.items[i]);
-		if (pc.items[i].ability == 44)
-			airy = TRUE;
-		if (pc.items[i].ability == 45)
-			heavy = TRUE;
-		}
-	if (airy == TRUE)
-		storage -= 30;
-	if (heavy == TRUE)
-		storage += 30;
-	if (storage < 0)
-		storage = 0;
-	return storage;
-}
-
-short item_weight(item_record_type item)
-{
-	if (item.variety == 0)
-		return 0;
-	if ((item.variety == 5) || (item.variety == 6) || (item.variety == 24) || (item.variety == 7)
-		|| ((item.variety == 21) && (item.charges > 0)))
-		return (short) (item.charges) * (short) (item.weight);
-	return (short) (item.weight);
 }
 
 void give_food(short amount,Boolean print_result)

@@ -11,7 +11,6 @@ short pc_has_abil(short pc_num,short abil);
 Boolean party_has_abil(short abil);
 Boolean party_take_abil(short abil);
 Boolean party_check_class(short item_class,short mode);
-short item_weight(item_record_type item);
 short pc_carry_weight(short pc_num);
 short amount_pc_can_carry(short pc_num);
 void give_food(short amount,Boolean print_result);

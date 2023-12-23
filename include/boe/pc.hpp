@@ -18,3 +18,4 @@ short pc_has_abil(const pc_record_type& pc, short abil);
 short pc_amount_can_carry(const pc_record_type& pc);
 void pc_sort_items(pc_record_type& pc);
 bool pc_affect(pc_record_type& pc, affect type, short how_much);
+short pc_carry_weight(const pc_record_type& pc);

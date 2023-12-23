@@ -1,4 +1,5 @@
 #include "boe/pc.hpp"
+#include "boe/item.hpp"
 #include <algorithm>
 #include <ranges>
 #include <utility>
@@ -307,4 +308,26 @@ bool pc_affect(pc_record_type& pc, affect type, short how_much)
 		pc.gaffect(type) = std::max(pc.gaffect(type), static_cast<short>(0));
 	}
 	return true;
+}
+
+short pc_carry_weight(const pc_record_type& pc)
+{
+	short i, storage = 0;
+	Boolean airy = BOE_FALSE, heavy = BOE_FALSE;
+
+	for (i = 0; i < 24; i++)
+		if (pc.items[i].variety > 0) {
+			storage += item_weight(pc.items[i]);
+			if (pc.items[i].ability == 44)
+				airy = BOE_TRUE;
+			if (pc.items[i].ability == 45)
+				heavy = BOE_TRUE;
+		}
+	if (airy == BOE_TRUE)
+		storage -= 30;
+	if (heavy == BOE_TRUE)
+		storage += 30;
+	if (storage < 0)
+		storage = 0;
+	return storage;
 }
