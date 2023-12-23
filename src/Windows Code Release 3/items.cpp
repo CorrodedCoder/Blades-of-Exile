@@ -1373,12 +1373,12 @@ void place_treasure(location where,short level,short loot,short mode)
 
 short luck_total()
 {
+	short total = 0;
 	short i = 0;
-	
 	for (i = 0; i < 6; i++)
 		if (adven[i].main_status == status::Normal)
-			i += adven[i].skills[18];
-	return i;
+			total += pc_luck(adven[i]);
+	return total;
 }
 
 item_record_type return_treasure(short loot,short level,short mode)

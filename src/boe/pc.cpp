@@ -331,3 +331,8 @@ short pc_carry_weight(const pc_record_type& pc)
 		storage = 0;
 	return storage;
 }
+
+short pc_luck(const pc_record_type& pc)
+{
+	return pc.skills[18];
+}
