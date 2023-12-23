@@ -693,7 +693,7 @@ void pc_attack(short who_att,short target)
 					if (pc_has_abil_equip(adven[who_att],51) < 24)
 						poison_amt += 2;
 					poison_monst(which_m,poison_amt);
-					adven[who_att].gaffect(affect::PoisonedWeapon) = move_to_zero(adven[who_att].gaffect(affect::PoisonedWeapon));
+					adven[who_att].reduce_affect(affect::PoisonedWeapon);
 				}
 			if ((adven[who_att].items[weap1].ability == 14) && (get_ran(1,0,1) == 1)) {
 				add_string_to_buf("  Blade drips venom.             ");
@@ -778,7 +778,7 @@ void pc_attack(short who_att,short target)
 					else play_sound(2);
 			}
 		}
-	adven[who_att].gaffect(affect::PoisonedWeapon) = move_to_zero(adven[who_att].gaffect(affect::PoisonedWeapon));
+	adven[who_att].reduce_affect(affect::PoisonedWeapon);
 	take_ap(4);
 
 	if (((c_town.monst.dudes[target].m_d.mstatus[10] > 0) || (c_town.monst.dudes[target].m_d.spec_skill == 22))
@@ -1587,7 +1587,7 @@ void fire_missile(location target)
 				}	
 
 	combat_posing_monster = current_working_monster = -1;
-	adven[current_pc].gaffect(affect::PoisonedWeapon) = move_to_zero(adven[current_pc].gaffect(affect::PoisonedWeapon));
+	adven[current_pc].reduce_affect(affect::PoisonedWeapon);
 	print_buf();////
 }
 
@@ -1705,8 +1705,8 @@ void combat_run_monst()
 			for (i = 0; i < 6; i++) {
 			if ((adven[i].gaffect(affect::CursedBlessed) != 0) || (adven[i].gaffect(affect::Speed) != 0))
 				update_stat = TRUE;
-				adven[i].gaffect(affect::CursedBlessed) = move_to_zero(adven[i].gaffect(affect::CursedBlessed));
-				adven[i].gaffect(affect::Speed) = move_to_zero(adven[i].gaffect(affect::Speed));	
+				adven[i].reduce_affect(affect::CursedBlessed);
+				adven[i].reduce_affect(affect::Speed);
 				party.stuff_done[305][0] = move_to_zero(party.stuff_done[305][0]);
 				if ((item = pc_has_abil_equip(adven[i],50)) < 24) {
 					update_stat = TRUE;
@@ -1720,12 +1720,12 @@ void combat_run_monst()
 			 || (adven[i].gaffect(affect::Asleep) != 0)|| (adven[i].gaffect(affect::Paralyzed) != 0))
 				update_stat = TRUE;
 
-				adven[i].gaffect(affect::Invulnerable) = move_to_zero(adven[i].gaffect(affect::Invulnerable));
-				adven[i].gaffect(affect::MagicResistant) = move_to_zero(adven[i].gaffect(affect::MagicResistant));		
-				adven[i].gaffect(affect::Sanctuary) = move_to_zero(adven[i].gaffect(affect::Sanctuary));	
-				adven[i].gaffect(affect::MartyrsShield) = move_to_zero(adven[i].gaffect(affect::MartyrsShield));	
-				adven[i].gaffect(affect::Asleep) = move_to_zero(adven[i].gaffect(affect::Asleep));	
-				adven[i].gaffect(affect::Paralyzed) = move_to_zero(adven[i].gaffect(affect::Paralyzed));	
+				adven[i].reduce_affect(affect::Invulnerable);
+				adven[i].reduce_affect(affect::MagicResistant);
+				adven[i].reduce_affect(affect::Sanctuary);
+				adven[i].reduce_affect(affect::MartyrsShield);
+				adven[i].reduce_affect(affect::Asleep);
+				adven[i].reduce_affect(affect::Paralyzed);
 
 				// Do special items
 				if (((item_level = pc_prot_level(adven[i],47)) > 0)
@@ -3929,10 +3929,10 @@ void do_poison()
 					r1 = get_ran(adven[i].gaffect(affect::Poisoned),1,6);
 					damage_pc(i,r1,2,-1);
 					if (get_ran(1,0,8) < 6)
-						adven[i].gaffect(affect::Poisoned) = move_to_zero(adven[i].gaffect(affect::Poisoned));
+						adven[i].reduce_affect(affect::Poisoned);
 					if (get_ran(1,0,8) < 6)
 						if (adven[i].traits[trait::GoodConstitution] == TRUE)
-							adven[i].gaffect(affect::Poisoned) = move_to_zero(adven[i].gaffect(affect::Poisoned));
+							adven[i].reduce_affect(affect::Poisoned);
 				}
 		put_pc_screen();
 		//if (overall_mode < 10)
@@ -3983,7 +3983,7 @@ void handle_disease()
 					if (adven[i].traits[trait::GoodConstitution] == TRUE)
 						r1 -= 2;
 					if ((get_ran(1,0,7) <= 0) || (pc_has_abil_equip(adven[i],67) < 24))
-						adven[i].gaffect(affect::Diseased) = move_to_zero(adven[i].gaffect(affect::Diseased));
+						adven[i].reduce_affect(affect::Diseased);
 				}
 		put_pc_screen();
 		}	
@@ -4006,7 +4006,7 @@ void handle_acid()
 				if (adven[i].gaffect(affect::Acid) > 0) {
 					r1 = get_ran(adven[i].gaffect(affect::Acid),1,6);
 					damage_pc(i,r1,3,-1);
-					adven[i].gaffect(affect::Acid) = move_to_zero(adven[i].gaffect(affect::Acid));
+					adven[i].reduce_affect(affect::Acid);
 				}
 		if (overall_mode < 10)
 			boom_space(party.p_loc,overall_mode,3,r1,8);

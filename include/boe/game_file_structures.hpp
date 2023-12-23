@@ -3,6 +3,7 @@
 #include <array>
 #include <compare>
 #include <algorithm>
+#include "boe/utility.hpp"
 
 const auto NUM_TOWN_ITEMS = 115;
 
@@ -546,22 +547,27 @@ struct pc_record_type {
 	Boolean advan[15], traits[15];
 	short race, exp_adj, direction;
 
-	auto operator<=>(const pc_record_type&) const = default;
-	bool operator==(const pc_record_type&) const = default;
+	[[nodiscard]] auto operator<=>(const pc_record_type&) const = default;
+	[[nodiscard]] bool operator==(const pc_record_type&) const = default;
 
-	bool has_trait(trait trait) const
+	[[nodiscard]] bool has_trait(trait trait) const
 	{
 		return traits[static_cast<int>(trait)];
 	}
 
-	short gaffect(affect type) const
+	[[nodiscard]] short gaffect(affect type) const
 	{
 		return status[static_cast<int>(type)];
 	}
 
-	short& gaffect(affect type)
+	[[nodiscard]] short& gaffect(affect type)
 	{
 		return status[static_cast<int>(type)];
+	}
+
+	void reduce_affect(affect type)
+	{
+		status[static_cast<short>(type)] = move_to_zero(status[static_cast<short>(type)]);
 	}
 };
 static_assert(sizeof(pc_record_type) == 1898);

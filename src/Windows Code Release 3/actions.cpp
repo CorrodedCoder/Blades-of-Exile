@@ -715,8 +715,8 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 				add_string_to_buf("Stand ready.  ");
 				if (adven[current_pc].gaffect(affect::Webbed) > 0) {
 					add_string_to_buf("You clean webs.  ");
-					adven[current_pc].gaffect(affect::Webbed) = move_to_zero(adven[current_pc].gaffect(affect::Webbed));
-					adven[current_pc].gaffect(affect::Webbed) = move_to_zero(adven[current_pc].gaffect(affect::Webbed));
+					adven[current_pc].reduce_affect(affect::Webbed);
+					adven[current_pc].reduce_affect(affect::Webbed);
 					put_pc_screen();
 					}
 				check_fields(pc_pos[current_pc],2,current_pc);
@@ -727,8 +727,8 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 						if ((adven[k].main_status == status::Normal) && (adven[k].gaffect(affect::Webbed) > 0)) {
 							sprintf(str,"%s cleans webs.",adven[k].name);
 							add_string_to_buf( str);
-							adven[k].gaffect(affect::Webbed) = move_to_zero(adven[k].gaffect(affect::Webbed));
-							adven[k].gaffect(affect::Webbed) = move_to_zero(adven[k].gaffect(affect::Webbed));
+							adven[k].reduce_affect(affect::Webbed);
+							adven[k].reduce_affect(affect::Webbed);
 							}
 					if (party.in_horse >= 0) {
 						if (overall_mode == 0) {
@@ -2307,15 +2307,15 @@ void increase_age()
 			if ((adven[i].gaffect(affect::Invulnerable) == 1) || (adven[i].gaffect(affect::MagicResistant) == 1) || (adven[i].gaffect(affect::Sanctuary) == 1)
 			|| (adven[i].gaffect(affect::Asleep) == 1)|| (adven[i].gaffect(affect::Paralyzed) == 1))
 				update_stat = TRUE;
- 			adven[i].gaffect(affect::Invulnerable) = move_to_zero(adven[i].gaffect(affect::Invulnerable));
-			adven[i].gaffect(affect::MagicResistant) = move_to_zero(adven[i].gaffect(affect::MagicResistant));	
-			adven[i].gaffect(affect::Sanctuary) = move_to_zero(adven[i].gaffect(affect::Sanctuary));	
-			adven[i].gaffect(affect::MartyrsShield) = move_to_zero(adven[i].gaffect(affect::MartyrsShield));	
-			adven[i].gaffect(affect::Asleep) = move_to_zero(adven[i].gaffect(affect::Asleep));	
-			adven[i].gaffect(affect::Paralyzed) = move_to_zero(adven[i].gaffect(affect::Paralyzed));	
+ 			adven[i].reduce_affect(affect::Invulnerable);
+			adven[i].reduce_affect(affect::MagicResistant);
+			adven[i].reduce_affect(affect::Sanctuary);
+			adven[i].reduce_affect(affect::MartyrsShield);
+			adven[i].reduce_affect(affect::Asleep);
+			adven[i].reduce_affect(affect::Paralyzed);
 			if ((party.age % 40 == 0) && (adven[i].gaffect(affect::PoisonedWeapon) > 0)) {
 				update_stat = TRUE;
- 				adven[i].gaffect(affect::PoisonedWeapon) = move_to_zero(adven[i].gaffect(affect::PoisonedWeapon));
+ 				adven[i].reduce_affect(affect::PoisonedWeapon);
  				}
 
 		}
@@ -2420,8 +2420,8 @@ void increase_age()
 		for (i = 0; i < 6; i++) {
 			if ((adven[i].gaffect(affect::CursedBlessed) != 0) || (adven[i].gaffect(affect::Speed) != 0))
 				update_stat = TRUE;
-			adven[i].gaffect(affect::CursedBlessed) = move_to_zero(adven[i].gaffect(affect::CursedBlessed));
-			adven[i].gaffect(affect::Speed) = move_to_zero(adven[i].gaffect(affect::Speed));	
+			adven[i].reduce_affect(affect::CursedBlessed);
+			adven[i].reduce_affect(affect::Speed);
 			if (((item = pc_has_abil_equip(adven[i],50)) < 24) 
 				&& (adven[i].cur_health < adven[i].max_health)
 				&& ((overall_mode > 0) || (get_ran(1,0,10) == 5))){

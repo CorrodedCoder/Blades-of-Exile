@@ -27,15 +27,6 @@ Boolean same_point(location p1,location p2)
 		else return FALSE;
 }
 
-short move_to_zero(short val)
-{
-	if (val < 0)
-		return val + 1;
-	if (val > 0)
-		return val - 1;
-	return val;
-}
-
 short s_pow(short x,short y)
 {
 	if (y == 0)
