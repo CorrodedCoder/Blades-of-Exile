@@ -1517,7 +1517,7 @@ void fire_missile(location target) ////
 							}
 						break;
 					case 12: case 14:
-						m_type = (is_magic(adven[current_pc].items[ammo_inv_slot]) == TRUE) ? 4 : 3;
+						m_type = is_magic(adven[current_pc].items[ammo_inv_slot]) ? 4 : 3;
 						break; 
 					}
 				run_a_missile(pc_pos[current_pc],target,m_type,1,(overall_mode == 12) ? 12 : 14,

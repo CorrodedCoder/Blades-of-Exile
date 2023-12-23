@@ -260,7 +260,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 			make_crate((short) to_loc.x,(short) to_loc.y);
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
 			if ((t_i.items[i].variety > 0) && (same_point(t_i.items[i].item_loc,where_check))
-			 && (is_contained(t_i.items[i]) == TRUE))
+			 && is_contained(t_i.items[i]))
 			 	t_i.items[i].item_loc = to_loc;
 		}
 	if (is_barrel(where_check.x,where_check.y)) {
@@ -271,7 +271,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 			make_barrel((short) to_loc.x,(short) to_loc.y);
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
 			if ((t_i.items[i].variety > 0) && (same_point(t_i.items[i].item_loc,where_check))
-			 && (is_contained(t_i.items[i]) == TRUE))
+			 && is_contained(t_i.items[i]))
 			 	t_i.items[i].item_loc = to_loc;
 		}
 		}
@@ -556,7 +556,7 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 				}
 		}
 	if (take_charge == TRUE) {
-		if (is_ident(adven[pc].items[item]) == FALSE)
+		if (!is_ident(adven[pc].items[item]))
 			sprintf(to_draw, "Use: %s",adven[pc].items[item].name);
 			else sprintf(to_draw, "Use: %s",adven[pc].items[item].full_name);
 		add_string_to_buf( to_draw);
@@ -936,7 +936,7 @@ Boolean use_space(location where)
 		make_crate((short) to_loc.x,(short) to_loc.y);
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
 			if ((t_i.items[i].variety > 0) && (same_point(t_i.items[i].item_loc,where))
-			 && (is_contained(t_i.items[i]) == TRUE))
+			 && is_contained(t_i.items[i]))
 			 	t_i.items[i].item_loc = to_loc;
 		}
 	if (is_barrel(where.x,where.y)) {
@@ -950,7 +950,7 @@ Boolean use_space(location where)
 		make_barrel((short) to_loc.x,(short) to_loc.y);
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
 			if ((t_i.items[i].variety > 0) && (same_point(t_i.items[i].item_loc,where))
-			 && (is_contained(t_i.items[i]) == TRUE))
+			 && is_contained(t_i.items[i]))
 			 	t_i.items[i].item_loc = to_loc;
 		}
 		
@@ -984,7 +984,7 @@ Boolean adj_town_look(location where)
 	short i = 0,trap_pc,s1 = 0, s2 = 0, s3 = 0;
 
 	for (i = 0; i < NUM_TOWN_ITEMS; i++) 
-		if ((t_i.items[i].variety > 0) && (is_contained(t_i.items[i]) == TRUE) &&
+		if ((t_i.items[i].variety > 0) && is_contained(t_i.items[i]) &&
 			(same_point(where,t_i.items[i].item_loc) == TRUE))
 				item_there = TRUE;
 
@@ -1013,7 +1013,7 @@ Boolean adj_town_look(location where)
 				}
 		}
 	if ((is_container(where)) && (item_there == TRUE) && (can_open == TRUE)) {
-		get_item(where,6,TRUE);
+		get_item(where,6,true);
 		}
 	else switch (terrain) {
 		case 22: case 23:
@@ -1483,7 +1483,7 @@ void push_things()////
 				ASB("You smash the crate.");			
 				}
 			for (k = 0; k < NUM_TOWN_ITEMS; k++)
-				if ((t_i.items[k].variety > 0) && (is_contained(t_i.items[k]) == TRUE)
+				if ((t_i.items[k].variety > 0) && is_contained(t_i.items[k])
 				&& (same_point(t_i.items[k].item_loc,c_town.p_loc) == TRUE))
 					t_i.items[k].item_properties = t_i.items[k].item_properties & 247;				
 			redraw = TRUE;
@@ -1517,7 +1517,7 @@ void push_things()////
 						ASB("You smash the crate.");			
 						}
 					for (k = 0; k < NUM_TOWN_ITEMS; k++)
-						if ((t_i.items[k].variety > 0) && (is_contained(t_i.items[k]) == TRUE)
+						if ((t_i.items[k].variety > 0) && is_contained(t_i.items[k])
 						&& (same_point(t_i.items[k].item_loc,pc_pos[i]) == TRUE))
 							t_i.items[k].item_properties = t_i.items[k].item_properties & 247;		
 					redraw = TRUE;

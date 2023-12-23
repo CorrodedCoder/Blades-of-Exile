@@ -14,6 +14,7 @@
 #include "graphutl.h"
 #include <cstdio>
 #include "graphutl_helpers.hpp"
+#include "boe/item.hpp"
 
 extern HWND	mainPtr;
 extern short overall_mode;
@@ -441,7 +442,7 @@ void draw_items()
 				(same_point(where_draw,ok_space[3]) == FALSE))
 				;
 			else if ((point_onscreen(center, t_i.items[i].item_loc) == TRUE) &&
-				(is_contained(t_i.items[i]) == FALSE) &&
+				!is_contained(t_i.items[i]) &&
 			   ((cartoon_happening == TRUE) || (party_can_see(t_i.items[i].item_loc) < 6))) {
 					// safety valve
 					//if ((t_i.items[i].graphic_num < 0) || 

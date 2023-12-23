@@ -1397,18 +1397,6 @@ Boolean spend_xp(short pc_num, short mode, short parent)
 }
 
 
-short mage_lore_total()
-{
-	short total = 0,i;
-	
-	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == status::Normal)
-			total += adven[i].skills[11];
-	
-	return total;
-}
-
-
 Boolean poison_weapon( short pc_num, short how_much,short safe)
 //short safe; // 1 - always succeeds
 {
@@ -2009,7 +1997,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 					}
 				if (spell_num == 33) {
 						for (i = 0; i < 24; i++) 
-							if (is_cursed(adven[target].items[i]) == TRUE){
+							if (is_cursed(adven[target].items[i])){
 									r1 = get_ran(1,0,200) - 10 * stat_adj(pc_num,2);
 									if (r1 < 60) {
 										adven[target].items[i].item_properties = 

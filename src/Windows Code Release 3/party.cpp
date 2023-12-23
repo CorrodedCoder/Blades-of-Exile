@@ -1786,7 +1786,7 @@ void do_priest_spell(short pc_num,short spell_num)
 					}
 				if (spell_num == 33) {
 						for (i = 0; i < 24; i++) 
-							if (is_cursed(adven[target].items[i]) == TRUE){
+							if (is_cursed(adven[target].items[i])){
 									r1 = get_ran(1,0,200) - 10 * stat_adj(adven[pc_num],2);
 									if (r1 < 60) {
 										adven[target].items[i].item_properties = 

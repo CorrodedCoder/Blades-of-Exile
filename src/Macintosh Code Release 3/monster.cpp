@@ -956,7 +956,7 @@ void monst_inflict_fields(short which_monst)
 			if ((is_crate(where_check.x,where_check.y)) ||
 				(is_barrel(where_check.x,where_check.y)) )
 				for (k = 0; k < NUM_TOWN_ITEMS; k++)
-					if ((t_i.items[k].variety > 0) && (is_contained(t_i.items[k]) == TRUE)
+					if ((t_i.items[k].variety > 0) && is_contained(t_i.items[k])
 					&& (same_point(t_i.items[k].item_loc,where_check) == TRUE))
 						t_i.items[k].item_properties = t_i.items[k].item_properties & 247;
 			take_crate(where_check.x,where_check.y);
@@ -1078,7 +1078,7 @@ Boolean monst_check_special_terrain(location where_check,short mode,short which_
 					make_crate((short) to_loc.x,(short) to_loc.y);
 				for (i = 0; i < NUM_TOWN_ITEMS; i++)
 					if ((t_i.items[i].variety > 0) && (same_point(t_i.items[i].item_loc,where_check))
-					 && (is_contained(t_i.items[i]) == TRUE))
+					 && is_contained(t_i.items[i]))
 			 			t_i.items[i].item_loc = to_loc;
 						}
 		}
@@ -1092,7 +1092,7 @@ Boolean monst_check_special_terrain(location where_check,short mode,short which_
 				    	make_barrel((short) to_loc.x,(short) to_loc.y);
 				for (i = 0; i < NUM_TOWN_ITEMS; i++)
 					if ((t_i.items[i].variety > 0) && (same_point(t_i.items[i].item_loc,where_check))
-					 && (is_contained(t_i.items[i]) == TRUE))
+					 && is_contained(t_i.items[i]))
 			 			t_i.items[i].item_loc = to_loc;
 				
 				}

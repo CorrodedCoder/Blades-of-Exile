@@ -18,6 +18,7 @@
 #include "graphutl.h"
 #include "graphutl_helpers.hpp"
 #include "boe/utility.hpp"
+#include "boe/item.hpp"
 
 static const std::array heal_types{"Heal Damage","Cure Poison","Cure Disease","Cure Paralysis",
 		"Uncurse Items","Cure Stoned Character","Raise Dead","Resurrection","Cure Dumbfounding"};
@@ -1094,15 +1095,15 @@ short val[20] = {50,75,30,130,100,150, 200,200,300,250,300, 500,600,750,700,1000
 
 void get_item_interesting_string(item_record_type item,char *message)
 {
-	if (is_property(item) == TRUE) {
+	if (is_property(item)) {
 		sprintf(message,"Not yours.");
 		return;
 		}
-	if (is_ident(item) == FALSE) {
+	if (!is_ident(item)) {
 		sprintf(message,"");
 		return;
 		}
-	if (is_cursed(item) == TRUE) {
+	if (is_cursed(item)) {
 		sprintf(message,"Cursed item.");
 		return;
 		}

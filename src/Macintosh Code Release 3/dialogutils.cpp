@@ -435,7 +435,7 @@ void set_up_shop_array()
 				shop_pos++;
 				}
 			for (i = 0; i < 24; i++)
-				if ((adven[current_pc].equip[i] == TRUE) && (is_cursed(adven[current_pc].items[i]) == TRUE))
+				if ((adven[current_pc].equip[i] == TRUE) && is_cursed(adven[current_pc].items[i]))
 					cursed_item = TRUE;
 			if (cursed_item) {
 				store_shop_items[shop_pos] = 704;

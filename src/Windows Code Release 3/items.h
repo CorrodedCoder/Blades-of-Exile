@@ -21,12 +21,11 @@ void give_thing(short pc_num, short item_num);
 void combine_things(short pc_num);
 short dist_from_party(location where);
 void set_item_flag(item_record_type *item);
-short get_item(location place,short pc_num,Boolean check_container);
+short get_item(location place,short pc_num,bool check_container);
 void put_item_graphics();
 
 void make_town_hostile();
 void display_item_event_filter (short item_hit);
-short display_item(location from_loc,short pc_num,short mode, Boolean check_container);
 void fancy_choice_dialog_event_filter (short item_hit);
 short fancy_choice_dialog(short which_dlog,short parent);
 void select_pc_event_filter (short item_hit);

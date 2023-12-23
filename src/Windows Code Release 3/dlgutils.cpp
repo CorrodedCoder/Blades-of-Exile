@@ -24,6 +24,7 @@
 #include "infodlgs.h"
 #include "graphutl.h"
 #include "boe/utility.hpp"
+#include "boe/item.hpp"
 
 #define	NUM_HINTS	30
 
@@ -287,7 +288,7 @@ void handle_sale(short what_chosen,short cost)
 						case 4: 
 							for (i = 0; i < 24; i++)
 								if ((adven[current_pc].equip[i] == TRUE) && 
-									(is_cursed(adven[current_pc].items[i])))
+									is_cursed(adven[current_pc].items[i]))
 										adven[current_pc].items[i].item_properties =
 											adven[current_pc].items[i].item_properties & 239;
   							break;
@@ -434,7 +435,7 @@ void set_up_shop_array()
 				shop_pos++;
 				}
 			for (i = 0; i < 24; i++)
-				if ((adven[current_pc].equip[i] == TRUE) && (is_cursed(adven[current_pc].items[i]) == TRUE))
+				if ((adven[current_pc].equip[i] == TRUE) && is_cursed(adven[current_pc].items[i]))
 					cursed_item = TRUE;
   			if (cursed_item) {
 				store_shop_items[shop_pos] = 704;

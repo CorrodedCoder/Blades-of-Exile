@@ -17,6 +17,7 @@
 #include "graphutl.h"
 #include "graphutl_helpers.hpp"
 #include "boe/hacks.hpp"
+#include "boe/item.hpp"
 
 static const std::array m_mage_sp{"Spark","Minor Haste","Strength","Flame Cloud","Flame",
 						"Minor Poison","Slow","Dumbfound","Stinking Cloud","Summon Beast",
@@ -462,7 +463,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 					//if (adven[pc].items[i_num].variety != 0)
 					//	draw_obj_graphic(i + ((which_item_page[pc] == 1) ? 1 : 0),adven[pc].items[i_num].graphic_num,text_panel_rect); // rect is space holder
 
-							if (is_ident(adven[pc].items[i_num]) == 0)
+							if (!is_ident(adven[pc].items[i_num]))
 								sprintf(to_draw, "%s  ",adven[pc].items[i_num].name);
 								else { /// Don't place # of charges when Sell button up and space tight
 									if ((adven[pc].items[i_num].charges > 0) && (adven[pc].items[i_num].type != 2)
@@ -545,7 +546,7 @@ static void place_buy_button(short position,short pc_num,short item_num,HDC hdc)
 
 	switch (stat_screen_mode) {
 		case 2:
-			if (is_ident(adven[pc_num].items[item_num]) == FALSE) { 
+			if (!is_ident(adven[pc_num].items[item_num])) { 
 				item_area_button_active[position][5] = TRUE;
 				source_rect = button_sources[0];
 				val_to_place = shop_identify_cost;
@@ -555,8 +556,8 @@ static void place_buy_button(short position,short pc_num,short item_num,HDC hdc)
 			if (((adven[pc_num].items[item_num].variety < 7) || (adven[pc_num].items[item_num].variety == 23) ||
 				(adven[pc_num].equip[item_num] == FALSE) &&
 				(adven[pc_num].items[item_num].variety == 24)) &&
-				(is_ident(adven[pc_num].items[item_num]) == TRUE) && (val_to_place > 0) &&
-				 (is_cursed(adven[pc_num].items[item_num]) == FALSE)) { 
+				is_ident(adven[pc_num].items[item_num]) && (val_to_place > 0) &&
+				 !is_cursed(adven[pc_num].items[item_num])) { 
 				item_area_button_active[position][5] = TRUE;
 				source_rect = button_sources[1];
 				}
@@ -564,25 +565,25 @@ static void place_buy_button(short position,short pc_num,short item_num,HDC hdc)
 		case 4: // sell armor
 			if ((adven[pc_num].items[item_num].variety >= 12) && (adven[pc_num].items[item_num].variety <= 17) &&
 				(adven[pc_num].equip[item_num] == FALSE) &&
-				(is_ident(adven[pc_num].items[item_num]) == TRUE) && (val_to_place > 0) &&
-				 (is_cursed(adven[pc_num].items[item_num]) == FALSE)) { 
+				is_ident(adven[pc_num].items[item_num]) && (val_to_place > 0) &&
+				!is_cursed(adven[pc_num].items[item_num])) { 
 				item_area_button_active[position][5] = TRUE;
 				source_rect = button_sources[1];
 				}
 			break;
 		case 5: // sell any
-			if ((val_to_place > 0) && (is_ident(adven[pc_num].items[item_num]) == TRUE) && 
+			if ((val_to_place > 0) && is_ident(adven[pc_num].items[item_num]) && 
 				(adven[pc_num].equip[item_num] == FALSE) &&
-				 (is_cursed(adven[pc_num].items[item_num]) == FALSE)) { 
+				 !is_cursed(adven[pc_num].items[item_num])) { 
 				item_area_button_active[position][5] = TRUE;
 				source_rect = button_sources[1];
 				}
 			break;
 		case 6: // augment weapons 
 			if ((adven[pc_num].items[item_num].variety < 3) &&
-				(is_ident(adven[pc_num].items[item_num]) == TRUE) &&
+				is_ident(adven[pc_num].items[item_num]) &&
 				(adven[pc_num].items[item_num].ability == 0) &&
-				(is_magic(adven[pc_num].items[item_num]) == FALSE)) { 
+				!is_magic(adven[pc_num].items[item_num])) { 
 				item_area_button_active[position][5] = TRUE;
 				source_rect = button_sources[2];
 				val_to_place = max(aug_cost[shop_identify_cost] * 100,adven[pc_num].items[item_num].value * (5 + aug_cost[shop_identify_cost]));
@@ -1039,8 +1040,8 @@ short do_look(location space)
 			add_string_to_buf("    Many items");
 			else for (i = 0; i < NUM_TOWN_ITEMS; i++) {
 				if ((t_i.items[i].variety != 0) && (t_i.items[i].variety != 3) &&(t_i.items[i].variety != 11) &&
-					 (same_point(space,t_i.items[i].item_loc) == TRUE) && (is_contained(t_i.items[i]) == FALSE)) {
-					if (is_ident(t_i.items[i]) == TRUE)
+					 (same_point(space,t_i.items[i].item_loc) == TRUE) && !is_contained(t_i.items[i])) {
+					if (is_ident(t_i.items[i]))
 						sprintf(store_string, "    %s",t_i.items[i].full_name);
 						else sprintf(store_string, "    %s",t_i.items[i].name);
 					add_string_to_buf( store_string);
@@ -1766,35 +1767,4 @@ void MoveTo(short x, short y)
 void MoveToDrawString(char *string,HDC hdc)
 {
 	DrawString(string,store_text_x,store_text_y, hdc);
-}
-////
-Boolean is_ident(item_record_type item)
-{
-	if (item.item_properties & 1)
-		return TRUE;
-		else return FALSE;
-}
-Boolean is_magic(item_record_type item)
-{
-	if (item.item_properties & 4)
-		return TRUE;
-		else return FALSE;
-}
-Boolean is_contained(item_record_type item)
-{
-	if (item.item_properties & 8)
-		return TRUE;
-		else return FALSE;
-}
-Boolean is_cursed(item_record_type item)
-{
-	if (item.item_properties & 16)
-		return TRUE;
-		else return FALSE;
-}
-Boolean is_property(item_record_type item)
-{
-	if (item.item_properties & 2)
-		return TRUE;
-		else return FALSE;
 }

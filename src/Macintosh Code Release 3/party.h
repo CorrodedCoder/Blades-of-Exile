@@ -26,7 +26,6 @@ Boolean spend_xp_event_filter (short item_hit);
 void do_xp_draw();
 void draw_xp_skills();
 Boolean spend_xp(short pc_num, short mode, short parent);
-short mage_lore_total();
 Boolean poison_weapon( short pc_num, short how_much,short safe);
 void cast_spell(short type,short situation);
 Boolean repeat_cast_ok(short type);

@@ -18,3 +18,26 @@ bool item_is_weapon(const item_record_type& item)
 {
 	return (item.variety == 1) || (item.variety == 2) || (item.variety == 5) || (item.variety == 24);
 }
+
+bool is_ident(item_record_type item)
+{
+	return item.item_properties & 1;
+}
+
+bool is_magic(item_record_type item)
+{
+	return item.item_properties & 4;
+}
+
+bool is_contained(item_record_type item)
+{
+	return item.item_properties & 8;
+}
+bool is_cursed(item_record_type item)
+{
+	return item.item_properties & 16;
+}
+bool is_property(item_record_type item)
+{
+	return item.item_properties & 2;
+}

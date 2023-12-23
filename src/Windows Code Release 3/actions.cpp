@@ -555,9 +555,9 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 							add_string_to_buf("Get: Not while in boat.           ");
 							}
 						if (overall_mode == 1)
-							j = get_item(c_town.p_loc,6,FALSE);
+							j = get_item(c_town.p_loc,6,false);
 							else {
-								j = get_item(pc_pos[current_pc],current_pc,FALSE);
+								j = get_item(pc_pos[current_pc],current_pc,false);
 								take_ap(4);
 								}
 						if (j > 0) {
