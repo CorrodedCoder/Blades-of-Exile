@@ -1239,10 +1239,9 @@ void place_glands(location where,unsigned char m_type)
 short party_total_level() 
 {
 	short i,j = 0;
-	
 	for (i = 0; i < 6; i++)
 		if (adven[i].main_status == status::Normal)
-			j += adven[i].level;
+			j += pc_level(adven[i]);
 	return j;
 }
 

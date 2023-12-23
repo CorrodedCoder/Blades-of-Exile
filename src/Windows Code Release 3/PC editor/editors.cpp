@@ -260,20 +260,6 @@ short choice_dialog(short pic,short num)
 	return answer_given;
 }
 
-
-
-short party_total_level() 
-{
-	short i,j = 0;
-	
-	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == status::Normal)
-			j += adven[i].level;
-	return j;
-}
-
-
-
 void display_traits_graphics()
 {
 	short i,store;

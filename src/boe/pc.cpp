@@ -336,3 +336,8 @@ short pc_luck(const pc_record_type& pc)
 {
 	return pc.skills[18];
 }
+
+short pc_level(const pc_record_type& pc)
+{
+	return pc.level;
+}
