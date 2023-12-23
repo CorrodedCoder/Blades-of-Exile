@@ -1543,7 +1543,7 @@ void initiate_outdoor_combat(short i)
 	initiate_redraw();
 
 	// Is combat too easy?
-	if ((party_total_level() > ((out_enc_lev_tot(i) * 5) / 3) ) && (out_enc_lev_tot(i) < 200)
+	if ((adventurers_level_total(adven) > ((out_enc_lev_tot(i) * 5) / 3) ) && (out_enc_lev_tot(i) < 200)
 		&& (party.out_c[i].what_monst.cant_flee % 10 != 1)) {
 		add_string_to_buf("Combat: Monsters fled!           ");
 		party.out_c[i].exists = FALSE;

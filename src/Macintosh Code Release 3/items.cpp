@@ -1427,16 +1427,6 @@ void place_glands(location where,unsigned char m_type)
 		}
 }
 
-short party_total_level() 
-{
-	short i,j = 0;
-	
-	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == status::Normal)
-			j += adven[i].level;
-	return j;
-}
-
 void reset_item_max()
 {
 	short i;
@@ -1488,9 +1478,9 @@ void place_treasure(location where,short level,short loot,short mode)
 		amt = get_ran(2,1,7) + 1;
 		else amt = loot * (get_ran(1,0,10 + (loot * 6) + (level * 2)) + 5);
 
-	if (party_total_level() <= 12)
+	if (adventurers_level_total(adven) <= 12)
 		amt += 1;	
-	if ((party_total_level() <= 60)	&& (amt > 2))
+	if ((adventurers_level_total(adven) <= 60)	&& (amt > 2))
 		amt += 2;
 		
 	if (amt > 3) {	
@@ -1498,7 +1488,7 @@ void place_treasure(location where,short level,short loot,short mode)
 			new_item.item_level = amt;
 			r1 = get_ran(1,1,9);
 			if (((loot > 1) && (r1 < 7)) || ((loot == 1) && (r1 < 5)) || (mode == 1)
-				|| ((r1 < 6) && (party_total_level() < 30)) || (loot > 2) )
+				|| ((r1 < 6) && (adventurers_level_total(adven) < 30)) || (loot > 2) )
 				place_item(new_item,where,FALSE);
 		}
 	for (j = 0; j < 5; j++) {
