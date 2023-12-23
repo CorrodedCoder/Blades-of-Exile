@@ -1311,11 +1311,11 @@ void place_treasure(location where,short level,short loot,short mode)
 		}
 	for (j = 0; j < 5; j++) {
 		r1 = get_ran(1,0,100);
-		if ((treas_chart[loot][j] >= 0) && (r1 <= treas_odds[loot][j] + luck_total(adven))) {
+		if ((treas_chart[loot][j] >= 0) && (r1 <= treas_odds[loot][j] + adventurers_luck_total(adven))) {
 			r1 = get_ran(1,0,9);
 			min = min_chart[treas_chart[loot][j]][r1];
 			r1 = get_ran(1,0,9);
-			max = (min + level + (2 * (loot - 1)) + (luck_total(adven) / 3)) * max_mult[treas_chart[loot][j]][r1];
+			max = (min + level + (2 * (loot - 1)) + (adventurers_luck_total(adven) / 3)) * max_mult[treas_chart[loot][j]][r1];
 			if (get_ran(1,0,1000) == 500) {
 				max = 10000;
 				min = 100;
@@ -1369,16 +1369,6 @@ void place_treasure(location where,short level,short loot,short mode)
 			}
 		}
 
-}
-
-short luck_total(const Adventurers& adventurers)
-{
-	short total = 0;
-	short i = 0;
-	for (i = 0; i < 6; i++)
-		if (adventurers[i].main_status == status::Normal)
-			total += pc_luck(adventurers[i]);
-	return total;
 }
 
 item_record_type return_treasure(short loot,short level,short mode)

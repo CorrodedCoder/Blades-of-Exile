@@ -63,3 +63,13 @@ bool adventurers_has_ability(const Adventurers& adventurers, short abil)
 				return true;
 	return false;
 }
+
+short adventurers_luck_total(const Adventurers& adventurers)
+{
+	short total = 0;
+	size_t i = 0;
+	for (i = 0; i < 6; i++)
+		if (adventurers[i].main_status == status::Normal)
+			total += pc_luck(adventurers[i]);
+	return total;
+}
