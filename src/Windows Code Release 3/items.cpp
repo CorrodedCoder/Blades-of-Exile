@@ -48,37 +48,6 @@ extern Boolean dialog_not_toast;
 extern HBITMAP pcs_gworld;
 extern HDC main_dc,main_dc2,main_dc3;
 
-////
-static const Boolean c_equippable[26] = {FALSE,TRUE,TRUE,FALSE,TRUE, TRUE,TRUE,FALSE,FALSE,FALSE,
-						TRUE,FALSE,TRUE,TRUE,TRUE, TRUE,TRUE,TRUE,TRUE,TRUE,
-						FALSE,FALSE,TRUE,TRUE,TRUE,TRUE};
-static const short c_num_hands_to_use[26] = {0,1,2,0,0, 0,0,0,0,0 ,0,0,1,0,0, 0,1,0,0,0, 0,0,0,0,0, 0};
-static const short c_num_that_can_equip[26] = {0,2,1,0,1, 1,1,0,0,0, 1,0,1,1,1, 1,1,1,2,1, 0,0,1,1,1, 1};
-
-// For following, if an item of type n is equipped, no other items of type n can be equipped,
-// if n > 0
-static const short c_excluding_types[26] = { 0,0,0,0,2, 1,1,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,2,1, 2 };
-
-static Boolean equippable(item_variety variety)
-{
-	return c_equippable[static_cast<short>(variety)];
-}
-
-static short num_hands_to_use(item_variety variety)
-{
-	return c_num_hands_to_use[static_cast<short>(variety)];
-}
-
-static short num_that_can_equip(item_variety variety)
-{
-	return c_num_that_can_equip[static_cast<short>(variety)];
-}
-
-static short excluding_types(item_variety variety)
-{
-	return c_excluding_types[static_cast<short>(variety)];
-}
-
 static short item_max = 0;
 
 short first_item_shown,store_get_mode,current_getting_pc,store_pcnum,total_items_gettable; // these 5 used for get items dialog

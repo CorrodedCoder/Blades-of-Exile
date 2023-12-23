@@ -46,17 +46,6 @@ extern GWorldPtr pcs_gworld;
 extern ModalFilterUPP main_dialog_UPP;
 extern scenario_data_type scenario;
 
-////
-static const Boolean equippable[26] = {FALSE,TRUE,TRUE,FALSE,TRUE, TRUE,TRUE,FALSE,FALSE,FALSE,
-						TRUE,FALSE,TRUE,TRUE,TRUE, TRUE,TRUE,TRUE,TRUE,TRUE,
-						FALSE,FALSE,TRUE,TRUE,TRUE,TRUE};
-static const short num_hands_to_use[26] = {0,1,2,0,0, 0,0,0,0,0 ,0,0,1,0,0, 0,1,0,0,0, 0,0,0,0,0, 0};
-static const short num_that_can_equip[26] = {0,2,1,0,1, 1,1,0,0,0, 1,0,1,1,1, 1,1,1,2,1, 0,0,1,1,1, 1};
-
-// For following, if an item of type n is equipped, no other items of type n can be equipped, 
-// if n > 0
-static const short excluding_types[26] = {0,0,0,0,2, 1,1,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,2,1, 2};
-
 static short item_max = 0;
 
 short first_item_shown,store_get_mode,current_getting_pc,store_pcnum,total_items_gettable; // these 5 used for get items dialog
@@ -67,36 +56,6 @@ short store_dnum;
 
 static short display_item(location from_loc, short pc_num, short mode, bool check_container);
 
-
-void sort_pc_items(short pc_num)
-{
-	item_record_type store_item;
-	////
-	short item_priority[26] = {20,8,8,20,9, 9,3,2,1,0, 7,20,10,10,10, 10,10,10,5,6, 4,11,12,9,9, 9};
-	Boolean no_swaps = FALSE,store_equip;
-	short i;
-	
-	while (no_swaps == FALSE) {
-		no_swaps = TRUE;
-		for (i = 0; i < 23; i++)
-			if (item_priority[adven[pc_num].items[i + 1].variety] < 
-			  item_priority[adven[pc_num].items[i].variety]) {
-			  	no_swaps = FALSE;
-			  	store_item = adven[pc_num].items[i + 1];
-			  	adven[pc_num].items[i + 1] = adven[pc_num].items[i];
-			  	adven[pc_num].items[i] = store_item;
-			  	store_equip = adven[pc_num].equip[i + 1];
-	 			adven[pc_num].equip[i + 1] = adven[pc_num].equip[i];
-				adven[pc_num].equip[i] = store_equip;
-				if (adven[pc_num].weap_poisoned == i + 1)
-					adven[pc_num].weap_poisoned--;
-					else if (adven[pc_num].weap_poisoned == i)
-						adven[pc_num].weap_poisoned++;
-			  	}
-		}
-}
-
-////  
 Boolean give_to_pc(short pc_num,item_record_type  item,short  print_result)
 {
 	short free_space;
@@ -142,7 +101,7 @@ Boolean give_to_pc(short pc_num,item_record_type  item,short  print_result)
 				}
 
 			combine_things(pc_num);
-			sort_pc_items(pc_num);
+			sort_pc_items(adven[pc_num]);
 			return TRUE;
 			}
 	return FALSE;
@@ -182,7 +141,7 @@ Boolean forced_give(short item_num,short abil) ////
 					else sprintf(announce_string,"  %s gets %s.",adven[i].name,item.full_name);
 				add_string_to_buf(announce_string);
 				combine_things(i);
-				sort_pc_items(i);
+				sort_pc_items(adven[i]);
 				return TRUE;
 				}	
 	return FALSE;
@@ -523,22 +482,22 @@ if ((overall_mode == 10) && (adven[pc_num].items[item_num].variety == 11))
 		}
 
 	else {  // equip
-		if (equippable[adven[pc_num].items[item_num].variety] == FALSE)
+		if (equippable(adven[pc_num].items[item_num].variety) == FALSE)
 			add_string_to_buf("Equip: Can't equip this item.");
 				else {
 					for (i = 0; i < 24; i++) 
 						if (adven[pc_num].equip[i] == TRUE) {
 							if (adven[pc_num].items[i].variety == adven[pc_num].items[item_num].variety)
 								num_equipped_of_this_type++;
-							num_hands_occupied = num_hands_occupied + num_hands_to_use[adven[pc_num].items[i].variety];
+							num_hands_occupied = num_hands_occupied + num_hands_to_use(adven[pc_num].items[i].variety);
 						}
 						
 						
-					equip_item_type = excluding_types[adven[pc_num].items[item_num].variety];
+					equip_item_type = excluding_types(adven[pc_num].items[item_num].variety);
 					// Now if missile is already equipped, no more missiles
 					if (equip_item_type > 0) {
 						for (i = 0; i < 24; i++) 
-							if ((adven[pc_num].equip[i] == TRUE) && (excluding_types[adven[pc_num].items[i].variety] == equip_item_type)) {
+							if ((adven[pc_num].equip[i] == TRUE) && (excluding_types(adven[pc_num].items[i].variety) == equip_item_type)) {
 								add_string_to_buf("Equip: You have something of");
 								add_string_to_buf("  this type equipped.");
 								return;
@@ -547,9 +506,9 @@ if ((overall_mode == 10) && (adven[pc_num].items[item_num].variety == 11))
 
 					if ((is_combat()) && (adven[pc_num].items[item_num].variety == 13))
 						add_string_to_buf("Equip: Not armor in combat");
-						else if ((2 - num_hands_occupied) < num_hands_to_use[adven[pc_num].items[item_num].variety])
+						else if ((2 - num_hands_occupied) < num_hands_to_use(adven[pc_num].items[item_num].variety))
 							add_string_to_buf("Equip: Not enough free hands");
-							else if (num_that_can_equip[adven[pc_num].items[item_num].variety] <= num_equipped_of_this_type)
+							else if (num_that_can_equip(adven[pc_num].items[item_num].variety) <= num_equipped_of_this_type)
 								add_string_to_buf("Equip: Can't equip another");
 								else {
 									adven[pc_num].equip[item_num] = TRUE;

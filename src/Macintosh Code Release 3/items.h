@@ -1,4 +1,3 @@
-void sort_pc_items(short pc_num);
 Boolean give_to_pc(short pc_num,item_record_type  item,short  print_result);
 Boolean give_to_party(item_record_type item,short print_result);
 Boolean forced_give(short item_num,short abil);
