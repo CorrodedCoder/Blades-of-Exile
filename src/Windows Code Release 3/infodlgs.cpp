@@ -414,7 +414,7 @@ Boolean display_pc_item_event_filter (short item_hit)
 	return FALSE;
 }
 
-void display_pc_item(short pc_num,short item,item_record_type si,short parent)
+void display_pc_item(short pc_num,short item,const item_record_type& si,short parent)
 {
 		store_item_pc = pc_num;
 		if (pc_num == 6)

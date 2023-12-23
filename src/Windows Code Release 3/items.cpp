@@ -78,7 +78,7 @@ short procinst_exists[18] = {0,0,0,0,0, 0,0,0,0,0 ,0,0,0,0,0, 0,0,0};
 
 static short display_item(location from_loc, short pc_num, short mode, bool check_container);
 
-Boolean give_to_pc(short pc_num,item_record_type  item,short  print_result)
+Boolean give_to_pc(short pc_num,const item_record_type& item,short  print_result)
 {
 	short free_space;
 	char announce_string[60];
@@ -106,16 +106,16 @@ Boolean give_to_pc(short pc_num,item_record_type  item,short  print_result)
 	if (((free_space = pc_has_space(adven[pc_num])) == 24) || (adven[pc_num].main_status != status::Normal))
 		return FALSE;
 		else {
-			item.item_properties = item.item_properties & 253; // not property
-			item.item_properties = item.item_properties & 247; // not contained
 			adven[pc_num].items[free_space] = item;
+			adven[pc_num].items[free_space].item_properties &= 253; // not property
+			adven[pc_num].items[free_space].item_properties &= 247; // not contained
 
 			if (print_result == 1) {
 				if (stat_window == pc_num)
 					put_item_screen(stat_window,0);
 			}
 			if (in_startup_mode == FALSE) {
-				if (is_ident(item) == 0)
+				if (is_ident(adven[pc_num].items[free_space]) == 0)
 					sprintf(announce_string,"  %s gets %s.",adven[pc_num].name,item.name);
 					else sprintf(announce_string,"  %s gets %s.",adven[pc_num].name,item.full_name);
 				if (print_result == TRUE)
@@ -129,7 +129,7 @@ Boolean give_to_pc(short pc_num,item_record_type  item,short  print_result)
 	return FALSE;
 }
 
-Boolean give_to_party(item_record_type item,short print_result)
+Boolean give_to_party(const item_record_type& item,short print_result)
 {
 	short i = 0;
 	
@@ -243,7 +243,7 @@ short take_food(short amount,Boolean print_result)
 }
 
 // returns 1 if OK, 2 if no room, 3 if not enough cash, 4 if too heavy, 5 if too many of item
-short pc_ok_to_buy(short pc_num,short cost,item_record_type item)
+short pc_ok_to_buy(short pc_num,short cost,const item_record_type& item)
 {
 	short i;
 	
@@ -495,7 +495,7 @@ void drop_item(short pc_num,short item_num,location where_drop)
 		}
 }
 
-Boolean place_item(item_record_type item,location where,Boolean forced)
+Boolean place_item(const item_record_type& item,location where,Boolean forced)
 {
 	short i;
 	
@@ -1247,7 +1247,7 @@ void reset_item_max()
 			item_max = i + 1;
 }
 
-short item_val(item_record_type item)
+short item_val(const item_record_type& item)
 {
 	if (item.charges == 0)
 		return item.value;

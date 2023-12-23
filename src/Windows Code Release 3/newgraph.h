@@ -28,7 +28,7 @@ void refresh_shopping();
 item_record_type store_mage_spells(short which_s) ;
 item_record_type store_priest_spells(short which_s);
 item_record_type store_alchemy(short which_s);
-void get_item_interesting_string(item_record_type item,char *message);
+void get_item_interesting_string(const item_record_type& item,char *message);
 void click_talk_rect(char *str_to_place,char *str_to_place2,RECT c_rect);
 void place_talk_str(char *str_to_place,const char *str_to_place2,short color,RECT c_rect);
 short scan_for_response(char *str);

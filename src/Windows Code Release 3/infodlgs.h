@@ -9,7 +9,7 @@ Boolean display_pc_event_filter (short item_hit);
 void display_pc(short pc_num,short mode,short parent_num);
 void put_item_info(short pc,short item);
 Boolean display_pc_item_event_filter (short item_hit);
-void display_pc_item(short pc_num,short item,item_record_type si,short parent);
+void display_pc_item(short pc_num,short item,const item_record_type& si,short parent);
 void put_monst_info();
 Boolean display_monst_event_filter (short item_hit);
 void display_monst(short array_pos,creature_data_type *which_m,short mode);

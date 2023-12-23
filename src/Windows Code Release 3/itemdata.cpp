@@ -7,7 +7,6 @@
 #include <cstring>
 
 
-item_record_type convert_item (short_item_record_type s_item);
 extern piles_of_stuff_dumping_type2 data_store2;
 
 short loot_min[5] = {0,0,5,50,400};
@@ -16,15 +15,10 @@ short loot_max[5] = {3,8,40,800,4000};
 
 item_record_type get_stored_item(short which)
 {
-	item_record_type s_item;
-
 	if ((which >= 400) || (which < 0)) {
-		s_item = item_record_type{};
-		return s_item;
-		}
-	
-	s_item = data_store2.scen_item_list.scen_items[which]; 
-	return s_item;
+		return item_record_type{};
+	}
+	return data_store2.scen_item_list.scen_items[which];
 }
 
 item_record_type get_food()
@@ -40,7 +34,6 @@ item_record_type get_food()
 	// food doesn't always appear
 	if (get_ran(1,0,2) != 1)
 		food.variety = 0;
-	
 	return food;
 }
 
@@ -65,39 +58,27 @@ item_record_type pull_item_of_type(short loot_max,short min_val,short max_val,sh
 				return temp_i;
 			}
 		}
-	temp_i = item_record_type{};
-	return temp_i;
+	return item_record_type{};
 }
 
-item_record_type	get_weapon(short loot,short level)
+item_record_type get_weapon(short loot,short level)
 {
-	item_record_type weapon;
-
 	if (loot == 0)
 		return item_record_type{};
-	weapon = pull_item_of_type(loot,loot_min[loot],loot_max[loot],1,2,-1); 
-
-	return weapon;
-
+	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],1,2,-1);
 }
 
-item_record_type	get_armor(short loot,short level)
+item_record_type get_armor(short loot,short level)
 {
-	short r1;
-	item_record_type armor;
-
 	if (loot == 0)
 		return item_record_type{};
-	r1 = get_ran(1,(loot - 1) * 5 + 124,142);
-	
-	armor = pull_item_of_type(loot,loot_min[loot],loot_max[loot],13,-1,-1); 
-
-	return armor;
+	short r1 = get_ran(1,(loot - 1) * 5 + 124,142);
+	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],13,-1,-1); 
 }
 
 item_record_type get_helm(short loot)
 {
-	return  pull_item_of_type(loot,loot_min[loot],loot_max[loot],14,-1,-1); 
+	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],14,-1,-1); 
 }
 
 item_record_type get_gloves(short loot)
@@ -105,43 +86,36 @@ item_record_type get_gloves(short loot)
 	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],15,-1,-1); 
 }
 
-
-
 item_record_type get_boots(short loot)
 {
 	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],17,-1,-1); 
 }
 
-item_record_type	get_shield(short loot)
+item_record_type get_shield(short loot)
 {
 	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],12,-1,-1); 
 }
 
-item_record_type	get_potion(short loot)
+item_record_type get_potion(short loot)
 {
-	item_record_type p;
-	
 	if (get_ran(1,0,80) < 20 * (4 - loot))
-		p = pull_item_of_type(loot,loot_min[loot],loot_max[loot] / 2,7,-1,-1); 
-		else p = pull_item_of_type(loot,loot_min[loot],loot_max[loot],7,-1,-1); 
-	
-	return p;
+		return pull_item_of_type(loot,loot_min[loot],loot_max[loot] / 2,7,-1,-1);
+	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],7,-1,-1); 
 }
 
-item_record_type	get_scroll(short loot)
+item_record_type get_scroll(short loot)
 {
 	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],8,-1,-1); 
 }
 
-item_record_type	get_missile(short loot)
+item_record_type get_missile(short loot)
 {
 	if (get_ran(1,0,2) < 2)
 		return pull_item_of_type(loot,loot_min[loot],loot_max[loot],5,6,4); 
 	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],23,24,25); 
-
 }
 
-item_record_type	get_poison(short loot,short level)
+item_record_type get_poison(short loot,short level)
 {
 	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],20,-1,-1); 
 }

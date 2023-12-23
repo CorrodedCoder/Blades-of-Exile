@@ -1093,7 +1093,7 @@ short val[20] = {50,75,30,130,100,150, 200,200,300,250,300, 500,600,750,700,1000
 	return spell; 
 }
 
-void get_item_interesting_string(item_record_type item,char *message)
+void get_item_interesting_string(const item_record_type& item,char *message)
 {
 	if (is_property(item)) {
 		sprintf(message,"Not yours.");
