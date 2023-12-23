@@ -72,7 +72,6 @@ item_record_type get_armor(short loot,short level)
 {
 	if (loot == 0)
 		return item_record_type{};
-	short r1 = get_ran(1,(loot - 1) * 5 + 124,142);
 	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],13,-1,-1); 
 }
 

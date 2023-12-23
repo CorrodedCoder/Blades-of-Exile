@@ -1430,13 +1430,6 @@ void reset_item_max()
 			item_max = i + 1;
 }
 
-short item_val(item_record_type item)
-{
-	if (item.charges == 0)
-		return item.value;
-	return item.charges * item.value;
-}
-
 //// rewrite
 void place_treasure(location where,short level,short loot,short mode)
 //short mode;  // 0 - normal, 1 - force

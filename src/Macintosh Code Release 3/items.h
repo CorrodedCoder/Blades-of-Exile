@@ -52,7 +52,6 @@ void make_cursor_watch() ;
 DialogPtr other_make_dialog(short which);
 void place_glands(location where,unsigned char m_type);
 void reset_item_max();
-short item_val(item_record_type item);
 void place_treasure(location where,short level,short loot,short mode);
 item_record_type return_treasure(short loot,short level,short mode);
 void frame_button(Rect button_rect);

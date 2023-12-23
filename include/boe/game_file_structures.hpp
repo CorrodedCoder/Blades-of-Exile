@@ -429,6 +429,22 @@ enum class affect: short {
 	Acid = 13,
 };
 
+enum class item_type
+{
+	// weapon = 1,2
+	Potion = 7,
+	Scroll = 8,
+	Wand = 9,
+	Shield = 12,
+	Armor = 13,
+	Helm = 14,
+	Gloves = 15,
+	Boots = 17,
+	// missile = 5,6,4,23,24,25
+	Ring = 18,
+	Necklace = 19,
+	Poison = 20,
+};
 
 
 // for game

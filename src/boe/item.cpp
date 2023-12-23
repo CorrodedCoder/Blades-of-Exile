@@ -14,6 +14,13 @@ short item_weight(const item_record_type& item)
 	return static_cast<short>(item.weight);
 }
 
+short item_val(const item_record_type& item)
+{
+	if (item.charges == 0)
+		return item.value;
+	return item.charges * item.value;
+}
+
 bool item_is_weapon(const item_record_type& item)
 {
 	return (item.variety == 1) || (item.variety == 2) || (item.variety == 5) || (item.variety == 24);
