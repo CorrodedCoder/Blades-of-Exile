@@ -387,7 +387,7 @@ if ((overall_mode == 10) && (adven[pc_num].items[item_num].variety == item_varie
 		}
 
 	else {  // equip
-		if (equippable(adven[pc_num].items[item_num].variety) == FALSE)
+		if (!equippable(adven[pc_num].items[item_num].variety))
 			add_string_to_buf("Equip: Can't equip this item.");
 				else {
 					for (i = 0; i < 24; i++) 

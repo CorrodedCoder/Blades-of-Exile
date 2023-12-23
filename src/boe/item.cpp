@@ -1,16 +1,17 @@
 #include "boe/item.hpp"
+#include <array>
 
 namespace {
 
-const Boolean c_equippable[26] = { BOE_FALSE,BOE_TRUE,BOE_TRUE,BOE_FALSE,BOE_TRUE, BOE_TRUE,BOE_TRUE,BOE_FALSE,BOE_FALSE,BOE_FALSE,
-						BOE_TRUE,BOE_FALSE,BOE_TRUE,BOE_TRUE,BOE_TRUE, BOE_TRUE,BOE_TRUE,BOE_TRUE,BOE_TRUE,BOE_TRUE,
-						BOE_FALSE,BOE_FALSE,BOE_TRUE,BOE_TRUE,BOE_TRUE,BOE_TRUE };
-const short c_num_hands_to_use[26] = { 0,1,2,0,0, 0,0,0,0,0 ,0,0,1,0,0, 0,1,0,0,0, 0,0,0,0,0, 0 };
-const short c_num_that_can_equip[26] = { 0,2,1,0,1, 1,1,0,0,0, 1,0,1,1,1, 1,1,1,2,1, 0,0,1,1,1, 1 };
+const std::array<bool,26> c_equippable{ false,true,true,false,true,true,true,false,false,false,
+						true,false,true,true,true, true,true,true,true,true,
+						false,false,true,true,true,true };
+const std::array<short,26> c_num_hands_to_use{ 0,1,2,0,0, 0,0,0,0,0 ,0,0,1,0,0, 0,1,0,0,0, 0,0,0,0,0, 0 };
+const std::array<short,26> c_num_that_can_equip{ 0,2,1,0,1, 1,1,0,0,0, 1,0,1,1,1, 1,1,1,2,1, 0,0,1,1,1, 1 };
 
 // For following, if an item of type n is equipped, no other items of type n can be equipped,
 // if n > 0
-const short c_excluding_types[26] = { 0,0,0,0,2, 1,1,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,2,1, 2 };
+const std::array<short,26> c_excluding_types{ 0,0,0,0,2, 1,1,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,2,1, 2 };
 
 }
 
@@ -63,23 +64,23 @@ bool is_property(const item_record_type& item)
 	return item.item_properties & 2;
 }
 
-Boolean equippable(item_variety variety)
+bool equippable(item_variety variety)
 {
-	return c_equippable[static_cast<short>(variety)];
+	return c_equippable.at(static_cast<size_t>(variety));
 }
 
 short num_hands_to_use(item_variety variety)
 {
-	return c_num_hands_to_use[static_cast<short>(variety)];
+	return c_num_hands_to_use.at(static_cast<size_t>(variety));
 }
 
 short num_that_can_equip(item_variety variety)
 {
-	return c_num_that_can_equip[static_cast<short>(variety)];
+	return c_num_that_can_equip.at(static_cast<size_t>(variety));
 }
 
 short excluding_types(item_variety variety)
 {
-	return c_excluding_types[static_cast<short>(variety)];
+	return c_excluding_types.at(static_cast<size_t>(variety));
 }
 
