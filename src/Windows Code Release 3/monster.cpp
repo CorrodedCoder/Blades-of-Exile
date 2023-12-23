@@ -28,7 +28,7 @@ extern Adventurers adven;
 extern big_tr_type  t_d;
 extern short monst_target[T_M]; // 0-5 target that pc   6 - no target  100 + x - target monster x
 extern short spell_caster, missile_firer,current_monst_tactic;
-extern short hit_chance[21];
+extern const short hit_chance[51];
 extern unsigned char misc_i[64][64];
 extern location monster_targs[T_M];
 
@@ -39,9 +39,9 @@ extern town_item_list 	t_i;
 
 
 
-short charm_odds[20] = {90,90,85,80,78, 75,73,60,40,30, 20,10,5,2,1, 0,0,0,0,0};	
+static const short charm_odds[20] = {90,90,85,80,78, 75,73,60,40,30, 20,10,5,2,1, 0,0,0,0,0};	
 
-creature_start_type null_start_type = {0,0,{80,80},1,0,0,0,0,0,0,0, 0,-1,-1,-1};
+static const creature_start_type null_start_type = {0,0,{80,80},1,0,0,0,0,0,0,0, 0,-1,-1,-1};
 
 monster_record_type return_monster_template(unsigned char store)
 {	monster_record_type monst;

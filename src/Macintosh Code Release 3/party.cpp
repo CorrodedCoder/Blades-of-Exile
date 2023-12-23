@@ -86,7 +86,7 @@ char *priest_s_name[] = {"Minor Bless","Minor Heal","Weaken Poison","Turn Undead
 		"Resurrection Bal","Medium Energy Ptn.","Knowledge Brew"	,
 		"Strong Strength","Bliss","Strong Power"
 		};
-	short spell_w_cast[2][62] = {{0,1,1,1,1,1,3,4,1,2, 1,1,1,1,1,1,4,1,4,1, 2,1,1,0,1,1,4,1,1,0,
+	extern const short spell_w_cast[2][62] = {{0,1,1,1,1,1,3,4,1,2, 1,1,1,1,1,1,4,1,4,1, 2,1,1,0,1,1,4,1,1,0,
 							1,1,1,2,4,1,1,1, 2,1,1,2,4,4,1,1, 1,1,1,1,4,4,1,5, 1,4,1,4,4,4,4,1},
 							{1,0,0,1,3,1,1,3,2,1, 1,0,1,0,1,4,2,1,1,0, 0,0,1,2,0,3,1,0,0,1,
 							0,1,1,3,4,1,0,0, 1,0,3,1,1,4,2,4, 0,0,0,3,4,1,1,1, 0,1,3,1,4,1,5,0}};
@@ -122,7 +122,8 @@ extern short pc_last_cast[2][6];
 extern effect_pat_type null_pat,single,t,square,rad_pat2,rad_pat3;
 extern effect_pat_type current_pat;
 extern short current_spell_range;
-extern short hit_chance[21],pc_parry[6],pc_moves[6],combat_active_pc;
+extern const short hit_chance[51]
+extern short pc_parry[6],pc_moves[6],combat_active_pc;
 extern short boom_gr[8];
 extern	unsigned char beasts[5];
 extern	unsigned char m1[20];

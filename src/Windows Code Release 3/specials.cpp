@@ -58,12 +58,11 @@ Boolean can_draw_pcs = TRUE;
 short store_item_spell_level = 10;
 Boolean special_in_progress = FALSE;
 
-item_record_type	null_item = { item_variety::None,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
 short spec_str_offset[3] = {160,10,20};
 short current_pc_picked_in_spec_enc = -1; // pc that's been selected, -1 if none
 location store_special_loc;
 	short boom_gr[8] = {3,0,2,1,1,4,3,3};
- short skill_max[20] = {20,20,20,20,20,20,20,20,20,7,
+extern const short skill_max[20] = {20,20,20,20,20,20,20,20,20,7,
 						7,20,20,10,20,20,20,20,20};
 															
 	// 0 - everywhere 1 - combat only 2 - town only 3 - town & combat only  4 - can't use  5 - outdoor

@@ -23,7 +23,7 @@
 static const std::array heal_types{"Heal Damage","Cure Poison","Cure Disease","Cure Paralysis",
 		"Uncurse Items","Cure Stoned Character","Raise Dead","Resurrection","Cure Dumbfounding"};
 
-short monsters_faces[190] = {0,1,2,3,4,5,6,7,8,9,
+static const short monsters_faces[190] = {0,1,2,3,4,5,6,7,8,9,
 							10,0,12,11,11,12,13,13,2,11,
 							11,14,15,14,59,59,59,14,17,16,
 							18,27,20,30,31,32,19,19,25,25,

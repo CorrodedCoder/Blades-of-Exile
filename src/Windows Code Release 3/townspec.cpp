@@ -32,10 +32,8 @@ extern town_item_list 	t_i;
 extern Adventurers adven;
 extern big_tr_type  t_d;
 
-item_record_type	null_thing = { item_variety::None,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
-char answer[256];
-
-
+static const short trap_odds[30] = { 5,30,35,42,48, 55,63,69,75,77,
+						78,80,82,84,86, 88,90,92,94,96,98,99,99,99,99,99,99,99,99,99 };
 
 void activate_monster_enc(short enc_num,short str1,short str2,short strsnd,short *flip_bit)
 {
@@ -114,8 +112,6 @@ Boolean run_trap(short pc_num,short trap_type,short trap_level,short diff)
 				 //	20 + *  - trap *, but nasty 
 {
 	short r1,skill,i,num_hits = 1,i_level;
-	short trap_odds[30] = {5,30,35,42,48, 55,63,69,75,77,
-							78,80,82,84,86, 88,90,92,94,96,98,99,99,99,99,99,99,99,99,99};
 	
 	if (pc_num > 7) { // Debug
 		SysBeep(50);

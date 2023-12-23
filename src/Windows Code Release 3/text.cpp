@@ -42,9 +42,9 @@ Boolean printing_long = FALSE;
 char c_str[256] = "";
 Boolean save_mess_given = FALSE;
 
-RECT status_panel_clip_rect = {299, 11,495,175},item_panel_clip_rect = {297,11,463,175};
+static const RECT status_panel_clip_rect = {299, 11,495,175},item_panel_clip_rect = {297,11,463,175};
 
-RECT item_buttons_from[7] = {{0,12,14,24},{14,12,28,24},{28,12,42,24},{42,12,56,24},
+static const RECT item_buttons_from[7] = {{0,12,14,24},{14,12,28,24},{28,12,42,24},{42,12,56,24},
 						{0,24,30,36},{30,24,60,36},{0,36,30,48}}; /**/
 
 Boolean string_added = FALSE;

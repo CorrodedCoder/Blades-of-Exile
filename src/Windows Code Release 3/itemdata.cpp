@@ -9,8 +9,8 @@
 
 extern piles_of_stuff_dumping_type2 data_store2;
 
-short loot_min[5] = {0,0,5,50,400};
-short loot_max[5] = {3,8,40,800,4000};
+static const short loot_min[5] = {0,0,5,50,400};
+static const short loot_max[5] = {3,8,40,800,4000};
 //// whole file
 
 item_record_type get_stored_item(short which)

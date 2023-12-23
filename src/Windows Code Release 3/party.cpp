@@ -30,7 +30,7 @@
 
 extern const short skill_cost[20] = {3,3,3,2,2,2, 1,2,2,6,
 						5, 1,2,4,2,1, 4,2,5,0};
-extern short skill_max[20];
+extern const short skill_max[20];
 extern const short skill_g_cost[20] = {50,50,50,40,40,40,30,50,40,250,
 						250,25,100,200,30,20,100,80,0,0};
 static constinit const auto skill_bonus(std::to_array<short>({-3,-3,-2,-1,0,0,1,1,1,2,
@@ -86,7 +86,7 @@ static const std::array alch_names_short{"Weak Curing Potion","Weak Healing Poti
 		"Resurrection Bal","Medium Energy Ptn.","Knowledge Brew"	,
 		"Strong Strength","Bliss","Strong Power"
 		};
-short spell_w_cast[2][62] = {{0,1,1,1,1,1,3,4,1,2, 1,1,1,1,1,1,4,1,4,1, 2,1,1,0,1,1,4,1,1,0,
+extern const short spell_w_cast[2][62] = {{0,1,1,1,1,1,3,4,1,2, 1,1,1,1,1,1,4,1,4,1, 2,1,1,0,1,1,4,1,1,0,
 							1,1,1,2,4,1,1,1, 2,1,1,2,4,4,1,1, 1,1,1,1,4,4,1,5, 1,4,1,4,4,4,4,1},
 							{1,0,0,1,3,1,1,3,2,1, 1,0,1,0,1,4,2,1,1,0, 0,0,1,2,0,3,1,0,0,1,
 							0,1,1,3,4,1,0,0, 1,0,3,1,1,4,2,4, 0,0,0,3,4,1,1,1, 0,1,3,1,4,1,5,0}};
@@ -126,7 +126,8 @@ extern effect_pat_type rad_pat2;
 extern effect_pat_type rad_pat3;
 extern effect_pat_type current_pat;
 extern short current_spell_range;
-extern short hit_chance[21],pc_parry[6],combat_active_pc;
+extern const short hit_chance[51];
+extern short pc_parry[6], combat_active_pc;
 extern std::array<short, 6> pc_moves;
 extern short boom_gr[8];
 extern	unsigned char beasts[5];
