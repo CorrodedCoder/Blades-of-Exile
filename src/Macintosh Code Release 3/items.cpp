@@ -324,15 +324,6 @@ short pc_carry_weight(short pc_num)
 		storage = 0;
 	return storage;
 }
-short item_weight(item_record_type item)
-{
-	if (item.variety == 0)
-		return 0;
-	if ((item.variety == 5) || (item.variety == 6) || (item.variety == 24) || (item.variety == 7)
-		|| ((item.variety == 21) && (item.charges > 0)))
-		return (short) (item.charges) * (short) (item.weight);
-	return (short) (item.weight);
-}
 
 void give_food(short amount,Boolean print_result)////
 {
