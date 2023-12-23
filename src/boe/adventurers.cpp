@@ -58,27 +58,37 @@ void adventurers_restore_sp(Adventurers& adventurers, short amt)
 bool adventurers_has_ability(const Adventurers& adventurers, short abil)
 {
 	for (const auto& pc : adventurers)
-		if (pc.main_status == status::Normal)
-			if (pc_has_abil(pc, abil) < 24)
-				return true;
+	{
+		if ( (pc.main_status == status::Normal) && (pc_has_abil(pc, abil) < 24) )
+		{
+			return true;
+		}
+	}
 	return false;
 }
 
 short adventurers_luck_total(const Adventurers& adventurers)
 {
 	short total = 0;
-	size_t i = 0;
-	for (i = 0; i < 6; i++)
-		if (adventurers[i].main_status == status::Normal)
-			total += pc_luck(adventurers[i]);
+	for (const auto& pc : adventurers)
+	{
+		if (pc.main_status == status::Normal)
+		{
+			total += pc_luck(pc);
+		}
+	}
 	return total;
 }
 
 short adventurers_level_total(const Adventurers& adventurers)
 {
-	short j = 0;
-	for (size_t i = 0; i < 6; i++)
-		if (adventurers[i].main_status == status::Normal)
-			j += pc_level(adventurers[i]);
-	return j;
+	short total = 0;
+	for (const auto& pc : adventurers)
+	{
+		if (pc.main_status == status::Normal)
+		{
+			total += pc_level(pc);
+		}
+	}
+	return total;
 }
