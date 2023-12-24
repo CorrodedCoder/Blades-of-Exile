@@ -90,9 +90,8 @@ Boolean cur_scen_is_win = TRUE;
 void save_outdoor_maps();
 void add_outdoor_maps();
 
-char last_load_file[63] = "blades.save";
-char szFileName[128] = "blades.sav";
-char szTitleName[128] = "blades.sav";
+static char szFileName[128] = "blades.sav";
+static char szTitleName[128] = "blades.sav";
 OPENFILENAME ofn;
 OFSTRUCT save_dir, save_dir2;
 

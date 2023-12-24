@@ -55,7 +55,7 @@ extern Boolean web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,
 extern location pc_pos[6];
 extern short last_attacked[6],pc_dir[6],pc_parry[6],pc_moves[6];
 
-extern location hor_vert_place[14];
+extern const location hor_vert_place[14];
 extern location diag_place[14];
 extern short terrain_pic[256];
 extern char terrain_blocked[256];

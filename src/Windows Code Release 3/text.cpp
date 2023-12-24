@@ -42,8 +42,6 @@ Boolean printing_long = FALSE;
 char c_str[256] = "";
 Boolean save_mess_given = FALSE;
 
-static const RECT status_panel_clip_rect = {299, 11,495,175},item_panel_clip_rect = {297,11,463,175};
-
 static const RECT item_buttons_from[7] = {{0,12,14,24},{14,12,28,24},{28,12,42,24},{42,12,56,24},
 						{0,24,30,36},{30,24,60,36},{0,36,30,48}}; /**/
 
@@ -94,7 +92,7 @@ extern std::array< std::array<Boolean, 6>, 8> item_area_button_active;
 extern std::array< std::array<Boolean, 5>, 6> pc_area_button_active;
 extern std::array<RECT, 9> item_screen_button_rects;
 extern short spec_item_array[60];
-extern short abil_chart[200],store_anim_type;
+extern const short abil_chart[200],store_anim_type;
 // combat globals
 extern std::array<short, 9> item_bottom_button_active;
 

@@ -33,7 +33,7 @@ extern unsigned char misc_i[64][64];
 extern location monster_targs[T_M];
 
 extern location pc_pos[6],center;
-extern short boom_gr[8],futzing;
+extern short futzing;
 extern Boolean processing_fields,monsters_going;
 extern town_item_list 	t_i;
 

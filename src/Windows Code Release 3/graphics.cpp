@@ -107,10 +107,8 @@ extern std::array<RECT, 6> startup_button;
 static RECT trim_rects[8] = {{0,0,28,5},{0,31,28,36},{0,0,5,36},{24,0,28,36},
 						{0,0,5,5},{24,0,28,5},{24,31,28,36},{0,31,5,36}};  /**/
 
-const RECT	top_left_rec = {0,0,28,36};
 static short which_graphic_index[6] = {50,50,50,50,50,50};
 
-const char combat_graphics[5] = {28,29,36,79,2};
 short debug_nums[6] = {0,0,0,0,0,0};					     
 short remember_tiny_text = 300; // Remembers what's in the tiny text-bar, to prevent redrawing.
 	// 50 indicates area name, other number indicates which-rect.

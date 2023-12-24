@@ -119,16 +119,12 @@ extern short store_mage, store_priest;
 extern short store_mage_lev, store_priest_lev;
 extern short store_spell_target,pc_casting,stat_screen_mode;
 extern short pc_last_cast[2][6];
-extern effect_pat_type null_pat,single,t,square,rad_pat2,rad_pat3;
+extern const effect_pat_type single,square,rad_pat2;
 extern effect_pat_type current_pat;
 extern short current_spell_range;
 extern const short hit_chance[51]
 extern short pc_parry[6],pc_moves[6],combat_active_pc;
 extern short boom_gr[8];
-extern	unsigned char beasts[5];
-extern	unsigned char m1[20];
-extern	unsigned char m2[16];
-extern	unsigned char m3[16];
 extern stored_town_maps_type maps;
 extern stored_outdoor_maps_type o_maps;
 extern short current_ground,dialog_answer;

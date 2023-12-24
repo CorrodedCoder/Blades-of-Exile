@@ -23,25 +23,6 @@
 static const std::array heal_types{"Heal Damage","Cure Poison","Cure Disease","Cure Paralysis",
 		"Uncurse Items","Cure Stoned Character","Raise Dead","Resurrection","Cure Dumbfounding"};
 
-static const short monsters_faces[190] = {0,1,2,3,4,5,6,7,8,9,
-							10,0,12,11,11,12,13,13,2,11,
-							11,14,15,14,59,59,59,14,17,16,
-							18,27,20,30,31,32,19,19,25,25,
-							45,45,45,45,45, 24,24,53,53,53,
-							53,53,53,53,24, 24,24,24,22,22, // 50
-							22,22,22,22,22,22,22,22,22,21,
-							0,0,0,0,0, 0,0,0,0,0,
-							0,0,0,23,0, 0,0,0,0,0,
-							47,47,47,47,47, 49,49,49,49,0,
-							0,0,0,0,0, 0,0,26,0,0, // 100
-							0,0,0,0,0, 0,0,0,46,46,
-							0,0,0,0,0, 0,0,0,0,0,
-							0,0,0,0,0, 0,0,0,0,0,
-							0,0,0,48,48,48,48,48,48,51,
-							51,51,52,52,52,54,54,54,54,0, // 150
-							0,0,0,0,26,26,0,0,0,50,
-							23,0,0,0,0,0,0,0,23,23,
-							0,0,0,55,23,36,31,0,0,0};
 extern short ulx,uly;
 extern RECT	windRect;
 extern long anim_ticks;
@@ -83,7 +64,7 @@ extern char old_str1[256];
 extern char old_str2[256];
 extern char one_back1[256];
 extern char one_back2[256];
-extern std::array<word_rect_type, 9> preset_words;
+extern const std::array<word_rect_type, 9> preset_words;
 extern RECT talk_area_rect, word_place_rect,talk_help_rect;
 extern char title_string[50];
 extern unsigned char store_monst_type;
@@ -1241,9 +1222,9 @@ void place_talk_str(char *str_to_place,const char *str_to_place2,short color,REC
 		else SetTextColor(hdc,PALETTEINDEX(c[6]));
 	for (i = 0; i < 9; i++)
 		if ((talk_end_forced == FALSE) || (i == 6) || (i == 5)) {
-			OffsetRect(&preset_words[i].word_rect,0,-2);
-			char_win_draw_string(hdc,preset_words[i].word_rect,preset_words[i].word,2,18);
-			OffsetRect(&preset_words[i].word_rect,0,2);
+			RECT tmp{ preset_words[i].word_rect };
+			OffsetRect(&tmp,0,-2);
+			char_win_draw_string(hdc,tmp,preset_words[i].word,2,18);
 			}
 	// Place bulk of what said. Save words.
 	//TextSize(14);

@@ -67,7 +67,7 @@ extern const std::array<short, 62> priest_need_select{1,1,1,0,0,1,1,0,0,0, 1,1,0
 						0,0,0,1,0,1,1,0, 0,1,2,0,0,0,0,0, 0,1,0,2,0,0,0,0, 0,0,2,0,0,0,0,0};
 // 0 - no select  1 - active only  2 - any existing
 
-extern std::array<word_rect_type, 9> preset_words{ {
+extern const std::array<word_rect_type, 9> preset_words{ {
 	{"Look",{4,366,54,389}},{"Name",{70,366,130,389}},{"Job",{136,366,186,389}},
 	{"Buy",{4,389,54,412}},{"Sell",{70,389,120,412}},{"Record",{121,389,186,412}},
 	{"Done",{210,389,270,412}},{"Go Back",{190,366,270,389}},{"Ask About...",{4,343,134,366}}

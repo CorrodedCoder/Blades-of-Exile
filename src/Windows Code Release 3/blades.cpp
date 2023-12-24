@@ -193,8 +193,8 @@ talking_record_type talking;
 char scen_strs2[110][256];
 stored_town_maps_type town_maps,town_maps2;
 
-char szWinName[] = "Blades of Exile Dialogs";
-char szAppName[] = "Blades of Exile";
+extern const char szWinName[] = "Blades of Exile Dialogs";
+static const char szAppName[] = "Blades of Exile";
 char file_path_name[256];
 
 Boolean block_erase = FALSE;

@@ -28,24 +28,19 @@
 extern short overall_mode;
 extern party_record_type party;
 extern piles_of_stuff_dumping_type data_store;
-extern talking_record_type talking;
 extern scenario_data_type scenario;
-
-extern current_town_type	c_town;
+extern current_town_type c_town;
 extern unsigned char out[96][96];
-extern unsigned char out_e[96][96];
 extern unsigned char combat_terrain[64][64];
-extern unsigned char sfx[64][64];
 extern short which_combat_type,current_pc,stat_window;
 extern outdoor_record_type outdoors[2][2];
 extern location pc_pos[6],center;
 extern Boolean in_scen_debug,belt_present,processing_fields,monsters_going,suppress_stat_screen,boom_anim_active;
-extern big_tr_type  t_d;
+extern big_tr_type t_d;
 extern Adventurers adven;
 extern effect_pat_type current_pat;
-extern town_item_list 	t_i;
+extern town_item_list t_i;
 extern out_wandering_type store_wandering_special;
-extern short pc_marked_damage[6];
 extern short monst_marked_damage[T_M];
 extern HWND modeless_dialogs[18];
 extern Boolean fast_bang,end_scenario;
@@ -54,20 +49,21 @@ extern short town_type;
 extern piles_of_stuff_dumping_type5 data_store5;
 extern char scen_strs2[110][256];
 
-Boolean can_draw_pcs = TRUE;
-short store_item_spell_level = 10;
-Boolean special_in_progress = FALSE;
+extern Boolean can_draw_pcs = TRUE;
+extern short store_item_spell_level = 10;
 
-short spec_str_offset[3] = {160,10,20};
-short current_pc_picked_in_spec_enc = -1; // pc that's been selected, -1 if none
-location store_special_loc;
-	short boom_gr[8] = {3,0,2,1,1,4,3,3};
+static Boolean special_in_progress = FALSE;
+static const short spec_str_offset[3] = {160,10,20};
+static short current_pc_picked_in_spec_enc = -1; // pc that's been selected, -1 if none
+static location store_special_loc;
+
+extern const short boom_gr[8] = {3,0,2,1,1,4,3,3};
 extern const short skill_max[20] = {20,20,20,20,20,20,20,20,20,7,
 						7,20,20,10,20,20,20,20,20};
 															
 	// 0 - everywhere 1 - combat only 2 - town only 3 - town & combat only  4 - can't use  5 - outdoor
 	// + 10 - mag. inept can use
-	short abil_chart[200] = {4,4,4,4,4,4,4,4,4,4,
+extern const short abil_chart[200] = {4,4,4,4,4,4,4,4,4,4,
 							4,4,4,4,4,4,4,4,4,4,
 							4,4,4,4,4,4,4,4,4,4,
 							4,4,4,4,4,4,4,4,4,4,

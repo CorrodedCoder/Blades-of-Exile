@@ -79,7 +79,7 @@ char old_str1[256];
 char old_str2[256];
 char one_back1[256];
 char one_back2[256]; 
-extern std::array<word_rect_type, 9> preset_words;
+extern const std::array<word_rect_type, 9> preset_words;
 RECT talk_area_rect = {5,5,284,420}, word_place_rect = {7,44,257,372},talk_help_rect = {254,5,272,21};
 /**/
 char title_string[50];

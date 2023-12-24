@@ -144,8 +144,8 @@ short cen_x, cen_y;
 Boolean editing_town = FALSE;
 short town_type = 0;  // 0 - big 1 - ave 2 - small
 short cur_viewing_mode = 0;
-char szWinName[] = "Blades of Exile dialogs";
-char szAppName[] = "Blades of Exile Scenario Editor";
+extern const char szWinName[] = "Blades of Exile dialogs";
+static const char szAppName[] = "Blades of Exile Scenario Editor";
 
 
 Boolean block_erase = FALSE;

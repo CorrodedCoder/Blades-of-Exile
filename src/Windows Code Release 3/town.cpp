@@ -63,8 +63,8 @@ extern location pc_pos[6];
 extern short last_attacked[6], pc_dir[6], pc_parry[6];
 extern std::array<short, 6> pc_moves;
 
-extern location hor_vert_place[14];
-extern location diag_place[14];
+extern const location hor_vert_place[14];
+extern const location diag_place[14];
 extern short terrain_pic[256];
 extern char terrain_blocked[256];
 extern location golem_m_locs[16];

@@ -48,10 +48,9 @@ talking_record_type *dummy_talk_ptr;
 town_record_type *dummy_town_ptr;
 
 // Big waste!
-char last_load_file[63] = "newscen.exs";
-char szFileName [128] = "newscen.exs";
-char szFileName2 [128] = "tempscen.exs";
-char szTitleName [128] = "newscen.exs";
+static char szFileName [128] = "newscen.exs";
+static char szFileName2 [128] = "tempscen.exs";
+static char szTitleName [128] = "newscen.exs";
 OPENFILENAME ofn;
 	OFSTRUCT store;
 Boolean suppress_load_file_name = FALSE;

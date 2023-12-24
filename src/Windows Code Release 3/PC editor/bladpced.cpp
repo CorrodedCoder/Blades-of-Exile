@@ -160,8 +160,8 @@ HINSTANCE store_hInstance;
 HACCEL accel;
 BOOL event_handled;
 
-char szWinName[] = "Blades of Exile dialogs";
-char szAppName[] = "Blades of Exile Editor";
+extern const char szWinName[] = "Blades of Exile dialogs";
+static const char szAppName[] = "Blades of Exile Editor";
 char file_path_name[256];
 
 Boolean block_erase = FALSE;

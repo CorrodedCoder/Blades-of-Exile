@@ -44,9 +44,8 @@ static flag_type store_flags[3];
 
 // Big waste!
 out_info_type store_map;
-char last_load_file[63] = "blades.sav";
-char szFileName [128] = "blades.sav";
-char szTitleName [128] = "blades.sav";
+static char szFileName [128] = "blades.sav";
+static char szTitleName [128] = "blades.sav";
 OPENFILENAME ofn;
 extern stored_town_maps_type town_maps,town_maps2;
 
