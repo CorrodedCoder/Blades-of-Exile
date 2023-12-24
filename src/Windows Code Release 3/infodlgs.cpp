@@ -19,6 +19,8 @@
 #include "exlsound.h"
 #include "infodlgs.h"
 #include "fileio.h"
+#include "boe/utility.hpp"
+#include "boe/item.hpp"
 
 short mage_spell_pos = 0,priest_spell_pos = 0,skill_pos = 0;
 static pc_record_type *store_pc;
@@ -26,16 +28,16 @@ creature_data_type *store_m;
 short store_trait_mode,store_item_pc,store_pc_num;
 item_record_type store_i;
 
-extern short spell_w_cast[2][62];
+extern const short spell_w_cast[2][62];
 extern const short spell_level[62];
 extern const short skill_cost[20];
-extern short skill_max[20];
+extern const short skill_max[20];
 extern const short skill_g_cost[20];
 extern Adventurers adven;
 extern short which_pc_displayed;
 extern party_record_type party;
-extern short mage_range[66];
-extern short priest_range[66];
+extern const short mage_range[80];
+extern const short priest_range[62];
 extern const short spell_cost[2][62];
 extern Boolean in_startup_mode,give_intro_hint;
 extern Boolean cd_event_filter();
@@ -283,10 +285,15 @@ void display_pc(short pc_num,short mode,short parent)
 		ModalDialog();	cd_kill_dialog(991,0);
 }
 
-static const std::array item_types{ "","1-Handed weapon","2-Handed weapon","","Bow","Arrows","Thrown missile",
+static const std::array c_item_types{ "","1-Handed weapon","2-Handed weapon","","Bow","Arrows","Thrown missile",
 		"Potion/Magic Item","Scroll/Magic Item","Wand","Tool","","Shield","Armor","Helm",
 		"Gloves","Shield","Boots","Ring","Necklace",
 		"Weapon Poison","Gem, Stone, Etc.","Pants","Crossbow","Bolts","Missile Weapon" };
+
+static const char * item_types(item_variety variety)
+{
+	return c_item_types[static_cast<short>(variety)];
+}
 
 void put_item_info(short pc,short item)
 {
@@ -303,13 +310,13 @@ void put_item_info(short pc,short item)
 		else csp(998,1,1800 + s_i.graphic_num);
 		
 	// id? magic?
-	if ((is_magic(store_i) == TRUE) && (is_ident(store_i) == TRUE))
+	if (is_magic(store_i) && is_ident(store_i))
 		cd_set_led(998,17,1);
 		else cd_set_led(998,17,0);
-	if (is_ident(store_i) == TRUE)
+	if (is_ident(store_i))
 		cd_set_led(998,16,1);
 		else cd_set_led(998,16,0);
-	cd_set_item_text(998,4,	item_types[s_i.variety]);
+	cd_set_item_text(998,4,	item_types(s_i.variety));
 	
 	// Clear fields
 	for (i = 5; i < 13; i++) {
@@ -317,7 +324,7 @@ void put_item_info(short pc,short item)
 		}
 			
 
-	if (is_ident(s_i) == FALSE) {
+	if (!is_ident(s_i)) {
 			cd_set_item_text(998,3,	s_i.name);
 			return;
 		}	
@@ -338,7 +345,8 @@ void put_item_info(short pc,short item)
 		cd_set_item_num(998,8,s_i.protection);
 
 	switch (s_i.variety) {
-		case 1: case 2:
+		case item_variety::OneHandedWeapon:
+		case item_variety::TwoHandedWeapon:
 			cd_set_item_num(998,6,s_i.item_level);
 			cd_set_item_num(998,7,s_i.bonus);
 		
@@ -353,24 +361,37 @@ void put_item_info(short pc,short item)
 			if (s_i.ability == 0)
 				cd_set_item_text(998,12,store_text);
 			break;
-		case 4: case 23:
+		case item_variety::Bow:
+		case item_variety::Crossbow:
 			cd_set_item_num(998,6,s_i.item_level);
 			cd_set_item_num(998,7,s_i.bonus);
 			break;
-		case 5:	case 6: case 24: case 25:
+		case item_variety::Arrows:
+		case item_variety::ThrownMissile:
+		case item_variety::Bolts:
+		case item_variety::MissileWeapon:
 			cd_set_item_num(998,6,s_i.item_level);
 			cd_set_item_num(998,7,s_i.bonus);	
 			break;
-		case 7: case 18:
+		case item_variety::PotionOrMagicItem:
+		case item_variety::Ring:
 			cd_set_item_num(998,11,s_i.item_level);
 			break;
-		case 12: case 13: case 14: case 15: case 16: case 17: 			
+		case item_variety::Shield:
+		case item_variety::Armor:
+		case item_variety::Helm:
+		case item_variety::Gloves:
+		case item_variety::Shield2:
+		case item_variety::Boots:
 			cd_set_item_num(998,7,s_i.bonus + s_i.protection);	
 			cd_set_item_num(998,8,s_i.item_level);	
 			cd_set_item_num(998,9,s_i.awkward);
 			break;	
-		case 20:
+		case item_variety::WeaponPoison:
 			cd_set_item_num(998,11,s_i.item_level);
+			break;
+		default:
+			// CC: This was not present in the original code
 			break;
 		}	
 
@@ -391,7 +412,7 @@ Boolean display_pc_item_event_filter (short item_hit)
 				case 14:
 					do {
 						item = (item == 0) ? 23 : item - 1;
-						} while (adven[pc_num].items[item].variety == 0);
+						} while (adven[pc_num].items[item].variety == item_variety::None);
 					store_displayed_item = item;
 					store_i = adven[pc_num].items[item];
 					put_item_info(pc_num,item);
@@ -399,7 +420,7 @@ Boolean display_pc_item_event_filter (short item_hit)
 				case 15:
 					do {
 						item = (item == 23) ? 0 : item + 1;
-						} while (adven[pc_num].items[item].variety == 0);
+						} while (adven[pc_num].items[item].variety == item_variety::None);
 					store_displayed_item = item;
 					store_i = adven[pc_num].items[item];
 					put_item_info(pc_num,item);
@@ -412,7 +433,7 @@ Boolean display_pc_item_event_filter (short item_hit)
 	return FALSE;
 }
 
-void display_pc_item(short pc_num,short item,item_record_type si,short parent)
+void display_pc_item(short pc_num,short item,const item_record_type& si,short parent)
 {
 		store_item_pc = pc_num;
 		if (pc_num == 6)
@@ -776,8 +797,8 @@ void display_pc_info()
 
 	pc = store_pc_num;
 	
-	store = pc_carry_weight(pc);
-	i = amount_pc_can_carry(pc);
+	store = pc_carry_weight(adven[pc]);
+	i = pc_amount_can_carry(adven[pc]);
 	sprintf(to_draw, "%s is carrying %d stones out of %d.",adven[pc].name,store,i);
 	csit(1019,69,(char *) to_draw);
 
@@ -803,19 +824,19 @@ void display_pc_info()
 
 	// Fight bonuses
 	for (i = 0; i < 24; i++)
-		if (((adven[pc].items[i].variety == 1) || (adven[pc].items[i].variety == 2)) &&
+		if (((adven[pc].items[i].variety == item_variety::OneHandedWeapon) || (adven[pc].items[i].variety == item_variety::TwoHandedWeapon)) &&
 			(adven[pc].equip[i] == TRUE)) {
 					if (weap1 == 24)
 						weap1 = i;
 						else weap2 = i;
 					}
 				
-	hit_adj = stat_adj(pc,1) * 5 - (pc_encumberance(adven[pc])) * 5
-		+ (5 * minmax(-8,8,adven[pc].status[1]));
+	hit_adj = stat_adj(adven[pc],1) * 5 - (pc_encumberance(adven[pc])) * 5
+		+ (5 * boe_clamp(adven[pc].gaffect(affect::CursedBlessed),-8,8));
 	if ((adven[pc].traits[trait::Ambidextrous] == FALSE) && (weap2 < 24))
 		hit_adj -= 25;
 
-	dam_adj = stat_adj(pc,0) + minmax(-8,8,adven[pc].status[1]);
+	dam_adj = stat_adj(adven[pc],0) + boe_clamp(adven[pc].gaffect(affect::CursedBlessed),-8,8);
 	if ((skill_item = text_pc_has_abil_equip(pc,101)) < 24) {
 		hit_adj += 5 * (adven[pc].items[skill_item].item_level + 1);
 		dam_adj += adven[pc].items[skill_item].item_level;
@@ -834,7 +855,7 @@ void display_pc_info()
 	csit(1019,59,"No weapon.");	
 	csit(1019,60,"");	
 	if (weap1 < 24) {
-		if (is_ident(adven[pc].items[weap1]) == FALSE)
+		if (!is_ident(adven[pc].items[weap1]))
 			csit(1019,56,"Not identified.");
 			else {
 				if (hit_adj + 5 * adven[pc].items[weap1].bonus < 0)
@@ -848,7 +869,7 @@ void display_pc_info()
 				}
 			}
 	if (weap2 < 24) {
-		if (is_ident(adven[pc].items[weap2]) == FALSE)
+		if (!is_ident(adven[pc].items[weap2]))
 			csit(1019,59,"Not identified.");
 			else {
 				if (hit_adj + 5 * adven[pc].items[weap2].bonus < 0)

@@ -97,20 +97,18 @@ extern long anim_ticks;
 
 // 0 - terrain   1 - buttons   2 - pc stats 
 // 3 - item stats   4 - text bar   5 - text area (not right)
-RECT win_from_rects[6] = {{0,0,279,351},{0,0,258,37},{0,0,288,115},{0,0,288,143},{0,0,279,21},{0,0,288,0}};
-RECT win_to_rects[6] = {{5,5,284,356},{5,383,263,420},{0,0,271,116},{0,0,271,144},{5,358,284,379},{0,0,256,138}};
+const RECT win_from_rects[6] = {{0,0,279,351},{0,0,258,37},{0,0,288,115},{0,0,288,143},{0,0,279,21},{0,0,288,0}};
+static RECT win_to_rects[6] = {{5,5,284,356},{5,383,263,420},{0,0,271,116},{0,0,271,144},{5,358,284,379},{0,0,256,138}};
 
 // 0 - title  1 - button  2 - credits  3 - base button
-RECT startup_from[4] = {{0,0,602,274},{0,274,301,322},{301,0,579,67},{301,274,341,314}}; ////
+const RECT startup_from[4] = {{0,0,602,274},{0,274,301,322},{301,0,579,67},{301,274,341,314}}; ////
 extern std::array<RECT, 6> startup_button;
 	
-	RECT trim_rects[8] = {{0,0,28,5},{0,31,28,36},{0,0,5,36},{24,0,28,36},
+static RECT trim_rects[8] = {{0,0,28,5},{0,31,28,36},{0,0,5,36},{24,0,28,36},
 						{0,0,5,5},{24,0,28,5},{24,31,28,36},{0,31,5,36}};  /**/
 
-RECT	top_left_rec = {0,0,28,36};
-short which_graphic_index[6] = {50,50,50,50,50,50};
+static short which_graphic_index[6] = {50,50,50,50,50,50};
 
-char combat_graphics[5] = {28,29,36,79,2};
 short debug_nums[6] = {0,0,0,0,0,0};					     
 short remember_tiny_text = 300; // Remembers what's in the tiny text-bar, to prevent redrawing.
 	// 50 indicates area name, other number indicates which-rect.

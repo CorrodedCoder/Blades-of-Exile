@@ -11,6 +11,7 @@
 #include "edsound.h" 
 #include "dlogtool.h" 
 #include "../graphutl.h"
+#include "boe/utility.hpp"
 
 /* Adventure globals */
 extern party_record_type party;
@@ -36,7 +37,7 @@ extern long register_flag;
 
 extern HBITMAP pc_gworld;
 extern HCURSOR sword_curs;
-extern Boolean diff_depth_ok,registered,save_blocked;
+extern Boolean save_blocked;
 extern RECT edit_rect[5][2];
 
 
@@ -58,7 +59,7 @@ extern short ulx,uly;
 
 short skill_cost[20] = {3,3,3,2,2,2, 1,2,2,6,
 						5, 1,2,4,2,1, 4,2,5,0};
-short skill_max[20] = {20,20,20,20,20,20,20,20,20,7,
+static const short skill_max[20] = {20,20,20,20,20,20,20,20,20,7,
 						7,20,20,10,20,20,20,20,20};
 static const short skill_g_cost[20] = {50,50,50,40,40,40,30,50,40,250,
 						250,25,100,200,30,20,100,80,0,0};
@@ -127,14 +128,14 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 		}
 	for (i = 0; i < 24; i++)
 		if ((PtInRect(&item_string_rects[i][1],the_point) == TRUE) && // drop item
-			(adven[current_active_pc].items[i].variety > 0)) { // variety = 0 no item in slot/ non 0 item exists
+			(adven[current_active_pc].items[i].variety > item_variety::None)) { // variety = 0 no item in slot/ non 0 item exists
 				flash_rect(item_string_rects[i][1]);
 				take_item(current_active_pc,i);
 				draw_items(1);
 				}
 	for (i = 0; i < 24; i++)
 		if ((PtInRect(&item_string_rects[i][2],the_point) == TRUE) && // identify item
-			(adven[current_active_pc].items[i].variety > 0)) {
+			(adven[current_active_pc].items[i].variety > item_variety::None)) {
 				flash_rect(item_string_rects[i][2]);
 				adven[current_active_pc].items[i].item_properties = adven[current_active_pc].items[i].item_properties | 1;
 				draw_items(1);
@@ -190,7 +191,7 @@ void edit_gold_or_food(short which_to_edit)
 
 	if (dialog_answer < 0)
 		dialog_answer = -1;
-		else dialog_answer = minmax(0,25000,dialog_answer);
+		else dialog_answer = boe_clamp(dialog_answer,0,25000);
 	
 	if (dialog_answer >= 0) {
 		if (which_to_edit == 0) 
@@ -227,7 +228,7 @@ void edit_day()
 	
 	cd_kill_dialog(917,0);
 	
-	dialog_answer = minmax(0,500,dialog_answer);
+	dialog_answer = boe_clamp(dialog_answer,0,500);
 	
 	party.age = (long) (3700) * (long) (dialog_answer);
 }
@@ -707,7 +708,7 @@ void edit_xp(pc_record_type *pc)
 	
 	if (dialog_answer < 0)
 		dialog_answer = dialog_answer * -1;
-	dialog_answer = minmax(0,10000,dialog_answer);
+	dialog_answer = boe_clamp(dialog_answer,0,10000);
 	
 	pc->experience = dialog_answer;
 }

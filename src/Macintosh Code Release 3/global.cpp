@@ -23,24 +23,6 @@ Boolean same_point(location p1,location p2)
 		else return FALSE;
 }
 
-short move_to_zero(short val)
-{
-	if (val < 0)
-		return val + 1;
-	if (val > 0)
-		return val - 1;
-	return val;
-}
-
-short minmax(short min,short max,short k)
-{
-	if (k < min)
-		return min;
-	if (k > max)
-		return max;
-	return k;
-}
-
 short s_pow(short x,short y)
 {
 	return (short) pow((double) x, (double) y);
@@ -72,7 +54,7 @@ void pause(short length)
 // stuff done legit, i.e. flags are within proper ranges for stuff done flag
 Boolean sd_legit(short a, short b)
 {
-	if ((minmax(0,299,a) == a) && (minmax(0,9,b) == b))
+	if ((boe_clamp(a,0,299) == a) && (boe_clamp(b,0,9) == b))
 		return TRUE;
 	return FALSE;
 }

@@ -193,8 +193,8 @@ talking_record_type talking;
 char scen_strs2[110][256];
 stored_town_maps_type town_maps,town_maps2;
 
-char szWinName[] = "Blades of Exile Dialogs";
-char szAppName[] = "Blades of Exile";
+extern const char szWinName[] = "Blades of Exile Dialogs";
+static const char szAppName[] = "Blades of Exile";
 char file_path_name[256];
 
 Boolean block_erase = FALSE;
@@ -727,8 +727,10 @@ Boolean handle_menu (short item, HMENU menu)
 				choice = FCD(1091,0);
 				if (choice == 1)
 					return FALSE;
-				for (i = 0; i < 6; i++)
-					adven[i].main_status = status::Absent;
+				for (auto& pc : adven)
+				{
+					pc.main_status = status::Absent;
+				}
 				party_in_memory = FALSE;
 				reload_startup();
 				in_startup_mode = TRUE;

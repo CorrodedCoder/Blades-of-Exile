@@ -22,7 +22,7 @@ extern pc_record_type adven[6];
 extern big_tr_type t_d;
 extern short monst_target[T_M]; // 0-5 target that pc   6 - no target  100 + x - target monster x
 extern short spell_caster, missile_firer,current_monst_tactic;
-extern short hit_chance[21];
+extern const short hit_chance[51];
 extern unsigned char misc_i[64][64];
 extern location monster_targs[T_M];
 
@@ -34,9 +34,9 @@ extern scenario_data_type scenario;
 
 
 
-short charm_odds[20] = {90,90,85,80,78, 75,73,60,40,30, 20,10,4,1,0, 0,0,0,0,0};	
+static const short charm_odds[20] = {90,90,85,80,78, 75,73,60,40,30, 20,10,4,1,0, 0,0,0,0,0};
 
-creature_start_type null_start_type = {0,0,{80,80},1,0,0,0,0,0,0,0, 0,-1,-1,-1};
+static const creature_start_type null_start_type = {0,0,{80,80},1,0,0,0,0,0,0,0, 0,-1,-1,-1};
 	
 ////				
 monster_record_type return_monster_template(unsigned char store)
@@ -956,7 +956,7 @@ void monst_inflict_fields(short which_monst)
 			if ((is_crate(where_check.x,where_check.y)) ||
 				(is_barrel(where_check.x,where_check.y)) )
 				for (k = 0; k < NUM_TOWN_ITEMS; k++)
-					if ((t_i.items[k].variety > 0) && (is_contained(t_i.items[k]) == TRUE)
+					if ((t_i.items[k].variety > 0) && is_contained(t_i.items[k])
 					&& (same_point(t_i.items[k].item_loc,where_check) == TRUE))
 						t_i.items[k].item_properties = t_i.items[k].item_properties & 247;
 			take_crate(where_check.x,where_check.y);
@@ -1078,7 +1078,7 @@ Boolean monst_check_special_terrain(location where_check,short mode,short which_
 					make_crate((short) to_loc.x,(short) to_loc.y);
 				for (i = 0; i < NUM_TOWN_ITEMS; i++)
 					if ((t_i.items[i].variety > 0) && (same_point(t_i.items[i].item_loc,where_check))
-					 && (is_contained(t_i.items[i]) == TRUE))
+					 && is_contained(t_i.items[i]))
 			 			t_i.items[i].item_loc = to_loc;
 						}
 		}
@@ -1092,7 +1092,7 @@ Boolean monst_check_special_terrain(location where_check,short mode,short which_
 				    	make_barrel((short) to_loc.x,(short) to_loc.y);
 				for (i = 0; i < NUM_TOWN_ITEMS; i++)
 					if ((t_i.items[i].variety > 0) && (same_point(t_i.items[i].item_loc,where_check))
-					 && (is_contained(t_i.items[i]) == TRUE))
+					 && is_contained(t_i.items[i]))
 			 			t_i.items[i].item_loc = to_loc;
 				
 				}
@@ -1192,7 +1192,7 @@ void poison_monst(creature_data_type *which_m,short how_much)
 void acid_monst(creature_data_type *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
-	which_m->m_d.status[13] = minmax(-8,8, which_m->m_d.status[13] + how_much);
+	which_m->m_d.status[13] = boe_clamp(which_m->m_d.status[13] + how_much,-8,8);
 	monst_spell_note(which_m->number,31);
 
 }
@@ -1200,21 +1200,21 @@ void acid_monst(creature_data_type *which_m,short how_much)
 void slow_monst(creature_data_type *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
-	which_m->m_d.status[3] = minmax(-8,8, which_m->m_d.status[3] - how_much);
+	which_m->m_d.status[3] = boe_clamp(which_m->m_d.status[3] - how_much,-8,8);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 2);
 
 }
 void curse_monst(creature_data_type *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
-	which_m->m_d.status[1] = minmax(-8,8, which_m->m_d.status[1] - how_much);
+	which_m->m_d.status[1] = boe_clamp(which_m->m_d.status[1] - how_much,-8,8);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 5);
 
 }
 void web_monst(creature_data_type *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
-	which_m->m_d.status[6] = minmax(-8,8, which_m->m_d.status[6] + how_much);
+	which_m->m_d.status[6] = boe_clamp(which_m->m_d.status[6] + how_much,-8,8);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 19);
 
 }
@@ -1228,7 +1228,7 @@ void scare_monst(creature_data_type *which_m,short how_much)
 void disease_monst(creature_data_type *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
-	which_m->m_d.status[7] = minmax(-8,8, which_m->m_d.status[7] + how_much);
+	which_m->m_d.status[7] = boe_clamp(which_m->m_d.status[7] + how_much,-8,8);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 25);
 
 }
@@ -1236,7 +1236,7 @@ void disease_monst(creature_data_type *which_m,short how_much)
 void dumbfound_monst(creature_data_type *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
-	which_m->m_d.status[9] = minmax(-8,8, which_m->m_d.status[9] + how_much);
+	which_m->m_d.status[9] = boe_clamp(which_m->m_d.status[9] + how_much,-8,8);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 22);
 
 }

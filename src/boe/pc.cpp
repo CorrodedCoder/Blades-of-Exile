@@ -1,4 +1,5 @@
 #include "boe/pc.hpp"
+#include "boe/item.hpp"
 #include <algorithm>
 #include <ranges>
 #include <utility>
@@ -10,6 +11,7 @@ namespace
 {
 	const std::array<short, 3> c_rp{ 0,12,20 };
 	const std::array<short, 15> c_ap{ 10,20,8,10,4, 6,10,7,12,15, -10,-8,-8,-20,-8 };
+	const std::array<short, 26> c_item_priority{ 20,8,8,20,9, 9,3,2,1,0, 7,20,10,10,10, 10,10,10,5,6, 4,11,12,9,9, 9 };
 
 	const std::array c_debug_names{
 		"Gunther",
@@ -104,7 +106,7 @@ bool pc_cure(pc_record_type& pc, short amt)
 	{
 		return false;
 	}
-	pc.status[2] = std::max(static_cast<short>(pc.status[2] - amt), static_cast<short>(0));
+	pc.gaffect(affect::Poisoned) = std::max(static_cast<short>(pc.gaffect(affect::Poisoned) - amt), static_cast<short>(0));
 	return true;
 }
 
@@ -129,15 +131,15 @@ void pc_setup_blank(pc_record_type& pc)
 	pc.level = 1;
 	pc.weap_poisoned = 24;
 	pc.exp_adj = 100;
-	std::fill(std::begin(pc.priest_spells), std::begin(pc.priest_spells) + 30, BOE_TRUE);
-	std::fill(std::begin(pc.mage_spells), std::begin(pc.mage_spells) + 30, BOE_TRUE);
+	std::ranges::fill(std::views::counted(pc.priest_spells, 30), BOE_TRUE);
+	std::ranges::fill(std::views::counted(pc.mage_spells, 30), BOE_TRUE);
 }
 
 void pc_setup_debug(pc_record_type& pc, short num)
 {
 	pc = pc_record_type{};
 	pc.main_status = status::Normal;
-	std::ranges::copy(std::string_view(c_debug_names.at(num)), pc.name);
+	std::ranges::copy(std::string_view(c_debug_names.at(static_cast<size_t>(num))), pc.name);
 	std::ranges::fill(pc.skills, static_cast<short>(8));
 	pc.skills[0] = 20;
 	pc.skills[1] = 20;
@@ -162,10 +164,10 @@ void pc_setup_prefab(pc_record_type& pc, short num)
 	pc.main_status = status::Normal;
 	pc.level = 1;
 	pc.exp_adj = 100;
-	std::fill(std::begin(pc.priest_spells), std::begin(pc.priest_spells) + 30, BOE_TRUE);
-	std::fill(std::begin(pc.mage_spells), std::begin(pc.mage_spells) + 30, BOE_TRUE);
+	std::ranges::fill(std::views::counted(pc.priest_spells, 30), BOE_TRUE);
+	std::ranges::fill(std::views::counted(pc.mage_spells, 30), BOE_TRUE);
 
-	const auto& prefab{ c_prefabs.at(num) };
+	const auto& prefab{ c_prefabs.at(static_cast<size_t>(num)) };
 
 	std::ranges::copy(std::string_view(prefab.name), pc.name);
 	std::ranges::copy(prefab.skills, pc.skills);
@@ -204,7 +206,7 @@ short pc_get_tnl(const pc_record_type& pc)
 #else
 	auto v = std::views::iota(0, static_cast<int>(std::size(pc.traits)))
 		| std::views::filter([pc](int i) { return pc.traits[i] == BOE_TRUE; })
-		| std::views::transform([](int i) { return c_ap[i]; });
+		| std::views::transform([](int i) { return c_ap[static_cast<size_t>(i)]; });
 #endif
 
 #if defined(__cpp_lib_ranges_fold) && __cpp_lib_ranges_fold
@@ -212,5 +214,130 @@ short pc_get_tnl(const pc_record_type& pc)
 #else
 	const short store_per = static_cast<short>(std::reduce(std::begin(v), std::end(v), 100));
 #endif
-	return ((100 + c_rp.at(pc.race)) * store_per) / 100;
+	return ((100 + c_rp.at(static_cast<size_t>(pc.race))) * store_per) / 100;
+}
+
+short pc_has_space(const pc_record_type& pc)
+{
+	auto it = std::ranges::find_if(pc.items, [](const auto& item) { return item.variety == item_variety::None; });
+	return static_cast<short>(std::distance(std::begin(pc.items), it));
+}
+
+// returnes equipped protection level of specified abil, or -1 if no such abil is equipped
+short pc_prot_level(const pc_record_type& pc, short abil)
+{
+	static_assert(std::size(pc_record_type().items) == std::size(pc_record_type().equip));
+	for (size_t i = 0; i < std::size(pc.items); i++)
+	{
+		const auto equip = pc.equip[i];
+		const auto& item = pc.items[i];
+		if ((equip == BOE_TRUE) && (item.variety != item_variety::None) && (item.ability == abil))
+		{
+			return item.ability_strength;
+		}
+	}
+	return -1;
+}
+
+short pc_has_abil_equip(const pc_record_type& pc, short abil)
+{
+	short i = 0;
+
+	while (((pc.items[i].variety == item_variety::None) || (pc.items[i].ability != abil)
+		|| (pc.equip[i] == BOE_FALSE)) && (i < 24))
+		i++;
+	return i;
+
+}
+
+short pc_has_abil(const pc_record_type& pc, short abil)
+{
+	short i = 0;
+
+	while (((pc.items[i].variety == item_variety::None) || (pc.items[i].ability != abil)
+		) && (i < 24))
+		i++;
+	return i;
+}
+
+short pc_amount_can_carry(const pc_record_type& pc)
+{
+	return 100 + (15 * std::min(pc.skills[0], static_cast<short>(20))) + ((pc.traits[trait::ExceptionalStr] == 0) ? 0 : 30)
+		+ ((pc.traits[trait::BadBack] == 0) ? 0 : -50);
+}
+
+void pc_sort_items(pc_record_type& pc)
+{
+	// This is pretty much the same algorithm as std::sort, but the way
+	// the poisoned weapon index is recorded makes it hard to substitute
+	// without paying a performance penalty.
+	bool items_swapped = false;
+	do
+	{
+		items_swapped = false;
+		for (size_t index = 0; index < std::size(pc.items) - 1; ++index)
+		{
+			if (c_item_priority[static_cast<size_t>(pc.items[index + 1].variety)] < c_item_priority[static_cast<size_t>(pc.items[index].variety)])
+			{
+				items_swapped = true;
+				std::swap(pc.items[index], pc.items[index + 1]);
+				std::swap(pc.equip[index], pc.equip[index + 1]);
+				if (pc.weap_poisoned == static_cast<short>(index + 1))
+				{
+					--pc.weap_poisoned;
+				}
+				else if (pc.weap_poisoned == static_cast<short>(index))
+				{
+					++pc.weap_poisoned;
+				}
+			}
+		}
+	} while(items_swapped);
+}
+
+bool pc_affect(pc_record_type& pc, affect type, short how_much)
+//type; // which status to affect
+{
+	if (pc.main_status != status::Normal)
+	{
+		return false;
+	}
+	pc.gaffect(type) = std::clamp<short>(pc.gaffect(type) + how_much, -8, 8);
+	if (((type >= affect::Invulnerable) && (type <= affect::MartyrsShield)) || (type == affect::Paralyzed) || (type == affect::Acid))
+	{
+		pc.gaffect(type) = std::max(pc.gaffect(type), static_cast<short>(0));
+	}
+	return true;
+}
+
+short pc_carry_weight(const pc_record_type& pc)
+{
+	short i, storage = 0;
+	Boolean airy = BOE_FALSE, heavy = BOE_FALSE;
+
+	for (i = 0; i < 24; i++)
+		if (pc.items[i].variety > item_variety::None) {
+			storage += item_weight(pc.items[i]);
+			if (pc.items[i].ability == 44)
+				airy = BOE_TRUE;
+			if (pc.items[i].ability == 45)
+				heavy = BOE_TRUE;
+		}
+	if (airy == BOE_TRUE)
+		storage -= 30;
+	if (heavy == BOE_TRUE)
+		storage += 30;
+	if (storage < 0)
+		storage = 0;
+	return storage;
+}
+
+short pc_luck(const pc_record_type& pc)
+{
+	return pc.skills[18];
+}
+
+short pc_level(const pc_record_type& pc)
+{
+	return pc.level;
 }

@@ -18,7 +18,7 @@ extern party_record_type	party;
 
 short last_played = 10000;
 
-Boolean always_asynch[70] = {FALSE,FALSE,FALSE,FALSE,FALSE,
+static Boolean always_asynch[70] = {FALSE,FALSE,FALSE,FALSE,FALSE,
 							FALSE,TRUE,FALSE,FALSE,FALSE,
 							FALSE,FALSE,FALSE,FALSE,FALSE,
 							FALSE,FALSE,FALSE,FALSE,FALSE,

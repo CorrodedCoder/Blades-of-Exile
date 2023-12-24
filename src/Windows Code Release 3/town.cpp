@@ -23,6 +23,7 @@
 #include "infodlgs.h"
 #include "graphutl.h"
 #include "graphutl_helpers.hpp"
+#include "boe/utility.hpp"
 
 extern HBITMAP mixed_gworld,spec_scen_g;
 extern current_town_type c_town;
@@ -62,8 +63,8 @@ extern location pc_pos[6];
 extern short last_attacked[6], pc_dir[6], pc_parry[6];
 extern std::array<short, 6> pc_moves;
 
-extern location hor_vert_place[14];
-extern location diag_place[14];
+extern const location hor_vert_place[14];
+extern const location diag_place[14];
 extern short terrain_pic[256];
 extern char terrain_blocked[256];
 extern location golem_m_locs[16];
@@ -252,7 +253,7 @@ void start_town_mode(short which_town, short entry_dir)
 				c_town.monst.dudes[j].m_d.mp = c_town.monst.dudes[j].m_d.max_mp; 			
 				c_town.monst.dudes[j].m_d.morale = c_town.monst.dudes[j].m_d.m_morale;
 				for (k = 0; k < 15; k++)
-					c_town.monst.dudes[j].m_d.status[k] = 0;
+					c_town.monst.dudes[j].m_d.mstatus[k] = 0;
 				if (c_town.monst.dudes[j].summoned > 0)
 					c_town.monst.dudes[j].active = 0;
 				monst_target[j] = 6;
@@ -449,16 +450,19 @@ void start_town_mode(short which_town, short entry_dir)
 			for (j = 0; j < NUM_TOWN_ITEMS; j++) 
 			
 				// place the preset item, if party hasn't gotten it already
-				if (t_i.items[j].variety == 0) {
+				if (t_i.items[j].variety == item_variety::None) {
 					t_i.items[j] = get_stored_item(c_town.town.preset_items[i].item_code);
 					t_i.items[j].item_loc = c_town.town.preset_items[i].item_loc;
 
 					// Not use the items data flags, starting with forcing an ability
 					if (c_town.town.preset_items[i].ability >= 0) {
 		 				switch (t_i.items[j].variety) {
-							case 3: case 11: // If gold or food, this value is amount
+							case item_variety::Gold: case item_variety::Food: // If gold or food, this value is amount
 								if (c_town.town.preset_items[i].ability > 0)
 									t_i.items[j].item_level = c_town.town.preset_items[i].ability;
+								break;
+							default:
+								// CC: This was not present in the original source
 								break;
 		 					}
 		 				}
@@ -481,7 +485,7 @@ void start_town_mode(short which_town, short entry_dir)
 			c_town.monst.dudes[i].active = 0;
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
 		if (loc_off_act_area(t_i.items[i].item_loc) == TRUE)
-				t_i.items[i].variety = 0;		
+				t_i.items[i].variety = item_variety::None;
 				
 	// Clean out unwanted monsters
 	for (i = 0; i < T_M; i++) 
@@ -529,9 +533,9 @@ void start_town_mode(short which_town, short entry_dir)
 	// If a PC dead, drop his items
 	for (m = 0; m < 6; m++)
 		for (n = 0; n < 24; n++)
-			if ((adven[m].main_status != status::Normal) && (adven[m].items[n].variety != 0)) {
+			if ((adven[m].main_status != status::Normal) && (adven[m].items[n].variety != item_variety::None)) {
 				place_item(adven[m].items[n],c_town.p_loc,TRUE);
-				adven[m].items[n].variety = 0;
+				adven[m].items[n].variety = item_variety::None;
 				}
 
 	for (i = 0; i < T_M; i++)
@@ -594,14 +598,14 @@ location end_town_mode(short switching_level,location destination)  // returns n
 		for (j = 0; j < 3; j++)
 			if (scenario.store_item_towns[j] == c_town.town_num) {
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
-				if ((t_i.items[i].variety != 0) && (t_i.items[i].is_special == 0) &&
+				if ((t_i.items[i].variety != item_variety::None) && (t_i.items[i].is_special == 0) &&
 				((t_i.items[i].item_loc.x >= scenario.store_item_rects[j].left) &&
 				 (t_i.items[i].item_loc.x <= scenario.store_item_rects[j].right) && 
 				 (t_i.items[i].item_loc.y >= scenario.store_item_rects[j].top) &&
 				 (t_i.items[i].item_loc.y <= scenario.store_item_rects[j].bottom)) ) {
 				 	stored_items[j].items[i] = t_i.items[i];
 				 	}
-				 	else stored_items[j].items[i].variety = 0;			
+				 	else stored_items[j].items[i].variety = item_variety::None;
 				}
 				
 			
@@ -717,11 +721,11 @@ Boolean abil_exists(short abil) // use when outdoors
 
 	for (i = 0; i < 6; i++)
 		for (j = 0; j < 24; j++)
-			if ((adven[i].items[j].variety != 0) && (adven[i].items[j].ability == abil))
+			if ((adven[i].items[j].variety != item_variety::None) && (adven[i].items[j].ability == abil))
 				return TRUE;
 	for (i = 0; i < 3; i++)
 		for (j = 0; j < NUM_TOWN_ITEMS; j++)
-			if ((stored_items[i].items[j].variety != 0) && (stored_items[i].items[j].ability == abil))
+			if ((stored_items[i].items[j].variety != item_variety::None) && (stored_items[i].items[j].ability == abil))
 				return TRUE;
 
 	return FALSE;
@@ -1102,7 +1106,7 @@ void pick_lock(location where,short pc_num)
 	short unlock_adjust;
 	
 	terrain = t_d.terrain[where.x][where.y];
-	which_item = pc_has_abil_equip(pc_num,161);
+	which_item = pc_has_abil_equip(adven[pc_num],161);
 	if (which_item == 24) {
 		add_string_to_buf("  Need lockpick equipped.        ");
 		return;
@@ -1113,14 +1117,14 @@ void pick_lock(location where,short pc_num)
 	if (r1 < 75)
 		will_break = TRUE;
 
-	r1 = get_ran(1,0,100) - 5 * stat_adj(pc_num,1) + c_town.difficulty * 7
+	r1 = get_ran(1,0,100) - 5 * stat_adj(adven[pc_num],1) + c_town.difficulty * 7
 	 - 5 * adven[pc_num].skills[15] - adven[pc_num].items[which_item].ability_strength * 7;
 
 	// Nimble?
 	if (adven[pc_num].traits[trait::NimbleFingers] == FALSE)
 		r1 -= 8;
 
-	if (pc_has_abil_equip(pc_num,42) < 24)
+	if (pc_has_abil_equip(adven[pc_num],42) < 24)
 		r1 = r1 - 12;	
 
 	if ((scenario.ter_types[terrain].special < 9) || (scenario.ter_types[terrain].special > 10)) {
@@ -1149,7 +1153,7 @@ void bash_door(location where,short pc_num)
 	short r1,unlock_adjust;
 
 	terrain = t_d.terrain[where.x][where.y];
-	r1 = get_ran(1,0,100) - 15 * stat_adj(pc_num,0) + c_town.difficulty * 4;
+	r1 = get_ran(1,0,100) - 15 * stat_adj(adven[pc_num],0) + c_town.difficulty * 4;
 	
 	if ((scenario.ter_types[terrain].special < 9) || (scenario.ter_types[terrain].special > 10)) {
 		add_string_to_buf("  Wrong terrain type.           ");
@@ -1224,8 +1228,8 @@ void erase_out_specials()
 			if (quadrant_legal(k,l) == TRUE) {
 			for (m = 0; m < 8; m++)
 				if ((outdoors[k][l].exit_dests[m] >= 0) &&
-						(outdoors[k][l].exit_locs[m].x == minmax(0,47,outdoors[k][l].exit_locs[m].x)) &&
-						(outdoors[k][l].exit_locs[m].y == minmax(0,47,outdoors[k][l].exit_locs[m].y))) {
+						(outdoors[k][l].exit_locs[m].x == boe_clamp(outdoors[k][l].exit_locs[m].x,0,47)) &&
+						(outdoors[k][l].exit_locs[m].y == boe_clamp(outdoors[k][l].exit_locs[m].y,0,47))) {
 					if (party.can_find_town[outdoors[k][l].exit_dests[m]] == 0) {
 					out[48 * k + outdoors[k][l].exit_locs[m].x][48 * l + outdoors[k][l].exit_locs[m].y] = 
 						scenario.ter_types[outdoors[k][l].terrain[outdoors[k][l].exit_locs[m].x][outdoors[k][l].exit_locs[m].y]].flag1;
@@ -1381,18 +1385,18 @@ void draw_map (HWND the_dialog, short the_item)
 	if ((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
 		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
 		((overall_mode == 21) && (store_pre_shop_mode == 0))) {
-		view_rect.left = minmax(0,8,party.loc_in_sec.x - 20);
+		view_rect.left = boe_clamp(party.loc_in_sec.x - 20,0,8);
 		view_rect.right = view_rect.left + 40;
-		view_rect.top = minmax(0,8,party.loc_in_sec.y - 20);
+		view_rect.top = boe_clamp(party.loc_in_sec.y - 20,0,8);
 		view_rect.bottom = view_rect.top + 40;
 		redraw_rect = view_rect;
 		}
 		else {
 			switch (town_type) {
 				case 0:
-					view_rect.left = minmax(0,24,c_town.p_loc.x - 20);
+					view_rect.left = boe_clamp(c_town.p_loc.x - 20,0,24);
 					view_rect.right = view_rect.left + 40;
-					view_rect.top = minmax(0,24,c_town.p_loc.y - 20);
+					view_rect.top = boe_clamp(c_town.p_loc.y - 20,0,24);
 					view_rect.bottom = view_rect.top + 40;
 					if (the_item == 5)
 						redraw_rect = view_rect;
@@ -1400,9 +1404,9 @@ void draw_map (HWND the_dialog, short the_item)
 					total_size = 64;
 					break;
 				case 1:
-					view_rect.left = minmax(0,8,c_town.p_loc.x - 20);
+					view_rect.left = boe_clamp(c_town.p_loc.x - 20,0,8);
 					view_rect.right = view_rect.left + 40;
-					view_rect.top = minmax(0,8,c_town.p_loc.y - 20);
+					view_rect.top = boe_clamp(c_town.p_loc.y - 20,0,8);
 					view_rect.bottom = view_rect.top + 40;
 					redraw_rect = view_rect;
 					break;

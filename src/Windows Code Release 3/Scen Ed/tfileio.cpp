@@ -48,10 +48,9 @@ talking_record_type *dummy_talk_ptr;
 town_record_type *dummy_town_ptr;
 
 // Big waste!
-char last_load_file[63] = "newscen.exs";
-char szFileName [128] = "newscen.exs";
-char szFileName2 [128] = "tempscen.exs";
-char szTitleName [128] = "newscen.exs";
+static char szFileName [128] = "newscen.exs";
+static char szFileName2 [128] = "tempscen.exs";
+static char szTitleName [128] = "newscen.exs";
 OPENFILENAME ofn;
 	OFSTRUCT store;
 Boolean suppress_load_file_name = FALSE;
@@ -60,17 +59,18 @@ static short FSWrite(HFILE file, long* len, char* buffer);
 static short FSRead(HFILE file, long* len, char* buffer);
 static short SetFPos(HFILE file, short mode, long len);
 
-static const std::array szFilter{ "Blades of Exile Scenarios (*.EXS)","*.exs",
-		"Text Files (*.TXT)","*.txt",
-		"All Files (*.*)","*.*",
-		"" };
+static const char szFilter[]{
+	"Blades of Exile Scenarios (*.EXS)\0" "*.exs\0"
+		"Text Files (*.TXT)\0" "*.txt\0"
+		"All Files (*.*)\0" "*.*\0"
+		};
 
 void file_initialize()
 {
 		ofn.lStructSize = sizeof(OPENFILENAME);
 		ofn.hwndOwner = mainPtr;
 		ofn.hInstance = NULL;
-		ofn.lpstrFilter = szFilter[0];
+		ofn.lpstrFilter = szFilter;
 		ofn.lpstrCustomFilter = NULL;
 		ofn.nMaxCustFilter = 0;
 		ofn.nFilterIndex = 0;

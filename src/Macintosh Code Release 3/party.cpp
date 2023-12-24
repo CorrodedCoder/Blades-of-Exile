@@ -86,7 +86,7 @@ char *priest_s_name[] = {"Minor Bless","Minor Heal","Weaken Poison","Turn Undead
 		"Resurrection Bal","Medium Energy Ptn.","Knowledge Brew"	,
 		"Strong Strength","Bliss","Strong Power"
 		};
-	short spell_w_cast[2][62] = {{0,1,1,1,1,1,3,4,1,2, 1,1,1,1,1,1,4,1,4,1, 2,1,1,0,1,1,4,1,1,0,
+	extern const short spell_w_cast[2][62] = {{0,1,1,1,1,1,3,4,1,2, 1,1,1,1,1,1,4,1,4,1, 2,1,1,0,1,1,4,1,1,0,
 							1,1,1,2,4,1,1,1, 2,1,1,2,4,4,1,1, 1,1,1,1,4,4,1,5, 1,4,1,4,4,4,4,1},
 							{1,0,0,1,3,1,1,3,2,1, 1,0,1,0,1,4,2,1,1,0, 0,0,1,2,0,3,1,0,0,1,
 							0,1,1,3,4,1,0,0, 1,0,3,1,1,4,2,4, 0,0,0,3,4,1,1,1, 0,1,3,1,4,1,5,0}};
@@ -119,15 +119,12 @@ extern short store_mage, store_priest;
 extern short store_mage_lev, store_priest_lev;
 extern short store_spell_target,pc_casting,stat_screen_mode;
 extern short pc_last_cast[2][6];
-extern effect_pat_type null_pat,single,t,square,rad_pat2,rad_pat3;
+extern const effect_pat_type single,square,rad_pat2;
 extern effect_pat_type current_pat;
 extern short current_spell_range;
-extern short hit_chance[21],pc_parry[6],pc_moves[6],combat_active_pc;
+extern const short hit_chance[51]
+extern short pc_parry[6],pc_moves[6],combat_active_pc;
 extern short boom_gr[8];
-extern	unsigned char beasts[5];
-extern	unsigned char m1[20];
-extern	unsigned char m2[16];
-extern	unsigned char m3[16];
 extern stored_town_maps_type maps;
 extern stored_outdoor_maps_type o_maps;
 extern short current_ground,dialog_answer;
@@ -781,9 +778,9 @@ void cure_pc(short pc_num,short amt)
 {
 	if (adven[pc_num].main_status != status::Normal)
 		return;
-	if (adven[pc_num].status[2] <= amt)
-		adven[pc_num].status[2] = 0;
-		else adven[pc_num].status[2] -= amt;
+	if (adven[pc_num].gaffect(affect::Poisoned) <= amt)
+		adven[pc_num].gaffect(affect::Poisoned) = 0;
+		else adven[pc_num].gaffect(affect::Poisoned) -= amt;
 	one_sound(51);
 }
 
@@ -802,7 +799,7 @@ void curse_pc(short which_pc,short how_much)
 	if (adven[which_pc].main_status != status::Normal)
 		return;
 	if (adven[which_pc].main_status == status::Normal) {
-		adven[which_pc].status[1] = max(adven[which_pc].status[1] - how_much,-8);
+		adven[which_pc].gaffect(affect::CursedBlessed) = max(adven[which_pc].gaffect(affect::CursedBlessed) - how_much,-8);
 		sprintf(c_line, "  %s cursed.",(char *) adven[which_pc].name);
 		add_string_to_buf( c_line);
 		}
@@ -829,7 +826,7 @@ void dumbfound_pc(short which_pc,short how_much)
 		return;
 		}
 	if (adven[which_pc].main_status == status::Normal) {
-		adven[which_pc].status[9] = min(adven[which_pc].status[9] + how_much,8);
+		adven[which_pc].gaffect(affect::Dumbfounded) = min(adven[which_pc].gaffect(affect::Dumbfounded) + how_much,8);
 		sprintf(c_line, "  %s dumbfounded.",(char *) adven[which_pc].name);
 		add_string_to_buf( c_line);
 		}
@@ -861,7 +858,7 @@ void disease_pc(short which_pc,short how_much)
 		(how_much == 1) && (get_ran(1,0,1) == 0))
 			how_much++;
 	if (adven[which_pc].main_status == status::Normal) {
-		adven[which_pc].status[7] = min(adven[which_pc].status[7] + how_much,8);
+		adven[which_pc].gaffect(affect::Diseased) = min(adven[which_pc].gaffect(affect::Diseased) + how_much,8);
 		sprintf(c_line, "  %s diseased.",(char *) adven[which_pc].name);
 		add_string_to_buf( c_line);
 		}
@@ -889,7 +886,7 @@ void sleep_pc(short which_pc,short how_much,short what_type,short adjust)
 	r1 = get_ran(1,0,100) + adjust;
 	if (r1 < 30 + adven[which_pc].level * 2)
 		how_much = -1;
-	if ((what_type == 11) && ((adven[which_pc].traits[trait::HighlyAlert] > 0) || (adven[which_pc].status[11] < 0)))
+	if ((what_type == 11) && ((adven[which_pc].traits[trait::HighlyAlert] > 0) || (adven[which_pc].gaffect(affect::Asleep) < 0)))
 		how_much = -1;
 	if (how_much <= 0) {
 		sprintf(c_line, "  %s resisted.",(char *) adven[which_pc].name);
@@ -921,7 +918,7 @@ void slow_pc(short which_pc,short how_much)////
 		return;
 	if (adven[which_pc].main_status == status::Normal) {
 
-		adven[which_pc].status[3] = minmax(-8,8,adven[which_pc].status[3] - how_much);
+		adven[which_pc].gaffect(affect::Speed) = boe_clamp(adven[which_pc].gaffect(affect::Speed) - how_much,-8,8);
 		if (how_much < 0)
 			sprintf(c_line, "  %s hasted.",(char *) adven[which_pc].name);
 			else sprintf(c_line, "  %s slowed.",(char *) adven[which_pc].name);
@@ -937,7 +934,7 @@ void web_pc(short which_pc,short how_much)
 	if (adven[which_pc].main_status != status::Normal)
 		return;
 	if (adven[which_pc].main_status == status::Normal) {
-		adven[which_pc].status[6] = min(adven[which_pc].status[6] + how_much,8);
+		adven[which_pc].gaffect(affect::Webbed) = min(adven[which_pc].gaffect(affect::Webbed) + how_much,8);
 		sprintf(c_line, "  %s webbed.",(char *) adven[which_pc].name);
 		add_string_to_buf( c_line);
 		one_sound(17);
@@ -956,7 +953,7 @@ void acid_pc(short which_pc,short how_much)
 		return;
 		}
 	if (adven[which_pc].main_status == status::Normal) {
-		adven[which_pc].status[13] += how_much;
+		adven[which_pc].gaffect(affect::Acid) += how_much;
 		sprintf(c_line, "  %s covered with acid!",(char *) adven[which_pc].name);
 		add_string_to_buf( c_line);
 		one_sound(42);
@@ -1397,18 +1394,6 @@ Boolean spend_xp(short pc_num, short mode, short parent)
 }
 
 
-short mage_lore_total()
-{
-	short total = 0,i;
-	
-	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == status::Normal)
-			total += adven[i].skills[11];
-	
-	return total;
-}
-
-
 Boolean poison_weapon( short pc_num, short how_much,short safe)
 //short safe; // 1 - always succeeds
 {
@@ -1417,7 +1402,7 @@ Boolean poison_weapon( short pc_num, short how_much,short safe)
 							91,92,93,94,94,95,95,96,97,98,100,100,100,100};
 	
 	for (i = 0; i < 24; i++)
-		if ((adven[pc_num].equip[i] == TRUE) && (is_weapon(pc_num,i) == TRUE)) {
+		if ((adven[pc_num].equip[i] == TRUE) && item_is_weapon(adven[pc_num].items[i])) {
 			weap = i;
 			i = 30;
 			}
@@ -1438,28 +1423,17 @@ Boolean poison_weapon( short pc_num, short how_much,short safe)
 					r1 = get_ran(1,0,100);
 					if (r1 > p_chance[adven[pc_num].skills[17]] + 10) {
 						add_string_to_buf("  You nick yourself.          ");
-						adven[pc_num].status[2] += p_level;
+						adven[pc_num].gaffect(affect::Poisoned) += p_level;
 						}
 					}
 				if (safe != 1)
 					play_sound(55);
 				adven[pc_num].weap_poisoned = weap;
-				adven[pc_num].status[0] = max (adven[pc_num].status[0],
+				adven[pc_num].gaffect(affect::PoisonedWeapon) = max (adven[pc_num].gaffect(affect::PoisonedWeapon),
 					p_level);
 
 				return TRUE;
 			}
-}
-
-Boolean is_weapon(short pc_num,short item)
-{
-	if ((adven[pc_num].items[item].variety  == 1) ||
-		(adven[pc_num].items[item].variety  == 2) ||
-		(adven[pc_num].items[item].variety  == 5) ||
-		(adven[pc_num].items[item].variety  == 24))
-			return TRUE;
-			else return FALSE;
-
 }
 
 void cast_spell(short type,short situation)
@@ -1607,7 +1581,7 @@ void do_mage_spell(short pc_num,short spell_num)
 			break;
 		case 26: // summon 1
 			store = adven[who_cast].level / 5 + stat_adj(who_cast,2) / 3 + get_ran(1,0,2);
-			j = minmax(1,7,store);
+			j = boe_clamp(store,1,7);
 			r1 = get_summon_monster(1); ////
 			if (r1 < 0) break;
 			adven[pc_num].cur_sp -= spell_cost[0][spell_num];
@@ -1618,7 +1592,7 @@ void do_mage_spell(short pc_num,short spell_num)
 			break;
 		case 43: // summon 2
 			store = adven[who_cast].level / 7 + stat_adj(who_cast,2) / 3 + get_ran(1,0,1);
-			j = minmax(1,6,store);
+			j = boe_clamp(store,1,6);
 			r1 = get_summon_monster(2); ////
 			if (r1 < 0) break;
 			adven[pc_num].cur_sp -= spell_cost[0][spell_num];
@@ -1629,7 +1603,7 @@ void do_mage_spell(short pc_num,short spell_num)
 			break;
 		case 58: // summon 3
 			store = adven[who_cast].level / 10 + stat_adj(who_cast,2) / 3 + get_ran(1,0,1);
-			j = minmax(1,5,store);
+			j = boe_clamp(store,1,5);
 			r1 = get_summon_monster(3); ////
 			if (r1 < 0) break;
 			adven[pc_num].cur_sp -= spell_cost[0][spell_num];
@@ -1724,15 +1698,15 @@ void do_mage_spell(short pc_num,short spell_num)
 				if (target < 6)
 					adven[pc_num].cur_sp -= spell_cost[0][spell_num];
 				if ((spell_num == 57) && (target < 6)) {
-						adven[target].status[4] += 2 + stat_adj(pc_num,2) + get_ran(2,1,2);
+						adven[target].gaffect(affect::Invulnerable) += 2 + stat_adj(pc_num,2) + get_ran(2,1,2);
 						for (i = 0; i < 6; i++)
 							if (adven[i].main_status == status::Normal) {
-								adven[i].status[5] += 4 + adven[pc_num].level / 3 + stat_adj(pc_num,2);										
+								adven[i].gaffect(affect::MagicResistant) += 4 + adven[pc_num].level / 3 + stat_adj(pc_num,2);										
 								}
 						sprintf(c_line, "  Party protected.                         ");
 					}
 				if ((spell_num == 29) && (target < 6)) {
-						adven[target].status[5] += 2 + stat_adj(pc_num,2) + get_ran(2,1,2);
+						adven[target].gaffect(affect::MagicResistant) += 2 + stat_adj(pc_num,2) + get_ran(2,1,2);
 						sprintf(c_line, "  %s protected.",adven[target].name);
 					}
 				add_string_to_buf( c_line);	
@@ -1914,45 +1888,45 @@ void do_priest_spell(short pc_num,short spell_num) ////
 					break;
 					
 					case 19: // awaken
-						if (adven[target].status[11] <= 0) {
+						if (adven[target].gaffect(affect::Asleep) <= 0) {
 							sprintf(c_line, "  %s is already awake!    "
 								,(char *) adven[target].name);
 							break;
 							}
 						sprintf(c_line, "  %s wakes up.    "
 							,(char *) adven[target].name);
-						adven[target].status[11] = 0;
+						adven[target].gaffect(affect::Asleep) = 0;
 					break;
 					case 24: // cure paralysis
-						if (adven[target].status[12] <= 0) {
+						if (adven[target].gaffect(affect::Paralyzed) <= 0) {
 							sprintf(c_line, "  %s isn't paralyzed!    "
 								,(char *) adven[target].name);
 							break;
 							}
 						sprintf(c_line, "  %s can move now.    "
 							,(char *) adven[target].name);
-						adven[target].status[12] = 0;
+						adven[target].gaffect(affect::Paralyzed) = 0;
 					break;
 
 					case 27:
 						sprintf(c_line, "  %s recovers.      "
 							,(char *) adven[target].name);
 						r1 = 2 + get_ran(1,0,2) + stat_adj(pc_num,2) / 2;
-						adven[target].status[7] = max(0,adven[target].status[7] - r1);
+						adven[target].gaffect(affect::Diseased) = max(0,adven[target].gaffect(affect::Diseased) - r1);
 						break;
 
 					case 28:
 						sprintf(c_line, "  %s restored.      "
 							,(char *) adven[target].name);
 						r1 = 1 + get_ran(1,0,2) + stat_adj(pc_num,2) / 2;
-						adven[target].status[9] = max(0,adven[target].status[9] - r1);
+						adven[target].gaffect(affect::Dumbfounded) = max(0,adven[target].gaffect(affect::Dumbfounded) - r1);
 						break;
 						
 					case 36:
 						sprintf(c_line, "  %s cleansed.      "
 							,(char *) adven[target].name);
-						adven[target].status[7] = 0;
-						adven[target].status[6] = 0;					
+						adven[target].gaffect(affect::Diseased) = 0;
+						adven[target].gaffect(affect::Webbed) = 0;					
 						break;
 					}
 				}
@@ -1974,13 +1948,13 @@ void do_priest_spell(short pc_num,short spell_num) ////
 						sprintf(c_line, "  %s shielded.         ",
 							(char *) adven[target].name);
 						r1 = max(1,get_ran((adven[pc_num].level + 5) / 5,1,3) + adj);
-						adven[target].status[10] += r1;
+						adven[target].gaffect(affect::MartyrsShield) += r1;
 					}
 				if (spell_num == 5) { // sanctuary
 						sprintf(c_line, "  %s hidden.         ",
 							(char *) adven[target].name);
 						r1 = max(0,get_ran(0,1,3) + adven[pc_num].level / 4 + adj);
-						adven[target].status[8] += r1;
+						adven[target].gaffect(affect::Sanctuary) += r1;
 					}
 				if (spell_num == 6) { // symbiosis
 					store_victim_health = adven[target].cur_health;
@@ -2006,7 +1980,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 						sprintf(c_line, "  %s healed.         ",
 							(char *) adven[target].name);
 						heal_pc(target,250);
-						adven[target].status[2] = 0;
+						adven[target].gaffect(affect::Poisoned) = 0;
 						one_sound(-53); one_sound(52);
 					}
 				if (spell_num == 49) {
@@ -2020,7 +1994,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 					}
 				if (spell_num == 33) {
 						for (i = 0; i < 24; i++) 
-							if (is_cursed(adven[target].items[i]) == TRUE){
+							if (is_cursed(adven[target].items[i])){
 									r1 = get_ran(1,0,200) - 10 * stat_adj(pc_num,2);
 									if (r1 < 60) {
 										adven[target].items[i].item_properties = 
@@ -2116,15 +2090,15 @@ void do_priest_spell(short pc_num,short spell_num) ////
 					if (spell_num == 42) {
 						store = get_ran(0,1,3) + adven[pc_num].level / 6 + stat_adj(pc_num,2);
 						r1 = max(0,store);
-						adven[i].status[8] += r1;					
+						adven[i].gaffect(affect::Sanctuary) += r1;					
 						}
 					if (spell_num == 61) {
-						adven[i].status[6] = 0;
-						adven[i].status[7] = 0;	
+						adven[i].gaffect(affect::Webbed) = 0;
+						adven[i].gaffect(affect::Diseased) = 0;	
 						}
 					if (spell_num == 48) { // Hyperactivity
-						adven[i].status[11] -= 6 + 2 * stat_adj(pc_num,2);
-						adven[i].status[3] = max(0,adven[i].status[3]);
+						adven[i].gaffect(affect::Asleep) -= 6 + 2 * stat_adj(pc_num,2);
+						adven[i].gaffect(affect::Speed) = max(0,adven[i].gaffect(affect::Speed));
 						}
 				}
 			break;
@@ -2313,7 +2287,7 @@ void do_mindduel(short pc_num,creature_data_type *monst)
 	while ((adven[pc_num].main_status == status::Normal) && (monst->active > 0) && (i < 10)) {
 		play_sound(1);
 		r1 = get_ran(1,0,100) + adjust;
-		r1 += 5 * (monst->m_d.status[9] - adven[pc_num].status[9]);
+		r1 += 5 * (monst->m_d.status[9] - adven[pc_num].gaffect(affect::Dumbfounded));
 		r1 += 5 * balance;
 		r2 = get_ran(1,1,6);
 		if (r1 < 30) {
@@ -2322,10 +2296,10 @@ void do_mindduel(short pc_num,creature_data_type *monst)
 			monst->m_d.mp += r2;
 			balance++;
 			if (adven[pc_num].cur_sp == 0) {
-				adven[pc_num].status[9] += 2;
+				adven[pc_num].gaffect(affect::Dumbfounded) += 2;
 				sprintf(c_line,"  %s is dumbfounded.",adven[pc_num].name);
 				add_string_to_buf( c_line);
-				if (adven[pc_num].status[9] > 7) {
+				if (adven[pc_num].gaffect(affect::Dumbfounded) > 7) {
 					sprintf(c_line,"  %s is killed!",adven[pc_num].name);
 					add_string_to_buf( c_line);
 					kill_pc(pc_num,2);
@@ -2413,11 +2387,11 @@ Boolean pc_can_cast_spell(short pc_num,short type,short spell_num)
 		return FALSE;
 	if ((type == 1) && (adven[pc_num].priest_spells[spell_num] == FALSE))
 		return FALSE;
-	if (adven[pc_num].status[9] >= 8 - level)
+	if (adven[pc_num].gaffect(affect::Dumbfounded) >= 8 - level)
 		return FALSE;	
-	if (adven[pc_num].status[12] != 0)
+	if (adven[pc_num].gaffect(affect::Paralyzed) != 0)
 		return FALSE;	
-	if (adven[pc_num].status[11] > 0)
+	if (adven[pc_num].gaffect(affect::Asleep) > 0)
 		return FALSE;	
 	
 // 0 - everywhere 1 - combat only 2 - town only 3 - town & outdoor only 4 - town & combat only  5 - outdoor only
@@ -3299,7 +3273,7 @@ void poison_pc(short which_pc,short how_much)
 					how_much++;
 			
 			if (how_much > 0) {
-				adven[which_pc].status[2] = min(adven[which_pc].status[2] + how_much,8);
+				adven[which_pc].gaffect(affect::Poisoned) = min(adven[which_pc].gaffect(affect::Poisoned) + how_much,8);
 				sprintf(c_line, "  %s poisoned.",
 					(char *) adven[which_pc].name);
 				add_string_to_buf( c_line);
@@ -3323,7 +3297,7 @@ void affect_pc(short which_pc,short type,short how_much)////
 
 		if (adven[which_pc].main_status != status::Normal)
 			return;
-			adven[which_pc].status[type] = minmax (-8,8,adven[which_pc].status[type] + how_much);
+			adven[which_pc].status[type] = boe_clamp(adven[which_pc].status[type] + how_much,-8,8);
 	if (((type >= 4) && (type <= 10)) || (type == 12) || (type == 13))
 		adven[which_pc].status[type] = max(adven[which_pc].status[type],0);
 	put_pc_screen(); 
@@ -3335,15 +3309,15 @@ void affect_party(short type,short how_much)
 
 	for (i = 0; i < 6; i++)
 		if (adven[i].main_status == status::Normal)
-			adven[i].status[type] = minmax (-8,8,adven[i].status[type] + how_much);
+			adven[i].status[type] = boe_clamp(adven[i].status[type] + how_much,-8,8);
 	put_pc_screen(); 
 }
 
 void void_sanctuary(short pc_num)
 {
-	if (adven[pc_num].status[8] > 0) {
+	if (adven[pc_num].gaffect(affect::Sanctuary) > 0) {
 		add_string_to_buf("You become visible!");
-		adven[pc_num].status[8] = 0;
+		adven[pc_num].gaffect(affect::Sanctuary) = 0;
 		}
 }
 
@@ -3404,7 +3378,7 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 		
 	// armor	
 	if ((damage_type == 0) || (damage_type == 6) ||(damage_type == 7)) {
-		how_much -= minmax(-5,5,adven[which_pc].status[1]);
+		how_much -= boe_clamp(adven[which_pc].gaffect(affect::CursedBlessed),-5,5);
 		for (i = 0; i < 24; i++)
 			if ((adven[which_pc].items[i].variety != 0) && (adven[which_pc].equip[i] == TRUE)) {
 				if ((adven[which_pc].items[i].variety >= 12) && (adven[which_pc].items[i].variety <= 17)) {
@@ -3466,7 +3440,7 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 	
 
 	// invuln
-	if (adven[which_pc].status[4] > 0)
+	if (adven[which_pc].gaffect(affect::Invulnerable) > 0)
 		how_much = 0;
 		
 	// magic resistance
@@ -3475,7 +3449,7 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 	
 	// Mag. res helps w. fire and cold
 	if (((damage_type == 1) || (damage_type == 5)) && 
-		(adven[which_pc].status[5] > 0))
+		(adven[which_pc].gaffect(affect::MagicResistant) > 0))
 			how_much = how_much / 2;
 			
 	// fire res.
@@ -3514,8 +3488,8 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 		}
 		else {
 			// if asleep, get bonus
-			if (adven[which_pc].status[11] > 0)
-				adven[which_pc].status[11]--;
+			if (adven[which_pc].gaffect(affect::Asleep) > 0)
+				adven[which_pc].gaffect(affect::Asleep)--;
 			
 			sprintf(c_line, "  %s takes %d. ",(char *) adven[which_pc].name, how_much);
 			if (do_print == TRUE)
@@ -3620,28 +3594,28 @@ void set_pc_moves()
 			else {
 				pc_moves[i] = (adven[i].traits[trait::Sluggish] == TRUE) ? 3 : 4;
 				r = get_encumberance(i);
-				pc_moves[i] = minmax(1,8,pc_moves[i] - (r / 3));
+				pc_moves[i] = boe_clamp(pc_moves[i] - (r / 3),1,8);
 				
 				if ((i_level = get_prot_level(i,55)) > 0)
 					pc_moves[i] += i_level / 7 + 1;
 				if ((i_level = get_prot_level(i,56)) > 0)
 					pc_moves[i] -= i_level / 5;
 
-				if ((adven[i].status[3] < 0) && (party.age % 2 == 1)) // slowed?
+				if ((adven[i].gaffect(affect::Speed) < 0) && (party.age % 2 == 1)) // slowed?
 					pc_moves[i] = 0;
 					else { // do webs
-						pc_moves[i] = max(0,pc_moves[i] - adven[i].status[6] / 2);
+						pc_moves[i] = max(0,pc_moves[i] - adven[i].gaffect(affect::Webbed) / 2);
 						if (pc_moves[i] == 0) {
 							sprintf(c_line,"%s must clean webs.",adven[i].name);
 							add_string_to_buf( c_line);
-							adven[i].status[6] = max(0,adven[i].status[6] - 3);
+							adven[i].gaffect(affect::Webbed) = max(0,adven[i].gaffect(affect::Webbed) - 3);
 							}
 						}
-				if (adven[i].status[3] > 7)
+				if (adven[i].gaffect(affect::Speed) > 7)
 					pc_moves[i] = pc_moves[i] * 3;
-					else if (adven[i].status[3] > 0)
+					else if (adven[i].gaffect(affect::Speed) > 0)
 						pc_moves[i] = pc_moves[i] * 2;
-				if ((adven[i].status[11] > 0) || (adven[i].status[12] > 0)) 	
+				if ((adven[i].gaffect(affect::Asleep) > 0) || (adven[i].gaffect(affect::Paralyzed) > 0)) 	
 					pc_moves[i] = 0;
 
 				}

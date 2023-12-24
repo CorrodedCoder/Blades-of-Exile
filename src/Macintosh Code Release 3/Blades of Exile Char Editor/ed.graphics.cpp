@@ -620,82 +620,82 @@ void display_party(short mode,short clear_first)
 								TextFace(0);
 								//for(k = 0 ; k < 10; k++)
 									//frame_dlog_rect((GrafPtr) mainPtr,pc_status_rect[k],0);
-								if (adven[i].status[0] > 0) 
+								if (adven[i].gaffect(affect::PoisonedWeapon) > 0) 
 										if(cur_rect <= 9) {
 											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Poisoned Weap.",0,9);
 											cur_rect++;
 										}
-								if (adven[i].status[1] > 0) 
+								if (adven[i].gaffect(affect::CursedBlessed) > 0) 
 										if(cur_rect <= 9) {
 											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Blessed",0,9);
 											cur_rect++;
 										}
-								else if(adven[i].status[1] < 0)
+								else if(adven[i].gaffect(affect::CursedBlessed) < 0)
 										if(cur_rect <= 9) {
 											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Cursed",0,9);
 											cur_rect++;
 										}
-								if (adven[i].status[2] > 0) 
+								if (adven[i].gaffect(affect::Poisoned) > 0) 
 										if(cur_rect <= 9) {
 											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Poisoned",0,9);
 											cur_rect++;
 										}	
-								if (adven[i].status[3] > 0) 
+								if (adven[i].gaffect(affect::Speed) > 0) 
 										if(cur_rect <= 9) {
 											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Hasted",0,9);
 											cur_rect++;
 										}
-								else if(adven[i].status[3] < 0)
+								else if(adven[i].gaffect(affect::Speed) < 0)
 										if(cur_rect <= 9) {
 											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Slowed",0,9);
 											cur_rect++;
 										}
-								if (adven[i].status[4] > 0) 
+								if (adven[i].gaffect(affect::Invulnerable) > 0) 
 										if(cur_rect <= 9) {
 											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Invulnerable",0,9);
 											cur_rect++;
 										}
-								if (adven[i].status[5] > 0) 
+								if (adven[i].gaffect(affect::MagicResistant) > 0) 
 										if(cur_rect <= 9) {
 											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Magic Resistant",0,9);
 											cur_rect++;
 										}
-								if (adven[i].status[6] > 0) 
+								if (adven[i].gaffect(affect::Webbed) > 0) 
 										if(cur_rect <= 9) {
 											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Webbed",0,9);
 											cur_rect++;
 										}
-								if (adven[i].status[7] > 0) 
+								if (adven[i].gaffect(affect::Diseased) > 0) 
 										if(cur_rect <= 9) {
 											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Diseased",0,9);
 											cur_rect++;
 										}
-								if (adven[i].status[8] > 0) 
+								if (adven[i].gaffect(affect::Sanctuary) > 0) 
 										if(cur_rect <= 9) {
 											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Sanctury",0,9);
 											cur_rect++;
 										}
-								if (adven[i].status[9] > 0) 
+								if (adven[i].gaffect(affect::Dumbfounded) > 0) 
 										if(cur_rect <= 9) {
 											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Dumbfounded",0,9);
 											cur_rect++;
 										}
-								if (adven[i].status[10] > 0) 
+								if (adven[i].gaffect(affect::MartyrsShield) > 0) 
 										if(cur_rect <= 9) {
 											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Martyr's Shield",0,9);
 											cur_rect++;
 										}
-								if (adven[i].status[11] > 0) 
+								if (adven[i].gaffect(affect::Asleep) > 0) 
 										if(cur_rect <= 9) {
 											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Asleep",0,9);
 											cur_rect++;
 										}
-								if (adven[i].status[12] > 0) 
+								if (adven[i].gaffect(affect::Paralyzed) > 0) 
 										if(cur_rect <= 9) {
 											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Paralyzed",0,9);
 											cur_rect++;
 										}
-								if (adven[i].status[13] > 0) 
+								if (adven[i].gaffect(affect::Acid) > 0) 
 										if(cur_rect <= 9) {
 											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Acid",0,9);
 											cur_rect++;

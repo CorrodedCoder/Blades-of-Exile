@@ -25,6 +25,7 @@
 #include "exlsound.h"
 #include "boe/endian_adjust.hpp"
 #include "boe/savedata_serialization.hpp"
+#include "boe/utility.hpp"
 
 
 HWND	the_dialog;
@@ -89,9 +90,8 @@ Boolean cur_scen_is_win = TRUE;
 void save_outdoor_maps();
 void add_outdoor_maps();
 
-char last_load_file[63] = "blades.save";
-char szFileName[128] = "blades.sav";
-char szTitleName[128] = "blades.sav";
+static char szFileName[128] = "blades.sav";
+static char szTitleName[128] = "blades.sav";
 OPENFILENAME ofn;
 OFSTRUCT save_dir, save_dir2;
 
@@ -104,10 +104,11 @@ town_record_type dummy_town;
 short jl;
 extern char file_path_name[256];
 
-static const std::array szFilter{ "Blades of Exile Save Files (*.SAV)","*.sav",
-	"Text Files (*.TXT)","*.txt",
-	"All Files (*.*)","*.*",
-	"" };
+static const char szFilter[]{
+	"Blades of Exile Save Files (*.SAV)\0" "*.sav\0"
+	"Text Files (*.TXT)\0" "*.txt\0"
+	"All Files (*.*)\0" "*.*\0"
+	};
 
 static bool FSClose(auto& file)
 {
@@ -172,7 +173,7 @@ void file_initialize()
 	ofn.lStructSize = sizeof(OPENFILENAME);
 	ofn.hwndOwner = mainPtr;
 	ofn.hInstance = NULL;
-	ofn.lpstrFilter = szFilter[0];
+	ofn.lpstrFilter = szFilter;
 	ofn.lpstrCustomFilter = NULL;
 	ofn.nMaxCustFilter = 0;
 	ofn.nFilterIndex = 0;
@@ -454,7 +455,7 @@ void load_town(short town_num, short mode, short extra, char* str)
 	short which_town;
 	char file_name[256];
 
-	if (town_num != minmax(0, scenario.num_towns - 1, town_num)) {
+	if (town_num != boe_clamp(town_num, 0, scenario.num_towns - 1)) {
 		give_error("The scenario tried to place you into a non-existant town.", "", 0);
 		return;
 	}
@@ -960,8 +961,8 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 	char file_name[256];
 	long len_to_jump = 0, store = 0;
 
-	if ((to_create_x != minmax(0, scenario.out_width - 1, to_create_x)) ||
-		(to_create_y != minmax(0, scenario.out_height - 1, to_create_y))) { // not exist
+	if ((to_create_x != boe_clamp(to_create_x, 0, scenario.out_width - 1)) ||
+		(to_create_y != boe_clamp(to_create_y, 0, scenario.out_height - 1))) { // not exist
 		for (i = 0; i < 48; i++)
 			for (j = 0; j < 48; j++)
 				outdoors[targ_x][targ_y].terrain[i][j] = 5;

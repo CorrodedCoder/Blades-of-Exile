@@ -6,6 +6,9 @@ if (POLICY CMP0141)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
+  cmake_policy(SET CMP0117 NEW)
+
+
 # Only set the cxx_standard if it is not set by someone else
 if (NOT DEFINED CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 23)
@@ -37,6 +40,7 @@ if (MSVC)
 	# largely because they aren't portable and in any case we'll be migrating such
 	# functionality to leverage the C++ STL in good time.
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+	add_compile_options(/GR-)
 
 	if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 		# See the following for an explanation of this warning model:

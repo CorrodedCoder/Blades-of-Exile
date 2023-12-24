@@ -2,6 +2,8 @@
 
 #include <array>
 #include <compare>
+#include <algorithm>
+#include "boe/utility.hpp"
 
 const auto NUM_TOWN_ITEMS = 115;
 
@@ -114,8 +116,42 @@ struct creature_start_type {
 };
 static_assert(sizeof(creature_start_type) == 22);
 
+enum class item_variety : short {
+	Invalid = -1,
+	None = 0,
+	OneHandedWeapon = 1,
+	TwoHandedWeapon = 2,
+	Gold = 3,
+	Bow = 4,
+	Arrows = 5,
+	ThrownMissile = 6,
+	PotionOrMagicItem = 7,
+	ScrollOrMagicItem = 8,
+	Wand = 9,
+	Tool = 10,
+	Food = 11,
+	Shield = 12,
+	Armor = 13,
+	Helm = 14,
+	Gloves = 15,
+	Shield2 = 16,
+	Boots = 17,
+	Ring = 18,
+	Necklace = 19,
+	WeaponPoison = 20,
+	GemStoneEtc = 21,
+	Pants = 22,
+	Crossbow = 23,
+	Bolts = 24,
+	MissileWeapon = 25
+	// missile = 5,6,4,23,24,25
+};
+static_assert(sizeof(item_variety) == 2);
+
+
 struct short_item_record_type {
-	short variety, item_level;
+	item_variety variety;
+	short item_level;
 	char awkward, bonus, protection, charges, type;
 	unsigned char graphic_num, ability, type_flag, is_special;
 	short value;
@@ -131,7 +167,8 @@ struct short_item_record_type {
 static_assert(sizeof(short_item_record_type) == 66);
 
 struct item_record_type {
-	short variety, item_level;
+	item_variety variety;
+	short item_level;
 	char awkward, bonus, protection, charges, type, magic_use_type;
 	unsigned char graphic_num, ability, ability_strength, type_flag, is_special, a;
 	short value;
@@ -284,7 +321,7 @@ struct monster_record_type {
 	unsigned char a1_type, a23_type, m_type, speed, ap, mu, cl, breath, breath_type, treasure, spec_skill, poison;
 	short morale, m_morale;
 	short corpse_item, corpse_item_chance;
-	short status[15];
+	short mstatus[15];
 	unsigned char direction, immunities, x_width, y_width, radiate_1, radiate_2;
 	unsigned char default_attitude, summon_type, default_facial_pic, res1, res2, res3;
 	short picture_num;
@@ -410,6 +447,22 @@ enum class status: short {
 };
 static_assert(sizeof(status) == 2);
 
+enum class affect: short {
+	PoisonedWeapon = 0,
+	CursedBlessed = 1,
+	Poisoned = 2,
+	Speed = 3,
+	Invulnerable = 4,
+	MagicResistant = 5,
+	Webbed = 6,
+	Diseased = 7,
+	Sanctuary = 8,
+	Dumbfounded = 9,
+	MartyrsShield = 10,
+	Asleep = 11,
+	Paralyzed = 12,
+	Acid = 13,
+};
 
 // for game
 struct talk_save_type {
@@ -527,12 +580,27 @@ struct pc_record_type {
 	Boolean advan[15], traits[15];
 	short race, exp_adj, direction;
 
-	auto operator<=>(const pc_record_type&) const = default;
-	bool operator==(const pc_record_type&) const = default;
+	[[nodiscard]] auto operator<=>(const pc_record_type&) const = default;
+	[[nodiscard]] bool operator==(const pc_record_type&) const = default;
 
-	bool has_trait(trait trait) const
+	[[nodiscard]] bool has_trait(trait trait) const
 	{
 		return traits[static_cast<int>(trait)];
+	}
+
+	[[nodiscard]] short gaffect(affect type) const
+	{
+		return status[static_cast<int>(type)];
+	}
+
+	[[nodiscard]] short& gaffect(affect type)
+	{
+		return status[static_cast<int>(type)];
+	}
+
+	void reduce_affect(affect type)
+	{
+		status[static_cast<short>(type)] = move_to_zero(status[static_cast<short>(type)]);
 	}
 };
 static_assert(sizeof(pc_record_type) == 1898);

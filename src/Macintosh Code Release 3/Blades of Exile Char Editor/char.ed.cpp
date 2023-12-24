@@ -143,7 +143,6 @@ void set_up_apple_events();
 Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit);
 void set_pixel_depth();
 void handle_item_menu(int item_hit);
-item_record_type convert_item (short_item_record_type s_item);
 
 // File io
 short specials_res_id;
@@ -611,15 +610,15 @@ void handle_extra_menu(int item_hit)
 		case 11: // conditions
 			display_strings(20,4,0,0,"Editing party",57,715,0);
 			for (i = 0; i < 6; i++) {
-				adven[i].status[2] = 0;
-				if (adven[i].status[3] < 0)
-					adven[i].status[3] = 0;
-				adven[i].status[6] = 0;
-				adven[i].status[7] = 0;
-				adven[i].status[9] = 0;
-				adven[i].status[11] = 0;
-				adven[i].status[12] = 0;
-				adven[i].status[13] = 0;
+				adven[i].gaffect(affect::Poisoned) = 0;
+				if (adven[i].gaffect(affect::Speed) < 0)
+					adven[i].gaffect(affect::Speed) = 0;
+				adven[i].gaffect(affect::Webbed) = 0;
+				adven[i].gaffect(affect::Diseased) = 0;
+				adven[i].gaffect(affect::Dumbfounded) = 0;
+				adven[i].gaffect(affect::Asleep) = 0;
+				adven[i].gaffect(affect::Paralyzed) = 0;
+				adven[i].gaffect(affect::Acid) = 0;
 				}
 			break;
 			
@@ -704,7 +703,7 @@ void handle_edit_menu(int item_hit)
 		}
 }
 
-item_record_type convert_item (short_item_record_type s_item) {
+static item_record_type convert_item (short_item_record_type s_item) {
 	item_record_type i;
 	location l = {0,0};
 	short temp_val;

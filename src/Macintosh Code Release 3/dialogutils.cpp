@@ -279,12 +279,12 @@ void handle_sale(short what_chosen,short cost)
 							adven[current_pc].cur_health = adven[current_pc].max_health;
 							break;
 						case 1:
-							adven[current_pc].status[2] = 0;
+							adven[current_pc].gaffect(affect::Poisoned) = 0;
 							break;
 						case 2:
-							adven[current_pc].status[7] = 0; break;
+							adven[current_pc].gaffect(affect::Diseased) = 0; break;
 						case 3:
-							adven[current_pc].status[12] = 0; break;
+							adven[current_pc].gaffect(affect::Paralyzed) = 0; break;
 						case 4: 
 							for (i = 0; i < 24; i++)
 								if ((adven[current_pc].equip[i] == TRUE) && 
@@ -295,7 +295,7 @@ void handle_sale(short what_chosen,short cost)
 						case 5: case 6: case 7:
 							adven[current_pc].main_status = status::Normal; break;
 						case 8:
-							adven[current_pc].status[9] = 0; break;
+							adven[current_pc].gaffect(affect::Dumbfounded) = 0; break;
 						}
 					}
 			break;
@@ -414,28 +414,28 @@ void set_up_shop_array()
 				store_shop_costs[shop_pos] = heal_costs[0];
 				shop_pos++;
 				}
-			if (adven[current_pc].status[2] > 0) {
+			if (adven[current_pc].gaffect(affect::Poisoned) > 0) {
 				store_shop_items[shop_pos] = 701;
 				store_shop_costs[shop_pos] = heal_costs[1];
 				shop_pos++;
 				}
-			if (adven[current_pc].status[7] > 0) {
+			if (adven[current_pc].gaffect(affect::Diseased) > 0) {
 				store_shop_items[shop_pos] = 702;
 				store_shop_costs[shop_pos] = heal_costs[2];
 				shop_pos++;
 				}
-			if (adven[current_pc].status[12] > 0) {
+			if (adven[current_pc].gaffect(affect::Paralyzed) > 0) {
 				store_shop_items[shop_pos] = 703;
 				store_shop_costs[shop_pos] = heal_costs[3];
 				shop_pos++;
 				}
-			if (adven[current_pc].status[9] > 0) {
+			if (adven[current_pc].gaffect(affect::Dumbfounded) > 0) {
 				store_shop_items[shop_pos] = 708;
 				store_shop_costs[shop_pos] = heal_costs[8];
 				shop_pos++;
 				}
 			for (i = 0; i < 24; i++)
-				if ((adven[current_pc].equip[i] == TRUE) && (is_cursed(adven[current_pc].items[i]) == TRUE))
+				if ((adven[current_pc].equip[i] == TRUE) && is_cursed(adven[current_pc].items[i]))
 					cursed_item = TRUE;
 			if (cursed_item) {
 				store_shop_items[shop_pos] = 704;
@@ -477,7 +477,7 @@ void set_up_shop_array()
 			break;
 		case 10:
 			for (i = store_shop_min; i < store_shop_max + 1; i++) 
-				if (i == minmax(0,31,i)) {
+				if (i == boe_clamp(i,0,31)) {
 				store_i = store_mage_spells(i);
 				store_shop_costs[shop_pos] = store_i.value;
 				store_shop_items[shop_pos] = 800 + i + 30;
@@ -486,7 +486,7 @@ void set_up_shop_array()
 			break;
 		case 11:
 			for (i = store_shop_min; i < store_shop_max + 1; i++) 
-				if (i == minmax(0,31,i)) {
+				if (i == boe_clamp(i,0,31)) {
 				store_i = store_priest_spells(i);
 				store_shop_costs[shop_pos] = store_i.value;
 				store_shop_items[shop_pos] = 900 + i + 30;
@@ -495,7 +495,7 @@ void set_up_shop_array()
 			break;
 		case 12:
 			for (i = store_shop_min; i < store_shop_max + 1; i++) 
-				if (i == minmax(0,19,i)) {
+				if (i == boe_clamp(i,0,19)) {
 				store_i = store_alchemy(i);
 				store_shop_costs[shop_pos] = store_i.value;
 				store_shop_items[shop_pos] = 500 + i;
@@ -823,7 +823,7 @@ void handle_talk_event(Point p)
 			strnum2 = 0;
 			break;
 		case 7: 
-			c = minmax(1,30,c);
+			c = boe_clamp(c,1,30);
 			start_shop_mode(2,b,
 				b + c - 1,a,(char *)place_string1);
 			strnum1 = -1;
@@ -837,7 +837,7 @@ void handle_talk_event(Point p)
 			return;
 		
 		case 9: case 10: case 11: 
-			c = minmax(1,30,c);
+			c = boe_clamp(c,1,30);
 			start_shop_mode(ttype + 1,b,
 				b + c - 1,a,(char *)place_string1);
 			strnum1 = -1;

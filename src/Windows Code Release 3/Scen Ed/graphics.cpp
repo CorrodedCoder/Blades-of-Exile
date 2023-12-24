@@ -12,6 +12,7 @@
 #include "../graphutl.h"
 #include "../graphutl_helpers.hpp"
 #include "keydlgs.h"
+#include "boe/utility.hpp"
 
 extern char scen_strs[160][256];
 extern char scen_strs2[110][256];
@@ -791,8 +792,8 @@ void draw_monsts(HDC hdc)
 				
 				for (k = 0; k < width * height; k++) {
 					store_loc = where_draw;
-					if ((where_draw.x == minmax(0,8,where_draw.x)) && 
-					(where_draw.y == minmax(0,8,where_draw.y)) && 
+					if ((where_draw.x == boe_clamp(where_draw.x,0,8)) && 
+					(where_draw.y == boe_clamp(where_draw.y,0,8)) && 
 						(scenario.scen_monsters[t_d.creatures[i].number].picture_num >= 1000)) {
 						source_rect = get_custom_rect((scenario.scen_monsters[t_d.creatures[i].number].picture_num + k) % 1000);
 						store_loc.x += k % width;

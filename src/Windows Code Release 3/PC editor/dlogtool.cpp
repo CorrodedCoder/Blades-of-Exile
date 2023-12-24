@@ -159,8 +159,7 @@ LRESULT CALLBACK fresh_edit_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 
 DLGPROC d_proc;
 
-extern char szAppName[];
-extern char szWinName[];
+extern const char szWinName[];
 
 void cd_init_dialogs()
 {

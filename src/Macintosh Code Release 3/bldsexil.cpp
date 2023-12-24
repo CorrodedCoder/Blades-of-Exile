@@ -586,7 +586,7 @@ void sbar_action(ControlHandle bar, short part)
 		case inPageUp: new_setting -= 11; break;
 		case inPageDown: new_setting += 11; break;
 		}
-	new_setting = minmax(0,max,new_setting);
+	new_setting = boe_clamp(new_setting,0,max);
 	SetControlValue(bar,new_setting);
 	if (new_setting != old_setting)
 		print_buf();
@@ -610,7 +610,7 @@ void item_sbar_action(ControlHandle bar, short part)
 		case inPageUp: new_setting -= (stat_window == 7) ? 2 : 8; break;
 		case inPageDown: new_setting += (stat_window == 7) ? 2 : 8; break;
 		}
-	new_setting = minmax(0,max,new_setting);
+	new_setting = boe_clamp(new_setting,0,max);
 	SetControlValue(bar,new_setting);
 	if (new_setting != old_setting)
 		put_item_screen(stat_window,1);
@@ -633,7 +633,7 @@ void shop_sbar_action(ControlHandle bar, short part)
 		case inPageUp: new_setting -= 8; break;
 		case inPageDown: new_setting += 8; break;
 		}
-	new_setting = minmax(0,max,new_setting);
+	new_setting = boe_clamp(new_setting,0,max);
 	SetControlValue(bar,new_setting);
 	if (new_setting != old_setting)
 		draw_shop_graphics(0,shop_sbar_rect);			

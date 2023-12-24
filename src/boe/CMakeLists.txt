@@ -7,11 +7,12 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 	)
 endif()
 
-
-add_executable(tests
-	test_pc.cpp
-	test_adventurers.cpp
+add_library(boe STATIC
+	adventurers.cpp
+	dump_game_structures.cpp
+	endian_adjust.cpp
+	item.cpp
+	pc.cpp
+	savedata_serialization.cpp
+	utility.cpp
 )
-target_link_libraries(tests PRIVATE boe Catch2::Catch2WithMain)
-
-catch_discover_tests(tests)

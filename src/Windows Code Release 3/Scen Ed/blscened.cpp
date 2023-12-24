@@ -144,8 +144,8 @@ short cen_x, cen_y;
 Boolean editing_town = FALSE;
 short town_type = 0;  // 0 - big 1 - ave 2 - small
 short cur_viewing_mode = 0;
-char szWinName[] = "Blades of Exile dialogs";
-char szAppName[] = "Blades of Exile Scenario Editor";
+extern const char szWinName[] = "Blades of Exile dialogs";
+static const char szAppName[] = "Blades of Exile Scenario Editor";
 
 
 Boolean block_erase = FALSE;
@@ -683,7 +683,7 @@ Boolean handle_menu (short item, HMENU menu)
 				}
 			if ((item_hit >= 600) && (item_hit < 1000)) {
 				item_hit -= 600;
-				if (scen_item_list.scen_items[item_hit].variety == 0) {
+				if (scen_item_list.scen_items[item_hit].variety == item_variety::None) {
 					give_error("This item has its Variety set to No Item. You can only place items with a Variety set to an actual item type.","",0);
 					return to_return;
 					}

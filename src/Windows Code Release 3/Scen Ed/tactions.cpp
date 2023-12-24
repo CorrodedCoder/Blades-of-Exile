@@ -13,6 +13,7 @@
 #include "townout.h"
 #include "../graphutl.h"
 #include "buttonmg.h"
+#include "boe/utility.hpp"
 
 
 RECT world_screen;
@@ -529,8 +530,8 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 						town.preset_items[x].item_loc.y = spot_hit.y;
 						town.preset_items[x].item_code = mode_count;
 						town.preset_items[x].ability = -1;
-						if ((scen_item_list.scen_items[mode_count].variety == 3) ||
-							(scen_item_list.scen_items[mode_count].variety == 11))
+						if ((scen_item_list.scen_items[mode_count].variety == item_variety::Gold) ||
+							(scen_item_list.scen_items[mode_count].variety == item_variety::Food))
 								town.preset_items[x].ability = get_ran(1,4,6);
 						//town.preset_items[x].charges = 0;
 						town.preset_items[x].always_there = 0;
@@ -801,8 +802,8 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 			case 47: //edit out start loc
 				if (fancy_choice_dialog(864,0) == 2)
 					break;
-				if ((spot_hit.x != minmax(4,43,spot_hit.x)) ||
-					(spot_hit.y != minmax(4,43,spot_hit.y))) {
+				if ((spot_hit.x != boe_clamp(spot_hit.x,4,43)) ||
+					(spot_hit.y != boe_clamp(spot_hit.y,4,43))) {
 						give_error("You can't put the starting location this close to the edge of an outdoor section. It has to be at least 4 spaces away.","",0);
 						break;
 						}
@@ -2899,7 +2900,7 @@ Boolean place_item(location spot_hit,short which_item,short property,short alway
 
 	if ((which_item < 0) || (which_item > 399))
 		return TRUE;
-	if (scen_item_list.scen_items[which_item].variety == 0)
+	if (scen_item_list.scen_items[which_item].variety == item_variety::None)
 		return TRUE;
 	if (get_ran(1,1,100) > odds)
 		return FALSE;
@@ -2909,8 +2910,8 @@ Boolean place_item(location spot_hit,short which_item,short property,short alway
 			town.preset_items[x].item_loc.y = spot_hit.y;
 			town.preset_items[x].item_code = which_item;
 			town.preset_items[x].ability = -1;
-			if ((scen_item_list.scen_items[which_item].variety == 3) ||
-				(scen_item_list.scen_items[which_item].variety == 11))
+			if ((scen_item_list.scen_items[which_item].variety == item_variety::Gold) ||
+				(scen_item_list.scen_items[which_item].variety == item_variety::Food))
 					town.preset_items[x].ability = get_ran(1,4,6);
 
 			//town.preset_items[x].charges = 0;

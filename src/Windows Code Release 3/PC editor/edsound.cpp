@@ -24,7 +24,7 @@ extern short overall_mode;
 short last_played = 10000;
 short store_last_sound_played = 0;
 
-Boolean always_asynch[100] = {FALSE,FALSE,FALSE,FALSE,FALSE,
+static const Boolean always_asynch[100] = {FALSE,FALSE,FALSE,FALSE,FALSE,
 							TRUE,TRUE,FALSE,FALSE,FALSE,
 							TRUE,FALSE,FALSE,FALSE,FALSE, // 10
 							FALSE,FALSE,FALSE,FALSE,FALSE,
@@ -44,7 +44,7 @@ Boolean always_asynch[100] = {FALSE,FALSE,FALSE,FALSE,FALSE,
 							TRUE,FALSE,FALSE,FALSE,FALSE,
 							FALSE,TRUE,FALSE,FALSE,FALSE, // 90
 							FALSE,FALSE,FALSE,FALSE,FALSE};
-Boolean load_when_play[100] = {
+static Boolean load_when_play[100] = {
 0,0,1,1,1,0,0,1,1,1,
 0,0,0,1,0,1,1,1,1,1,
 1,1,0,1,1,1,1,0,1,1,
@@ -57,7 +57,7 @@ Boolean load_when_play[100] = {
 1,0,1,1,1,1,1,1,1,0
 };
 
-short can_ignore[100] = {
+static const short can_ignore[100] = {
 0,0,0,0,0,5,3,0,0,0,
 5,5,5,0,5,0,0,0,0,0,
 0,0,5,0,0,0,0,0,0,2,

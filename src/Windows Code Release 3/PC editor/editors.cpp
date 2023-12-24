@@ -31,11 +31,6 @@ extern short current_cursor;
 extern HCURSOR sword_curs;
 extern Boolean diff_depth_ok,current_file_has_maps;
 
-Boolean equippable[18] = {FALSE,TRUE,TRUE,FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,
-							TRUE,TRUE,TRUE,FALSE,FALSE,TRUE};
-short num_hands_to_use[18] = {0,1,2,0,1,1,1,0,0,1,1,0,0,0,0,0,0,0};
-short num_that_can_equip[18] = {0,2,1,0,1,1,1,0,0,2,1,1,1,2,1,0,0,1}; 
-short selected,item_max = 0;
 Boolean choice_active[6];
 
 
@@ -56,10 +51,10 @@ void combine_things(short pc_num)
 	short i,j,test;
 	
 	for (i = 0; i < 24; i++) {
-		if ((adven[pc_num].items[i].variety > 0) &&
+		if ((adven[pc_num].items[i].variety > item_variety::None) &&
 			(adven[pc_num].items[i].type_flag > 0) && (adven[pc_num].items[i].item_properties & 254 != 0)) {
 			for (j = i + 1; j < 24; j++)
-				if ((adven[pc_num].items[j].variety > 0) &&
+				if ((adven[pc_num].items[j].variety > item_variety::None) &&
 				(adven[pc_num].items[j].type_flag == adven[pc_num].items[i].type_flag) 
 				 && (adven[pc_num].items[j].item_properties & 254 != 0)) {
 					add_string_to_buf("(items combined)");
@@ -76,7 +71,7 @@ void combine_things(short pc_num)
 					take_item(pc_num,j);
 				 	}
 			}		
-		if ((adven[pc_num].items[i].variety > 0) && (adven[pc_num].items[i].charges < 0))
+		if ((adven[pc_num].items[i].variety > item_variety::None) && (adven[pc_num].items[i].charges < 0))
 			adven[pc_num].items[i].charges = 1;
 		}
 }
@@ -85,9 +80,9 @@ Boolean give_to_pc(short pc_num,item_record_type  item, short print_result)
 {
 	short free_space;
 
-	if (item.variety == 0)
+	if (item.variety == item_variety::None)
 		return TRUE;
-	if (((free_space = pc_has_space(pc_num)) == 24 ) || (adven[pc_num].main_status != status::Normal))
+	if (((free_space = pc_has_space(adven[pc_num])) == 24 ) || (adven[pc_num].main_status != status::Normal))
 		return FALSE;
 		else {
 			adven[pc_num].items[free_space] = item;
@@ -123,36 +118,23 @@ Boolean take_gold(short amount,Boolean print_result)
 }
 
 
-short pc_has_space(short pc_num)
-{
-	short i = 0;
-	
-	while (i < 24) {
-	if (adven[pc_num].items[i].variety == 0)
-		return i;
-	i++;
-	}
-	return 24;
-}
-
-
 void take_item(short pc_num,short which_item)
 //short pc_num,which_item;  // if which_item > 20, don't update stat win, item is which_item - 20
 {
 	short i;
 
-	if ((adven[pc_num].weap_poisoned == which_item) && (adven[pc_num].status[0] > 0)) {
+	if ((adven[pc_num].weap_poisoned == which_item) && (adven[pc_num].gaffect(affect::PoisonedWeapon) > 0)) {
 //			add_string_to_buf("  Poison lost.           ");
-			adven[pc_num].status[0] = 0;
+			adven[pc_num].gaffect(affect::PoisonedWeapon) = 0;
 		}
-	if ((adven[pc_num].weap_poisoned > which_item) && (adven[pc_num].status[0] > 0)) 
+	if ((adven[pc_num].weap_poisoned > which_item) && (adven[pc_num].gaffect(affect::PoisonedWeapon) > 0)) 
 		adven[pc_num].weap_poisoned--;
 		
 	for (i = which_item; i < 23; i++) {
 		adven[pc_num].items[i] = adven[pc_num].items[i + 1];
 		adven[pc_num].equip[i] = adven[pc_num].equip[i + 1];
 		}
-	adven[pc_num].items[23].variety = 0;
+	adven[pc_num].items[23].variety = item_variety::None;
 	adven[pc_num].equip[23] = FALSE;
 
 }
@@ -210,7 +192,7 @@ short char_select_pc(short active_only,short free_inv_only, const char * title)
 	for (i = 0; i < 6; i++) {
 		if ((adven[i].main_status == status::Absent) ||
 			((active_only == TRUE) && (adven[i].main_status > status::Normal)) ||
-			((free_inv_only == 1) && (pc_has_space(i) == 24)) || (adven[i].main_status == status::Fled)) {
+			((free_inv_only == 1) && (pc_has_space(adven[i]) == 24)) || (adven[i].main_status == status::Fled)) {
 				cd_activate_item(1018, 3 + i, 0);
 				}
 		if (adven[i].main_status != status::Absent) {
@@ -271,30 +253,6 @@ short choice_dialog(short pic,short num)
 	DestroyWindow(test_dlog3);
 	SetFocus(store_focus);
 	return answer_given;
-}
-
-
-
-short party_total_level() 
-{
-	short i,j = 0;
-	
-	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == status::Normal)
-			j += adven[i].level;
-	return j;
-}
-
-
-
-short luck_total()
-{
-	short i = 0;
-	
-	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == status::Normal)
-			i += adven[i].skills[18];
-	return i;
 }
 
 void display_traits_graphics()

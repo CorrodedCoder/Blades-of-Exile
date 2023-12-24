@@ -22,28 +22,25 @@
 #include "newgraph.h"
 #include "dlgutils.h"
 #include "boe/hacks.hpp"
+#include "boe/utility.hpp"
+#include "boe/item.hpp"
 
 extern short overall_mode;
 extern party_record_type party;
 extern piles_of_stuff_dumping_type data_store;
-extern talking_record_type talking;
 extern scenario_data_type scenario;
-
-extern current_town_type	c_town;
+extern current_town_type c_town;
 extern unsigned char out[96][96];
-extern unsigned char out_e[96][96];
 extern unsigned char combat_terrain[64][64];
-extern unsigned char sfx[64][64];
 extern short which_combat_type,current_pc,stat_window;
 extern outdoor_record_type outdoors[2][2];
 extern location pc_pos[6],center;
-extern Boolean in_scen_debug,belt_present,registered,processing_fields,monsters_going,suppress_stat_screen,boom_anim_active;
-extern big_tr_type  t_d;
+extern Boolean in_scen_debug,belt_present,processing_fields,monsters_going,suppress_stat_screen,boom_anim_active;
+extern big_tr_type t_d;
 extern Adventurers adven;
 extern effect_pat_type current_pat;
-extern town_item_list 	t_i;
+extern town_item_list t_i;
 extern out_wandering_type store_wandering_special;
-extern short pc_marked_damage[6];
 extern short monst_marked_damage[T_M];
 extern HWND modeless_dialogs[18];
 extern Boolean fast_bang,end_scenario;
@@ -52,21 +49,21 @@ extern short town_type;
 extern piles_of_stuff_dumping_type5 data_store5;
 extern char scen_strs2[110][256];
 
-Boolean can_draw_pcs = TRUE;
-short store_item_spell_level = 10;
-Boolean special_in_progress = FALSE;
+extern Boolean can_draw_pcs = TRUE;
+extern short store_item_spell_level = 10;
 
-item_record_type	null_item = {0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
-short spec_str_offset[3] = {160,10,20};
-short current_pc_picked_in_spec_enc = -1; // pc that's been selected, -1 if none
-location store_special_loc;
-	short boom_gr[8] = {3,0,2,1,1,4,3,3};
- short skill_max[20] = {20,20,20,20,20,20,20,20,20,7,
+static Boolean special_in_progress = FALSE;
+static const short spec_str_offset[3] = {160,10,20};
+static short current_pc_picked_in_spec_enc = -1; // pc that's been selected, -1 if none
+static location store_special_loc;
+
+extern const short boom_gr[8] = {3,0,2,1,1,4,3,3};
+extern const short skill_max[20] = {20,20,20,20,20,20,20,20,20,7,
 						7,20,20,10,20,20,20,20,20};
 															
 	// 0 - everywhere 1 - combat only 2 - town only 3 - town & combat only  4 - can't use  5 - outdoor
 	// + 10 - mag. inept can use
-	short abil_chart[200] = {4,4,4,4,4,4,4,4,4,4,
+extern const short abil_chart[200] = {4,4,4,4,4,4,4,4,4,4,
 							4,4,4,4,4,4,4,4,4,4,
 							4,4,4,4,4,4,4,4,4,4,
 							4,4,4,4,4,4,4,4,4,4,
@@ -254,8 +251,8 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 		if (to_loc.x > 0)
 			make_crate((short) to_loc.x,(short) to_loc.y);
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
-			if ((t_i.items[i].variety > 0) && (same_point(t_i.items[i].item_loc,where_check))
-			 && (is_contained(t_i.items[i]) == TRUE))
+			if ((t_i.items[i].variety > item_variety::None) && (same_point(t_i.items[i].item_loc,where_check))
+			 && is_contained(t_i.items[i]))
 			 	t_i.items[i].item_loc = to_loc;
 		}
 	if (is_barrel(where_check.x,where_check.y)) {
@@ -265,8 +262,8 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 		if (to_loc.x > 0)
 			make_barrel((short) to_loc.x,(short) to_loc.y);
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
-			if ((t_i.items[i].variety > 0) && (same_point(t_i.items[i].item_loc,where_check))
-			 && (is_contained(t_i.items[i]) == TRUE))
+			if ((t_i.items[i].variety > item_variety::None) && (same_point(t_i.items[i].item_loc,where_check))
+			 && is_contained(t_i.items[i]))
 			 	t_i.items[i].item_loc = to_loc;
 		}
 		}
@@ -460,12 +457,12 @@ void check_fields(location where_check,short mode,short which_pc)
 		if (mode < 2) {
 			suppress_stat_screen = TRUE;
 			for (i = 0; i < 6; i++) {
-				sleep_pc(i,3,11,0);
+				sleep_pc(i,3, affect::Asleep,0);
 				}
 			suppress_stat_screen = FALSE;
 			put_pc_screen();
 			}
-			else sleep_pc(current_pc,3,11,0);
+			else sleep_pc(current_pc,3, affect::Asleep,0);
 		}
 	if (is_fire_barrier(where_check.x,where_check.y)) {
 			add_string_to_buf("  Magic barrier!               ");
@@ -482,7 +479,8 @@ void check_fields(location where_check,short mode,short which_pc)
 void use_item(short pc,short item)
 {
 	Boolean take_charge = TRUE,inept_ok = FALSE;
-	short abil,level,i,j,item_use_code,str,type,which_stat,r1;
+	short abil,level,i,j,item_use_code,str,type,r1;
+	affect which_stat;
 	char to_draw[60];
 	location user_loc;
 creature_data_type *which_m;
@@ -539,12 +537,12 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 				}
 		}
 	if (take_charge == TRUE) {
-		if (is_ident(adven[pc].items[item]) == FALSE)
+		if (!is_ident(adven[pc].items[item]))
 			sprintf(to_draw, "Use: %s",adven[pc].items[item].name);
 			else sprintf(to_draw, "Use: %s",adven[pc].items[item].full_name);
 		add_string_to_buf( to_draw);
 
-		if ((adven[pc].items[item].variety == 7) &&
+		if ((adven[pc].items[item].variety == item_variety::PotionOrMagicItem) &&
 		      (adven[pc].items[item].graphic_num >= 50) && (adven[pc].items[item].graphic_num <= 52))
 		      	play_sound(56);
 		
@@ -560,34 +558,34 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 				switch (abil) {
 					case 71: 
 						play_sound(4);
-						which_stat = 1;
+						which_stat = affect::CursedBlessed;
 						if (type % 2 == 1) {
 							ASB("  You feel awkward."); str = str * -1;}
 							else ASB("  You feel blessed.");
 						break;
 					case 73: 
 						play_sound(75);
-						which_stat = 3;
+						which_stat = affect::Speed;
 						if (type % 2 == 1) {
 							ASB("  You feel sluggish."); str = str * -1;}
 							else ASB("  You feel speedy.");
 						break;
 					case 74:
 						play_sound(68);
-						which_stat = 4;
+						which_stat = affect::Invulnerable;
 						if (type % 2 == 1) {
 							ASB("  You feel odd."); str = str * -1;}
 							else ASB("  You feel protected.");
 						break;
 					case 75: 
 						play_sound(51);
-						which_stat = 5;
+						which_stat = affect::MagicResistant;
 						if (type % 2 == 1) {
 							ASB("  You feel odd."); str = str * -1;}
 							else ASB("  You feel protected.");
 						break;
 					case 76: 
-						which_stat = 6;
+						which_stat = affect::Webbed;
 						if (type % 2 == 1)
 							ASB("  You feel sticky.");
 							else {
@@ -595,14 +593,14 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 						break;
 					case 78: 
 						play_sound(43);
-						which_stat = 8;
+						which_stat = affect::Sanctuary;
 						if (type % 2 == 1) {
 							ASB("  You feel exposed."); str = str * -1;}
 							else ASB("  You feel obscure.");
 						break;
 					case 80: 
 						play_sound(43);
-						which_stat = 10;
+						which_stat = affect::MartyrsShield;
 						if (type % 2 == 1) {
 							ASB("  You feel dull."); str = str * -1;}
 							else ASB("  You start to glow slightly.");
@@ -622,51 +620,51 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 				break;
 			case 77:
 				switch (type) {
-					case 0: ASB("  You feel healthy."); affect_pc(pc,7,-1 * str); break;
+					case 0: ASB("  You feel healthy."); affect_pc(pc, affect::Diseased,-1 * str); break;
 					case 1: ASB("  You feel sick."); disease_pc(pc,str); break;
-					case 2: ASB("  You all feel healthy."); affect_party(7,-1 * str); break;
+					case 2: ASB("  You all feel healthy."); affect_party(affect::Diseased,-1 * str); break;
 					case 3: ASB("  You all feel sick."); for (i = 0; i < 6; i++) disease_pc(i,str); break;
 					}
 				break;
 			case 79:
 				switch (type) {
-					case 0: ASB("  You feel clear headed."); affect_pc(pc,9,-1 * str); break;
+					case 0: ASB("  You feel clear headed."); affect_pc(pc, affect::Dumbfounded,-1 * str); break;
 					case 1: ASB("  You feel confused."); dumbfound_pc(pc,str); break;
-					case 2: ASB("  You all feel clear headed."); affect_party(9,-1 * str); break;
+					case 2: ASB("  You all feel clear headed."); affect_party(affect::Dumbfounded,-1 * str); break;
 					case 3: ASB("  You all feel confused."); for (i = 0; i < 6; i++) dumbfound_pc(i,str); break;
 					}
 				break;
 			case 81:
 				switch (type) {
-					case 0: ASB("  You feel alert."); affect_pc(pc,11,-1 * str); break;
-					case 1: ASB("  You feel very tired."); sleep_pc(pc,str + 1,11,200); break;
-					case 2: ASB("  You all feel alert."); affect_party(11,-1 * str); break;
-					case 3: ASB("  You all feel very tired."); for (i = 0; i < 6; i++) sleep_pc(i,str + 1,11,200); break;
+					case 0: ASB("  You feel alert."); affect_pc(pc, affect::Asleep,-1 * str); break;
+					case 1: ASB("  You feel very tired."); sleep_pc(pc,str + 1, affect::Asleep,200); break;
+					case 2: ASB("  You all feel alert."); affect_party(affect::Asleep,-1 * str); break;
+					case 3: ASB("  You all feel very tired."); for (i = 0; i < 6; i++) sleep_pc(i,str + 1, affect::Asleep,200); break;
 					}
 				break;
 			case 82:
 				switch (type) {
-					case 0: ASB("  You find it easier to move."); affect_pc(pc,12,-1 * str * 100); break;
-					case 1: ASB("  You feel very stiff."); sleep_pc(pc,str * 20 + 10,12,200); break;
-					case 2: ASB("  You all find it easier to move."); affect_party(12,-1 * str * 100); break;
-					case 3: ASB("  You all feel very stiff."); for (i = 0; i < 6; i++) sleep_pc(i,str * 20 + 10,12,200); break;
+					case 0: ASB("  You find it easier to move."); affect_pc(pc, affect::Paralyzed,-1 * str * 100); break;
+					case 1: ASB("  You feel very stiff."); sleep_pc(pc,str * 20 + 10, affect::Paralyzed,200); break;
+					case 2: ASB("  You all find it easier to move."); affect_party(affect::Paralyzed,-1 * str * 100); break;
+					case 3: ASB("  You all feel very stiff."); for (i = 0; i < 6; i++) sleep_pc(i,str * 20 + 10, affect::Paralyzed,200); break;
 					}
 				break;
 			case 83:
 				switch (type) {
-					case 0: ASB("  Your skin tingles pleasantly."); affect_pc(pc,13,-1 * str); break;
+					case 0: ASB("  Your skin tingles pleasantly."); affect_pc(pc, affect::Acid,-1 * str); break;
 					case 1: ASB("  Your skin burns!"); acid_pc(pc,str); break;
-					case 2: ASB("  You all tingle pleasantly."); affect_party(13,-1 * str); break;
+					case 2: ASB("  You all tingle pleasantly."); affect_party(affect::Acid,-1 * str); break;
 					case 3: ASB("  Everyone's skin burns!"); for (i = 0; i < 6; i++) acid_pc(i,str); break;
 					}
 				break;
 			case 84:
 				switch (type) {
 					case 0: 
-					case 1: ASB("  You feel wonderful!"); pc_heal(adven[pc],str * 20); affect_pc(pc,1,str); break;
+					case 1: ASB("  You feel wonderful!"); pc_heal(adven[pc],str * 20); affect_pc(pc, affect::CursedBlessed,str); break;
 					case 2:
 					case 3: ASB("  Everyone feels wonderful!"); for (i = 0; i < 6; i++) {
-								pc_heal(adven[i],str * 20); affect_pc(i,1,str); } break;
+								pc_heal(adven[i],str * 20); affect_pc(i, affect::CursedBlessed,str); } break;
 					}
 				break;
 			case 85:
@@ -916,8 +914,8 @@ Boolean use_space(location where)
 		take_crate((short) where.x,(short) where.y);
 		make_crate((short) to_loc.x,(short) to_loc.y);
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
-			if ((t_i.items[i].variety > 0) && (same_point(t_i.items[i].item_loc,where))
-			 && (is_contained(t_i.items[i]) == TRUE))
+			if ((t_i.items[i].variety > item_variety::None) && (same_point(t_i.items[i].item_loc,where))
+			 && is_contained(t_i.items[i]))
 			 	t_i.items[i].item_loc = to_loc;
 		}
 	if (is_barrel(where.x,where.y)) {
@@ -930,8 +928,8 @@ Boolean use_space(location where)
 		take_barrel((short) where.x,(short) where.y);
 		make_barrel((short) to_loc.x,(short) to_loc.y);
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
-			if ((t_i.items[i].variety > 0) && (same_point(t_i.items[i].item_loc,where))
-			 && (is_contained(t_i.items[i]) == TRUE))
+			if ((t_i.items[i].variety > item_variety::None) && (same_point(t_i.items[i].item_loc,where))
+			 && is_contained(t_i.items[i]))
 			 	t_i.items[i].item_loc = to_loc;
 		}
 		
@@ -965,7 +963,7 @@ Boolean adj_town_look(location where)
 	short i = 0,s1 = 0, s2 = 0, s3 = 0;
 
 	for (i = 0; i < NUM_TOWN_ITEMS; i++) 
-		if ((t_i.items[i].variety > 0) && (is_contained(t_i.items[i]) == TRUE) &&
+		if ((t_i.items[i].variety > item_variety::None) && is_contained(t_i.items[i]) &&
 			(same_point(where,t_i.items[i].item_loc) == TRUE))
 				item_there = TRUE;
 
@@ -994,7 +992,7 @@ Boolean adj_town_look(location where)
 				}
 		}
 	if ((is_container(where)) && (item_there == TRUE) && (can_open == TRUE)) {
-		get_item(where,6,TRUE);
+		get_item(where,6,true);
 		}
 	else switch (terrain) {
 		case 22: case 23:
@@ -1426,7 +1424,7 @@ void push_things()
 				}
 			}
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
-		if (t_i.items[i].variety > 0) {
+		if (t_i.items[i].variety > item_variety::None) {
 			l = t_i.items[i].item_loc;
 			ter = t_d.terrain[l.x][l.y];
 			switch (scenario.ter_types[ter].special) {
@@ -1470,7 +1468,7 @@ void push_things()
 				ASB("You smash the crate.");			
 				}
 			for (k = 0; k < NUM_TOWN_ITEMS; k++)
-				if ((t_i.items[k].variety > 0) && (is_contained(t_i.items[k]) == TRUE)
+				if ((t_i.items[k].variety > item_variety::None) && is_contained(t_i.items[k])
 				&& (same_point(t_i.items[k].item_loc,c_town.p_loc) == TRUE))
 					t_i.items[k].item_properties = t_i.items[k].item_properties & 247;				
 			redraw = TRUE;
@@ -1504,7 +1502,7 @@ void push_things()
 						ASB("You smash the crate.");			
 						}
 					for (k = 0; k < NUM_TOWN_ITEMS; k++)
-						if ((t_i.items[k].variety > 0) && (is_contained(t_i.items[k]) == TRUE)
+						if ((t_i.items[k].variety > item_variety::None) && is_contained(t_i.items[k])
 						&& (same_point(t_i.items[k].item_loc,pc_pos[i]) == TRUE))
 							t_i.items[k].item_properties = t_i.items[k].item_properties & 247;		
 					redraw = TRUE;
@@ -1658,21 +1656,21 @@ special_node_type get_node(short cur_spec,short cur_spec_type)
 	dummy_node = scenario.scen_specials[0];
 	dummy_node.type = -1;
 	if (cur_spec_type == 0) {
-		if (cur_spec != minmax(0,255,cur_spec)) {
+		if (cur_spec != boe_clamp(cur_spec,0,255)) {
 			give_error("The scenario called a scenario special node out of range.","",0);
 			return dummy_node;
 			}
 		return scenario.scen_specials[cur_spec];
 		}
 	if (cur_spec_type == 1) {
-		if (cur_spec != minmax(0,59,cur_spec)) {
+		if (cur_spec != boe_clamp(cur_spec,0,59)) {
 			give_error("The scenario called an outdoor special node out of range.","",0);
 			return dummy_node;
 			}
 		return outdoors[party.i_w_c.x][party.i_w_c.y].specials[cur_spec];
 		}
 	if (cur_spec_type == 2) {
-		if (cur_spec != minmax(0,99,cur_spec)) {
+		if (cur_spec != boe_clamp(cur_spec,0,99)) {
 			give_error("The scenario called a town special node out of range.","",0);
 			return dummy_node;
 			}
@@ -1767,26 +1765,26 @@ void general_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 			break;
 		case 15:
 			check_mess = TRUE;
-			if (spec.ex1a != minmax(0,29,spec.ex1a))
+			if (spec.ex1a != boe_clamp(spec.ex1a,0,29))
 				give_error("Horse out of range.","",0);
 				else party.horses[spec.ex1a].property = (spec.ex2a == 0) ? 1 : 0;
 			break;
 		case 16:
 			check_mess = TRUE;
-			if (spec.ex1a != minmax(0,29,spec.ex1a))
+			if (spec.ex1a != boe_clamp(spec.ex1a,0,29))
 				give_error("Boat out of range.","",0);
 				else party.boats[spec.ex1a].property = (spec.ex2a == 0) ? 1 : 0;
 			break;
 		case 17:
 			check_mess = TRUE;
-			if (spec.ex1a != minmax(0,scenario.num_towns - 1,spec.ex1a))
+			if (spec.ex1a != boe_clamp(spec.ex1a,0,scenario.num_towns - 1))
 				give_error("Town out of range.","",0);
 				else party.can_find_town[spec.ex1a] = (spec.ex2a == 0) ? 0 : 1;
 			*redraw = TRUE;
 			break;
 		case 18:
 			check_mess = TRUE;
-			if (spec.ex1a != minmax(1,10,spec.ex1a))
+			if (spec.ex1a != boe_clamp(spec.ex1a,1,10))
 				give_error("Event code out of range.","",0);
 				else if (party.key_times[spec.ex1a] == 30000)
 					party.key_times[spec.ex1a] = calc_day();
@@ -1813,7 +1811,7 @@ void general_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 			*next_spec_type = 0;
 			break;
 		case 22:
-			if (spec.sd1 != minmax(0,299,spec.sd1))
+			if (spec.sd1 != boe_clamp(spec.sd1,0,299))
 				give_error("Stuff Done flag out of range.","",0);
 				else for (i = 0; i < 10; i++) PSD[spec.sd1][i] = spec.ex1a;
 			break;
@@ -1896,7 +1894,7 @@ void oneshot_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 					}
 			break;
 		case 51:
-			if (spec.ex1a != minmax(0,49,spec.ex1a)) {
+			if (spec.ex1a != boe_clamp(spec.ex1a,0,49)) {
 				give_error("Special item is out of range.","",0);
 				set_sd = FALSE;
 				}
@@ -1990,7 +1988,7 @@ void oneshot_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 					}
 			break;
 		case 61:
-			if (spec.ex1a != minmax(0,3,spec.ex1a)) {
+			if (spec.ex1a != boe_clamp(spec.ex1a,0,3)) {
 				give_error("Special outdoor enc. is out of range. Must be 0-3.","",0);
 				set_sd = FALSE;
 				}
@@ -2077,14 +2075,14 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 		case 82:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					adven[i].cur_health = minmax(0,	adven[i].max_health,
-						adven[i].cur_health + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					adven[i].cur_health = boe_clamp(adven[i].cur_health + spec.ex1a * ((spec.ex1b != 0) ? -1: 1),	0,
+						adven[i].max_health);
 			break;
 		case 83:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					adven[i].cur_sp = minmax(0,	adven[i].max_sp,
-						adven[i].cur_sp + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					adven[i].cur_sp = boe_clamp(adven[i].cur_sp + spec.ex1a * ((spec.ex1b != 0) ? -1: 1),	0,
+						adven[i].max_sp);
 			break;
 		case 84:
 			for (i = 0; i < 6; i++)
@@ -2095,8 +2093,8 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 		case 85:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					adven[i].skill_pts = minmax(0,	100,
-						adven[i].skill_pts + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					adven[i].skill_pts = boe_clamp(adven[i].skill_pts + spec.ex1a * ((spec.ex1b != 0) ? -1: 1),	0,
+						100);
 			break;
 		case 86:
 			for (i = 0; i < 6; i++)
@@ -2130,68 +2128,68 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 		case 89:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					affect_pc(i,4,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					affect_pc(i, affect::Invulnerable,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case 90:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					affect_pc(i,5,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					affect_pc(i, affect::MagicResistant,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case 91:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					affect_pc(i,6,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					affect_pc(i, affect::Webbed,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case 92:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					affect_pc(i,7,spec.ex1a * ((spec.ex1b != 0) ? 1: -1));
+					affect_pc(i, affect::Diseased,spec.ex1a * ((spec.ex1b != 0) ? 1: -1));
 			break;
 		case 93:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					affect_pc(i,8,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					affect_pc(i, affect::Sanctuary,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case 94:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					affect_pc(i,1,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					affect_pc(i, affect::CursedBlessed,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case 95:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					affect_pc(i,9,spec.ex1a * ((spec.ex1b == 0) ? -1: 1));
+					affect_pc(i, affect::Dumbfounded,spec.ex1a * ((spec.ex1b == 0) ? -1: 1));
 			break;
 		case 96:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i)) {
 					if (spec.ex1b == 0) {
-						affect_pc(i,11,-1 * spec.ex1a);
+						affect_pc(i, affect::Asleep,-1 * spec.ex1a);
 						}
-						else sleep_pc(i,spec.ex1a,11,10);
+						else sleep_pc(i,spec.ex1a, affect::Asleep,10);
 					}
 			break;
 		case 97:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i)) {
 					if (spec.ex1b == 0) {
-						affect_pc(i,12,-1 * spec.ex1a);
+						affect_pc(i, affect::Paralyzed,-1 * spec.ex1a);
 						}
-						else sleep_pc(i,spec.ex1a,12,10);
+						else sleep_pc(i,spec.ex1a, affect::Paralyzed,10);
 					}
 			break;
 		case 98:
-			if (spec.ex2a != minmax(0,18,spec.ex2a)) {
+			if (spec.ex2a != boe_clamp(spec.ex2a,0,18)) {
 				give_error("Skill is out of range.","",0);
 				break;
 				}
 			for (i = 0; i < 6; i++)
 				if (((pc < 0) || (pc == i)) && (get_ran(1,0,100) < spec.pic))
-					adven[i].skills[spec.ex2a] = minmax(0, skill_max[spec.ex2a],
-						adven[i].skills[spec.ex2a] + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					adven[i].skills[spec.ex2a] = boe_clamp(adven[i].skills[spec.ex2a] + spec.ex1a * ((spec.ex1b != 0) ? -1: 1), 0,
+						skill_max[spec.ex2a]);
 			break;
 		case 99:
-			if (spec.ex1a != minmax(0,31,spec.ex1a)) {
+			if (spec.ex1a != boe_clamp(spec.ex1a,0,31)) {
 				give_error("Mage spell is out of range (0 - 31). See docs.","",0);
 				break;
 				}
@@ -2200,7 +2198,7 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 					adven[i].mage_spells[spec.ex1a + 30] = TRUE;
 			break;
 		case 100:
-			if (spec.ex1a != minmax(0,31,spec.ex1a)) {
+			if (spec.ex1a != boe_clamp(spec.ex1a,0,31)) {
 				give_error("Priest spell is out of range (0 - 31). See docs.","",0);
 				break;
 				}
@@ -2223,7 +2221,7 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 					else take_food(spec.ex1a,FALSE);
 			break;
 		case 103:
-			if (spec.ex1a != minmax(0,19,spec.ex1a)) {
+			if (spec.ex1a != boe_clamp(spec.ex1a,0,19)) {
 				give_error("Alchemy is out of range.","",0);
 				break;
 				}
@@ -2231,12 +2229,12 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 			break;
 		case 104:
 			r1 = (short) party.stuff_done[305][0];
-			r1 = minmax(0,250,r1 + spec.ex1a);
+			r1 = boe_clamp(r1 + spec.ex1a,0,250);
 			party.stuff_done[305][0] = r1;
 			break;
 		case 105:
 			r1 = (short) party.stuff_done[305][3];
-			r1 = minmax(0,250,r1 + spec.ex1a);
+			r1 = boe_clamp(r1 + spec.ex1a,0,250);
 			party.stuff_done[305][3] = r1;
 			break;
 		case 106:
@@ -2246,7 +2244,7 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 				add_string_to_buf("  Can't fly when on a horse.  "); 
 			else {
 				r1 = (short) party.stuff_done[305][1];
-				r1 = minmax(0,250,r1 + spec.ex1a);
+				r1 = boe_clamp(r1 + spec.ex1a,0,250);
 				party.stuff_done[305][1] = r1;
 				}
 			break;
@@ -2283,7 +2281,7 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 				*next_spec = spec.ex1b;
 			break;
 		case 133:
-			if (spec.ex1a != minmax(0,49,spec.ex1a)) {
+			if (spec.ex1a != boe_clamp(spec.ex1a,0,49)) {
 				give_error("Special item is out of range.","",0);		
 				}
 				else if (party.spec_items[spec.ex1a] > 0)
@@ -2319,7 +2317,7 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 				break;
 			l.x = spec.ex1a; l.y = spec.ex1b;
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
-				if ((t_i.items[i].variety > 0) && (t_i.items[i].special_class == spec.ex2a)
+				if ((t_i.items[i].variety > item_variety::None) && (t_i.items[i].special_class == spec.ex2a)
 					&& (same_point(l,t_i.items[i].item_loc) == TRUE))
 						*next_spec = spec.ex2b;
 			break;
@@ -2331,7 +2329,7 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 			for (i = 0; i < 6; i++)
 				if (adven[i].main_status == status::Normal)
 					for (j = 0; j < 24; j++)
-						if ((adven[i].items[j].variety > 0) && (adven[i].items[j].special_class == spec.ex1a)
+						if ((adven[i].items[j].variety > item_variety::None) && (adven[i].items[j].special_class == spec.ex1a)
 							&& (adven[i].equip[j] == TRUE)) 
 							*next_spec = spec.ex1b;			
 			break;
@@ -2352,11 +2350,11 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 				break;
 			l.x = spec.ex1a; l.y = spec.ex1b;
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
-				if ((t_i.items[i].variety > 0) && (t_i.items[i].special_class == spec.ex2a)
+				if ((t_i.items[i].variety > item_variety::None) && (t_i.items[i].special_class == spec.ex2a)
 					&& (same_point(l,t_i.items[i].item_loc) == TRUE)) {
 						*next_spec = spec.ex2b;
 						*redraw = 1;
-						t_i.items[i].variety = 0;
+						t_i.items[i].variety = item_variety::None;
 						}
 			break;
 		case 145:
@@ -2367,7 +2365,7 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 			for (i = 0; i < 6; i++)
 				if (adven[i].main_status == status::Normal)
 					for (j = 0; j < 24; j++)
-						if ((adven[i].items[j].variety > 0) && (adven[i].items[j].special_class == spec.ex1a)
+						if ((adven[i].items[j].variety > item_variety::None) && (adven[i].items[j].special_class == spec.ex1a)
 							&& (adven[i].equip[j] == TRUE)) {
 							*next_spec = spec.ex1b;			
 							*redraw = 1;
@@ -2412,7 +2410,7 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 			check_mess = FALSE;
 			get_text_response(873,str3,0);
 			j = 1; k = 1;
-			spec.pic = minmax(0,8,spec.pic);
+			spec.pic = boe_clamp(spec.pic,0,8);
 			get_strs((char *) str1,(char *) str2,0,spec.ex1a,spec.ex2a);
 			for (i = 0; i < spec.pic;i++) {
 				if ((spec.ex1a < 0) || (str3[i] != str1[i]))
@@ -2797,15 +2795,15 @@ void rect_spec(short which_mode,special_node_type cur_node,short cur_spec_type,
 					} break;
 		case 212:
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
-				if ((t_i.items[i].variety > 0) && (same_point(t_i.items[i].item_loc,l) == TRUE)) {
+				if ((t_i.items[i].variety > item_variety::None) && (same_point(t_i.items[i].item_loc,l) == TRUE)) {
 					t_i.items[i].item_loc.x = spec.sd1;
 					t_i.items[i].item_loc.y = spec.sd2;
 					}					
 			break;
 		case 213:
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
-				if ((t_i.items[i].variety > 0) && (same_point(t_i.items[i].item_loc,l) == TRUE)) {
-					t_i.items[i].variety = 0;
+				if ((t_i.items[i].variety > item_variety::None) && (same_point(t_i.items[i].item_loc,l) == TRUE)) {
+					t_i.items[i].variety = item_variety::None;
 					}					
 			break;
 		case 214:
@@ -2864,7 +2862,7 @@ void outdoor_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 			check_mess = TRUE;
 			break;		
 		case 227:
-			if (spec.ex1a != minmax(0,3,spec.ex1a)) {
+			if (spec.ex1a != boe_clamp(spec.ex1a,0,3)) {
 				give_error("Special outdoor enc. is out of range. Must be 0-3.","",0);
 				//set_sd = FALSE;
 				}
@@ -2887,7 +2885,7 @@ void outdoor_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 				spec.ex2a = 39;
 			if (spec.ex2a < 1)
 				spec.ex2a = 1;
-			spec.ex2b = minmax(0,6,spec.ex2b);
+			spec.ex2b = boe_clamp(spec.ex2b,0,6);
 			switch (spec.ex1b) {
 				case 0: start_shop_mode(0,spec.ex1a,spec.ex1a + spec.ex2a - 1,spec.ex2b,(char *) str1); break;
 				case 1: start_shop_mode(10,spec.ex1a,spec.ex1a + spec.ex2a - 1,spec.ex2b,(char *) str1); break;
@@ -2946,8 +2944,8 @@ void get_strs(char *str1,char *str2,short cur_type,short which_str1,short which_
 {
 	short num_strs[3] = {260,108,135};
 		
-	if (((which_str1 >= 0) && (which_str1 != minmax(0,num_strs[cur_type],which_str1))) ||
-		((which_str2 >= 0) && (which_str2 != minmax(0,num_strs[cur_type],which_str2)))) {
+	if (((which_str1 >= 0) && (which_str1 != boe_clamp(which_str1,0,num_strs[cur_type]))) ||
+		((which_str2 >= 0) && (which_str2 != boe_clamp(which_str2,0,num_strs[cur_type])))) {
 		give_error("The scenario attempted to access a message out of range.","",0);
 		return;
 		}

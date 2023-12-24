@@ -11,6 +11,8 @@
 #include "exlsound.h"
 #include "graphics.h"
 #include "newgraph.h"
+#include "boe/utility.hpp"
+#include "boe/item.hpp"
 
 extern current_town_type c_town;
 extern party_record_type party;
@@ -26,20 +28,20 @@ extern Adventurers adven;
 extern big_tr_type  t_d;
 extern short monst_target[T_M]; // 0-5 target that pc   6 - no target  100 + x - target monster x
 extern short spell_caster, missile_firer,current_monst_tactic;
-extern short hit_chance[21];
+extern const short hit_chance[51];
 extern unsigned char misc_i[64][64];
 extern location monster_targs[T_M];
 
 extern location pc_pos[6],center;
-extern short boom_gr[8],futzing;
+extern short futzing;
 extern Boolean processing_fields,monsters_going;
 extern town_item_list 	t_i;
 
 
 
-short charm_odds[20] = {90,90,85,80,78, 75,73,60,40,30, 20,10,5,2,1, 0,0,0,0,0};	
+static const short charm_odds[20] = {90,90,85,80,78, 75,73,60,40,30, 20,10,5,2,1, 0,0,0,0,0};	
 
-creature_start_type null_start_type = {0,0,{80,80},1,0,0,0,0,0,0,0, 0,-1,-1,-1};
+static const creature_start_type null_start_type = {0,0,{80,80},1,0,0,0,0,0,0,0, 0,-1,-1,-1};
 
 monster_record_type return_monster_template(unsigned char store)
 {	monster_record_type monst;
@@ -72,7 +74,7 @@ monster_record_type return_monster_template(unsigned char store)
 	monst.morale = monst.m_morale;
 	monst.direction = 0;
 	for (i = 0; i < 15; i++)
-		monst.status[i] = 0;
+		monst.mstatus[i] = 0;
 		
 	return monst;
 }
@@ -280,8 +282,8 @@ void do_monsters()
 	
 	if (overall_mode == 1) 
 		for (i = 0; i < T_M; i++) 
-		if ((c_town.monst.dudes[i].active != 0) && (c_town.monst.dudes[i].m_d.status[11] <= 0)
-			&& (c_town.monst.dudes[i].m_d.status[12] <= 0)) {
+		if ((c_town.monst.dudes[i].active != 0) && (c_town.monst.dudes[i].m_d.mstatus[11] <= 0)
+			&& (c_town.monst.dudes[i].m_d.mstatus[12] <= 0)) {
 			// have to pick targets
 			if (c_town.monst.dudes[i].active == 1)
 				target = 6;
@@ -608,7 +610,7 @@ short switch_target_to_adjacent(short which_m,short orig_target)
 	if (is_combat())
 		for (i = 0; i < 6; i++)
 			if ((adven[i].main_status == status::Normal) && (monst_adjacent(pc_pos[i],which_m) == TRUE) && 
-			 (get_encumberance(i) < 2))
+			 (get_encumberance(adven[i]) < 2))
 		 		return i; 
 
 	// Check for a nice, adjacent, friendly monster and maybe attack
@@ -955,7 +957,7 @@ void monst_inflict_fields(short which_monst)
 			if ((is_crate(where_check.x,where_check.y)) ||
 				(is_barrel(where_check.x,where_check.y)) )
 				for (k = 0; k < NUM_TOWN_ITEMS; k++)
-					if ((t_i.items[k].variety > 0) && (is_contained(t_i.items[k]) == TRUE)
+					if ((t_i.items[k].variety > item_variety::None) && is_contained(t_i.items[k])
 					&& (same_point(t_i.items[k].item_loc,where_check) == TRUE))
 						t_i.items[k].item_properties = t_i.items[k].item_properties & 247;
 			take_crate(where_check.x,where_check.y);
@@ -1072,8 +1074,8 @@ Boolean monst_check_special_terrain(location where_check,short mode,short which_
 				if (to_loc.x > 0)
 					make_crate((short) to_loc.x,(short) to_loc.y);
 				for (i = 0; i < NUM_TOWN_ITEMS; i++)
-					if ((t_i.items[i].variety > 0) && (same_point(t_i.items[i].item_loc,where_check))
-					 && (is_contained(t_i.items[i]) == TRUE))
+					if ((t_i.items[i].variety > item_variety::None) && (same_point(t_i.items[i].item_loc,where_check))
+					 && is_contained(t_i.items[i]))
 			 			t_i.items[i].item_loc = to_loc;
 						}
 		}
@@ -1086,8 +1088,8 @@ Boolean monst_check_special_terrain(location where_check,short mode,short which_
 				if (to_loc.x > 0)
 				    	make_barrel((short) to_loc.x,(short) to_loc.y);
 				for (i = 0; i < NUM_TOWN_ITEMS; i++)
-					if ((t_i.items[i].variety > 0) && (same_point(t_i.items[i].item_loc,where_check))
-					 && (is_contained(t_i.items[i]) == TRUE))
+					if ((t_i.items[i].variety > item_variety::None) && (same_point(t_i.items[i].item_loc,where_check))
+					 && is_contained(t_i.items[i]))
 			 			t_i.items[i].item_loc = to_loc;
 				
 				}
@@ -1179,7 +1181,7 @@ void poison_monst(creature_data_type *which_m,short how_much)
 		monst_spell_note(which_m->number,10);
 		return;
 		}
-	which_m->m_d.status[2] = min(8, which_m->m_d.status[2] + how_much);
+	which_m->m_d.mstatus[2] = min(8, which_m->m_d.mstatus[2] + how_much);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 4);
 
 }
@@ -1190,7 +1192,7 @@ void acid_monst(creature_data_type *which_m,short how_much)
 	i = how_much;
 	magic_adjust(which_m,&i);
 	how_much = i;
-	which_m->m_d.status[13] = minmax(-8,8, which_m->m_d.status[13] + how_much);
+	which_m->m_d.mstatus[13] = boe_clamp(which_m->m_d.mstatus[13] + how_much,-8, 8);
 	monst_spell_note(which_m->number,31);
 
 }
@@ -1202,7 +1204,7 @@ void slow_monst(creature_data_type *which_m,short how_much)
 	i = how_much;
 	magic_adjust(which_m,&i);
 	how_much = i;
-	which_m->m_d.status[3] = minmax(-8,8, which_m->m_d.status[3] - how_much);
+	which_m->m_d.mstatus[3] = boe_clamp(which_m->m_d.mstatus[3] - how_much,-8, 8);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 2);
 
 }
@@ -1215,7 +1217,7 @@ void curse_monst(creature_data_type *which_m,short how_much)
 	how_much = i;
 
 
-	which_m->m_d.status[1] = minmax(-8,8, which_m->m_d.status[1] - how_much);
+	which_m->m_d.mstatus[1] = boe_clamp(which_m->m_d.mstatus[1] - how_much,-8, 8);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 5);
 
 }
@@ -1226,7 +1228,7 @@ void web_monst(creature_data_type *which_m,short how_much)
 	i = how_much;
 	magic_adjust(which_m,&i);
 	how_much = i;
-	which_m->m_d.status[6] = minmax(-8,8, which_m->m_d.status[6] + how_much);
+	which_m->m_d.mstatus[6] = boe_clamp(which_m->m_d.mstatus[6] + how_much,-8, 8);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 19);
 
 }
@@ -1248,7 +1250,7 @@ void disease_monst(creature_data_type *which_m,short how_much)
 	i = how_much;
 	magic_adjust(which_m,&i);
 	how_much = i;
-	which_m->m_d.status[7] = minmax(-8,8, which_m->m_d.status[7] + how_much);
+	which_m->m_d.mstatus[7] = boe_clamp(which_m->m_d.mstatus[7] + how_much,-8, 8);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 25);
 
 }
@@ -1260,7 +1262,7 @@ void dumbfound_monst(creature_data_type *which_m,short how_much)
 	i = how_much;
 	magic_adjust(which_m,&i);
 	how_much = i;
-	which_m->m_d.status[9] = minmax(-8,8, which_m->m_d.status[9] + how_much);
+	which_m->m_d.mstatus[9] = boe_clamp(which_m->m_d.mstatus[9] + how_much,-8, 8);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 22);
 
 }
@@ -1297,7 +1299,7 @@ void charm_monst(creature_data_type *which_m,short penalty,short which_status,sh
 				monst_spell_note(which_m->number,23);
 				}
 				else {
-					which_m->m_d.status[which_status] = amount;
+					which_m->m_d.mstatus[which_status] = amount;
 					if (which_status == 11)
 						monst_spell_note(which_m->number,28);
 					if (which_status == 12)
@@ -1452,16 +1454,16 @@ void activate_monsters(short code,short attitude)
 			}
 }
 
-short get_encumberance(short pc_num)
+short get_encumberance(const pc_record_type& pc)
 {
 	short store = 0,i,what_val;
 	
 	for (i = 0; i < 16; i++)
-		if (adven[pc_num].equip[i] == TRUE) {
-			what_val = adven[pc_num].items[i].awkward;
-			if ((what_val == 1) && (get_ran(1,0,130) < hit_chance[adven[pc_num].skills[8]]))
+		if (pc.equip[i] == TRUE) {
+			what_val = pc.items[i].awkward;
+			if ((what_val == 1) && (get_ran(1,0,130) < hit_chance[pc.skills[8]]))
 				what_val--;
-			if ((what_val > 1) && (get_ran(1,0,70) < hit_chance[adven[pc_num].skills[8]]))
+			if ((what_val > 1) && (get_ran(1,0,70) < hit_chance[pc.skills[8]]))
 				what_val--;
 			store += what_val;
 			}

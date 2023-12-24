@@ -5,8 +5,6 @@
 extern piles_of_stuff_dumping_type *data_store;
 
 
-item_record_type convert_item (short_item_record_type s_item);
-
 short loot_min[5] = {0,0,5,50,400};
 short loot_max[5] = {3,8,40,800,4000};
 

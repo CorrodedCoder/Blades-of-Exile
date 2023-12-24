@@ -17,6 +17,7 @@
 #include "graphutl.h"
 #include "graphutl_helpers.hpp"
 #include "boe/hacks.hpp"
+#include "boe/item.hpp"
 
 static const std::array m_mage_sp{"Spark","Minor Haste","Strength","Flame Cloud","Flame",
 						"Minor Poison","Slow","Dumbfound","Stinking Cloud","Summon Beast",
@@ -41,9 +42,7 @@ Boolean printing_long = FALSE;
 char c_str[256] = "";
 Boolean save_mess_given = FALSE;
 
-RECT status_panel_clip_rect = {299, 11,495,175},item_panel_clip_rect = {297,11,463,175};
-
-RECT item_buttons_from[7] = {{0,12,14,24},{14,12,28,24},{28,12,42,24},{42,12,56,24},
+static const RECT item_buttons_from[7] = {{0,12,14,24},{14,12,28,24},{28,12,42,24},{42,12,56,24},
 						{0,24,30,36},{30,24,60,36},{0,36,30,48}}; /**/
 
 Boolean string_added = FALSE;
@@ -93,7 +92,7 @@ extern std::array< std::array<Boolean, 6>, 8> item_area_button_active;
 extern std::array< std::array<Boolean, 5>, 6> pc_area_button_active;
 extern std::array<RECT, 9> item_screen_button_rects;
 extern short spec_item_array[60];
-extern short abil_chart[200],store_anim_type;
+extern const short abil_chart[200],store_anim_type;
 // combat globals
 extern std::array<short, 9> item_bottom_button_active;
 
@@ -133,7 +132,7 @@ short text_pc_has_abil_equip(short pc_num,short abil)
 {
 	short i = 0;
 
-	while (((adven[pc_num].items[i].variety == 0) || (adven[pc_num].items[i].ability != abil)
+	while (((adven[pc_num].items[i].variety == item_variety::None) || (adven[pc_num].items[i].ability != abil)
 			|| (adven[pc_num].equip[i] == FALSE)) && (i < 24))
 				i++;
 	return i;
@@ -444,25 +443,25 @@ void put_item_screen(short screen_num,short suppress_buttons)
 				dest_rect = item_buttons[i][0];
 				dest_rect.left += 36;
 
-				if (adven[pc].items[i_num].variety == 0) {
+				if (adven[pc].items[i_num].variety == item_variety::None) {
 
 					}
 					else {
 						if (adven[pc].equip[i_num] == TRUE) {
 							//TextFace(italic | bold);
 							SelectObject(hdc,italic_font);
-							if (adven[pc].items[i_num].variety < 3)
+							if (adven[pc].items[i_num].variety < item_variety::Gold)
 								SetTextColor(hdc,PALETTEINDEX(c[1]));
-								else if ((adven[pc].items[i_num].variety >= 12) && (adven[pc].items[i_num].variety <= 17))
+								else if ((adven[pc].items[i_num].variety >= item_variety::Shield) && (adven[pc].items[i_num].variety <= item_variety::Boots))
 									SetTextColor(hdc,PALETTEINDEX(c[3]));
 									else SetTextColor(hdc,PALETTEINDEX(c[4]));
 							}
 							else SetTextColor(hdc,PALETTEINDEX(c[0]));
 					// Place object graphic here
-					//if (adven[pc].items[i_num].variety != 0)
+					//if (adven[pc].items[i_num].variety != item_variety::None)
 					//	draw_obj_graphic(i + ((which_item_page[pc] == 1) ? 1 : 0),adven[pc].items[i_num].graphic_num,text_panel_rect); // rect is space holder
 
-							if (is_ident(adven[pc].items[i_num]) == 0)
+							if (!is_ident(adven[pc].items[i_num]))
 								sprintf(to_draw, "%s  ",adven[pc].items[i_num].name);
 								else { /// Don't place # of charges when Sell button up and space tight
 									if ((adven[pc].items[i_num].charges > 0) && (adven[pc].items[i_num].type != 2)
@@ -533,7 +532,7 @@ static void place_buy_button(short position,short pc_num,short item_num,HDC hdc)
 	short aug_cost[10] = {4,7,10,8, 15,15,10, 0,0,0};
 	HGDIOBJ store_bmp;
 
-	if (adven[pc_num].items[item_num].variety == 0)
+	if (adven[pc_num].items[item_num].variety == item_variety::None)
 		return;
 
 	dest_rect = item_buttons[position][5];
@@ -545,44 +544,44 @@ static void place_buy_button(short position,short pc_num,short item_num,HDC hdc)
 
 	switch (stat_screen_mode) {
 		case 2:
-			if (is_ident(adven[pc_num].items[item_num]) == FALSE) { 
+			if (!is_ident(adven[pc_num].items[item_num])) { 
 				item_area_button_active[position][5] = TRUE;
 				source_rect = button_sources[0];
 				val_to_place = shop_identify_cost;
 				}
 			break;
 		case 3: // sell weapons 
-			if (((adven[pc_num].items[item_num].variety < 7) || (adven[pc_num].items[item_num].variety == 23) ||
+			if (((adven[pc_num].items[item_num].variety < item_variety::PotionOrMagicItem) || (adven[pc_num].items[item_num].variety == item_variety::Crossbow) ||
 				(adven[pc_num].equip[item_num] == FALSE) &&
-				(adven[pc_num].items[item_num].variety == 24)) &&
-				(is_ident(adven[pc_num].items[item_num]) == TRUE) && (val_to_place > 0) &&
-				 (is_cursed(adven[pc_num].items[item_num]) == FALSE)) { 
+				(adven[pc_num].items[item_num].variety == item_variety::Bolts)) &&
+				is_ident(adven[pc_num].items[item_num]) && (val_to_place > 0) &&
+				 !is_cursed(adven[pc_num].items[item_num])) { 
 				item_area_button_active[position][5] = TRUE;
 				source_rect = button_sources[1];
 				}
 			break;
 		case 4: // sell armor
-			if ((adven[pc_num].items[item_num].variety >= 12) && (adven[pc_num].items[item_num].variety <= 17) &&
+			if ((adven[pc_num].items[item_num].variety >= item_variety::Shield) && (adven[pc_num].items[item_num].variety <= item_variety::Boots) &&
 				(adven[pc_num].equip[item_num] == FALSE) &&
-				(is_ident(adven[pc_num].items[item_num]) == TRUE) && (val_to_place > 0) &&
-				 (is_cursed(adven[pc_num].items[item_num]) == FALSE)) { 
+				is_ident(adven[pc_num].items[item_num]) && (val_to_place > 0) &&
+				!is_cursed(adven[pc_num].items[item_num])) { 
 				item_area_button_active[position][5] = TRUE;
 				source_rect = button_sources[1];
 				}
 			break;
 		case 5: // sell any
-			if ((val_to_place > 0) && (is_ident(adven[pc_num].items[item_num]) == TRUE) && 
+			if ((val_to_place > 0) && is_ident(adven[pc_num].items[item_num]) && 
 				(adven[pc_num].equip[item_num] == FALSE) &&
-				 (is_cursed(adven[pc_num].items[item_num]) == FALSE)) { 
+				 !is_cursed(adven[pc_num].items[item_num])) { 
 				item_area_button_active[position][5] = TRUE;
 				source_rect = button_sources[1];
 				}
 			break;
 		case 6: // augment weapons 
-			if ((adven[pc_num].items[item_num].variety < 3) &&
-				(is_ident(adven[pc_num].items[item_num]) == TRUE) &&
+			if ((adven[pc_num].items[item_num].variety < item_variety::Gold) &&
+				is_ident(adven[pc_num].items[item_num]) &&
 				(adven[pc_num].items[item_num].ability == 0) &&
-				(is_magic(adven[pc_num].items[item_num]) == FALSE)) { 
+				!is_magic(adven[pc_num].items[item_num])) { 
 				item_area_button_active[position][5] = TRUE;
 				source_rect = button_sources[2];
 				val_to_place = max(aug_cost[shop_identify_cost] * 100,adven[pc_num].items[item_num].value * (5 + aug_cost[shop_identify_cost]));
@@ -788,82 +787,82 @@ static void draw_pc_effects_ex(RectDrawDestination dest_bmp, const pc_record_typ
 	if (hacks_adventurer_without_split_status(adventurer) != status::Normal)
 		return;
 			
-	if ((adventurer.status[0] > 0) && (dest_rect.right < right_limit)) {
+	if ((adventurer.gaffect(affect::PoisonedWeapon) > 0) && (dest_rect.right < right_limit)) {
 		rect_draw_some_item(mixed_gworld,c_source_rects[4],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (adventurer.status[1] > 0) {
+	if (adventurer.gaffect(affect::CursedBlessed) > 0) {
 		rect_draw_some_item(mixed_gworld,c_source_rects[2],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (adventurer.status[1] < 0) {
+	if (adventurer.gaffect(affect::CursedBlessed) < 0) {
 		rect_draw_some_item(mixed_gworld,c_source_rects[3],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (adventurer.status[2] > 0) {
-		rect_draw_some_item(mixed_gworld,c_source_rects[(adventurer.status[2] > 4) ? 1 : 0],dest_bmp,dest_rect,mode,dest);
+	if (adventurer.gaffect(affect::Poisoned) > 0) {
+		rect_draw_some_item(mixed_gworld,c_source_rects[(adventurer.gaffect(affect::Poisoned) > 4) ? 1 : 0],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (adventurer.status[4] > 0) {
+	if (adventurer.gaffect(affect::Invulnerable) > 0) {
 		rect_draw_some_item(mixed_gworld,c_source_rects[5],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (adventurer.status[3] > 0) {
+	if (adventurer.gaffect(affect::Speed) > 0) {
 		rect_draw_some_item(mixed_gworld,c_source_rects[6],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (adventurer.status[3] < 0) {
+	if (adventurer.gaffect(affect::Speed) < 0) {
 		rect_draw_some_item(mixed_gworld,c_source_rects[8],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((adventurer.status[5] > 0) && (dest_rect.right < right_limit)) {
+	if ((adventurer.gaffect(affect::MagicResistant) > 0) && (dest_rect.right < right_limit)) {
 		rect_draw_some_item(mixed_gworld,c_source_rects[9],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((adventurer.status[6] > 0) && (dest_rect.right < right_limit)) {
+	if ((adventurer.gaffect(affect::Webbed) > 0) && (dest_rect.right < right_limit)) {
 		rect_draw_some_item(mixed_gworld,c_source_rects[10],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((adventurer.status[7] > 0) && (dest_rect.right < right_limit)){
+	if ((adventurer.gaffect(affect::Diseased) > 0) && (dest_rect.right < right_limit)){
 		rect_draw_some_item(mixed_gworld,c_source_rects[11],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((adventurer.status[8] > 0) && (dest_rect.right < right_limit)){
+	if ((adventurer.gaffect(affect::Sanctuary) > 0) && (dest_rect.right < right_limit)){
 		rect_draw_some_item(mixed_gworld,c_source_rects[12],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((adventurer.status[9] > 0) && (dest_rect.right < right_limit)){
+	if ((adventurer.gaffect(affect::Dumbfounded) > 0) && (dest_rect.right < right_limit)){
 		rect_draw_some_item(mixed_gworld,c_source_rects[13],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
-	if ((adventurer.status[10] > 0) && (dest_rect.right < right_limit)){
+	if ((adventurer.gaffect(affect::MartyrsShield) > 0) && (dest_rect.right < right_limit)){
 		rect_draw_some_item(mixed_gworld,c_source_rects[14],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
-	if ((adventurer.status[11] > 0) && (dest_rect.right < right_limit)){
+	if ((adventurer.gaffect(affect::Asleep) > 0) && (dest_rect.right < right_limit)){
 		rect_draw_some_item(mixed_gworld,c_source_rects[15],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
-	if ((adventurer.status[12] > 0) && (dest_rect.right < right_limit)){
+	if ((adventurer.gaffect(affect::Paralyzed) > 0) && (dest_rect.right < right_limit)) {
 		rect_draw_some_item(mixed_gworld,c_source_rects[16],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
-	if ((adventurer.status[13] > 0) && (dest_rect.right < right_limit)){
+	if ((adventurer.gaffect(affect::Acid) > 0) && (dest_rect.right < right_limit)){
 		rect_draw_some_item(mixed_gworld,c_source_rects[17],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
@@ -1022,11 +1021,11 @@ short do_look(location space)
 			add_string_to_buf("    Rubble               ");
 
 		for (i = 0; i < NUM_TOWN_ITEMS; i++) {
-			if ((t_i.items[i].variety != 0) && (same_point(space,t_i.items[i].item_loc) == TRUE)
+			if ((t_i.items[i].variety != item_variety::None) && (same_point(space,t_i.items[i].item_loc) == TRUE)
 				&& (is_lit == TRUE)) {
-				if (t_i.items[i].variety == 3)
+				if (t_i.items[i].variety == item_variety::Gold)
 					gold_here = TRUE;
-				else if (t_i.items[i].variety == 11)
+				else if (t_i.items[i].variety == item_variety::Food)
 					food_here = TRUE;
 					else num_items++;
 				}
@@ -1038,9 +1037,9 @@ short do_look(location space)
 		if (num_items > 8)
 			add_string_to_buf("    Many items");
 			else for (i = 0; i < NUM_TOWN_ITEMS; i++) {
-				if ((t_i.items[i].variety != 0) && (t_i.items[i].variety != 3) &&(t_i.items[i].variety != 11) &&
-					 (same_point(space,t_i.items[i].item_loc) == TRUE) && (is_contained(t_i.items[i]) == FALSE)) {
-					if (is_ident(t_i.items[i]) == TRUE)
+				if ((t_i.items[i].variety != item_variety::None) && (t_i.items[i].variety != item_variety::Gold) &&(t_i.items[i].variety != item_variety::Food) &&
+					 (same_point(space,t_i.items[i].item_loc) == TRUE) && !is_contained(t_i.items[i])) {
+					if (is_ident(t_i.items[i]))
 						sprintf(store_string, "    %s",t_i.items[i].full_name);
 						else sprintf(store_string, "    %s",t_i.items[i].name);
 					add_string_to_buf( store_string);
@@ -1766,35 +1765,4 @@ void MoveTo(short x, short y)
 void MoveToDrawString(char *string,HDC hdc)
 {
 	DrawString(string,store_text_x,store_text_y, hdc);
-}
-////
-Boolean is_ident(item_record_type item)
-{
-	if (item.item_properties & 1)
-		return TRUE;
-		else return FALSE;
-}
-Boolean is_magic(item_record_type item)
-{
-	if (item.item_properties & 4)
-		return TRUE;
-		else return FALSE;
-}
-Boolean is_contained(item_record_type item)
-{
-	if (item.item_properties & 8)
-		return TRUE;
-		else return FALSE;
-}
-Boolean is_cursed(item_record_type item)
-{
-	if (item.item_properties & 16)
-		return TRUE;
-		else return FALSE;
-}
-Boolean is_property(item_record_type item)
-{
-	if (item.item_properties & 2)
-		return TRUE;
-		else return FALSE;
 }

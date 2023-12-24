@@ -36,11 +36,6 @@ extern Boolean modeless_exists[12],diff_depth_ok,current_file_has_maps;
 extern short modeless_key[12];
 extern DialogPtr modeless_dialogs[12];
 
-Boolean equippable[18] = {FALSE,TRUE,TRUE,FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,
-							TRUE,TRUE,TRUE,FALSE,FALSE,TRUE};
-short num_hands_to_use[18] = {0,1,2,0,1,1,1,0,0,1,1,0,0,0,0,0,0,0};
-short num_that_can_equip[18] = {0,2,1,0,1,1,1,0,0,2,1,1,1,2,1,0,0,1}; 
-short selected,item_max = 0;
 Boolean choice_active[6];
 
 
@@ -144,11 +139,11 @@ void take_item(short pc_num,short which_item)
 	short i;
 	Boolean do_print = TRUE;
 
-	if ((adven[pc_num].weap_poisoned == which_item) && (adven[pc_num].status[0] > 0)) {
+	if ((adven[pc_num].weap_poisoned == which_item) && (adven[pc_num].gaffect(affect::PoisonedWeapon) > 0)) {
 //			add_string_to_buf("  Poison lost.           ");
-			adven[pc_num].status[0] = 0;
+			adven[pc_num].gaffect(affect::PoisonedWeapon) = 0;
 		}
-	if ((adven[pc_num].weap_poisoned > which_item) && (adven[pc_num].status[0] > 0)) 
+	if ((adven[pc_num].weap_poisoned > which_item) && (adven[pc_num].gaffect(affect::PoisonedWeapon) > 0)) 
 		adven[pc_num].weap_poisoned--;
 		
 	for (i = which_item; i < 23; i++) {
@@ -292,35 +287,6 @@ short choice_dialog(short pic,short num)
 	
 	return item_hit;
 
-}
-
-
-
-
-
-
-
-
-short party_total_level() 
-{
-	short i,j = 0;
-	
-	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == status::Normal)
-			j += adven[i].level;
-	return j;
-}
-
-
-
-short luck_total()
-{
-	short i = 0;
-	
-	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == status::Normal)
-			i += adven[i].skills[18];
-	return i;
 }
 
 void display_traits_graphics()

@@ -1,8 +1,11 @@
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/benchmark/catch_benchmark.hpp>
 #include <algorithm>
+#include <ranges>
 
 #include "boe/pc.hpp"
 
+namespace {
 
 TEST_CASE("pc_heal", "[pc]")
 {
@@ -72,7 +75,7 @@ TEST_CASE("pc_cure", "[pc]")
 {
 	SECTION("Curing zero has no effect") {
 		pc_record_type pc{};
-		pc.main_status = status::Normal; pc.status[2] = 2;
+		pc.main_status = status::Normal; pc.gaffect(affect::Poisoned) = 2;
 		const pc_record_type before{ pc };
 		// Existing logic returns true on zero change
 		REQUIRE(pc_cure(pc, 0));
@@ -80,7 +83,7 @@ TEST_CASE("pc_cure", "[pc]")
 	}
 	SECTION("Curing when already at zero has no effect") {
 		pc_record_type pc{};
-		pc.main_status = status::Normal; pc.status[2] = 0;
+		pc.main_status = status::Normal; pc.gaffect(affect::Poisoned) = 0;
 		const pc_record_type before{ pc };
 		// Existing logic returns true on zero change
 		REQUIRE(pc_cure(pc, 5));
@@ -88,25 +91,25 @@ TEST_CASE("pc_cure", "[pc]")
 	}
 	SECTION("Curing by two decreases the amount correctly") {
 		pc_record_type pc{};
-		pc.main_status = status::Normal; pc.status[2] = 5;
+		pc.main_status = status::Normal; pc.gaffect(affect::Poisoned) = 5;
 		REQUIRE(pc_cure(pc, 2));
 		pc_record_type expected{};
-		expected.main_status = status::Normal; expected.status[2] = 3;
+		expected.main_status = status::Normal; expected.gaffect(affect::Poisoned) = 3;
 		REQUIRE(expected == pc);
 	}
 	SECTION("Curing by two does not decrease the amount if status is not 1") {
 		pc_record_type pc{};
-		pc.main_status = status::Absent; pc.status[2] = 5;
+		pc.main_status = status::Absent; pc.gaffect(affect::Poisoned) = 5;
 		pc_record_type before{pc};
 		REQUIRE(!pc_cure(pc, 2));
 		REQUIRE(before == pc);
 	}
 	SECTION("Curing by more than total decreases the amount only down to zero") {
 		pc_record_type pc{};
-		pc.main_status = status::Normal; pc.status[2] = 5;
+		pc.main_status = status::Normal; pc.gaffect(affect::Poisoned) = 5;
 		REQUIRE(pc_cure(pc, 9));
 		pc_record_type expected{};
-		expected.main_status = status::Normal; expected.status[2] = 0;
+		expected.main_status = status::Normal; expected.gaffect(affect::Poisoned) = 0;
 		REQUIRE(expected == pc);
 	}
 	SECTION("Curing for pc with different levels of illness") {
@@ -114,11 +117,11 @@ TEST_CASE("pc_cure", "[pc]")
 		{
 			pc_record_type pc{};
 			pc.main_status = status::Normal;
-			pc.status[2] = static_cast<short>(4 + index);
+			pc.gaffect(affect::Poisoned) = static_cast<short>(4 + index);
 			REQUIRE(pc_cure(pc, 7));
 			pc_record_type expected{};
 			expected.main_status = status::Normal;
-			expected.status[2] = std::max(static_cast<short>(4 + index - 7), static_cast<short>(0));
+			expected.gaffect(affect::Poisoned) = std::max(static_cast<short>(4 + index - 7), static_cast<short>(0));
 			REQUIRE(expected == pc);
 		}
 	}
@@ -352,20 +355,6 @@ TEST_CASE("pc_setup_prefab", "[pc]")
 		REQUIRE(c_pc_prefab[index] == pc);
 	}
 }
-
-/*
-short pc_encumberance(const pc_record_type& pc)
-{
-	short store = 0, i, what_val;
-
-	for (i = 0; i < 24; i++)
-		if (pc.equip[i] == BOE_TRUE) {
-			what_val = pc.items[i].awkward;
-			store += what_val;
-		}
-	return store;
-}
-*/
 
 TEST_CASE("pc_encumberance", "[pc]")
 {
@@ -2164,3 +2153,285 @@ TEST_CASE("pc_get_tnl", "[pc]")
 		}
 	}
 }
+
+TEST_CASE("pc_has_space", "[pc]")
+{
+	SECTION("No items yields zero") {
+		pc_record_type pc{};
+		REQUIRE(pc_has_space(pc) == 0);
+	}
+	SECTION("Fill up items") {
+		pc_record_type pc{};
+		short item_count = 0;
+		for (auto & item: pc.items)
+		{
+			++item_count;
+			item.variety = item_variety::OneHandedWeapon;
+			REQUIRE(pc_has_space(pc) == item_count);
+		}
+	}
+}
+
+TEST_CASE("pc_prot_level", "[pc]")
+{
+	SECTION("No items yields zero") {
+		pc_record_type pc{};
+		REQUIRE(pc_prot_level(pc, 0) == -1);
+	}
+	SECTION("Try each item") {
+		pc_record_type pc{};
+		for (unsigned char index = 0; index < std::size(pc.items); ++index)
+		{
+			INFO("Checking at index: " << index);
+			pc.items[index].variety = item_variety::OneHandedWeapon;
+			pc.items[index].ability = index;
+			pc.items[index].ability_strength = index + 1;
+			pc.equip[index] = BOE_TRUE;
+			REQUIRE(pc_prot_level(pc, index) == index + 1);
+			pc.items[index].variety = item_variety::None;
+			pc.items[index].ability = 0;
+			pc.equip[index] = BOE_FALSE;
+			pc.items[index].ability_strength = 0;
+		}
+	}
+	SECTION("Item that is not equipped gives no protection") {
+		pc_record_type pc{};
+		pc.items[4].variety = item_variety::ThrownMissile;
+		pc.items[4].ability = 4;
+		pc.items[4].ability_strength = 7;
+		REQUIRE(pc_prot_level(pc, 4) == -1);
+	}
+	SECTION("Item that is equipped gives correct protection") {
+		pc_record_type pc{};
+		pc.items[4].variety = item_variety::ThrownMissile;
+		pc.items[4].ability = 4;
+		pc.items[4].ability_strength = 7;
+		pc.equip[4] = BOE_TRUE;
+		REQUIRE(pc_prot_level(pc, 4) == 7);
+		BENCHMARK("pc_prot_level performance") {
+			return pc_prot_level(pc, 4);
+		};
+	}
+	SECTION("Item that is equipped of different ability type gives no protection") {
+		pc_record_type pc{};
+		pc.items[4].variety = item_variety::ThrownMissile;
+		pc.items[4].ability = 4;
+		pc.items[4].ability_strength = 7;
+		pc.equip[4] = BOE_TRUE;
+		REQUIRE(pc_prot_level(pc, 8) == -1);
+	}
+	// Don't think this is necessarily a valid test case, but it is the behaviour all the same.
+	SECTION("Item that is equipped of variety type zero gives no protection") {
+		pc_record_type pc{};
+		pc.items[4].variety = item_variety::None;
+		pc.items[4].ability = 4;
+		pc.items[4].ability_strength = 7;
+		pc.equip[4] = BOE_TRUE;
+		REQUIRE(pc_prot_level(pc, 4) == -1);
+	}
+}
+
+const item_record_type c_items[]{
+{
+	.variety = item_variety::Tool,
+	.item_level = 8,
+	.charges = 1,
+	.type = 1,
+	.graphic_num = 103,
+	.ability = 90,
+	.ability_strength = 7,
+	.value = 8,
+	.weight = 14,
+	.item_loc = {.x = 10,.y = 8},
+	.full_name = "Lamp", // (0)(101)(0)(-20)(-88)(-8)(0)(0)(82)(0)(0)(-20)(-88)(-24)(0)(0)(30)(0)(0)(0)(1)
+	.name = "Lamp", // (0)(101)(0)(1)(24)(53)(78)(0)(0)(0)(0)
+	.item_properties = 1
+},
+{
+	.variety = item_variety::Tool,
+	.charges = 4,
+	.type = 1,
+	.graphic_num = 56,
+	.ability = 161,
+	.ability_strength = 3,
+	.type_flag = 14,
+	.value = 8,
+	.weight = 1,
+	.item_loc = {.x = 18, .y = 10},
+	.full_name = "Lockpicks", //(0)(32)(66)(111)(111)(116)(115)(0)(0)(0)(0)(0)(0)(0)(0)(1)
+	.name = "Lockpicks", //(0)(0)(0)(114)(0)(99)
+	.treas_class = 1,
+},
+{
+	.variety = item_variety::OneHandedWeapon,
+	.item_level = 4,
+	.bonus = 1,
+	.type = 1,
+	.graphic_num = 45,
+	.value = 2,
+	.weight = 7,
+	.full_name = "Bronze Knife",
+	.name = "Knife",
+	.item_properties = 1,
+},
+{
+	.variety = item_variety::OneHandedWeapon,
+	.item_level = 6,
+	.type = 1,
+	.value = 5,
+	.weight = 15,
+	.item_loc = {.x = 15, .y = 8},
+	.full_name = "Stone Short Sword", //(0)(0)(0)(30)(0)(0)(0)(1)
+	.name = "Short Sword",
+	.item_properties = 1,
+},
+{
+	.variety = item_variety::OneHandedWeapon,
+	.item_level = 7,
+	.bonus = 1,
+	.type = 2,
+	.graphic_num = 2,
+	.value = 22,
+	.weight = 18,
+	.item_loc = {.x = 17, .y = 8},
+	.full_name = "Bronze Mace", //(0)(32)(83)(119)(111)(114)(100)(0)(0)(30)(0)(0)(0)(1)
+	.name = "Mace", //(0)(32)(83)(119)(111)(114)(100)(0)(0)(0)(0)
+	.treas_class = 1,
+},
+{
+	.variety = item_variety::Bow,
+	.type = 1,
+	.graphic_num = 10,
+	.value = 30,
+	.weight = 20,
+	.item_loc = {.x = 15, .y = 10},
+	.full_name = "Cavewood Bow", //(0)(0)(75)(110)(105)(118)(101)(115)(0)(0)(0)(0)(1)
+	.name = "Bow", //(0)(108)(105)(110)(115)(0)(75)(110)(105)(118)(101)(115)
+	.treas_class = 1,
+},
+{
+	.variety = item_variety::Arrows,
+	.item_level = 12,
+	.charges = 12,
+	.type = 1,
+	.graphic_num = 47,
+	.type_flag = 6,
+	.value = 1,
+	.weight = 1,
+	.item_loc = {.x = 16, .y = 10},
+	.full_name = "Arrows", //(0)(114)(111)(119)(105)(110)(103)(32)(75)(110)(105)(118)(101)(115)(0)(0)(0)(0)(1)
+	.name = "Arrows", //(0)(103)(32)(75)(110)(105)(118)(101)(115)
+	.treas_class = 1,
+	.item_properties = 1,
+},
+{
+	.variety = item_variety::Shield,
+	.item_level = 1,
+	.awkward = 1,
+	.graphic_num = 65,
+	.value = 2,
+	.weight = 20,
+	.full_name = "Crude Buckler",
+	.name = "Buckler",
+	.item_properties = 1,
+},
+{
+	.variety = item_variety::Shield,
+	.item_level = 4,
+	.awkward = 2,
+	.type = 1,
+	.graphic_num = 13,
+	.value = 8,
+	.weight = 30,
+	.item_loc = {.x = 15, .y = 6},
+	.full_name = "Crude Shield", //(0)(0)(0)(97)(105)(108)(0)(0)(0)(0)(0)(0)(1)
+	.name = "Shield", //(0)(0)(105)(108)(0)(0)(114)(0)(99)
+	.treas_class = 2,
+},
+{
+	.variety = item_variety::Boots,
+	.item_level = 1,
+	.type = 1,
+	.graphic_num = 111,
+	.value = 10,
+	.weight = 8,
+	.item_loc = {.x = 17, .y = 10},
+	.full_name = "Boots", //(0)(71)(97)(117)(110)(116)(108)(101)(116)(115)(0)(0)(0)(0)(0)(0)(0)(0)(0)(1)
+	.name = "Boots", //(0)(101)(116)(115)(0)(0)(0)(114)(0)(99)
+	.treas_class = 2,
+},
+{
+	.variety = item_variety::Armor,
+	.item_level = 3,
+	.awkward = 1,
+	.protection = 1,
+	.type = 1,
+	.graphic_num = 14,
+	.value = 30,
+	.weight = 70,
+	.item_loc = {.x = 14, .y = 10},
+	.full_name = "Bronze Studded Armor", //(0)(0)(0)(0)(1)
+	.name = "Studded Armor", //(0)(99)
+	.treas_class = 1,
+},
+};
+
+std::vector<size_t> get_item_order(const pc_record_type& pc)
+{
+	std::vector<size_t> res;
+	for (unsigned char index = 0; index < std::size(c_items); ++index)
+	{
+		auto it = std::ranges::find(c_items, pc.items[index]);
+		res.push_back(std::distance(std::begin(c_items), it));
+	}
+	return res;
+}
+
+TEST_CASE("pc_sort_items", "[pc]")
+{
+	SECTION("Sorting empty pc yields no change") {
+		pc_record_type pc{};
+		const pc_record_type before{ pc };
+		pc_sort_items(pc);
+		REQUIRE(before == pc);
+	}
+	SECTION("Reverse sorted") {
+		const std::vector<size_t> c_expected_order{ 1, 0, 4, 3, 2, 6, 5, 10, 9, 8, 7, };
+		pc_record_type pc{};
+		std::ranges::copy(std::views::reverse(c_items), pc.items);
+		pc.weap_poisoned = 9;
+		pc_sort_items(pc);
+		REQUIRE(get_item_order(pc) == c_expected_order);
+		REQUIRE(pc.weap_poisoned == 0);
+	}
+	SECTION("Already sorted") {
+		const std::vector<size_t> c_expected_order{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+		pc_record_type pc{};
+		std::ranges::copy(c_items, pc.items);
+		pc.weap_poisoned = 4;
+		pc_sort_items(pc);
+		REQUIRE(get_item_order(pc) == c_expected_order);
+		REQUIRE(pc.weap_poisoned == 4);
+	}
+	SECTION("D") {
+		const std::vector<size_t> c_expected_order{ 0, 1, 2, 3, 4, 5, 6, 10, 7, 8, 9 };
+		pc_record_type pc{};
+		std::ranges::copy(c_items, pc.items);
+		std::swap(pc.items[1], pc.items[10]);
+		pc.weap_poisoned = 10;
+		pc_sort_items(pc);
+		REQUIRE(get_item_order(pc) == c_expected_order);
+		REQUIRE(pc.weap_poisoned == 1);
+	}
+	SECTION("Benchmark") {
+		pc_record_type pc{};
+		std::ranges::copy(c_items, pc.items);
+		BENCHMARK("Curious") {
+			pc_record_type pc2{pc};
+			pc_sort_items(pc2);
+			return pc2.items[0].variety;
+		};
+	}
+}
+
+} // Unnamed namespace

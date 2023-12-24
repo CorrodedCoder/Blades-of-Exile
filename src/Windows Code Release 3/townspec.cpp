@@ -15,6 +15,7 @@
 #include "townspec.h"
 #include "exlsound.h"
 #include "boe/hacks.hpp"
+#include "boe/utility.hpp"
 
 extern short overall_mode;
 extern party_record_type party;
@@ -30,12 +31,9 @@ extern location pc_pos[6],center;
 extern town_item_list 	t_i;
 extern Adventurers adven;
 extern big_tr_type  t_d;
-extern Boolean registered;
 
-item_record_type	null_thing = {0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
-char answer[256];
-
-
+static const short trap_odds[30] = { 5,30,35,42,48, 55,63,69,75,77,
+						78,80,82,84,86, 88,90,92,94,96,98,99,99,99,99,99,99,99,99,99 };
 
 void activate_monster_enc(short enc_num,short str1,short str2,short strsnd,short *flip_bit)
 {
@@ -114,8 +112,6 @@ Boolean run_trap(short pc_num,short trap_type,short trap_level,short diff)
 				 //	20 + *  - trap *, but nasty 
 {
 	short r1,skill,i,num_hits = 1,i_level;
-	short trap_odds[30] = {5,30,35,42,48, 55,63,69,75,77,
-							78,80,82,84,86, 88,90,92,94,96,98,99,99,99,99,99,99,99,99,99};
 	
 	if (pc_num > 7) { // Debug
 		SysBeep(50);
@@ -138,11 +134,11 @@ Boolean run_trap(short pc_num,short trap_type,short trap_level,short diff)
 		return TRUE;
 		
 	if (pc_num < 6) {
-			i = stat_adj(pc_num,1);
-			if ((i_level = get_prot_level(pc_num,42)) > 0)
+			i = stat_adj(adven[pc_num],1);
+			if ((i_level = pc_prot_level(adven[pc_num],42)) > 0)
 				i = i + i_level / 2;
-			skill = minmax(0,20,adven[pc_num].skills[14] + 
-				+ adven[pc_num].skills[18] / 2 + 1 - c_town.difficulty + 2 * i);
+			skill = boe_clamp(adven[pc_num].skills[14] + 
+				+ adven[pc_num].skills[18] / 2 + 1 - c_town.difficulty + 2 * i,0,20);
 	
 			r1 = get_ran(1,0,100) + diff;
 			// Nimble?
@@ -193,7 +189,7 @@ Boolean run_trap(short pc_num,short trap_type,short trap_level,short diff)
 			add_string_to_buf("  A purple ray flies out.          ");
 			r1 = 200 + c_town.difficulty * 100;
 			r1 = r1 + trap_level * 400;
-			sleep_pc(pc_num,r1,12,50);
+			sleep_pc(pc_num,r1, affect::Paralyzed,50);
 			break;
 		case 7:
 			add_string_to_buf("  You feel weak.            ");

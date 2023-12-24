@@ -331,10 +331,10 @@ void put_item_info(short pc,short item)////
 		else csp(998,1,1800 + s_i.graphic_num);
 		
 	// id? magic?
-	if ((is_magic(store_i) == TRUE) && (is_ident(store_i) == TRUE))
+	if (is_magic(store_i) && is_ident(store_i))
 		cd_set_led(998,17,1);
 		else cd_set_led(998,17,0);
-	if (is_ident(store_i) == TRUE)
+	if (is_ident(store_i))
 		cd_set_led(998,16,1);
 		else cd_set_led(998,16,0);
 	cd_set_item_text(998,4,	item_types[s_i.variety]);
@@ -345,7 +345,7 @@ void put_item_info(short pc,short item)////
 		}
 			
 
-	if (is_ident(s_i) == FALSE) {
+	if (!is_ident(s_i)) {
 			cd_set_item_text(998,3,	s_i.name);
 			return;
 		}	
@@ -877,11 +877,11 @@ void display_pc_info()
 					}
 				
 	hit_adj = stat_adj(pc,1) * 5 - (total_encumberance(pc)) * 5 
-		+ 5 * minmax(-8,8,adven[pc].status[1]);
+		+ 5 * boe_clamp(adven[pc].gaffect(affect::CursedBlessed),-8,8);
 	if ((adven[pc].traits[trait::Ambidextrous] == FALSE) && (weap2 < 24))
 		hit_adj -= 25;
 
-	dam_adj = stat_adj(pc,0) + minmax(-8,8,adven[pc].status[1]);
+	dam_adj = stat_adj(pc,0) + boe_clamp(adven[pc].gaffect(affect::CursedBlessed),-8,8);
 	if ((skill_item = text_pc_has_abil_equip(pc,37)) < 24) {
 		hit_adj += 5 * (adven[pc].items[skill_item].item_level / 2 + 1);
 		dam_adj += adven[pc].items[skill_item].item_level / 2;
@@ -897,7 +897,7 @@ void display_pc_info()
 	csit(1019,59,"No weapon.");	
 	csit(1019,60,"");	
 	if (weap1 < 24) {
-		if (is_ident(adven[pc].items[weap1]) == FALSE)
+		if (!is_ident(adven[pc].items[weap1]))
 			csit(1019,56,"Not identified.");
 			else {
 				if (hit_adj + 5 * adven[pc].items[weap1].bonus < 0)
@@ -911,7 +911,7 @@ void display_pc_info()
 				}
 			}
 	if (weap2 < 24) {
-		if (is_ident(adven[pc].items[weap2]) == FALSE)
+		if (!is_ident(adven[pc].items[weap2]))
 			csit(1019,59,"Not identified.");
 			else {
 				if (hit_adj + 5 * adven[pc].items[weap2].bonus < 0)

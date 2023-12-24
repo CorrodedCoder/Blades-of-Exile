@@ -23,6 +23,8 @@
 #include "newgraph.h"
 #include "infodlgs.h"
 #include "graphutl.h"
+#include "boe/utility.hpp"
+#include "boe/item.hpp"
 
 #define	NUM_HINTS	30
 
@@ -77,7 +79,7 @@ char old_str1[256];
 char old_str2[256];
 char one_back1[256];
 char one_back2[256]; 
-extern std::array<word_rect_type, 9> preset_words;
+extern const std::array<word_rect_type, 9> preset_words;
 RECT talk_area_rect = {5,5,284,420}, word_place_rect = {7,44,257,372},talk_help_rect = {254,5,272,21};
 /**/
 char title_string[50];
@@ -277,23 +279,23 @@ void handle_sale(short what_chosen,short cost)
 							adven[current_pc].cur_health = adven[current_pc].max_health;
 							break;
 						case 1:
-							adven[current_pc].status[2] = 0;
+							adven[current_pc].gaffect(affect::Poisoned) = 0;
 							break;
 						case 2:
-							adven[current_pc].status[7] = 0; break;
+							adven[current_pc].gaffect(affect::Diseased) = 0; break;
 						case 3:
-							adven[current_pc].status[12] = 0; break;
+							adven[current_pc].gaffect(affect::Paralyzed) = 0; break;
 						case 4: 
 							for (i = 0; i < 24; i++)
 								if ((adven[current_pc].equip[i] == TRUE) && 
-									(is_cursed(adven[current_pc].items[i])))
+									is_cursed(adven[current_pc].items[i]))
 										adven[current_pc].items[i].item_properties =
 											adven[current_pc].items[i].item_properties & 239;
   							break;
 						case 5: case 6: case 7:
 							adven[current_pc].main_status = status::Normal; break;
 						case 8:
-							adven[current_pc].status[9] = 0; break;
+							adven[current_pc].gaffect(affect::Dumbfounded) = 0; break;
 						}
 					}
 			break;
@@ -334,7 +336,7 @@ void handle_sale(short what_chosen,short cost)
 			base_item.item_properties = base_item.item_properties | 1;
 			switch (pc_ok_to_buy(current_pc,cost,base_item)) {
 				case 1: play_sound(-38); give_to_pc(current_pc,base_item,TRUE); 
-					party.magic_store_items[what_magic_shop][what_magic_shop_item].variety = 0;
+					party.magic_store_items[what_magic_shop][what_magic_shop_item].variety = item_variety::None;
 					break;
 				case 2: ASB("Can't carry any more items."); break;
 				case 3: ASB("Not enough cash."); break;
@@ -412,28 +414,28 @@ void set_up_shop_array()
 				store_shop_costs[shop_pos] = heal_costs[0];
 				shop_pos++;
 				}
-			if (adven[current_pc].status[2] > 0) {
+			if (adven[current_pc].gaffect(affect::Poisoned) > 0) {
 				store_shop_items[shop_pos] = 701;
 				store_shop_costs[shop_pos] = heal_costs[1];
 				shop_pos++;
 				}
-			if (adven[current_pc].status[7] > 0) {
+			if (adven[current_pc].gaffect(affect::Diseased) > 0) {
 				store_shop_items[shop_pos] = 702;
 				store_shop_costs[shop_pos] = heal_costs[2];
 				shop_pos++;
 				}
-			if (adven[current_pc].status[12] > 0) {
+			if (adven[current_pc].gaffect(affect::Paralyzed) > 0) {
 				store_shop_items[shop_pos] = 703;
 				store_shop_costs[shop_pos] = heal_costs[3];
 				shop_pos++;
 				}
-			if (adven[current_pc].status[9] > 0) {
+			if (adven[current_pc].gaffect(affect::Dumbfounded) > 0) {
 				store_shop_items[shop_pos] = 708;
 				store_shop_costs[shop_pos] = heal_costs[8];
 				shop_pos++;
 				}
 			for (i = 0; i < 24; i++)
-				if ((adven[current_pc].equip[i] == TRUE) && (is_cursed(adven[current_pc].items[i]) == TRUE))
+				if ((adven[current_pc].equip[i] == TRUE) && is_cursed(adven[current_pc].items[i]))
 					cursed_item = TRUE;
   			if (cursed_item) {
 				store_shop_items[shop_pos] = 704;
@@ -465,7 +467,7 @@ void set_up_shop_array()
 			break;
 		case 5: case 6: case 7: case 8: case 9:
 			for (i = 0; i < 10; i++)
-				if (party.magic_store_items[store_shop_type - 5][i].variety != 0) {
+				if (party.magic_store_items[store_shop_type - 5][i].variety != item_variety::None) {
 					store_shop_items[shop_pos] = (store_shop_type - 4) * 1000 + i;
 					store_i = party.magic_store_items[store_shop_type - 5][i];
 					store_shop_costs[shop_pos] = (store_i.charges == 0) ? 
@@ -475,7 +477,7 @@ void set_up_shop_array()
 			break;
 		case 10:
 			for (i = store_shop_min; i < store_shop_max + 1; i++) 
-				if (i == minmax(0,31,i)) {
+				if (i == boe_clamp(i,0,31)) {
 				store_i = store_mage_spells(i);
 				store_shop_costs[shop_pos] = store_i.value;
 				store_shop_items[shop_pos] = 800 + i + 30;
@@ -484,7 +486,7 @@ void set_up_shop_array()
 			break;
 		case 11:
 			for (i = store_shop_min; i < store_shop_max + 1; i++) 
-				if (i == minmax(0,31,i)) {
+				if (i == boe_clamp(i,0,31)) {
 				store_i = store_priest_spells(i);
 				store_shop_costs[shop_pos] = store_i.value;
 				store_shop_items[shop_pos] = 900 + i + 30;
@@ -493,7 +495,7 @@ void set_up_shop_array()
 			break;
 		case 12:
 			for (i = store_shop_min; i < store_shop_max + 1; i++) 
-				if (i == minmax(0,19,i)) {
+				if (i == boe_clamp(i,0,19)) {
 				store_i = store_alchemy(i);
 				store_shop_costs[shop_pos] = store_i.value;
 				store_shop_items[shop_pos] = 500 + i;
@@ -817,7 +819,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 			strnum2 = 0;
 			break;
 		case 7: 
-			c = minmax(1,30,c);
+			c = boe_clamp(c,1,30);
 			start_shop_mode(2,b,
 				b + c - 1,a,(char *)place_string1);
 			strnum1 = -1;
@@ -831,7 +833,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 			return;
 		
 		case 9: case 10: case 11: 
-			c = minmax(1,30,c);
+			c = boe_clamp(c,1,30);
 			start_shop_mode(ttype + 1,b,
 				b + c - 1,a,(char *)place_string1);
 			strnum1 = -1;

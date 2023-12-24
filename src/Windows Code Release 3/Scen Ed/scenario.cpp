@@ -43,10 +43,15 @@ short spec_item_spec,store_horse_page,store_boat_page ;
 item_storage_shortcut_type store_storage;
 short cur_shortcut;
 
-static const std::array item_types{"No Item","1-Handed weapon","2-Handed weapon","Gold","Bow","Arrows","Thrown missile",
+static const std::array c_item_types{"No Item","1-Handed weapon","2-Handed weapon","Gold","Bow","Arrows","Thrown missile",
 			"Potion/Magic Item","Scroll/Magic Item","Wand","Tool","Food","Shield","Armor","Helm",
 			"Gloves","Shield","Boots","Ring","Necklace",
 			"Weapon Poison","Non-Use Object","Pants","Crossbow","Bolts","Missile (no ammo)","Unused","Unused"};
+
+static const char* item_types(item_variety variety)
+{
+	return c_item_types[static_cast<short>(variety)];
+}
 
 unsigned char m_level[200] = {
 0,1,1,1,1,1,1,1,1,1,  // 0
@@ -754,7 +759,7 @@ monster_record_type return_monster_template(unsigned char store)
 	monst.corpse_item = -1;
 	monst.corpse_item_chance = -1;
 	for (i = 0; i < 15; i++)
-		monst.status[i] = 0;
+		monst.mstatus[i] = 0;
 	monst.x_width = monst.y_width = 1;
 	for (i = 0; i < 200; i++)
 		if (m_pict[m_num] == m_pic_index[i]) {
@@ -793,58 +798,6 @@ monster_record_type return_monster_template(unsigned char store)
 		monst.immunities = monst.immunities | 128;
 		
 	return monst;
-}
-
-item_record_type convert_item (short_item_record_type s_item) {
-	item_record_type i;
-	location l = {0,0};
-	short temp_val;
-	
-	i.variety = (short) s_item.variety;
-	i.item_level = (short) s_item.item_level;
-	i.awkward = (short) s_item.awkward;
-	i.bonus = (short) s_item.bonus;
-	i.protection = (short) s_item.protection;
-	i.charges = (short) s_item.charges;
-	i.type = (short) s_item.type;
-	i.graphic_num = (short) s_item.graphic_num;
-	if (i.graphic_num >= 25)
-		i.graphic_num += 20;
-	i.ability = (short) s_item.real_abil;
-	i.type_flag = (short) s_item.type_flag;
-	i.is_special = (short) s_item.is_special;
-	i.value = (short) s_item.value;
-	i.weight = s_item.weight;
-	i.special_class = 0;
-	i.item_loc = l;
-	strcpy(i.full_name, s_item.full_name);
-	strcpy(i.name, s_item.name);
-
-	if (i.charges > 0)
-		temp_val = i.value * i.charges;
-		else temp_val = i.value;
-	if (temp_val >= 15)
-		i.treas_class = 1;
-	if (temp_val >= 100)
-		i.treas_class = 2;
-	if (temp_val >= 900)
-		i.treas_class = 3;
-	if (temp_val >= 2400)
-		i.treas_class = 4;
-		
-	i.magic_use_type = s_item.magic_use_type;
-	i.ability_strength = s_item.ability_strength;
-	i.reserved1 = 0;
-	i.reserved2 = 0;
-	i.item_properties = 0;
-	if (s_item.identified == TRUE)
-		i.item_properties = i.item_properties | 1;
-	if ((s_item.ability == 14) || (s_item.ability == 129) || (s_item.ability == 95))
-		i.item_properties = i.item_properties | 16;
-	if (s_item.magic == TRUE)
-		i.item_properties = i.item_properties | 4;
-
-	return i;
 }
 
 void init_scenario()
@@ -938,7 +891,7 @@ void init_scenario()
 	scenario.last_out_edited.y = 0;
 	scenario.last_town_edited = 0;
 	for (i = 0; i < 400; i++) {
-		scen_item_list.scen_items[i].variety = 0;
+		scen_item_list.scen_items[i].variety = item_variety::None;
 		// =
 		//	convert_item(scen_item_list.scen_items[i]);
 		for (j = 0; j < 13; j++)
@@ -1512,7 +1465,7 @@ void put_item_info_in_dlog()
 		csp(818,49,950);
 		else csp(818,49,1800 + store_item.graphic_num);
 	CDSN(818,4,store_item.graphic_num);
-	cd_set_led_range(818,18,45,store_item.variety);
+	cd_set_led_range(818,18,45,static_cast<short>(store_item.variety));
 	CDSN(818,5,store_item.item_level);
 	CDSN(818,6,store_item.awkward);
 	CDSN(818,7,store_item.bonus);
@@ -1538,12 +1491,12 @@ Boolean save_item_info()
 	sprintf(store_item.name,"%s",str);
 	store_item.graphic_num = CDGN(818,4);
 
-	store_item.variety = cd_get_led_range(818,18,45);
+	store_item.variety = static_cast<item_variety>(cd_get_led_range(818,18,45));
 	store_item.type = cd_get_led_range(818,46,48) + 1;
 
 	store_item.item_level = CDGN(818,5);
 	if (cre(store_item.item_level,0,50,"Item Level must be from 0 to 50.","",818) > 0) return FALSE;
-	if (((store_item.variety == 3) || (store_item.variety == 11)) && (store_item.item_level == 0))
+	if (((store_item.variety == item_variety::Gold) || (store_item.variety == item_variety::Food)) && (store_item.item_level == 0))
 		store_item.item_level = 1;
 	
 	store_item.awkward = CDGN(818,6);
@@ -1567,7 +1520,7 @@ Boolean save_item_info()
 		give_error("If the Type Flag is greater than 0, the Charges must also be greater than 0.","",818);
 		return FALSE;
 		}
-	if (store_item.variety > 25) {
+	if (store_item.variety > item_variety::MissileWeapon) {
 		give_error("The Unused item varieties are reserved for later expansions, and can't be used now.","",818);
 		return FALSE;
 		}
@@ -1617,22 +1570,22 @@ void edit_item_type_event_filter (short item_hit)
 			put_item_info_in_dlog();
 			break;
 		case 69:
-			if (store_item.variety == 0) {
+			if (store_item.variety == item_variety::None) {
 				give_error("You must give the item a type (weapon, armor, etc.) before you can choose its abilities.","",818);
 				break;
 				}
-			if ((store_item.variety == 3) || (store_item.variety == 11)) {
+			if ((store_item.variety == item_variety::Gold) || (store_item.variety == item_variety::Food)) {
 				give_error("Gold and Food cannot be given special abilities.","",818);
 				break;
 				}
 			temp_item = edit_item_abil(store_item,818);
-			if (temp_item.variety != 0)
+			if (temp_item.variety != item_variety::None)
 				store_item = temp_item;
 			break;
 		default:
 			cd_hit_led_range(818,18,45,item_hit);
-			store_item.variety = cd_get_led_range(818,18,45);
-			if ((store_item.variety == 1) || (store_item.variety == 2))
+			store_item.variety = static_cast<item_variety>(cd_get_led_range(818,18,45));
+			if ((store_item.variety == item_variety::OneHandedWeapon) || (store_item.variety == item_variety::TwoHandedWeapon))
 				store_item.type = 1;
 			cd_hit_led_range(818,46,48,item_hit);
 			break;
@@ -1654,7 +1607,7 @@ short edit_item_type(short which_item)
 	put_item_info_in_dlog();
 
 	for (i = 18; i < 46; i++) 
-		cd_add_label(818, i,item_types[i - 18],47);
+		cd_add_label(818, i,c_item_types.at(i - 18),47);
 	cd_add_label(818,46,"Edged",23);
 	cd_add_label(818,47,"Bashing",23);
 	cd_add_label(818,48,"Pole",23);
@@ -1673,7 +1626,7 @@ void put_item_abils_in_dlog()
 	
 	cdsin(824,16,store_which_item);
 	csit(824,32,store_item2.full_name);
-	csit(824,34,item_types[store_item2.variety]);
+	csit(824,34,item_types(store_item2.variety));
 	get_str(str,23,store_item2.ability + 1);
 	csit(824,19,(char *) str);
 	
@@ -1724,7 +1677,7 @@ void edit_item_abil_event_filter (short item_hit)
 			break;
 		case 17:
 			if (save_item_abils() == FALSE) break;
-			if (store_item.variety > 2) {
+			if (store_item.variety > item_variety::TwoHandedWeapon) {
 				give_error("You can only give an ability of this sort to a melee weapon.","",824);
 				break;
 				}
@@ -1735,9 +1688,10 @@ void edit_item_abil_event_filter (short item_hit)
 			break;
 		case 35:
 			if (save_item_abils() == FALSE) break;
-			if ((store_item.variety == 5) || (store_item.variety == 6)|| (store_item.variety == 7) || (store_item.variety == 8) ||
-				(store_item.variety == 9) || (store_item.variety == 10) || (store_item.variety == 20) ||
-				(store_item.variety == 21) || (store_item.variety == 24)){
+			if ((store_item.variety == item_variety::Arrows) || (store_item.variety == item_variety::ThrownMissile)||
+				(store_item.variety == item_variety::PotionOrMagicItem) || (store_item.variety == item_variety::ScrollOrMagicItem) ||
+				(store_item.variety == item_variety::Wand) || (store_item.variety == item_variety::Tool) || (store_item.variety == item_variety::WeaponPoison) ||
+				(store_item.variety == item_variety::GemStoneEtc) || (store_item.variety == item_variety::Bolts)){
 				give_error("You can only give an ability of this sort to an non-missile item which can be equipped (like armor, or a ring).","",824);
 				break;
 				}
@@ -1748,7 +1702,7 @@ void edit_item_abil_event_filter (short item_hit)
 			break;
 		case 36:
 			if (save_item_abils() == FALSE) break;
-			if ((store_item.variety == 5) || (store_item.variety == 6) || (store_item.variety == 24)){
+			if ((store_item.variety == item_variety::Arrows) || (store_item.variety == item_variety::ThrownMissile) || (store_item.variety == item_variety::Bolts)){
 				give_error("You can only give an ability of this sort to an item which isn't a missile.","",824);
 				break;
 				}
@@ -1759,7 +1713,7 @@ void edit_item_abil_event_filter (short item_hit)
 			break;
 		case 39:
 			if (save_item_abils() == FALSE) break;
-			if ((store_item.variety == 5) || (store_item.variety == 6) || (store_item.variety == 24)){
+			if ((store_item.variety == item_variety::Arrows) || (store_item.variety == item_variety::ThrownMissile) || (store_item.variety == item_variety::Bolts)){
 				give_error("You can only give an ability of this sort to an item which isn't a missile.","",824);
 				break;
 				}
@@ -1770,7 +1724,7 @@ void edit_item_abil_event_filter (short item_hit)
 			break;
 		case 38:
 			if (save_item_abils() == FALSE) break;
-			if (store_item.variety != 21){
+			if (store_item.variety != item_variety::GemStoneEtc){
 				give_error("You can only give an ability of this sort to an item of type Non-Use Object.","",824);
 				break;
 				}
@@ -1781,7 +1735,7 @@ void edit_item_abil_event_filter (short item_hit)
 			break;
 		case 37:
 			if (save_item_abils() == FALSE) break;
-			if ((store_item.variety != 5) && (store_item.variety != 6) && (store_item.variety != 24)){
+			if ((store_item.variety != item_variety::Arrows) && (store_item.variety != item_variety::ThrownMissile) && (store_item.variety != item_variety::Bolts)){
 				give_error("You can only give an ability of this sort to an item which isn't a missile.","",824);
 				break;
 				}

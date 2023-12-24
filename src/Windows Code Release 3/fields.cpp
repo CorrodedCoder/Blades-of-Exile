@@ -3,6 +3,7 @@
 #include "global.h"
 #include "locutils.h"
 #include "fields.h"
+#include "boe/utility.hpp"
 
 extern current_town_type c_town;
 extern short overall_mode,which_combat_type,current_pc,town_type;
@@ -22,7 +23,7 @@ extern scenario_data_type scenario;
 Boolean is_explored(short i,short j)
 {
 	if (is_out())  {
-		if ((i != minmax(0,95,i)) || (j != minmax(0,95,j)))
+		if ((i != boe_clamp(i,0,95)) || (j != boe_clamp(j,0,95)))
       	return FALSE;
 		return (out_e[i][j] != 0) ? TRUE : FALSE;
 		}

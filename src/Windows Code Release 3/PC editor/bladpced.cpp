@@ -53,7 +53,7 @@ void check_cd_event(HWND hwnd,UINT message,UINT wparam,LONG lparam);
 
 
 
-item_record_type convert_item (short_item_record_type s_item);
+static item_record_type convert_item (short_item_record_type s_item);
 
 
 /* Mac stuff globals */
@@ -160,8 +160,8 @@ HINSTANCE store_hInstance;
 HACCEL accel;
 BOOL event_handled;
 
-char szWinName[] = "Blades of Exile dialogs";
-char szAppName[] = "Blades of Exile Editor";
+extern const char szWinName[] = "Blades of Exile dialogs";
+static const char szAppName[] = "Blades of Exile Editor";
 char file_path_name[256];
 
 Boolean block_erase = FALSE;
@@ -513,15 +513,15 @@ Boolean handle_menu (short item, HMENU menu)
 		case 54: // conditions
 			display_strings(20,4,0,0,"Editing party",57,715,0);
 			for (i = 0; i < 6; i++) {
-				adven[i].status[2] = 0;
-				if (adven[i].status[3] < 0)
-					adven[i].status[3] = 0;
-				adven[i].status[6] = 0;
-				adven[i].status[7] = 0;
-				adven[i].status[9] = 0;
-				adven[i].status[11] = 0;
-				adven[i].status[12] = 0;
-				adven[i].status[13] = 0;
+				adven[i].gaffect(affect::Poisoned) = 0;
+				if (adven[i].gaffect(affect::Speed) < 0)
+					adven[i].gaffect(affect::Speed) = 0;
+				adven[i].gaffect(affect::Webbed) = 0;
+				adven[i].gaffect(affect::Diseased) = 0;
+				adven[i].gaffect(affect::Dumbfounded) = 0;
+				adven[i].gaffect(affect::Asleep) = 0;
+				adven[i].gaffect(affect::Paralyzed) = 0;
+				adven[i].gaffect(affect::Acid) = 0;
 				}
 			redraw_screen();
 			break;
@@ -666,12 +666,12 @@ Boolean verify_restore_quit(short mode)
 }
 
 
-item_record_type convert_item (short_item_record_type s_item) {
+static item_record_type convert_item (short_item_record_type s_item) {
 	item_record_type i;
 	location l = {0,0};
 	short temp_val;
 	
-	i.variety = (short) s_item.variety;
+	i.variety = static_cast<item_variety>(s_item.variety);
 	i.item_level = (short) s_item.item_level;
 	i.awkward = (short) s_item.awkward;
 	i.bonus = (short) s_item.bonus;

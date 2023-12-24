@@ -17,29 +17,12 @@
 #include "exlsound.h"
 #include "graphutl.h"
 #include "graphutl_helpers.hpp"
+#include "boe/utility.hpp"
+#include "boe/item.hpp"
 
 static const std::array heal_types{"Heal Damage","Cure Poison","Cure Disease","Cure Paralysis",
 		"Uncurse Items","Cure Stoned Character","Raise Dead","Resurrection","Cure Dumbfounding"};
 
-short monsters_faces[190] = {0,1,2,3,4,5,6,7,8,9,
-							10,0,12,11,11,12,13,13,2,11,
-							11,14,15,14,59,59,59,14,17,16,
-							18,27,20,30,31,32,19,19,25,25,
-							45,45,45,45,45, 24,24,53,53,53,
-							53,53,53,53,24, 24,24,24,22,22, // 50
-							22,22,22,22,22,22,22,22,22,21,
-							0,0,0,0,0, 0,0,0,0,0,
-							0,0,0,23,0, 0,0,0,0,0,
-							47,47,47,47,47, 49,49,49,49,0,
-							0,0,0,0,0, 0,0,26,0,0, // 100
-							0,0,0,0,0, 0,0,0,46,46,
-							0,0,0,0,0, 0,0,0,0,0,
-							0,0,0,0,0, 0,0,0,0,0,
-							0,0,0,48,48,48,48,48,48,51,
-							51,51,52,52,52,54,54,54,54,0, // 150
-							0,0,0,0,26,26,0,0,0,50,
-							23,0,0,0,0,0,0,0,23,23,
-							0,0,0,55,23,36,31,0,0,0};
 extern short ulx,uly;
 extern RECT	windRect;
 extern long anim_ticks;
@@ -81,7 +64,7 @@ extern char old_str1[256];
 extern char old_str2[256];
 extern char one_back1[256];
 extern char one_back2[256];
-extern std::array<word_rect_type, 9> preset_words;
+extern const std::array<word_rect_type, 9> preset_words;
 extern RECT talk_area_rect, word_place_rect,talk_help_rect;
 extern char title_string[50];
 extern unsigned char store_monst_type;
@@ -1037,7 +1020,7 @@ void click_talk_rect(char *str_to_place,char *str_to_place2,RECT c_rect)
 
 item_record_type store_mage_spells(short which_s) 
 {
-	item_record_type spell = {21,0, 0,0,0,0,0,0, 53,0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
+	item_record_type spell = { item_variety::GemStoneEtc,0, 0,0,0,0,0,0, 53,0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
 
  short cost[32] = {150,200,150,1000,1200,400,300,200,
  200,250,500,1500,300,  250,125,150, 
@@ -1046,7 +1029,7 @@ item_record_type store_mage_spells(short which_s)
 
 	char str[256];
 	
-	if (which_s != minmax(0,31,which_s))
+	if (which_s != boe_clamp(which_s,0,31))
 		which_s = 0;
 	spell.item_level = which_s + 30;
 	spell.value = cost[which_s];
@@ -1058,7 +1041,7 @@ item_record_type store_mage_spells(short which_s)
 // which_s = 0 means that it returns first 4th level spell
 item_record_type store_priest_spells(short which_s)
 {
-	item_record_type spell = {21,0, 0,0,0,0,0,0, 53,0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
+	item_record_type spell = { item_variety::GemStoneEtc,0, 0,0,0,0,0,0, 53,0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
 
 short cost[32] = {100,150,75,400,200, 100,80,250,
 
@@ -1068,7 +1051,7 @@ short cost[32] = {100,150,75,400,200, 100,80,250,
 2500,2000,4500,4500,3000,3000,2000,2000};
 	char str[256];
 
-	if (which_s != minmax(0,31,which_s))
+	if (which_s != boe_clamp(which_s,0,31))
 		which_s = 0;
 	spell.item_level = which_s + 30;
 	spell.value = cost[which_s];
@@ -1078,11 +1061,11 @@ short cost[32] = {100,150,75,400,200, 100,80,250,
 }
 item_record_type store_alchemy(short which_s)
 {
-	item_record_type spell = {21,0, 0,0,0,0,0,0, 53,0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
+	item_record_type spell = { item_variety::GemStoneEtc,0, 0,0,0,0,0,0, 53,0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
 short val[20] = {50,75,30,130,100,150, 200,200,300,250,300, 500,600,750,700,1000,10000,5000,7000,12000};
 	char str[256];
 	
-	if (which_s != minmax(0,19,which_s))
+	if (which_s != boe_clamp(which_s,0,19))
 		which_s = 0;
 	spell.item_level = which_s;
 	spell.value = val[which_s];
@@ -1091,40 +1074,51 @@ short val[20] = {50,75,30,130,100,150, 200,200,300,250,300, 500,600,750,700,1000
 	return spell; 
 }
 
-void get_item_interesting_string(item_record_type item,char *message)
+void get_item_interesting_string(const item_record_type& item,char *message)
 {
-	if (is_property(item) == TRUE) {
+	if (is_property(item)) {
 		sprintf(message,"Not yours.");
 		return;
 		}
-	if (is_ident(item) == FALSE) {
+	if (!is_ident(item)) {
 		sprintf(message,"");
 		return;
 		}
-	if (is_cursed(item) == TRUE) {
+	if (is_cursed(item)) {
 		sprintf(message,"Cursed item.");
 		return;
 		}
 	switch (item.variety) {
-		case 1: case 2: case 5: case 6: case 24: case 25: ////
+		case item_variety::OneHandedWeapon:
+		case item_variety::TwoHandedWeapon:
+		case item_variety::Arrows:
+		case item_variety::ThrownMissile:
+		case item_variety::Bolts:
+		case item_variety::MissileWeapon:
 			if (item.bonus != 0)
 				sprintf(message,"Damage: 1-%d + %d.",item.item_level,item.bonus);
 				else sprintf(message,"Damage: 1-%d.",item.item_level);
 			break;
-		case 12: case 13: case 14: case 15: case 16: case 17:
+		case item_variety::Shield:
+		case item_variety::Armor:
+		case item_variety::Helm:
+		case item_variety::Gloves:
+		case item_variety::Shield2:
+		case item_variety::Boots:
 			sprintf(message,"Blocks %d-%d damage.",item.item_level + (item.protection > 0) ? 1 : 0,
 				item.item_level + item.protection);
 			break;
-		case 4: case 23:
+		case item_variety::Bow:
+		case item_variety::Crossbow:
 			sprintf(message,"Bonus : +%d to hit.",item.bonus);
 			break;
-		case 3:
+		case item_variety::Gold:
 			sprintf(message,"%d gold pieces.",item.item_level);
 			break;
-		case 11:
+		case item_variety::Food:
 			sprintf(message,"%d food.",item.item_level);
 			break;
-		case 20:
+		case item_variety::WeaponPoison:
 			sprintf(message,"Poison: Does %d-%d damage.",item.item_level,item.item_level * 6);
 			break;
 		default:
@@ -1228,9 +1222,9 @@ void place_talk_str(char *str_to_place,const char *str_to_place2,short color,REC
 		else SetTextColor(hdc,PALETTEINDEX(c[6]));
 	for (i = 0; i < 9; i++)
 		if ((talk_end_forced == FALSE) || (i == 6) || (i == 5)) {
-			OffsetRect(&preset_words[i].word_rect,0,-2);
-			char_win_draw_string(hdc,preset_words[i].word_rect,preset_words[i].word,2,18);
-			OffsetRect(&preset_words[i].word_rect,0,2);
+			RECT tmp{ preset_words[i].word_rect };
+			OffsetRect(&tmp,0,-2);
+			char_win_draw_string(hdc,tmp,preset_words[i].word,2,18);
 			}
 	// Place bulk of what said. Save words.
 	//TextSize(14);
