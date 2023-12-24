@@ -53,10 +53,11 @@ short give_intro_hint = 1;
 short display_mode = 0;
  short store_size;
 
- static const std::array szFilter{ "Blades of Exile Save Files (*.SAV)","*.sav",
-	 "Text Files (*.TXT)","*.txt",
-	 "All Files (*.*)","*.*",
-	 "" };
+ static const char szFilter[]{
+	 "Blades of Exile Save Files (*.SAV)\0" "*.sav\0"
+	 "Text Files (*.TXT)\0" "*.txt\0"
+	 "All Files (*.*)\0" "*.*\0"
+	 };
 
 static short FSWrite(HFILE file, long* len, char* buffer);
 static short FSRead(HFILE file, long* len, char* buffer);
@@ -67,7 +68,7 @@ void file_initialize()
 		ofn.lStructSize = sizeof(OPENFILENAME);
 		ofn.hwndOwner = mainPtr;
 		ofn.hInstance = NULL;
-		ofn.lpstrFilter = szFilter[0];
+		ofn.lpstrFilter = szFilter;
 		ofn.lpstrCustomFilter = NULL;
 		ofn.nMaxCustFilter = 0;
 		ofn.nFilterIndex = 0;

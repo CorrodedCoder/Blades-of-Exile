@@ -104,10 +104,11 @@ town_record_type dummy_town;
 short jl;
 extern char file_path_name[256];
 
-static const std::array szFilter{ "Blades of Exile Save Files (*.SAV)","*.sav",
-	"Text Files (*.TXT)","*.txt",
-	"All Files (*.*)","*.*",
-	"" };
+static const char szFilter[]{
+	"Blades of Exile Save Files (*.SAV)\0" "*.sav\0"
+	"Text Files (*.TXT)\0" "*.txt\0"
+	"All Files (*.*)\0" "*.*\0"
+	};
 
 static bool FSClose(auto& file)
 {
@@ -172,7 +173,7 @@ void file_initialize()
 	ofn.lStructSize = sizeof(OPENFILENAME);
 	ofn.hwndOwner = mainPtr;
 	ofn.hInstance = NULL;
-	ofn.lpstrFilter = szFilter[0];
+	ofn.lpstrFilter = szFilter;
 	ofn.lpstrCustomFilter = NULL;
 	ofn.nMaxCustFilter = 0;
 	ofn.nFilterIndex = 0;
