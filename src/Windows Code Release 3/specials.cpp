@@ -39,7 +39,7 @@ extern Boolean in_scen_debug,belt_present,processing_fields,monsters_going,suppr
 extern big_tr_type t_d;
 extern Adventurers adven;
 extern const effect_pat_type single;
-extern effect_pat_type current_pat;
+extern std::reference_wrapper<const effect_pat_type> current_pat;
 extern town_item_list t_i;
 extern out_wandering_type store_wandering_special;
 extern short monst_marked_damage[T_M];

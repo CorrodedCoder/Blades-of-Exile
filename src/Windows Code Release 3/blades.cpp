@@ -150,7 +150,8 @@ unsigned char combat_terrain[64][64];
 location pc_pos[6];
 short current_pc;
 short combat_active_pc;
-effect_pat_type current_pat;
+extern const effect_pat_type single; 
+extern std::reference_wrapper<const effect_pat_type> current_pat = single;
 short monst_target[T_M]; // 0-5 target that pc   6 - no target  100 + x - target monster x
 short spell_caster, missile_firer,current_monst_tactic;
 short store_current_pc = 0;

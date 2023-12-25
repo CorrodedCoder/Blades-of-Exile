@@ -121,7 +121,7 @@ extern short pc_last_cast[2][6];
 extern const effect_pat_type single;
 extern const effect_pat_type square;
 extern const effect_pat_type rad_pat2;
-extern effect_pat_type current_pat;
+extern std::reference_wrapper<const effect_pat_type> current_pat;
 extern short current_spell_range;
 extern const short hit_chance[51];
 extern short pc_parry[6], combat_active_pc;

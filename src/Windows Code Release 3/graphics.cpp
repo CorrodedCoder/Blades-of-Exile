@@ -35,7 +35,7 @@ extern town_item_list  t_i;
 extern unsigned char out[96][96];
 extern unsigned char out_e[96][96];
 extern unsigned char combat_terrain[64][64];
-extern effect_pat_type current_pat;
+extern std::reference_wrapper<const effect_pat_type> current_pat;
 extern Boolean web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern short ulx,uly;
 extern location pc_pos[6],pc_dir[6],center;
@@ -2426,7 +2426,7 @@ void draw_targeting_line(POINT where_curs)
 		from_loc = pc_pos[current_pc];
 		else from_loc = c_town.p_loc;
 	if ((overall_mode == 11) || (overall_mode == 12) || (overall_mode == 13) || (overall_mode == 14)
-	  || ((overall_mode == 3) && (current_pat.pattern[4][4] != 0))) {
+	  || ((overall_mode == 3) && (current_pat.get().pattern[4][4] != 0))) {
 
 		OffsetRect(&on_screen_terrain_area,ulx,uly);
 		OffsetRect(&terrain_rect,18,18);
@@ -2471,7 +2471,7 @@ void draw_targeting_line(POINT where_curs)
 						store_loc.y = center.y + j - 4;
 						if ((a_v(store_loc.x - which_space.x) <= 4) &&
 							(a_v(store_loc.y - which_space.y) <= 4) &&
-							(current_pat.pattern[store_loc.x - which_space.x + 4][store_loc.y - which_space.y + 4] != 0)) {
+							(current_pat.get().pattern[store_loc.x - which_space.x + 4][store_loc.y - which_space.y + 4] != 0)) {
 								target_rect.left = 13 + BITMAP_WIDTH * i + 5;// + ulx;
 								target_rect.right = target_rect.left + BITMAP_WIDTH;
 								target_rect.top = 13 + BITMAP_HEIGHT * j + 5;// + uly;

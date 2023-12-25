@@ -40,7 +40,7 @@ extern Boolean monsters_going,spell_forced,in_scen_debug;
 extern short store_mage, store_priest;
 extern short store_mage_lev, store_priest_lev;
 extern short store_spell_target,pc_casting,current_spell_range;
-extern effect_pat_type current_pat;
+extern std::reference_wrapper<const effect_pat_type> current_pat;
 extern short town_size[3];
 extern short town_type;
 extern short monst_target[T_M]; // 0-5 target that pc   6 - no target  100 + x - target monster x
