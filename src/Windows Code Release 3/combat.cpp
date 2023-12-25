@@ -161,6 +161,16 @@ static const effect_pat_type rad_pat3 = {{{0,0,0,0,0,0,0,0,0},
 						{0,0,1,1,1,1,1,0,0},
 						{0,0,0,1,1,1,0,0,0},
 						{0,0,0,0,0,0,0,0,0}}};
+static const effect_pat_type protect_pat = { {{0,4,4,4,4,4,4,4,0},
+						{4,8,8,8,8,8,8,8,4},
+						{4,8,9,9,9,9,9,8,4},
+						{4,8,9,6,6,6,9,8,4},
+						{4,8,9,6,6,6,9,8,4},
+						{4,8,9,6,6,6,9,8,4},
+						{4,8,9,9,9,9,9,8,4},
+						{4,8,8,8,8,8,8,8,4},
+						{0,4,4,4,4,4,4,4,0}} };
+
 static const effect_pat_type field[8] = {{{{0,0,0,0,1,1,0,0,0},
 							{0,0,0,0,1,1,0,0,0},
 							{0,0,0,0,1,1,0,0,0},
@@ -4215,15 +4225,6 @@ Boolean combat_cast_priest_spell()
 	short spell_num,target,i,store_sp,bonus,store_sound = 0,store_m_type = 0,num_opp = 0;
 	char c_line[60];
 	creature_data_type *which_m;
-	effect_pat_type protect_pat = {{{0,4,4,4,4,4,4,4,0},
-						{4,8,8,8,8,8,8,8,4},
-						{4,8,9,9,9,9,9,8,4},
-						{4,8,9,6,6,6,9,8,4},
-						{4,8,9,6,6,6,9,8,4},
-						{4,8,9,6,6,6,9,8,4},
-						{4,8,9,9,9,9,9,8,4},
-						{4,8,8,8,8,8,8,8,4},
-						{0,4,4,4,4,4,4,4,0}}};	
 						
 	if (is_antimagic(pc_pos[current_pc].x,pc_pos[current_pc].y)) {
 		add_string_to_buf("  Not in antimagic field.");

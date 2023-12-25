@@ -38,6 +38,7 @@ extern location pc_pos[6],center;
 extern Boolean in_scen_debug,belt_present,processing_fields,monsters_going,suppress_stat_screen,boom_anim_active;
 extern big_tr_type t_d;
 extern Adventurers adven;
+extern const effect_pat_type single;
 extern effect_pat_type current_pat;
 extern town_item_list t_i;
 extern out_wandering_type store_wandering_special;
@@ -483,16 +484,7 @@ void use_item(short pc,short item)
 	affect which_stat;
 	char to_draw[60];
 	location user_loc;
-creature_data_type *which_m;
-effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,1,0,0,0,0},
-						{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,0,0,0,0,0}}};	
+	creature_data_type *which_m;
 	abil = adven[pc].items[item].ability;
 	level = adven[pc].items[item].item_level;
 	
@@ -849,7 +841,7 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 				add_string_to_buf("  It fires a blinding ray.");
 				add_string_to_buf("  Target spell.    ");
 				overall_mode = 3;
-				current_pat = s;
+				current_pat = single;
 				set_town_spell(1041,current_pc);
 			break;
 			case 133:
