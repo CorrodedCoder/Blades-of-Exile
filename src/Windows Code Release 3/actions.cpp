@@ -2656,7 +2656,6 @@ Boolean outd_move_party(location destination,Boolean forced)
 	location real_dest, sector_p_in;
 	Boolean keep_going = TRUE,check_f;
 	location store_corner,store_iwc;
-	unsigned char ter;
 	
 	keep_going = check_special_terrain(destination,0,0,&spec_num,&check_f);
 	if (check_f == TRUE)
@@ -2721,13 +2720,13 @@ Boolean outd_move_party(location destination,Boolean forced)
 	//		if (same_point(destination,party.out_c[i].m_loc) == TRUE)
 	//				party.out_c[i].exists = FALSE;
 
-		ter = out[real_dest.x][real_dest.y];
+	const auto& terrain{ scenario_ter_type(out[real_dest.x][real_dest.y]) };
 	if (party.in_boat >= 0) {
 		if ((outd_is_blocked(real_dest) == FALSE) //&& (outd_is_special(real_dest) == FALSE)
 		// not in towns
-		&& ((scenario_ter_type(ter).boat_over == FALSE)
+		&& ((terrain.boat_over == FALSE)
 			|| ((real_dest.x != party.p_loc.x) && (real_dest.y != party.p_loc.y)))
-			&& (scenario_ter_type(ter).special != 21)) {
+			&& (terrain.special != 21)) {
 					add_string_to_buf("You leave the boat.");
 					party.in_boat = -1;
 					}
@@ -2735,8 +2734,8 @@ Boolean outd_move_party(location destination,Boolean forced)
 				|| ((forced == FALSE) && (out_boat_there(destination) < 30)))
 				return FALSE;
 			else if ((outd_is_blocked(real_dest) == FALSE) 
-				&& (scenario_ter_type(ter).boat_over == TRUE)
-				&& (scenario_ter_type(ter).special != 21)) {
+				&& (terrain.boat_over == TRUE)
+				&& (terrain.special != 21)) {
 				if ((fancy_choice_dialog(1086,0)) == 1)
 					forced = TRUE;
 					else {
@@ -2744,7 +2743,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 						party.in_boat = -1;					
 						}
 				}
-			else if (scenario_ter_type(ter).boat_over == TRUE)
+			else if (terrain.boat_over == TRUE)
 				forced = TRUE;
 		}
 
@@ -2774,7 +2773,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 			add_string_to_buf("Land before mounting horses.");
 			return FALSE;
 			}
-		if ((scenario_ter_type(ter).special >= 2) && (scenario_ter_type(ter).special <= 4)) {
+		if ((terrain.special >= 2) && (terrain.special <= 4)) {
 			ASB("Your horses quite sensibly refuse.");
 			return FALSE;
 			}
@@ -2799,10 +2798,10 @@ Boolean outd_move_party(location destination,Boolean forced)
 	else if ((outd_is_blocked(real_dest) == FALSE) || (forced == TRUE)
 		// Check if can fly over
 		|| ((flying() == TRUE) && 
-			(scenario_ter_type(ter).fly_over == TRUE))   ) {
+			(terrain.fly_over == TRUE))   ) {
 		party.direction = set_direction(party.p_loc, destination); 
 
-		if ((flying() == TRUE) && (scenario_ter_type(ter).special == 21)) {
+		if ((flying() == TRUE) && (terrain.special == 21)) {
 			add_string_to_buf("Moved: You have to land first.               ");
 			return FALSE;
 			}
@@ -2872,7 +2871,6 @@ Boolean town_move_party(location destination,short forced)
 {
 	char create_line[60],keep_going = TRUE;
 	short boat_there,horse_there,spec_num;
-	unsigned char ter;
 	Boolean check_f = FALSE;
 		
 	if (debug_on == TRUE)
@@ -2897,13 +2895,13 @@ Boolean town_move_party(location destination,short forced)
 
 	if (spec_num == 50)
 		forced = TRUE;
-	ter = t_d.terrain[destination.x][destination.y];
-	
+
+	const auto& terrain{ scenario_ter_type(t_d.terrain[destination.x][destination.y]) };
 	if (keep_going == TRUE) {
 		if (party.in_boat >= 0) {
 				if ((is_blocked(destination) == FALSE) && (is_special(destination) == FALSE)
 				// If to bridge, exit if heading diagonal, keep going is head horiz or vert
-		&& ( (scenario_ter_type(ter).boat_over == FALSE)
+		&& ( (terrain.boat_over == FALSE)
 		|| ((destination.x != c_town.p_loc.x) && (destination.y != c_town.p_loc.y)))) {
 						add_string_to_buf("You leave the boat.             ");
 						party.in_boat = -1;
@@ -2911,7 +2909,7 @@ Boolean town_move_party(location destination,short forced)
 				else if ((destination.x != c_town.p_loc.x) && (destination.y != c_town.p_loc.y))
 					return FALSE;	
 				// Crossing bridge: land or go through
-				else if ((is_blocked(destination) == FALSE) && (scenario_ter_type(ter).boat_over == TRUE)) {
+				else if ((is_blocked(destination) == FALSE) && (terrain.boat_over == TRUE)) {
 					if ((fancy_choice_dialog(1086,0)) == 1)
 						forced = TRUE;
 						else if (is_blocked(destination) == FALSE) {
@@ -2925,7 +2923,7 @@ Boolean town_move_party(location destination,short forced)
 					return FALSE;
 					}
 				// water or lava
-				else if (scenario_ter_type(ter).boat_over == TRUE)
+				else if (terrain.boat_over == TRUE)
 					forced = TRUE;
 			}
 
@@ -2962,11 +2960,11 @@ Boolean town_move_party(location destination,short forced)
 		} 
 		else if ((is_blocked(destination) == FALSE) || (forced == 1)) {
 			if (party.in_horse >= 0) {
-				if ((scenario_ter_type(ter).special >= 2) && (scenario_ter_type(ter).special <= 4)) {
+				if ((terrain.special >= 2) && (terrain.special <= 4)) {
 					ASB("Your horses quite sensibly refuse.");
 					return FALSE;
 					}
-				if (scenario_ter_type(ter).block_horse == TRUE) {
+				if (terrain.block_horse == TRUE) {
 					ASB("You can't take horses there!");
 					return FALSE;
 					}
