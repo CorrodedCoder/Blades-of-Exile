@@ -328,14 +328,11 @@ void init_party_scen_data()
 			party.stuff_done[i][j] = 0;
 	PSD[306][4] = store_help;
 		party.light_level = 0;
-	party.outdoor_corner.x = scenario_out_sec_start().x;
-	party.outdoor_corner.y = scenario_out_sec_start().y;
+	party.outdoor_corner = scenario_out_sec_start();
 	party.i_w_c.x = 0;
 	party.i_w_c.y = 0;
-	party.loc_in_sec.x = scenario_out_start().x;
-	party.loc_in_sec.y = scenario_out_start().y;
-	party.p_loc.x = scenario_out_start().x;
-	party.p_loc.y = scenario_out_start().y;
+	party.loc_in_sec = scenario_out_start();
+	party.p_loc = scenario_out_start();
 	for (i = 0; i < 30; i++)
 		party.boats[i] = scenario_boats(i);
 	for (i = 0; i < 30; i++)
@@ -1647,8 +1644,7 @@ void do_priest_spell(short pc_num,short spell_num)
 			add_string_to_buf("  You are moved... ");
 			force_town_enter(scenario_which_town_start(),scenario_where_start());
 			start_town_mode(scenario_which_town_start(),9);
-			position_party(scenario_out_sec_start().x, scenario_out_sec_start().y,
-				scenario_out_start().x, scenario_out_start().y);
+			position_party(scenario_out_sec_start(), scenario_out_start());
 			center = c_town.p_loc = scenario_where_start();
 //			overall_mode = 0;
 //			center = party.p_loc;

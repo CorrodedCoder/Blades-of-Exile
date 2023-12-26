@@ -787,18 +787,17 @@ void shift_universe_down()
 	make_cursor_sword();
 
 }
-void position_party(short out_x, short out_y, short pc_pos_x, short pc_pos_y)
+
+void position_party(const location& out, const location& pc_pos)
 {
 	short i, j;
 
 	save_outdoor_maps();
-	party.p_loc.x = pc_pos_x;
-	party.p_loc.y = pc_pos_y;
+	party.p_loc = pc_pos;
 	party.loc_in_sec = global_to_local(party.p_loc);
 
-	if ((party.outdoor_corner.x != out_x) || (party.outdoor_corner.y != out_y)) {
-		party.outdoor_corner.x = out_x;
-		party.outdoor_corner.y = out_y;
+	if ( party.outdoor_corner != out ) {
+		party.outdoor_corner = out;
 		load_outdoors(party.outdoor_corner.x + 1, party.outdoor_corner.y + 1, 1, 1, 0, 0, NULL);
 		load_outdoors(party.outdoor_corner.x, party.outdoor_corner.y + 1, 0, 1, 0, 0, NULL);
 		load_outdoors(party.outdoor_corner.x + 1, party.outdoor_corner.y, 1, 0, 0, 0, NULL);
@@ -814,6 +813,17 @@ void position_party(short out_x, short out_y, short pc_pos_x, short pc_pos_y)
 	build_outdoors();
 }
 
+void position_party(short out_x, short out_y, short pc_pos_x, short pc_pos_y)
+{
+	assert(std::in_range<signed char>(out_x));
+	assert(std::in_range<signed char>(out_y));
+	assert(std::in_range<signed char>(pc_pos_x));
+	assert(std::in_range<signed char>(pc_pos_y));
+	position_party(
+		{ static_cast<char>(out_x), static_cast<char>(out_y) },
+		{ static_cast<char>(pc_pos_x), static_cast<char>(pc_pos_y) }
+	);
+}
 
 void build_outdoors()
 {

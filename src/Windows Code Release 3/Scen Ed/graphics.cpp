@@ -584,8 +584,7 @@ void draw_terrain()
 				OffsetRect(&tiny_to,0,-7);
 				}
 			if ((editing_town == FALSE)
-				&& (scenario_out_sec_start().x == cur_out.x)
-				&& (scenario_out_sec_start().y == cur_out.y)
+				&& (scenario_out_sec_start() == cur_out)
 				&& (scenario_out_start().x == cen_x + q - 4)
 				&& (scenario_out_start().y == cen_y + r - 4)) {
 				from_rect = start_button_from;
