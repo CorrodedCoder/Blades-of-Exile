@@ -338,15 +338,17 @@ void init_party_scen_data()
 	for (i = 0; i < 30; i++)
 		party.horses[i] = scenario_horses(i);
 	for (i = 0; i < 30; i++) {
-		if ((scenario_boats(i).which_town >= 0) && (scenario_boats(i).boat_loc.x >= 0)) {
+		const auto& boat{ scenario_boats(i) };
+		if ((boat.which_town >= 0) && (boat.boat_loc.x >= 0)) {
 			if (party.boats[i].exists == FALSE) {
-				party.boats[i] = scenario_boats(i);
+				party.boats[i] = boat;
 				party.boats[i].exists = TRUE;
 				}
 			}
-		if ((scenario_horses(i).which_town >= 0) && (scenario_horses(i).horse_loc.x >= 0)) {
+		const auto& horse{ scenario_horses(i) };
+		if ((horse.which_town >= 0) && (horse.horse_loc.x >= 0)) {
 			if (party.horses[i].exists == FALSE) {
-				party.horses[i] = scenario_horses(i);
+				party.horses[i] = horse;
 				party.horses[i].exists = TRUE;
 				}
 			}

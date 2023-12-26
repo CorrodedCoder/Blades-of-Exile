@@ -1663,11 +1663,7 @@ void put_graphics_in_template()
 // right now, trying a restrictive rule (just cave floor and grass, mainly)
 Boolean is_nature(char x, char y)
 {
-	short pic;
-	unsigned char ter_type;
-	
-	ter_type = coord_to_ter((short) x,(short) y);
-	pic = scenario_ter_type(ter_type).picture;
+	const auto pic = scenario_ter_type(coord_to_ter(x, y)).picture;
 	if ((pic >= 0) && (pic <= 45))
 		return TRUE;
 	if ((pic >= 67) && (pic <= 73))

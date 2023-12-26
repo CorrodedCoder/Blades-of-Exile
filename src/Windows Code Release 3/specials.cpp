@@ -155,10 +155,11 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 			from_loc = pc_pos[current_pc];
 			break;	
 		}
-	ter_special = scenario_ter_type(ter).special;
-	ter_flag1 = scenario_ter_type(ter).flag1;
-	ter_flag2 = scenario_ter_type(ter).flag2;
-	ter_pic = scenario_ter_type(ter).picture;
+	const auto& terrain{ scenario_ter_type(ter) };
+	ter_special = terrain.special;
+	ter_flag1 = terrain.flag1;
+	ter_flag2 = terrain.flag2;
+	ter_pic = terrain.picture;
 
 		if ((mode > 0) && (ter_special >= 16) && 
 			(ter_special <= 19)) {
@@ -277,7 +278,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 				play_sound(-1 * ter_flag2);
 				}
 			give_help(47,65,0);
-			if (scenario_ter_type(ter).blockage > 2)
+			if (terrain.blockage > 2)
 				can_enter = FALSE;
 			break;
 		case 2: case 3:case 4:

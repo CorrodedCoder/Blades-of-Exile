@@ -821,10 +821,8 @@ unsigned char get_t_t(char x,char y)  // returns terrain type at where
 // Is this is subterranean fluid that gets shore plopped down on it?
 Boolean is_fluid(unsigned char ter_type)////
 {
-
 	if (((ter_type >= 71) && (ter_type <= 76)) || (ter_type == 90))
 		return TRUE;
-	
 	return FALSE;
 }
 
@@ -849,20 +847,14 @@ Boolean is_shore(unsigned char ter_type)////
 // These two functions used to determine wall round-cornering
 Boolean is_wall(unsigned char ter_type)////
 {
-	short pic;
-
-	pic = scenario_ter_type(ter_type).picture;
-	
+	const auto pic = scenario_ter_type(ter_type).picture;
 	if ((pic >= 88) && (pic <= 120))
 		return TRUE;
-	
 	return FALSE;
 }
 Boolean is_ground(unsigned char ter_type)
 {
-	short pic;
-
-	pic = scenario_ter_type(ter_type).picture;
+	const auto pic = scenario_ter_type(ter_type).picture;
 	if ((pic >= 0) && (pic <= 87))
 		return TRUE;
 	if ((pic >= 121) && (pic <= 122))

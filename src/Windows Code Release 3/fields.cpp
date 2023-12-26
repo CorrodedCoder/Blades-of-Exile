@@ -181,17 +181,15 @@ Boolean is_quickfire(short i,short j)
 	return (misc_i[i][j] & 128) ? TRUE : FALSE;
 }
 void make_quickfire(short i,short j)
-/**/{
-	unsigned char ter;
-
+{
 	if ((is_antimagic(i,j)) && (get_ran(1,0,1) == 0))
 		return;
 	if ((is_force_barrier(i,j)) || (is_fire_barrier(i,j)))
 		return;
-	ter = coord_to_ter(i,j);
-	if (scenario_ter_type(ter).blockage == 1)
+	const auto& terrain{ scenario_ter_type(coord_to_ter(i, j)) };
+	if (terrain.blockage == 1)
 		return;
-	if (scenario_ter_type(ter).blockage == 5)
+	if (terrain.blockage == 5)
 		return;
 	c_town.explored[i][j] = c_town.explored[i][j] & 1;
 	misc_i[i][j] = misc_i[i][j] & 3;

@@ -197,12 +197,10 @@ static short short_can_see(shortloc p1,shortloc p2)
 
 Boolean is_lava(short x,short y)////
 {
-	unsigned char ter;
-	
-	ter = coord_to_ter(x,y);
-	if (scenario_ter_type(ter).picture == 404)
+	if (scenario_ter_type(coord_to_ter(x, y)).picture == 404)
 		return TRUE;
-		else return FALSE;
+	else
+		return FALSE;
 }
 
 
@@ -355,12 +353,9 @@ unsigned char coord_to_ter(short x,short y)
 
 Boolean is_container(location loc)
 {
-	unsigned char ter;
-	
 	if ((is_barrel(loc.x,loc.y)) || (is_crate(loc.x,loc.y)))
 		return TRUE;
-	ter = coord_to_ter(loc.x,loc.y);
-	if (scenario_ter_type(ter).special == 14)
+	if (scenario_ter_type(coord_to_ter(loc.x, loc.y)).special == 14)
 			return TRUE;
 	return FALSE;
 }
@@ -790,8 +785,11 @@ void alter_space(short i,short j,unsigned char ter)
 		else {
 			t_d.terrain[i][j] = ter;
 			combat_terrain[i][j] = ter;
-			if ((scenario_ter_type(t_d.terrain[i][j]).special >= 16) &&
-				(scenario_ter_type(t_d.terrain[i][j]).special <= 19))
-					belt_present = TRUE;	
+			if (const auto& special{ scenario_ter_type(t_d.terrain[i][j]).special };
+				(special >= 16) && (special <= 19)
+				)
+			{
+				belt_present = TRUE;
 			}
+		}
 }

@@ -251,9 +251,9 @@ short get_monst_picnum(unsigned char monst)
 
 void get_monst_dims(unsigned char monst,short *width, short *height)
 {
-
-	*width = scenario_monster(monst).x_width;
-	*height = scenario_monster(monst).y_width;
+	const auto& monster{ scenario_monster(monst) };
+	*width = monster.x_width;
+	*height = monster.y_width;
 }
 
 // Used to set up monsters for outdoor wandering encounters.
