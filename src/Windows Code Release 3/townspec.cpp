@@ -21,7 +21,6 @@
 extern short overall_mode;
 extern party_record_type party;
 extern talking_record_type talking;
-extern scenario_data_type scenario;
 
 extern current_town_type	c_town;
 extern unsigned char out[96][96];

@@ -14,3 +14,15 @@
 [[nodiscard]] short scenario_special_item(short index);
 [[nodiscard]] short scenario_timer_times(short index);
 [[nodiscard]] short scenario_timer_specs(short index);
+[[nodiscard]] unsigned char scenario_difficulty(void);
+[[nodiscard]] unsigned char scenario_difficulty(void);
+[[nodiscard]] short scenario_town_to_add_to(short index);
+[[nodiscard]] short scenario_flag_to_add_to_town(short a, short b);
+[[nodiscard]] short scenario_store_item_town(short index);
+[[nodiscard]] const BoeRect& scenario_store_item_rects(short index);
+[[nodiscard]] const boat_record_type& scenario_boats(short index);
+[[nodiscard]] const horse_record_type& scenario_horses(short index);
+[[nodiscard]] const location& scenario_where_start(void);
+[[nodiscard]] unsigned char scenario_town_hidden(short index);
+[[nodiscard]] const location& scenario_out_sec_start(void);
+[[nodiscard]] const location& scenario_out_start(void);

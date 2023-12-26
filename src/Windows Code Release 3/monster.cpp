@@ -19,7 +19,6 @@
 extern current_town_type c_town;
 extern party_record_type party;
 extern talking_record_type talking;
-extern scenario_data_type scenario;
 
 extern short overall_mode;
 extern outdoor_record_type outdoors[2][2];
@@ -90,11 +89,11 @@ short difficulty_adjust()
 		if (adven[i].main_status == status::Normal)
 			j += adven[i].level;
 	
-	if ((scenario.difficulty <= 0) && (j >= 60))
+	if ((scenario_difficulty() <= 0) && (j >= 60))
 		to_return++;
-	if ((scenario.difficulty <= 1) && (j >= 130))
+	if ((scenario_difficulty() <= 1) && (j >= 130))
 		to_return++;
-	if ((scenario.difficulty <= 2) && (j >= 210))
+	if ((scenario_difficulty() <= 2) && (j >= 210))
 		to_return++;
 	return to_return;
 }	

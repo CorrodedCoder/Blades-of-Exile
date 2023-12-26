@@ -39,7 +39,6 @@ extern short max_dim[3];
 extern short dungeon_font_num,geneva_font_num;
 extern RECT windRect;
 extern piles_of_stuff_dumping_type data_store;
-extern scenario_data_type scenario;
 extern RECT world_screen;
 extern scen_item_data_type scen_item_list;
 
@@ -576,8 +575,8 @@ void draw_terrain()
 
 			// draw start icon, if starting point
 			if ((editing_town == TRUE) &&
-				(cur_town == scenario_which_town_start()) && (scenario.where_start.x == cen_x + q - 4)
-				&& (scenario.where_start.y == cen_y + r - 4)) {
+				(cur_town == scenario_which_town_start()) && (scenario_where_start().x == cen_x + q - 4)
+				&& (scenario_where_start().y == cen_y + r - 4)) {
 				from_rect = start_button_from;
 				to_rect = tiny_to;
 				to_rect.left -= 14;
@@ -585,10 +584,10 @@ void draw_terrain()
 				OffsetRect(&tiny_to,0,-7);
 				}
 			if ((editing_town == FALSE)
-				&& (scenario.out_sec_start.x == cur_out.x)
-				&& (scenario.out_sec_start.y == cur_out.y)
-				&& (scenario.out_start.x == cen_x + q - 4)
-				&& (scenario.out_start.y == cen_y + r - 4)) {
+				&& (scenario_out_sec_start().x == cur_out.x)
+				&& (scenario_out_sec_start().y == cur_out.y)
+				&& (scenario_out_start().x == cen_x + q - 4)
+				&& (scenario_out_start().y == cen_y + r - 4)) {
 				from_rect = start_button_from;
 				to_rect = tiny_to;
 				to_rect.left -= 14;

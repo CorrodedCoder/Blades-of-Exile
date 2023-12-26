@@ -144,7 +144,6 @@ extern town_item_list  t_i;
 extern HDC main_dc;
 extern char scen_strs2[110][256];
 extern stored_town_maps_type town_maps,town_maps2;
-extern scenario_data_type scenario;
 extern const item_record_type start_items[6];
 extern piles_of_stuff_dumping_type5 data_store5;
 
@@ -329,28 +328,28 @@ void init_party_scen_data()
 			party.stuff_done[i][j] = 0;
 	PSD[306][4] = store_help;
 		party.light_level = 0;
-	party.outdoor_corner.x = scenario.out_sec_start.x;
-	party.outdoor_corner.y = scenario.out_sec_start.y;
+	party.outdoor_corner.x = scenario_out_sec_start().x;
+	party.outdoor_corner.y = scenario_out_sec_start().y;
 	party.i_w_c.x = 0;
 	party.i_w_c.y = 0;
-	party.loc_in_sec.x = scenario.out_start.x;
-	party.loc_in_sec.y = scenario.out_start.y;
-	party.p_loc.x = scenario.out_start.x;
-	party.p_loc.y = scenario.out_start.y;
+	party.loc_in_sec.x = scenario_out_start().x;
+	party.loc_in_sec.y = scenario_out_start().y;
+	party.p_loc.x = scenario_out_start().x;
+	party.p_loc.y = scenario_out_start().y;
 	for (i = 0; i < 30; i++)
-		party.boats[i] = scenario.scen_boats[i];
+		party.boats[i] = scenario_boats(i);
 	for (i = 0; i < 30; i++)
-		party.horses[i] = scenario.scen_horses[i];
+		party.horses[i] = scenario_horses(i);
 	for (i = 0; i < 30; i++) {
-		if ((scenario.scen_boats[i].which_town >= 0) && (scenario.scen_boats[i].boat_loc.x >= 0)) {
+		if ((scenario_boats(i).which_town >= 0) && (scenario_boats(i).boat_loc.x >= 0)) {
 			if (party.boats[i].exists == FALSE) {
-				party.boats[i] = scenario.scen_boats[i];
+				party.boats[i] = scenario_boats(i);
 				party.boats[i].exists = TRUE;
 				}
 			}
-		if ((scenario.scen_horses[i].which_town >= 0) && (scenario.scen_horses[i].horse_loc.x >= 0)) {
+		if ((scenario_horses(i).which_town >= 0) && (scenario_horses(i).horse_loc.x >= 0)) {
 			if (party.horses[i].exists == FALSE) {
-				party.horses[i] = scenario.scen_horses[i];
+				party.horses[i] = scenario_horses(i);
 				party.horses[i].exists = TRUE;
 				}
 			}
@@ -379,13 +378,13 @@ void init_party_scen_data()
 	 party.direction = 0;
 	party.at_which_save_slot = 0;
 	for (i = 0; i < 200; i++)
-		party.can_find_town[i] = 1 - scenario.town_hidden[i];
+		party.can_find_town[i] = 1 - scenario_town_hidden(i);
 	for (i = 0; i < 20; i++)
 	 	party.key_times[i] = 30000;
 	for (i = 0; i < 30; i++)
 	 	party.party_event_timers[i] = 0;
 	for (i = 0; i < 50; i++)
-		party.spec_items[i] = (scenario.special_items[i] >= 10) ? 1 : 0;
+		party.spec_items[i] = (scenario_special_item(i) >= 10) ? 1 : 0;
 
 	for (i = 0; i < 200; i++)
 	 party.m_killed[i] = 0;
@@ -497,10 +496,10 @@ void put_party_in_scen()
 	update_pc_graphics();
 
 	current_pc = first_active_pc();
-	force_town_enter(scenario_which_town_start(),scenario.where_start);
+	force_town_enter(scenario_which_town_start(),scenario_where_start());
 	start_town_mode(scenario_which_town_start(),9);
-	center = scenario.where_start;
-	update_explored(scenario.where_start);
+	center = scenario_where_start();
+	update_explored(scenario_where_start());
 	overall_mode = 1;
 	load_area_graphics();
 	create_clip_region();
@@ -523,7 +522,7 @@ void put_party_in_scen()
 	give_help(1,2,0);
 	// this is kludgy, put here to prevent problems
 	for (i = 0; i < 50; i++)
-		party.spec_items[i] = (scenario.special_items[i] >= 10) ? 1 : 0;
+		party.spec_items[i] = (scenario_special_item(i) >= 10) ? 1 : 0;
 }
 
 
@@ -1646,11 +1645,11 @@ void do_priest_spell(short pc_num,short spell_num)
 				}
 			adven[pc_num].cur_sp -= spell_cost[1][spell_num];
 			add_string_to_buf("  You are moved... ");
-			force_town_enter(scenario_which_town_start(),scenario.where_start);
+			force_town_enter(scenario_which_town_start(),scenario_where_start());
 			start_town_mode(scenario_which_town_start(),9);
-			position_party(scenario.out_sec_start.x,scenario.out_sec_start.y,
-				scenario.out_start.x,scenario.out_start.y);
-			center = c_town.p_loc = scenario.where_start;
+			position_party(scenario_out_sec_start().x, scenario_out_sec_start().y,
+				scenario_out_start().x, scenario_out_start().y);
+			center = c_town.p_loc = scenario_where_start();
 //			overall_mode = 0;
 //			center = party.p_loc;
 //			update_explored(party.p_loc);

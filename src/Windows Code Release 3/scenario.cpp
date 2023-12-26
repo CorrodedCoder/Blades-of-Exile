@@ -62,3 +62,58 @@ short scenario_timer_specs(short index)
 {
 	return scenario.scenario_timer_specs[index];
 }
+
+unsigned char scenario_difficulty(void)
+{
+	return scenario.difficulty;
+}
+
+short scenario_town_to_add_to(short index)
+{
+	return scenario.town_to_add_to[index];
+}
+
+short scenario_flag_to_add_to_town(short a, short b)
+{
+	return scenario.flag_to_add_to_town[a][b];
+}
+
+short scenario_store_item_town(short index)
+{
+	return scenario.store_item_towns[index];
+}
+
+const BoeRect& scenario_store_item_rects(short index)
+{
+	return scenario.store_item_rects[index];
+}
+
+const boat_record_type& scenario_boats(short index)
+{
+	return scenario.scen_boats[index];
+}
+
+const horse_record_type& scenario_horses(short index)
+{
+	return scenario.scen_horses[index];
+}
+
+const location& scenario_where_start(void)
+{
+	return scenario.where_start;
+}
+
+unsigned char scenario_town_hidden(short index)
+{
+	return scenario.town_hidden[index];
+}
+
+const location& scenario_out_sec_start(void)
+{
+	return scenario.out_sec_start;
+}
+
+const location& scenario_out_start(void)
+{
+	return scenario.out_start;
+}

@@ -44,7 +44,6 @@ extern Boolean dialog_not_toast;
 
 extern short store_pre_shop_mode,store_pre_talk_mode;
 extern location monster_targs[T_M];
-	extern scenario_data_type scenario;
 
 extern Boolean modeless_exists[18],diff_depth_ok,belt_present;
 extern short modeless_key[18];
@@ -177,11 +176,11 @@ void start_town_mode(short which_town, short entry_dir)
 
 	// Now adjust town number as necessary.
 	for (i = 0; i < 10; i++)
-		if ((scenario.town_to_add_to[i] >= 0) && (scenario.town_to_add_to[i] < 200) &&
-			(town_number == scenario.town_to_add_to[i]) &&
-			(sd_legit(scenario.flag_to_add_to_town[i][0],scenario.flag_to_add_to_town[i][1]) == TRUE)) {
+		if ((scenario_town_to_add_to(i) >= 0) && (scenario_town_to_add_to(i) < 200) &&
+			(town_number == scenario_town_to_add_to(i)) &&
+			(sd_legit(scenario_flag_to_add_to_town(i,0), scenario_flag_to_add_to_town(i,1)) == TRUE)) {
 			former_town = town_number;
-			town_number += PSD[scenario.flag_to_add_to_town[i][0]][scenario.flag_to_add_to_town[i][1]];
+			town_number += PSD[scenario_flag_to_add_to_town(i,0)][scenario_flag_to_add_to_town(i,1)];
 			// Now update horses & boats
 			for (i = 0; i < 30; i++) 	
 				if ((party.horses[i].exists == TRUE) && (party.horses[i].which_town == former_town))
@@ -436,7 +435,7 @@ void start_town_mode(short which_town, short entry_dir)
 	
 							
 	for (j = 0; j < 3; j++)
-		if (scenario.store_item_towns[j] == town_number) {
+		if (scenario_store_item_town(j) == town_number) {
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
 				t_i.items[i] = stored_items[j].items[i];		
 			}				
@@ -545,15 +544,15 @@ void start_town_mode(short which_town, short entry_dir)
 
 	//// check horses
 	for (i = 0; i < 30; i++) {
-		if ((scenario.scen_boats[i].which_town >= 0) && (scenario.scen_boats[i].boat_loc.x >= 0)) {
+		if ((scenario_boats(i).which_town >= 0) && (scenario_boats(i).boat_loc.x >= 0)) {
 			if (party.boats[i].exists == FALSE) {
-				party.boats[i] = scenario.scen_boats[i];
+				party.boats[i] = scenario_boats(i);
 				party.boats[i].exists = TRUE;
 				}
 			}
-		if ((scenario.scen_horses[i].which_town >= 0) && (scenario.scen_horses[i].horse_loc.x >= 0)) {
+		if ((scenario_horses(i).which_town >= 0) && (scenario_horses(i).horse_loc.x >= 0)) {
 			if (party.horses[i].exists == FALSE) {
-				party.horses[i] = scenario.scen_horses[i];
+				party.horses[i] = scenario_horses(i);
 				party.horses[i].exists = TRUE;
 				}
 			}
@@ -597,13 +596,13 @@ location end_town_mode(short switching_level,location destination)  // returns n
 
 	// Store items, if necessary 
 		for (j = 0; j < 3; j++)
-			if (scenario.store_item_towns[j] == c_town.town_num) {
+			if (scenario_store_item_town(j) == c_town.town_num) {
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
 				if ((t_i.items[i].variety != item_variety::None) && (t_i.items[i].is_special == 0) &&
-				((t_i.items[i].item_loc.x >= scenario.store_item_rects[j].left) &&
-				 (t_i.items[i].item_loc.x <= scenario.store_item_rects[j].right) && 
-				 (t_i.items[i].item_loc.y >= scenario.store_item_rects[j].top) &&
-				 (t_i.items[i].item_loc.y <= scenario.store_item_rects[j].bottom)) ) {
+				((t_i.items[i].item_loc.x >= scenario_store_item_rects(j).left) &&
+				 (t_i.items[i].item_loc.x <= scenario_store_item_rects(j).right) &&
+				 (t_i.items[i].item_loc.y >= scenario_store_item_rects(j).top) &&
+				 (t_i.items[i].item_loc.y <= scenario_store_item_rects(j).bottom)) ) {
 				 	stored_items[j].items[i] = t_i.items[i];
 				 	}
 				 	else stored_items[j].items[i].variety = item_variety::None;
