@@ -1219,7 +1219,7 @@ void put_spec_item_info (short which_i)
 {
 	display_strings(data_store5.scen_strs[60 + 1 + which_i * 2],"",
 	-1,-1,-1,-1,
-	data_store5.scen_strs[60 + which_i * 2],57,1600 + scenario.intro_pic,0);
+	data_store5.scen_strs[60 + which_i * 2],57,1600 + scenario_intro_pic(),0);
 }
 
 void display_strings_event_filter (short item_hit)

@@ -517,7 +517,7 @@ void put_party_in_scen()
 		if (strlen(data_store5.scen_strs[4 + j]) > 0) {
 			for (i = 0; i < 6; i++)
 				strcpy(strs[i],data_store5.scen_strs[4 + i]);
-			custom_choice_dialog((char *) strs,-1 * (1600 + scenario.intro_pic),buttons) ;
+			custom_choice_dialog((char *) strs,-1 * (1600 + scenario_intro_pic()),buttons) ;
 			j = 6;
 		}
 	give_help(1,2,0);

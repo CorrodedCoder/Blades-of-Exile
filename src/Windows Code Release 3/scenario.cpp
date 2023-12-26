@@ -32,3 +32,8 @@ const terrain_type_type& scenario_ter_type(short index)
 {
 	return scenario.ter_types[index];
 }
+
+unsigned char scenario_intro_pic(void)
+{
+	return scenario.intro_pic;
+}

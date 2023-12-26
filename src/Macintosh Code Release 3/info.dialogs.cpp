@@ -1360,7 +1360,7 @@ void put_spec_item_info (short which_i)
 	
 	display_strings(data_store->scen_strs[60 + 1 + which_i * 2],"",
 	-1,-1,-1,-1,
-	data_store->scen_strs[60 + which_i * 2],57,1600 + scenario.intro_pic,0);
+	data_store->scen_strs[60 + which_i * 2],57,1600 + scenario_intro_pic(),0);
 	//get_str(item_name,6,1 + which_i * 2);
 	//display_strings(6,2 + which_i * 2,0,0,
 	//(char *)item_name,-1,702,0);

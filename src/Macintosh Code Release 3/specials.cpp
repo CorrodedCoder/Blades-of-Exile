@@ -2955,7 +2955,7 @@ void handle_message(short which_mode,short cur_type,short mess1,short mess2,shor
 			scenario_out_width() * (party.outdoor_corner.y + party.i_w_c.y) : c_town.town_num;
 		}
 	display_strings((char *) str1, (char *) str2,label1,label2, label1b,label2b, 
-		"",57,1600 + scenario.intro_pic,0);
+		"",57,1600 + scenario_intro_pic(),0);
 }
  
 void get_strs(char *str1,char *str2,short cur_type,short which_str1,short which_str2) 

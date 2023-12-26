@@ -8,3 +8,4 @@
 [[nodiscard]] unsigned char scenario_num_towns(void);
 [[nodiscard]] unsigned char scenario_town_size(short index);
 [[nodiscard]] const terrain_type_type& scenario_ter_type(short index);
+[[nodiscard]] unsigned char scenario_intro_pic(void);
