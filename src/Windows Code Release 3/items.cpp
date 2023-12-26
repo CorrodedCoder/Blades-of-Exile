@@ -1336,7 +1336,7 @@ void place_treasure(location where,short level,short loot,short mode)
 			if (new_item.variety != item_variety::None) {
 				for (i = 0; i < 6; i++)
 					if ((adven[i].main_status == status::Normal) 
-						&& (get_ran(1,0,100) < id_odds[adven[i].skills[13]]))
+						&& (get_ran(1,0,100) < id_odds[adven[i].skills[skill::ItemLore]]))
 							new_item.item_properties = new_item.item_properties | 1;
 				place_item(new_item,where,FALSE);
 				}			

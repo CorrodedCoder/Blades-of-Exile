@@ -1918,8 +1918,8 @@ Boolean handle_keystroke(UINT wParam,LONG lParam)
 				for (j = 0; j < 62; j++) {
 					adven[i].mage_spells[j] = TRUE;
 					adven[i].priest_spells[j] = TRUE;
-					adven[i].skills[9] = 7;
-					adven[i].skills[10] = 7;
+					adven[i].skills[skill::MageSpells] = 7;
+					adven[i].skills[skill::PriestSpells] = 7;
 					}
 
 			add_string_to_buf("Debug: Add stuff and heal.            ");
@@ -2607,16 +2607,16 @@ void start_new_game()
 		if (adven[i].main_status == status::Normal) {
 			// Do stat adjs for selected race.
 			if (adven[i].race == 1) {
-				if (adven[i].skills[1] < 18)
-					adven[i].skills[1] += 2;
+				if (adven[i].skills[skill::Dexterity] < 18)
+					adven[i].skills[skill::Dexterity] += 2;
 				}
 			if (adven[i].race == 2) {
-				if (adven[i].skills[0] < 18)
-					adven[i].skills[0] += 2;
-				if (adven[i].skills[2] < 19)
-					adven[i].skills[2] += 1;
+				if (adven[i].skills[skill::Strength] < 18)
+					adven[i].skills[skill::Strength] += 2;
+				if (adven[i].skills[skill::Intelligence] < 19)
+					adven[i].skills[skill::Intelligence] += 1;
 				}
-			adven[i].max_sp += adven[i].skills[9] * 3 + adven[i].skills[10] * 3;
+			adven[i].max_sp += adven[i].skills[skill::MageSpells] * 3 + adven[i].skills[skill::PriestSpells] * 3;
 			adven[i].cur_sp = adven[i].max_sp;
 			}
 	save_file(1);

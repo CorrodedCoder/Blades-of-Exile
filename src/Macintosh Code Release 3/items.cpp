@@ -262,7 +262,7 @@ Boolean party_check_class(short item_class,short mode) ////
 }
 short amount_pc_can_carry(short pc_num)
 {
-	return 100 + (15 * min(adven[pc_num].skills[0],20)) + ((adven[pc_num].traits[trait::ExceptionalStr] == 0) ? 0 : 30)
+	return 100 + (15 * min(adven[pc_num].skills[skill::Strength],20)) + ((adven[pc_num].traits[trait::ExceptionalStr] == 0) ? 0 : 30)
 		+ ((adven[pc_num].traits[trait::BadBack] == 0) ? 0 : -50);
 }
 short pc_carry_weight(short pc_num)
@@ -1490,7 +1490,7 @@ void place_treasure(location where,short level,short loot,short mode)
 			if (new_item.variety != 0) {
 				for (i = 0; i < 6; i++)
 					if ((adven[i].main_status == status::Normal) 
-						&& (get_ran(1,0,100) < id_odds[adven[i].skills[13]]))
+						&& (get_ran(1,0,100) < id_odds[adven[i].skills[skill::ItemLore]]))
 							new_item.item_properties = new_item.item_properties | 1;
 				place_item(new_item,where,FALSE);
 				}			

@@ -512,7 +512,7 @@ Boolean pc_combat_move(location destination) ////
 void char_parry()
 {
 	pc_parry[current_pc] = (pc_moves[current_pc] / 4) * 
-		(2 + stat_adj(current_pc,1) + adven[current_pc].skills[8]);
+		(2 + stat_adj(current_pc, skill::Dexterity) + adven[current_pc].skills[skill::Defense]);
 	pc_moves[current_pc] = 0;
 }
 
@@ -546,10 +546,10 @@ void pc_attack(short who_att,short target)////
 					else weap2 = i;
 
 	hit_adj = (-5 * boe_clamp(adven[who_att].gaffect(affect::CursedBlessed),-8,8)) + 5 * boe_clamp(which_m->m_d.status[1],-8,8)
-			- stat_adj(who_att,1) * 5 + (get_encumberance(who_att)) * 5;
+			- stat_adj(who_att, skill::Dexterity) * 5 + (get_encumberance(who_att)) * 5;
 
 	dam_adj = boe_clamp(adven[who_att].gaffect(affect::CursedBlessed),-8,8) - boe_clamp(which_m->m_d.status[1],-8,8)
-			+ stat_adj(who_att,0);
+			+ stat_adj(who_att, skill::Strength);
 
 	if ((which_m->m_d.status[11] > 0) || (which_m->m_d.status[12] > 0)) {
 		hit_adj -= 80;
@@ -625,9 +625,9 @@ void pc_attack(short who_att,short target)////
 			// assassinate
 			r1 = get_ran(1,0,100);
 			if ((adven[who_att].level >= which_m->m_d.level - 1) 
-				&& (adven[who_att].skills[16] >= which_m->m_d.level / 2)
+				&& (adven[who_att].skills[skill::Assassination] >= which_m->m_d.level / 2)
 				&& (which_m->m_d.spec_skill != 12)) // Can't assassinate splitters
-				if (r1 < hit_chance[max(adven[who_att].skills[16] - which_m->m_d.level,0)]) {
+				if (r1 < hit_chance[max(adven[who_att].skills[skill::Assassination] - which_m->m_d.level,0)]) {
 					add_string_to_buf("  You assassinate.           ");
 					spec_dam += r2;
 					}
@@ -887,7 +887,7 @@ void do_combat_cast(location target)////
 		}
 		else {
 			level = 1 + adven[current_pc].level / 2;
-			bonus = stat_adj(current_pc,2);
+			bonus = stat_adj(current_pc, skill::Intelligence);
 			}
 	force_wall_position = 10;
 	s_num = spell_being_cast % 100;
@@ -1094,32 +1094,32 @@ void do_combat_cast(location target)////
 			do_missile_anim(50,pc_pos[current_pc],61); 
 			switch (spell_being_cast) {
 			case 35: // Simulacrum
-				r2 = get_ran(3,1,4) + stat_adj(current_pc,2);
+				r2 = get_ran(3,1,4) + stat_adj(current_pc, skill::Intelligence);
 				if (summon_monster(store_sum_monst,target,r2,2) == FALSE)
 					add_string_to_buf("  Summon failed.");
 				break;
 			case 16: // summon beast
-				r2 = get_ran(3,1,4) + stat_adj(current_pc,2);
+				r2 = get_ran(3,1,4) + stat_adj(current_pc, skill::Intelligence);
 				if ((summon < 0) || (summon_monster(summon,target,r2,2) == FALSE))
 					add_string_to_buf("  Summon failed.");
 				break;
 			case 26: // summon 1
-				r2 = get_ran(4,1,4) + stat_adj(current_pc,2);
+				r2 = get_ran(4,1,4) + stat_adj(current_pc, skill::Intelligence);
 				if ((summon < 0) || (summon_monster(summon,target,r2,2) == FALSE))
 					add_string_to_buf("  Summon failed.");
 				break;
 			case 43: // summon 2
-				r2 = get_ran(5,1,4) + stat_adj(current_pc,2);
+				r2 = get_ran(5,1,4) + stat_adj(current_pc, skill::Intelligence);
 				if ((summon < 0) || (summon_monster(summon,target,r2,2) == FALSE))
 					add_string_to_buf("  Summon failed.");
 				break;
 			case 58: // summon 3
-				r2 = get_ran(7,1,4) + stat_adj(current_pc,2);
+				r2 = get_ran(7,1,4) + stat_adj(current_pc, skill::Intelligence);
 				if ((summon < 0) || (summon_monster(summon,target,r2,2) == FALSE))
 					add_string_to_buf("  Summon failed.");
 				break;
 			case 50: // Daemon
-				r2 = get_ran(5,1,4) + stat_adj(current_pc,2);
+				r2 = get_ran(5,1,4) + stat_adj(current_pc, skill::Intelligence);
 				if (summon_monster(85,target,r2,2) == FALSE)
 					add_string_to_buf("  Summon failed.");
 				break;
@@ -1130,23 +1130,23 @@ void do_combat_cast(location target)////
 				break;
 			
 			case 115: // summon spirit
-				r2 = get_ran(2,1,5) + stat_adj(current_pc,2);
+				r2 = get_ran(2,1,5) + stat_adj(current_pc, skill::Intelligence);
 				if (summon_monster(125,target,r2,2) == FALSE)
 					add_string_to_buf("  Summon failed.");		
 				break;
 			case 134: // s to s
 				r1 = get_ran(1,0,7);
-				r2 = get_ran(2,1,5) + stat_adj(current_pc,2);
+				r2 = get_ran(2,1,5) + stat_adj(current_pc, skill::Intelligence);
 				if (summon_monster((r1 == 1) ? 100 : 99,target,r2,2) == FALSE)
 					add_string_to_buf("  Summon failed.");
 				break;
 			case 143: // host
-				r2 = get_ran(2,1,4) + stat_adj(current_pc,2);
+				r2 = get_ran(2,1,4) + stat_adj(current_pc, skill::Intelligence);
 				if (summon_monster((i == 0) ? 126 : 125,target,r2,2) == FALSE)
 					add_string_to_buf("  Summon failed.");		
 				break;
 			case 150: // guardian
-				r2 = get_ran(6,1,4) + stat_adj(current_pc,2);
+				r2 = get_ran(6,1,4) + stat_adj(current_pc, skill::Intelligence);
 				if (summon_monster(122,target,r2,2) == FALSE)
 					add_string_to_buf("  Summon failed.");		
 				break;
@@ -1438,12 +1438,12 @@ void fire_missile(location target) ////
 	creature_data_type *cur_monst;
 	Boolean exploding = FALSE;
 	
-	skill = (overall_mode == 12) ? adven[current_pc].skills[7] : adven[current_pc].skills[8];
+	skill = (overall_mode == 12) ? adven[current_pc].skills[skill::Archery] : adven[current_pc].skills[skill::Defense];
 	range = (overall_mode == 12) ? 12 : 8;
 	dam = adven[current_pc].items[ammo_inv_slot].item_level;
 	dam_bonus = adven[current_pc].items[ammo_inv_slot].bonus + boe_clamp(-8,8,adven[current_pc].gaffect(affect::CursedBlessed));
 	hit_bonus = (overall_mode == 12) ? adven[current_pc].items[missile_inv_slot].bonus : 0;
-	hit_bonus += stat_adj(current_pc,1) - can_see(pc_pos[current_pc],target,0) 
+	hit_bonus += stat_adj(current_pc, skill::Dexterity) - can_see(pc_pos[current_pc],target,0)
 		+ boe_clamp(adven[current_pc].gaffect(affect::CursedBlessed),-8,8);
 	if ((skill_item = pc_has_abil_equip(current_pc,41)) < 24) {
 		hit_bonus += adven[current_pc].items[skill_item].ability_strength / 2;
@@ -2242,7 +2242,7 @@ void monster_attack_pc(short who_att,short target)
 
 			// Attack roll
 			r1 = get_ran(1,0,100) - 5 * min(8,attacker->m_d.status[1]) + 5 * adven[target].gaffect(affect::CursedBlessed)
-					+ 5 * stat_adj(target,1) - 15;
+					+ 5 * stat_adj(target, skill::Dexterity) - 15;
 			r1 += 5 * (attacker->m_d.status[6] / 3);
 			if (pc_parry[target] < 100)
 				r1 += 5 * pc_parry[target];
@@ -4025,7 +4025,7 @@ Boolean combat_cast_mage_spell()
 	store_sp = adven[current_pc].cur_sp;
 	if (adven[current_pc].cur_sp == 0)
 		add_string_to_buf("Cast: No spell points.        ");		
-	else if (adven[current_pc].skills[9] == 0)
+	else if (adven[current_pc].skills[skill::MageSpells] == 0)
 		add_string_to_buf("Cast: No mage skill.        ");		
 	else if (get_encumberance(current_pc) > 1) { 
 		add_string_to_buf("Cast: Too encumbered.        ");
@@ -4056,7 +4056,7 @@ Boolean combat_cast_mage_spell()
 		store_sum_monst_cost = get_monst.level;
 		}
 
-	bonus = stat_adj(current_pc,2);
+	bonus = stat_adj(current_pc, skill::Intelligence);
 	combat_posing_monster = current_working_monster = current_pc;
 	if (spell_num >= 70)
 		return FALSE;
@@ -4245,7 +4245,7 @@ Boolean combat_cast_priest_spell()
 	
 	if (spell_num >= 70)
 		return FALSE;
-	bonus = stat_adj(current_pc,2);
+	bonus = stat_adj(current_pc, skill::Intelligence);
 
 	combat_posing_monster = current_working_monster = current_pc;
 
@@ -4428,35 +4428,35 @@ void start_fancy_spell_targeting(short num)
 	
 	switch (num) { // Assign special targeting shapes and number of targets
 		case 129: // smite
-			num_targets_left = boe_clamp(adven[current_pc].level / 4 + stat_adj(current_pc,2) / 2,1,8);
+			num_targets_left = boe_clamp(adven[current_pc].level / 4 + stat_adj(current_pc, skill::Intelligence) / 2,1,8);
 			break; 
 		case 134: // sticks to snakes
-			num_targets_left = adven[current_pc].level / 5 + stat_adj(current_pc,2) / 2;
+			num_targets_left = adven[current_pc].level / 5 + stat_adj(current_pc, skill::Intelligence) / 2;
 			break;
 		case 143: // summon host
 			num_targets_left = 5;
 			break;
 		case 27: // flame arrows
-			num_targets_left = adven[current_pc].level / 4 + stat_adj(current_pc,2) / 2;
+			num_targets_left = adven[current_pc].level / 4 + stat_adj(current_pc, skill::Intelligence) / 2;
 			break;
 		case 36: // venom arrows
-			num_targets_left = adven[current_pc].level / 5 + stat_adj(current_pc,2) / 2;
+			num_targets_left = adven[current_pc].level / 5 + stat_adj(current_pc, skill::Intelligence) / 2;
 			break;
 		case 61: case 49: // paralysis, death arrows
-			num_targets_left = adven[current_pc].level / 8 + stat_adj(current_pc,2) / 3;
+			num_targets_left = adven[current_pc].level / 8 + stat_adj(current_pc, skill::Intelligence) / 3;
 			break;
 		case 45: // spray fields
-			num_targets_left = adven[current_pc].level / 5 + stat_adj(current_pc,2) / 2;
+			num_targets_left = adven[current_pc].level / 5 + stat_adj(current_pc, skill::Intelligence) / 2;
 			current_pat = t;
 			break;
 		case 26: // summon 1
-			num_targets_left = boe_clamp(adven[current_pc].level / 4 + stat_adj(current_pc,2) / 2,1,7);
+			num_targets_left = boe_clamp(adven[current_pc].level / 4 + stat_adj(current_pc, skill::Intelligence) / 2,1,7);
 			break;
 		case 43: // summon 2
-			num_targets_left = boe_clamp(adven[current_pc].level / 6 + stat_adj(current_pc,2) / 2,1,6);
+			num_targets_left = boe_clamp(adven[current_pc].level / 6 + stat_adj(current_pc, skill::Intelligence) / 2,1,6);
 			break;
 		case 58: // summon 3
-			num_targets_left = boe_clamp(adven[current_pc].level / 8 + stat_adj(current_pc,2) / 2,1,5);
+			num_targets_left = boe_clamp(adven[current_pc].level / 8 + stat_adj(current_pc, skill::Intelligence) / 2,1,5);
 			break;
 		}	
 	

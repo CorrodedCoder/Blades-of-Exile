@@ -464,6 +464,29 @@ enum class affect: short {
 	Acid = 13,
 };
 
+enum skill
+{
+	Strength = 0,
+	Dexterity = 1,
+	Intelligence = 2,
+	EdgedWeapon = 3,
+	BashingWeapon = 4,
+	PoleWeapon = 5,
+	ThrownMissile = 6,
+	Archery = 7,
+	Defense = 8,
+	MageSpells = 9,
+	PriestSpells = 10,
+	MageLore = 11,
+	Alchemy = 12,
+	ItemLore = 13,
+	DisarmTraps = 14,
+	Lockpicking = 15,
+	Assassination = 16,
+	Poison = 17,
+	Luck = 18
+};
+
 // for game
 struct talk_save_type {
 	short personality;

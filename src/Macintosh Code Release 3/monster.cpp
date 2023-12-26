@@ -1436,9 +1436,9 @@ short get_encumberance(short pc_num)
 	for (i = 0; i < 24; i++)
 		if (adven[pc_num].equip[i] == TRUE) {
 			what_val = adven[pc_num].items[i].awkward;
-			if ((what_val == 1) && (get_ran(1,0,130) < hit_chance[adven[pc_num].skills[8]]))
+			if ((what_val == 1) && (get_ran(1,0,130) < hit_chance[adven[pc_num].skills[skill::Defense]]))
 				what_val--;
-			if ((what_val > 1) && (get_ran(1,0,70) < hit_chance[adven[pc_num].skills[8]]))
+			if ((what_val > 1) && (get_ran(1,0,70) < hit_chance[adven[pc_num].skills[skill::Defense]]))
 				what_val--;
 			store += what_val;
 			}

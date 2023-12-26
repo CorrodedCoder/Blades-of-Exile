@@ -566,7 +566,7 @@ void display_party(short mode,short clear_first)
 								
 								SelectObject(main_dc,font);
 								string_num=1;
-								for( k = 0; k < 19 ; ++k)
+								for( k = skill::Strength; k <= skill::Luck; ++k)
 								{
 									temp_rect = pc_skills_rect[k];
 									temp_rect.left = pc_skills_rect[k].left + ((k < 10) ? 90 : 83);

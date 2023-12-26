@@ -809,7 +809,7 @@ void display_pc_info()
 			adven[pc].cur_sp,adven[pc].max_sp);
 	csit(1019,67,(char *) str);
 
-	for (i = 0; i < 19; i++) {
+	for (i = skill::Strength; i <= skill::Luck; ++i) {
 		cdsin(1019,18 + i * 2,adven[pc].skills[i]);
 		}
 	store = pc_encumberance(adven[pc]);
@@ -831,12 +831,12 @@ void display_pc_info()
 						else weap2 = i;
 					}
 				
-	hit_adj = stat_adj(adven[pc],1) * 5 - (pc_encumberance(adven[pc])) * 5
+	hit_adj = stat_adj(adven[pc], skill::Dexterity) * 5 - (pc_encumberance(adven[pc])) * 5
 		+ (5 * boe_clamp(adven[pc].gaffect(affect::CursedBlessed),-8,8));
 	if ((adven[pc].traits[trait::Ambidextrous] == FALSE) && (weap2 < 24))
 		hit_adj -= 25;
 
-	dam_adj = stat_adj(adven[pc],0) + boe_clamp(adven[pc].gaffect(affect::CursedBlessed),-8,8);
+	dam_adj = stat_adj(adven[pc], skill::Strength) + boe_clamp(adven[pc].gaffect(affect::CursedBlessed),-8,8);
 	if ((skill_item = text_pc_has_abil_equip(pc,101)) < 24) {
 		hit_adj += 5 * (adven[pc].items[skill_item].item_level + 1);
 		dam_adj += adven[pc].items[skill_item].item_level;

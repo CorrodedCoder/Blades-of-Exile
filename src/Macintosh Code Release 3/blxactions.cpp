@@ -2484,12 +2484,12 @@ void start_new_game()
 		if (adven[i].main_status == status::Normal) {
 			// Do stat adjs for selected race.
 			if (adven[i].race == 1)
-				adven[i].skills[1] += 2;
+				adven[i].skills[skill::Dexterity] += 2;
 			if (adven[i].race == 2) {
-				adven[i].skills[0] += 2;
-				adven[i].skills[2] += 1;	
+				adven[i].skills[skill::Strength] += 2;
+				adven[i].skills[skill::Intelligence] += 1;	
 				}
-			adven[i].max_sp += adven[i].skills[9] * 3 + adven[i].skills[10] * 3;
+			adven[i].max_sp += adven[i].skills[skill::MageSpells] * 3 + adven[i].skills[skill::PriestSpells] * 3;
 			adven[i].cur_sp = adven[i].max_sp;
 			}
 	save_file(1);

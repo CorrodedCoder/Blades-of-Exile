@@ -1461,9 +1461,9 @@ short get_encumberance(const pc_record_type& pc)
 	for (i = 0; i < 16; i++)
 		if (pc.equip[i] == TRUE) {
 			what_val = pc.items[i].awkward;
-			if ((what_val == 1) && (get_ran(1,0,130) < hit_chance[pc.skills[8]]))
+			if ((what_val == 1) && (get_ran(1,0,130) < hit_chance[pc.skills[skill::Defense]]))
 				what_val--;
-			if ((what_val > 1) && (get_ran(1,0,70) < hit_chance[pc.skills[8]]))
+			if ((what_val > 1) && (get_ran(1,0,70) < hit_chance[pc.skills[skill::Defense]]))
 				what_val--;
 			store += what_val;
 			}

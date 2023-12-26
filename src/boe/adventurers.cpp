@@ -25,7 +25,7 @@ bool woodsman_present(const Adventurers& adven)
 
 short mage_lore_total(const Adventurers& adven)
 {
-	auto pc_mage_lore = [](const auto& adventurer) { return adventurer.skills[11]; };
+	auto pc_mage_lore = [](const auto& adventurer) { return adventurer.skills[skill::MageLore]; };
 	auto v = adven | std::views::filter(is_active) | std::views::transform(pc_mage_lore);
 #if defined(__cpp_lib_ranges_fold) && __cpp_lib_ranges_fold
 	return static_cast<short>(std::ranges::fold_left(v, 0, std::plus<int>()));

@@ -97,25 +97,25 @@ TEST_CASE("mage_lore_total", "[adventurers]")
 		for (auto& adventurer : adventurers)
 		{
 			adventurer.main_status = status::Normal;
-			adventurer.skills[11] = 1;
+			adventurer.skills[skill::MageLore] = 1;
 			REQUIRE(mage_lore_total(adventurers) == 1);
 			adventurer.main_status = status::Absent;
-			adventurer.skills[11] = 0;
+			adventurer.skills[skill::MageLore] = 0;
 		}
 	}
 	{
 		Adventurers adventurers{};
-		for (auto& adventurer : adventurers) { adventurer.skills[11] = 1; }
+		for (auto& adventurer : adventurers) { adventurer.skills[skill::MageLore] = 1; }
 		REQUIRE(mage_lore_total(adventurers) == 0);
 	}
 	{
 		Adventurers adventurers{};
-		for (auto& adventurer : adventurers) { adventurer.main_status = status::Normal; adventurer.skills[11] = 1; }
+		for (auto& adventurer : adventurers) { adventurer.main_status = status::Normal; adventurer.skills[skill::MageLore] = 1; }
 		REQUIRE(mage_lore_total(adventurers) == 6);
 	}
 	{
 		Adventurers adventurers{};
-		for (auto& adventurer : adventurers) { adventurer.main_status = status::Normal; adventurer.skills[11] = 2; }
+		for (auto& adventurer : adventurers) { adventurer.main_status = status::Normal; adventurer.skills[skill::MageLore] = 2; }
 		REQUIRE(mage_lore_total(adventurers) == 12);
 	}
 }
