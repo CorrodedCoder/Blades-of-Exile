@@ -99,7 +99,6 @@ extern Boolean debug_on,registered,cartoon_happening,in_scen_debug,party_in_memo
 extern HWND	mainPtr;
 extern party_record_type party;
 extern talking_record_type talking;
-extern scenario_data_type scenario;
 
 extern Adventurers adven;
 extern outdoor_record_type outdoors[2][2];

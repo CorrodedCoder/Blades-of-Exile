@@ -17,7 +17,6 @@
 #include "boe/item.hpp"
 #include "scenario.hpp"
 
-
 extern HWND	mainPtr;
 extern short overall_mode;
 extern short town_type;
@@ -25,7 +24,6 @@ extern Boolean in_startup_mode,cartoon_happening;
 extern short town_size[3];
 extern party_record_type party;
 extern piles_of_stuff_dumping_type2 data_store2;
-extern scenario_data_type scenario;
 
 extern Adventurers adven;
 extern big_tr_type  t_d;

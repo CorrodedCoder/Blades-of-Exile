@@ -53,7 +53,6 @@ location which_party_sec;
 
 extern party_record_type party;
 extern talking_record_type talking;
-extern scenario_data_type scenario;
 
 extern current_town_type c_town;
 extern short overall_mode,which_combat_type,current_pc,town_type;

@@ -16,7 +16,6 @@ HGLOBAL sound_handles[NUM_SOUNDS];
 LPCSTR snds[NUM_SOUNDS];
 
 extern HINSTANCE store_hInstance;
-extern scenario_data_type scenario;
 
 extern Boolean play_sounds,in_startup_mode;
 extern HWND mainPtr;

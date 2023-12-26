@@ -125,7 +125,6 @@ HINSTANCE store_hInstance;
 HACCEL accel;
 BOOL event_handled;
 
-extern scenario_data_type scenario;
 piles_of_stuff_dumping_type data_store;
 RECT right_sbar_rect;
 town_record_type town;

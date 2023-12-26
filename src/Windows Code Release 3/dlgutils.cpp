@@ -36,7 +36,6 @@ extern party_record_type party;
 extern piles_of_stuff_dumping_type data_store;
 extern piles_of_stuff_dumping_type2 data_store2;
 extern talking_record_type talking;
-extern scenario_data_type scenario;
 
 extern Boolean in_startup_mode,play_sounds,sys_7_avail,give_intro_hint;
 extern HWND mainPtr;

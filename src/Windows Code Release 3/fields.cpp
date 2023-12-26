@@ -19,7 +19,6 @@ extern unsigned char misc_i[64][64];
 extern unsigned char sfx[64][64];
 extern char terrain_blocked[256];
 extern short town_size[3];
-extern scenario_data_type scenario;
 
 Boolean is_explored(short i,short j)
 {

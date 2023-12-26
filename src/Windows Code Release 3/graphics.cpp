@@ -27,7 +27,6 @@ extern short anim_step;
 extern party_record_type party;
 extern piles_of_stuff_dumping_type data_store;
 extern talking_record_type talking;
-extern scenario_data_type scenario;
 
 extern Adventurers adven;
 extern big_tr_type  t_d;

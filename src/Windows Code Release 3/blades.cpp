@@ -185,7 +185,6 @@ HDC main_dc,main_dc2,main_dc3;
 HINSTANCE store_hInstance;
 HACCEL accel;
 BOOL event_handled;
-extern scenario_data_type scenario;
 piles_of_stuff_dumping_type data_store;
 piles_of_stuff_dumping_type2 data_store2;
 piles_of_stuff_dumping_type3 data_store3;
