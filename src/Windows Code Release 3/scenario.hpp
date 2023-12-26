@@ -10,3 +10,7 @@
 [[nodiscard]] const terrain_type_type& scenario_ter_type(short index);
 [[nodiscard]] unsigned char scenario_intro_pic(void);
 [[nodiscard]] const monster_record_type& scenario_monster(short index);
+[[nodiscard]] const special_node_type& scenario_specials(short index);
+[[nodiscard]] short scenario_special_item(short index);
+[[nodiscard]] short scenario_timer_times(short index);
+[[nodiscard]] short scenario_timer_specs(short index);

@@ -42,3 +42,23 @@ const monster_record_type& scenario_monster(short index)
 {
 	return scenario.scen_monsters[index];
 }
+
+const special_node_type& scenario_specials(short index)
+{
+	return scenario.scen_specials[index];
+}
+
+short scenario_special_item(short index)
+{
+	return scenario.special_item_special[index];
+}
+
+short scenario_timer_times(short index)
+{
+	return scenario.scenario_timer_times[index];
+}
+
+short scenario_timer_specs(short index)
+{
+	return scenario.scenario_timer_specs[index];
+}

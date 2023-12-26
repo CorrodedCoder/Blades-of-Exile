@@ -29,7 +29,6 @@
 extern short overall_mode;
 extern party_record_type party;
 extern piles_of_stuff_dumping_type data_store;
-extern scenario_data_type scenario;
 extern current_town_type c_town;
 extern unsigned char out[96][96];
 extern unsigned char combat_terrain[64][64];
@@ -1523,8 +1522,8 @@ void special_increase_age()
 				redraw = TRUE;
 			}
 	for (i = 0; i < 20; i++)
-		if ((scenario.scenario_timer_times[i] > 0) && (party.age % scenario.scenario_timer_times[i] == 0)) {
-			run_special(10,0,scenario.scenario_timer_specs[i],null_loc,&s1,&s2,&s3);
+		if ((scenario_timer_times(i) > 0) && (party.age % scenario_timer_times(i) == 0)) {
+			run_special(10,0, scenario_timer_specs(i),null_loc,&s1,&s2,&s3);
 			stat_area = TRUE;
 			if (s3 > 0)
 				redraw = TRUE;
@@ -1646,14 +1645,14 @@ special_node_type get_node(short cur_spec,short cur_spec_type)
 {
 	special_node_type dummy_node;
 	
-	dummy_node = scenario.scen_specials[0];
+	dummy_node = scenario_specials(0);
 	dummy_node.type = -1;
 	if (cur_spec_type == 0) {
 		if (cur_spec != boe_clamp(cur_spec,0,255)) {
 			give_error("The scenario called a scenario special node out of range.","",0);
 			return dummy_node;
 			}
-		return scenario.scen_specials[cur_spec];
+		return scenario_specials(cur_spec);
 		}
 	if (cur_spec_type == 1) {
 		if (cur_spec != boe_clamp(cur_spec,0,59)) {
@@ -2981,7 +2980,5 @@ void use_spec_item(short item)
 {
 	short i,j,k;
 	location null_loc = {0,0};
-	
-	run_special(8,0,scenario.special_item_special[item],null_loc,&i,&j,&k);
-
+	run_special(8,0, scenario_special_item(item),null_loc,&i,&j,&k);
 }
