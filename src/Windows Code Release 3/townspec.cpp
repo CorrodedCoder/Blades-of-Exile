@@ -16,6 +16,7 @@
 #include "exlsound.h"
 #include "boe/hacks.hpp"
 #include "boe/utility.hpp"
+#include "scenario.hpp"
 
 extern short overall_mode;
 extern party_record_type party;
@@ -300,5 +301,5 @@ short handle_lever(location w)
 
 void switch_lever(location w)
 {
-	alter_space(w.x,w.y,scenario.ter_types[t_d.terrain[w.x][w.y]].trans_to_what);
+	alter_space(w.x,w.y, scenario_ter_type(t_d.terrain[w.x][w.y]).trans_to_what);
 }

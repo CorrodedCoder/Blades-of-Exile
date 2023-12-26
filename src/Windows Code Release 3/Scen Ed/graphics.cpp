@@ -13,6 +13,7 @@
 #include "../graphutl_helpers.hpp"
 #include "keydlgs.h"
 #include "boe/utility.hpp"
+#include "../scenario.hpp"
 
 extern char scen_strs[160][256];
 extern char scen_strs2[110][256];
@@ -437,7 +438,7 @@ void set_up_terrain_buttons()
  	// first make terrain buttons
 	for (i = 0; i < 256; i++) {
 		ter_from = ter_from_base;
-		pic = scenario.ter_types[i].picture;
+		pic = scenario_ter_type(i).picture;
 		}
 	SelectObject(hdc,store_bmp);
 	DeleteObject(hdc);
@@ -447,7 +448,7 @@ void set_up_terrain_buttons()
 	// first make terrain buttons
 	for (i = 0; i < 256; i++) {
 		ter_from = ter_from_base;
-		pic = scenario.ter_types[i].picture;
+		pic = scenario_ter_type(i).picture;
 		if (pic >= 1000) {
 			ter_from = get_custom_rect(pic % 1000);
 			rect_draw_some_item_bmp(spec_scen_g,
@@ -456,7 +457,7 @@ void set_up_terrain_buttons()
 		else if (pic < 400)	{
 				pic = pic % 50;
 				OffsetRect(&ter_from,28 * (pic % 10), 36 * (pic / 10));
-				rect_draw_some_item_bmp(terrain_gworld[scenario.ter_types[i].picture/50],
+				rect_draw_some_item_bmp(terrain_gworld[scenario_ter_type(i).picture/50],
 					ter_from,terrain_buttons_gworld,terrain_rects[i],0,0);
 				}
 				else if (pic < 1000) {
@@ -469,10 +470,10 @@ void set_up_terrain_buttons()
 					rect_draw_some_item_bmp(anim_gworld,
 						ter_from,terrain_buttons_gworld,terrain_rects[i],0,0);
 					}
-		small_i = small_icons[scenario.ter_types[i].special];
-		if ((small_i == 30) && (scenario.ter_types[i].flag2 >= 5))
+		small_i = small_icons[scenario_ter_type(i).special];
+		if ((small_i == 30) && (scenario_ter_type(i).flag2 >= 5))
 			small_i = 31;
-		if ((small_i == 31) && (scenario.ter_types[i].flag2 == 10))
+		if ((small_i == 31) && (scenario_ter_type(i).flag2 == 10))
 			small_i = 32;
 		if (i == 82)
 			small_i = 3;
@@ -575,7 +576,7 @@ void draw_terrain()
 
 			// draw start icon, if starting point
 			if ((editing_town == TRUE) &&
-				(cur_town == scenario.which_town_start) && (scenario.where_start.x == cen_x + q - 4)
+				(cur_town == scenario_which_town_start()) && (scenario.where_start.x == cen_x + q - 4)
 				&& (scenario.where_start.y == cen_y + r - 4)) {
 				from_rect = start_button_from;
 				to_rect = tiny_to;
@@ -594,10 +595,10 @@ void draw_terrain()
 				rect_draw_some_item_bmp(editor_mixed,from_rect,ter_draw_gworld,to_rect,0,0);
 				OffsetRect(&tiny_to,0,-7);
 				}
-			small_i = small_icons[scenario.ter_types[t_to_draw].special];
-			if ((small_i == 30) && (scenario.ter_types[t_to_draw].flag2 >= 5))
+			small_i = small_icons[scenario_ter_type(t_to_draw).special];
+			if ((small_i == 30) && (scenario_ter_type(t_to_draw).flag2 >= 5))
 				small_i = 31;
-			if ((small_i == 31) && (scenario.ter_types[t_to_draw].flag2 == 10))
+			if ((small_i == 31) && (scenario_ter_type(t_to_draw).flag2 == 10))
 				small_i = 32;
 			tiny_from = base_small_button_from;
 			OffsetRect(&tiny_from,7 * (small_i % 10),7 * (small_i / 10));
@@ -896,7 +897,7 @@ void draw_one_terrain_spot (short i,short j,unsigned char terrain_to_draw)
 	short picture_wanted;
 	GWorldPtr source_gworld;
 	
-	picture_wanted = scenario.ter_types[terrain_to_draw].picture;
+	picture_wanted = scenario_ter_type(terrain_to_draw).picture;
 
 	where_draw.x = (char) i;
 	where_draw.y = (char) j;
@@ -931,7 +932,7 @@ void draw_one_tiny_terrain_spot (short i,short j,unsigned char terrain_to_draw,H
 	HGDIOBJ store_bmp;
 	HGDIOBJ old_brush;
 
-	picture_wanted = scenario.ter_types[terrain_to_draw].picture;
+	picture_wanted = scenario_ter_type(terrain_to_draw).picture;
 	if (picture_wanted >= 1000)
 		picture_wanted = 74;
 
@@ -1097,7 +1098,7 @@ RECT get_template_rect (unsigned char type_wanted)
 	RECT store_rect;
 	short picture_wanted;
 	
-	picture_wanted = scenario.ter_types[type_wanted].picture;
+	picture_wanted = scenario_ter_type(type_wanted).picture;
 	if (picture_wanted >= 1000)
 		picture_wanted = 0;
 	picture_wanted = picture_wanted % 50;
@@ -1174,7 +1175,7 @@ void place_location()
 	draw_rect.left = palette_buttons[7][0].right + 17;
 	draw_rect.bottom = draw_rect.top + 36;
 	draw_rect.right = draw_rect.left + 28;
-	picture_wanted = scenario.ter_types[current_terrain_type].picture;
+	picture_wanted = scenario_ter_type(current_terrain_type).picture;
 
 	if (overall_mode < 60) {
 		if (picture_wanted >= 1000)	{
@@ -1450,7 +1451,7 @@ Boolean container_there(location l)
 {
 	if (editing_town == FALSE)
 		return FALSE;
-	if (scenario.ter_types[t_d.terrain[l.x][l.y]].special == 14)
+	if (scenario_ter_type(t_d.terrain[l.x][l.y]).special == 14)
 		return TRUE;
 	if (is_barrel(l.x,l.y) == TRUE)
 		return TRUE;

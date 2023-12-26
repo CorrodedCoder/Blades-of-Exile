@@ -181,9 +181,9 @@ void make_quickfire(short i,short j)
 	if ((is_force_barrier(i,j)) || (is_fire_barrier(i,j)))
 		return;
 	ter = coord_to_ter(i,j);
-	if (scenario.ter_types[ter].blockage == 1)
+	if (scenario_ter_type(ter).blockage == 1)
 		return;
-	if (scenario.ter_types[ter].blockage == 5)
+	if (scenario_ter_type(ter).blockage == 5)
 		return;
 	c_town.explored[i][j] = c_town.explored[i][j] & 1;
 	misc_i[i][j] = misc_i[i][j] & 3;

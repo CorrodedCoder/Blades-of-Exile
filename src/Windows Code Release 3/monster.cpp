@@ -13,6 +13,8 @@
 #include "newgraph.h"
 #include "boe/utility.hpp"
 #include "boe/item.hpp"
+#include "scenario.hpp"
+
 
 extern current_town_type c_town;
 extern party_record_type party;
@@ -991,7 +993,7 @@ Boolean monst_check_special_terrain(location where_check,short mode,short which_
 			break;	
 		}
 	which_m = &c_town.monst.dudes[which_monst];
-	ter_abil = scenario.ter_types[ter].special;
+	ter_abil = scenario_ter_type(ter).special;
 	
 		if ((mode > 0) && (ter_abil >= 16) && 
 			(ter_abil <= 19)) {
@@ -1095,9 +1097,9 @@ Boolean monst_check_special_terrain(location where_check,short mode,short which_
 				}
 		}
 	if (monster_placid(which_monst) && // monstyers don't hop into bed when things are calm
-		(scenario.ter_types[ter].picture == 143))
+		(scenario_ter_type(ter).picture == 143))
 				can_enter = FALSE;
-	if ((scenario.ter_types[ter].picture <= 212) && (scenario.ter_types[ter].picture >= 207))
+	if ((scenario_ter_type(ter).picture <= 212) && (scenario_ter_type(ter).picture >= 207))
 		can_enter = FALSE;
 	if (ter == 90) {
 			if ((is_combat()) && (which_combat_type == 0)) {
@@ -1111,11 +1113,11 @@ Boolean monst_check_special_terrain(location where_check,short mode,short which_
 		case 1:
 			can_enter = FALSE;
 			if (!(monster_placid(which_monst))) {
-				t_d.terrain[where_check.x][where_check.y] = scenario.ter_types[ter].flag1;
-				combat_terrain[where_check.x][where_check.y] = scenario.ter_types[ter].flag1;
+				t_d.terrain[where_check.x][where_check.y] = scenario_ter_type(ter).flag1;
+				combat_terrain[where_check.x][where_check.y] = scenario_ter_type(ter).flag1;
 				do_look = TRUE;
 				if (point_onscreen(center,where_check))
-					play_sound(scenario.ter_types[ter].flag2);
+					play_sound(scenario_ter_type(ter).flag2);
 				}
 			break;
 

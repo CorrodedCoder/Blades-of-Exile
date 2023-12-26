@@ -15,6 +15,8 @@
 #include <cstdio>
 #include "graphutl_helpers.hpp"
 #include "boe/item.hpp"
+#include "scenario.hpp"
+
 
 extern HWND	mainPtr;
 extern short overall_mode;
@@ -321,7 +323,7 @@ void draw_monsters()
 						ter = t_d.terrain[c_town.monst.dudes[i].m_loc.x][c_town.monst.dudes[i].m_loc.y];
 						// in bed?
 						if ((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
-							(scenario.ter_types[ter].picture == 143) && 
+							(scenario_ter_type(ter).picture == 143) && 
 							((c_town.monst.dudes[i].m_d.m_type < 7) 
 							&& (c_town.monst.dudes[i].m_d.m_type != 1) && (c_town.monst.dudes[i].m_d.m_type != 2))
 							&& ((c_town.monst.dudes[i].active == 1) || (monst_target[i] == 6)) &&
@@ -358,7 +360,7 @@ void draw_monsters()
 								 ,k);
 								ter = t_d.terrain[c_town.monst.dudes[i].m_loc.x][c_town.monst.dudes[i].m_loc.y];
 								if ((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
-									(scenario.ter_types[ter].picture == 143) && 
+									(scenario_ter_type(ter).picture == 143) && 
 									((c_town.monst.dudes[i].m_d.m_type < 7) 
 										&& (c_town.monst.dudes[i].m_d.m_type != 1) && (c_town.monst.dudes[i].m_d.m_type != 2))
 									&& ((c_town.monst.dudes[i].active == 1) || (monst_target[i] == 6)) &&
@@ -691,7 +693,7 @@ void draw_party_symbol(short mode,location center)
 			source_rect = get_party_template_rect(i,(party.direction < 4) ? 0 : 1);
 
 			// now wedge in bed graphic
-			if ((is_town()) && (scenario.ter_types[t_d.terrain[c_town.p_loc.x][c_town.p_loc.y]].picture == 143))
+			if ((is_town()) && (scenario_ter_type(t_d.terrain[c_town.p_loc.x][c_town.p_loc.y]).picture == 143))
 				draw_one_terrain_spot((short) target.x,(short) target.y,10230,0);
 				else Draw_Some_Item(party_template_gworld, source_rect, terrain_screen_gworld, target, 1, 0);
 		}
@@ -851,7 +853,7 @@ Boolean is_wall(unsigned char ter_type)////
 {
 	short pic;
 
-	pic = scenario.ter_types[ter_type].picture;
+	pic = scenario_ter_type(ter_type).picture;
 	
 	if ((pic >= 88) && (pic <= 120))
 		return TRUE;
@@ -862,7 +864,7 @@ Boolean is_ground(unsigned char ter_type)
 {
 	short pic;
 
-	pic = scenario.ter_types[ter_type].picture;
+	pic = scenario_ter_type(ter_type).picture;
 	if ((pic >= 0) && (pic <= 87))
 		return TRUE;
 	if ((pic >= 121) && (pic <= 122))

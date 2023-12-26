@@ -1,6 +1,3 @@
-
-#include <Windows.h>
-
 #include "global.h"
 #include "itemdata.h"
 #include <cstdio>

@@ -1023,8 +1023,8 @@ void adventure_notes_event_filter (short item_hit)
 			switch (party.special_notes_str[i][0] / 1000) {
 				case 0: strcpy(place_str,data_store->scen_strs[party.special_notes_str[i][0] % 1000]); break;
 				case 1:
-					 load_outdoors(party.special_notes_str[i][1] % scenario.out_width,
-					 	party.special_notes_str[i][1] / scenario.out_width, 
+					 load_outdoors(party.special_notes_str[i][1] % scenario_out_width(),
+					 	party.special_notes_str[i][1] / scenario_out_width(), 
 					 0,0,1,party.special_notes_str[i][0] % 1000,(char *)place_str);
 					break;
 				case 2: load_town(party.special_notes_str[i][1],2,party.special_notes_str[i][0],(char *)place_str); break;
@@ -1041,8 +1041,8 @@ void adventure_notes_event_filter (short item_hit)
 			switch (party.special_notes_str[i][0] / 1000) {
 				case 0: strcpy(place_str,data_store->scen_strs[party.special_notes_str[i][0] % 1000]); break;
 				case 1:
-					 load_outdoors(party.special_notes_str[i][1] % scenario.out_width,
-					 	party.special_notes_str[i][1] / scenario.out_width, 
+					 load_outdoors(party.special_notes_str[i][1] % scenario_out_width(),
+					 	party.special_notes_str[i][1] / scenario_out_width(), 
 					 0,0,1,party.special_notes_str[i][0] % 1000,(char *)place_str);
 					break;
 				case 2: load_town(party.special_notes_str[i][1],2,party.special_notes_str[i][0] % 1000,(char *)place_str); break;
@@ -1086,8 +1086,8 @@ void adventure_notes()
 			switch (party.special_notes_str[i][0] / 1000) {
 				case 0: strcpy(place_str,data_store->scen_strs[party.special_notes_str[i][0] % 1000]); break;
 				case 1:
-					 load_outdoors(party.special_notes_str[i][1] % scenario.out_width,
-					 	party.special_notes_str[i][1] / scenario.out_width, 
+					 load_outdoors(party.special_notes_str[i][1] % scenario_out_width(),
+					 	party.special_notes_str[i][1] / scenario_out_width(), 
 					 0,0,1,party.special_notes_str[i][0] % 1000,(char *)place_str);
 					break;
 				case 2: load_town(party.special_notes_str[i][1],2,party.special_notes_str[i][0] % 1000,(char *)place_str); break;

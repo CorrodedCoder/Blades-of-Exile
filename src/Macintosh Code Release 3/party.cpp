@@ -487,8 +487,8 @@ void put_party_in_scen()
 	update_pc_graphics();
 		
 	current_pc = first_active_pc();
-	force_town_enter(scenario.which_town_start,scenario.where_start);
-	start_town_mode(scenario.which_town_start,9);
+	force_town_enter(scenario_which_town_start(),scenario.where_start);
+	start_town_mode(scenario_which_town_start(),9);
 	center = scenario.where_start;
 	update_explored(scenario.where_start);
 	overall_mode = 1;
@@ -1855,8 +1855,8 @@ void do_priest_spell(short pc_num,short spell_num) ////
 				}
 			adven[pc_num].cur_sp -= spell_cost[1][spell_num];
 			add_string_to_buf("  You are moved... ");
-			force_town_enter(scenario.which_town_start,scenario.where_start);
-			start_town_mode(scenario.which_town_start,9);
+			force_town_enter(scenario_which_town_start(),scenario.where_start);
+			start_town_mode(scenario_which_town_start(),9);
 			position_party(scenario.out_sec_start.x,scenario.out_sec_start.y,
 				scenario.out_start.x,scenario.out_start.y);
 			center = c_town.p_loc = scenario.where_start;
@@ -2191,16 +2191,16 @@ void cast_town_spell(location where) ////
 				break;
 				
 			case 20:
-				switch (scenario.ter_types[ter].special) { ////
+				switch (scenario_ter_type(ter).special) { ////
 					case 9: case 10:
 						r1 = get_ran(1,0,100) - 5 * stat_adj(who_cast, skill::Intelligence) + 5 * c_town.difficulty;
-						r1 += scenario.ter_types[ter].flag2 * 7;
-						if (scenario.ter_types[ter].flag2 == 10)
+						r1 += scenario_ter_type(ter).flag2 * 7;
+						if (scenario_ter_type(ter).flag2 == 10)
 							r1 = 10000;
 						if (r1 < (135 - combat_percent[min(19,adven[who_cast].level)])) {
 							add_string_to_buf("  Door unlocked.                 ");
 							play_sound(9);
-							t_d.terrain[where.x][where.y] = scenario.ter_types[ter].flag1;
+							t_d.terrain[where.x][where.y] = scenario_ter_type(ter).flag1;
 							}
 							else {
 								play_sound(41);
@@ -2264,9 +2264,9 @@ void crumble_wall(location where)
 	if (loc_off_act_area(where) == TRUE)
 		return;
 	ter = t_d.terrain[where.x][where.y];
-	if (scenario.ter_types[ter].special == 7) {
+	if (scenario_ter_type(ter).special == 7) {
 			play_sound(60);
-				t_d.terrain[where.x][where.y] = scenario.ter_types[ter].flag1;
+				t_d.terrain[where.x][where.y] = scenario_ter_type(ter).flag1;
 			add_string_to_buf("  Barrier crumbles.");	
 		}
 

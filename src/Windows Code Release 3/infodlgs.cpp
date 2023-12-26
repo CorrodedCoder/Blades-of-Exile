@@ -21,6 +21,7 @@
 #include "fileio.h"
 #include "boe/utility.hpp"
 #include "boe/item.hpp"
+#include "scenario.hpp"
 
 short mage_spell_pos = 0,priest_spell_pos = 0,skill_pos = 0;
 static pc_record_type *store_pc;
@@ -976,8 +977,8 @@ void adventure_notes_event_filter (short item_hit)
 							else strcpy(place_str,scen_strs2[(party.special_notes_str[i][0] % 1000) - 160]);
 						break;
 				case 1:
-					 load_outdoors(party.special_notes_str[i][1] % scenario.out_width,
-						party.special_notes_str[i][1] / scenario.out_width,
+					 load_outdoors(party.special_notes_str[i][1] % scenario_out_width(),
+						party.special_notes_str[i][1] / scenario_out_width(),
 					 0,0,1,party.special_notes_str[i][0] % 1000,(char *)place_str);
 					break;
 				case 2: load_town(party.special_notes_str[i][1],2,party.special_notes_str[i][0],(char *)place_str); break;
@@ -997,8 +998,8 @@ void adventure_notes_event_filter (short item_hit)
 							else strcpy(place_str,scen_strs2[(party.special_notes_str[i][0] % 1000) - 160]); 
 					break;
 				case 1:
-					 load_outdoors(party.special_notes_str[i][1] % scenario.out_width,
-					 	party.special_notes_str[i][1] / scenario.out_width, 
+					 load_outdoors(party.special_notes_str[i][1] % scenario_out_width(),
+					 	party.special_notes_str[i][1] / scenario_out_width(), 
 					 0,0,1,party.special_notes_str[i][0] % 1000,(char *)place_str);
 					break;
 				case 2: load_town(party.special_notes_str[i][1],2,party.special_notes_str[i][0] % 1000,(char *)place_str); break;
@@ -1044,8 +1045,8 @@ void adventure_notes()
 							else strcpy(place_str,scen_strs2[(party.special_notes_str[i][0] % 1000) - 160]);
 					break;
 				case 1:
-					 load_outdoors(party.special_notes_str[i][1] % scenario.out_width,
-					 	party.special_notes_str[i][1] / scenario.out_width, 
+					 load_outdoors(party.special_notes_str[i][1] % scenario_out_width(),
+					 	party.special_notes_str[i][1] / scenario_out_width(), 
 					 0,0,1,party.special_notes_str[i][0] % 1000,(char *)place_str);
 					break;
 				case 2: load_town(party.special_notes_str[i][1],2,party.special_notes_str[i][0] % 1000,(char *)place_str); break;

@@ -14,6 +14,8 @@
 #include "exlsound.h"
 #include "graphutl.h"
 #include "graphutl_helpers.hpp"
+#include "scenario.hpp"
+
 
 extern HWND	mainPtr;
 extern RECT	windRect;
@@ -1666,7 +1668,7 @@ Boolean is_nature(char x, char y)
 	unsigned char ter_type;
 	
 	ter_type = coord_to_ter((short) x,(short) y);
-	pic = scenario.ter_types[ter_type].picture;
+	pic = scenario_ter_type(ter_type).picture;
 	if ((pic >= 0) && (pic <= 45))
 		return TRUE;
 	if ((pic >= 67) && (pic <= 73))
@@ -2149,7 +2151,7 @@ Boolean extend_road_terrain(unsigned char ter)
 							192,193,194,195,196, 197,191,200,201};
 	
 	for (i = 0; i < 39; i++)
-		if (scenario.ter_types[ter].picture == extend_pics[i])
+		if (scenario_ter_type(ter).picture == extend_pics[i])
 			return TRUE;
 	return FALSE;
 }

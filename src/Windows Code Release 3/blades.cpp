@@ -46,6 +46,7 @@ Blades of Exile Game/Scenario Editor/Character Editor
 #include "exlsound.h"
 #include "infodlgs.h"
 #include "graphutl.h"
+#include "scenario.hpp"
 
 void check_game_done();
 Boolean handle_menu (short item, HMENU menu);
@@ -184,7 +185,7 @@ HDC main_dc,main_dc2,main_dc3;
 HINSTANCE store_hInstance;
 HACCEL accel;
 BOOL event_handled;
-scenario_data_type scenario;
+extern scenario_data_type scenario;
 piles_of_stuff_dumping_type data_store;
 piles_of_stuff_dumping_type2 data_store2;
 piles_of_stuff_dumping_type3 data_store3;
@@ -813,7 +814,7 @@ Boolean handle_menu (short item, HMENU menu)
 				ASB("Add PC: You already have 6 PCs.");
 				print_buf();
 				}
-			if (c_town.town_num == scenario.which_town_start) {
+			if (c_town.town_num == scenario_which_town_start()) {
 				give_help(56,0,0);
 				create_pc(6,0);
 				}
