@@ -48,7 +48,6 @@ extern short on_monst_menu[256],cur_town_talk_loaded;
 extern big_tr_type  t_d;
 extern location tinraya_portculli[12];
 extern char scen_strs2[110][256];
-extern scenario_data_type scenario;
 extern piles_of_stuff_dumping_type3 data_store3;
 extern piles_of_stuff_dumping_type5 data_store5;
 

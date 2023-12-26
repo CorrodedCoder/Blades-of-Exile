@@ -19,6 +19,7 @@
 #include "graphutl_helpers.hpp"
 #include "boe/utility.hpp"
 #include "boe/item.hpp"
+#include "scenario.hpp"
 
 static const std::array heal_types{"Heal Damage","Cure Poison","Cure Disease","Cure Paralysis",
 		"Uncurse Items","Cure Stoned Character","Raise Dead","Resurrection","Cure Dumbfounding"};
@@ -32,7 +33,6 @@ extern Boolean play_sounds,boom_anim_active,cartoon_happening,in_startup_mode;
 extern HBITMAP fields_gworld,mixed_gworld,dlg_buttons_gworld,terrain_screen_gworld,missiles_gworld;
 extern party_record_type party;
 extern talking_record_type talking;
-extern scenario_data_type scenario;
 
 extern Adventurers adven;
 extern RECT sbar_rect,item_sbar_rect,shop_sbar_rect;
@@ -1191,7 +1191,7 @@ void place_talk_str(char *str_to_place,const char *str_to_place2,short color,REC
 
 	// Place face of talkee
 	if ((color == 0) && (c_rect.right == 0)) {
-		face_to_draw = scenario.scen_monsters[store_monst_type].default_facial_pic;
+		face_to_draw = scenario_monster(store_monst_type).default_facial_pic;
 		if (store_talk_face_pic >= 0)
 			face_to_draw = store_talk_face_pic;
 		if (store_talk_face_pic >= 1000) {

@@ -50,7 +50,7 @@ monster_record_type return_monster_template(unsigned char store)
 	short m_num,i;
 	
 	m_num = store;
-	monst = scenario.scen_monsters[store];
+	monst = scenario_monster(store);
 	if (monst.spec_skill == 11)
 		monst.picture_num = 0;
 		
@@ -247,14 +247,14 @@ location get_monst_head(short m_num)
 
 short get_monst_picnum(unsigned char monst)
 {
-	return scenario.scen_monsters[monst].picture_num;
+	return scenario_monster(monst).picture_num;
 }
 
 void get_monst_dims(unsigned char monst,short *width, short *height)
 {
 
-	*width = scenario.scen_monsters[monst].x_width;
-	*height = scenario.scen_monsters[monst].y_width;
+	*width = scenario_monster(monst).x_width;
+	*height = scenario_monster(monst).y_width;
 }
 
 // Used to set up monsters for outdoor wandering encounters.
@@ -1353,7 +1353,7 @@ short place_monster(unsigned char which,location where)
 	
 	if (i < T_M) {
 		c_town.monst.dudes[i].m_d = return_monster_template((unsigned char) which);
-		c_town.monst.dudes[i].attitude = scenario.scen_monsters[which].default_attitude;
+		c_town.monst.dudes[i].attitude = scenario_monster(which).default_attitude;
 		if (c_town.monst.dudes[i].attitude % 2 == 0)
 			c_town.monst.dudes[i].attitude = 1;
 		c_town.monst.dudes[i].mobile = TRUE;
@@ -1478,7 +1478,7 @@ short get_summon_monster(short summon_class)
 	
 	for (i = 0; i < 200; i++) {
 		j = get_ran(1,0,255);
-		if (scenario.scen_monsters[j].summon_type == summon_class) {
+		if (scenario_monster(j).summon_type == summon_class) {
 			return j;
 			}
 		}

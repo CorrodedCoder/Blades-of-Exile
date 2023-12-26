@@ -591,7 +591,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 						t_d.creatures[i].start_loc = spot_hit;
 						t_d.creatures[i].number = mode_count;
 						t_d.creatures[i].start_attitude =
-							scenario.scen_monsters[mode_count].default_attitude;
+							scenario_monster(mode_count).default_attitude;
 						t_d.creatures[i].mobile = 1;
 						t_d.creatures[i].time_flag = 0;
 						t_d.creatures[i].extra1 = 0;
@@ -603,7 +603,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 						t_d.creatures[i].monster_time = 0;
 						t_d.creatures[i].personality = -1;
 						t_d.creatures[i].special_on_kill = -1;
-						t_d.creatures[i].facial_pic = scenario.scen_monsters[mode_count].default_facial_pic;
+						t_d.creatures[i].facial_pic = scenario_monster(mode_count).default_facial_pic;
 						if ((i >= 30) && (scenario_town_size(cur_town) == 2)) {
 							give_error("Small towns can have at most 30 preset monsters.","",0); // error
 							t_d.creatures[i].number = 0;
@@ -3339,9 +3339,9 @@ Boolean monst_on_space(location loc,short m_num)
 	if (t_d.creatures[m_num].number == 0)
 		return FALSE;
 	if ((loc.x - t_d.creatures[m_num].start_loc.x >= 0) && 
-	(loc.x - t_d.creatures[m_num].start_loc.x <= scenario.scen_monsters[t_d.creatures[m_num].number].x_width - 1) &&
+	(loc.x - t_d.creatures[m_num].start_loc.x <= scenario_monster(t_d.creatures[m_num].number).x_width - 1) &&
 	(loc.y - t_d.creatures[m_num].start_loc.y >= 0) && 
-	(loc.y - t_d.creatures[m_num].start_loc.y <= scenario.scen_monsters[t_d.creatures[m_num].number].y_width - 1))
+	(loc.y - t_d.creatures[m_num].start_loc.y <= scenario_monster(t_d.creatures[m_num].number).y_width - 1))
 		return TRUE;
 	return FALSE;	
 	

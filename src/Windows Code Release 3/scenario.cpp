@@ -37,3 +37,8 @@ unsigned char scenario_intro_pic(void)
 {
 	return scenario.intro_pic;
 }
+
+const monster_record_type& scenario_monster(short index)
+{
+	return scenario.scen_monsters[index];
+}

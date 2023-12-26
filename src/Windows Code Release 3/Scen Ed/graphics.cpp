@@ -788,21 +788,21 @@ void draw_monsts(HDC hdc)
 		if (t_d.creatures[i].number != 0) {
 				where_draw.x = t_d.creatures[i].start_loc.x - cen_x + 4;
 				where_draw.y = t_d.creatures[i].start_loc.y - cen_y + 4;
-				width = scenario.scen_monsters[t_d.creatures[i].number].x_width;
-				height = scenario.scen_monsters[t_d.creatures[i].number].y_width;
+				width = scenario_monster(t_d.creatures[i].number).x_width;
+				height = scenario_monster(t_d.creatures[i].number).y_width;
 				
 				for (k = 0; k < width * height; k++) {
 					store_loc = where_draw;
 					if ((where_draw.x == boe_clamp(where_draw.x,0,8)) && 
 					(where_draw.y == boe_clamp(where_draw.y,0,8)) && 
-						(scenario.scen_monsters[t_d.creatures[i].number].picture_num >= 1000)) {
-						source_rect = get_custom_rect((scenario.scen_monsters[t_d.creatures[i].number].picture_num + k) % 1000);
+						(scenario_monster(t_d.creatures[i].number).picture_num >= 1000)) {
+						source_rect = get_custom_rect((scenario_monster(t_d.creatures[i].number).picture_num + k) % 1000);
 						store_loc.x += k % width;
 						store_loc.y += k / width;
 						Draw_Some_Item(spec_scen_g, source_rect, ter_draw_gworld, store_loc, 1, 0);
 						}
-						else if (scenario.scen_monsters[t_d.creatures[i].number].picture_num < 1000) {
-							m_start_pic = m_pic_index[scenario.scen_monsters[t_d.creatures[i].number].picture_num] + k;
+						else if (scenario_monster(t_d.creatures[i].number).picture_num < 1000) {
+							m_start_pic = m_pic_index[scenario_monster(t_d.creatures[i].number).picture_num] + k;
 							from_gworld = monst_gworld[m_start_pic / 20];
 							m_start_pic = m_start_pic % 20;
 							source_rect = calc_rect(2 * (m_start_pic / 10), m_start_pic % 10);				
