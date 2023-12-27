@@ -3,18 +3,6 @@
 #include "global.h"
 #include <cmath>
 
-short get_ran (short times,short  min,short  max)
-{
-	long int store;
-	short i, to_ret = 0;
-	
-	for (i = 1; i < times + 1; i++) {
-		store = Random();
-		to_ret = to_ret + min + (((store + 32767) * (max - min + 1)) / 65536);
-		}
-	return to_ret;
-}
-
 short s_pow(short x,short y)
 {
 	return (short) pow((double) x, (double) y);

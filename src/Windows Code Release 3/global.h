@@ -71,7 +71,6 @@ typedef struct {unsigned char pattern[9][9];} effect_pat_type;
 short s_pow(short x,short y);
 short a_v(short x);
 short ex_abs(short x);
-short get_ran (short times,short  min,short  max);
 Boolean same_point(location p1,location p2);
 void pause(short length);
 void Delay(short val,long *dummy);

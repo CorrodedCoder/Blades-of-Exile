@@ -10,20 +10,6 @@ extern char talk_strs[170][256];
 extern char town_strs[180][256];
 extern short give_delays;
 
-short get_ran (short times,short  min,short  max)
-{
-	short store;
-	short i, to_ret = 0;
-
-	if ((max - min + 1) == 0)
-		return 0;
-	for (i = 1; i < times + 1; i++) {
-		store = rand() % (max - min + 1);
-		to_ret = to_ret + min + store;
-		}
-	return to_ret;
-}
-
 short s_pow(short x,short y)
 {
 	return (short) pow((double) x, (double) y);
