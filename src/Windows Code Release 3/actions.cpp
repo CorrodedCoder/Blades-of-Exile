@@ -33,7 +33,7 @@ static std::array<RECT, 7> bottom_buttons;
 static std::array<RECT, 10> town_buttons;
 static std::array<RECT, 9> combat_buttons;
 static const RECT world_screen{ 23, 23, 274,346 };
-std::array<RECT, 9> item_screen_button_rects{ {
+extern const std::array<RECT, 9> item_screen_button_rects{ {
 	{11,126,28,140}, {40,126,57,140}, {69,126,86,140},
 	{98,126,115,140}, {127,126,144,140}, {156,126,173,140},
 	{176,126,211,141},{213,126,248,141},{251,127,267,139}
@@ -1130,10 +1130,9 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 		point_in_area.y -= ITEM_WIN_UL_Y;
 
 		for (i = 0; i < 9; i++)
-			if ((item_bottom_button_active[i] > 0) && (PtInRect (&item_screen_button_rects[i],point_in_area))) {
-				OffsetRect(&item_screen_button_rects[i],ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
-				arrow_button_click(item_screen_button_rects[i]);
-				OffsetRect(&item_screen_button_rects[i],-1 * ITEM_WIN_UL_X,-1 * ITEM_WIN_UL_Y);
+			if ((item_bottom_button_active[i] > 0) && (PtInRect (&item_screen_button_rects[i],point_in_area)))
+			{
+				arrow_button_click(offset_rect(item_screen_button_rects[i], ITEM_WIN_UL_X, ITEM_WIN_UL_Y));
 				switch (i) {
 					case 0: case 1: case 2: case 3: case 4: case 5:
 						if ((prime_time() == FALSE) && (overall_mode != 20) && (overall_mode != 21))

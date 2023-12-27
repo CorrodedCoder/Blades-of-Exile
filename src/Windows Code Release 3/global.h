@@ -1,3 +1,5 @@
+#pragma once
+
 #include "global_structs.hpp"
 
 #define T_M 	60
@@ -63,3 +65,10 @@ Boolean sd_legit(short a, short b);
 #else
 #define BOE_INIT_RECT(top, left, bottom, right) {top, left, bottom, right}
 #endif
+
+static inline RECT offset_rect(const RECT& input, int x, int y)
+{
+	auto output{ input };
+	::OffsetRect(&output, x, y);
+	return output;
+}

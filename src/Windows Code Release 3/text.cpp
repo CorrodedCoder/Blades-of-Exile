@@ -89,7 +89,7 @@ extern std::array< std::array<RECT, 5>, 6> pc_buttons;
  // name, hp, sp, info, trade
 extern std::array< std::array<Boolean, 6>, 8> item_area_button_active;
 extern std::array< std::array<Boolean, 5>, 6> pc_area_button_active;
-extern std::array<RECT, 9> item_screen_button_rects;
+extern const std::array<RECT, 9> item_screen_button_rects;
 extern short spec_item_array[60];
 extern const short abil_chart[200],store_anim_type;
 // combat globals

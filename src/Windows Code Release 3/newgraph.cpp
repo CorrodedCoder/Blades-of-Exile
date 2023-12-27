@@ -1222,9 +1222,7 @@ void place_talk_str(char *str_to_place,const char *str_to_place2,short color,REC
 		else SetTextColor(hdc,PALETTEINDEX(c[6]));
 	for (i = 0; i < 9; i++)
 		if ((talk_end_forced == FALSE) || (i == 6) || (i == 5)) {
-			RECT tmp{ preset_words[i].word_rect };
-			OffsetRect(&tmp,0,-2);
-			char_win_draw_string(hdc,tmp,preset_words[i].word,2,18);
+			char_win_draw_string(hdc, offset_rect(preset_words[i].word_rect, 0, -2),preset_words[i].word,2,18);
 			}
 	// Place bulk of what said. Save words.
 	//TextSize(14);
