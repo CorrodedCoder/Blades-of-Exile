@@ -1,5 +1,9 @@
+#pragma once
+
+#include "boe/game_file_structures.hpp"
+
 const item_record_type& get_stored_item(short which);
-item_record_type get_food();
+item_record_type get_food(void);
 const item_record_type& get_weapon(short loot,short level);
 const item_record_type& get_armor(short loot,short level);
 const item_record_type& get_helm(short loot);

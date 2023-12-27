@@ -1,8 +1,6 @@
-#include "global.h"
 #include "itemdata.h"
 #include "scenario.hpp"
-#include <cstdio>
-#include <cstring>
+#include "boe/utility.hpp"
 
 static const short loot_min[5] = {0,0,5,50,400};
 static const short loot_max[5] = {3,8,40,800,4000};
@@ -17,7 +15,7 @@ const item_record_type& get_stored_item(short which)
 	return scenario_item(which);
 }
 
-item_record_type get_food()
+item_record_type get_food(void)
 {
 	item_record_type food = 
 		{ item_variety::Food,0, 0,0,0,0,0,0, 62,0,0,0,0,0, 0, 0,0, {0,0},"Food", "Food",0,0,0,0};
