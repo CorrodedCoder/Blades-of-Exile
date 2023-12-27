@@ -980,7 +980,6 @@ Boolean monst_check_special_terrain(location where_check,short mode,short which_
 	location from_loc,to_loc;
 	Boolean do_look = FALSE; // If becomes true, terrain changed, so need to update what party sees
 	creature_data_type *which_m;
-	short ter_abil;
 
 	from_loc = c_town.monst.dudes[which_monst].m_loc;
 	switch (mode) {	
@@ -992,15 +991,15 @@ Boolean monst_check_special_terrain(location where_check,short mode,short which_
 			break;	
 		}
 	which_m = &c_town.monst.dudes[which_monst];
-	ter_abil = scenario_ter_type(ter).special;
+	const auto ter_abil = scenario_ter_type(ter).special;
 	
-		if ((mode > 0) && (ter_abil >= 16) && 
-			(ter_abil <= 19)) {
+		if ((mode > 0) && (ter_abil >= terrain_special::ConveyorNorth) &&
+			(ter_abil <= terrain_special::ConveyorWest)) {
 			if (
-				((ter_abil == 16) && (where_check.y > from_loc.y)) ||
-				((ter_abil == 17) && (where_check.x < from_loc.x)) ||
-				((ter_abil == 18) && (where_check.y < from_loc.y)) ||
-				((ter_abil == 19) && (where_check.x > from_loc.x)) ) {
+				((ter_abil == terrain_special::ConveyorNorth) && (where_check.y > from_loc.y)) ||
+				((ter_abil == terrain_special::ConveyorEast) && (where_check.x < from_loc.x)) ||
+				((ter_abil == terrain_special::ConveyorSouth) && (where_check.y < from_loc.y)) ||
+				((ter_abil == terrain_special::ConveyorWest) && (where_check.x > from_loc.x)) ) {
 					return FALSE;
 					}
 			}
@@ -1109,7 +1108,7 @@ Boolean monst_check_special_terrain(location where_check,short mode,short which_
 		}
 	switch (ter_abil) {
 		// changing ter
-		case 1:
+		case terrain_special::ChangeWhenStepOn:
 			can_enter = FALSE;
 			if (!(monster_placid(which_monst))) {
 				t_d.terrain[where_check.x][where_check.y] = scenario_ter_type(ter).flag1;
@@ -1120,14 +1119,20 @@ Boolean monst_check_special_terrain(location where_check,short mode,short which_
 				}
 			break;
 
-		case 20: case 21: case 15: 
+		case terrain_special::BlockedToMonsters:
+		case terrain_special::TownEntrance:
+		case terrain_special::Waterfall:
 			can_enter = FALSE;
 			break;
 						
-		case 2:
+		case terrain_special::DoesFireDamage:
 			if (c_town.monst.dudes[which_monst].m_d.immunities & 8)
 				return TRUE;
 				else return FALSE;
+			break;
+
+		default:
+			// CC: Not present in original source.
 			break;
 		}
 

@@ -341,28 +341,26 @@ void sound_pause(long len) {
 }
 void move_sound(unsigned char ter,short step)
 {
-	short pic,spec;
-	
-	pic = scenario_ter_type(ter).picture;
-	spec = scenario_ter_type(ter).special;
-	
-						if ((monsters_going == FALSE) && (overall_mode < 10) && (party.in_boat >= 0)) {
-							if (spec == 21)
-								return;
-							play_sound(48);
-							}
-						else if ((monsters_going == FALSE) && (overall_mode < 10) && (party.in_horse >= 0)) {////
-							play_sound(85);
-							}
-							else if ((ter >= 84) && (ter <= 89))
-								play_sound(47);
-								else if ((pic == 80) || (pic == 76)) // already played in special terrain check
-									; 
-									else if (pic == 180)
-									play_sound(55);
-									else if (step % 2 == 0)
-										play_sound(49);
-										else play_sound(50);
+	const auto& terrain = scenario_ter_type(ter);
+
+	if ((monsters_going == FALSE) && (overall_mode < 10) && (party.in_boat >= 0)) {
+		if (terrain.special == terrain_special::TownEntrance)
+			return;
+		play_sound(48);
+	}
+	else if ((monsters_going == FALSE) && (overall_mode < 10) && (party.in_horse >= 0)) {////
+		play_sound(85);
+	}
+	else if ((ter >= 84) && (ter <= 89))
+		play_sound(47);
+	else if ((terrain.picture == 80) || (terrain.picture == 76)) // already played in special terrain check
+		; 
+	else if (terrain.picture == 180)
+		play_sound(55);
+	else if (step % 2 == 0)
+		play_sound(49);
+	else
+		play_sound(50);
 }
 
 void incidental_noises()

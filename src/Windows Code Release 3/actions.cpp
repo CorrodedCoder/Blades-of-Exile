@@ -503,7 +503,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 								add_string_to_buf("Rest: Not enough food.            ");
 								else if (nearest_monster() <= 3)
 								add_string_to_buf("Rest: Monster too close.            ");
-								else if ((scenario_ter_type(ter).special >= 2) && (scenario_ter_type(ter).special <= 6))
+								else if ((scenario_ter_type(ter).special >= terrain_special::DoesFireDamage) && (scenario_ter_type(ter).special <= terrain_special::DiseasedLand))
 									add_string_to_buf("Rest: It's dangerous here.");////
 								else if (flying() == TRUE)
 									add_string_to_buf("Rest: Not while flying.           ");
@@ -807,7 +807,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 						else need_redraw = TRUE;					
 					
 					storage = out[party.p_loc.x][party.p_loc.y];
-					if (scenario_ter_type(storage).special == 21) {//// town entry
+					if (scenario_ter_type(storage).special == terrain_special::TownEntrance) {//// town entry
 
 						if (party.direction == 0) find_direction_from = 2;
 						else if (party.direction == 4) find_direction_from = 0;
@@ -2725,7 +2725,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 		// not in towns
 		&& ((terrain.boat_over == FALSE)
 			|| ((real_dest.x != party.p_loc.x) && (real_dest.y != party.p_loc.y)))
-			&& (terrain.special != 21)) {
+			&& (terrain.special != terrain_special::TownEntrance)) {
 					add_string_to_buf("You leave the boat.");
 					party.in_boat = -1;
 					}
@@ -2734,7 +2734,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 				return FALSE;
 			else if ((outd_is_blocked(real_dest) == FALSE) 
 				&& (terrain.boat_over == TRUE)
-				&& (terrain.special != 21)) {
+				&& (terrain.special != terrain_special::TownEntrance)) {
 				if ((fancy_choice_dialog(1086,0)) == 1)
 					forced = TRUE;
 					else {
@@ -2772,7 +2772,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 			add_string_to_buf("Land before mounting horses.");
 			return FALSE;
 			}
-		if ((terrain.special >= 2) && (terrain.special <= 4)) {
+		if ((terrain.special >= terrain_special::DoesFireDamage) && (terrain.special <= terrain_special::DoesMagicalDamage)) {
 			ASB("Your horses quite sensibly refuse.");
 			return FALSE;
 			}
@@ -2800,7 +2800,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 			(terrain.fly_over == TRUE))   ) {
 		party.direction = set_direction(party.p_loc, destination); 
 
-		if ((flying() == TRUE) && (terrain.special == 21)) {
+		if ((flying() == TRUE) && (terrain.special == terrain_special::TownEntrance)) {
 			add_string_to_buf("Moved: You have to land first.               ");
 			return FALSE;
 			}
@@ -2817,7 +2817,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 		
 		if (party.in_boat >= 0) {
 				// Waterfall!!!
-				while (scenario_ter_type(out[party.p_loc.x][party.p_loc.y + 1]).special == 15) {
+				while (scenario_ter_type(out[party.p_loc.x][party.p_loc.y + 1]).special == terrain_special::Waterfall) {
 					add_string_to_buf("  Waterfall!                     ");
 					party.p_loc.y += 2;
 					party.loc_in_sec.y += 2;
@@ -2959,7 +2959,7 @@ Boolean town_move_party(location destination,short forced)
 		} 
 		else if ((is_blocked(destination) == FALSE) || (forced == 1)) {
 			if (party.in_horse >= 0) {
-				if ((terrain.special >= 2) && (terrain.special <= 4)) {
+				if ((terrain.special >= terrain_special::DoesFireDamage) && (terrain.special <= terrain_special::DoesMagicalDamage)) {
 					ASB("Your horses quite sensibly refuse.");
 					return FALSE;
 					}
@@ -3059,7 +3059,7 @@ short count_walls(location loc)
 
 Boolean is_sign(unsigned char ter)
 {
-	if (scenario_ter_type(ter).special == 11)
+	if (scenario_ter_type(ter).special == terrain_special::IsASign)
 		return TRUE;
 	return FALSE;
 }

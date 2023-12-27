@@ -355,7 +355,7 @@ Boolean is_container(location loc)
 {
 	if ((is_barrel(loc.x,loc.y)) || (is_crate(loc.x,loc.y)))
 		return TRUE;
-	if (scenario_ter_type(coord_to_ter(loc.x, loc.y)).special == 14)
+	if (scenario_ter_type(coord_to_ter(loc.x, loc.y)).special == terrain_special::IsAContainer)
 			return TRUE;
 	return FALSE;
 }
@@ -786,7 +786,7 @@ void alter_space(short i,short j,unsigned char ter)
 			t_d.terrain[i][j] = ter;
 			combat_terrain[i][j] = ter;
 			if (const auto& special{ scenario_ter_type(t_d.terrain[i][j]).special };
-				(special >= 16) && (special <= 19)
+				(special >= terrain_special::ConveyorNorth) && (special <= terrain_special::ConveyorWest)
 				)
 			{
 				belt_present = TRUE;

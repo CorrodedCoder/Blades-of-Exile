@@ -228,8 +228,8 @@ void start_town_mode(short which_town, short entry_dir)
 				current_ground = 0;
 				else if (t_d.terrain[i][j] == 2)
 				current_ground = 2;
-			if ((scenario_ter_type(t_d.terrain[i][j]).special >= 16) &&
-				(scenario_ter_type(t_d.terrain[i][j]).special <= 19))
+			if ((scenario_ter_type(t_d.terrain[i][j]).special >= terrain_special::ConveyorNorth) &&
+				(scenario_ter_type(t_d.terrain[i][j]).special <= terrain_special::ConveyorWest))
 					belt_present = TRUE;	
 		}
 	c_town.hostile = 0;
@@ -1127,7 +1127,7 @@ void pick_lock(location where,short pc_num)
 	if (pc_has_abil_equip(adven[pc_num],42) < 24)
 		r1 = r1 - 12;	
 
-	if ((scenario_ter_type(terrain).special < 9) || (scenario_ter_type(terrain).special > 10)) {
+	if ((scenario_ter_type(terrain).special < terrain_special::UnlockableTerrain) || (scenario_ter_type(terrain).special > terrain_special::UnlockableOrBashable)) {
 		add_string_to_buf("  Wrong terrain type.           ");
 		return;
 		}
@@ -1155,13 +1155,13 @@ void bash_door(location where,short pc_num)
 	terrain = t_d.terrain[where.x][where.y];
 	r1 = rand_short(0,100) - 15 * stat_adj(adven[pc_num], skill::Strength) + c_town.difficulty * 4;
 	
-	if ((scenario_ter_type(terrain).special < 9) || (scenario_ter_type(terrain).special > 10)) {
+	if ((scenario_ter_type(terrain).special < terrain_special::UnlockableTerrain) || (scenario_ter_type(terrain).special > terrain_special::UnlockableOrBashable)) {
 		add_string_to_buf("  Wrong terrain type.           ");
 		return;
 		}
 
 	unlock_adjust = scenario_ter_type(terrain).flag2;
-	if ((unlock_adjust >= 5) || (r1 > (unlock_adjust * 15 + 40)) || (scenario_ter_type(terrain).special != 10))  {
+	if ((unlock_adjust >= 5) || (r1 > (unlock_adjust * 15 + 40)) || (scenario_ter_type(terrain).special != terrain_special::UnlockableOrBashable))  {
 					add_string_to_buf("  Didn't work.                ");
 					damage_pc(pc_num,rand_short(1,4),4,-1);					
 				} 
@@ -1759,9 +1759,9 @@ void display_map()
 
 Boolean is_door(location destination)
 {
-	if ((scenario_ter_type(t_d.terrain[destination.x][destination.y]).special == 9) ||
-		(scenario_ter_type(t_d.terrain[destination.x][destination.y]).special == 1) ||
-		(scenario_ter_type(t_d.terrain[destination.x][destination.y]).special == 10))
+	if ((scenario_ter_type(t_d.terrain[destination.x][destination.y]).special == terrain_special::UnlockableTerrain) ||
+		(scenario_ter_type(t_d.terrain[destination.x][destination.y]).special == terrain_special::ChangeWhenStepOn) ||
+		(scenario_ter_type(t_d.terrain[destination.x][destination.y]).special == terrain_special::UnlockableOrBashable))
 			return TRUE;
 	return FALSE;
 }

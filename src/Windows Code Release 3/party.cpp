@@ -1980,7 +1980,8 @@ void cast_town_spell(location where)
 				
 			case 20:
 				switch (scenario_ter_type(ter).special) { ////
-					case 9: case 10:
+					case terrain_special::UnlockableTerrain:
+					case terrain_special::UnlockableOrBashable:
 						r1 = rand_short(0,100) - 5 * stat_adj(adven[who_cast], skill::Intelligence) + 5 * c_town.difficulty;
 						r1 += scenario_ter_type(ter).flag2 * 7;
 						if (scenario_ter_type(ter).flag2 == 10)
@@ -2049,7 +2050,7 @@ void crumble_wall(location where)
 	if (loc_off_act_area(where) == TRUE)
 		return;
 	ter = t_d.terrain[where.x][where.y];
-	if (scenario_ter_type(ter).special == 7) {
+	if (scenario_ter_type(ter).special == terrain_special::CrumblingTerrain) {
 			play_sound(60);
 				t_d.terrain[where.x][where.y] = scenario_ter_type(ter).flag1;
 			add_string_to_buf("  Barrier crumbles.");	

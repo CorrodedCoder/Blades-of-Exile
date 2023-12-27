@@ -55,9 +55,39 @@ struct talking_record_type {
 };
 static_assert(sizeof(talking_record_type) == 1400);
 
+enum class terrain_special : unsigned char
+{
+	None = 0,
+	ChangeWhenStepOn = 1,
+	DoesFireDamage = 2,
+	DoesColdDamage = 3,
+	DoesMagicalDamage = 4,
+	PoisonLand = 5,
+	DiseasedLand = 6,
+	CrumblingTerrain = 7,
+	LockableTerrain = 8,
+	UnlockableTerrain = 9,
+	UnlockableOrBashable = 10,
+	IsASign = 11,
+	CallLocalSpecial = 12,
+	CallScenarioSpecial = 13,
+	IsAContainer = 14,
+	Waterfall = 15,
+	ConveyorNorth = 16,
+	ConveyorEast = 17,
+	ConveyorSouth = 18,
+	ConveyorWest = 19,
+	BlockedToMonsters = 20,
+	TownEntrance = 21,
+	CanBeUsed = 22,
+	CallSpecialWhenUsed = 23,
+};
+
 struct terrain_type_type {
 	short picture;
-	unsigned char blockage, flag1, flag2, special, trans_to_what, fly_over, boat_over;
+	unsigned char blockage, flag1, flag2;
+	terrain_special special;
+	unsigned char trans_to_what, fly_over, boat_over;
 	unsigned char block_horse, light_radius, step_sound, shortcut_key, res1, res2, res3;
 	auto operator<=>(const terrain_type_type&) const = default;
 	bool operator==(const terrain_type_type&) const = default;

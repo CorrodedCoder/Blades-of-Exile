@@ -679,37 +679,72 @@ short ter_block[256] = {
 5,5,5,5,5,5,2,2,2,2,
 2,2,0,0,0,0};
 
-short ter_traits[256] = {
-0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,
-
-0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,2,0,15,0,0,
-0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,5,0,0,0,
-
-0,14,14,0,0,0,11,11,0,0,
-0,5,0,0,0,0,0,0,0,0,
-0,11,0,1,0,1,10,10,10,22,
-9,8,11,7,7,7,0,0,0,0,
-1,0,1,10,10,10,22,9,8,11,
-
-7,7,7,0,0,1,0,1,10,10,
-10,22,9,8,11,7,7,7,0,0,
-0,20,4,20,0,14,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,
-0,14,0,0,14,0,0,0,0,0,
-
-0,14,0,0,0,0,0,0,0,0,			
-0,20,0,0,0,0,0,0,0,0,
-0,14,0,14,20,0,0,0,0,0,
-0,0,21,21,21,21,21,21,21,21,
-21,21,21,21,21,21,0,0,0,0,
-0,0,16,17,18,19};
+static const terrain_special ter_traits[256] = {
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::DoesFireDamage,
+terrain_special::None,terrain_special::Waterfall,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::PoisonLand,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::IsAContainer,terrain_special::IsAContainer,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::IsASign,terrain_special::IsASign,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::PoisonLand,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::IsASign,terrain_special::None,terrain_special::ChangeWhenStepOn,
+terrain_special::None,terrain_special::ChangeWhenStepOn,terrain_special::UnlockableOrBashable,terrain_special::UnlockableOrBashable,
+terrain_special::UnlockableOrBashable,terrain_special::CanBeUsed,terrain_special::UnlockableTerrain,terrain_special::LockableTerrain,
+terrain_special::IsASign,terrain_special::CrumblingTerrain,terrain_special::CrumblingTerrain,terrain_special::CrumblingTerrain,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::ChangeWhenStepOn,terrain_special::None,terrain_special::ChangeWhenStepOn,terrain_special::UnlockableOrBashable,
+terrain_special::UnlockableOrBashable,terrain_special::UnlockableOrBashable,terrain_special::CanBeUsed,terrain_special::UnlockableTerrain,
+terrain_special::LockableTerrain,terrain_special::IsASign,terrain_special::CrumblingTerrain,terrain_special::CrumblingTerrain,
+terrain_special::CrumblingTerrain,terrain_special::None,terrain_special::None,terrain_special::ChangeWhenStepOn,
+terrain_special::None,terrain_special::ChangeWhenStepOn,terrain_special::UnlockableOrBashable,terrain_special::UnlockableOrBashable,
+terrain_special::UnlockableOrBashable,terrain_special::CanBeUsed,terrain_special::UnlockableTerrain,terrain_special::LockableTerrain,
+terrain_special::IsASign,terrain_special::CrumblingTerrain,terrain_special::CrumblingTerrain,terrain_special::CrumblingTerrain,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::BlockedToMonsters,
+terrain_special::DoesMagicalDamage,terrain_special::BlockedToMonsters,terrain_special::None,terrain_special::IsAContainer,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::IsAContainer,
+terrain_special::None,terrain_special::None,terrain_special::IsAContainer,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::IsAContainer,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::BlockedToMonsters,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::IsAContainer,terrain_special::None,terrain_special::IsAContainer,
+terrain_special::BlockedToMonsters,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::TownEntrance,terrain_special::TownEntrance,terrain_special::TownEntrance,terrain_special::TownEntrance,
+terrain_special::TownEntrance,terrain_special::TownEntrance,terrain_special::TownEntrance,terrain_special::TownEntrance,
+terrain_special::TownEntrance,terrain_special::TownEntrance,terrain_special::TownEntrance,terrain_special::TownEntrance,
+terrain_special::TownEntrance,terrain_special::TownEntrance,terrain_special::None,terrain_special::None,
+terrain_special::None,terrain_special::None,terrain_special::None,terrain_special::None,
+terrain_special::ConveyorNorth,terrain_special::ConveyorEast,terrain_special::ConveyorSouth,terrain_special::ConveyorWest
+};
 
 monster_record_type return_monster_template(unsigned char store)
 {
@@ -911,7 +946,8 @@ void init_scenario()
 				scenario.scen_str_len[i] = strlen(scen_strs[i - 160]);
 				}
 		}
-}	
+}
+
 void put_ter_info_in_dlog()
 {
 	char str[256];
@@ -929,12 +965,12 @@ void put_ter_info_in_dlog()
 	CDST(813,3,(char *) str);
 	CDSN(813,4,store_ter.trans_to_what);
 	CDSN(813,8,store_ter.light_radius);
-	cd_set_led_range(813,32,55,store_ter.special);
+	cd_set_led_range(813,32,55,std::to_underlying(store_ter.special));
 	CDSN(813,6,store_ter.flag1);
 	CDSN(813,7,store_ter.flag2);
-	get_str(str,21,40 + store_ter.special);
+	get_str(str,21,40 + std::to_underlying(store_ter.special));
 	csit(813,67,(char *) str);
-	get_str(str,21,80 + store_ter.special);
+	get_str(str,21,80 + std::to_underlying(store_ter.special));
 	csit(813,68,(char *) str);
 	if (store_ter.picture >= 1000)
 		csp(813,14,950);
@@ -958,24 +994,24 @@ Boolean save_ter_info()
 	
 	if (store_which_ter > 90) {
 	store_ter.blockage = cd_get_led_range(813,19,24);
-	store_ter.special = cd_get_led_range(813,32,55);
+	store_ter.special = static_cast<terrain_special>(cd_get_led_range(813,32,55));
 	i = CDGN(813,6);
-	if ((store_ter.special < 2) || (store_ter.special > 6)) {
+	if ((store_ter.special < terrain_special::DoesFireDamage) || (store_ter.special > terrain_special::DiseasedLand)) {
 		if (cre(i,0,256,"First special flag must be from 0 to 255.","",813) == TRUE) return FALSE;
 		}
-		else if ((store_ter.special > 1) && (store_ter.special <= 4)) {
+		else if ((store_ter.special > terrain_special::ChangeWhenStepOn) && (store_ter.special <= terrain_special::DoesMagicalDamage)) {
 		if (cre(i,0,256,"First special flag must be from 0 to 100.","",813) == TRUE) return FALSE;
 		}
-		else if ((store_ter.special > 4) && (store_ter.special <= 7)) {
+		else if ((store_ter.special > terrain_special::DoesMagicalDamage) && (store_ter.special <= terrain_special::CrumblingTerrain)) {
 		if (cre(i,0,256,"First special flag must be from 0 to 8.","",813) == TRUE) return FALSE;
 		}
 	store_ter.flag1 = CDGN(813,6);
 	
 	i = CDGN(813,7);
-	if ((store_ter.special == 21) || (store_ter.special == 1)) {
+	if ((store_ter.special == terrain_special::TownEntrance) || (store_ter.special == terrain_special::ChangeWhenStepOn)) {
 		if (cre(i,0,256,"Second special flag must be from 0 to 200.","",813) == TRUE) return FALSE;
 		}
-		else if ((store_ter.special > 1) && (store_ter.special <= 7)) {
+		else if ((store_ter.special > terrain_special::ChangeWhenStepOn) && (store_ter.special <= terrain_special::CrumblingTerrain)) {
 		if (cre(i,0,256,"Second special flag must be from 0 to 100.","",813) == TRUE) return FALSE;
 		}
 	store_ter.flag2 = CDGN(813,7);
@@ -1795,7 +1831,7 @@ void put_spec_item_in_dlog()
 	cdsin(806,19,store_which_spec_item);
 	CDST(806,2,scen_strs[60 + store_which_spec_item * 2]);
 	CDST(806,3,scen_strs[60 + store_which_spec_item * 2 + 1]);
-	CDSN(806,4,scenario.special_item_special[store_which_spec_item]);
+	CDSN(806,4, scenario.special_item_special[store_which_spec_item]);
 	if (scenario.special_items[store_which_spec_item] >= 10)
 		cd_set_led(806,15,1); else cd_set_led(806,15,0);
 	if (scenario.special_items[store_which_spec_item] % 10 > 0)
@@ -1900,11 +1936,11 @@ void put_save_rects_in_dlog()
 	short i;
 	
 	for (i = 0; i < 3; i++) {
-		 CDSN(807,3 + 5 * i,scenario.store_item_rects[i].top);
-		 CDSN(807,4 + 5 * i,scenario.store_item_rects[i].left);
-		 CDSN(807,5 + 5 * i,scenario.store_item_rects[i].bottom);
-		 CDSN(807,6 + 5 * i,scenario.store_item_rects[i].right);
-		 CDSN(807,2 + 5 * i,scenario.store_item_towns[i]);
+		 CDSN(807,3 + 5 * i, scenario.store_item_rects[i].top);
+		 CDSN(807,4 + 5 * i, scenario.store_item_rects[i].left);
+		 CDSN(807,5 + 5 * i, scenario.store_item_rects[i].bottom);
+		 CDSN(807,6 + 5 * i, scenario.store_item_rects[i].right);
+		 CDSN(807,2 + 5 * i, scenario.store_item_towns[i]);
 
 		}
 
@@ -1925,13 +1961,13 @@ Boolean save_save_rects()
 			return FALSE;
 			}
 		}
-	if (((scenario.store_item_towns[0] == scenario.store_item_towns[1]) && 
+	if (((scenario.store_item_towns[0] == scenario.store_item_towns[1]) &&
 		(scenario.store_item_towns[0] >= 0) && (scenario.store_item_towns[1] >= 0))
 		||
-		((scenario.store_item_towns[2] == scenario.store_item_towns[1]) && 
+		((scenario.store_item_towns[2] == scenario.store_item_towns[1]) &&
 		(scenario.store_item_towns[2] >= 0) && (scenario.store_item_towns[1] >= 0))
 		||
-		((scenario.store_item_towns[2] == scenario.store_item_towns[0]) && 
+		((scenario.store_item_towns[2] == scenario.store_item_towns[0]) &&
 		(scenario.store_item_towns[2] >= 0) && (scenario.store_item_towns[0] >= 0))
 		) {
 			give_error("The three towns towns with saved item rectangles must be different.","",807);
@@ -1991,10 +2027,10 @@ void put_horses_in_dlog()
 	
 	for (i = 0; i < 6; i++) {
 		cdsin(808,23 + i,6 * store_horse_page + i);
-		CDSN(808,2 + i,scenario.scen_horses[6 * store_horse_page + i].which_town);
-		CDSN(808,8 + i,scenario.scen_horses[6 * store_horse_page + i].horse_loc.x);
-		CDSN(808,14 + i,scenario.scen_horses[6 * store_horse_page + i].horse_loc.y);
-		cd_set_led(808,43 + i,scenario.scen_horses[6 * store_horse_page + i].property);
+		CDSN(808,2 + i, scenario.scen_horses[6 * store_horse_page + i].which_town);
+		CDSN(808,8 + i, scenario.scen_horses[6 * store_horse_page + i].horse_loc.x);
+		CDSN(808,14 + i, scenario.scen_horses[6 * store_horse_page + i].horse_loc.y);
+		cd_set_led(808,43 + i, scenario.scen_horses[6 * store_horse_page + i].property);
 		}
 
 }
@@ -2067,10 +2103,10 @@ static void put_boats_in_dlog()
 	
 	for (i = 0; i < 6; i++) {
 		cdsin(809,24 + i,6 * store_boat_page + i);
-		CDSN(809,2 + i,scenario.scen_boats[6 * store_boat_page + i].which_town);
-		CDSN(809,8 + i,scenario.scen_boats[6 * store_boat_page + i].boat_loc.x);
-		CDSN(809,14 + i,scenario.scen_boats[6 * store_boat_page + i].boat_loc.y);
-		cd_set_led(809,43 + i,scenario.scen_boats[6 * store_boat_page + i].property);
+		CDSN(809,2 + i, scenario.scen_boats[6 * store_boat_page + i].which_town);
+		CDSN(809,8 + i, scenario.scen_boats[6 * store_boat_page + i].boat_loc.x);
+		CDSN(809,14 + i, scenario.scen_boats[6 * store_boat_page + i].boat_loc.y);
+		cd_set_led(809,43 + i, scenario.scen_boats[6 * store_boat_page + i].property);
 		}
 
 }
@@ -2141,9 +2177,9 @@ void put_add_town_in_dlog()
 	short i;
 	
 	for (i = 0; i < 10; i++) {
-		CDSN(810,2 + i,scenario.town_to_add_to[i]);
-		CDSN(810,12 + i,scenario.flag_to_add_to_town[i][0]);
-		CDSN(810,22 + i,scenario.flag_to_add_to_town[i][1]);
+		CDSN(810,2 + i, scenario.town_to_add_to[i]);
+		CDSN(810,12 + i, scenario.flag_to_add_to_town[i][0]);
+		CDSN(810,22 + i, scenario.flag_to_add_to_town[i][1]);
 		}
 
 }
@@ -2294,11 +2330,11 @@ static Boolean save_scen_details()
 
 static void put_scen_details_in_dlog()
 {
-	cd_set_led_range(803,30,33,scenario.difficulty);
-	cd_set_led_range(803,21,24,scenario.rating);
-	CDSN(803,2,scenario.ver[0]);
-	CDSN(803,3,scenario.ver[1]);
-	CDSN(803,4,scenario.ver[2]);
+	cd_set_led_range(803,30,33, scenario.difficulty);
+	cd_set_led_range(803,21,24, scenario.rating);
+	CDSN(803,2, scenario.ver[0]);
+	CDSN(803,3, scenario.ver[1]);
+	CDSN(803,4, scenario.ver[2]);
 	CDST(803,5,scen_strs[1]);
 	CDST(803,6,scen_strs[2]);
 	CDST(803,7,scen_strs[3]);

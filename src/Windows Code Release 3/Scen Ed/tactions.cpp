@@ -1796,7 +1796,7 @@ void set_terrain(location l,unsigned char terrain_type)
 	adjust_space(l);
 	l.y--;
 	
-	if ((scenario_ter_type(terrain_type).special == 11) && (editing_town == TRUE)) { /// it's a sign
+	if ((scenario_ter_type(terrain_type).special == terrain_special::IsASign) && (editing_town == TRUE)) { /// it's a sign
 		for (i = 0; i < 15; i++) 
 			if (which_sign < 0) {
 				if ((town.sign_locs[i].x == l.x) && (town.sign_locs[i].y == l.y))
@@ -1808,7 +1808,7 @@ void set_terrain(location l,unsigned char terrain_type)
 				which_sign = i;
 				else {
 					ter = t_d.terrain[town.sign_locs[i].x][town.sign_locs[i].y];
-					if (scenario_ter_type(ter).special != 11)
+					if (scenario_ter_type(ter).special != terrain_special::IsASign)
 						which_sign = i;
 					}
 			}
@@ -1826,7 +1826,7 @@ void set_terrain(location l,unsigned char terrain_type)
 				}
 		mouse_button_held = FALSE;
 		}
-	if ((scenario_ter_type(terrain_type).special == 11) && (editing_town == FALSE)) { /// it's a sign
+	if ((scenario_ter_type(terrain_type).special == terrain_special::IsASign) && (editing_town == FALSE)) { /// it's a sign
 		if ((l.x == 0) || (l.x == 47) || (l.y == 0) || (l.y == 47)) {
 			fancy_choice_dialog(870,0);
 			mouse_button_held = FALSE;
@@ -1843,7 +1843,7 @@ void set_terrain(location l,unsigned char terrain_type)
 				which_sign = i;
 				else {
 					ter = current_terrain.terrain[current_terrain.sign_locs[i].x][current_terrain.sign_locs[i].y];
-					if (scenario_ter_type(ter).special != 11)
+					if (scenario_ter_type(ter).special != terrain_special::IsASign)
 						which_sign = i;
 					}
 			}
@@ -3075,7 +3075,7 @@ void town_entry(location spot_hit)
 	unsigned char ter;
 	
 	ter = current_terrain.terrain[spot_hit.x][spot_hit.y];
-	if (scenario_ter_type(ter).special != 21) {
+	if (scenario_ter_type(ter).special != terrain_special::TownEntrance) {
 		give_error("This space isn't a town entrance. Town entrances are marked by a small brown castle icon.","",0);
 		return;
 		}
@@ -3083,7 +3083,7 @@ void town_entry(location spot_hit)
 	for (x = 0; x < 8; x++)
 		if (current_terrain.exit_locs[x].x < 100) {
 			ter = current_terrain.terrain[current_terrain.exit_locs[x].x][current_terrain.exit_locs[x].y];
-			if (scenario_ter_type(ter).special != 21) 
+			if (scenario_ter_type(ter).special != terrain_special::TownEntrance)
 				current_terrain.exit_locs[x].x = 100;
 			}
 				y = -2;

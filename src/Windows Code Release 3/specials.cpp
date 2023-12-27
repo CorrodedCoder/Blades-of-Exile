@@ -133,7 +133,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 //short mode; // 0 - out 1 - town 2 - combat
 {
 	unsigned char ter;
-	short r1,i,choice,door_pc,ter_special,ter_flag1,ter_flag2,dam_type = 0,pic_type = 0,ter_pic = 0;
+	short r1,i,choice,door_pc,ter_flag1,ter_flag2,dam_type = 0,pic_type = 0,ter_pic = 0;
 	Boolean can_enter = TRUE;
 	location out_where,from_loc,to_loc;
 	short s1 = 0,s2 = 0,s3 = 0;
@@ -156,18 +156,18 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 			break;	
 		}
 	const auto& terrain{ scenario_ter_type(ter) };
-	ter_special = terrain.special;
+	const auto ter_special = terrain.special;
 	ter_flag1 = terrain.flag1;
 	ter_flag2 = terrain.flag2;
 	ter_pic = terrain.picture;
 
-		if ((mode > 0) && (ter_special >= 16) && 
-			(ter_special <= 19)) {
+		if ((mode > 0) && (ter_special >= terrain_special::ConveyorNorth) &&
+			(ter_special <= terrain_special::ConveyorWest)) {
 			if (
-				((ter_special == 16) && (where_check.y > from_loc.y)) ||
-				((ter_special == 17) && (where_check.x < from_loc.x)) ||
-				((ter_special == 18) && (where_check.y < from_loc.y)) ||
-				((ter_special == 19) && (where_check.x > from_loc.x)) ) {
+				((ter_special == terrain_special::ConveyorNorth) && (where_check.y > from_loc.y)) ||
+				((ter_special == terrain_special::ConveyorEast) && (where_check.x < from_loc.x)) ||
+				((ter_special == terrain_special::ConveyorSouth) && (where_check.y < from_loc.y)) ||
+				((ter_special == terrain_special::ConveyorWest) && (where_check.x > from_loc.x)) ) {
 					ASB("The moving floor prevents you.");
 					return FALSE;
 					}
@@ -210,8 +210,8 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 						*forced = TRUE;
 						}
 					*spec_num = c_town.town.spec_id[i];
-					if ((is_blocked(where_check) == FALSE) || (ter_special == 1)
-	 					|| (ter_special == 12) || (ter_special == 13)) {
+					if ((is_blocked(where_check) == FALSE) || (ter_special == terrain_special::ChangeWhenStepOn)
+	 					|| (ter_special == terrain_special::CallLocalSpecial) || (ter_special == terrain_special::CallScenarioSpecial)) {
 						give_help(54,0,0);
 						run_special(mode,2,c_town.town.spec_id[i],where_check,&s1,&s2,&s3);
 						if (s1 > 0)
@@ -272,7 +272,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 
 
 	switch (ter_special) {
-		case 1: 
+		case terrain_special::ChangeWhenStepOn:
 			alter_space(where_check.x,where_check.y,ter_flag1);
 			if (ter_flag2 < 200) {
 				play_sound(-1 * ter_flag2);
@@ -281,10 +281,12 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 			if (terrain.blockage > 2)
 				can_enter = FALSE;
 			break;
-		case 2: case 3:case 4:
+		case terrain_special::DoesFireDamage:
+		case terrain_special::DoesColdDamage:
+		case terrain_special::DoesMagicalDamage:
 			if (flying())
 				break;
-			if (ter_special == 2) {
+			if (ter_special == terrain_special::DoesFireDamage) {
 				add_string_to_buf("  It's hot!");
 				dam_type = 1; pic_type = 0;
 				if (party.stuff_done[305][3] > 0) {
@@ -292,11 +294,11 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 					break;
 					}
 				}
-			if (ter_special == 3) {
+			if (ter_special == terrain_special::DoesColdDamage) {
 				add_string_to_buf("  You feel cold!");
 				dam_type = 5; pic_type = 4;
 				}
-			if (ter_special == 4) {
+			if (ter_special == terrain_special::DoesMagicalDamage) {
 				add_string_to_buf("  Something shocks you!");
 				dam_type = 3; pic_type = 1;
 				}
@@ -310,7 +312,8 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 				boom_space(party.p_loc,overall_mode,pic_type,r1,12);
 			fast_bang = 0;
 			break;
-		case 5: case 6:
+		case terrain_special::PoisonLand:
+		case terrain_special::DiseasedLand:
 			if (flying())
 				break;
 			if (party.in_boat >= 0)
@@ -321,7 +324,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 					if (adven[i].main_status == status::Normal) 
 						{
 						if (rand_short(1,100) <= ter_flag2) {
-							if (ter_special == 5)
+							if (ter_special == terrain_special::PoisonLand)
 								poison_pc(i,ter_flag1);
 								else disease_pc(i,ter_flag1);
 							}
@@ -330,18 +333,18 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 			//print_nums(1,which_pc,current_pc);
 			if (mode == 2) {
 						if (rand_short(1,100) <= ter_flag2){
-							if (ter_special == 5)
+							if (ter_special == terrain_special::PoisonLand)
 								poison_pc(which_pc,ter_flag1);
 								else disease_pc(which_pc,ter_flag1);
 							}
 					}
 			break;
-		case 12: // local special
+		case terrain_special::CallLocalSpecial: // local special
 			run_special(mode,2,ter_flag1,where_check,&s1,&s2,&s3);
 					if (s1 > 0)
 						can_enter = FALSE;
 			break;
-		case 13: // global special
+		case terrain_special::CallScenarioSpecial: // global special
 			run_special(mode,0,ter_flag1,where_check,&s1,&s2,&s3);
 					if (s1 > 0)
 						can_enter = FALSE;
@@ -349,7 +352,8 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 
 			
 		// Locked doors
-		case 9: case 10:
+		case terrain_special::UnlockableTerrain:
+		case terrain_special::UnlockableOrBashable:
 			if (is_combat()) {  // No lockpicking in combat
 				add_string_to_buf("  Can't enter: It's locked.");
 				break;
@@ -367,8 +371,10 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 					else bash_door(where_check,door_pc);
 				}		
 			break;
-			
-
+		
+		default:
+			// CC: Not present in original source
+			break;
 		}
 		
 	// Action may change terrain, so update what's been seen
@@ -927,7 +933,7 @@ Boolean use_space(location where)
 		}
 		
 	switch (scenario_ter_type(ter).special) {
-		case 22:
+		case terrain_special::CanBeUsed:
 			if (same_point(where,from_loc) == TRUE) {
 				add_string_to_buf("  Not while on space.");
 				return FALSE;
@@ -937,9 +943,12 @@ Boolean use_space(location where)
 			play_sound(scenario_ter_type(ter).flag2);
 			return TRUE;
 			break;
-		case 23: // call special
+		case terrain_special::CallSpecialWhenUsed: // call special
 			run_special(17,0,scenario_ter_type(ter).flag1,where,&i,&i,&i);
-			break;	
+			break;
+		default:
+			// CC: Not present in original source
+			break;
 		}
 	add_string_to_buf("  Nothing to use.");
 
@@ -1404,10 +1413,11 @@ void push_things()
 			l = c_town.monst.dudes[i].m_loc;
 			ter = t_d.terrain[l.x][l.y];
 			switch (scenario_ter_type(ter).special) {
-				case 16: l.y--; break;
-				case 17: l.x++; break;
-				case 18: l.y++; break;
-				case 19: l.x--; break;
+				case terrain_special::ConveyorNorth: l.y--; break;
+				case terrain_special::ConveyorEast: l.x++; break;
+				case terrain_special::ConveyorSouth: l.y++; break;
+				case terrain_special::ConveyorWest: l.x--; break;
+				default: break; // CC: Not present in original source
 				}
 			if (same_point(l,c_town.monst.dudes[i].m_loc) == FALSE) {
 				c_town.monst.dudes[i].m_loc = l;
@@ -1421,11 +1431,12 @@ void push_things()
 			l = t_i.items[i].item_loc;
 			ter = t_d.terrain[l.x][l.y];
 			switch (scenario_ter_type(ter).special) {
-				case 16: l.y--; break;
-				case 17: l.x++; break;
-				case 18: l.y++; break;
-				case 19: l.x--; break;
-				}
+				case terrain_special::ConveyorNorth: l.y--; break;
+				case terrain_special::ConveyorEast: l.x++; break;
+				case terrain_special::ConveyorSouth: l.y++; break;
+				case terrain_special::ConveyorWest: l.x--; break;
+				default: break; // CC: Not present in original source
+			}
 			if (same_point(l,t_i.items[i].item_loc) == FALSE) {
 				t_i.items[i].item_loc = l;
 				if ((point_onscreen(center,t_i.items[i].item_loc) == TRUE) || 
@@ -1438,14 +1449,15 @@ void push_things()
 		ter = t_d.terrain[c_town.p_loc.x][c_town.p_loc.y];
 		l = c_town.p_loc;
 		switch (scenario_ter_type(ter).special) {
-			case 16: l.y--; break;
-			case 17: l.x++; break;
-			case 18: l.y++; break;
-			case 19: l.x--; break;
+			case terrain_special::ConveyorNorth: l.y--; break;
+			case terrain_special::ConveyorEast: l.x++; break;
+			case terrain_special::ConveyorSouth: l.y++; break;
+			case terrain_special::ConveyorWest: l.x--; break;
+			default: break; // CC: Not present in original source
 			}
 		if (same_point(l,c_town.p_loc) == FALSE) {
 			ASB("You get pushed.");
-			if (scenario_ter_type(ter).special >= 16)	
+			if (scenario_ter_type(ter).special >= terrain_special::ConveyorNorth)
 				draw_terrain(0);
 			center = l;
 			c_town.p_loc = l;
@@ -1473,15 +1485,16 @@ void push_things()
 				ter = t_d.terrain[pc_pos[i].x][pc_pos[i].y];
 				l = pc_pos[i];
 				switch (scenario_ter_type(ter).special) {
-					case 16: l.y--; break;
-					case 17: l.x++; break;
-					case 18: l.y++; break;
-					case 19: l.x--; break;
-					}
+					case terrain_special::ConveyorNorth: l.y--; break;
+					case terrain_special::ConveyorEast: l.x++; break;
+					case terrain_special::ConveyorSouth: l.y++; break;
+					case terrain_special::ConveyorWest: l.x--; break;
+					default: break; // CC: Not present in original source
+				}
 				if (same_point(l, pc_pos[i]) == FALSE) {
 					ASB("Someone gets pushed.");	
 					ter = t_d.terrain[l.x][l.y];
-					if (scenario_ter_type(ter).special >= 16)	
+					if (scenario_ter_type(ter).special >= terrain_special::ConveyorNorth)
 						draw_terrain(0);
 					pc_pos[i] = l;
 					update_explored(l);
@@ -2496,13 +2509,13 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 			break;
 		case 177:
 			ter = coord_to_ter(spec.ex1a,spec.ex1b);
-			if (scenario_ter_type(ter).special == 8)
+			if (scenario_ter_type(ter).special == terrain_special::LockableTerrain)
 				set_terrain(l,scenario_ter_type(ter).flag1);
 			*redraw = 1;
 			break;
 		case 178:
 			ter = coord_to_ter(spec.ex1a,spec.ex1b);
-			if ((scenario_ter_type(ter).special == 9) || (scenario_ter_type(ter).special == 10))
+			if ((scenario_ter_type(ter).special == terrain_special::UnlockableTerrain) || (scenario_ter_type(ter).special == terrain_special::UnlockableOrBashable))
 				set_terrain(l,scenario_ter_type(ter).flag1);
 			*redraw = 1;
 			break;
@@ -2812,12 +2825,12 @@ void rect_spec(short which_mode,special_node_type cur_node,short cur_spec_type,
 			break;
 		case 217:
 			ter = coord_to_ter(i,j);
-			if (scenario_ter_type(ter).special == 8)
+			if (scenario_ter_type(ter).special == terrain_special::LockableTerrain)
 				set_terrain(l,scenario_ter_type(ter).flag1);
 			break;
 		case 218:
 			ter = coord_to_ter(i,j);
-			if ((scenario_ter_type(ter).special == 9) || (scenario_ter_type(ter).special == 10))
+			if ((scenario_ter_type(ter).special == terrain_special::UnlockableTerrain) || (scenario_ter_type(ter).special == terrain_special::UnlockableOrBashable))
 				set_terrain(l,scenario_ter_type(ter).flag1);
 			break;
 			

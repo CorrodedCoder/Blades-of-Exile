@@ -469,7 +469,7 @@ void set_up_terrain_buttons()
 					rect_draw_some_item_bmp(anim_gworld,
 						ter_from,terrain_buttons_gworld,terrain_rects[i],0,0);
 					}
-		small_i = small_icons[scenario_ter_type(i).special];
+		small_i = small_icons[std::to_underlying(scenario_ter_type(i).special)];
 		if ((small_i == 30) && (scenario_ter_type(i).flag2 >= 5))
 			small_i = 31;
 		if ((small_i == 31) && (scenario_ter_type(i).flag2 == 10))
@@ -593,7 +593,7 @@ void draw_terrain()
 				rect_draw_some_item_bmp(editor_mixed,from_rect,ter_draw_gworld,to_rect,0,0);
 				OffsetRect(&tiny_to,0,-7);
 				}
-			small_i = small_icons[scenario_ter_type(t_to_draw).special];
+			small_i = small_icons[std::to_underlying(scenario_ter_type(t_to_draw).special)];
 			if ((small_i == 30) && (scenario_ter_type(t_to_draw).flag2 >= 5))
 				small_i = 31;
 			if ((small_i == 31) && (scenario_ter_type(t_to_draw).flag2 == 10))
@@ -1449,7 +1449,7 @@ Boolean container_there(location l)
 {
 	if (editing_town == FALSE)
 		return FALSE;
-	if (scenario_ter_type(t_d.terrain[l.x][l.y]).special == 14)
+	if (scenario_ter_type(t_d.terrain[l.x][l.y]).special == terrain_special::IsAContainer)
 		return TRUE;
 	if (is_barrel(l.x,l.y) == TRUE)
 		return TRUE;
