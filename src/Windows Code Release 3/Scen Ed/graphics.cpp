@@ -13,6 +13,7 @@
 #include "../graphutl_helpers.hpp"
 #include "keydlgs.h"
 #include "boe/utility.hpp"
+#include "boe/compatibility.hpp"
 #include "../scenario.hpp"
 
 extern char scen_strs[160][256];
@@ -469,7 +470,7 @@ void set_up_terrain_buttons()
 					rect_draw_some_item_bmp(anim_gworld,
 						ter_from,terrain_buttons_gworld,terrain_rects[i],0,0);
 					}
-		small_i = small_icons[std::to_underlying(scenario_ter_type(i).special)];
+		small_i = small_icons[to_underlying(scenario_ter_type(i).special)];
 		if ((small_i == 30) && (scenario_ter_type(i).flag2 >= 5))
 			small_i = 31;
 		if ((small_i == 31) && (scenario_ter_type(i).flag2 == 10))
@@ -593,7 +594,7 @@ void draw_terrain()
 				rect_draw_some_item_bmp(editor_mixed,from_rect,ter_draw_gworld,to_rect,0,0);
 				OffsetRect(&tiny_to,0,-7);
 				}
-			small_i = small_icons[std::to_underlying(scenario_ter_type(t_to_draw).special)];
+			small_i = small_icons[to_underlying(scenario_ter_type(t_to_draw).special)];
 			if ((small_i == 30) && (scenario_ter_type(t_to_draw).flag2 >= 5))
 				small_i = 31;
 			if ((small_i == 31) && (scenario_ter_type(t_to_draw).flag2 == 10))

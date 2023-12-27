@@ -12,6 +12,7 @@
 #include "tactions.h"
 #include "edsound.h"
 #include "../scenario.hpp"
+#include "boe/compatibility.hpp"
 
 extern short cen_x, cen_y, overall_mode,cur_town;
 extern Boolean mouse_button_held,dialog_not_toast;
@@ -965,12 +966,12 @@ void put_ter_info_in_dlog()
 	CDST(813,3,(char *) str);
 	CDSN(813,4,store_ter.trans_to_what);
 	CDSN(813,8,store_ter.light_radius);
-	cd_set_led_range(813,32,55,std::to_underlying(store_ter.special));
+	cd_set_led_range(813,32,55,to_underlying(store_ter.special));
 	CDSN(813,6,store_ter.flag1);
 	CDSN(813,7,store_ter.flag2);
-	get_str(str,21,40 + std::to_underlying(store_ter.special));
+	get_str(str,21,40 + to_underlying(store_ter.special));
 	csit(813,67,(char *) str);
-	get_str(str,21,80 + std::to_underlying(store_ter.special));
+	get_str(str,21,80 + to_underlying(store_ter.special));
 	csit(813,68,(char *) str);
 	if (store_ter.picture >= 1000)
 		csp(813,14,950);
