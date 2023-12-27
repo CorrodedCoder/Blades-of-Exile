@@ -61,7 +61,8 @@ unsigned char store_sum_monst;
 short store_sum_monst_cost;
 
 
-location out_start_loc = {20,23};
+static const location out_start_loc = {20,23};
+
 extern const short hit_chance[51] = {20,30,40,45,50,55,60,65,69,73,
 							77,81,84,87,90,92,94,96,97,98,99
 							,99,99,99,99,99,99,99,99,99,99

@@ -23,7 +23,6 @@ extern short town_type;
 extern Boolean in_startup_mode,cartoon_happening;
 extern short town_size[3];
 extern party_record_type party;
-extern piles_of_stuff_dumping_type2 data_store2;
 
 extern Adventurers adven;
 extern big_tr_type  t_d;
@@ -1045,7 +1044,8 @@ void adjust_monst_menu()
 	for (i = 0; i < 256; i++)
 		if (on_monst_menu[i] >= 0) {
 			//GetIndString(monst_name, 2,on_monst_menu[i]);
-			sprintf(monst_name,"%s",data_store2.scen_item_list.monst_names[on_monst_menu[i]]);			if ((total_added % 24 == 0) && (total_added > 0))
+			sprintf(monst_name,"%s",scenario_monster_name(on_monst_menu[i]));
+			if ((total_added % 24 == 0) && (total_added > 0))
 				InsertMenu(menu,599,MF_MENUBREAK | MF_BYCOMMAND | MF_ENABLED | MF_STRING, 600 + i, monst_name);
 				else InsertMenu(menu,599,MF_BYCOMMAND | MF_ENABLED | MF_STRING, 600 + i, monst_name);
 			total_added++;

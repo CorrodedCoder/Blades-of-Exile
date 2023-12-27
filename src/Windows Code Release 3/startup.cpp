@@ -11,14 +11,13 @@
 #include "party.h"
 #include "exlsound.h"
 #include "startup.h"
+#include "scenario.hpp"
 
 extern party_record_type party;
 extern scen_header_type scen_headers[25];
 extern Boolean unreg_party_in_scen_not_check;
 extern Boolean in_startup_mode,registered,play_sounds,party_in_memory;
 extern short ulx,uly;
-extern piles_of_stuff_dumping_type2 data_store2;
-
 
 //void start_game();
 
@@ -102,7 +101,7 @@ Boolean handle_startup_press(POINT the_point)
 					if (scen >= 0) {
 						if (registered == FALSE)
 							unreg_party_in_scen_not_check = TRUE;
-						sprintf(party.scen_name,"%s",data_store2.scen_names[scen]);
+						sprintf(party.scen_name,"%s", scenario_name_string(scen));
 						put_party_in_scen();
 						}
 

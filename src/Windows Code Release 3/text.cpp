@@ -73,7 +73,6 @@ extern HBITMAP dialog_pattern_gworld,pattern_gworld,status_pattern_gworld,spec_s
 
 // game globals
 extern party_record_type party;
-extern piles_of_stuff_dumping_type2 data_store2;
 extern talking_record_type talking;
 
 extern current_town_type c_town;
@@ -1126,7 +1125,7 @@ void notify_out_combat_began(out_wandering_type encounter,short *nums)
 
 void get_m_name(char *str,unsigned char num)
 {
-	strcpy(str, data_store2.scen_item_list.monst_names[num]);
+	strcpy(str, scenario_monster_name(num));
 }
 
 static void get_ter_name(char *str,unsigned char num)
@@ -1137,7 +1136,7 @@ static void get_ter_name(char *str,unsigned char num)
 	if ((num == 90) && ((is_out()) || (is_town()) || ((is_combat()) && (which_combat_type == 1))))
 		sprintf(store_name,"Pit");
 		else {
-			strcpy(store_name, data_store2.scen_item_list.ter_names[num]);
+			strcpy(store_name, scenario_terrain_name(num));
 			}
 	strcpy(str, store_name);
 }

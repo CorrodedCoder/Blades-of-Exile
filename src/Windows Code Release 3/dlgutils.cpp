@@ -34,7 +34,6 @@ extern short stat_window,overall_mode,dialog_answer;
 extern current_town_type c_town;
 extern party_record_type party;
 extern piles_of_stuff_dumping_type data_store;
-extern piles_of_stuff_dumping_type2 data_store2;
 extern talking_record_type talking;
 
 extern Boolean in_startup_mode,play_sounds,sys_7_avail,give_intro_hint;
@@ -1502,14 +1501,14 @@ void put_scen_info()
 			cd_set_pict(947, 6 + i * 3,1600 + scen_headers[store_scen_page_on * 3 + i].intro_pic);
 			sprintf(place_str,
 				"%s v%d.%d.%d - |  Difficulty: %s, Rating: %s |%s |%s",
-				data_store2.scen_header_strs[store_scen_page_on * 3 + i][0],
+				scenario_header_string(store_scen_page_on * 3 + i,0),
 				(short) scen_headers[store_scen_page_on * 3 + i].ver[0],
 				(short) scen_headers[store_scen_page_on * 3 + i].ver[1],
 				(short) scen_headers[store_scen_page_on * 3 + i].ver[2],
 				difficulty[scen_headers[store_scen_page_on * 3 + i].difficulty],
 				ratings[scen_headers[store_scen_page_on * 3 + i].default_ground],
-				data_store2.scen_header_strs[store_scen_page_on * 3 + i][1],
-				data_store2.scen_header_strs[store_scen_page_on * 3 + i][2]); 
+				scenario_header_string(store_scen_page_on * 3 + i,1),
+				scenario_header_string(store_scen_page_on * 3 + i,2));
 			csit(947,7 + i * 3,(char *) place_str);
 			cd_activate_item(947,8 + i * 3,1);			
 			}

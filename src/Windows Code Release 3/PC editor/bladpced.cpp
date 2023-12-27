@@ -135,14 +135,6 @@ long stored_key;
 short pixel_depth,dialog_answer;
 
 
-// Spell casting globals
-short store_mage = 0, store_priest = 0;
-short store_mage_lev = 0, store_priest_lev = 0;
-short store_spell_target = 6,pc_casting;
-short num_targets_left = 0;
-location spell_targets[8];
-
-
 /* Windoze stuff globals */
 Boolean cursor_shown = TRUE;
 short store_pc_being_created;

@@ -1,10 +1,8 @@
 #include "global.h"
 #include "itemdata.h"
+#include "scenario.hpp"
 #include <cstdio>
 #include <cstring>
-
-
-extern piles_of_stuff_dumping_type2 data_store2;
 
 static const short loot_min[5] = {0,0,5,50,400};
 static const short loot_max[5] = {3,8,40,800,4000};
@@ -15,7 +13,7 @@ item_record_type get_stored_item(short which)
 	if ((which >= 400) || (which < 0)) {
 		return item_record_type{};
 	}
-	return data_store2.scen_item_list.scen_items[which];
+	return scenario_item(which);
 }
 
 item_record_type get_food()

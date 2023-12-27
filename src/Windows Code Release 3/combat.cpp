@@ -20,11 +20,8 @@
 #include "boe/item.hpp"
 
 extern party_record_type party;
-extern talking_record_type talking;
-
 extern Adventurers adven;
 extern current_town_type c_town;
-extern big_tr_type t_d;
 extern town_item_list t_i;
 extern short overall_mode,store_item_spell_level;
 extern short which_combat_type;
@@ -36,9 +33,7 @@ extern short current_pc;
 extern short pc_last_cast[2][6];
 extern short combat_active_pc;
 extern Boolean monsters_going,spell_forced,in_scen_debug;
-extern short store_mage, store_priest;
-extern short store_mage_lev, store_priest_lev;
-extern short store_spell_target,pc_casting,current_spell_range;
+extern short store_spell_target,current_spell_range;
 extern std::reference_wrapper<const effect_pat_type> current_pat;
 extern short town_size[3];
 extern short town_type;
@@ -51,9 +46,7 @@ extern Boolean fast_bang;
 extern unsigned char misc_i[64][64],sfx[64][64];
 extern short store_current_pc;
 extern const std::array<short, 62> refer_mage,refer_priest;
-extern location monster_targs[T_M];
-extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
-
+extern short combat_posing_monster, current_working_monster; // 0-5 PC 100 + x - monster x
 extern short spell_caster, missile_firer,current_monst_tactic;
 char create_line[60];
 short spell_being_cast;
@@ -64,8 +57,8 @@ short futzing;
 unsigned char store_sum_monst;
 short store_sum_monst_cost;
 
+static const location out_start_loc = {20,23};
 
-location out_start_loc = {20,23};
 extern const short hit_chance[51] = {20,30,40,45,50,55,60,65,69,73,
 							77,81,84,87,90,92,94,96,97,98,99
 							,99,99,99,99,99,99,99,99,99,99

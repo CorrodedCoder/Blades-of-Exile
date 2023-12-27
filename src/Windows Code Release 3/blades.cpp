@@ -186,7 +186,6 @@ HINSTANCE store_hInstance;
 HACCEL accel;
 BOOL event_handled;
 piles_of_stuff_dumping_type data_store;
-piles_of_stuff_dumping_type2 data_store2;
 piles_of_stuff_dumping_type3 data_store3;
 piles_of_stuff_dumping_type4 data_store4;
 piles_of_stuff_dumping_type5 data_store5;

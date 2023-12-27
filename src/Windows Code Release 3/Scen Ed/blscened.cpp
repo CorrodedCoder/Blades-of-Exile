@@ -101,12 +101,6 @@ short which_item_page[6] = {0,0,0,0,0,0}; // Remembers which of the 2 item pages
 long stored_key;
 short pixel_depth,dialog_answer;
 
-
-// Spell casting globals
-short store_mage = 0, store_priest = 0;
-short store_mage_lev = 0, store_priest_lev = 0;
-short store_spell_target = 6,pc_casting;
-short num_targets_left = 0;
 char file_path_name[256];
 
 /* Windoze stuff globals */

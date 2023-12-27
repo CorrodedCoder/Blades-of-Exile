@@ -26,3 +26,9 @@
 [[nodiscard]] unsigned char scenario_town_hidden(short index);
 [[nodiscard]] const location& scenario_out_sec_start(void);
 [[nodiscard]] const location& scenario_out_start(void);
+
+[[nodiscard]] const char* scenario_header_string(short a, short b);
+[[nodiscard]] const char* scenario_name_string(short index);
+[[nodiscard]] const item_record_type& scenario_item(short index);
+[[nodiscard]] const char* scenario_monster_name(short index);
+[[nodiscard]] const char* scenario_terrain_name(short index);
