@@ -1346,7 +1346,7 @@ long open_pref_file()
 		|| (display_mode < 0) || (display_mode > 5) || (ed_flag < 0) || (ed_flag > 10000)) ) {
 		registered = FALSE;
 		if  ((register_flag < 10000) || (register_flag > 30000))
-			register_flag = get_ran(1,10000,30000);
+			register_flag = rand_short(10000,30000);
 		if ((ed_flag < 0) || (ed_flag > 10000))
 			ed_flag = 10000;
 		
@@ -1382,14 +1382,14 @@ void make_pref_file(FSSpec pref)
 //	app_handle = Get1Resource('PRFN',128);
 	
 //	for (i = 0; i < 10; i++)
-//		(**(PrefHandle)app_handle).l[i] = (long) (get_ran(1,-20000,20000)) * (i + 2);
+//		(**(PrefHandle)app_handle).l[i] = (long) (rand_short(-20000,20000)) * (i + 2);
 //	(**(PrefHandle)app_handle).l[2] = (long) (give_intro_hint);
 //	(**(PrefHandle)app_handle).l[3] = (long) (display_mode);
 //	(**(PrefHandle)app_handle).l[4] = (long) (play_sounds);
 
 //	if (register_flag == 0) {
-//		register_flag = (long) get_ran(1,10000,20000);
-//		ed_flag = get_ran(1,5000,9999);
+//		register_flag = (long) rand_short(10000,20000);
+//		ed_flag = rand_short(5000,9999);
 //		}
 
 	// Amputating this code, cause it's broken, while save prefs code works OK
@@ -1458,7 +1458,7 @@ void save_prefs()
 	HLock(data_handle);
 
 	for (i = 0; i < 10; i++)
-		(**(PrefHandle)data_handle).l[i] = (long) (get_ran(1,-20000,20000)) * (i + 2);
+		(**(PrefHandle)data_handle).l[i] = (long) (rand_short(-20000,20000)) * (i + 2);
 	(**(PrefHandle)data_handle).l[1] = (long) (ask_to_change_color);
 	(**(PrefHandle)data_handle).l[2] = (long) (give_intro_hint);
 	(**(PrefHandle)data_handle).l[3] = (long) (display_mode);
@@ -1466,8 +1466,8 @@ void save_prefs()
 	
 
 	if (register_flag == 0) {
-		register_flag = (long) get_ran(1,10000,20000);
-		ed_flag = get_ran(1,5000,9999);
+		register_flag = (long) rand_short(10000,20000);
+		ed_flag = rand_short(5000,9999);
 		}
 	(**(PrefHandle)data_handle).l[5] = (long) (800000) - register_flag;
 	(**(PrefHandle)data_handle).l[6] = (long) (800000) - ed_flag;
@@ -1780,7 +1780,7 @@ void tip_of_day()
 	short i,item_hit;
 	Str255 place_str;
 	
-	store_tip_page_on = get_ran(1,0,NUM_HINTS - 1);
+	store_tip_page_on = rand_short(0,NUM_HINTS - 1);
 	
 	make_cursor_sword();
 

@@ -188,13 +188,13 @@ void save_scenario()
 	scenario.flag4 = 80; /// these mean made on PC
 	
 	// now flags
-	scenario.flag_a = sizeof(scenario_data_type) + get_ran(1,-1000,1000);
+	scenario.flag_a = sizeof(scenario_data_type) + rand_short(-1000,1000);
 	scenario.flag_b = town_s(user_given_password);
 	scenario.flag_c = out_s(user_given_password);
 	scenario.flag_e = str_size_1(user_given_password);
 	scenario.flag_f = str_size_2(user_given_password);
 	scenario.flag_h = str_size_3(user_given_password);
-	scenario.flag_g = 10000 + get_ran(1,0,5000);
+	scenario.flag_g = 10000 + rand_short(0,5000);
 	scenario.flag_d = init_data(user_given_password);
 	
 
@@ -1061,13 +1061,13 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 	scenario.flag3 = 60;
 	scenario.flag4 = 80; /// these mean made on mac
 	// now flags
-	scenario.flag_a = sizeof(scenario_data_type) + get_ran(1,-1000,1000);
+	scenario.flag_a = sizeof(scenario_data_type) + rand_short(-1000,1000);
 	scenario.flag_b = town_s(user_given_password);
 	scenario.flag_c = out_s(user_given_password);
 	scenario.flag_e = str_size_1(user_given_password);
 	scenario.flag_f = str_size_2(user_given_password);
 	scenario.flag_h = str_size_3(user_given_password);
-	scenario.flag_g = 10000 + get_ran(1,0,5000);
+	scenario.flag_g = 10000 + rand_short(0,5000);
 	scenario.flag_d = init_data(user_given_password);
 	
 	len = sizeof(scenario_data_type); // scenario data
@@ -1437,13 +1437,13 @@ short get_buf_ptr(short flag)
 void reset_pwd()
 {
 	// now flags
-	scenario.flag_a = sizeof(scenario_data_type) + get_ran(1,-1000,1000);
+	scenario.flag_a = sizeof(scenario_data_type) + rand_short(-1000,1000);
 	scenario.flag_b = town_s(user_given_password);
 	scenario.flag_c = out_s(user_given_password);
 	scenario.flag_e = str_size_1(user_given_password);
 	scenario.flag_f = str_size_2(user_given_password);
 	scenario.flag_h = str_size_3(user_given_password);
-	scenario.flag_g = 10000 + get_ran(1,0,5000);
+	scenario.flag_g = 10000 + rand_short(0,5000);
 	scenario.flag_d = init_data(user_given_password);
 }
 

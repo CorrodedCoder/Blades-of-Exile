@@ -676,7 +676,7 @@ void build_data_file(short mode)
 
 	for (i = 0; i < 10; i++) {
 		if (mode < 2)
-			val_store = (long) (get_ran(1,5000,25000));
+			val_store = (long) (rand_short(5000,25000));
 			else val_store = s_vals[i];
 		switch (i) {
 			case 2: // tip of day
@@ -711,7 +711,7 @@ void build_data_file(short mode)
 				break;
 			case 8:
 				if (mode < 2)
-					val_store = (long) (get_ran(1,1000,5000));
+					val_store = (long) (rand_short(1000,5000));
 					else val_store = s_vals[i];
 				ed_flag = val_store;
 				break;

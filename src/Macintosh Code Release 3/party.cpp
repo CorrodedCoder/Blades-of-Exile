@@ -813,7 +813,7 @@ void dumbfound_pc(short which_pc,short how_much)
 
 	if (adven[which_pc].main_status != status::Normal)
 		return;
-	r1 = get_ran(1,0,90);
+	r1 = rand_short(0,90);
 	if (pc_has_abil_equip(which_pc,53) < 24) {////
 		add_string_to_buf("  Ring of Will glows.");
 		r1 -= 10;
@@ -841,7 +841,7 @@ void disease_pc(short which_pc,short how_much)
 
 	if (adven[which_pc].main_status != status::Normal)
 		return;
-	r1 = get_ran(1,0,100);
+	r1 = rand_short(0,100);
 	if (r1 < adven[which_pc].level * 2)
 		how_much -= 2;
 	if (how_much <= 0) {
@@ -855,7 +855,7 @@ void disease_pc(short which_pc,short how_much)
 		(how_much > 1))
 			how_much++;
 	if ((adven[which_pc].traits[trait::Frail] == TRUE) && 
-		(how_much == 1) && (get_ran(1,0,1) == 0))
+		(how_much == 1) && (rand_short(0,1) == 0))
 			how_much++;
 	if (adven[which_pc].main_status == status::Normal) {
 		adven[which_pc].gaffect(affect::Diseased) = min(adven[which_pc].gaffect(affect::Diseased) + how_much,8);
@@ -883,7 +883,7 @@ void sleep_pc(short which_pc,short how_much,short what_type,short adjust)
 
 		}
 		
-	r1 = get_ran(1,0,100) + adjust;
+	r1 = rand_short(0,100) + adjust;
 	if (r1 < 30 + adven[which_pc].level * 2)
 		how_much = -1;
 	if ((what_type == 11) && ((adven[which_pc].traits[trait::HighlyAlert] > 0) || (adven[which_pc].gaffect(affect::Asleep) < 0)))
@@ -1037,7 +1037,7 @@ void award_xp(short pc_num,short amt)
 		else adjust = xp_percent[adven[pc_num].level / 2];
 
 	if ((amt > 0) && (adven[pc_num].level > 7)) {
-		if (get_ran(1,0,100) < xp_percent[adven[pc_num].level / 2])
+		if (rand_short(0,100) < xp_percent[adven[pc_num].level / 2])
 			amt--;
 		}
 	if (amt <= 0)
@@ -1069,7 +1069,7 @@ void award_xp(short pc_num,short amt)
 			sprintf(c_line, "  %s is level %d!  ",(char *) adven[pc_num].name,adven[pc_num].level);
 			add_string_to_buf( c_line);		
 			adven[pc_num].skill_pts += (adven[pc_num].level < 20) ? 5 : 4;
-			add_hp = (adven[pc_num].level < 26) ? get_ran(1,2,6) + skill_bonus[adven[pc_num].skills[skill::Strength]]
+			add_hp = (adven[pc_num].level < 26) ? rand_short(2,6) + skill_bonus[adven[pc_num].skills[skill::Strength]]
 			   : max (skill_bonus[adven[pc_num].skills[skill::Strength]],0);
 			if (add_hp < 0)
 				add_hp = 0;
@@ -1413,14 +1413,14 @@ Boolean poison_weapon( short pc_num, short how_much,short safe)
 		else {
 				p_level = how_much;
 				add_string_to_buf("  You poison your weapon.       ");
-				r1 = get_ran(1,0,100);
+				r1 = rand_short(0,100);
 				// Nimble?
 				if (adven[pc_num].traits[trait::NimbleFingers] == FALSE)
 					r1 -= 6;
 				if ((r1 > p_chance[adven[pc_num].skills[skill::Poison]]) && (safe == 0)) {
 					add_string_to_buf("  Poison put on badly.         ");
 					p_level = p_level / 2;
-					r1 = get_ran(1,0,100);
+					r1 = rand_short(0,100);
 					if (r1 > p_chance[adven[pc_num].skills[skill::Poison]] + 10) {
 						add_string_to_buf("  You nick yourself.          ");
 						adven[pc_num].gaffect(affect::Poisoned) += p_level;
@@ -1580,7 +1580,7 @@ void do_mage_spell(short pc_num,short spell_num)
 				add_string_to_buf("  Summon failed.");
 			break;
 		case 26: // summon 1
-			store = adven[who_cast].level / 5 + stat_adj(who_cast, skill::Intelligence) / 3 + get_ran(1,0,2);
+			store = adven[who_cast].level / 5 + stat_adj(who_cast, skill::Intelligence) / 3 + rand_short(0,2);
 			j = boe_clamp(store,1,7);
 			r1 = get_summon_monster(1); ////
 			if (r1 < 0) break;
@@ -1591,7 +1591,7 @@ void do_mage_spell(short pc_num,short spell_num)
 					add_string_to_buf("  Summon failed.");
 			break;
 		case 43: // summon 2
-			store = adven[who_cast].level / 7 + stat_adj(who_cast, skill::Intelligence) / 3 + get_ran(1,0,1);
+			store = adven[who_cast].level / 7 + stat_adj(who_cast, skill::Intelligence) / 3 + rand_short(0,1);
 			j = boe_clamp(store,1,6);
 			r1 = get_summon_monster(2); ////
 			if (r1 < 0) break;
@@ -1602,7 +1602,7 @@ void do_mage_spell(short pc_num,short spell_num)
 					add_string_to_buf("  Summon failed.");
 			break;
 		case 58: // summon 3
-			store = adven[who_cast].level / 10 + stat_adj(who_cast, skill::Intelligence) / 3 + get_ran(1,0,1);
+			store = adven[who_cast].level / 10 + stat_adj(who_cast, skill::Intelligence) / 3 + rand_short(0,1);
 			j = boe_clamp(store,1,5);
 			r1 = get_summon_monster(3); ////
 			if (r1 < 0) break;
@@ -1779,9 +1779,9 @@ void do_priest_spell(short pc_num,short spell_num) ////
 			break;
 		case 34:
 			adven[pc_num].cur_sp -= spell_cost[1][spell_num];
-			r1 = adven[who_cast].level / 6 + stat_adj(who_cast, skill::Intelligence) / 3 + get_ran(1,0,1);
+			r1 = adven[who_cast].level / 6 + stat_adj(who_cast, skill::Intelligence) / 3 + rand_short(0,1);
 			for (i = 0; i < r1; i++) {
-				r2 = get_ran(1,0,7);
+				r2 = rand_short(0,7);
 				store = get_ran(2,1,5) + stat_adj(who_cast, skill::Intelligence);
 				if (summon_monster((r2 == 1) ? 100 : 99,where,store,2 ) == FALSE)
 					add_string_to_buf("  Summon failed.");
@@ -1821,7 +1821,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 
 		case 23: // Detect life
 			add_string_to_buf("  Monsters now on map.                ");
-			party.stuff_done[305][2] += 6 + get_ran(1,0,6);
+			party.stuff_done[305][2] += 6 + rand_short(0,6);
 			clear_map();
 			adven[pc_num].cur_sp -= spell_cost[1][spell_num];
 			break;
@@ -1883,7 +1883,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 					case 2: case 11:
 						sprintf(c_line, "  %s cured.    "
 							,(char *) adven[target].name);
-						r1 = ((spell_num == 2) ? 1 : 3) + get_ran(1,0,2) + stat_adj(pc_num, skill::Intelligence) / 2;
+						r1 = ((spell_num == 2) ? 1 : 3) + rand_short(0,2) + stat_adj(pc_num, skill::Intelligence) / 2;
 						cure_pc(target,r1);
 					break;
 					
@@ -1911,14 +1911,14 @@ void do_priest_spell(short pc_num,short spell_num) ////
 					case 27:
 						sprintf(c_line, "  %s recovers.      "
 							,(char *) adven[target].name);
-						r1 = 2 + get_ran(1,0,2) + stat_adj(pc_num, skill::Intelligence) / 2;
+						r1 = 2 + rand_short(0,2) + stat_adj(pc_num, skill::Intelligence) / 2;
 						adven[target].gaffect(affect::Diseased) = max(0,adven[target].gaffect(affect::Diseased) - r1);
 						break;
 
 					case 28:
 						sprintf(c_line, "  %s restored.      "
 							,(char *) adven[target].name);
-						r1 = 1 + get_ran(1,0,2) + stat_adj(pc_num, skill::Intelligence) / 2;
+						r1 = 1 + rand_short(0,2) + stat_adj(pc_num, skill::Intelligence) / 2;
 						adven[target].gaffect(affect::Dumbfounded) = max(0,adven[target].gaffect(affect::Dumbfounded) - r1);
 						break;
 						
@@ -1962,7 +1962,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 					targ_damaged = adven[target].max_health - adven[target].cur_health;
 					while ((targ_damaged > 0) && (adven[pc_num].cur_health > 0)) {
 						adven[target].cur_health++;
-						r1 = get_ran(1,0,100) + adven[pc_num].level / 2 + 3 * adj;
+						r1 = rand_short(0,100) + adven[pc_num].level / 2 + 3 * adj;
 						if (r1 < 100)
 							adven[pc_num].cur_health--;
 						if (r1 < 50)
@@ -1995,7 +1995,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 				if (spell_num == 33) {
 						for (i = 0; i < 24; i++) 
 							if (is_cursed(adven[target].items[i])){
-									r1 = get_ran(1,0,200) - 10 * stat_adj(pc_num, skill::Intelligence);
+									r1 = rand_short(0,200) - 10 * stat_adj(pc_num, skill::Intelligence);
 									if (r1 < 60) {
 										adven[target].items[i].item_properties = 
 											adven[target].items[i].item_properties & 239;
@@ -2013,7 +2013,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 						else take_item(pc_num,item);
 				if (spell_num == 40) {
 						if (adven[target].main_status == status::Dead) 
-								if (get_ran(1,1,adven[pc_num].level / 2) == 1) {
+								if (rand_short(1,adven[pc_num].level / 2) == 1) {
 										sprintf(c_line, "  %s now dust.                          ",
 											(char *) adven[target].name);									
 										play_sound(5);
@@ -2022,7 +2022,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 									else {
 									adven[target].main_status = status::Normal;
 									for (i = 0; i < 3; i++)
-										if (get_ran(1,0,2) < 2)
+										if (rand_short(0,2) < 2)
 											adven[target].skills[i] -= (adven[target].skills[i] > 1) ? 1 : 0;
 									adven[target].cur_health = 1;
 									sprintf(c_line, "  %s raised.                          ",
@@ -2036,7 +2036,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 						if (adven[target].main_status != status::Normal) {
 							adven[target].main_status = status::Normal;
 							for (i = 0; i < 3; i++)
-								if (get_ran(1,0,2) < 1)
+								if (rand_short(0,2) < 1)
 									adven[target].skills[i] -= (adven[target].skills[i] > 1) ? 1 : 0;
 							adven[target].cur_health = 1;
 							sprintf(c_line, "  %s raised.",
@@ -2193,7 +2193,7 @@ void cast_town_spell(location where) ////
 			case 20:
 				switch (scenario_ter_type(ter).special) { ////
 					case 9: case 10:
-						r1 = get_ran(1,0,100) - 5 * stat_adj(who_cast, skill::Intelligence) + 5 * c_town.difficulty;
+						r1 = rand_short(0,100) - 5 * stat_adj(who_cast, skill::Intelligence) + 5 * c_town.difficulty;
 						r1 += scenario_ter_type(ter).flag2 * 7;
 						if (scenario_ter_type(ter).flag2 == 10)
 							r1 = 10000;
@@ -2216,7 +2216,7 @@ void cast_town_spell(location where) ////
 				
 			case 41:
 				if ((is_fire_barrier(where.x,where.y)) || (is_force_barrier(where.x,where.y))) {
-						r1 = get_ran(1,0,100) - 5 * stat_adj(who_cast, skill::Intelligence) + 5 * (c_town.difficulty / 10);
+						r1 = rand_short(0,100) - 5 * stat_adj(who_cast, skill::Intelligence) + 5 * (c_town.difficulty / 10);
 						if (is_fire_barrier(where.x,where.y))
 							r1 -= 8;
 						if (r1 < (120 - combat_percent[min(19,adven[who_cast].level)])) {
@@ -2228,7 +2228,7 @@ void cast_town_spell(location where) ////
 							update_explored(c_town.p_loc);
 							}
 							else {
-								store = get_ran(1,0,1);
+								store = rand_short(0,1);
 								play_sound(41);
 								add_string_to_buf("  Didn't work.                  ");
 								}
@@ -2286,10 +2286,10 @@ void do_mindduel(short pc_num,creature_data_type *monst)
 	add_string_to_buf("Mindduel!");
 	while ((adven[pc_num].main_status == status::Normal) && (monst->active > 0) && (i < 10)) {
 		play_sound(1);
-		r1 = get_ran(1,0,100) + adjust;
+		r1 = rand_short(0,100) + adjust;
 		r1 += 5 * (monst->m_d.status[9] - adven[pc_num].gaffect(affect::Dumbfounded));
 		r1 += 5 * balance;
-		r2 = get_ran(1,1,6);
+		r2 = rand_short(1,6);
 		if (r1 < 30) {
 			sprintf(c_line, "  %s is drained %d.",adven[pc_num].name,r2);
 			add_string_to_buf( c_line);
@@ -2351,19 +2351,19 @@ void dispel_fields(short i,short j,short mode)
 	take_fire_wall(i,j);
 	take_force_wall(i,j);
 	take_scloud(i,j);
-	r1 = get_ran(1,1,6) + mode;
+	r1 = rand_short(1,6) + mode;
 	if (r1 <= 1)
 		take_web(i,j);
-	r1 = get_ran(1,1,6) + mode;
+	r1 = rand_short(1,6) + mode;
 	if (r1 < 6)
 		take_ice_wall(i,j);
-	r1 = get_ran(1,1,6) + mode;
+	r1 = rand_short(1,6) + mode;
 	if (r1 < 5)
 		take_sleep_cloud(i,j);
-	r1 = get_ran(1,1,8) + mode;
+	r1 = rand_short(1,8) + mode;
 	if (r1 <= 1)
 		take_quickfire(i,j);
-	r1 = get_ran(1,1,7) + mode;
+	r1 = rand_short(1,7) + mode;
 	if (r1 < 5)
 		take_blade_wall(i,j);
 }
@@ -2997,10 +2997,10 @@ void do_alchemy() ////
 			if (abil2_needed[which_p] > 0)
 				remove_charge(pc_num,which_item2);
 
-			r1 = get_ran(1,0,100);
+			r1 = rand_short(0,100);
 			if (r1 < fail_chance[adven[pc_num].skills[skill::Alchemy] - difficulty[which_p]]) {
 				add_string_to_buf("Alchemy: Failed.               ");
-				r1 = get_ran(1,0,1);
+				r1 = rand_short(0,1);
 				play_sound(41 );
 				}
 				else {
@@ -3015,7 +3015,7 @@ void do_alchemy() ////
 					if (adven[pc_num].skills[skill::Alchemy] - difficulty[which_p] >= 11)
 						store_i.charges++;
 					if (store_i.variety == 7)
-						store_i.graphic_num += get_ran(1,0,2);
+						store_i.graphic_num += rand_short(0,2);
 					if (give_to_pc(pc_num,store_i,0) == FALSE) {
 						ASB("No room in inventory.");
 						ASB("  Potion placed on floor.");
@@ -3269,7 +3269,7 @@ void poison_pc(short which_pc,short how_much)
 				(how_much > 1))
 					how_much++;
 			if ((adven[which_pc].traits[trait::Frail] == TRUE) && 
-				(how_much == 1) && (get_ran(1,0,1) == 0))
+				(how_much == 1) && (rand_short(0,1) == 0))
 					how_much++;
 			
 			if (how_much > 0) {
@@ -3382,28 +3382,28 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 		for (i = 0; i < 24; i++)
 			if ((adven[which_pc].items[i].variety != 0) && (adven[which_pc].equip[i] == TRUE)) {
 				if ((adven[which_pc].items[i].variety >= 12) && (adven[which_pc].items[i].variety <= 17)) {
-						r1 = get_ran(1,1,adven[which_pc].items[i].item_level);
+						r1 = rand_short(1,adven[which_pc].items[i].item_level);
 						how_much -= r1;
 						
 						// bonus for magical items
 						if (adven[which_pc].items[i].bonus > 0) {
-							r1 = get_ran(1,1,adven[which_pc].items[i].bonus);
+							r1 = rand_short(1,adven[which_pc].items[i].bonus);
 							how_much -= r1;
 							how_much -= adven[which_pc].items[i].bonus / 2;
 							}
 						if (adven[which_pc].items[i].bonus < 0) {
 							how_much = how_much - adven[which_pc].items[i].bonus;
 							}
-						r1 = get_ran(1,0,100);
+						r1 = rand_short(0,100);
 						if (r1 < hit_chance[adven[which_pc].skills[skill::Defense]] - 20)
 							how_much -= 1;
 					}
 				if (adven[which_pc].items[i].protection > 0) {
-						r1 = get_ran(1,1,adven[which_pc].items[i].protection);
+						r1 = rand_short(1,adven[which_pc].items[i].protection);
 						how_much -= r1;
 					}
 				if (adven[which_pc].items[i].protection < 0) {
-						r1 = get_ran(1,1,-1 * adven[which_pc].items[i].protection);
+						r1 = rand_short(1,-1 * adven[which_pc].items[i].protection);
 						how_much += r1;
 					}
 				}	
@@ -3421,7 +3421,7 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 		if (adven[which_pc].traits[trait::Toughness] == TRUE)
 			how_much--;
 		// luck
-		if (get_ran(1,0,100) < 2 * (hit_chance[adven[which_pc].skills[skill::Luck]] - 20))
+		if (rand_short(0,100) < 2 * (hit_chance[adven[which_pc].skills[skill::Luck]] - 20))
 			how_much -= 1;
 		}
 
@@ -3544,7 +3544,7 @@ void kill_pc(short which_pc,short type)
 		i = pc_has_abil_equip(which_pc,48);
 
 	if ((no_save == FALSE) && (type != 0) && (adven[which_pc].skills[skill::Luck] > 0) && 
-		(get_ran(1,0,100) < hit_chance[adven[which_pc].skills[skill::Luck]])) {
+		(rand_short(0,100) < hit_chance[adven[which_pc].skills[skill::Luck]])) {
 			add_string_to_buf("  But you luck out!          ");
 			adven[which_pc].cur_health = 0;
 			}

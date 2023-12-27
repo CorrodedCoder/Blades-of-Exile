@@ -1453,7 +1453,7 @@ void tip_of_day()
 {
 	char place_str[256];
 	
-	store_tip_page_on = get_ran(1,0,NUM_HINTS - 1);
+	store_tip_page_on = rand_short(0,NUM_HINTS - 1);
 	
 	make_cursor_sword();
 

@@ -21,14 +21,14 @@ item_record_type get_food()
 {
 	item_record_type food = 
 		{ item_variety::Food,0, 0,0,0,0,0,0, 62,0,0,0,0,0, 0, 0,0, {0,0},"Food", "Food",0,0,0,0};
-	food.graphic_num += get_ran(1,0,2);
-	food.item_level = get_ran(1,5,10);
-	if (get_ran(1,0,9) == 5)
+	food.graphic_num += rand_short(0,2);
+	food.item_level = rand_short(5,10);
+	if (rand_short(0,9) == 5)
 		food.graphic_num = 113;
-	if (get_ran(1,0,9) == 5)
+	if (rand_short(0,9) == 5)
 		food.graphic_num = 114;
 	// food doesn't always appear
-	if (get_ran(1,0,2) != 1)
+	if (rand_short(0,2) != 1)
 		food.variety = item_variety::None;
 	return food;
 }
@@ -37,14 +37,14 @@ item_record_type get_food()
 const item_record_type& pull_item_of_type(short loot_max,short min_val,short max_val, item_variety t1, item_variety t2, item_variety t3)
 {
 	// occasionally get nice item
-	if (get_ran(1,0,160) == 80)
+	if (rand_short(0,160) == 80)
 	{
 		loot_max += 2;
 		max_val += 2000;
 	}
 	for (short i = 0; i < 80; i++)
 	{
-		const auto j = get_ran(1,0,399);
+		const auto j = rand_short(0,399);
 		const auto& temp_i = get_stored_item(j);
 		if ((temp_i.variety == t1) || (temp_i.variety == t2) || (temp_i.variety == t3))
 		{
@@ -95,7 +95,7 @@ const item_record_type& get_shield(short loot)
 
 const item_record_type& get_potion(short loot)
 {
-	if (get_ran(1,0,80) < 20 * (4 - loot))
+	if (rand_short(0,80) < 20 * (4 - loot))
 		return pull_item_of_type(loot,loot_min[loot],loot_max[loot] / 2, item_variety::PotionOrMagicItem, item_variety::Invalid, item_variety::Invalid);
 	return pull_item_of_type(loot,loot_min[loot],loot_max[loot], item_variety::PotionOrMagicItem, item_variety::Invalid, item_variety::Invalid);
 }
@@ -107,7 +107,7 @@ const item_record_type& get_scroll(short loot)
 
 const item_record_type& get_missile(short loot)
 {
-	if (get_ran(1,0,2) < 2)
+	if (rand_short(0,2) < 2)
 		return pull_item_of_type(loot,loot_min[loot],loot_max[loot], item_variety::Arrows, item_variety::ThrownMissile, item_variety::Bow);
 	return pull_item_of_type(loot,loot_min[loot],loot_max[loot], item_variety::Crossbow, item_variety::Bolts, item_variety::MissileWeapon);
 }

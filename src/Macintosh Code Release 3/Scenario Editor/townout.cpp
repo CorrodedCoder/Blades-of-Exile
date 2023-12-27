@@ -1792,9 +1792,9 @@ Boolean new_town(short which_town)
 					break;
 				case 2:
 					t_d.terrain[i][j] = 2;
-					if (get_ran(1,0,8) == 0)
+					if (rand_short(0,8) == 0)
 						t_d.terrain[i][j] = 3;
-						else  if (get_ran(1,0,10) == 0)
+						else  if (rand_short(0,10) == 0)
 						t_d.terrain[i][j] = 4;
 					break;
 				}
@@ -1814,13 +1814,13 @@ void delete_last_town()
 	scenario.town_data_size[scenario.num_towns][2] = 0;
 	scenario.town_data_size[scenario.num_towns][3] = 0;
 	scenario.town_data_size[scenario.num_towns][4] = 0;
-	scenario.flag_a = sizeof(scenario_data_type) + get_ran(1,-1000,1000);
+	scenario.flag_a = sizeof(scenario_data_type) + rand_short(-1000,1000);
 	scenario.flag_b = town_s(user_given_password);
 	scenario.flag_c = out_s(user_given_password);
 	scenario.flag_e = str_size_1(user_given_password);
 	scenario.flag_f = str_size_2(user_given_password);
 	scenario.flag_h = str_size_3(user_given_password);
-	scenario.flag_g = 10000 + get_ran(1,0,5000);
+	scenario.flag_g = 10000 + rand_short(0,5000);
 	scenario.flag_d = init_data(user_given_password);
 	save_scenario();
 }

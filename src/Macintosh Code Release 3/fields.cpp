@@ -134,7 +134,7 @@ Boolean is_fire_barrier(short i,short j)
 }
 void make_fire_barrier(short i,short j)
 /**/{
-	if ((is_antimagic(i,j)) && (get_ran(1,0,3) < 3))
+	if ((is_antimagic(i,j)) && (rand_short(0,3) < 3))
 		return;
 	if (misc_i[i][j] & 248)
 		return;
@@ -154,7 +154,7 @@ Boolean is_force_barrier(short i,short j)
 }
 void make_force_barrier(short i,short j)
 /**/{
-	if ((is_antimagic(i,j)) && (get_ran(1,0,2) < 2))
+	if ((is_antimagic(i,j)) && (rand_short(0,2) < 2))
 		return;
 	if (misc_i[i][j] & 248)
 		return;
@@ -176,7 +176,7 @@ void make_quickfire(short i,short j)
 /**/{////
 	unsigned char ter;
 
-	if ((is_antimagic(i,j)) && (get_ran(1,0,1) == 0))
+	if ((is_antimagic(i,j)) && (rand_short(0,1) == 0))
 		return;
 	if ((is_force_barrier(i,j)) || (is_fire_barrier(i,j)))
 		return;
@@ -396,7 +396,7 @@ void spread_sfx(short type,short prob)
 	
 	for (i = 0; i < town_size[town_type]; i++)
 		for (j = 0; j < town_size[town_type]; j++)
-			if ((t_d.terrain[i][j] < 5) && (get_ran(1,0,100) <= prob))
+			if ((t_d.terrain[i][j] < 5) && (rand_short(0,100) <= prob))
 				make_sfx(i,j,type);
 				
 }

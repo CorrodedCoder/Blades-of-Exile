@@ -239,13 +239,13 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 		if (mode < 2) {
 			suppress_stat_screen = TRUE;
 			for (i = 0; i < 6; i++) {
-				r1 = get_ran(1,2,3);
+				r1 = rand_short(2,3);
 				web_pc(i,r1);
 				}
 			suppress_stat_screen = TRUE;
 			put_pc_screen();	
 			}
-			else web_pc(current_pc,get_ran(1,2,3));
+			else web_pc(current_pc,rand_short(2,3));
 		take_web(where_check.x,where_check.y);
 		}
 	if (is_force_barrier(where_check.x,where_check.y)) {
@@ -326,7 +326,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 				for (i = 0; i < 6; i++) 
 					if (adven[i].main_status == status::Normal) 
 						{
-						if (get_ran(1,1,100) <= ter_flag2) {
+						if (rand_short(1,100) <= ter_flag2) {
 							if (ter_special == 5)
 								poison_pc(i,ter_flag1);
 								else disease_pc(i,ter_flag1);
@@ -335,7 +335,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 				}
 			//print_nums(1,which_pc,current_pc);
 			if (mode == 2) {
-						if (get_ran(1,1,100) <= ter_flag2){
+						if (rand_short(1,100) <= ter_flag2){
 							if (ter_special == 5)
 								poison_pc(which_pc,ter_flag1);
 								else disease_pc(which_pc,ter_flag1);
@@ -399,7 +399,7 @@ void check_fields(location where_check,short mode,short which_pc)
 		fast_bang = 1;
 	if (is_fire_wall(where_check.x,where_check.y)) {
 			add_string_to_buf("  Fire wall!               ");
-			r1 = get_ran(1,1,6) + 1;
+			r1 = rand_short(1,6) + 1;
 //			if (mode < 2)
 //				hit_party(r1,1);
 			if (mode == 2)
@@ -452,13 +452,13 @@ void check_fields(location where_check,short mode,short which_pc)
 		if (mode < 2) {
 			suppress_stat_screen = TRUE;
 			for (i = 0; i < 6; i++) {
-				r1 = get_ran(1,2,3);
+				r1 = rand_short(2,3);
 				curse_pc(i,r1);
 				}
 			suppress_stat_screen = FALSE;
 			put_pc_screen();
 			}
-			else curse_pc(current_pc,get_ran(1,2,3));
+			else curse_pc(current_pc,rand_short(2,3));
 		}
 	if (is_sleep_cloud(where_check.x,where_check.y)) {
 		add_string_to_buf("  Sleep cloud!               ");
@@ -802,7 +802,7 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 				break;
 			case 120:
 				r1 = get_ran(6,1,4);
-				for (i = 0; i < get_ran(1,3,5); i++)
+				for (i = 0; i < rand_short(3,5); i++)
 					if (summon_monster(str,user_loc,r1,2) == FALSE)
 						add_string_to_buf("  Summon failed.");
 				break;
@@ -1233,9 +1233,9 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 		}
 		
 	// Saving throw
-	if (((dam_type == 1) || (dam_type == 5)) && (get_ran(1,0,20) <= victim->m_d.level))
+	if (((dam_type == 1) || (dam_type == 5)) && (rand_short(0,20) <= victim->m_d.level))
 		how_much = how_much / 2;
-	if ((dam_type == 3) && (get_ran(1,0,24) <= victim->m_d.level))
+	if ((dam_type == 3) && (rand_short(0,24) <= victim->m_d.level))
 		how_much = how_much / 2;
 
 	// Rentar-Ihrno?
@@ -1243,7 +1243,7 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 		how_much = how_much / 10;
 
 		
-	r1 = get_ran(1,0,(victim->m_d.armor * 5) / 4);
+	r1 = rand_short(0,(victim->m_d.armor * 5) / 4);
 	r1 += victim->m_d.level / 4;
 	if (dam_type == 0)
 		how_much -= r1;
@@ -1350,11 +1350,11 @@ void kill_monst(creature_data_type *which_m,short who_killed)
 				i = 4;
 				else if ( which_m->number == 45)
 					i = 0;
-					else i = get_ran(1,0,1); 
+					else i = rand_short(0,1); 
 			play_sound(29 + i); break;
 		 case 9: play_sound(29); break;
 		 case 1: case 2: case 7: case 8: case 11:
-			i = get_ran(1,0,1); play_sound(31 + i); break;
+			i = rand_short(0,1); play_sound(31 + i); break;
 		default: play_sound(33); break;
 		}
 	
@@ -2200,7 +2200,7 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 				break;
 				}
 			for (i = 0; i < 6; i++)
-				if (((pc < 0) || (pc == i)) && (get_ran(1,0,100) < spec.pic))
+				if (((pc < 0) || (pc == i)) && (rand_short(0,100) < spec.pic))
 					adven[i].skills[spec.ex2a] = boe_clamp(
 						adven[i].skills[spec.ex2a] + spec.ex1a * ((spec.ex1b != 0) ? -1: 1),0, skill_max[spec.ex2a]);
 			break;
@@ -2293,7 +2293,7 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 				*next_spec = spec.ex1b;
 			break;
 		case 132:
-			if (get_ran(1,1,100) < spec.ex1a)
+			if (rand_short(1,100) < spec.ex1a)
 				*next_spec = spec.ex1b;
 			break;
 		case 133:
@@ -2794,18 +2794,18 @@ void rect_spec(short which_mode,special_node_type cur_node,short cur_spec_type,
 	
 	l.x = i; l.y = j;
 	switch (cur_node.type) {
-		case 200: if (get_ran(1,0,100) <= spec.sd1 ) make_fire_wall(i,j); break;
-		case 201: if (get_ran(1,0,100) <= spec.sd1 ) make_force_wall(i,j); break;
-		case 202: if (get_ran(1,0,100) <= spec.sd1 ) make_ice_wall(i,j); break;
-		case 203: if (get_ran(1,0,100) <= spec.sd1 ) make_blade_wall(i,j); break;
-		case 204: if (get_ran(1,0,100) <= spec.sd1 ) make_scloud(i,j); break;
-		case 205: if (get_ran(1,0,100) <= spec.sd1 ) make_sleep_cloud(i,j); break;
-		case 206: if (get_ran(1,0,100) <= spec.sd1 ) make_quickfire(i,j); break;
-		case 207: if (get_ran(1,0,100) <= spec.sd1 ) make_fire_barrier(i,j); break;
-		case 208: if (get_ran(1,0,100) <= spec.sd1 ) make_force_barrier(i,j); break;
+		case 200: if (rand_short(0,100) <= spec.sd1 ) make_fire_wall(i,j); break;
+		case 201: if (rand_short(0,100) <= spec.sd1 ) make_force_wall(i,j); break;
+		case 202: if (rand_short(0,100) <= spec.sd1 ) make_ice_wall(i,j); break;
+		case 203: if (rand_short(0,100) <= spec.sd1 ) make_blade_wall(i,j); break;
+		case 204: if (rand_short(0,100) <= spec.sd1 ) make_scloud(i,j); break;
+		case 205: if (rand_short(0,100) <= spec.sd1 ) make_sleep_cloud(i,j); break;
+		case 206: if (rand_short(0,100) <= spec.sd1 ) make_quickfire(i,j); break;
+		case 207: if (rand_short(0,100) <= spec.sd1 ) make_fire_barrier(i,j); break;
+		case 208: if (rand_short(0,100) <= spec.sd1 ) make_force_barrier(i,j); break;
 		case 209: if (spec.sd1 == 0) dispel_fields(i,j,1); else dispel_fields(i,j,2);break;
-		case 210: if (get_ran(1,0,100) <= spec.sd1 ) make_sfx(i,j,spec.sd2 + 1); break;
-		case 211: if (get_ran(1,0,100) <= spec.sd1 ) {
+		case 210: if (rand_short(0,100) <= spec.sd1 ) make_sfx(i,j,spec.sd2 + 1); break;
+		case 211: if (rand_short(0,100) <= spec.sd1 ) {
 					if (spec.sd2 == 0) make_web(i,j);
 					if (spec.sd2 == 1) make_barrel(i,j);
 					if (spec.sd2 == 2) make_crate(i,j);
@@ -2824,7 +2824,7 @@ void rect_spec(short which_mode,special_node_type cur_node,short cur_spec_type,
 					}					
 			break;
 		case 214:
-			if (get_ran(1,0,100) <= spec.sd2) set_terrain(l,spec.sd1);
+			if (rand_short(0,100) <= spec.sd2) set_terrain(l,spec.sd1);
 			break;
 		case 215:
 			if (coord_to_ter(i,j) == spec.sd1) set_terrain(l,spec.sd2);

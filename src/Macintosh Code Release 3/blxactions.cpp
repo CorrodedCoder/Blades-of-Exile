@@ -505,10 +505,10 @@ Boolean handle_action(EventRecord event)
 										party.food -= 6;
 										while (i < 50) {
 											increase_age();
-											j = get_ran(1,1,2);
+											j = rand_short(1,2);
 											if (j == 2)
 												do_monsters();
-											j = get_ran(1,1,70);
+											j = rand_short(1,70);
 											if (j == 10)
 												create_wand_monst();
 											if (nearest_monster() <= 3) {
@@ -1277,7 +1277,7 @@ Boolean handle_action(EventRecord event)
 			increase_age();
 			do_monsters();
 			do_monster_turn();
-			j = get_ran(1,1,160 - c_town.difficulty);
+			j = rand_short(1,160 - c_town.difficulty);
 			if (j == 10)
 				create_wand_monst();
 			for (j = 0; j < 6; j++)
@@ -1361,7 +1361,7 @@ Boolean handle_action(EventRecord event)
 			// Wand monsts				
 			if ((overall_mode == 0) && (party_toast() == FALSE) && (party.age % 10 == 0)) {
 
-				i = get_ran(1,1,70 + PSD[306][8] * 200);
+				i = rand_short(1,70 + PSD[306][8] * 200);
 				if (i == 10)
 					create_wand_monst();			
 				for (i = 0; i < 10; i++)
@@ -1383,7 +1383,7 @@ Boolean handle_action(EventRecord event)
 							} 
 				} 
 			if (overall_mode == 1) {
-				i = get_ran(1,1,160 - c_town.difficulty + PSD[306][8] * 200);
+				i = rand_short(1,160 - c_town.difficulty + PSD[306][8] * 200);
 				if (i == 2)
 					create_wand_monst();
 				}
@@ -2155,7 +2155,7 @@ void increase_age()////
 
 
 	// Specials countdowns
-	if ((party.age % 500 == 0) && (get_ran(1,0,5) == 3) && (party_has_abil(52) == TRUE)) {
+	if ((party.age % 500 == 0) && (rand_short(0,5) == 3) && (party_has_abil(52) == TRUE)) {
 			update_stat = TRUE;
 			display_enc_string(52,39,3);
 			for (i = 0; i < 6; i++)
@@ -2278,11 +2278,11 @@ void increase_age()////
 	// Recuperation and chronic disease disads
 	for (i = 0; i < 6; i++) 
 		if (adven[i].main_status == status::Normal) {
-			if ((adven[i].traits[trait::Recuperation] > 0) && (get_ran(1,0,10) == 1) && (adven[i].cur_health < adven[i].max_health)) {
+			if ((adven[i].traits[trait::Recuperation] > 0) && (rand_short(0,10) == 1) && (adven[i].cur_health < adven[i].max_health)) {
 				heal_pc(i,2);
 				update_stat = TRUE;
 				}
-			if ((adven[i].traits[trait::ChronicDisease] > 0) && (get_ran(1,0,110) == 1)) {
+			if ((adven[i].traits[trait::ChronicDisease] > 0) && (rand_short(0,110) == 1)) {
 				disease_pc(i,4);
 				update_stat = TRUE;
 				}
@@ -2299,10 +2299,10 @@ void increase_age()////
 			adven[i].reduce_affect(affect::Speed);
 			if (((item = pc_has_abil_equip(i,50)) < 24) 
 				&& (adven[i].cur_health < adven[i].max_health)
-				&& ((overall_mode > 0) || (get_ran(1,0,10) == 5))){
-					j = get_ran(1,0,adven[i].items[item].ability_strength / 3);
+				&& ((overall_mode > 0) || (rand_short(0,10) == 5))){
+					j = rand_short(0,adven[i].items[item].ability_strength / 3);
 					if (adven[i].items[item].ability_strength / 3 == 0)
-						j = get_ran(1,0,1);
+						j = rand_short(0,1);
 					if (is_out()) j = j * 4;
 					heal_pc(i,j);	
 					update_stat = TRUE;
@@ -2342,7 +2342,7 @@ void handle_cave_lore()////
 	ter = out[party.p_loc.x][party.p_loc.y];
 	pic = scenario_ter_type(ter).picture;
 	for (i = 0; i < 6; i++)
-		if ((adven[i].main_status == status::Normal) && (adven[i].traits[trait::CaveLore] > 0) && (get_ran(1,0,12) == 5)
+		if ((adven[i].main_status == status::Normal) && (adven[i].traits[trait::CaveLore] > 0) && (rand_short(0,12) == 5)
 			&& (((pic >= 0) && (pic <= 1)) || ((pic >= 70) && (pic <= 76))) ) {
 			sprintf(str,"%s hunts.",adven[i].name);
 			party.food += get_ran(2,1,6);
@@ -2351,7 +2351,7 @@ void handle_cave_lore()////
 			}
 	for (i = 0; i < 6; i++)
 		if (
-		(adven[i].main_status == status::Normal) && (adven[i].traits[trait::Woodsman] > 0) && (get_ran(1,0,12) == 5)
+		(adven[i].main_status == status::Normal) && (adven[i].traits[trait::Woodsman] > 0) && (rand_short(0,12) == 5)
 			&& (((pic >= 2) && (pic <= 4)) || ((pic >= 79) && (pic <= 84)))) {
 			sprintf(str,"%s hunts.",adven[i].name);
 			party.food += get_ran(2,1,6);
@@ -2699,7 +2699,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 					update_explored(party.p_loc);
 					initiate_redraw();
 					print_buf();
-					if ((cave_lore_present() > 0) && (get_ran(1,0,1) == 0))
+					if ((cave_lore_present() > 0) && (rand_short(0,1) == 0))
 						add_string_to_buf("  (No supplies lost.)");
 						else if (party.food > 1800)
 							party.food -= 50;
@@ -2843,7 +2843,7 @@ Boolean town_move_party(location destination,short forced)////
 					ASB("You can't take horses there!");
 					return FALSE;
 					}
-				if ((c_town.town.lighting > 0) && (get_ran(1,0,1) == 0)) {
+				if ((c_town.town.lighting > 0) && (rand_short(0,1) == 0)) {
 					ASB("The darkness spooks your horses.");
 					return FALSE;
 					}

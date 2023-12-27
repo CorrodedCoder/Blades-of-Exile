@@ -405,7 +405,7 @@ void add_explosion(location dest,short val_to_place,short place_type,short boom_
 	for (i = 0; i < 30; i++)
 		if (store_booms[i].boom_type < 0) {
 			have_boom = TRUE;
-			store_booms[i].offset = (i == 0) ? 0 : -1 * get_ran(1,0,2);
+			store_booms[i].offset = (i == 0) ? 0 : -1 * rand_short(0,2);
 			store_booms[i].dest = dest;
 			store_booms[i].val_to_place = val_to_place;
 			store_booms[i].place_type = place_type;
@@ -673,8 +673,8 @@ void do_explosion_anim(short sound_num,short special_draw)
 				13 + 36 * (store_booms[i].dest.y - screen_ul.y) + store_booms[i].y_adj);
 				
 			if ((store_booms[i].place_type == 1) && (special_draw < 2)) {
-				temp_val = get_ran(1,0,50) - 25;
-				temp_val2 = get_ran(1,0,50) - 25;
+				temp_val = rand_short(0,50) - 25;
+				temp_val2 = rand_short(0,50) - 25;
 				OffsetRect(&explode_place_rect[i],temp_val,temp_val2);
 				}
 			

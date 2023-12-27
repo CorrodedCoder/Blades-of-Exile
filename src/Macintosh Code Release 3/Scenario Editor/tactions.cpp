@@ -523,7 +523,7 @@ Boolean handle_action(Point the_point,EventRecord event)
 						town.preset_items[x].ability = -1;
 						if ((data_store->scen_item_list.scen_items[mode_count].variety == 3) ||
 							(data_store->scen_item_list.scen_items[mode_count].variety == 11))
-								town.preset_items[x].ability = get_ran(1,4,6);
+								town.preset_items[x].ability = rand_short(4,6);
 						//town.preset_items[x].charges = 0;
 						town.preset_items[x].always_there = 0;
 						town.preset_items[x].property = 0;
@@ -1148,11 +1148,11 @@ Boolean handle_action(Point the_point,EventRecord event)
 		//draw_frames();
 		}
 
-	if ((get_ran(1,0,100) == 50) && (check_p2(user_given_password) == FALSE)) {
+	if ((rand_short(0,100) == 50) && (check_p2(user_given_password) == FALSE)) {
 		fancy_choice_dialog(868,0);
 		return are_done;
 		}
-	if ((get_ran(1,0,100) == 50) && (check_p3(user_given_password) == FALSE)) {
+	if ((rand_short(0,100) == 50) && (check_p3(user_given_password) == FALSE)) {
 		fancy_choice_dialog(868,0);
 		return are_done;
 		}
@@ -1188,7 +1188,7 @@ void swap_terrain()
 		for (j = 0; j < ((editing_town == TRUE) ? max_dim[town_type] : 48); j++) 
 		{
 			ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
-			if ((ter == a) && (get_ran(1,1,100) <= c)) {
+			if ((ter == a) && (rand_short(1,100) <= c)) {
 				if (editing_town == TRUE)
 					t_d.terrain[i][j] = b;
 					else current_terrain.terrain[i][j] = b;
@@ -1654,7 +1654,7 @@ for (i = 0; i < ((editing_town == TRUE) ? max_dim[town_type] : 48); i++)
 		l.x = i;
 		l.y = j;
 		ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
-		if ((dist(center,l) <= radius) && (get_ran(1,1,20) <= probability) 
+		if ((dist(center,l) <= radius) && (rand_short(1,20) <= probability) 
 			&& (ter < 5))
 			set_terrain(l,terrain_type);
 		}
@@ -1670,7 +1670,7 @@ for (i = 0; i < ((editing_town == TRUE) ? max_dim[town_type] : 48); i++)
 	for (j = 0; j < ((editing_town == TRUE) ? max_dim[town_type] : 48); j++) {
 		l.x = i;
 		l.y = j;
-		if ((dist(center,l) <= radius) && (get_ran(1,1,20) <= probability))
+		if ((dist(center,l) <= radius) && (rand_short(1,20) <= probability))
 			set_terrain(l,terrain_type);
 		}
 }
@@ -1687,7 +1687,7 @@ for (i = 0; i < ((editing_town == TRUE) ? max_dim[town_type] : 48); i++)
 		l.y = j;
 		if ((i >= r.left) && (i <= r.right) && (j >= r.top) && (j <= r.bottom)
 		&& ((hollow == FALSE) || (i == r.left) || (i == r.right) || (j == r.top) || (j == r.bottom))
-		  && ((hollow == TRUE) || (get_ran(1,1,20) <= probability)))
+		  && ((hollow == TRUE) || (rand_short(1,20) <= probability)))
 			set_terrain(l,terrain_type);
 		}
 }
@@ -1701,13 +1701,13 @@ void frill_up_terrain()
 		for (j = 0; j < ((editing_town == TRUE) ? max_dim[town_type] : 48); j++) {
 		terrain_type = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
 
-		if ((terrain_type == 2) && (get_ran(1,1,20) < 3))
+		if ((terrain_type == 2) && (rand_short(1,20) < 3))
 			terrain_type = 3;
-		if ((terrain_type == 2) && (get_ran(1,1,20) < 2))
+		if ((terrain_type == 2) && (rand_short(1,20) < 2))
 			terrain_type = 4;
-		if ((terrain_type == 0) && (get_ran(1,1,20) < 2))
+		if ((terrain_type == 0) && (rand_short(1,20) < 2))
 			terrain_type = 1;
-		if ((terrain_type == 36) && (get_ran(1,1,20) < 5))
+		if ((terrain_type == 36) && (rand_short(1,20) < 5))
 			terrain_type = 37;
 		if (editing_town == TRUE)
 			t_d.terrain[i][j] = terrain_type;
@@ -2196,7 +2196,7 @@ else // wall(i-1,j) == TRUE
 }
 }
 			ter_to_fix += 14;
-			//if ((ter_to_fix == 36) && (get_ran(1,0,15) == 5))
+			//if ((ter_to_fix == 36) && (rand_short(0,15) == 5))
 			//	ter_to_fix++; 
 			if ((t_d.terrain[i][j] != 37) || (ter_to_fix != 36))
 				t_d.terrain[i][j] = ter_to_fix; 				
@@ -2622,7 +2622,7 @@ else // wall(i-1,j) == TRUE
 }
 }
 			ter_to_fix += 14;
-			//if ((ter_to_fix == 36) && (get_ran(1,0,15) == 5))
+			//if ((ter_to_fix == 36) && (rand_short(0,15) == 5))
 			//	ter_to_fix++; 
 			if ((current_terrain.terrain[i][j] != 37) || (ter_to_fix != 36))
 				current_terrain.terrain[i][j] = ter_to_fix; 				
@@ -2923,7 +2923,7 @@ Boolean place_item(location spot_hit,short which_item,short property,short alway
 		return TRUE;
 	if (data_store->scen_item_list.scen_items[which_item].variety == 0)
 		return TRUE;
-	if (get_ran(1,1,100) > odds)
+	if (rand_short(1,100) > odds)
 		return FALSE;
 	for (x = 0; x < 64; x++) 
 		if (town.preset_items[x].item_code < 0) {
@@ -2933,7 +2933,7 @@ Boolean place_item(location spot_hit,short which_item,short property,short alway
 			town.preset_items[x].ability = -1;
 			if ((data_store->scen_item_list.scen_items[which_item].variety == 3) ||
 				(data_store->scen_item_list.scen_items[which_item].variety == 11))
-					town.preset_items[x].ability = get_ran(1,4,6);
+					town.preset_items[x].ability = rand_short(4,6);
 
 			//town.preset_items[x].charges = 0;
 			town.preset_items[x].always_there = always;

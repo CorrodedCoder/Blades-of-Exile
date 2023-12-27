@@ -16,7 +16,7 @@ short move_to_zero(short val)
 	return val;
 }
 
-short get_ran(short times, short  low, short  high)
+short get_ran(short times, short low, short high)
 {
 	short to_ret = 0;
 
@@ -38,4 +38,9 @@ short get_ran(short times, short  low, short  high)
 #endif
 
 	return to_ret;
+}
+
+short rand_short(short low, short high)
+{
+	return get_ran(1, low, high);
 }
