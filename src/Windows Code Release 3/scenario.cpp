@@ -1,5 +1,5 @@
 #include "scenario.hpp"
-#include "global.h"
+#include "global_structs.hpp"
 
 scenario_data_type scenario;
 piles_of_stuff_dumping_type2 data_store2;
