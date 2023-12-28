@@ -404,7 +404,7 @@ bool is_blocked(location to_check)
 	unsigned char ter;
 
 	if (is_out()) {
-		if (impassable(out[to_check.x][to_check.y]) == TRUE) {
+		if (impassable(out[to_check.x][to_check.y])) {
 			return true;
 			}
 		if (same_point (to_check,party.p_loc) == TRUE)
@@ -421,7 +421,7 @@ bool is_blocked(location to_check)
 		gr = scenario_ter_type(ter).picture;
 		
 		// Terrain blocking?
-		if (impassable(ter) == TRUE) {
+		if (impassable(ter)) {
 			return true;
 			}
 			
@@ -565,7 +565,7 @@ Boolean outd_is_blocked(location to_check)
 	short i;
 
 	if (overall_mode == 0) {
-		if (impassable(out[to_check.x][to_check.y]) == TRUE) {
+		if (impassable(out[to_check.x][to_check.y])) {
 			return TRUE;
 			}
 		for (i = 0; i < 10; i++)
@@ -608,11 +608,11 @@ Boolean outd_is_special(location to_check)
 	return FALSE;
 }
 
-Boolean impassable(unsigned char terrain_to_check)
+bool impassable(unsigned char terrain_to_check)
 {
 	if (terrain_blocked[terrain_to_check] > 2)
-		return TRUE;
-		else return FALSE;
+		return true;
+		else return false;
 }
 
 short get_blockage(unsigned char terrain_type)
@@ -755,14 +755,12 @@ location push_loc(location from_where,location to_where)
 
 
 
-Boolean spot_impassable(short i,short  j)
+bool spot_impassable(short i,short  j)
 {
-	unsigned char ter;
-
-	ter = coord_to_ter(i,j);
+	const auto ter{ coord_to_ter(i,j) };
 	if (terrain_blocked[ter] == 5)
-		return TRUE;
-		else return FALSE;
+		return true;
+		else return false;
 }
 
 void swap_ter(short i,short j,unsigned char ter1,unsigned char ter2)

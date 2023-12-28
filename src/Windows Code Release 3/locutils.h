@@ -29,7 +29,7 @@ Boolean outd_is_blocked(location to_check);
 Boolean special_which_blocks_monst(location to_check);
 Boolean is_special(location to_check);
 Boolean outd_is_special(location to_check);
-Boolean impassable(unsigned char terrain_to_check);
+bool impassable(unsigned char terrain_to_check);
 short get_blockage(unsigned char terrain_type);
 short light_radius();
 Boolean pt_in_light(location from_where,location to_where) ;// Assumes, of course, in town or combat
@@ -37,6 +37,6 @@ Boolean combat_pt_in_light(location to_where);
 Boolean party_sees_a_monst(); // Returns true is a hostile monster is in sight.
 short party_can_see(location where);
 location push_loc(location from_where,location to_where);
-Boolean spot_impassable(short i,short  j);
+bool spot_impassable(short i,short  j);
 void swap_ter(short i,short j,unsigned char ter1,unsigned char ter2);
 void alter_space(short i,short j,unsigned char ter);

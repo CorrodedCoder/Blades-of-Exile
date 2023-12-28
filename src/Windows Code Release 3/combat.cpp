@@ -443,7 +443,7 @@ Boolean pc_combat_move(location destination)
 				return TRUE;
 				}
 			else if ((forced == TRUE)
-				|| ((impassable(combat_terrain[destination.x][destination.y]) == FALSE) && (pc_there(destination) == 6))) {
+				|| ( !impassable(combat_terrain[destination.x][destination.y]) && (pc_there(destination) == 6))) {
 			
 				// monsters get back-shots
 				for (i = 0; i < T_M; i++) {
