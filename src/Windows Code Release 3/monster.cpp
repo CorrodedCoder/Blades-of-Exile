@@ -283,8 +283,8 @@ void do_monsters()
 	
 	if (overall_mode == 1) 
 		for (i = 0; i < T_M; i++) 
-		if ((c_town.monst.dudes[i].active != 0) && (c_town.monst.dudes[i].m_d.mstatus[11] <= 0)
-			&& (c_town.monst.dudes[i].m_d.mstatus[12] <= 0)) {
+		if ((c_town.monst.dudes[i].active != 0) && (c_town.monst.dudes[i].gaffect(affect::Asleep) <= 0)
+			&& (c_town.monst.dudes[i].gaffect(affect::Paralyzed) <= 0)) {
 			// have to pick targets
 			if (c_town.monst.dudes[i].active == 1)
 				target = 6;
@@ -1187,7 +1187,7 @@ void poison_monst(creature_data_type *which_m,short how_much)
 		monst_spell_note(which_m->number,10);
 		return;
 		}
-	which_m->m_d.mstatus[2] = min(8, which_m->m_d.mstatus[2] + how_much);
+	which_m->gaffect(affect::Poisoned) = min(8, which_m->gaffect(affect::Poisoned) + how_much);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 4);
 
 }
@@ -1198,7 +1198,7 @@ void acid_monst(creature_data_type *which_m,short how_much)
 	i = how_much;
 	magic_adjust(which_m,&i);
 	how_much = i;
-	which_m->m_d.mstatus[13] = boe_clamp(which_m->m_d.mstatus[13] + how_much,-8, 8);
+	which_m->gaffect(affect::Acid) = boe_clamp(which_m->gaffect(affect::Acid) + how_much,-8, 8);
 	monst_spell_note(which_m->number,31);
 
 }
@@ -1210,7 +1210,7 @@ void slow_monst(creature_data_type *which_m,short how_much)
 	i = how_much;
 	magic_adjust(which_m,&i);
 	how_much = i;
-	which_m->m_d.mstatus[3] = boe_clamp(which_m->m_d.mstatus[3] - how_much,-8, 8);
+	which_m->gaffect(affect::Speed) = boe_clamp(which_m->gaffect(affect::Speed) - how_much,-8, 8);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 2);
 
 }
@@ -1223,7 +1223,7 @@ void curse_monst(creature_data_type *which_m,short how_much)
 	how_much = i;
 
 
-	which_m->m_d.mstatus[1] = boe_clamp(which_m->m_d.mstatus[1] - how_much,-8, 8);
+	which_m->gaffect(affect::CursedBlessed) = boe_clamp(which_m->gaffect(affect::CursedBlessed) - how_much,-8, 8);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 5);
 
 }
@@ -1234,7 +1234,7 @@ void web_monst(creature_data_type *which_m,short how_much)
 	i = how_much;
 	magic_adjust(which_m,&i);
 	how_much = i;
-	which_m->m_d.mstatus[6] = boe_clamp(which_m->m_d.mstatus[6] + how_much,-8, 8);
+	which_m->gaffect(affect::Webbed) = boe_clamp(which_m->gaffect(affect::Webbed) + how_much,-8, 8);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 19);
 
 }
@@ -1256,7 +1256,7 @@ void disease_monst(creature_data_type *which_m,short how_much)
 	i = how_much;
 	magic_adjust(which_m,&i);
 	how_much = i;
-	which_m->m_d.mstatus[7] = boe_clamp(which_m->m_d.mstatus[7] + how_much,-8, 8);
+	which_m->gaffect(affect::Diseased) = boe_clamp(which_m->gaffect(affect::Diseased) + how_much,-8, 8);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 25);
 
 }
@@ -1268,7 +1268,7 @@ void dumbfound_monst(creature_data_type *which_m,short how_much)
 	i = how_much;
 	magic_adjust(which_m,&i);
 	how_much = i;
-	which_m->m_d.mstatus[9] = boe_clamp(which_m->m_d.mstatus[9] + how_much,-8, 8);
+	which_m->gaffect(affect::Dumbfounded) = boe_clamp(which_m->gaffect(affect::Dumbfounded) + how_much,-8, 8);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 22);
 
 }

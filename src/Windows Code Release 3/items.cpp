@@ -704,8 +704,8 @@ void make_town_hostile()
 				
 				// If a town, give pwoer boost
 				c_town.monst.dudes[i].m_d.health *= 3;
-				c_town.monst.dudes[i].m_d.mstatus[3] = 8;
-				c_town.monst.dudes[i].m_d.mstatus[1] = 8;
+				c_town.monst.dudes[i].gaffect(affect::Speed) = 8;
+				c_town.monst.dudes[i].gaffect(affect::CursedBlessed) = 8;
 				}
 			}
 			

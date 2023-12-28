@@ -292,7 +292,7 @@ static const std::array c_item_types{ "","1-Handed weapon","2-Handed weapon","",
 
 static const char * item_types(item_variety variety)
 {
-	return c_item_types[static_cast<short>(variety)];
+	return c_item_types[to_underlying(variety)];
 }
 
 void put_item_info(short pc,short item)

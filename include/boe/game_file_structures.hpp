@@ -4,6 +4,7 @@
 #include <compare>
 #include <algorithm>
 #include "boe/utility.hpp"
+#include "boe/compatibility.hpp"
 
 const auto NUM_TOWN_ITEMS = 115;
 
@@ -537,6 +538,16 @@ struct creature_data_type {
 	short summoned;
 	creature_start_type monst_start;
 
+	[[nodiscard]] short gaffect(affect type) const
+	{
+		return m_d.mstatus[to_underlying(type)];
+	}
+
+	[[nodiscard]] short& gaffect(affect type)
+	{
+		return m_d.mstatus[to_underlying(type)];
+	}
+
 	auto operator<=>(const creature_data_type&) const = default;
 	bool operator==(const creature_data_type&) const = default;
 };
@@ -638,22 +649,22 @@ struct pc_record_type {
 
 	[[nodiscard]] bool has_trait(trait trait) const
 	{
-		return traits[static_cast<int>(trait)];
+		return traits[to_underlying(trait)];
 	}
 
 	[[nodiscard]] short gaffect(affect type) const
 	{
-		return status[static_cast<int>(type)];
+		return status[to_underlying(type)];
 	}
 
 	[[nodiscard]] short& gaffect(affect type)
 	{
-		return status[static_cast<int>(type)];
+		return status[to_underlying(type)];
 	}
 
 	void reduce_affect(affect type)
 	{
-		status[static_cast<short>(type)] = move_to_zero(status[static_cast<short>(type)]);
+		status[to_underlying(type)] = move_to_zero(status[to_underlying(type)]);
 	}
 };
 static_assert(sizeof(pc_record_type) == 1898);
