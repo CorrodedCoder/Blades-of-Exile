@@ -137,7 +137,7 @@ void create_wand_monst()
 			while ((point_onscreen(outdoors[party.i_w_c.x][party.i_w_c.y].wandering_locs[r2],global_to_local(party.p_loc)) == TRUE)
 				&& (num_tries++ < 100))
 				r2 = rand_short(0,3);
-			if (is_blocked(outdoors[party.i_w_c.x][party.i_w_c.y].wandering_locs[r2]) == FALSE)
+			if (is_not_blocked(outdoors[party.i_w_c.x][party.i_w_c.y].wandering_locs[r2]))
 				place_outd_wand_monst(outdoors[party.i_w_c.x][party.i_w_c.y].wandering_locs[r2],
 					outdoors[party.i_w_c.x][party.i_w_c.y].wandering[r1],0);
 			}
@@ -156,17 +156,17 @@ void create_wand_monst()
 					p_loc = c_town.town.wandering_locs[r2];
 					p_loc.x += rand_short(0,4) - 2;
 					p_loc.y += rand_short(0,4) - 2;
-					if (is_blocked(p_loc) == FALSE)
+					if (is_not_blocked(p_loc))
 						place_monster(c_town.town.wandering[r1].monst[i],p_loc);
 					p_loc = c_town.town.wandering_locs[r2];
 					p_loc.x += rand_short(0,4) - 2;
 					p_loc.y += rand_short(0,4) - 2;
-					if ((r1 >= 2) && (i == 0) && (is_blocked(p_loc) == FALSE)) // place extra monsters?
+					if ((r1 >= 2) && (i == 0) && is_not_blocked(p_loc)) // place extra monsters?
 						place_monster(c_town.town.wandering[r1].monst[i],p_loc);
 					p_loc = c_town.town.wandering_locs[r2];
 					p_loc.x += rand_short(0,4) - 2;
 					p_loc.y += rand_short(0,4) - 2;
-					if ((r1 == 3) && (i == 1) && (is_blocked(p_loc) == FALSE)) 
+					if ((r1 == 3) && (i == 1) && is_not_blocked(p_loc))
 						place_monster(c_town.town.wandering[r1].monst[i],p_loc);						
 					}
 				}			
@@ -194,7 +194,7 @@ void place_outd_wand_monst(location where,out_wandering_type group,short forced)
 				if (party.out_c[i].which_sector.y == 1)
 					party.out_c[i].m_loc.y += 48;
 				l = party.out_c[i].m_loc;
-				while ((forced == TRUE) && (is_blocked(l)) && (j < 50)) {
+				while ((forced == TRUE) && is_blocked(l) && (j < 50)) {
 					l = party.out_c[i].m_loc;
 					l.x += rand_short(0,2) - 1;
 					l.y += rand_short(0,2) - 1;
@@ -817,7 +817,7 @@ location find_clear_spot(location from_where,short mode)
 		loc.x = loc.x + r1;
 		r1 = rand_short(-2,2);
 		loc.y = loc.y + r1;
-		if ((loc_off_act_area(loc) == FALSE) && (is_blocked(loc) == FALSE)
+		if ((loc_off_act_area(loc) == FALSE) && is_not_blocked(loc)
 			&& (can_see(from_where,loc,1) == 0)
 			&& (!(is_combat()) || (pc_there(loc) == 6))
 			&& (!(is_town()) || (same_point(loc,c_town.p_loc) == FALSE))

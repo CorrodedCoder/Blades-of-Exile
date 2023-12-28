@@ -2774,7 +2774,7 @@ Boolean town_move_party(location destination,short forced)////
 	
 	if (keep_going == TRUE) {
 		if (party.in_boat >= 0) {
-				if ((is_blocked(destination) == FALSE) && (is_special(destination) == FALSE)
+				if (is_not_blocked(destination) && (is_special(destination) == FALSE)
 				// If to bridge, exit if heading diagonal, keep going is head horiz or vert
 		&& ( (scenario_ter_type(ter).boat_over == FALSE)
 		|| ((destination.x != c_town.p_loc.x) && (destination.y != c_town.p_loc.y)))) {
@@ -2784,10 +2784,10 @@ Boolean town_move_party(location destination,short forced)////
 				else if ((destination.x != c_town.p_loc.x) && (destination.y != c_town.p_loc.y))
 					return FALSE;	
 				// Crossing bridge: land or go through
-				else if ((is_blocked(destination) == FALSE) && (scenario_ter_type(ter).boat_over == TRUE)) {
+				else if ( is_not_blocked(destination) && (scenario_ter_type(ter).boat_over == TRUE)) {
 					if ((fancy_choice_dialog(1086,0)) == 1)
 						forced = TRUE;
-						else if (is_blocked(destination) == FALSE) {
+						else if (is_not_blocked(destination)) {
 							add_string_to_buf("You leave the boat.             ");
 							party.in_boat = -1;					
 							}				
@@ -2833,7 +2833,7 @@ Boolean town_move_party(location destination,short forced)////
 
 			return TRUE;
 		} 
-		else if ((is_blocked(destination) == FALSE) || (forced == 1)) {
+		else if (is_not_blocked(destination) || (forced == 1)) {
 			if (party.in_horse >= 0) {
 				if ((scenario_ter_type(ter).special >= 2) && (scenario_ter_type(ter).special <= 4)) {
 					ASB("Your horses quite sensibly refuse.");

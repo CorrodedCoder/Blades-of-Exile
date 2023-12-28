@@ -807,7 +807,7 @@ void place_party(short direction)
 		
 		check_loc.y -= y_adj;		
 		pos_locs[i] = check_loc;
-		if ((is_blocked(check_loc) == FALSE) && (is_special(check_loc) == FALSE) && (get_obscurity(check_loc.x,check_loc.y) == 0)
+		if (is_not_blocked(check_loc) && (is_special(check_loc) == FALSE) && (get_obscurity(check_loc.x,check_loc.y) == 0)
 			&& (can_see(c_town.p_loc,check_loc,1) < 1) && (loc_off_act_area(check_loc) == FALSE)) {
 			spot_ok[i] = TRUE;
 			how_many_ok += (i > 1) ? 1 : 0;

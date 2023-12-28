@@ -370,7 +370,7 @@ void update_explored(location dest)
 
 
 // All purpose function to check is spot is free for travel into.
-Boolean is_blocked(location to_check)
+bool is_blocked(location to_check)
 {
 	short i,gr;
 	location check_loc;
@@ -378,15 +378,15 @@ Boolean is_blocked(location to_check)
 
 	if (is_out()) {
 		if (impassable(out[to_check.x][to_check.y]) == TRUE) {
-			return TRUE;
+			return true;
 			}
 		if (same_point (to_check,party.p_loc) == TRUE)
-			return TRUE;
+			return true;
 		for (i = 0; i < 20; i++)
 			if ((party.out_c[i].exists) == TRUE)  
 				if (same_point(party.out_c[i].m_loc, to_check) == TRUE)
-					return TRUE;
-		return FALSE;
+					return true;
+		return false;
 		}
 		
 	if ((is_town()) || (is_combat())) {
@@ -396,35 +396,40 @@ Boolean is_blocked(location to_check)
 		////
 		// Terrain blocking?
 		if (impassable(ter) == TRUE) {
-			return TRUE;
+			return true;
 			}
 			
 		// Keep away from marked specials during combat
 		if ((is_combat()) && (gr <= 212) && (gr >= 207))
-			return TRUE;
+			return true;
 		if ((is_combat()) && (gr == 406))
-			return TRUE;
+			return true;
 			
 		// Party there?
 		if (is_town())
 			if (same_point (to_check,c_town.p_loc) == TRUE)
-				return TRUE;
+				return true;
 		if (is_combat())
 			for (i = 0; i < 6; i++)
 				if ((adven[i].main_status == status::Normal) && (same_point (to_check,pc_pos[i]) == TRUE))
-					return TRUE;
+					return true;
 		
 		// Monster there?
 		if (monst_there(to_check) < 90)
-			return TRUE;
+			return true;
 		
 		// Magic barrier?
 		if (is_force_barrier(to_check.x,to_check.y))
-			return TRUE;
+			return true;
 			
-		return FALSE;
+		return false;
 		}
-	return TRUE;
+	return true;
+}
+
+bool is_not_blocked(location to_check)
+{
+	return !is_blocked(to_check);
 }
 
 Boolean monst_on_space(location loc,short m_num)
@@ -461,7 +466,7 @@ Boolean monst_can_be_there(location loc,short m_num)
 	for (i = 0; i < c_town.monst.dudes[m_num].m_d.x_width; i++)
 		for (j = 0; j < c_town.monst.dudes[m_num].m_d.y_width; j++) {
 			destination.x = loc.x + i; destination.y = loc.y + j;
-			if ((is_blocked(destination) == TRUE)
+			if (is_blocked(destination))
 				|| (loc_off_act_area(destination) == TRUE)) {
 					c_town.monst.dudes[m_num].m_loc.x -= 100;
 					return FALSE;

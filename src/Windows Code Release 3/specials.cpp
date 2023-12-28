@@ -210,7 +210,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 						*forced = TRUE;
 						}
 					*spec_num = c_town.town.spec_id[i];
-					if ((is_blocked(where_check) == FALSE) || (ter_special == terrain_special::ChangeWhenStepOn)
+					if (is_not_blocked(where_check) || (ter_special == terrain_special::ChangeWhenStepOn)
 	 					|| (ter_special == terrain_special::CallLocalSpecial) || (ter_special == terrain_special::CallScenarioSpecial)) {
 						give_help(54,0,0);
 						run_special(mode,2,c_town.town.spec_id[i],where_check,&s1,&s2,&s3);

@@ -216,7 +216,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 						*forced = TRUE;
 						}
 					*spec_num = c_town.town.spec_id[i];
-					if ((is_blocked(where_check) == FALSE) || (ter_special == 1)
+					if (is_not_blocked(where_check) || (ter_special == 1)
 	 					|| (ter_special == 12) || (ter_special == 13)) {
 						give_help(54,0,0);
 						run_special(mode,2,c_town.town.spec_id[i],where_check,&s1,&s2,&s3);
