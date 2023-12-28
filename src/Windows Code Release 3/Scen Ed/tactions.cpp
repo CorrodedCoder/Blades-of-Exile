@@ -2767,11 +2767,9 @@ void adjust_space(location l)
 
 }
 
-Boolean is_lava(short x,short y)
+bool is_lava(short x,short y)
 {
-	if ((coord_to_ter(x,y) == 75) || (coord_to_ter(x,y) == 76))
-		return TRUE;
-		else return FALSE;
+	return (coord_to_ter(x, y) == 75) || (coord_to_ter(x, y) == 76);
 }
 
 unsigned char coord_to_ter(short x,short y)
@@ -2812,7 +2810,7 @@ short can_see(location p1,location p2,short mode)
 		if (p1.x > p2.x) {
 			for (count = p2.x + 1; count < p1.x; count++) {
 				storage = storage + get_obscurity(count, p1.y);
-				if (((scenario_ter_type(coord_to_ter(count,p1.y)).blockage > 2) || (is_lava(count,p1.y) == TRUE)) && (mode == 1))
+				if (((scenario_ter_type(coord_to_ter(count,p1.y)).blockage > 2) || is_lava(count,p1.y)) && (mode == 1))
 					return 5;
 				}
 			}
@@ -2820,7 +2818,7 @@ short can_see(location p1,location p2,short mode)
 				for (count = p1.x + 1; count < p2.x; count++) {
 
 				storage = storage + get_obscurity(count, p1.y);
-				if (((scenario_ter_type(coord_to_ter(count,p1.y)).blockage > 2) || (is_lava(count,p1.y) == TRUE)) && (mode == 1))
+				if (((scenario_ter_type(coord_to_ter(count,p1.y)).blockage > 2) || is_lava(count,p1.y)) && (mode == 1))
 					return 5;
 				}
 			}
@@ -2830,14 +2828,14 @@ short can_see(location p1,location p2,short mode)
 		if (p1.y > p2.y) {
 			for (count = p1.y - 1; count > p2.y; count--) {
 				storage = storage + get_obscurity(p1.x, count);
-				if (((scenario_ter_type(coord_to_ter(p1.x,count)).blockage > 2) || (is_lava(p1.x,count) == TRUE)) && (mode == 1))
+				if (((scenario_ter_type(coord_to_ter(p1.x,count)).blockage > 2) || is_lava(p1.x,count)) && (mode == 1))
 					return 5;
 				}
 			}
 			else {
 				for (count = p1.y + 1; count < p2.y; count++) {
 					storage = storage + get_obscurity(p1.x, count);
-					if (((scenario_ter_type(coord_to_ter(p1.x,count)).blockage > 2) || (is_lava(p1.x,count) == TRUE))  && (mode == 1))
+					if (((scenario_ter_type(coord_to_ter(p1.x,count)).blockage > 2) || is_lava(p1.x,count))  && (mode == 1))
 						return 5;
 					}
 			}
@@ -2851,7 +2849,7 @@ short can_see(location p1,location p2,short mode)
 			for (count = 1; count < dy; count++) {
 				storage = storage + get_obscurity(p1.x + (count * dx) / dy, p1.y + count);
 				if ( ((scenario_ter_type(coord_to_ter(p1.x + (count * dx) / dy,p1.y + count)).blockage > 2) ||
-					(is_lava(p1.x + (count * dx) / dy,p1.y + count) == TRUE))
+					is_lava(p1.x + (count * dx) / dy,p1.y + count))
 					 && (mode == 1))
 					return 5;
 				}			
@@ -2860,7 +2858,7 @@ short can_see(location p1,location p2,short mode)
 			for (count = -1; count > dy; count--) {
 				storage = storage + get_obscurity(p1.x + (count * dx) / dy, p1.y + count);
 				if ( ((scenario_ter_type(coord_to_ter(p1.x + (count * dx) / dy, p1.y + count)).blockage > 2) ||
-					(is_lava(p1.x + (count * dx) / dy, p1.y + count) == TRUE))
+					is_lava(p1.x + (count * dx) / dy, p1.y + count))
 					&& (mode == 1))
 					return 5;				
 				}
@@ -2872,7 +2870,7 @@ short can_see(location p1,location p2,short mode)
 			for (count = 1; count < dx; count++) {
 				storage = storage + get_obscurity(p1.x + count, p1.y + (count * dy) / dx);
 				if (((scenario_ter_type(coord_to_ter(p1.x + count,p1.y + (count * dy) / dx)).blockage > 2) ||
-					(is_lava(p1.x + count,p1.y + (count * dy) / dx) == TRUE))
+					is_lava(p1.x + count,p1.y + (count * dy) / dx))
 					&& (mode == 1))
 					return 5;
 				}
@@ -2881,7 +2879,7 @@ short can_see(location p1,location p2,short mode)
 			for (count = -1; count > dx; count--) {
 				storage = storage + get_obscurity(p1.x + count, p1.y + (count * dy) / dx);
 				if ( ((scenario_ter_type(coord_to_ter(p1.x + count,p1.y + (count * dy) / dx)).blockage > 2) ||
-					(is_lava(p1.x + count,p1.y + (count * dy) / dx) == TRUE))
+					is_lava(p1.x + count,p1.y + (count * dy) / dx))
 					&& (mode == 1))
 					return 5;
 				}
