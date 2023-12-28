@@ -494,7 +494,7 @@ Boolean handle_action(EventRecord event)
 								add_string_to_buf("Rest: Monster too close.            ");
 								else if ((scenario_ter_type(ter).special >= 2) && (scenario_ter_type(ter).special <= 6))
 									add_string_to_buf("Rest: It's dangerous here.");////
-								else if (flying() == TRUE)
+								else if (flying())
 									add_string_to_buf("Rest: Not while flying.           ");
 								else {
 										add_string_to_buf("Resting...                    ");
@@ -2622,7 +2622,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 		}
 
 	if (((boat_num = out_boat_there(real_dest)) < 30) && (party.in_boat < 0) && (party.in_horse < 0)) {
-		if (flying() == TRUE) {
+		if (flying()) {
 			add_string_to_buf("You land first.                 ");
 			party.stuff_done[305][1] = 0;
 			}
@@ -2643,7 +2643,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 			return TRUE;
 		} 					
 	else if (((horse_num = out_horse_there(real_dest)) < 30) && (party.in_boat < 0) && (party.in_horse < 0)) {
-		if (flying() == TRUE) {
+		if (flying()) {
 			add_string_to_buf("Land before mounting horses.");
 			return FALSE;
 			}
@@ -2671,11 +2671,11 @@ Boolean outd_move_party(location destination,Boolean forced)
 		} 					
 	else if ((outd_is_blocked(real_dest) == FALSE) || (forced == TRUE)
 		// Check if can fly over
-		|| ((flying() == TRUE) && 
+		|| (flying() && 
 			(scenario_ter_type(ter).fly_over == TRUE))   ) {
 		party.direction = set_direction(party.p_loc, destination); 
 
-		if ((flying() == TRUE) && (scenario_ter_type(ter).special == 21)) {
+		if (flying() && (scenario_ter_type(ter).special == 21)) {
 			add_string_to_buf("Moved: You have to land first.               ");
 			return FALSE;
 			}

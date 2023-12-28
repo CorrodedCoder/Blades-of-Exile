@@ -505,7 +505,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 								add_string_to_buf("Rest: Monster too close.            ");
 								else if ((scenario_ter_type(ter).special >= terrain_special::DoesFireDamage) && (scenario_ter_type(ter).special <= terrain_special::DiseasedLand))
 									add_string_to_buf("Rest: It's dangerous here.");////
-								else if (flying() == TRUE)
+								else if (flying())
 									add_string_to_buf("Rest: Not while flying.           ");
 								else {
 										add_string_to_buf("Resting...                    ");
@@ -1392,7 +1392,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 					if (party.out_c[i].exists == TRUE)
 						if (((adjacent(party.p_loc,party.out_c[i].m_loc) == TRUE) || 
 							(party.out_c[i].what_monst.cant_flee >= 10))
-							&& (party.in_boat < 0) && (flying() == FALSE)) {						
+							&& (party.in_boat < 0) && !flying()) {						
 							store_wandering_special = party.out_c[i].what_monst;
 
 							if (handle_wandering_specials(0,0) == TRUE)
@@ -2747,7 +2747,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 		}
 
 	if (((boat_num = out_boat_there(real_dest)) < 30) && (party.in_boat < 0) && (party.in_horse < 0)) {
-		if (flying() == TRUE) {
+		if (flying()) {
 			add_string_to_buf("You land first.                 ");
 			party.stuff_done[305][1] = 0;
 			}
@@ -2768,7 +2768,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 			return TRUE;
 		} 					
 	else if (((horse_num = out_horse_there(real_dest)) < 30) && (party.in_boat < 0) && (party.in_horse < 0)) {
-		if (flying() == TRUE) {
+		if (flying()) {
 			add_string_to_buf("Land before mounting horses.");
 			return FALSE;
 			}
@@ -2796,11 +2796,11 @@ Boolean outd_move_party(location destination,Boolean forced)
 		} 					
 	else if ((outd_is_blocked(real_dest) == FALSE) || (forced == TRUE)
 		// Check if can fly over
-		|| ((flying() == TRUE) && 
+		|| (flying() && 
 			(terrain.fly_over == TRUE))   ) {
 		party.direction = set_direction(party.p_loc, destination); 
 
-		if ((flying() == TRUE) && (terrain.special == terrain_special::TownEntrance)) {
+		if (flying() && (terrain.special == terrain_special::TownEntrance)) {
 			add_string_to_buf("Moved: You have to land first.               ");
 			return FALSE;
 			}

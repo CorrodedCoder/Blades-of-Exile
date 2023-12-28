@@ -2987,11 +2987,9 @@ unsigned char pick_trapped_monst()
 
 
 
-Boolean flying() 
+bool flying(void) 
 {
-	if (party.stuff_done[305][1] == 0)
-		return FALSE;
-		else return TRUE;
+	return party.stuff_done[305][1] != 0;
 }
 
 void poison_pc(short which_pc,short how_much)
