@@ -2410,12 +2410,12 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 			break;
 		case 151:
 			for (i = 0; i < 6; i++)
-				if ((adven[i].main_status == status::Normal) && (adven[i].traits[trait::CaveLore] > 0))
+				if ( pc_has_cave_lore(adven[i]) )
 					*next_spec = spec.ex1b;
 			break;
 		case 152:
 			for (i = 0; i < 6; i++)
-				if ((adven[i].main_status == status::Normal) && (adven[i].traits[trait::Woodsman] > 0))
+				if ( pc_has_woodsman(adven[i]) )
 					*next_spec = spec.ex1b;
 			break;
 		case 153:

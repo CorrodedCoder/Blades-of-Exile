@@ -2466,7 +2466,7 @@ void handle_cave_lore()
 	ter = out[party.p_loc.x][party.p_loc.y];
 	pic = scenario_ter_type(ter).picture;
 	for (i = 0; i < 6; i++)
-		if ((adven[i].main_status == status::Normal) && (adven[i].traits[trait::CaveLore] > 0) && (rand_short(0,12) == 5)
+		if ( pc_has_cave_lore(adven[i]) && (rand_short(0,12) == 5)
 			&& (((pic >= 0) && (pic <= 1)) || ((pic >= 70) && (pic <= 76))) ) {
 			sprintf(str,"%s hunts.",adven[i].name);
 			party.food += get_ran(2,1,6);
@@ -2474,8 +2474,7 @@ void handle_cave_lore()
 			put_pc_screen();
 			}
 	for (i = 0; i < 6; i++)
-		if (
-		(adven[i].main_status == status::Normal) && (adven[i].traits[trait::Woodsman] > 0) && (rand_short(0,12) == 5)
+		if ( pc_has_woodsman(adven[i]) && (rand_short(0,12) == 5)
 			&& (((pic >= 2) && (pic <= 4)) || ((pic >= 79) && (pic <= 84)))) {
 			sprintf(str,"%s hunts.",adven[i].name);
 			party.food += get_ran(2,1,6);

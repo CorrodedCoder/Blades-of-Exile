@@ -3629,7 +3629,7 @@ short cave_lore_present()
 {
 	short i,ret = 0;
 	for (i = 0; i < 6; i++)
-		if ((adven[i].main_status == status::Normal) && (adven[i].traits[trait::CaveLore] > 0))
+		if ( pc_has_cave_lore(adven[i]) )
 			ret += 1;
 	return ret;
 }
@@ -3638,7 +3638,7 @@ short woodsman_present()
 {
 	short i,ret = 0;
 	for (i = 0; i < 6; i++)
-		if ((adven[i].main_status == status::Normal) && (adven[i].traits[trait::Woodsman] > 0))
+		if ( pc_has_woodsman(adven[i]) )
 			ret += 1;
 	return ret;
 }

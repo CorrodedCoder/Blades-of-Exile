@@ -92,6 +92,16 @@ namespace
 
 } // unnamed namespace
 
+bool pc_has_cave_lore(const pc_record_type& pc)
+{
+	return (pc.main_status == status::Normal) && (pc.traits[trait::CaveLore] > 0);
+}
+
+bool pc_has_woodsman(const pc_record_type& pc)
+{
+	return (pc.main_status == status::Normal) && (pc.traits[trait::Woodsman] > 0);
+}
+
 void pc_heal(pc_record_type& pc, short amt)
 {
 	if ((pc.main_status == status::Normal) && (pc.cur_health < pc.max_health))

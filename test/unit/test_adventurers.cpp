@@ -23,19 +23,19 @@ TEST_CASE("cave_lore_present", "[adventurers]")
 		for (auto& adventurer : adventurers)
 		{
 			adventurer.main_status = status::Normal;
-			adventurer.traits[trait::CaveLore] = 1;
+			adventurer.traits[trait::CaveLore] = BOE_TRUE;
 			REQUIRE(cave_lore_present(adventurers));
 			adventurer.main_status = status::Absent;
-			adventurer.traits[trait::CaveLore] = 0;
+			adventurer.traits[trait::CaveLore] = BOE_FALSE;
 		}
 	}
 	{
 		Adventurers adventurers{};
 		for (auto& adventurer : adventurers)
 		{
-			adventurer.traits[trait::CaveLore] = 1;
+			adventurer.traits[trait::CaveLore] = BOE_TRUE;
 			REQUIRE(!cave_lore_present(adventurers));
-			adventurer.traits[trait::CaveLore] = 0;
+			adventurer.traits[trait::CaveLore] = BOE_FALSE;
 		}
 	}
 }
@@ -60,19 +60,19 @@ TEST_CASE("woodsman_present", "[adventurers]")
 		for (auto& adventurer : adventurers)
 		{
 			adventurer.main_status = status::Normal;
-			adventurer.traits[trait::Woodsman] = 1;
+			adventurer.traits[trait::Woodsman] = BOE_TRUE;
 			REQUIRE(woodsman_present(adventurers));
 			adventurer.main_status = status::Absent;
-			adventurer.traits[trait::Woodsman] = 0;
+			adventurer.traits[trait::Woodsman] = BOE_FALSE;
 		}
 	}
 	{
 		Adventurers adventurers{};
 		for (auto& adventurer : adventurers)
 		{
-			adventurer.traits[trait::Woodsman] = 1;
+			adventurer.traits[trait::Woodsman] = BOE_TRUE;
 			REQUIRE(!woodsman_present(adventurers));
-			adventurer.traits[trait::Woodsman] = 0;
+			adventurer.traits[trait::Woodsman] = BOE_FALSE;
 		}
 	}
 }
