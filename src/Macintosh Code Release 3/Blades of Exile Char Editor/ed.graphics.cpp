@@ -489,6 +489,43 @@ void draw_items(short clear_first)
 
 }
 
+static const std::tuple<const char*, const char*> c_status_text[]{
+	{"Poisoned Weap.", nullptr},
+	{"Blessed", "Cursed"},
+	{"Poisoned", nullptr},
+	{"Hasted", "Slowed"},
+	{"Invulnerable", nullptr},
+	{"Magic Resistant", nullptr},
+	{"Webbed", nullptr},
+	{"Diseased", nullptr},
+	{"Sanctury", nullptr},
+	{"Dumbfounded", nullptr},
+	{"Martyr's Shield", nullptr},
+	{"Asleep", nullptr },
+	{"Paralyzed", nullptr },
+	{"Acid", nullptr }
+};
+static_assert(std::size(c_status_text) == to_underlying(affect::Acid) + 1);
+
+static const char* const c_trait_text[]{
+	"Toughness",
+	"Magically Apt",
+	"Ambidextrous",
+	"Nimble Fingers",
+	"Cave Lore",
+	"Woodsman",
+	"Good Constitution",
+	"Highly Alert",
+	"Exceptional Str.",
+	"Recuperation",
+	"Sluggish",
+	"Magically Inept",
+	"Frail",
+	"Chronic Disease",
+	"Bad Back",
+};
+static_assert(std::size(c_trait_text) == trait::BadBack + 1);
+
 void display_party(short mode,short clear_first)
 //short mode; // 0 - 5 this pc, 6 - all
 //short clear_first; // 1 - redraw over what's already there, 0 - don't redraw over
@@ -620,86 +657,27 @@ void display_party(short mode,short clear_first)
 								TextFace(0);
 								//for(k = 0 ; k < 10; k++)
 									//frame_dlog_rect((GrafPtr) mainPtr,pc_status_rect[k],0);
-								if (adven[i].gaffect(affect::PoisonedWeapon) > 0) 
-										if(cur_rect <= 9) {
-											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Poisoned Weap.",0,9);
-											cur_rect++;
+								for (affect affect_index = affect::PoisonedWeapon; affect_index <= affect::Acid; affect_index = static_cast<affect>(to_underlying(affect_index) + 1))
+								{
+									const auto int_index = to_underlying(affect_index);
+									const auto affect_value = adven[i].gaffect(affect_index);
+									if ((affect_value > 0) && (std::get<0>(c_status_text[int_index]) != nullptr))
+									{
+										if (cur_rect <= 9)
+										{
+											char_win_draw_string(mainPtr, pc_status_rect[cur_rect], std::get<0>(c_status_text[int_index]), 0, 9);
+											++cur_rect;
 										}
-								if (adven[i].gaffect(affect::CursedBlessed) > 0) 
-										if(cur_rect <= 9) {
-											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Blessed",0,9);
-											cur_rect++;
+									}
+									if ((affect_value < 0) && (std::get<1>(c_status_text[int_index]) != nullptr))
+									{
+										if (cur_rect <= 9)
+										{
+											char_win_draw_string(mainPtr, pc_status_rect[cur_rect], std::get<1>(c_status_text[int_index]), 0, 9);
+											++cur_rect;
 										}
-								else if(adven[i].gaffect(affect::CursedBlessed) < 0)
-										if(cur_rect <= 9) {
-											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Cursed",0,9);
-											cur_rect++;
-										}
-								if (adven[i].gaffect(affect::Poisoned) > 0) 
-										if(cur_rect <= 9) {
-											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Poisoned",0,9);
-											cur_rect++;
-										}	
-								if (adven[i].gaffect(affect::Speed) > 0) 
-										if(cur_rect <= 9) {
-											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Hasted",0,9);
-											cur_rect++;
-										}
-								else if(adven[i].gaffect(affect::Speed) < 0)
-										if(cur_rect <= 9) {
-											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Slowed",0,9);
-											cur_rect++;
-										}
-								if (adven[i].gaffect(affect::Invulnerable) > 0) 
-										if(cur_rect <= 9) {
-											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Invulnerable",0,9);
-											cur_rect++;
-										}
-								if (adven[i].gaffect(affect::MagicResistant) > 0) 
-										if(cur_rect <= 9) {
-											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Magic Resistant",0,9);
-											cur_rect++;
-										}
-								if (adven[i].gaffect(affect::Webbed) > 0) 
-										if(cur_rect <= 9) {
-											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Webbed",0,9);
-											cur_rect++;
-										}
-								if (adven[i].gaffect(affect::Diseased) > 0) 
-										if(cur_rect <= 9) {
-											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Diseased",0,9);
-											cur_rect++;
-										}
-								if (adven[i].gaffect(affect::Sanctuary) > 0) 
-										if(cur_rect <= 9) {
-											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Sanctury",0,9);
-											cur_rect++;
-										}
-								if (adven[i].gaffect(affect::Dumbfounded) > 0) 
-										if(cur_rect <= 9) {
-											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Dumbfounded",0,9);
-											cur_rect++;
-										}
-								if (adven[i].gaffect(affect::MartyrsShield) > 0) 
-										if(cur_rect <= 9) {
-											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Martyr's Shield",0,9);
-											cur_rect++;
-										}
-								if (adven[i].gaffect(affect::Asleep) > 0) 
-										if(cur_rect <= 9) {
-											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Asleep",0,9);
-											cur_rect++;
-										}
-								if (adven[i].gaffect(affect::Paralyzed) > 0) 
-										if(cur_rect <= 9) {
-											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Paralyzed",0,9);
-											cur_rect++;
-										}
-								if (adven[i].gaffect(affect::Acid) > 0) 
-										if(cur_rect <= 9) {
-											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Acid",0,9);
-											cur_rect++;
-										}
+									}
+								}
 								//end pc status section
 								
 								//Write in Traits
@@ -712,83 +690,17 @@ void display_party(short mode,short clear_first)
 								TextSize(9);
 								TextFace(0);	
 								cur_rect=0;
-								if (adven[i].traits[trait::Toughness] == 1) 
-										if(cur_rect <= 15) {
-											char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Toughness",0,9);
-											cur_rect++;
+								for (int trait_index = trait::Toughness; trait_index <= trait::BadBack; ++trait_index)
+								{
+									if (adven[i].traits[trait_index] == 1)
+									{
+										if (cur_rect <= 15)
+										{
+											char_win_draw_string(mainPtr, pc_traits_rect[cur_rect], c_trait_text[trait_index], 0, 9);
+											++cur_rect;
 										}
-								if (adven[i].traits[trait::MagicallyApt] == 1) 
-										if(cur_rect <= 15) {
-											char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Magically Apt",0,9);
-											cur_rect++;
-										}		
-								if (adven[i].traits[trait::Ambidextrous] == 1) 
-										if(cur_rect <= 15) {
-											char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Ambidextrous",0,9);
-											cur_rect++;
-										}
-								if (adven[i].traits[trait::NimbleFingers] == 1) 
-										if(cur_rect <= 15) {
-											char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Nimble Fingers",0,9);
-											cur_rect++;
-										}
-								if (adven[i].traits[trait::CaveLore] == 1) 
-										if(cur_rect <= 15) {
-											char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Cave Lore",0,9);
-											cur_rect++;
-										}
-										
-								if (adven[i].traits[trait::Woodsman] == 1) 
-										if(cur_rect <= 15) {
-											char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Woodsman",0,9);
-											cur_rect++;
-										}
-								if (adven[i].traits[trait::GoodConstitution] == 1) 
-										if(cur_rect <= 15) {
-											char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Good Constitution",0,9);
-											cur_rect++;
-										}		
-								if (adven[i].traits[trait::HighlyAlert] == 1) 
-										if(cur_rect <= 15) {
-											char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Highly Alert",0,9);
-											cur_rect++;
-										}
-								if (adven[i].traits[trait::ExceptionalStr] == 1) 
-										if(cur_rect <= 15) {
-											char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Exceptional Str.",0,9);
-											cur_rect++;
-										}
-								if (adven[i].traits[trait::Recuperation] == 1) 
-										if(cur_rect <= 15) {
-											char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Recuperation",0,9);
-											cur_rect++;
-										}
-								if (adven[i].traits[trait::Sluggish] == 1) 
-										if(cur_rect <= 15) {
-											char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Sluggish",0,9);
-											cur_rect++;
-										}
-								if (adven[i].traits[trait::MagicallyInept] == 1) 
-										if(cur_rect <= 15) {
-											char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Magically Inept",0,9);
-											cur_rect++;
-										}		
-								if (adven[i].traits[trait::Frail] == 1) 
-										if(cur_rect <= 15) {
-											char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Frail",0,9);
-											cur_rect++;
-										}
-								if (adven[i].traits[trait::ChronicDisease] == 1) 
-										if(cur_rect <= 15) {
-											char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Chronic Disease",0,9);
-											cur_rect++;
-										}
-								if (adven[i].traits[trait::BadBack] == 1) 
-										if(cur_rect <= 15) {
-											char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Bad Back",0,9);
-											cur_rect++;
-										}
-										
+									}
+								}
 								//end traits
 							}
 							
