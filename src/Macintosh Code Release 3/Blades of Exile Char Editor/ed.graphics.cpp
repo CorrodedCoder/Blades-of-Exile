@@ -402,8 +402,7 @@ GWorldPtr load_pict(short picture_to_get)
 				NULL, NULL, 0);
 	if (check_error != noErr)  {
 		SysBeep(50); 
-//		format_to_buf(debug, "Stuck on {:d}          ",(short) picture_to_get);
-//		add_string_to_buf(debug);
+//		add_string_to_buf("Stuck on {:d}          ",(short) picture_to_get);
 //		print_buf(); 
 //		ExitToShell();
 		}

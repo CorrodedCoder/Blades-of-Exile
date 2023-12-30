@@ -731,10 +731,6 @@ void update_item_menu()
 				}
 		DeleteMenu(menu[j],1000 + j,MF_BYCOMMAND);
 		}
-
-			
-
-
 }
 
 void max_window(HWND window)

@@ -322,7 +322,6 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 	short find_direction_from,ter_looked_at,button_hit = 12,store_cur_pc;
 	short store_sp[6];
 
-	char str[60];	
 	POINT point_in_area;
 	Boolean right_button = FALSE;
 	Boolean ctrl_key = FALSE;
@@ -725,8 +724,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 					add_string_to_buf("Pause.");
 					for (k = 0; k < 6; k++)
 						if ((adven[k].main_status == status::Normal) && (adven[k].gaffect(affect::Webbed) > 0)) {
-							format_to_buf(str,"{} cleans webs.",adven[k].name);
-							add_string_to_buf( str);
+							add_string_to_buf("{} cleans webs.", adven[k].name);
 							adven[k].reduce_affect(affect::Webbed);
 							adven[k].reduce_affect(affect::Webbed);
 							}
@@ -886,8 +884,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 						}
 
 				}
-//			format_to_buf(store_str,"  Mod: {:d}",event.modifiers);
-//			add_string_to_buf(store_str);
+//			add_string_to_buf("  Mod: {:d}",event.modifiers);
 
 			// If option not pressed, looking done, so restore center
 			if ((ctrl_key == FALSE) && (right_button == FALSE)) {
@@ -1080,21 +1077,18 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 									current_pc = i;
 									set_stat_window (i);
 									if (overall_mode == 21)
-										format_to_buf(str,"Now shopping: {}",adven[i].name);
-										else format_to_buf(str,"Now active: {}",adven[i].name);
-									add_string_to_buf(str);
+										add_string_to_buf("Now shopping: {}",adven[i].name);
+										else add_string_to_buf("Now active: {}",adven[i].name);
 									adjust_spell_menus();
 									}
 							break;
 						case 1:
-							format_to_buf(str,"{} has {:d} health out of {:d}.",adven[i].name,
+							add_string_to_buf("{} has {:d} health out of {:d}.",adven[i].name,
 								adven[i].cur_health,adven[i].max_health);
-							add_string_to_buf(str);
 							break;
 						case 2:
-							format_to_buf(str,"{} has {:d} spell pts. out of {:d}.",adven[i].name,
+							add_string_to_buf("{} has {:d} spell pts. out of {:d}.",adven[i].name,
 								adven[i].cur_sp,adven[i].max_sp);
-							add_string_to_buf(str);
 							break;
 						case 3: // pc info
 							give_pc_info(i);
@@ -1144,8 +1138,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 										add_string_to_buf("Set active: PC must be here & active.");
 										else {
 											current_pc = i;
-											format_to_buf(str,"Now active: {}",adven[i].name);
-											add_string_to_buf(str);
+											add_string_to_buf("Now active: {}",adven[i].name);
 											adjust_spell_menus();
 											}
 								}
@@ -2456,7 +2449,6 @@ void increase_age()
 
 void handle_cave_lore()
 {
-	char str[60];
 	short i,pic;
 	unsigned char ter;
 	
@@ -2468,17 +2460,15 @@ void handle_cave_lore()
 	for (i = 0; i < 6; i++)
 		if ( pc_has_cave_lore(adven[i]) && (rand_short(0,12) == 5)
 			&& (((pic >= 0) && (pic <= 1)) || ((pic >= 70) && (pic <= 76))) ) {
-			format_to_buf(str,"{} hunts.",adven[i].name);
 			party.food += get_ran(2,1,6);
-			add_string_to_buf(str);
+			add_string_to_buf("{} hunts.", adven[i].name);
 			put_pc_screen();
 			}
 	for (i = 0; i < 6; i++)
 		if ( pc_has_woodsman(adven[i]) && (rand_short(0,12) == 5)
 			&& (((pic >= 2) && (pic <= 4)) || ((pic >= 79) && (pic <= 84)))) {
-			format_to_buf(str,"{} hunts.",adven[i].name);
 			party.food += get_ran(2,1,6);
-			add_string_to_buf(str);
+			add_string_to_buf("{} hunts.", adven[i].name);
 			put_pc_screen();
 			}
 			
@@ -2649,7 +2639,6 @@ location get_cur_direction(POINT the_point)
 
 Boolean outd_move_party(location destination,Boolean forced)
 {
-	char create_line[60];
 	short boat_num,horse_num,spec_num;
 	location real_dest, sector_p_in;
 	Boolean keep_going = TRUE,check_f;
@@ -2809,8 +2798,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 		party.i_w_c.x = (party.p_loc.x > 47) ? 1 : 0;
 		party.i_w_c.y = (party.p_loc.y > 47) ? 1 : 0;
 		party.loc_in_sec = global_to_local(party.p_loc);
-		//format_to_buf(create_line, "Moved: {}",dir_string[party.direction]);//, party.p_loc.x, party.p_loc.y, party.loc_in_sec.x, party.loc_in_sec.y);
-		//add_string_to_buf( create_line);
+		//add_string_to_buf("Moved: {}",dir_string[party.direction]);//, party.p_loc.x, party.p_loc.y, party.loc_in_sec.x, party.loc_in_sec.y);
 		move_sound(out[real_dest.x][real_dest.y],num_out_moves);
 		num_out_moves++;
 		
@@ -2855,8 +2843,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 		return TRUE;
 		}
 		else {
-			format_to_buf(create_line, "Blocked: {}",dir_string[set_direction(party.p_loc, destination)]);		
-			add_string_to_buf( create_line);	
+			add_string_to_buf("Blocked: {}", dir_string[set_direction(party.p_loc, destination)]);
 			return FALSE;
 			}
 	}
@@ -2867,7 +2854,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 
 Boolean town_move_party(location destination,short forced)
 {
-	char create_line[60],keep_going = TRUE;
+	char keep_going = TRUE;
 	short boat_there,horse_there,spec_num;
 	Boolean check_f = FALSE;
 		
@@ -2974,8 +2961,7 @@ Boolean town_move_party(location destination,short forced)
 				}
 			party.direction = set_direction(c_town.p_loc, destination);
 			c_town.p_loc = destination;
-			//format_to_buf(create_line, "Moved: {}",dir_string[party.direction]);
-			//add_string_to_buf( create_line);
+			//add_string_to_buf("Moved: {}",dir_string[party.direction]);
 //			place_treasure(destination,5,3);
 
 			move_sound(t_d.terrain[destination.x][destination.y],(short) party.age);
@@ -2993,9 +2979,8 @@ Boolean town_move_party(location destination,short forced)
 			}
 		else {
 			if (is_door(destination) == TRUE)
-				format_to_buf(create_line, "Door locked: {}               ",dir_string[set_direction(c_town.p_loc, destination)]);		
-				else format_to_buf(create_line, "Blocked: {}               ",dir_string[set_direction(c_town.p_loc, destination)]);		
-			add_string_to_buf( create_line);
+				add_string_to_buf("Door locked: {}               ",dir_string[set_direction(c_town.p_loc, destination)]);
+				else add_string_to_buf("Blocked: {}               ",dir_string[set_direction(c_town.p_loc, destination)]);
 			return FALSE;
 			}
 		}

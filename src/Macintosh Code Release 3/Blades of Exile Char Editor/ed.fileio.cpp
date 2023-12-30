@@ -140,8 +140,7 @@ void load_file()
 
 	len = sizeof(flag_type);
 
-//	format_to_buf(debug, "  Len {:d}               ", (short) len);
-//	add_string_to_buf( debug);
+//	add_string_to_buf("  Len {:d}               ", (short) len);
 
 	for (i = 0; i < 3; i++) {
 		if ((error = FSRead(file_id, &len, (char *) flag_data)) != 0) {

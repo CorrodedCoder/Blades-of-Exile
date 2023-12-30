@@ -127,8 +127,7 @@ void load_file()
 
 	len = sizeof(flag_type);
 
-//	format_to_buf(debug, "  Len {:d}               ", (short) len);
-//	add_string_to_buf( debug);
+//	add_string_to_buf("  Len {:d}               ", (short) len);
 
 	for (i = 0; i < 3; i++) {
 		if ((error = _lread(file_id, (char *) flag_data, len)) == HFILE_ERROR) {
@@ -662,8 +661,7 @@ void build_data_file(short mode)
 			for (i = 0; i < 10; i++)
 				_hread(f,(char *) &(s_vals[i]), 4);
 
-			//format_to_buf(debug_str,"Starting {:d}: {:d}",i,(short) s_vals[i]);
-			//add_string_to_buf(debug_str);
+			//add_string_to_buf("Starting {:d}: {:d}",i,(short) s_vals[i]);
 			}
 
 	if (f == HFILE_ERROR) {

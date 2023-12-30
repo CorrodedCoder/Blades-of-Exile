@@ -106,7 +106,8 @@ Boolean give_to_pc(short pc_num,const item_record_type& item,short  print_result
 			if (in_startup_mode == FALSE) {
 				if (is_ident(adven[pc_num].items[free_space]) == 0)
 					format_to_buf(announce_string,"  {} gets {}.",adven[pc_num].name,item.name);
-					else format_to_buf(announce_string,"  {} gets {}.",adven[pc_num].name,item.full_name);
+				else
+					format_to_buf(announce_string,"  {} gets {}.",adven[pc_num].name,item.full_name);
 				if (print_result == TRUE)
 					add_string_to_buf(announce_string);
 				}
@@ -135,7 +136,6 @@ Boolean forced_give(short item_num,short abil)
 {
 	short i,j;
 	item_record_type item;
-	char announce_string[60];
 
 	if ((item_num < 0) || (item_num > 399))
 		return TRUE;
@@ -146,11 +146,10 @@ Boolean forced_give(short item_num,short abil)
 		for (j = 0; j < 24; j++)
 			if ((adven[i].main_status == status::Normal) && (adven[i].items[j].variety == item_variety::None)) {
 				adven[i].items[j] = item;
-
 				if (is_ident(item) == 0)
-					format_to_buf(announce_string,"  {} gets {}.",adven[i].name,item.name);
-					else format_to_buf(announce_string,"  {} gets {}.",adven[i].name,item.full_name);
-				add_string_to_buf(announce_string);
+					add_string_to_buf("  {} gets {}.",adven[i].name,item.name);
+				else
+					add_string_to_buf("  {} gets {}.",adven[i].name,item.full_name);
 				combine_things(i);
 				pc_sort_items(adven[i]);
 				return TRUE;

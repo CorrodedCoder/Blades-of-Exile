@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string_view>
+#include <format>
 
 short text_pc_has_abil_equip(short pc_num,short abil);
 void put_pc_screen();
@@ -55,3 +56,9 @@ void MeasureText(short str_len,char *str, short *len_array,HDC hdc);
 void MoveTo(short x, short y);
 void MoveToDrawString(char *string,HDC hdc);
 RECT get_custom_rect (short which_rect);
+
+template <class... Types>
+static inline void add_string_to_buf(const std::format_string<Types...> Fmt, Types&&... Args)
+{
+	add_string_to_buf(std::vformat(Fmt.get(), std::make_format_args(Args...)));
+}

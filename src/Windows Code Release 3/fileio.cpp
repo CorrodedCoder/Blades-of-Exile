@@ -1108,8 +1108,7 @@ void build_data_file(short mode)
 			file_read_type(f, s_vals[i]);
 		}
 
-		//format_to_buf(debug_str,"Starting {:d}: {:d}",i,(short) s_vals[i]);
-		//add_string_to_buf(debug_str);
+		//add_string_to_buf("Starting {:d}: {:d}",i,(short) s_vals[i]);
 	}
 
 	if (f.fail()) {

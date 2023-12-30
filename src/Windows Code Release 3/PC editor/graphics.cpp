@@ -951,9 +951,9 @@ void GetIndString(char *str,short i, short j) {
 
 	len = LoadString(store_hInstance,resnum,str,256);
 	if (len == 0) {
-		format_to_buf(str,"");
+		str[0] = '\0';
 		return;
-		}
+	}
 	for (k = 0; k < 256; k++)  {
 		if (str[k] == '|')
 			str[k] = 13;

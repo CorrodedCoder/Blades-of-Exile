@@ -633,7 +633,6 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect, RectDrawDestination dest,REC
 
  void fry_dc(HWND hwnd,HDC dc) {
 	if (ReleaseDC(hwnd,dc) == 0)
-	  //	add_string_to_buf("xx");
 		PostQuitMessage(0);
  }
 

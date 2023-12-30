@@ -900,7 +900,8 @@ void init_scenario()
 		get_str(temp_str,2,i);
 		if ((i > 187) || (i == 0))
 			format_to_buf(scen_item_list.monst_names[i], "Unused");
-			else format_to_buf(scen_item_list.monst_names[i], "{}", temp_str);
+		else
+			format_to_buf(scen_item_list.monst_names[i], "{}", temp_str);
 		if (i == 0)
 			format_to_buf(scen_item_list.monst_names[i], "Empty");
 		}

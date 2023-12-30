@@ -489,7 +489,6 @@ void use_item(short pc,short item)
 	Boolean take_charge = TRUE,inept_ok = FALSE;
 	short abil,level,i,j,item_use_code,str,type,r1;
 	affect which_stat;
-	char to_draw[60];
 	location user_loc;
 	creature_data_type *which_m;
 	abil = adven[pc].items[item].ability;
@@ -537,9 +536,8 @@ void use_item(short pc,short item)
 		}
 	if (take_charge == TRUE) {
 		if (!is_ident(adven[pc].items[item]))
-			format_to_buf(to_draw, "Use: {}",adven[pc].items[item].name);
-			else format_to_buf(to_draw, "Use: {}",adven[pc].items[item].full_name);
-		add_string_to_buf( to_draw);
+			add_string_to_buf("Use: {}",adven[pc].items[item].name);
+			else add_string_to_buf("Use: {}",adven[pc].items[item].full_name);
 
 		if ((adven[pc].items[item].variety == item_variety::PotionOrMagicItem) &&
 		      (adven[pc].items[item].graphic_num >= 50) && (adven[pc].items[item].graphic_num <= 52))
@@ -1246,8 +1244,7 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 			draw_terrain(2);
 			play_sound(2);
 			}
-//		format_to_buf(create_line, "  No damage.              ");
-//		add_string_to_buf( create_line);		
+//		add_string_to_buf("  No damage.              ");
 		return FALSE;	
 		}
 

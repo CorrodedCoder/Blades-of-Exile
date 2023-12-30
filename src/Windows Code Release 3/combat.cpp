@@ -400,18 +400,19 @@ Boolean pc_combat_move(location destination)
 		return TRUE;
 		}
 	else if ((combat_terrain[destination.x][destination.y] == 90) && (which_combat_type == 0)) {
-			if (rand_short(1,10) < 3) {
+			if (rand_short(1,10) < 3)
+			{
 				adven[current_pc].main_status = status::Fled;
 				if (combat_active_pc == current_pc)
 					combat_active_pc = 6;
-				format_to_buf(create_line, "Moved: Fled.                    ");
+				add_string_to_buf("Moved: Fled.                    ");
 				pc_moves[current_pc] = 0;
-				}
-				else {
-					take_ap(1);
-					format_to_buf(create_line, "Moved: Couldn't flee.                  ");
-					}
-			add_string_to_buf( create_line);
+			}
+			else
+			{
+				take_ap(1);
+				add_string_to_buf("Moved: Couldn't flee.                  ");
+			}
 			return TRUE;		
 		}
 		else if ((monst_hit = monst_there(destination)) <= T_M) {
@@ -471,8 +472,7 @@ Boolean pc_combat_move(location destination)
 						pc_pos[current_pc] = destination;
 						adven[current_pc].direction = dir;
 						take_ap(1);
-						//format_to_buf(create_line, "Moved: {}               ",d_string[dir]);
-						//add_string_to_buf( create_line);
+						//add_string_to_buf("Moved: {}               ",d_string[dir]);
 						move_sound(combat_terrain[destination.x][destination.y],pc_moves[current_pc]);
 
 					}
@@ -480,8 +480,7 @@ Boolean pc_combat_move(location destination)
 				return TRUE;
 				}
 				else {
-					format_to_buf(create_line, "Blocked: {}               ",d_string[dir]);		
-					add_string_to_buf( create_line);	
+					add_string_to_buf("Blocked: {}               ", d_string[dir]);
 					return FALSE;
 				}
 	}
@@ -552,9 +551,7 @@ void pc_attack(short who_att,short target)
 	combat_posing_monster = current_working_monster = who_att;
 	
 	if (weap1 == 24) {	
-
-		format_to_buf(create_line, "{} punches.  ", adven[who_att].name);//,hit_adj, dam_adj);
-		add_string_to_buf( create_line);
+		add_string_to_buf("{} punches.  ", adven[who_att].name);//,hit_adj, dam_adj);
 
 		r1 = rand_short(0,100) + hit_adj - 20;
 		r1 += 5 * (adven[current_pc].gaffect(affect::Webbed) / 3);
@@ -565,8 +562,7 @@ void pc_attack(short who_att,short target)
 			}
 			else {
 				draw_terrain(2);
-				format_to_buf(create_line, "{} misses. ", adven[who_att].name);
-				add_string_to_buf( create_line);	
+				add_string_to_buf("{} misses. ", adven[who_att].name);
 				play_sound(2);		
 			}
 		}
@@ -579,8 +575,7 @@ void pc_attack(short who_att,short target)
 		if (what_skill1 == skill::Intelligence)
 			what_skill1 = skill::EdgedWeapon;
 			
-		format_to_buf(create_line, "{} swings. ", adven[who_att].name);//,hit_adj, dam_adj);
-		add_string_to_buf( create_line);
+		add_string_to_buf("{} swings. ", adven[who_att].name);//,hit_adj, dam_adj);
 		
 		r1 = rand_short(0,100) - 5 + hit_adj
 		 - 5 * adven[who_att].items[weap1].bonus;
@@ -650,8 +645,7 @@ void pc_attack(short who_att,short target)
 			}
 			else {
 				draw_terrain(2);
-				format_to_buf(create_line, "  {} misses.              ", adven[who_att].name);
-				add_string_to_buf( create_line);			
+				add_string_to_buf("  {} misses.              ", adven[who_att].name);
 				if (what_skill1 == skill::PoleWeapon)
 					play_sound(19);
 					else play_sound(2);
@@ -665,9 +659,7 @@ void pc_attack(short who_att,short target)
 		if (what_skill2 == skill::Intelligence)
 			what_skill2 = skill::EdgedWeapon;
 
-
-		format_to_buf(create_line, "{} swings.                    ", adven[who_att].name);//,hit_adj, dam_adj);
-		add_string_to_buf( create_line);
+		add_string_to_buf("{} swings.                    ", adven[who_att].name);//,hit_adj, dam_adj);
 		r1 = rand_short(0,100) + hit_adj - 5 * adven[who_att].items[weap2].bonus;
 		
 		// Ambidextrous?
@@ -715,8 +707,7 @@ void pc_attack(short who_att,short target)
 			}
 			else {
 				draw_terrain(2);
-				format_to_buf(create_line, "{} misses.             ", adven[who_att].name);
-				add_string_to_buf( create_line);	
+				add_string_to_buf("{} misses.             ", adven[who_att].name);
 				if (what_skill2 == skill::PoleWeapon)
 					play_sound(19);
 					else play_sound(2);
@@ -1482,8 +1473,7 @@ void fire_missile(location target)
 				r1 = rand_short(0,100) - 5 * hit_bonus - 10;
 				r1 += 5 * (adven[current_pc].gaffect(affect::Webbed) / 3);
 				r2 = rand_short(1,dam) + dam_bonus;
-				format_to_buf(create_line, "{} fires.", adven[current_pc].name); // debug
-				add_string_to_buf( create_line);
+				add_string_to_buf("{} fires.", adven[current_pc].name); // debug
 
 				switch (overall_mode) {
 					case 13:
@@ -1569,9 +1559,8 @@ Boolean combat_next_step()
 	center = pc_pos[current_pc];		*/
 
 	if ((combat_active_pc == 6) && (current_pc != store_pc)) {
-			format_to_buf(create_line, "Active:  {} (#{:d}, {:d} ap.)                     ",
+			add_string_to_buf("Active:  {} (#{:d}, {:d} ap.)                     ",
 				adven[current_pc].name,current_pc + 1,pc_moves[current_pc]);         
-			add_string_to_buf(create_line);
 			print_buf();
 		}
 	if ((current_pc != store_pc) || (to_return == TRUE)) {
@@ -1837,8 +1826,7 @@ void do_monster_turn()
 									targ_space = c_town.monst.dudes[monst_target[i] - 100].m_loc;	
 						}
 						
-		//			format_to_buf(create_line,"  {:d} targets {:d}.",i,target);
-		//			add_string_to_buf( create_line);
+		//			add_string_to_buf("  {:d} targets {:d}.",i,target);
 
 					if ((monst_target[i] < 0) || ((monst_target[i] > 5) && (monst_target[i] < 100)))
 						monst_target[i] = 6;
@@ -1908,8 +1896,7 @@ void do_monster_turn()
 					 && (monst_can_see(i,targ_space) == TRUE)
 					 && (can_see_monst(targ_space,i) == TRUE)) { // Begin spec. attacks
 
-//	format_to_buf(create_line,"{:d}: {:d}  {:d}  {:d}",i,cur_monst->m_d.breath,cur_monst->m_d.mu,cur_monst->m_d.cl);
-//	add_string_to_buf(create_line);
+//	add_string_to_buf("{:d}: {:d}  {:d}  {:d}",i,cur_monst->m_d.breath,cur_monst->m_d.mu,cur_monst->m_d.cl);
 
 					// Breathe (fire)
 						if ( (cur_monst->m_d.breath > 0)
@@ -2220,8 +2207,7 @@ void monster_attack_pc(short who_att,short target)
 
 	for (i = 0; i < 3; i++) {
 		if ((attacker->m_d.a[i] > 0) && (adven[target].main_status == status::Normal)) {
-//			format_to_buf(create_line, "  Attacks {}.", adven[target].name);
-//			add_string_to_buf( create_line);
+//			add_string_to_buf("  Attacks {}.", adven[target].name);
 
 			// Attack roll
 			r1 = rand_short(0,100) - 5 * min(8,attacker->gaffect(affect::CursedBlessed)) + 5 * adven[target].gaffect(affect::CursedBlessed)
@@ -2348,8 +2334,7 @@ void monster_attack_pc(short who_att,short target)
 						}	
 				}
 				else {
-					format_to_buf(create_line, "  Misses.");
-					add_string_to_buf( create_line);		
+					add_string_to_buf("  Misses.");
 					play_sound(2);
 				}
 		combat_posing_monster = -1;
@@ -2385,8 +2370,7 @@ void monster_attack_monster(short who_att,short attackee)
 			print_monst_attacks(attacker->number,100 + attackee);
 	for (i = 0; i < 3; i++) {
 		if ((attacker->m_d.a[i] > 0) && (target->active != 0)) {
-//			format_to_buf(create_line, "  Attacks {}.", adven[target].name);
-//			add_string_to_buf( create_line);
+//			add_string_to_buf("  Attacks {}.", adven[target].name);
 
 			// if friendly to party, make able to attack
 			if (target->attitude == 0)
@@ -2475,8 +2459,7 @@ void monster_attack_monster(short who_att,short attackee)
 						}
 				}
 				else {
-					format_to_buf(create_line, "  Misses.");
-					add_string_to_buf( create_line);		
+					add_string_to_buf("  Misses.");
 					play_sound(2);
 				}
 		combat_posing_monster = -1;
@@ -2530,8 +2513,7 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 	else if (level == 14) { // vapors
 			//play_sound(44);
 			if (target < 100) { // on PC
-				format_to_buf(create_line, "  Breathes on {}.                  ", adven[target].name);
-				add_string_to_buf( create_line);
+				add_string_to_buf("  Breathes on {}.                  ", adven[target].name);
 				}
 				else {  // on monst
 					add_string_to_buf("  Breathes vapors.");
@@ -2543,8 +2525,7 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 	else if (level == 19) { // webs
 			//play_sound(14);
 			if (target < 100) { // on PC
-				format_to_buf(create_line, "  Throws web at {}.                  ", adven[target].name);
-				add_string_to_buf( create_line);
+				add_string_to_buf("  Throws web at {}.                  ", adven[target].name);
 				}
 				else {  // on monst
 					add_string_to_buf("  Throws web.");
@@ -2556,8 +2537,7 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 	else if (level == 23) { // paral
 			play_sound(51);
 			if (target < 100) { // on PC
-				format_to_buf(create_line, "  Fires ray at {}.                  ", adven[target].name);
-				add_string_to_buf( create_line);
+				add_string_to_buf("  Fires ray at {}.                  ", adven[target].name);
 				sleep_pc(target,100, affect::Paralyzed,0);
 				}
 				else {  // on monst
@@ -2572,18 +2552,15 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 			//play_sound(43);
 			run_a_missile(source,targ_space,14,0,43,0,0,100);
 			if (target < 100) { // on PC
-				format_to_buf(create_line, "  Gazes at {}.                  ", adven[target].name);
-				add_string_to_buf( create_line);
+				add_string_to_buf("  Gazes at {}.                  ", adven[target].name);
 				r1 = rand_short(0,20) + adven[target].level / 4 + adven[target].gaffect(affect::CursedBlessed);
 				if (pc_has_abil_equip(adven[target],49) < 24)
 					r1 = 20;
 				if (r1 > 14) {
-						format_to_buf(create_line, "  {} resists.                  ", adven[target].name);
-						add_string_to_buf( create_line);
+						add_string_to_buf("  {} resists.                  ", adven[target].name);
 					}
 					else {
-						format_to_buf(create_line, "  {} is turned to stone.                  ", adven[target].name);
-						add_string_to_buf( create_line);
+						add_string_to_buf("  {} is turned to stone.                  ", adven[target].name);
 						kill_pc(target, status::Stone);
 						}
 				}
@@ -2614,8 +2591,7 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 								
 					}
 				run_a_missile(source,targ_space,8,0,43,0,0,100);
-				format_to_buf(create_line, "  Drains {}.                  ", adven[target].name);
-				add_string_to_buf( create_line);
+				add_string_to_buf("  Drains {}.                  ", adven[target].name);
 				adven[target].cur_sp = adven[target].cur_sp / 2;
 				}
 				else { // on monst
@@ -2632,8 +2608,7 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 			r1 = get_ran(7,1,6);
 			start_missile_anim();
 			if (target < 100) { // pc
-				format_to_buf(create_line, "  Hits {} with heat ray.", adven[target].name);
-				add_string_to_buf( create_line);
+				add_string_to_buf("  Hits {} with heat ray.", adven[target].name);
 				damage_pc(target,r1,1,-1);
 				}
 				else { // on monst
@@ -2649,8 +2624,7 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 				0,0,100);
 			//play_sound(64);
 			if (target < 100) { // pc
-				format_to_buf(create_line, "  Spits acid on {}.", adven[target].name);
-				add_string_to_buf( create_line);
+				add_string_to_buf("  Spits acid on {}.", adven[target].name);
 				acid_pc(target,6);
 				}
 				else { // on monst
@@ -2663,28 +2637,26 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 			switch (level) {
 				case 1: case 2: case 20:
 					run_a_missile(source,targ_space,3,1,12,0,0,100);
-					format_to_buf(create_line, "  Shoots at {}.", adven[target].name);
+					add_string_to_buf("  Shoots at {}.", adven[target].name);
 				break;
 				case 3:
 					run_a_missile(source,targ_space,5,1,14,0,0,100);
-					format_to_buf(create_line, "  Throws spear at {}.", adven[target].name);
+					add_string_to_buf("  Throws spear at {}.", adven[target].name);
 				break;
 				case 7:
 					run_a_missile(source,targ_space,7,1,14,0,0,100);
-					format_to_buf(create_line, "  Throws razordisk at {}.", adven[target].name);
+					add_string_to_buf("  Throws razordisk at {}.", adven[target].name);
 				break;		
 				case 34:
 					run_a_missile(source,targ_space,5,1,14,0,0,100);
-					format_to_buf(create_line, "  Fires spines at {}.", adven[target].name);
+					add_string_to_buf("  Fires spines at {}.", adven[target].name);
 				break;		
 				default:
 					run_a_missile(source,targ_space,12,1,14,0,0,100);
-					format_to_buf(create_line, "  Throws rock at {}.", adven[target].name);		
+					add_string_to_buf("  Throws rock at {}.", adven[target].name);
 				break;
 				}
 	
-			add_string_to_buf( create_line);
-
 			// Check sanctuary
 			if (adven[target].gaffect(affect::Sanctuary) > 0) {
 				r1 = rand_short(0,100);
@@ -2701,15 +2673,13 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 			r2 = get_ran(dam[level],1,7) + min(10,bless);
 
 			if (r1 <= hit_chance[dam[level] * 2]) {
-//					format_to_buf(create_line, "  Hits {}.", adven[target].name);
-//					add_string_to_buf( create_line);
+//					add_string_to_buf("  Hits {}.", adven[target].name);
 
 					if (damage_pc(target,r2,1300,-1) == TRUE) {
 						}	
 				}
 				else {
-					format_to_buf(create_line, "  Misses {}.", adven[target].name);
-					add_string_to_buf( create_line);
+					add_string_to_buf("  Misses {}.", adven[target].name);
 					}
 		
 		}
@@ -2884,9 +2854,8 @@ Boolean monst_cast_mage(creature_data_type *caster,short targ)
 	if ((spell == 27) && (caster->attitude % 2 == 1) && (count_levels(caster->m_loc,10) < 45))
 		spell = 26;
 
-//	format_to_buf(create_line,"m att {:d} trg {:d} trg2 x{:d}y{:d} spl {:d} mp {:d} tl:{:d} ",caster->attitude,targ,
+//	add_string_to_buf("m att {:d} trg {:d} trg2 x{:d}y{:d} spl {:d} mp {:d} tl:{:d} ",caster->attitude,targ,
 //		(short)target.x,(short)target.y,spell,caster->m_d.mp,target_levels);
-//	add_string_to_buf( create_line);
 	
 	l = caster->m_loc;
 	if ((caster->m_d.direction < 4) && (caster->m_d.x_width > 1))
@@ -3179,9 +3148,8 @@ Boolean monst_cast_priest(creature_data_type *caster,short targ)
 		return FALSE;
 
 	
-//	format_to_buf(create_line,"p att {:d} trg {:d} trg2 x{:d}y{:d} spl {:d} mp {:d}",caster->attitude,targ,
+//	add_string_to_buf("p att {:d} trg {:d} trg2 x{:d}y{:d} spl {:d} mp {:d}",caster->attitude,targ,
 //		(short)target.x,(short)target.y,spell,caster->m_d.mp);
-//	add_string_to_buf( create_line);
 
 	// snuff heals if unwounded
 	if ((caster->m_d.health == caster->m_d.m_health) &&
@@ -3804,8 +3772,7 @@ void hit_space(location target,short dam,short type,short report,short hit_all)
 	short i;
 	Boolean stop_hitting = FALSE,hit_monsters = TRUE;
 
-//	format_to_buf(create_line, "  {:d} {:d}.                                  ",target.x,target.y);
-//	add_string_to_buf( create_line);
+//	add_string_to_buf("  {:d} {:d}.                                  ",target.x,target.y);
 	if ((target.x < 0) || (target.x > 63) || (target.y < 0) || (target.y > 63))
 		return;
 	
@@ -3916,9 +3883,7 @@ void handle_disease()
 							dumbfound_pc(i,3);
 							break;
 						case 9: case 10:
-							format_to_buf(create_line, "  {} unaffected. ",
-								 adven[i].name);
-							add_string_to_buf( create_line);						
+							add_string_to_buf("  {} unaffected. ", adven[i].name);
 							break;
 						}
 					r1 = rand_short(0,7);
@@ -4020,7 +3985,6 @@ void end_combat()
 Boolean combat_cast_mage_spell()
 {
 	short spell_num,target,i,store_sp,bonus = 1,r1,store_sound = 0,store_m_type = 0,num_opp = 0;
-	char c_line[60];
 	creature_data_type *which_m;
 	monster_record_type get_monst;
 	
@@ -4099,20 +4063,20 @@ Boolean combat_cast_mage_spell()
 									play_sound(4);
 									switch (spell_num) {
 										case 14:
-											format_to_buf(c_line, "  {} receives venom.               ",
+											add_string_to_buf("  {} receives venom.               ",
 												 adven[target].name);
 											poison_weapon(target,3 + bonus,1);
 											store_m_type = 11;
 											break;
 										
 										case  3:
-											format_to_buf(c_line, "  {} stronger.                     ",
+											add_string_to_buf("  {} stronger.                     ",
 												 adven[target].name);
 											adven[target].gaffect(affect::CursedBlessed) = adven[target].gaffect(affect::CursedBlessed) + 3;		
 											store_m_type = 8;
 											break;
 										case 29:			
-											format_to_buf(c_line, "  {} resistant.                     ",
+											add_string_to_buf("  {} resistant.                     ",
 												 adven[target].name);
 											adven[target].gaffect(affect::MagicResistant) = adven[target].gaffect(affect::MagicResistant) + 5 + bonus;		
 											store_m_type = 15;
@@ -4122,12 +4086,11 @@ Boolean combat_cast_mage_spell()
 											i = (spell_num == 2) ? 2 : max(2,adven[current_pc].level / 2 + bonus);
 											adven[target].gaffect(affect::Speed) = min(8,
 												adven[target].gaffect(affect::Speed) + i);
-											format_to_buf(c_line, "  {} hasted.                       ",
+											add_string_to_buf("  {} hasted.                       ",
 												 adven[target].name);
 											store_m_type = 8;
 											break;
 										}
-									add_string_to_buf( c_line);				
 									add_missile(pc_pos[target],store_m_type,0,0,0);
 							}
 								break;
@@ -4150,11 +4113,9 @@ Boolean combat_cast_mage_spell()
 									}
 								//play_sound(4);
 								if (spell_num == 39)
-									format_to_buf(c_line, "  Party hasted.     ");
-									else 
-										format_to_buf(c_line, "  Party blessed!           ");
-								add_string_to_buf( c_line);	
-	
+									add_string_to_buf("  Party hasted.     ");
+								else 
+									add_string_to_buf("  Party blessed!           ");
 								break;
 								
 
@@ -4165,12 +4126,11 @@ Boolean combat_cast_mage_spell()
 								if (spell_num == 47) 
 									store_sound = 54;
 								switch (spell_num) {
-									case 32: format_to_buf(c_line, "  Enemy slowed:       "); break;
-									case 49: format_to_buf(c_line, "  Enemy ravaged:              ");break;
-									case 47: format_to_buf(c_line, "  Enemy scared:   ");break;
-									case 56: format_to_buf(c_line, "  Enemy paralyzed:   ");break;
+									case 32: add_string_to_buf("  Enemy slowed:       "); break;
+									case 49: add_string_to_buf("  Enemy ravaged:              ");break;
+									case 47: add_string_to_buf("  Enemy scared:   ");break;
+									case 56: add_string_to_buf("  Enemy paralyzed:   ");break;
 									}
-								add_string_to_buf( c_line);												
 								for (i = 0; i < T_M; i++) {
 										if ((c_town.monst.dudes[i].active != 0) && (c_town.monst.dudes[i].attitude % 2 == 1) 
 										 && (dist(pc_pos[current_pc],c_town.monst.dudes[i].m_loc) <= mage_range[spell_num])
@@ -4223,7 +4183,6 @@ Boolean combat_cast_mage_spell()
 Boolean combat_cast_priest_spell()
 {
 	short spell_num,target,i,store_sp,bonus,store_sound = 0,store_m_type = 0,num_opp = 0;
-	char c_line[60];
 	creature_data_type *which_m;
 						
 	if (is_antimagic(pc_pos[current_pc].x,pc_pos[current_pc].y)) {
@@ -4274,9 +4233,8 @@ Boolean combat_cast_priest_spell()
 								adven[current_pc].cur_sp -= s_cost[1][spell_num];
 								adven[target].gaffect(affect::CursedBlessed) += (spell_num == 0) ? 2 : 
 									max(2,(adven[current_pc].level * 3) / 4 + 1 + bonus);
-								format_to_buf(c_line, "  {} blessed.              ",
+								add_string_to_buf("  {} blessed.              ",
 									 adven[target].name);
-								add_string_to_buf( c_line);				
 								add_missile(pc_pos[target],8,0,0,0);
 								}						
 						break;
@@ -4288,16 +4246,14 @@ Boolean combat_cast_priest_spell()
 									adven[i].gaffect(affect::CursedBlessed) += adven[current_pc].level / 3;										
 								add_missile(pc_pos[i],8,0,0,0);
 								}
-								format_to_buf(c_line, "  Party blessed.                    ");
-								add_string_to_buf( c_line);	
+							add_string_to_buf("  Party blessed.                    ");
 							store_sound = 4;
 							break;	
 							
 						case 58:
 							adven[current_pc].cur_sp -= s_cost[1][spell_num];		
-							format_to_buf(c_line, "  {} is an avatar! ",
+							add_string_to_buf("  {} is an avatar! ",
 								 adven[current_pc].name);
-							add_string_to_buf( c_line);	
 							pc_heal(adven[current_pc],200);
 							cure_pc(adven[current_pc],8);
 							adven[current_pc].gaffect(affect::CursedBlessed) = 8;
@@ -4370,8 +4326,7 @@ void start_spell_targeting(short num)
 	// Then, is num >= 1000, it's a freebie, so remove the 1000
 	if (num >= 1000)
 		num -= 1000;
-	format_to_buf(create_line, "  Target spell.                ");
-	add_string_to_buf( create_line);
+	add_string_to_buf("  Target spell.                ");
 	if (num < 100)		
 		add_string_to_buf("  (Hit 'm' to cancel.)");
 		else add_string_to_buf("  (Hit 'p' to cancel.)");
@@ -4413,12 +4368,11 @@ void start_fancy_spell_targeting(short num)
 
 	for (i = 0; i < 8; i++)
 		spell_targets[i] = null_loc;
-	format_to_buf(create_line, "  Target spell.                ");
+	add_string_to_buf("  Target spell.                ");
 	if (num < 100)		
 		add_string_to_buf("  (Hit 'm' to cancel.)");
 		else add_string_to_buf("  (Hit 'p' to cancel.)");
 	add_string_to_buf("  (Hit space to cast.)");
-	add_string_to_buf( create_line);			
 	overall_mode = 14;
 	current_pat = single;
 	current_spell_range = (num >= 100) ? priest_range[num - 100] : mage_range[num];

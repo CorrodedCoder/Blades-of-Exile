@@ -408,7 +408,7 @@ void do_xp_draw()
 
 	pc_num = store_train_pc;
 
-			format_to_buf(get_text, "{}", adven[pc_num].name);
+	format_to_buf(get_text, "{}", adven[pc_num].name);
 
 
 	cd_set_item_text (1010, 51,get_text);

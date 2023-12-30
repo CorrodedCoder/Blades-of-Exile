@@ -965,7 +965,8 @@ void cd_get_item_text(short dlog_num, short item_num, char *str)
 		//print_nums(0,0,GetWindowText(edit_box,str,255));
 		if (edit_box != NULL)
 			GetWindowText(edit_box,str,255);
-			else format_to_buf(str,"");
+		else
+			format_to_buf(str,"");
 		//add_string_to_buf(str);
 		return;
 		}
@@ -973,9 +974,7 @@ void cd_get_item_text(short dlog_num, short item_num, char *str)
 		play_sound(0);
 		return;
 		}
-	if (item_index < 10)
-		format_to_buf(str,"{}",text_long_str[item_index]);
-		else format_to_buf(str,"{}",text_short_str[item_index - 10]);
+	format_to_buf(str,"{}",text_long_str[(item_index < 10) ? item_index : (item_index - 10)]);
 }
 
 void cd_get_text_edit_str(short dlog_num, char *str)
@@ -1041,9 +1040,7 @@ void cd_set_item_num(short dlog_num, short item_num, short num)
 		play_sound(0);
 		return;
 		}
-	if (item_index < 10)
-		format_to_buf(text_long_str[item_index],"{:d}",num);
-		else format_to_buf(text_short_str[item_index - 10],"{:d}",num);
+	format_to_buf(text_long_str[(item_index < 10) ? item_index : (item_index - 10)], "{:d}", num);
 	cd_draw_item( dlog_num,item_num);
 }
 
