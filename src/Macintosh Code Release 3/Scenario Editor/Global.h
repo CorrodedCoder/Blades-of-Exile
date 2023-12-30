@@ -343,7 +343,6 @@ typedef struct {
 	scen_item_data_type scen_item_list;
 	} piles_of_stuff_dumping_type;
 	
-short get_ran (short times,short  min,short  max);
 short s_pow(short x,short y);
 short dist(location p1,location p2);
 

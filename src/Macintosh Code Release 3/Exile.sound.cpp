@@ -279,8 +279,8 @@ void move_sound(unsigned char ter,short step)
 {
 	short pic,spec;
 	
-	pic = scenario.ter_types[ter].picture;
-	spec = scenario.ter_types[ter].special;
+	pic = scenario_ter_type(ter).picture;
+	spec = scenario_ter_type(ter).special;
 	
 						if ((monsters_going == FALSE) && (overall_mode < 10) && (party.in_boat >= 0)) {
 							if (spec == 21)

@@ -88,6 +88,7 @@ add_executable (Blades-of-Exile WIN32
 	itemdata.cpp
 	combat.cpp
 	townspec.cpp
+	scenario.cpp
 	specials.cpp
 	
 	BLADES.RC

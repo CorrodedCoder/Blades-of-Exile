@@ -135,14 +135,6 @@ long stored_key;
 short pixel_depth,dialog_answer;
 
 
-// Spell casting globals
-short store_mage = 0, store_priest = 0;
-short store_mage_lev = 0, store_priest_lev = 0;
-short store_spell_target = 6,pc_casting;
-short num_targets_left = 0;
-location spell_targets[8];
-
-
 /* Windoze stuff globals */
 Boolean cursor_shown = TRUE;
 short store_pc_being_created;
@@ -671,20 +663,20 @@ static item_record_type convert_item (short_item_record_type s_item) {
 	location l = {0,0};
 	short temp_val;
 	
-	i.variety = static_cast<item_variety>(s_item.variety);
-	i.item_level = (short) s_item.item_level;
-	i.awkward = (short) s_item.awkward;
-	i.bonus = (short) s_item.bonus;
-	i.protection = (short) s_item.protection;
-	i.charges = (short) s_item.charges;
-	i.type = (short) s_item.type;
-	i.graphic_num = (short) s_item.graphic_num;
+	i.variety = s_item.variety;
+	i.item_level = s_item.item_level;
+	i.awkward = s_item.awkward;
+	i.bonus = s_item.bonus;
+	i.protection = s_item.protection;
+	i.charges = s_item.charges;
+	i.type = s_item.type;
+	i.graphic_num = s_item.graphic_num;
 	if (i.graphic_num >= 25)
 		i.graphic_num += 20;
-	i.ability = (short) s_item.real_abil;
-	i.type_flag = (short) s_item.type_flag;
-	i.is_special = (short) s_item.is_special;
-	i.value = (short) s_item.value;
+	i.ability = s_item.real_abil;
+	i.type_flag = s_item.type_flag;
+	i.is_special = s_item.is_special;
+	i.value = s_item.value;
 	i.weight = s_item.weight;
 	i.special_class = 0;
 	i.item_loc = l;

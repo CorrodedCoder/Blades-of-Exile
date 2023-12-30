@@ -61,7 +61,8 @@ unsigned char store_sum_monst;
 short store_sum_monst_cost;
 
 
-location out_start_loc = {20,23};
+static const location out_start_loc = {20,23};
+
 extern const short hit_chance[51] = {20,30,40,45,50,55,60,65,69,73,
 							77,81,84,87,90,92,94,96,97,98,99
 							,99,99,99,99,99,99,99,99,99,99
@@ -278,9 +279,9 @@ void start_outdoor_combat(outdoor_creature_type encounter,unsigned char in_which
 	short nums[10];
 	
 	for (i = 0; i < 7; i++) 
-		nums[i] = get_ran(1,low[i],high[i]);
+		nums[i] = rand_short(low[i],high[i]);
 	for (i = 0; i < 3; i++) 
-		nums[i + 7] = get_ran(1,low[i + 7],high[i + 7]);
+		nums[i + 7] = rand_short(low[i + 7],high[i + 7]);
 	notify_out_combat_began(encounter.what_monst,nums);
 	print_buf();
 	play_sound(23);
@@ -343,8 +344,8 @@ void start_outdoor_combat(outdoor_creature_type encounter,unsigned char in_which
 		if (c_town.monst.dudes[i].active > 0) {
 			monst_target[i] = 6;
 			
-			c_town.monst.dudes[i].m_loc.x  = get_ran(1,15,25);
-			c_town.monst.dudes[i].m_loc.y  = get_ran(1,14,18);
+			c_town.monst.dudes[i].m_loc.x  = rand_short(15,25);
+			c_town.monst.dudes[i].m_loc.y  = rand_short(14,18);
 			if (c_town.monst.dudes[i].attitude == 2)
 				c_town.monst.dudes[i].m_loc.y += 9;
 				else if ((c_town.monst.dudes[i].m_d.mu > 0) || (c_town.monst.dudes[i].m_d.cl > 0))
@@ -354,8 +355,8 @@ void start_outdoor_combat(outdoor_creature_type encounter,unsigned char in_which
 			 (combat_terrain[c_town.monst.dudes[i].m_loc.x][c_town.monst.dudes[i].m_loc.y] == 180) ||
 			 (pc_there(c_town.monst.dudes[i].m_loc) < 6)) &&
 			 (num_tries++ < 50)) {
-				c_town.monst.dudes[i].m_loc.x = get_ran(1,15,25);
-				c_town.monst.dudes[i].m_loc.y = get_ran(1,14,18);		
+				c_town.monst.dudes[i].m_loc.x = rand_short(15,25);
+				c_town.monst.dudes[i].m_loc.y = rand_short(14,18);		
 				if (c_town.monst.dudes[i].attitude == 2)
 					c_town.monst.dudes[i].m_loc.y += 9;
 					else if ((c_town.monst.dudes[i].m_d.mu > 0) || (c_town.monst.dudes[i].m_d.cl > 0))
@@ -421,7 +422,7 @@ Boolean pc_combat_move(location destination) ////
 		return TRUE;
 		}
 	else if ((combat_terrain[destination.x][destination.y] == 90) && (which_combat_type == 0)) {
-			if (get_ran(1,1,10) < 3) {
+			if (rand_short(1,10) < 3) {
 				adven[current_pc].main_status = 5;
 				if (combat_active_pc == current_pc)
 					combat_active_pc = 6;
@@ -464,7 +465,7 @@ Boolean pc_combat_move(location destination) ////
 				return TRUE;
 				}
 			else if ((forced == TRUE)
-				|| ((impassable(combat_terrain[destination.x][destination.y]) == FALSE) && (pc_there(destination) == 6))) {
+				|| ( !impassable(combat_terrain[destination.x][destination.y]) && (pc_there(destination) == 6))) {
 			
 				// monsters get back-shots
 				for (i = 0; i < T_M; i++) {
@@ -512,7 +513,7 @@ Boolean pc_combat_move(location destination) ////
 void char_parry()
 {
 	pc_parry[current_pc] = (pc_moves[current_pc] / 4) * 
-		(2 + stat_adj(current_pc,1) + adven[current_pc].skills[8]);
+		(2 + stat_adj(current_pc, skill::Dexterity) + adven[current_pc].skills[skill::Defense]);
 	pc_moves[current_pc] = 0;
 }
 
@@ -546,10 +547,10 @@ void pc_attack(short who_att,short target)////
 					else weap2 = i;
 
 	hit_adj = (-5 * boe_clamp(adven[who_att].gaffect(affect::CursedBlessed),-8,8)) + 5 * boe_clamp(which_m->m_d.status[1],-8,8)
-			- stat_adj(who_att,1) * 5 + (get_encumberance(who_att)) * 5;
+			- stat_adj(who_att, skill::Dexterity) * 5 + (get_encumberance(who_att)) * 5;
 
 	dam_adj = boe_clamp(adven[who_att].gaffect(affect::CursedBlessed),-8,8) - boe_clamp(which_m->m_d.status[1],-8,8)
-			+ stat_adj(who_att,0);
+			+ stat_adj(who_att, skill::Strength);
 
 	if ((which_m->m_d.status[11] > 0) || (which_m->m_d.status[12] > 0)) {
 		hit_adj -= 80;
@@ -577,9 +578,9 @@ void pc_attack(short who_att,short target)////
 		sprintf(create_line, "%s punches.  ",(char *) adven[who_att].name);//,hit_adj, dam_adj);
 		add_string_to_buf( create_line);
 
-		r1 = get_ran(1,0,100) + hit_adj - 20;
+		r1 = rand_short(0,100) + hit_adj - 20;
 		r1 += 5 * (adven[current_pc].gaffect(affect::Webbed) / 3);
-		r2 = get_ran(1,1,4) + dam_adj;
+		r2 = rand_short(1,4) + dam_adj;
 		
 		if (r1 <= hit_chance[adven[who_att].skills[what_skill1]]) {
 			damage_monst(target, who_att, r2, 0,400);
@@ -603,7 +604,7 @@ void pc_attack(short who_att,short target)////
 		sprintf(create_line, "%s swings. ",(char *) adven[who_att].name);//,hit_adj, dam_adj);
 		add_string_to_buf( create_line);
 		
-		r1 = get_ran(1,0,100) - 5 + hit_adj
+		r1 = rand_short(0,100) - 5 + hit_adj
 		 - 5 * adven[who_att].items[weap1].bonus;
 		r1 += 5 * (adven[current_pc].gaffect(affect::Webbed) / 3);
 		
@@ -614,7 +615,7 @@ void pc_attack(short who_att,short target)////
 		if ((adven[who_att].race == 2) && (adven[who_att].items[weap1].type == 3))
 			r1 -= 10;
 
-		r2 = get_ran(1,1,adven[who_att].items[weap1].item_level) + dam_adj + 2 + adven[who_att].items[weap1].bonus;			
+		r2 = rand_short(1,adven[who_att].items[weap1].item_level) + dam_adj + 2 + adven[who_att].items[weap1].bonus;			
 		if (adven[who_att].items[weap1].ability == 12) 
 			r2 = (r2 * (10 - adven[who_att].items[weap1].ability_strength)) / 10;
 
@@ -623,11 +624,11 @@ void pc_attack(short who_att,short target)////
 				adven[who_att].items[weap1].ability_strength,which_m);
 
 			// assassinate
-			r1 = get_ran(1,0,100);
+			r1 = rand_short(0,100);
 			if ((adven[who_att].level >= which_m->m_d.level - 1) 
-				&& (adven[who_att].skills[16] >= which_m->m_d.level / 2)
+				&& (adven[who_att].skills[skill::Assassination] >= which_m->m_d.level / 2)
 				&& (which_m->m_d.spec_skill != 12)) // Can't assassinate splitters
-				if (r1 < hit_chance[max(adven[who_att].skills[16] - which_m->m_d.level,0)]) {
+				if (r1 < hit_chance[max(adven[who_att].skills[skill::Assassination] - which_m->m_d.level,0)]) {
 					add_string_to_buf("  You assassinate.           ");
 					spec_dam += r2;
 					}
@@ -653,15 +654,15 @@ void pc_attack(short who_att,short target)////
 					poison_monst(which_m,poison_amt);
 					adven[who_att].reduce_affect(affect::PoisonedWeapon);
 				}
-			if ((adven[who_att].items[weap1].ability == 14) && (get_ran(1,0,1) == 1)) {
+			if ((adven[who_att].items[weap1].ability == 14) && (rand_short(0,1) == 1)) {
 				add_string_to_buf("  Blade drips venom.             ");
 				poison_monst(which_m,adven[who_att].items[weap1].ability_strength / 2);
 				}
-			if ((adven[who_att].items[weap1].ability == 9) && (get_ran(1,0,1) == 1)) {
+			if ((adven[who_att].items[weap1].ability == 9) && (rand_short(0,1) == 1)) {
 				add_string_to_buf("  Blade drips acid.             ");
 				acid_monst(which_m,adven[who_att].items[weap1].ability_strength / 2);
 				}
-			if ((adven[who_att].items[weap1].ability == 10) && (get_ran(1,0,1) == 1)) {
+			if ((adven[who_att].items[weap1].ability == 10) && (rand_short(0,1) == 1)) {
 				add_string_to_buf("  Blade drains life.             ");
 				heal_pc(who_att,adven[who_att].items[weap1].ability_strength / 2);
 				}
@@ -685,14 +686,14 @@ void pc_attack(short who_att,short target)////
 
 		sprintf(create_line, "%s swings.                    ",(char *) adven[who_att].name);//,hit_adj, dam_adj);
 		add_string_to_buf( create_line);
-		r1 = get_ran(1,0,100) + hit_adj - 5 * adven[who_att].items[weap2].bonus;
+		r1 = rand_short(0,100) + hit_adj - 5 * adven[who_att].items[weap2].bonus;
 		
 		// Ambidextrous?
 		if (adven[who_att].traits[trait::Ambidextrous] == FALSE)
 			r1 += 25;
 
 		r1 += 5 * (adven[current_pc].gaffect(affect::Webbed) / 3);
-		r2 = get_ran(1,1,adven[who_att].items[weap2].item_level) + dam_adj - 1 + adven[who_att].items[weap2].bonus;
+		r2 = rand_short(1,adven[who_att].items[weap2].item_level) + dam_adj - 1 + adven[who_att].items[weap2].bonus;
 		if (adven[who_att].items[weap2].ability == 12) 
 			r2 = (r2 * (10 - adven[who_att].items[weap2].ability_strength)) / 10;
 			
@@ -713,15 +714,15 @@ void pc_attack(short who_att,short target)////
 					break;	
 				}
 
-			if ((adven[who_att].items[weap2].ability == 14) && (get_ran(1,0,1) == 1)) {
+			if ((adven[who_att].items[weap2].ability == 14) && (rand_short(0,1) == 1)) {
 				add_string_to_buf("  Blade drips venom.             ");
 				poison_monst(which_m,adven[who_att].items[weap2].ability_strength / 2);
 				}
-			if ((adven[who_att].items[weap2].ability == 9) && (get_ran(1,0,1) == 1)) {
+			if ((adven[who_att].items[weap2].ability == 9) && (rand_short(0,1) == 1)) {
 				add_string_to_buf("  Blade drips acid.             ");
 				acid_monst(which_m,adven[who_att].items[weap2].ability_strength / 2);
 				}
-			if ((adven[who_att].items[weap2].ability == 10) && (get_ran(1,0,1) == 1)) {
+			if ((adven[who_att].items[weap2].ability == 10) && (rand_short(0,1) == 1)) {
 				add_string_to_buf("  Blade drains life.             ");
 				heal_pc(who_att,adven[who_att].items[weap2].ability_strength / 2);
 				}
@@ -887,7 +888,7 @@ void do_combat_cast(location target)////
 		}
 		else {
 			level = 1 + adven[current_pc].level / 2;
-			bonus = stat_adj(current_pc,2);
+			bonus = stat_adj(current_pc, skill::Intelligence);
 			}
 	force_wall_position = 10;
 	s_num = spell_being_cast % 100;
@@ -979,7 +980,7 @@ void do_combat_cast(location target)////
 					make_quickfire(target.x,target.y);
 					break;
 				case 45: // spray fields
-					r1 = get_ran(1,0,14);
+					r1 = rand_short(0,14);
 					place_spell_pattern(current_pat,target,spray_type_array[r1],FALSE,current_pc);									
 					break;
 				case 159:  // wall of blades
@@ -1094,32 +1095,32 @@ void do_combat_cast(location target)////
 			do_missile_anim(50,pc_pos[current_pc],61); 
 			switch (spell_being_cast) {
 			case 35: // Simulacrum
-				r2 = get_ran(3,1,4) + stat_adj(current_pc,2);
+				r2 = get_ran(3,1,4) + stat_adj(current_pc, skill::Intelligence);
 				if (summon_monster(store_sum_monst,target,r2,2) == FALSE)
 					add_string_to_buf("  Summon failed.");
 				break;
 			case 16: // summon beast
-				r2 = get_ran(3,1,4) + stat_adj(current_pc,2);
+				r2 = get_ran(3,1,4) + stat_adj(current_pc, skill::Intelligence);
 				if ((summon < 0) || (summon_monster(summon,target,r2,2) == FALSE))
 					add_string_to_buf("  Summon failed.");
 				break;
 			case 26: // summon 1
-				r2 = get_ran(4,1,4) + stat_adj(current_pc,2);
+				r2 = get_ran(4,1,4) + stat_adj(current_pc, skill::Intelligence);
 				if ((summon < 0) || (summon_monster(summon,target,r2,2) == FALSE))
 					add_string_to_buf("  Summon failed.");
 				break;
 			case 43: // summon 2
-				r2 = get_ran(5,1,4) + stat_adj(current_pc,2);
+				r2 = get_ran(5,1,4) + stat_adj(current_pc, skill::Intelligence);
 				if ((summon < 0) || (summon_monster(summon,target,r2,2) == FALSE))
 					add_string_to_buf("  Summon failed.");
 				break;
 			case 58: // summon 3
-				r2 = get_ran(7,1,4) + stat_adj(current_pc,2);
+				r2 = get_ran(7,1,4) + stat_adj(current_pc, skill::Intelligence);
 				if ((summon < 0) || (summon_monster(summon,target,r2,2) == FALSE))
 					add_string_to_buf("  Summon failed.");
 				break;
 			case 50: // Daemon
-				r2 = get_ran(5,1,4) + stat_adj(current_pc,2);
+				r2 = get_ran(5,1,4) + stat_adj(current_pc, skill::Intelligence);
 				if (summon_monster(85,target,r2,2) == FALSE)
 					add_string_to_buf("  Summon failed.");
 				break;
@@ -1130,23 +1131,23 @@ void do_combat_cast(location target)////
 				break;
 			
 			case 115: // summon spirit
-				r2 = get_ran(2,1,5) + stat_adj(current_pc,2);
+				r2 = get_ran(2,1,5) + stat_adj(current_pc, skill::Intelligence);
 				if (summon_monster(125,target,r2,2) == FALSE)
 					add_string_to_buf("  Summon failed.");		
 				break;
 			case 134: // s to s
-				r1 = get_ran(1,0,7);
-				r2 = get_ran(2,1,5) + stat_adj(current_pc,2);
+				r1 = rand_short(0,7);
+				r2 = get_ran(2,1,5) + stat_adj(current_pc, skill::Intelligence);
 				if (summon_monster((r1 == 1) ? 100 : 99,target,r2,2) == FALSE)
 					add_string_to_buf("  Summon failed.");
 				break;
 			case 143: // host
-				r2 = get_ran(2,1,4) + stat_adj(current_pc,2);
+				r2 = get_ran(2,1,4) + stat_adj(current_pc, skill::Intelligence);
 				if (summon_monster((i == 0) ? 126 : 125,target,r2,2) == FALSE)
 					add_string_to_buf("  Summon failed.");		
 				break;
 			case 150: // guardian
-				r2 = get_ran(6,1,4) + stat_adj(current_pc,2);
+				r2 = get_ran(6,1,4) + stat_adj(current_pc, skill::Intelligence);
 				if (summon_monster(122,target,r2,2) == FALSE)
 					add_string_to_buf("  Summon failed.");		
 				break;
@@ -1208,7 +1209,7 @@ void do_combat_cast(location target)////
 									
 								case 118: // disease
 									store_m_type = 0;
-									r1 = get_ran(1,0,1);
+									r1 = rand_short(0,1);
 									disease_monst(cur_monst,2 + r1 + bonus);
 									break;
 																		
@@ -1238,7 +1239,7 @@ void do_combat_cast(location target)////
 									
 								case 12:
 									store_m_type = 11;
-									r1 = get_ran(1,0,1);
+									r1 = rand_short(0,1);
 									slow_monst(cur_monst,2 + r1 + bonus);
 									break;
 									
@@ -1284,7 +1285,7 @@ void do_combat_cast(location target)////
 										break;
 										}
 									store_m_type = 8;
-									r1 = get_ran(1,0,90);
+									r1 = rand_short(0,90);
 									if (r1 > hit_chance[boe_clamp(bonus * 2 + level * 4 - (cur_monst->m_d.level / 2) + 3,0,19)])
 										add_string_to_buf("  Monster resisted.                  ");
 										else {
@@ -1300,7 +1301,7 @@ void do_combat_cast(location target)////
 										store_m_type = -1;
 										break;
 										}
-									r1 = get_ran(1,0,100);
+									r1 = rand_short(0,100);
 									if (r1 > hit_chance[boe_clamp(level * 4 - cur_monst->m_d.level + 10,0,19)])
 										add_string_to_buf("  Demon resisted.                  ");
 										else {
@@ -1438,12 +1439,12 @@ void fire_missile(location target) ////
 	creature_data_type *cur_monst;
 	Boolean exploding = FALSE;
 	
-	skill = (overall_mode == 12) ? adven[current_pc].skills[7] : adven[current_pc].skills[8];
+	skill = (overall_mode == 12) ? adven[current_pc].skills[skill::Archery] : adven[current_pc].skills[skill::Defense];
 	range = (overall_mode == 12) ? 12 : 8;
 	dam = adven[current_pc].items[ammo_inv_slot].item_level;
 	dam_bonus = adven[current_pc].items[ammo_inv_slot].bonus + boe_clamp(-8,8,adven[current_pc].gaffect(affect::CursedBlessed));
 	hit_bonus = (overall_mode == 12) ? adven[current_pc].items[missile_inv_slot].bonus : 0;
-	hit_bonus += stat_adj(current_pc,1) - can_see(pc_pos[current_pc],target,0) 
+	hit_bonus += stat_adj(current_pc, skill::Dexterity) - can_see(pc_pos[current_pc],target,0)
 		+ boe_clamp(adven[current_pc].gaffect(affect::CursedBlessed),-8,8);
 	if ((skill_item = pc_has_abil_equip(current_pc,41)) < 24) {
 		hit_bonus += adven[current_pc].items[skill_item].ability_strength / 2;
@@ -1494,9 +1495,9 @@ void fire_missile(location target) ////
 				//play_sound((overall_mode == 12) ? 12 : 14);
 				take_ap((overall_mode == 12) ? 3 : 2);
 				missile_firer = current_pc;			
-				r1 = get_ran(1,0,100) - 5 * hit_bonus - 10;
+				r1 = rand_short(0,100) - 5 * hit_bonus - 10;
 				r1 += 5 * (adven[current_pc].gaffect(affect::Webbed) / 3);
-				r2 = get_ran(1,1,dam) + dam_bonus;
+				r2 = rand_short(1,dam) + dam_bonus;
 				sprintf(create_line, "%s fires.",(char *) adven[current_pc].name); // debug
 				add_string_to_buf( create_line);
 
@@ -1670,7 +1671,7 @@ void combat_run_monst()
 				party.stuff_done[305][0] = move_to_zero(party.stuff_done[305][0]);
 				if ((item = pc_has_abil_equip(i,50)) < 24) {
 					update_stat = TRUE;
-					heal_pc(i,get_ran(1,0,adven[i].items[item].item_level + 1));	
+					heal_pc(i,rand_short(0,adven[i].items[item].item_level + 1));	
 					}	
 				}
 		for (i = 0; i < 6; i++) 
@@ -1689,13 +1690,13 @@ void combat_run_monst()
 
 				// Do special items
 				if (((item_level = get_prot_level(i,47)) > 0)
-					&& (get_ran(1,0,10) == 5)) {
+					&& (rand_short(0,10) == 5)) {
 						update_stat = TRUE;
 						adven[i].gaffect(affect::Speed) += item_level / 2;
 						add_string_to_buf("An item hastes you!");
 						}
 				if ((item_level = get_prot_level(i,46)) > 0) {
-					if (get_ran(1,0,10) == 5) {
+					if (rand_short(0,10) == 5) {
 						update_stat = TRUE;
 						adven[i].gaffect(affect::CursedBlessed) += item_level / 2;
 						add_string_to_buf("An item blesses you!");
@@ -1743,7 +1744,7 @@ void do_monster_turn()
 	
 		// See if hostile monster notices party, during combat
 		if ((cur_monst->active == 1) && (cur_monst->attitude % 2 == 1) && (overall_mode == 10)) {
-			r1 = get_ran(1,1,100); // Check if see PCs first
+			r1 = rand_short(1,100); // Check if see PCs first
 			r1 += (party.stuff_done[305][0] > 0) ? 45 : 0;
 			r1 += can_see(cur_monst->m_loc,closest_pc_loc(cur_monst->m_loc),0) * 10;
 			if (r1 < 50)
@@ -1912,7 +1913,7 @@ void do_monster_turn()
 							cur_monst->m_d.morale++;
 						if (cur_monst->m_d.health > 50)
 							cur_monst->m_d.morale++;
-						r1 = get_ran(1,1,6);
+						r1 = rand_short(1,6);
 						if (r1 == 3)
 							cur_monst->m_d.morale++;
 						if ((adven[monst_target[i]].main_status == status::Normal)	&& (cur_monst->mobile == TRUE)) {
@@ -1929,7 +1930,7 @@ void do_monster_turn()
 
 					// Breathe (fire)
 						if ( (cur_monst->m_d.breath > 0)
-							&& (get_ran(1,1,8) < 4) && (acted_yet == FALSE)) {
+							&& (rand_short(1,8) < 4) && (acted_yet == FALSE)) {
 								//print_nums(cur_monst->m_d.breath,cur_monst->m_d.breath_type,dist(cur_monst->m_loc,targ_space) );
 								if ((target != 6)
 									&& (dist(cur_monst->m_loc,targ_space) <= 8)) {
@@ -1940,9 +1941,9 @@ void do_monster_turn()
 									}
 							}
 					// Mage spell
-						if ((cur_monst->m_d.mu > 0) && (get_ran(1,1,10) < ((cur_monst->m_d.cl > 0) ? 6 : 9) )
+						if ((cur_monst->m_d.mu > 0) && (rand_short(1,10) < ((cur_monst->m_d.cl > 0) ? 6 : 9) )
 							&& (acted_yet == FALSE)) {
-								if (((monst_adjacent(targ_space,i) == FALSE) || (get_ran(1,0,2) < 2) || (cur_monst->number >= 160)
+								if (((monst_adjacent(targ_space,i) == FALSE) || (rand_short(0,2) < 2) || (cur_monst->number >= 160)
 									|| (cur_monst->m_d.level > 9))
 										&& (dist(cur_monst->m_loc,targ_space) <= 10)) {	
 											acted_yet = monst_cast_mage(cur_monst,target);
@@ -1952,8 +1953,8 @@ void do_monster_turn()
 									}
 							}
 					// Priest spell
-						if ((cur_monst->m_d.cl > 0) && (get_ran(1,1,8) < 7) && (acted_yet == FALSE)) {
-								if (((monst_adjacent(targ_space,i) == FALSE) || (get_ran(1,0,2) < 2) || (cur_monst->m_d.level > 9))
+						if ((cur_monst->m_d.cl > 0) && (rand_short(1,8) < 7) && (acted_yet == FALSE)) {
+								if (((monst_adjacent(targ_space,i) == FALSE) || (rand_short(0,2) < 2) || (cur_monst->m_d.level > 9))
 										&& (dist(cur_monst->m_loc,targ_space) <= 10)) {
 											acted_yet = monst_cast_priest(cur_monst,target);
 											had_monst = TRUE;
@@ -1964,7 +1965,7 @@ void do_monster_turn()
 
 				// Missile
 						if ((abil_range[cur_monst->m_d.spec_skill] > 0) // breathing gas short range
-							&& (get_ran(1,1,8) < abil_odds[cur_monst->m_d.spec_skill]) && (acted_yet == FALSE)) {
+							&& (rand_short(1,8) < abil_odds[cur_monst->m_d.spec_skill]) && (acted_yet == FALSE)) {
 								// Don't fire when adjacent, unless non-gaze magical attack 
 								if (((monst_adjacent(targ_space,i) == FALSE) || 
 									((cur_monst->m_d.spec_skill > 7) && (cur_monst->m_d.spec_skill != 20)
@@ -2074,29 +2075,29 @@ void do_monster_turn()
 				
 				// Place fields for monsters that create them. Only done when monst sees foe
 				if ((target != 6) && (can_see(cur_monst->m_loc,targ_space,0) < 5)) { ////
-					if ((cur_monst->m_d.radiate_1 == 1) && (get_ran(1,0,100) < cur_monst->m_d.radiate_2))
+					if ((cur_monst->m_d.radiate_1 == 1) && (rand_short(0,100) < cur_monst->m_d.radiate_2))
 						place_spell_pattern(square,cur_monst->m_loc,5,FALSE,7);
-					if ((cur_monst->m_d.radiate_1 == 2) && (get_ran(1,0,100) < cur_monst->m_d.radiate_2))
+					if ((cur_monst->m_d.radiate_1 == 2) && (rand_short(0,100) < cur_monst->m_d.radiate_2))
 						place_spell_pattern(square,cur_monst->m_loc,8,FALSE,7);
-					if ((cur_monst->m_d.radiate_1 == 3) && (get_ran(1,0,100) < cur_monst->m_d.radiate_2))
+					if ((cur_monst->m_d.radiate_1 == 3) && (rand_short(0,100) < cur_monst->m_d.radiate_2))
 						place_spell_pattern(square,cur_monst->m_loc,4,FALSE,7);
-					if ((cur_monst->m_d.radiate_1 == 4) && (get_ran(1,0,100) < cur_monst->m_d.radiate_2))
+					if ((cur_monst->m_d.radiate_1 == 4) && (rand_short(0,100) < cur_monst->m_d.radiate_2))
 						place_spell_pattern(square,cur_monst->m_loc,6,FALSE,7);
-					if ((cur_monst->m_d.radiate_1 == 5) && (get_ran(1,0,100) < cur_monst->m_d.radiate_2))
+					if ((cur_monst->m_d.radiate_1 == 5) && (rand_short(0,100) < cur_monst->m_d.radiate_2))
 						place_spell_pattern(square,cur_monst->m_loc,12,FALSE,7);
-					if ((cur_monst->m_d.radiate_1 == 6) && (get_ran(1,0,100) < cur_monst->m_d.radiate_2))
+					if ((cur_monst->m_d.radiate_1 == 6) && (rand_short(0,100) < cur_monst->m_d.radiate_2))
 						place_spell_pattern(square,cur_monst->m_loc,7,FALSE,7);
-					if ((cur_monst->m_d.radiate_1 == 10) && (get_ran(1,0,100) < 5)){
+					if ((cur_monst->m_d.radiate_1 == 10) && (rand_short(0,100) < 5)){
 						if (summon_monster(cur_monst->m_d.radiate_2,
 							cur_monst->m_loc,130,cur_monst->attitude) == TRUE)
 							{monst_spell_note(cur_monst->number,33); play_sound(61);}
 						}
-					if ((cur_monst->m_d.radiate_1 == 11) && (get_ran(1,0,100) < 20)){
+					if ((cur_monst->m_d.radiate_1 == 11) && (rand_short(0,100) < 20)){
 						if (summon_monster(cur_monst->m_d.radiate_2,
 							cur_monst->m_loc,130,cur_monst->attitude) == TRUE)
 							{monst_spell_note(cur_monst->number,33); play_sound(61);}
 						}
-					if ((cur_monst->m_d.radiate_1 == 12) && (get_ran(1,0,100) < 50)){
+					if ((cur_monst->m_d.radiate_1 == 12) && (rand_short(0,100) < 50)){
 						if (summon_monster(cur_monst->m_d.radiate_2,
 							cur_monst->m_loc,130,cur_monst->attitude) == TRUE)
 							{monst_spell_note(cur_monst->number,33); play_sound(61);}
@@ -2116,7 +2117,7 @@ void do_monster_turn()
 				if (cur_monst->active == 0)
 					cur_monst->m_d.ap = 0;
 
-				//if ((futzing == 1) && (get_ran(1,0,1) == 0)) // If monster's just pissing around, give up
+				//if ((futzing == 1) && (rand_short(0,1) == 0)) // If monster's just pissing around, give up
 				//	cur_monst->m_d.ap = 0;
 				if (futzing > 1) // If monster's just pissing around, give up
 					cur_monst->m_d.ap = 0;
@@ -2169,14 +2170,14 @@ void do_monster_turn()
 									add_string_to_buf("Diseased monsters:              ");
 									printed_disease = TRUE;
 									}
-								k = get_ran(1,1,5);
+								k = rand_short(1,5);
 								switch (k) {
 									case 1: case 2: poison_monst(cur_monst, 2);break;
 									case 3:	slow_monst(cur_monst,2); break;
 									case 4: curse_monst(cur_monst,2); break;
 									case 5: scare_monst(cur_monst,10); break;					
 									}
-								if (get_ran(1,1,6) < 4)
+								if (rand_short(1,6) < 4)
 									cur_monst->m_d.status[7]--;
 								}
 
@@ -2228,7 +2229,7 @@ void monster_attack_pc(short who_att,short target)
 
 	// Check sanctuary
 	if (adven[target].gaffect(affect::Sanctuary) > 0) {
-		r1 = get_ran(1,0,100);
+		r1 = rand_short(0,100);
 		if (r1 > hit_chance[attacker->m_d.level / 2]) {
 			add_string_to_buf("  Can't find target!                 ");		
 			}
@@ -2241,8 +2242,8 @@ void monster_attack_pc(short who_att,short target)
 //			add_string_to_buf( create_line);
 
 			// Attack roll
-			r1 = get_ran(1,0,100) - 5 * min(8,attacker->m_d.status[1]) + 5 * adven[target].gaffect(affect::CursedBlessed)
-					+ 5 * stat_adj(target,1) - 15;
+			r1 = rand_short(0,100) - 5 * min(8,attacker->m_d.status[1]) + 5 * adven[target].gaffect(affect::CursedBlessed)
+					+ 5 * stat_adj(target, skill::Dexterity) - 15;
 			r1 += 5 * (attacker->m_d.status[6] / 3);
 			if (pc_parry[target] < 100)
 				r1 += 5 * pc_parry[target];
@@ -2287,17 +2288,17 @@ void monster_attack_pc(short who_att,short target)
 							}
 
 						// Gremlin
-						if ((attacker->m_d.spec_skill == 21) && (get_ran(1,0,2) < 2)) {
+						if ((attacker->m_d.spec_skill == 21) && (rand_short(0,2) < 2)) {
 							add_string_to_buf("  Steals food!                 ");
 							print_buf();
 							play_sound(26);
-							party.food = (long) max(0, (short) (party.food) - get_ran(1,0,10) - 10);
+							party.food = (long) max(0, (short) (party.food) - rand_short(0,10) - 10);
 							put_pc_screen();
 							}
 							
 						// Disease
 						if (((attacker->m_d.spec_skill == 25) || (attacker->m_d.spec_skill == 30))
-						 && (get_ran(1,0,2) < 2)) {
+						 && (rand_short(0,2) < 2)) {
 							add_string_to_buf("  Causes disease!                 ");
 							print_buf();
 							disease_pc(target,(attacker->m_d.spec_skill == 25) ? 6 : 2);
@@ -2312,7 +2313,7 @@ void monster_attack_pc(short who_att,short target)
 							}
 
 						// Undead slow
-						if ((attacker->m_d.spec_skill == 18) && (get_ran(1,0,8) < 6) && (pc_has_abil_equip(target,48) == 24)) {
+						if ((attacker->m_d.spec_skill == 18) && (rand_short(0,8) < 6) && (pc_has_abil_equip(target,48) == 24)) {
 							add_string_to_buf("  Stuns! ");
 							slow_pc(target,2);
 							put_pc_screen();
@@ -2350,7 +2351,7 @@ void monster_attack_pc(short who_att,short target)
 
 						// Freezing touch
 						if (((attacker->m_d.spec_skill == 15) || (attacker->m_d.spec_skill == 17))
-						 && (get_ran(1,0,8) < 6) && (pc_has_abil_equip(target,48) == 24)) {
+						 && (rand_short(0,8) < 6) && (pc_has_abil_equip(target,48) == 24)) {
 							add_string_to_buf("  Freezing touch!");
 							r1 = get_ran(3,1,10);
 							damage_pc(target,r1,5,-1);
@@ -2410,7 +2411,7 @@ void monster_attack_monster(short who_att,short attackee)
 				target->attitude = 2;
 
 			// Attack roll
-			r1 = get_ran(1,0,100) - 5 * min(10,attacker->m_d.status[1]) 
+			r1 = rand_short(0,100) - 5 * min(10,attacker->m_d.status[1]) 
 				+ 5 * target->m_d.status[1]	- 15;
 			r1 += 5 * (attacker->m_d.status[6] / 3);
 
@@ -2443,7 +2444,7 @@ void monster_attack_monster(short who_att,short attackee)
 							}
 
 						// Undead slow
-						if ((attacker->m_d.spec_skill == 18) && (get_ran(1,0,8) < 6)) {
+						if ((attacker->m_d.spec_skill == 18) && (rand_short(0,8) < 6)) {
 							add_string_to_buf("  Stuns!      ");
 							slow_monst(target,2);
 							}
@@ -2476,7 +2477,7 @@ void monster_attack_monster(short who_att,short attackee)
 
 						// Freezing touch
 						if (((attacker->m_d.spec_skill == 15) || (attacker->m_d.spec_skill == 17))
-						 && (get_ran(1,0,8) < 6)) {
+						 && (rand_short(0,8) < 6)) {
 							add_string_to_buf("  Freezing touch!");
 							r1 = get_ran(3,1,10);
 							damage_monst(attackee,7,r1,0,5);
@@ -2484,7 +2485,7 @@ void monster_attack_monster(short who_att,short attackee)
 							
 						// Death touch
 						if ((attacker->m_d.spec_skill == 35)
-						 && (get_ran(1,0,8) < 6)) {
+						 && (rand_short(0,8) < 6)) {
 							add_string_to_buf("  Killing touch!");
 							r1 = get_ran(20,1,10);
 							damage_monst(attackee,7,r1,0,4);
@@ -2591,7 +2592,7 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 			if (target < 100) { // on PC
 				sprintf(create_line, "  Gazes at %s.                  ",(char *) adven[target].name);
 				add_string_to_buf( create_line);
-				r1 = get_ran(1,0,20) + adven[target].level / 4 + adven[target].gaffect(affect::CursedBlessed);
+				r1 = rand_short(0,20) + adven[target].level / 4 + adven[target].gaffect(affect::CursedBlessed);
 				if (pc_has_abil_equip(target,49) < 24)
 					r1 = 20;
 				if (r1 > 14) {
@@ -2606,7 +2607,7 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 				}
 				else {
 					monst_spell_note(m_target->number,9);
-					r1 = get_ran(1,0,20) + m_target->m_d.level / 4 + m_target->m_d.status[1];
+					r1 = rand_short(0,20) + m_target->m_d.level / 4 + m_target->m_d.status[1];
 					if ((r1 > 14) || (m_target->m_d.immunities & 2)) 
 						monst_spell_note(m_target->number,10);
 						else {
@@ -2620,7 +2621,7 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 				// modify target is target has no sp
 				if (adven[target].cur_sp < 4) {
 					for (i = 0; i < 8; i++) {
-						j = get_ran(1,0,5);
+						j = rand_short(0,5);
 						if ((adven[j].main_status == status::Normal) && (adven[j].cur_sp > 4) &&
 							(can_see(source,pc_pos[j],0) < 5) && (dist(source,pc_pos[j]) <= 8)) {
 								target = j;
@@ -2704,14 +2705,14 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 
 			// Check sanctuary
 			if (adven[target].gaffect(affect::Sanctuary) > 0) {
-				r1 = get_ran(1,0,100);
+				r1 = rand_short(0,100);
 				if (r1 > hit_chance[level]) {
 					add_string_to_buf("  Can't find target!                 ");		
 					}
 				return;
 				}
 
-			r1 = get_ran(1,0,100) - 5 * min(10,bless) + 5 * adven[target].gaffect(affect::CursedBlessed)
+			r1 = rand_short(0,100) - 5 * min(10,bless) + 5 * adven[target].gaffect(affect::CursedBlessed)
 				- 5 * (can_see(source, pc_pos[target],0));
 			if (pc_parry[target] < 100)
 				r1 += 5 * pc_parry[target];
@@ -2753,7 +2754,7 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 					 monst_spell_note(m_target->number,14);
 				break;
 				}
-			r1 = get_ran(1,0,100) - 5 * min(10,bless) + 5 * m_target->m_d.status[1]
+			r1 = rand_short(0,100) - 5 * min(10,bless) + 5 * m_target->m_d.status[1]
 				- 5 * (can_see(source, m_target->m_loc,0));
 			r2 = get_ran(dam[level],1,7) + min(10,bless);
 
@@ -2843,17 +2844,17 @@ Boolean monst_cast_mage(creature_data_type *caster,short targ)////
 	target = find_fireball_loc(caster->m_loc,1,(caster->attitude % 2 == 1) ? 0 : 1,&target_levels);
 	friend_levels_near = (caster->attitude % 2 != 1) ? count_levels(caster->m_loc,3) : -1 * count_levels(caster->m_loc,3);
 
-	if ((caster->m_d.health * 4 < caster->m_d.m_health) && (get_ran(1,0,10) < 9))
+	if ((caster->m_d.health * 4 < caster->m_d.m_health) && (rand_short(0,10) < 9))
 		spell = emer_spells[level][3];
-		else if ((((caster->m_d.status[3] < 0) && (get_ran(1,0,10) < 7)) || 
-			((caster->m_d.status[3] == 0) && (get_ran(1,0,10) < 5))) && (emer_spells[level][0] != 0))
+		else if ((((caster->m_d.status[3] < 0) && (rand_short(0,10) < 7)) || 
+			((caster->m_d.status[3] == 0) && (rand_short(0,10) < 5))) && (emer_spells[level][0] != 0))
 			spell = emer_spells[level][0];
-			else if ((friend_levels_near <= -10) && (get_ran(1,0,10) < 7) && (emer_spells[level][1] != 0))
+			else if ((friend_levels_near <= -10) && (rand_short(0,10) < 7) && (emer_spells[level][1] != 0))
 				spell = emer_spells[level][1];
-				else if ((target_levels > 50) && (get_ran(1,0,10) < 7) && (emer_spells[level][2] != 0))
+				else if ((target_levels > 50) && (rand_short(0,10) < 7) && (emer_spells[level][2] != 0))
 					spell = emer_spells[level][2];
 					else {
-						r1 = get_ran(1,0,17);
+						r1 = rand_short(0,17);
 						spell = caster_array[level][r1];
 						}
 	
@@ -2864,7 +2865,7 @@ Boolean monst_cast_mage(creature_data_type *caster,short targ)////
 
 	// Anything prventing spell?
 	if ((target.x > 64) && (monst_mage_area_effect[spell - 1] > 0)) {
-		r1 = get_ran(1,0,9);
+		r1 = rand_short(0,9);
 		spell = caster_array[level][r1];
 		if ((target.x > 64) && (monst_mage_area_effect[spell - 1] > 0)) 
 			return FALSE;
@@ -2942,8 +2943,8 @@ Boolean monst_cast_mage(creature_data_type *caster,short targ)////
 			case 6: // minor poison
 				run_a_missile(l,vict_loc,11,0,25,0,0,80);
 				if (targ < 6)
-					poison_pc(targ,2 + get_ran(1,0,1));
-					else poison_monst(&c_town.monst.dudes[targ - 100],2 + get_ran(1,0,1));
+					poison_pc(targ,2 + rand_short(0,1));
+					else poison_monst(&c_town.monst.dudes[targ - 100],2 + rand_short(0,1));
 				break;
 			case 7: // slow
 				run_a_missile(l,vict_loc,15,0,25,0,0,80);
@@ -3002,7 +3003,7 @@ Boolean monst_cast_mage(creature_data_type *caster,short targ)////
 					r1 = get_summon_monster(3);
 					if (r1 < 0)
 						break;
-					j = get_ran(1,2,3);
+					j = rand_short(2,3);
 					}
 				Delay(12,&dummy); // gives sound time to end
 				x = get_ran(4,1,4);
@@ -3019,7 +3020,7 @@ Boolean monst_cast_mage(creature_data_type *caster,short targ)////
 				break;
 			case 15: // poison
 				run_a_missile(l,vict_loc,11,0,25,0,0,80);
-				x = get_ran(1,0,3);
+				x = rand_short(0,3);
 				if (targ < 6)
 					poison_pc(targ,4 + x);
 					else poison_monst(&c_town.monst.dudes[targ - 100],4 + x);
@@ -3073,7 +3074,7 @@ Boolean monst_cast_mage(creature_data_type *caster,short targ)////
 				break;
 			case 22: // m. poison
 				run_a_missile(l,vict_loc,11,1,11,0,0,80);
-				x = get_ran(1,1,2);
+				x = rand_short(1,2);
 				if (targ < 6)
 					poison_pc(targ,6 + x);
 					else poison_monst(&c_town.monst.dudes[targ - 100],6 + x);
@@ -3159,16 +3160,16 @@ Boolean monst_cast_priest(creature_data_type *caster,short targ)
 	target = find_fireball_loc(caster->m_loc,1,(caster->attitude % 2 == 1) ? 0 : 1,&target_levels);
 	friend_levels_near = (caster->attitude % 2 != 1) ? count_levels(caster->m_loc,3) : -1 * count_levels(caster->m_loc,3);
 
-	if ((caster->m_d.health * 4 < caster->m_d.m_health) && (get_ran(1,0,10) < 9))
+	if ((caster->m_d.health * 4 < caster->m_d.m_health) && (rand_short(0,10) < 9))
 		spell = emer_spells[level][3];
-		else if ((caster->m_d.status[3] < 0) && (get_ran(1,0,10) < 7) && (emer_spells[level][0] != 0))
+		else if ((caster->m_d.status[3] < 0) && (rand_short(0,10) < 7) && (emer_spells[level][0] != 0))
 			spell = emer_spells[level][0];
-			else if ((friend_levels_near <= -10) && (get_ran(1,0,10) < 7) && (emer_spells[level][1] != 0))
+			else if ((friend_levels_near <= -10) && (rand_short(0,10) < 7) && (emer_spells[level][1] != 0))
 				spell = emer_spells[level][1];
-				else if ((target_levels > 50 < 0) && (get_ran(1,0,10) < 7) && (emer_spells[level][2] != 0))
+				else if ((target_levels > 50 < 0) && (rand_short(0,10) < 7) && (emer_spells[level][2] != 0))
 					spell = emer_spells[level][2];
 					else {
-						r1 = get_ran(1,0,9);
+						r1 = rand_short(0,9);
 						spell = caster_array[level][r1];
 						}
 
@@ -3176,7 +3177,7 @@ Boolean monst_cast_priest(creature_data_type *caster,short targ)
 
 	// Anything preventing spell?
 	if ((target.x > 64) && (monst_priest_area_effect[spell - 1] > 0))  {
-		r1 = get_ran(1,0,9);
+		r1 = rand_short(0,9);
 		spell = caster_array[level][r1];
 		if ((target.x > 64) && (monst_priest_area_effect[spell - 1] > 0))  		
 			return FALSE;
@@ -3232,7 +3233,7 @@ Boolean monst_cast_priest(creature_data_type *caster,short targ)
 				break;
 			case 6: // curse
 				run_a_missile(l,vict_loc,8,0,24,0,0,80);
-				x = get_ran(1,0,1);
+				x = rand_short(0,1);
 				if (targ < 6)
 					curse_pc(targ,2 + x);
 					else curse_monst(&c_town.monst.dudes[targ - 100],2 + x);
@@ -3253,7 +3254,7 @@ Boolean monst_cast_priest(creature_data_type *caster,short targ)
 				break;
 			case 9: // disease
 				run_a_missile(l,vict_loc,11,0,24,0,0,80);
-				x = get_ran(1,0,2);
+				x = rand_short(0,2);
 				if (targ < 6)
 					disease_pc(targ,2 + x);
 					else disease_monst(&c_town.monst.dudes[targ - 100],2 + x);			
@@ -3261,15 +3262,15 @@ Boolean monst_cast_priest(creature_data_type *caster,short targ)
 			case 11: // holy scourge
 				run_a_missile(l,vict_loc,15,0,24,0,0,80);
 				if (targ < 6) {
-					r1 = get_ran(1,0,2);
+					r1 = rand_short(0,2);
 					slow_pc(targ,2 + r1);
-					r1 = get_ran(1,0,2);
+					r1 = rand_short(0,2);
 					curse_pc(targ,3 + r1);
 					}
 					else {
-						r1 = get_ran(1,0,2);
+						r1 = rand_short(0,2);
 						slow_monst(&c_town.monst.dudes[targ - 100],r1);						 
-						r1 = get_ran(1,0,2);
+						r1 = rand_short(0,2);
 						curse_monst(&c_town.monst.dudes[targ - 100],r1);
 						}
 				break;
@@ -3281,10 +3282,10 @@ Boolean monst_cast_priest(creature_data_type *caster,short targ)
 				break;		
 			case 14: // sticks to snakes
 				play_sound(24);
-				r1 = get_ran(1,1,4) + 2;
+				r1 = rand_short(1,4) + 2;
 				for (i = 0; i < r1; i++) {
 					play_sound(-61);
-					r2 = get_ran(1,0,7);
+					r2 = rand_short(0,7);
 					x = get_ran(3,1,4);
 					summon_monster((r2 == 1) ? 100 : 99,caster->m_loc,
 					 ((caster->attitude % 2 != 1) ? 0 : 100) + x,caster->attitude);
@@ -3311,7 +3312,7 @@ Boolean monst_cast_priest(creature_data_type *caster,short targ)
 			case 13: case 23: // holy scourge,curse all,pestilence		
 				play_sound(24);
 				r1 = get_ran(2,0,2);
-				r2 = get_ran(1,0,2);
+				r2 = rand_short(0,2);
 				if (caster->attitude % 2 == 1)
 					for (i = 0; i < 6; i++)
 						if (pc_near(i,caster->m_loc,8)) {
@@ -3370,7 +3371,7 @@ Boolean monst_cast_priest(creature_data_type *caster,short targ)
 			case 21: // holy ravaging
 				run_a_missile(l,vict_loc,14,0,53,0,0,80);
 				r1 = get_ran(4,1,8);
-				r2 = get_ran(1,0,2);
+				r2 = rand_short(0,2);
 				damage_target(targ,r1,3);
 				if (targ < 6) {
 					slow_pc(targ,6);
@@ -3439,7 +3440,7 @@ location find_fireball_loc(location where,short radius,short mode,short *m)
 						cur_lev = count_levels(check_loc,radius);
 						if (mode == 1)
 							cur_lev = cur_lev * -1;
-						if ( ((cur_lev > level_max) || ((cur_lev == level_max) && (get_ran(1,0,1) == 0)))
+						if ( ((cur_lev > level_max) || ((cur_lev == level_max) && (rand_short(0,1) == 0)))
 						 && (dist(where,check_loc) > radius)) {
 							level_max = cur_lev;
 							cast_loc = check_loc;
@@ -3602,7 +3603,7 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,Boolean 
 							damage_pc(k,r1,3,-1);
 							break;
 						case 5: 
-							r1 = get_ran(1,1,6) + 1;
+							r1 = rand_short(1,6) + 1;
 							damage_pc(k,r1,1,-1);
 							break;
 						case 8: 
@@ -3666,7 +3667,7 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,Boolean 
 							break;
 						case 7:
 							which_m = &c_town.monst.dudes[k];
-							curse_monst(which_m,get_ran(1,1,2));
+							curse_monst(which_m,rand_short(1,2));
 							break;
 						case 8: 
 							which_m = &c_town.monst.dudes[k];
@@ -3860,9 +3861,9 @@ void do_poison()
 				if (adven[i].gaffect(affect::Poisoned) > 0) {
 					r1 = get_ran(adven[i].gaffect(affect::Poisoned),1,6);
 					damage_pc(i,r1,2,-1);
-					if (get_ran(1,0,8) < 6)
+					if (rand_short(0,8) < 6)
 						adven[i].reduce_affect(affect::Poisoned);
-					if (get_ran(1,0,8) < 6)
+					if (rand_short(0,8) < 6)
 						if (adven[i].traits[trait::GoodConstitution] == TRUE)
 							adven[i].reduce_affect(affect::Poisoned);
 				}
@@ -3888,7 +3889,7 @@ void handle_disease()
 		for (i = 0; i < 6; i++)
 			if (adven[i].main_status == status::Normal)
 				if (adven[i].gaffect(affect::Diseased) > 0) {
-					r1 = get_ran(1,1,10);
+					r1 = rand_short(1,10);
 					switch (r1) {
 						case 1: case 2:
 							poison_pc(i,2);
@@ -3911,10 +3912,10 @@ void handle_disease()
 							add_string_to_buf( create_line);						
 							break;
 						}
-					r1 = get_ran(1,0,7);
+					r1 = rand_short(0,7);
 					if (adven[i].traits[trait::GoodConstitution] == TRUE)
 						r1 -= 2;
-					if ((get_ran(1,0,7) <= 0) || (pc_has_abil_equip(i,67) < 24))
+					if ((rand_short(0,7) <= 0) || (pc_has_abil_equip(i,67) < 24))
 						adven[i].reduce_affect(affect::Diseased);
 				}
 		put_pc_screen();
@@ -4025,7 +4026,7 @@ Boolean combat_cast_mage_spell()
 	store_sp = adven[current_pc].cur_sp;
 	if (adven[current_pc].cur_sp == 0)
 		add_string_to_buf("Cast: No spell points.        ");		
-	else if (adven[current_pc].skills[9] == 0)
+	else if (adven[current_pc].skills[skill::MageSpells] == 0)
 		add_string_to_buf("Cast: No mage skill.        ");		
 	else if (get_encumberance(current_pc) > 1) { 
 		add_string_to_buf("Cast: Too encumbered.        ");
@@ -4056,7 +4057,7 @@ Boolean combat_cast_mage_spell()
 		store_sum_monst_cost = get_monst.level;
 		}
 
-	bonus = stat_adj(current_pc,2);
+	bonus = stat_adj(current_pc, skill::Intelligence);
 	combat_posing_monster = current_working_monster = current_pc;
 	if (spell_num >= 70)
 		return FALSE;
@@ -4245,7 +4246,7 @@ Boolean combat_cast_priest_spell()
 	
 	if (spell_num >= 70)
 		return FALSE;
-	bonus = stat_adj(current_pc,2);
+	bonus = stat_adj(current_pc, skill::Intelligence);
 
 	combat_posing_monster = current_working_monster = current_pc;
 
@@ -4428,35 +4429,35 @@ void start_fancy_spell_targeting(short num)
 	
 	switch (num) { // Assign special targeting shapes and number of targets
 		case 129: // smite
-			num_targets_left = boe_clamp(adven[current_pc].level / 4 + stat_adj(current_pc,2) / 2,1,8);
+			num_targets_left = boe_clamp(adven[current_pc].level / 4 + stat_adj(current_pc, skill::Intelligence) / 2,1,8);
 			break; 
 		case 134: // sticks to snakes
-			num_targets_left = adven[current_pc].level / 5 + stat_adj(current_pc,2) / 2;
+			num_targets_left = adven[current_pc].level / 5 + stat_adj(current_pc, skill::Intelligence) / 2;
 			break;
 		case 143: // summon host
 			num_targets_left = 5;
 			break;
 		case 27: // flame arrows
-			num_targets_left = adven[current_pc].level / 4 + stat_adj(current_pc,2) / 2;
+			num_targets_left = adven[current_pc].level / 4 + stat_adj(current_pc, skill::Intelligence) / 2;
 			break;
 		case 36: // venom arrows
-			num_targets_left = adven[current_pc].level / 5 + stat_adj(current_pc,2) / 2;
+			num_targets_left = adven[current_pc].level / 5 + stat_adj(current_pc, skill::Intelligence) / 2;
 			break;
 		case 61: case 49: // paralysis, death arrows
-			num_targets_left = adven[current_pc].level / 8 + stat_adj(current_pc,2) / 3;
+			num_targets_left = adven[current_pc].level / 8 + stat_adj(current_pc, skill::Intelligence) / 3;
 			break;
 		case 45: // spray fields
-			num_targets_left = adven[current_pc].level / 5 + stat_adj(current_pc,2) / 2;
+			num_targets_left = adven[current_pc].level / 5 + stat_adj(current_pc, skill::Intelligence) / 2;
 			current_pat = t;
 			break;
 		case 26: // summon 1
-			num_targets_left = boe_clamp(adven[current_pc].level / 4 + stat_adj(current_pc,2) / 2,1,7);
+			num_targets_left = boe_clamp(adven[current_pc].level / 4 + stat_adj(current_pc, skill::Intelligence) / 2,1,7);
 			break;
 		case 43: // summon 2
-			num_targets_left = boe_clamp(adven[current_pc].level / 6 + stat_adj(current_pc,2) / 2,1,6);
+			num_targets_left = boe_clamp(adven[current_pc].level / 6 + stat_adj(current_pc, skill::Intelligence) / 2,1,6);
 			break;
 		case 58: // summon 3
-			num_targets_left = boe_clamp(adven[current_pc].level / 8 + stat_adj(current_pc,2) / 2,1,5);
+			num_targets_left = boe_clamp(adven[current_pc].level / 8 + stat_adj(current_pc, skill::Intelligence) / 2,1,5);
 			break;
 		}	
 	
@@ -4492,7 +4493,7 @@ void process_fields()
 			for (i = r.left + 1; i < r.right ; i++)
 				for (j = r.top + 1; j < r.bottom ; j++) 			
 					if (is_quickfire(i,j) > 0) {
-						r1 = get_ran(1,1,8);
+						r1 = rand_short(1,8);
 						if (r1 != 1) {
 							qf[i - 1][j] = 1;
 							qf[i + 1][j] = 1;
@@ -4522,7 +4523,7 @@ void process_fields()
 							r1 = get_ran(3,1,6);
 							loc.x = i; loc.y = j;
 							hit_pcs_in_space(loc,r1,3,1,1);
-					r1 = get_ran(1,1,6);
+					r1 = rand_short(1,6);
 					if (r1 == 2)
 						take_force_wall(i,j);
 						else {
@@ -4538,7 +4539,7 @@ void process_fields()
 							loc.x = i; loc.y = j;
 							r1 = get_ran(2,1,6) + 1;
 							 hit_pcs_in_space(loc,r1,1,1,1);					
-					r1 = get_ran(1,1,4);
+					r1 = rand_short(1,4);
 					if (r1 == 2)
 						take_fire_wall(i,j);
 						else {
@@ -4551,7 +4552,7 @@ void process_fields()
 		for (i = 0; i < town_size[town_type]; i++)
 			for (j = 0; j < town_size[town_type]; j++) 
 				if (is_antimagic(i,j)) {
-					r1 = get_ran(1,1,8);
+					r1 = rand_short(1,8);
 					if (r1 == 2)
 						take_antimagic(i,j);
 						else antimagic = TRUE;
@@ -4562,7 +4563,7 @@ void process_fields()
 		for (i = 0; i < town_size[town_type]; i++)
 			for (j = 0; j < town_size[town_type]; j++) 
 				if (is_scloud(i,j)) {
-					r1 = get_ran(1,1,4);
+					r1 = rand_short(1,4);
 					if (r1 == 2)
 						take_scloud(i,j);
 						else {
@@ -4576,7 +4577,7 @@ void process_fields()
 		for (i = 0; i < town_size[town_type]; i++)
 			for (j = 0; j < town_size[town_type]; j++) 
 				if (is_sleep_cloud(i,j)) {
-					r1 = get_ran(1,1,4);
+					r1 = rand_short(1,4);
 					if (r1 == 2)
 						take_sleep_cloud(i,j);
 						else {
@@ -4593,7 +4594,7 @@ void process_fields()
 							loc.x = i; loc.y = j;
 							r1 = get_ran(3,1,6);
 							hit_pcs_in_space(loc,r1,5,1,1);				
-					r1 = get_ran(1,1,6);
+					r1 = rand_short(1,6);
 					if (r1 == 1)
 						take_ice_wall(i,j);
 						else {
@@ -4609,7 +4610,7 @@ void process_fields()
 							loc.x = i; loc.y = j;
 							r1 = get_ran(6,1,8);
 							hit_pcs_in_space(loc,r1,0,1,1);						
-					r1 = get_ran(1,1,5);
+					r1 = rand_short(1,5);
 					if (r1 == 1)
 						take_blade_wall(i,j);
 						else {
@@ -4650,13 +4651,13 @@ void scloud_space(short m,short n)
 		for (i = 0; i < 6; i++)
 			if (adven[i].main_status == status::Normal)
 				if (same_point(pc_pos[i],target) == TRUE) {
-						curse_pc(i,get_ran(1,1,2));					
+						curse_pc(i,rand_short(1,2));					
 					}
 	if (overall_mode < 10)
 		if (same_point(target,c_town.p_loc) == TRUE) {
 			for (i = 0; i < 6; i++)
 				if (adven[i].main_status == status::Normal)
-					curse_pc(i,get_ran(1,1,2));					
+					curse_pc(i,rand_short(1,2));					
 			}
 }
 

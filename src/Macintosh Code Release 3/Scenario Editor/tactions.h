@@ -37,7 +37,7 @@ Boolean out_fix_mountain(location l);
 Boolean out_fix_hill(location l);
 Boolean out_fix_water(location l);
 void adjust_space(location l);
-Boolean is_lava(short x,short y);
+bool is_lava(short x,short y);
 unsigned char coord_to_ter(short x,short y);
 short get_obscurity(short x,short y);
 short can_see(location p1,location p2,short mode);

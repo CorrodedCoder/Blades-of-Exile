@@ -169,7 +169,7 @@ void save_scenario()
 
 	// Now, the pointer in scen_f needs to move along, so that the correct towns are sucked in.
 	// To do so, we'll remember the size of the saved town and out now.
-	out_num = cur_out.y * scenario.out_width + cur_out.x;
+	out_num = cur_out.y * scenario_out_width() + cur_out.x;
 	save_out_size = (long) (scenario.out_data_size[out_num][0]) + (long) (scenario.out_data_size[out_num][1]);
 	save_town_size = (long) (scenario.town_data_size[cur_town][0]) + (long) (scenario.town_data_size[cur_town][1])
 					+ (long) (scenario.town_data_size[cur_town][2]) + (long) (scenario.town_data_size[cur_town][3])
@@ -184,9 +184,9 @@ void save_scenario()
 	// We're finally set up. Let's first set up the new scenario field
 	// We need the new info for the current town and outdoors, which may have been changed
 	scenario.town_data_size[cur_town][0] = sizeof(town_record_type);
-	if (scenario.town_size[cur_town] == 0) 
+	if (scenario_town_size(cur_town) == 0) 
 		scenario.town_data_size[cur_town][0] += sizeof(big_tr_type);
-		else if (scenario.town_size[cur_town] == 1) 
+		else if (scenario_town_size(cur_town) == 1) 
 			scenario.town_data_size[cur_town][0] += sizeof(ave_tr_type);
 			else scenario.town_data_size[cur_town][0] += sizeof(tiny_tr_type);
 	scenario.town_data_size[cur_town][1] = 0;
@@ -221,13 +221,13 @@ void save_scenario()
 	scenario.flag4 = 40; /// these mean made on mac
 	
 	// now flags
-	scenario.flag_a = sizeof(scenario_data_type) + get_ran(1,-1000,1000);
+	scenario.flag_a = sizeof(scenario_data_type) + rand_short(-1000,1000);
 	scenario.flag_b = town_s(user_given_password);
 	scenario.flag_c = out_s(user_given_password);
 	scenario.flag_e = str_size_1(user_given_password);
 	scenario.flag_f = str_size_2(user_given_password);
 	scenario.flag_h = str_size_3(user_given_password);
-	scenario.flag_g = 10000 + get_ran(1,0,5000);
+	scenario.flag_g = 10000 + rand_short(0,5000);
 	scenario.flag_d = init_data(user_given_password);
 	
 
@@ -252,7 +252,7 @@ void save_scenario()
 	SetFPos(scen_f,1,scen_ptr_move);
 	
 	// OK ... scenario written. Now outdoors.
-	num_outdoors = scenario.out_width * scenario.out_height;
+	num_outdoors = scenario_out_width() * scenario_out_height();
 	for (i = 0; i < num_outdoors; i++)
 		if (i == out_num) {
 			// write outdoors
@@ -284,7 +284,7 @@ void save_scenario()
 				}
 				
 	// now, finally, write towns.
-	for (k = 0; k < scenario.num_towns; k++)
+	for (k = 0; k < scenario_num_towns(); k++)
 		if (k == cur_town) {
 			for (i = 0; i < 180; i++)
 				town.strlens[i] = 0;
@@ -296,7 +296,7 @@ void save_scenario()
 			error = FSWrite(dummy_f, &len, (char *) &town); 
 			if (error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(21);}
 
-			switch (scenario.town_size[cur_town]) {
+			switch (scenario_town_size(cur_town)) {
 				case 0:
 					len = sizeof(big_tr_type);
 					FSWrite(dummy_f, &len, (char *) &t_d);
@@ -363,14 +363,14 @@ void save_scenario()
 				port_dummy_town();
 				if ((error = FSWrite(dummy_f, &len, buffer)) != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(23);return;}						
 		
-				if (scenario.town_size[k] == 0) 
+				if (scenario_town_size(k) == 0) 
 					len = (long) ( sizeof(big_tr_type));
-					else if (scenario.town_size[k] == 1) 
+					else if (scenario_town_size(k) == 1) 
 						len = (long) ( sizeof(ave_tr_type));
 						else len = (long) ( sizeof(tiny_tr_type));
 				error = FSRead(scen_f, &len, buffer);
 				if (error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(24);}
-				port_dummy_t_d(scenario.town_size[k],buffer);
+				port_dummy_t_d(scenario_town_size(k),buffer);
 				if ((error = FSWrite(dummy_f, &len, buffer)) != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(23);return;}						
 				
 				len = (long) (scenario.town_data_size[k][1])
@@ -551,13 +551,13 @@ void augment_terrain(location to_create)
 		load_outdoors(to_load, 1);
 		}
 	to_load = to_create;
-	if (to_create.y < scenario.out_height - 1) {
+	if (to_create.y < scenario_out_height() - 1) {
 		to_load.y++;
 		load_outdoors(to_load, 3);
 		}
 
 	to_load = to_create;
-	if (to_create.x < scenario.out_width - 1) {
+	if (to_create.x < scenario_out_width() - 1) {
 		to_load.x++;
 		load_outdoors(to_load, 2);
 		}
@@ -584,7 +584,7 @@ void load_outdoors(location which_out,short mode)
 		oops_error(31); return;
 		}	
 	
-	out_sec_num = scenario.out_width * which_out.y + which_out.x;
+	out_sec_num = scenario_out_width() * which_out.y + which_out.x;
 	
 	len_to_jump = sizeof(scenario_data_type);
 	len_to_jump += sizeof(scen_item_data_type);
@@ -678,7 +678,7 @@ void load_town(short which_town)
 	port_town();
 	if (error != 0) {FSClose(file_id);oops_error(36);}
 
-	switch (scenario.town_size[which_town]) {
+	switch (scenario_town_size(which_town)) {
 		case 0:
 			len =  sizeof(big_tr_type);
 			FSRead(file_id, &len, (char *) &t_d);
@@ -741,7 +741,7 @@ void load_town(short which_town)
 		data_store->talk_strs[i][len] = 0;
 		}
 			
-	town_type = scenario.town_size[which_town];
+	town_type = scenario_town_size(which_town);
 	cur_town = which_town;
 	error = FSClose(file_id);
 	if (error != 0) {FSClose(file_id);oops_error(38);}
@@ -800,9 +800,9 @@ void create_basic_scenario()
 	// We're finally set up. Let's first set up the new scenario field
 	// We need the new info for the current town and outdoors, which may have been changed
 	scenario.town_data_size[cur_town][0] = sizeof(town_record_type);
-	if (scenario.town_size[cur_town] == 0) 
+	if (scenario_town_size(cur_town) == 0) 
 		scenario.town_data_size[cur_town][0] += sizeof(big_tr_type);
-		else if (scenario.town_size[cur_town] == 1) 
+		else if (scenario_town_size(cur_town) == 1) 
 			scenario.town_data_size[cur_town][0] += sizeof(ave_tr_type);
 			else scenario.town_data_size[cur_town][0] += sizeof(tiny_tr_type);
 	scenario.town_data_size[cur_town][1] = 0;
@@ -818,7 +818,7 @@ void create_basic_scenario()
 	for (i = 80; i < 170; i++)
 		scenario.town_data_size[cur_town][4] += strlen(data_store->talk_strs[i]);
 
-	out_num = cur_out.y * scenario.out_width + cur_out.x;
+	out_num = cur_out.y * scenario_out_width() + cur_out.x;
 	scenario.out_data_size[out_num][0] = sizeof(outdoor_record_type);
 	scenario.out_data_size[out_num][1] = 0;
 	for (i = 0; i < 120; i++)
@@ -855,7 +855,7 @@ void create_basic_scenario()
 		}
 	
 	// OK ... scenario written. Now outdoors.
-	num_outdoors = scenario.out_width * scenario.out_height;
+	num_outdoors = scenario_out_width() * scenario_out_height();
 	for (i = 0; i < num_outdoors; i++)
 		if (i == out_num) {
 			// write outdoors
@@ -873,7 +873,7 @@ void create_basic_scenario()
 			}
 				
 	// now, finally, write towns.
-	for (k = 0; k < scenario.num_towns; k++)
+	for (k = 0; k < scenario_num_towns(); k++)
 		if (k == cur_town) {
 			for (i = 0; i < 180; i++)
 				town.strlens[i] = 0;
@@ -884,7 +884,7 @@ void create_basic_scenario()
 			len = sizeof(town_record_type);
 			FSWrite(dummy_f, &len, (char *) &town); 
 
-			switch (scenario.town_size[cur_town]) {
+			switch (scenario_town_size(cur_town)) {
 				case 0:
 					len = sizeof(big_tr_type);
 					FSWrite(dummy_f, &len, (char *) &t_d);
@@ -987,7 +987,7 @@ void import_town(short which_town)
 		}
 	temp_scenario = (scenario_data_type *) buffer;
 	
-	if (temp_scenario->town_size[which_town] != scenario.town_size[cur_town]) {
+	if (temp_scenario->town_size[which_town] != scenario_town_size(cur_town)) {
 		give_error("Oops ... the town in the selected scenario and the current town are different sizes. Import failed.","",0);
 		DisposePtr(buffer);	FSClose(file_id); 
 		return;	
@@ -1184,9 +1184,9 @@ void make_new_scenario(Str255 file_name,short out_width,short out_height,short m
 	// We're finally set up. Let's first set up the new scenario field
 	// We need the new info for the current town and outdoors, which may have been changed
 	scenario.town_data_size[cur_town][0] = sizeof(town_record_type);
-	if (scenario.town_size[cur_town] == 0) 
+	if (scenario_town_size(cur_town) == 0) 
 		scenario.town_data_size[cur_town][0] += sizeof(big_tr_type);
-		else if (scenario.town_size[cur_town] == 1) 
+		else if (scenario_town_size(cur_town) == 1) 
 			scenario.town_data_size[cur_town][0] += sizeof(ave_tr_type);
 			else scenario.town_data_size[cur_town][0] += sizeof(tiny_tr_type);
 	scenario.town_data_size[cur_town][1] = 0;
@@ -1202,7 +1202,7 @@ void make_new_scenario(Str255 file_name,short out_width,short out_height,short m
 	for (i = 80; i < 170; i++)
 		scenario.town_data_size[cur_town][4] += strlen(data_store->talk_strs[i]);
 
-	num_outdoors = scenario.out_width * scenario.out_height;
+	num_outdoors = scenario_out_width() * scenario_out_height();
 	for (i = 0; i < num_outdoors; i++) {
 		scenario.out_data_size[i][0] = sizeof(outdoor_record_type);
 		scenario.out_data_size[i][1] = 0;
@@ -1223,13 +1223,13 @@ void make_new_scenario(Str255 file_name,short out_width,short out_height,short m
 	scenario.flag3 = 30;
 	scenario.flag4 = 40; /// these mean made on mac
 	// now flags
-	scenario.flag_a = sizeof(scenario_data_type) + get_ran(1,-1000,1000);
+	scenario.flag_a = sizeof(scenario_data_type) + rand_short(-1000,1000);
 	scenario.flag_b = town_s(user_given_password);
 	scenario.flag_c = out_s(user_given_password);
 	scenario.flag_e = str_size_1(user_given_password);
 	scenario.flag_f = str_size_2(user_given_password);
 	scenario.flag_h = str_size_3(user_given_password);
-	scenario.flag_g = 10000 + get_ran(1,0,5000);
+	scenario.flag_g = 10000 + rand_short(0,5000);
 	scenario.flag_d = init_data(user_given_password);
 	
 	len = sizeof(scenario_data_type); // scenario data
@@ -1257,11 +1257,11 @@ void make_new_scenario(Str255 file_name,short out_width,short out_height,short m
 	
 	
 	// OK ... scenario written. Now outdoors.
-	num_outdoors = scenario.out_width * scenario.out_height;
+	num_outdoors = scenario_out_width() * scenario_out_height();
 	for (i = 0; i < num_outdoors; i++)
 		{
-			loc.x = i % scenario.out_width;
-			loc.y = i / scenario.out_width;
+			loc.x = i % scenario_out_width();
+			loc.y = i / scenario_out_width();
 			
 			for (x = 0; x < 48; x++)
 				for (y = 0; y < 48; y++) {
@@ -1271,9 +1271,9 @@ void make_new_scenario(Str255 file_name,short out_width,short out_height,short m
 						current_terrain.terrain[x][y] = (use_grass > 0) ? 22 : 5;
 					if ((y < 4) && (loc.y == 0))
 						current_terrain.terrain[x][y] = (use_grass > 0) ? 22 : 5;
-					if ((x > 43) && (loc.x == scenario.out_width - 1))
+					if ((x > 43) && (loc.x == scenario_out_width() - 1))
 						current_terrain.terrain[x][y] = (use_grass > 0) ? 22 : 5;
-					if ((y > 43) && (loc.y == scenario.out_height - 1))
+					if ((y > 43) && (loc.y == scenario_out_height() - 1))
 						current_terrain.terrain[x][y] = (use_grass > 0) ? 22 : 5;
 					if ((i == 0) && (making_warriors_grove > 0)) {
 						current_terrain.terrain[24][24] = (use_grass > 0) ? 234 : 232;
@@ -1303,7 +1303,7 @@ void make_new_scenario(Str255 file_name,short out_width,short out_height,short m
 
 
 	// now, finally, write towns.
-	for (k = 0; k < scenario.num_towns; k++)
+	for (k = 0; k < scenario_num_towns(); k++)
 		{
 			for (i = 0; i < 180; i++)
 				town.strlens[i] = 0;
@@ -1315,7 +1315,7 @@ void make_new_scenario(Str255 file_name,short out_width,short out_height,short m
 			error = FSWrite(dummy_f, &len, (char *) &town); 
 			if (error != 0) {FSClose(dummy_f);oops_error(8);}
 
-			switch (scenario.town_size[cur_town]) {
+			switch (scenario_town_size(cur_town)) {
 				case 0:
 					len = sizeof(big_tr_type);
 					FSWrite(dummy_f, &len, (char *) &t_d);
@@ -1482,7 +1482,7 @@ short town_s(short flag)
 	k = k + 51;
 	k = k % 3000;
 	jl = jl * 2 + 1234 + k;
-	k = k * scenario.num_towns;
+	k = k * scenario_num_towns();
 	k = k % 10000;
 	jl = jl * jl + 84 + k;
 	k = k + 10000;
@@ -1540,7 +1540,7 @@ short str_size_2(short flag)
 	k = k + 80;
 	k = k % 3000;
 	jl = jl * 2 + 1234 + k;
-	k = k * scenario.out_width * scenario.out_height;
+	k = k * scenario_out_width() * scenario_out_height();
 	jl = jl * jl + 84 + k;
 	k = k % 3124;
 	k = k - 5426;
@@ -1573,7 +1573,7 @@ short get_buf_ptr(short flag)
 		
 	k = (long) flag;
 	jl = jl * jl + 84 + k;
-	k = k * (scenario.out_width +  scenario.out_width +  scenario.out_height +  scenario.town_data_size[0][3]);
+	k = k * (scenario_out_width() +  scenario_out_width() +  scenario_out_height() +  scenario.town_data_size[0][3]);
 	k = k + 80;
 	jl = jl * jl + 84 + k;
 	k = k % 2443;
@@ -1590,13 +1590,13 @@ short get_buf_ptr(short flag)
 void reset_pwd()
 {
 	// now flags
-	scenario.flag_a = sizeof(scenario_data_type) + get_ran(1,-1000,1000);
+	scenario.flag_a = sizeof(scenario_data_type) + rand_short(-1000,1000);
 	scenario.flag_b = town_s(user_given_password);
 	scenario.flag_c = out_s(user_given_password);
 	scenario.flag_e = str_size_1(user_given_password);
 	scenario.flag_f = str_size_2(user_given_password);
 	scenario.flag_h = str_size_3(user_given_password);
-	scenario.flag_g = 10000 + get_ran(1,0,5000);
+	scenario.flag_g = 10000 + rand_short(0,5000);
 	scenario.flag_d = init_data(user_given_password);
 }
 
@@ -1738,8 +1738,8 @@ void scen_text_dump()
 	sprintf(get_text,"\r");
 	len = (long) (strlen(get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	for (out_sec.x = 0; out_sec.x < scenario.out_width ; out_sec.x++) 
-		for (out_sec.y = 0; out_sec.y < scenario.out_height ; out_sec.y++) {
+	for (out_sec.x = 0; out_sec.x < scenario_out_width() ; out_sec.x++) 
+		for (out_sec.y = 0; out_sec.y < scenario_out_height() ; out_sec.y++) {
 			sprintf(get_text,"  Section X = %d, Y = %d:\r",(short) out_sec.x,(short) out_sec.y);
 			len = (long) (strlen(get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
@@ -1766,7 +1766,7 @@ void scen_text_dump()
 	sprintf(get_text,"\r");
 	len = (long) (strlen(get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	for (j = 0; j < scenario.num_towns; j++) {
+	for (j = 0; j < scenario_num_towns(); j++) {
 		load_town(j);
 
 		sprintf(get_text,"  Town: %s\r",data_store->town_strs[0]);
@@ -2015,7 +2015,7 @@ void port_scenario()
 	flip_short(&scenario.flag_i);
 	flip_short(&scenario.intro_mess_pic);
 	flip_short(&scenario.intro_mess_len);
-	flip_short(&scenario.which_town_start);
+	flip_short(&scenario_which_town_start());
 	for (i = 0; i < 200; i++)
 		for (j = 0; j < 5; j++)
 			flip_short(&scenario.town_data_size[i][j]);
@@ -2053,7 +2053,7 @@ void port_scenario()
 		}
 
 	for (i = 0; i < 256; i++) {
-		flip_short(&scenario.ter_types[i].picture);
+		flip_short(&scenario_ter_type(i).picture);
 		}
 	for (i = 0; i < 30; i++) {
 		flip_short(&scenario.scen_boats[i].which_town);

@@ -92,6 +92,16 @@ namespace
 
 } // unnamed namespace
 
+bool pc_has_cave_lore(const pc_record_type& pc)
+{
+	return (pc.main_status == status::Normal) && (pc.traits[trait::CaveLore] > 0);
+}
+
+bool pc_has_woodsman(const pc_record_type& pc)
+{
+	return (pc.main_status == status::Normal) && (pc.traits[trait::Woodsman] > 0);
+}
+
 void pc_heal(pc_record_type& pc, short amt)
 {
 	if ((pc.main_status == status::Normal) && (pc.cur_health < pc.max_health))
@@ -122,9 +132,9 @@ void pc_setup_blank(pc_record_type& pc)
 {
 	pc = pc_record_type{};
 	pc.name[0] = '\n';
-	pc.skills[0] = 1;
-	pc.skills[1] = 1;
-	pc.skills[2] = 1;
+	pc.skills[skill::Strength] = 1;
+	pc.skills[skill::Dexterity] = 1;
+	pc.skills[skill::Intelligence] = 1;
 	pc.cur_health = 6;
 	pc.max_health = 6;
 	pc.skill_pts = 60;
@@ -141,9 +151,9 @@ void pc_setup_debug(pc_record_type& pc, short num)
 	pc.main_status = status::Normal;
 	std::ranges::copy(std::string_view(c_debug_names.at(static_cast<size_t>(num))), pc.name);
 	std::ranges::fill(pc.skills, static_cast<short>(8));
-	pc.skills[0] = 20;
-	pc.skills[1] = 20;
-	pc.skills[2] = 20;
+	pc.skills[skill::Strength] = 20;
+	pc.skills[skill::Dexterity] = 20;
+	pc.skills[skill::Intelligence] = 20;
 	pc.cur_health = 60;
 	pc.max_health = 60;
 	pc.cur_sp = 90;
@@ -262,7 +272,7 @@ short pc_has_abil(const pc_record_type& pc, short abil)
 
 short pc_amount_can_carry(const pc_record_type& pc)
 {
-	return 100 + (15 * std::min(pc.skills[0], static_cast<short>(20))) + ((pc.traits[trait::ExceptionalStr] == 0) ? 0 : 30)
+	return 100 + (15 * std::min(pc.skills[skill::Strength], static_cast<short>(20))) + ((pc.traits[trait::ExceptionalStr] == 0) ? 0 : 30)
 		+ ((pc.traits[trait::BadBack] == 0) ? 0 : -50);
 }
 
@@ -334,7 +344,7 @@ short pc_carry_weight(const pc_record_type& pc)
 
 short pc_luck(const pc_record_type& pc)
 {
-	return pc.skills[18];
+	return pc.skills[skill::Luck];
 }
 
 short pc_level(const pc_record_type& pc)

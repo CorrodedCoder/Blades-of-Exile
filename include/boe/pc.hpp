@@ -11,6 +11,9 @@ void pc_restore_sp(pc_record_type& pc, short amt);
 short pc_encumberance(const pc_record_type& pc);
 short pc_get_tnl(const pc_record_type& pc);
 
+
+bool pc_has_cave_lore(const pc_record_type& pc);
+bool pc_has_woodsman(const pc_record_type& pc);
 short pc_has_space(const pc_record_type& pc);
 short pc_prot_level(const pc_record_type& pc, short abil);
 short pc_has_abil_equip(const pc_record_type& pc, short abil);

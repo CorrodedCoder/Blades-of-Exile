@@ -373,7 +373,7 @@ void set_up_terrain_buttons()
  	// first make terrain buttons
 	for (i = 0; i < 256; i++) {
 		ter_from = ter_from_base;
-		pic = scenario.ter_types[i].picture;
+		pic = scenario_ter_type(i).picture;
 		if (pic >= 1000) {
 			ter_from = get_custom_rect(pic % 1000);
 			rect_draw_some_item(spec_scen_g,
@@ -382,7 +382,7 @@ void set_up_terrain_buttons()
 			else if (pic < 400)	{
 				pic = pic % 50;
 				OffsetRect(&ter_from,28 * (pic % 10), 36 * (pic / 10));
-				rect_draw_some_item(terrain_gworld[scenario.ter_types[i].picture/50],
+				rect_draw_some_item(terrain_gworld[scenario_ter_type(i).picture/50],
 					ter_from,terrain_buttons_gworld,terrain_rects[i],0,0);
 				}
 				else {
@@ -395,10 +395,10 @@ void set_up_terrain_buttons()
 						ter_from,terrain_buttons_gworld,terrain_rects[i],0,0);
 				
 					}
-		small_i = small_icons[scenario.ter_types[i].special];
-		if ((small_i == 30) && (scenario.ter_types[i].flag2 >= 5))
+		small_i = small_icons[scenario_ter_type(i).special];
+		if ((small_i == 30) && (scenario_ter_type(i).flag2 >= 5))
 			small_i = 31;
-		if ((small_i == 31) && (scenario.ter_types[i].flag2 == 10))
+		if ((small_i == 31) && (scenario_ter_type(i).flag2 == 10))
 			small_i = 32;
 		if (i == 82)
 			small_i = 3;
@@ -521,7 +521,7 @@ void draw_terrain()
 			
 			// draw start icon, if starting point
 			if ((editing_town == TRUE) && 
-				(cur_town == scenario.which_town_start) && (scenario.where_start.x == cen_x + q - 4)
+				(cur_town == scenario_which_town_start()) && (scenario.where_start.x == cen_x + q - 4)
 				&& (scenario.where_start.y == cen_y + r - 4)) {
 				from_rect = start_button_from;
 				to_rect = tiny_to;

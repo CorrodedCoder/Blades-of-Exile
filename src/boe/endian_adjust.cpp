@@ -44,7 +44,7 @@ void endian_adjust(short& value)
 
 static void endian_adjust(item_variety& value)
 {
-	value = static_cast<item_variety>(byteswap(static_cast<short>(value)));
+	value = static_cast<item_variety>(byteswap(to_underlying(value)));
 }
 
 static void endian_adjust(BoeRect& r)

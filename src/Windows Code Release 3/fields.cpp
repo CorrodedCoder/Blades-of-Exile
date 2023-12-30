@@ -4,6 +4,7 @@
 #include "locutils.h"
 #include "fields.h"
 #include "boe/utility.hpp"
+#include "scenario.hpp"
 
 extern current_town_type c_town;
 extern short overall_mode,which_combat_type,current_pc,town_type;
@@ -18,7 +19,6 @@ extern unsigned char misc_i[64][64];
 extern unsigned char sfx[64][64];
 extern char terrain_blocked[256];
 extern short town_size[3];
-extern scenario_data_type scenario;
 
 Boolean is_explored(short i,short j)
 {
@@ -92,7 +92,7 @@ Boolean is_web(short i,short j)
 }
 void make_web(short i,short j)
 /**/{
-	if (spot_impassable(i,j) == TRUE)
+	if (spot_impassable(i,j))
 		return;
 	if ((misc_i[i][j] & 224) || (c_town.explored[i][j] & 238))
 		return;
@@ -142,7 +142,7 @@ Boolean is_fire_barrier(short i,short j)
 }
 void make_fire_barrier(short i,short j)
 /**/{
-	if ((is_antimagic(i,j)) && (get_ran(1,0,3) < 3))
+	if ((is_antimagic(i,j)) && (rand_short(0,3) < 3))
 		return;
 	if (misc_i[i][j] & 248)
 		return;
@@ -162,7 +162,7 @@ Boolean is_force_barrier(short i,short j)
 }
 void make_force_barrier(short i,short j)
 /**/{
-	if ((is_antimagic(i,j)) && (get_ran(1,0,2) < 2))
+	if ((is_antimagic(i,j)) && (rand_short(0,2) < 2))
 		return;
 	if (misc_i[i][j] & 248)
 		return;
@@ -181,17 +181,15 @@ Boolean is_quickfire(short i,short j)
 	return (misc_i[i][j] & 128) ? TRUE : FALSE;
 }
 void make_quickfire(short i,short j)
-/**/{
-	unsigned char ter;
-
-	if ((is_antimagic(i,j)) && (get_ran(1,0,1) == 0))
+{
+	if ((is_antimagic(i,j)) && (rand_short(0,1) == 0))
 		return;
 	if ((is_force_barrier(i,j)) || (is_fire_barrier(i,j)))
 		return;
-	ter = coord_to_ter(i,j);
-	if (scenario.ter_types[ter].blockage == 1)
+	const auto& terrain{ scenario_ter_type(coord_to_ter(i, j)) };
+	if (terrain.blockage == 1)
 		return;
-	if (scenario.ter_types[ter].blockage == 5)
+	if (terrain.blockage == 5)
 		return;
 	c_town.explored[i][j] = c_town.explored[i][j] & 1;
 	misc_i[i][j] = misc_i[i][j] & 3;
@@ -209,7 +207,7 @@ Boolean is_force_wall(short i,short j)
 }
 void make_force_wall(short i,short j)
 /**/{
-	if (spot_impassable(i,j) == TRUE)
+	if (spot_impassable(i,j))
 		return;
 	if ((c_town.explored[i][j] & 74) || (misc_i[i][j] & 248))
 		return;
@@ -230,7 +228,7 @@ Boolean is_fire_wall(short i,short j)
 }
 void make_fire_wall(short i,short j)
 /**/{
-	if (spot_impassable(i,j) == TRUE)
+	if (spot_impassable(i,j))
 		return;
 	if ((c_town.explored[i][j] & 248) || (misc_i[i][j] & 254))
 		return;
@@ -249,7 +247,7 @@ Boolean is_antimagic(short i,short j)
 }
 void make_antimagic(short i,short j)
 /**/{
-	if (spot_impassable(i,j) == TRUE)
+	if (spot_impassable(i,j))
 		return;
 	if (misc_i[i][j] & 224)
 		return;
@@ -269,7 +267,7 @@ Boolean is_scloud(short i,short j)
 }
 void make_scloud(short i,short j)
 /**/{
-	if (spot_impassable(i,j) == TRUE)
+	if (spot_impassable(i,j))
 		return;
 		
 	if ((c_town.explored[i][j] & 238) || (misc_i[i][j] & 224))
@@ -288,7 +286,7 @@ Boolean is_ice_wall(short i,short j)
 }
 void make_ice_wall(short i,short j)
 /**/{
-	if (spot_impassable(i,j) == TRUE)
+	if (spot_impassable(i,j))
 		return;
 	if ((c_town.explored[i][j] & 74) || (misc_i[i][j] & 252))
 		return;
@@ -309,7 +307,7 @@ Boolean is_blade_wall(short i,short j)
 }
 void make_blade_wall(short i,short j)
 /**/{
-	if (spot_impassable(i,j) == TRUE)
+	if (spot_impassable(i,j))
 		return;
 	if ((c_town.explored[i][j] & 8) || (misc_i[i][j] & 224))
 		return;
@@ -327,7 +325,7 @@ Boolean is_sleep_cloud(short i,short j)
 }
 void make_sleep_cloud(short i,short j)
 /**/{
-	if (spot_impassable(i,j) == TRUE)
+	if (spot_impassable(i,j))
 		return;
 	if ((c_town.explored[i][j] & 8) || (misc_i[i][j] & 224))
 		return;
@@ -404,7 +402,7 @@ void spread_sfx(short type,short prob)
 	
 	for (i = 0; i < town_size[town_type]; i++)
 		for (j = 0; j < town_size[town_type]; j++)
-			if ((t_d.terrain[i][j] < 5) && (get_ran(1,0,100) <= prob))
+			if ((t_d.terrain[i][j] < 5) && (rand_short(0,100) <= prob))
 				make_sfx(i,j,type);
 				
 }

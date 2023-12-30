@@ -1,4 +1,5 @@
 #include "boe/dump_game_structures.hpp"
+#include "boe/compatibility.hpp"
 #include <format>
 #include <ranges>
 #include <algorithm>
@@ -66,13 +67,14 @@ void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::st
 	std::format_to(strm, "}};\n");
 }
 
+void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const terrain_special& t)
+{
+	dump_to(strm, parent, item, to_underlying(t));
+}
+
 void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const status& t)
 {
-#if defined(__cpp_lib_to_underlying) && __cpp_lib_to_underlying
-	dump_to(strm, parent, item, std::to_underlying(t));
-#else
-	dump_to(strm, parent, item, static_cast<short>(t));
-#endif
+	dump_to(strm, parent, item, to_underlying(t));
 }
 
 void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const location& t)
@@ -118,7 +120,7 @@ void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::st
 void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const item_record_type& t)
 {
 	const auto path{ std::format("{}.{}", parent, item) };
-	dump_to(strm, path, "variety", static_cast<short>(t.variety));
+	dump_to(strm, path, "variety", to_underlying(t.variety));
 	dump_to(strm, path, "item_level", t.item_level);
 
 	dump_to(strm, path, "awkward", t.awkward);

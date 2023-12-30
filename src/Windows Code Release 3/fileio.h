@@ -8,6 +8,7 @@ void shift_universe_right();
 void shift_universe_up();
 void shift_universe_down();
 void position_party(short out_x,short out_y,short pc_pos_x,short pc_pos_y);
+void position_party(const location& out, const location& pc_pos);
 void build_outdoors();
 void save_outdoor_maps();
 void add_outdoor_maps();

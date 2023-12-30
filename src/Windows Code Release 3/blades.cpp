@@ -46,6 +46,7 @@ Blades of Exile Game/Scenario Editor/Character Editor
 #include "exlsound.h"
 #include "infodlgs.h"
 #include "graphutl.h"
+#include "scenario.hpp"
 
 void check_game_done();
 Boolean handle_menu (short item, HMENU menu);
@@ -150,7 +151,8 @@ unsigned char combat_terrain[64][64];
 location pc_pos[6];
 short current_pc;
 short combat_active_pc;
-effect_pat_type current_pat;
+extern const effect_pat_type single; 
+extern std::reference_wrapper<const effect_pat_type> current_pat = single;
 short monst_target[T_M]; // 0-5 target that pc   6 - no target  100 + x - target monster x
 short spell_caster, missile_firer,current_monst_tactic;
 short store_current_pc = 0;
@@ -183,9 +185,7 @@ HDC main_dc,main_dc2,main_dc3;
 HINSTANCE store_hInstance;
 HACCEL accel;
 BOOL event_handled;
-scenario_data_type scenario;
 piles_of_stuff_dumping_type data_store;
-piles_of_stuff_dumping_type2 data_store2;
 piles_of_stuff_dumping_type3 data_store3;
 piles_of_stuff_dumping_type4 data_store4;
 piles_of_stuff_dumping_type5 data_store5;
@@ -812,7 +812,7 @@ Boolean handle_menu (short item, HMENU menu)
 				ASB("Add PC: You already have 6 PCs.");
 				print_buf();
 				}
-			if (c_town.town_num == scenario.which_town_start) {
+			if (c_town.town_num == scenario_which_town_start()) {
 				give_help(56,0,0);
 				create_pc(6,0);
 				}

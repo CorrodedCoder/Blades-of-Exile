@@ -40,6 +40,7 @@ Blades of Exile Game/Scenario Editor/Character Editor
 #include "scenario.h"
 #include "keydlgs.h"
 #include "../graphutl.h"
+#include "../scenario.hpp"
 
 void check_game_done();
 
@@ -100,12 +101,6 @@ short which_item_page[6] = {0,0,0,0,0,0}; // Remembers which of the 2 item pages
 long stored_key;
 short pixel_depth,dialog_answer;
 
-
-// Spell casting globals
-short store_mage = 0, store_priest = 0;
-short store_mage_lev = 0, store_priest_lev = 0;
-short store_spell_target = 6,pc_casting;
-short num_targets_left = 0;
 char file_path_name[256];
 
 /* Windoze stuff globals */
@@ -124,7 +119,6 @@ HINSTANCE store_hInstance;
 HACCEL accel;
 BOOL event_handled;
 
-scenario_data_type scenario;
 piles_of_stuff_dumping_type data_store;
 RECT right_sbar_rect;
 town_record_type town;
@@ -532,12 +526,12 @@ Boolean handle_menu (short item, HMENU menu)
 					"",0);
 				return to_return;
 				}
-			if (scenario.num_towns >= 200) {
+			if (scenario_num_towns() >= 200) {
 				give_error("You have reached the limit of 200 towns you can have in one scenario.",
 					"",0);
 				return to_return;
 				}
-			if (new_town(scenario.num_towns) == TRUE)
+			if (new_town(scenario_num_towns()) == TRUE)
 				set_up_main_screen();
 			break;
 		case 103:
@@ -593,17 +587,17 @@ Boolean handle_menu (short item, HMENU menu)
 					"",0);
 				return to_return;
 				}
-			if (scenario.num_towns == 1) {
+			if (scenario_num_towns() == 1) {
 				give_error("You can't delete the last town in a scenario. All scenarios must have at least 1 town.",
 					"",0);
 				return to_return;
 				}
-			if (scenario.num_towns - 1 == cur_town) {
+			if (scenario_num_towns() - 1 == cur_town) {
 				give_error("You can't delete the last town in a scenario while you're working on it. Load a different town, and try this again.",
 					"",0);
 				return to_return;
 				}
-			if (scenario.num_towns - 1 == scenario.which_town_start) {
+			if (scenario_num_towns() - 1 == scenario_which_town_start()) {
 				give_error("You can't delete the last town in a scenario while it's the town the party starts the scenario in. Change the parties starting point and try this again.",
 					"",0);
 				return to_return;
