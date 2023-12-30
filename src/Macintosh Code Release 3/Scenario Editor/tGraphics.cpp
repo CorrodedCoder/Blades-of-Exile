@@ -1108,10 +1108,10 @@ void place_location()
 	
 	MoveTo(terrain_rects[255].left + 20 ,terrain_rects[255].top + 12);
 	if (overall_mode < 60)
-		sprintf(draw_str,"Center: x = %d, y = %d  ",cen_x,cen_y);
+		format_to_buf(draw_str,"Center: x = {:d}, y = {:d}  ",cen_x,cen_y);
 		else {
 			MoveTo(5 ,terrain_rects[255].top + 28);		
-			sprintf(draw_str,"Click terrain to edit. ",cen_x,cen_y);
+			format_to_buf(draw_str,"Click terrain to edit. ",cen_x,cen_y);
 			}
 	c2p(draw_str);
 	DrawString(draw_str);
@@ -1184,10 +1184,10 @@ void place_just_location()
 	
 	MoveTo(terrain_rects[255].left + 20 ,terrain_rects[255].top + 12);
 	if (overall_mode < 60)
-		sprintf(draw_str,"Center: x = %d, y = %d  ",cen_x,cen_y);
+		format_to_buf(draw_str,"Center: x = {:d}, y = {:d}  ",cen_x,cen_y);
 		else {
 			MoveTo(5 ,terrain_rects[255].top + 28);		
-			sprintf(draw_str,"Click terrain to edit. ",cen_x,cen_y);
+			format_to_buf(draw_str,"Click terrain to edit. ",cen_x,cen_y);
 			}
 	c2p(draw_str);
 	DrawString(draw_str);
@@ -1211,7 +1211,7 @@ void set_string(char *string,char *string2)
 //	if (strlen(string2) == 0)
 //		current_string2[0] = 0;
 //		else 
-//	sprintf(current_string2,"Bob");
+//	format_to_buf(current_string2,"Bob");
 	strcpy((char *)current_string2,string2);
 	c2p(current_string2);
 
@@ -1493,9 +1493,9 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 				  		c_str[i] = ' ';
 				  		force_skip = TRUE;
 				  		}
-					sprintf(str_to_draw,"%s",(char *)null_s);
+					format_to_buf(str_to_draw,"{}",(char *)null_s);
 					strncpy ((char *) str_to_draw,(char *) c_str + last_line_break,(size_t) (last_word_break - last_line_break - 1));
-					sprintf(str_to_draw2," %s",str_to_draw);
+					format_to_buf(str_to_draw2," {}",str_to_draw);
 					str_to_draw2[0] = (char) strlen(str_to_draw);
 					DrawString(str_to_draw2);
 					on_what_line++;
@@ -1517,7 +1517,7 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 			if (i - last_line_break > 1) {
 				strcpy((char *)str_to_draw,(char *)null_s);
 				strncpy ((char *) str_to_draw,(char *) c_str + last_line_break,(size_t) (i - last_line_break));
-				sprintf(str_to_draw2," %s",str_to_draw);
+				format_to_buf(str_to_draw2," {}",str_to_draw);
 				if (strlen(str_to_draw2) > 3) {
 					str_to_draw2[0] = (char) strlen(str_to_draw);
 					DrawString(str_to_draw2);

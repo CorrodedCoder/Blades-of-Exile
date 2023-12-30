@@ -324,7 +324,7 @@ void draw_main_screen()
 	
 	frame_dlog_rect((GrafPtr) mainPtr,pc_info_rect,0); // draw the frame
 	//i = pc_info_rect.left-pc_info_rect.right;
-	//sprintf(temp_str,"Width of pc_info_rect %d ",
+	//format_to_buf(temp_str,"Width of pc_info_rect {:d} ",
 				//(short) i);
 	//win_draw_string(mainPtr,pc_info_rect,temp_str,0,12);
 
@@ -359,7 +359,7 @@ void draw_main_screen()
 	
 
 	if (ed_reg == FALSE) {
-		sprintf(temp_str,"Unregistered Copy |To find out how to order, |select How To Order from File Menu.");
+		format_to_buf(temp_str,"Unregistered Copy |To find out how to order, |select How To Order from File Menu.");
 		win_draw_string(mainPtr,reg_rect,temp_str,0,12);
 		}
 }
@@ -402,7 +402,7 @@ GWorldPtr load_pict(short picture_to_get)
 				NULL, NULL, 0);
 	if (check_error != noErr)  {
 		SysBeep(50); 
-//		sprintf(debug, "Stuck on %d          ",(short) picture_to_get);
+//		format_to_buf(debug, "Stuck on {:d}          ",(short) picture_to_get);
 //		add_string_to_buf(debug);
 //		print_buf(); 
 //		ExitToShell();
@@ -447,7 +447,7 @@ void draw_items(short clear_first)
 		}
 	
 	// First, draw "Fred's Items:"
-	//sprintf(to_draw,"%s items:",adven[current_active_pc].name);
+	//format_to_buf(to_draw,"{} items:",adven[current_active_pc].name);
 	//TextSize(12);
 	//ClipRect(&dest_rect);
 	//win_draw_string(mainPtr,item_string_rects[0][0],to_draw,0,12);
@@ -462,18 +462,18 @@ void draw_items(short clear_first)
 	}
 	for (i = 0; i < 24; i++) // Loop through items and draw each
 		if (adven[current_active_pc].items[i].variety > 0) { // i.e. does item exist
-			sprintf(to_draw, "");
+			format_to_buf(to_draw, "");
 			if (adven[current_active_pc].items[i].item_properties & 1 == 0)
-				sprintf(to_draw, "%d. %s  ",i + 1,adven[current_active_pc].items[i].name);
+				format_to_buf(to_draw, "{:d}. {}  ",i + 1,adven[current_active_pc].items[i].name);
 				else if (adven[current_active_pc].items[i].charges > 0)
-					sprintf(to_draw, "%d. %s (%d)",i + 1,adven[current_active_pc].items[i].full_name,
+					format_to_buf(to_draw, "{:d}. {} ({:d})",i + 1,adven[current_active_pc].items[i].full_name,
 					adven[current_active_pc].items[i].charges);
-				else sprintf(to_draw, "%d. %s ",i + 1,adven[current_active_pc].items[i].full_name);			
+				else format_to_buf(to_draw, "{:d}. {} ",i + 1,adven[current_active_pc].items[i].full_name);			
 
 			//if (i % 2 == 0)
-			//	sprintf(to_draw, "%d %d %d %d",
+			//	format_to_buf(to_draw, "{:d} {:d} {:d} {:d}",
 			//	pc_info_rect.left,pc_info_rect.right,pc_info_rect.top,pc_info_rect.bottom);
-			//	else sprintf(to_draw, "%d %d %d %d",
+			//	else format_to_buf(to_draw, "{:d} {:d} {:d} {:d}",
 			//	name_rect.left,name_rect.right,name_rect.top,name_rect.bottom);
 
 			char_win_draw_string(mainPtr,item_string_rects[i][0],(char *) to_draw,0,10);
@@ -588,11 +588,11 @@ void display_party(short mode,short clear_first)
 					TextSize(9);
 					if( (strlen(adven[i].name)) >= 10) {
 						TextFace(0);
-						sprintf(to_draw, "%-s  ", (char *) adven[i].name);	
+						format_to_buf(to_draw, "{:>s}  ", (char *) adven[i].name);	
 						TextSize(6);
 						}
 					else {
-						sprintf(to_draw, "%-s ", (char *) adven[i].name);	
+						format_to_buf(to_draw, "{:>s} ", (char *) adven[i].name);	
 						}
 
 					ForeColor(whiteColor);
@@ -601,7 +601,7 @@ void display_party(short mode,short clear_first)
 					TextSize(10);
 					
 					if (i == current_active_pc){
-						sprintf(to_draw, "%-.18s  ", (char *) adven[i].name);
+						format_to_buf(to_draw, "{:>.18s}  ", (char *) adven[i].name);
 						if( (strlen(adven[i].name)) > 12)
 							TextSize(8);
 						ForeColor(blackColor);
@@ -622,9 +622,9 @@ void display_party(short mode,short clear_first)
 									char_win_draw_string(mainPtr,pc_race_rect,"Slithzerikai  ",1,10);
 								// Draw in skills	
 								
-								sprintf(to_draw, "Skills:");
+								format_to_buf(to_draw, "Skills:");
 								win_draw_string(mainPtr,skill_rect,to_draw,0,10);
-								sprintf(to_draw, "Hp: %d/%d  Sp: %d/%d",adven[i].cur_health,adven[i].max_health,adven[i].cur_sp,
+								format_to_buf(to_draw, "Hp: {:d}/{:d}  Sp: {:d}/{:d}",adven[i].cur_health,adven[i].max_health,adven[i].cur_sp,
 							 		adven[i].max_sp);
 								win_draw_string(mainPtr,hp_sp_rect,to_draw,0,10);
 								
@@ -640,7 +640,7 @@ void display_party(short mode,short clear_first)
 									get_str(to_draw,9,string_num);
 									win_draw_string(mainPtr,pc_skills_rect[k],to_draw,0,9);
 									
-									sprintf(skill_value,"%d",adven[i].skills[k]);
+									format_to_buf(skill_value,"{:d}",adven[i].skills[k]);
 									win_draw_string(mainPtr,temp_rect,skill_value,0,9);	
 									//frame_dlog_rect((GrafPtr) mainPtr,pc_skills_rect[k],0);
 									string_num+=2;
@@ -650,7 +650,7 @@ void display_party(short mode,short clear_first)
 								//Write in pc Status
 								TextSize(10);
 								TextFace(bold);	
-								sprintf(to_draw, "Status:");
+								format_to_buf(to_draw, "Status:");
 								win_draw_string(mainPtr,status_rect,to_draw,0,10);
 								
 								TextSize(9);
@@ -683,7 +683,7 @@ void display_party(short mode,short clear_first)
 								//Write in Traits
 								TextSize(10);
 								TextFace(bold);	
-								sprintf(to_draw, "Traits:");
+								format_to_buf(to_draw, "Traits:");
 								win_draw_string(mainPtr,traits_rect,to_draw,0,10);
 								//for(k = 0 ; k < 16; k++)
 									//frame_dlog_rect((GrafPtr) mainPtr,pc_traits_rect[k],0);
@@ -801,7 +801,7 @@ void display_party(short mode,short clear_first)
 			 
 		}
 //			MoveTo(start_h + 10, start_v + 127);	
-//			sprintf(to_draw, " Gold: %d       Food: %d ",(short) party.gold, (short) party.food);
+//			format_to_buf(to_draw, " Gold: {:d}       Food: {:d} ",(short) party.gold, (short) party.food);
 //			DrawString(to_draw);
 	}
 		
@@ -962,9 +962,9 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 				  		c_str[i] = ' ';
 				  		force_skip = TRUE;
 				  		}
-					sprintf(str_to_draw,"%s",(char *)null_s);
+					format_to_buf(str_to_draw,"{}",(char *)null_s);
 					strncpy ((char *) str_to_draw,(char *) c_str + last_line_break,(size_t) (last_word_break - last_line_break - 1));
-					sprintf(str_to_draw2," %s",str_to_draw);
+					format_to_buf(str_to_draw2," {}",str_to_draw);
 					str_to_draw2[0] = (char) strlen(str_to_draw);
 					DrawString(str_to_draw2);
 					on_what_line++;
@@ -986,7 +986,7 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 			if (i - last_line_break > 1) {
 				strcpy((char *)str_to_draw,(char *)null_s);
 				strncpy ((char *) str_to_draw,(char *) c_str + last_line_break,(size_t) (i - last_line_break));
-				sprintf(str_to_draw2," %s",str_to_draw);
+				format_to_buf(str_to_draw2," {}",str_to_draw);
 				if (strlen(str_to_draw2) > 3) {
 					str_to_draw2[0] = (char) strlen(str_to_draw);
 					DrawString(str_to_draw2);

@@ -87,8 +87,8 @@ void put_spell_info()
 	cd_set_item_text(1096,4,(char *) store_text);
 
 	if (spell_cost[store_display_mode][pos] > 0)
-		sprintf(store_text, "%d/%d",spell_level[pos],spell_cost[store_display_mode][pos]);
-		else sprintf(store_text, "%d/?",spell_level[pos]);
+		format_to_buf(store_text, "{:d}/{:d}",spell_level[pos],spell_cost[store_display_mode][pos]);
+		else format_to_buf(store_text, "{:d}/?",spell_level[pos]);
 	cd_set_item_text(1096,5,(char *) store_text);
 
 	if (ran == 0) {
@@ -351,11 +351,11 @@ void put_item_info(short pc,short item)
 			cd_set_item_num(998,7,s_i.bonus);
 		
 			switch (s_i.type) {
-				case 1:sprintf(store_text, "Edged weapon");
+				case 1:format_to_buf(store_text, "Edged weapon");
 					break;
-				case 2:sprintf(store_text, "Bashing weapon");
+				case 2:format_to_buf(store_text, "Bashing weapon");
 					break;
-				case 3:sprintf(store_text, "Pole weapon");
+				case 3:format_to_buf(store_text, "Pole weapon");
 					break;
 				}
 			if (s_i.ability == 0)
@@ -497,7 +497,7 @@ void put_monst_info()
 	
 	for (i = 0; i < 3; i++)
 		if (store_m->m_d.a[i] > 0) {
-			sprintf(store_text," %dd%d              ",
+			format_to_buf(store_text," {:d}d{:d}              ",
 				store_m->m_d.a[i] / 100 + 1, store_m->m_d.a[i] % 100);
 
 			cd_set_item_text(999,13 + i,store_text);
@@ -799,13 +799,13 @@ void display_pc_info()
 	
 	store = pc_carry_weight(adven[pc]);
 	i = pc_amount_can_carry(adven[pc]);
-	sprintf(to_draw, "%s is carrying %d stones out of %d.",adven[pc].name,store,i);
+	format_to_buf(to_draw, "{} is carrying {:d} stones out of {:d}.",adven[pc].name,store,i);
 	csit(1019,69,(char *) to_draw);
 
-	sprintf(str,"%d out of %d.",
+	format_to_buf(str,"{:d} out of {:d}.",
 			adven[pc].cur_health,adven[pc].max_health);
 	csit(1019,65,(char *) str);
-	sprintf(str,"%d out of %d.",
+	format_to_buf(str,"{:d} out of {:d}.",
 			adven[pc].cur_sp,adven[pc].max_sp);
 	csit(1019,67,(char *) str);
 
@@ -859,10 +859,10 @@ void display_pc_info()
 			csit(1019,56,"Not identified.");
 			else {
 				if (hit_adj + 5 * adven[pc].items[weap1].bonus < 0)
-					sprintf(to_draw,"Penalty to hit: %%%d",hit_adj + 5 * adven[pc].items[weap1].bonus);
-					else sprintf(to_draw,"Bonus to hit: +%%%d",hit_adj + 5 * adven[pc].items[weap1].bonus);
+					format_to_buf(to_draw,"Penalty to hit: %{:d}",hit_adj + 5 * adven[pc].items[weap1].bonus);
+					else format_to_buf(to_draw,"Bonus to hit: +%{:d}",hit_adj + 5 * adven[pc].items[weap1].bonus);
 				csit(1019,56,to_draw);
-				sprintf(to_draw,"Damage: (1-%d) + %d",adven[pc].items[weap1].item_level
+				format_to_buf(to_draw,"Damage: (1-{:d}) + {:d}",adven[pc].items[weap1].item_level
 					,dam_adj + adven[pc].items[weap1].bonus);
 				csit(1019,57,to_draw);
 
@@ -873,10 +873,10 @@ void display_pc_info()
 			csit(1019,59,"Not identified.");
 			else {
 				if (hit_adj + 5 * adven[pc].items[weap2].bonus < 0)
-					sprintf(to_draw,"Penalty to hit: %%%d",hit_adj + 5 * adven[pc].items[weap2].bonus);
-					else sprintf(to_draw,"Bonus to hit: +%%%d",hit_adj + 5 * adven[pc].items[weap2].bonus);
+					format_to_buf(to_draw,"Penalty to hit: %{:d}",hit_adj + 5 * adven[pc].items[weap2].bonus);
+					else format_to_buf(to_draw,"Bonus to hit: +%{:d}",hit_adj + 5 * adven[pc].items[weap2].bonus);
 				csit(1019,59,to_draw);
-				sprintf(to_draw,"Damage: (1-%d) + %d",adven[pc].items[weap2].item_level
+				format_to_buf(to_draw,"Damage: (1-{:d}) + {:d}",adven[pc].items[weap2].item_level
 					,dam_adj + adven[pc].items[weap2].bonus);
 				csit(1019,60,to_draw);
 

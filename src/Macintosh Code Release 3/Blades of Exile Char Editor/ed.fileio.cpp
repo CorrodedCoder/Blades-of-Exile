@@ -140,7 +140,7 @@ void load_file()
 
 	len = sizeof(flag_type);
 
-//	sprintf(debug, "  Len %d               ", (short) len);
+//	format_to_buf(debug, "  Len {:d}               ", (short) len);
 //	add_string_to_buf( debug);
 
 	for (i = 0; i < 3; i++) {

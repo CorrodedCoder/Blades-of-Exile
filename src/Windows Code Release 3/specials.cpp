@@ -537,8 +537,8 @@ void use_item(short pc,short item)
 		}
 	if (take_charge == TRUE) {
 		if (!is_ident(adven[pc].items[item]))
-			sprintf(to_draw, "Use: %s",adven[pc].items[item].name);
-			else sprintf(to_draw, "Use: %s",adven[pc].items[item].full_name);
+			format_to_buf(to_draw, "Use: {}",adven[pc].items[item].name);
+			else format_to_buf(to_draw, "Use: {}",adven[pc].items[item].full_name);
 		add_string_to_buf( to_draw);
 
 		if ((adven[pc].items[item].variety == item_variety::PotionOrMagicItem) &&
@@ -1246,7 +1246,7 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 			draw_terrain(2);
 			play_sound(2);
 			}
-//		sprintf(create_line, "  No damage.              ");
+//		format_to_buf(create_line, "  No damage.              ");
 //		add_string_to_buf( create_line);		
 		return FALSE;	
 		}

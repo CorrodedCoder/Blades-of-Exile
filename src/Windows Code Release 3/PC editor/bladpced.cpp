@@ -724,7 +724,7 @@ void update_item_menu()
 		menu[i] = GetSubMenu(big_menu,3 + i);
 	for (j = 0; j < 10; j++) {
 		for (i = 0; i < 37; i++) {
-				sprintf(item_name, "%s",item_list[i + j * 37].full_name);
+				format_to_buf(item_name, "{}",item_list[i + j * 37].full_name);
 				if ((i % 19 == 0) && (i > 0))
 					AppendMenu(menu[j],MF_MENUBREAK | MF_BYCOMMAND | MF_ENABLED | MF_STRING, 600 + (37 * j) + i, item_name);
 					else AppendMenu(menu[j],MF_BYCOMMAND | MF_ENABLED | MF_STRING, 600 + (37 * j) + i, item_name);

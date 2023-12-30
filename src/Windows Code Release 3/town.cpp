@@ -522,7 +522,7 @@ void start_town_mode(short which_town, short entry_dir)
 	party.stuff_done[305][9] = 0;
 		
 	add_string_to_buf("Now entering:");
-	sprintf(message, "   %-30.30s ",data_store.town_strs[0]);
+	format_to_buf(message, "   {:<30.30s} ",data_store.town_strs[0]);
 	add_string_to_buf( message);                       
 
 

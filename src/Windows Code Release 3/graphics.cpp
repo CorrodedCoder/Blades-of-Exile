@@ -438,13 +438,13 @@ void draw_startup_stats()
 			switch (adven[i].main_status) {
 				case status::Normal:
 					switch (adven[i].race) {
-						case 0: sprintf(str,"Level %d Human",adven[i].level); break;
-						case 1: sprintf(str,"Level %d Nephilim",adven[i].level); break;
-						case 2: sprintf(str,"Level %d Slithzerikai",adven[i].level); break;
+						case 0: format_to_buf(str,"Level {:d} Human",adven[i].level); break;
+						case 1: format_to_buf(str,"Level {:d} Nephilim",adven[i].level); break;
+						case 2: format_to_buf(str,"Level {:d} Slithzerikai",adven[i].level); break;
 						}
 					char_win_draw_string(main_dc,pc_rect,(char *) str,0,18);
 					OffsetRect(&pc_rect,0,13);
-					sprintf(str,"Health %d, Spell pts. %d",
+					format_to_buf(str,"Health {:d}, Spell pts. {:d}",
 						adven[i].max_health,adven[i].max_sp);
 					char_win_draw_string(main_dc,pc_rect,(char *) str,0,18);
 					break;
@@ -1113,7 +1113,7 @@ void draw_text_bar(short mode)
 	
 		}
   	if ((is_combat()) && (current_pc < 6) && (monsters_going == FALSE)) {
-		sprintf(combat_string,"%s (ap: %d)",
+		format_to_buf(combat_string,"{} (ap: {:d})",
 			adven[current_pc].name,pc_moves[current_pc]);
 		put_text_bar((char *) combat_string);
 		remember_tiny_text = 500;
@@ -1146,7 +1146,7 @@ void put_text_bar(char *str)
 	SetBkMode(hdc,TRANSPARENT);
 	SelectObject(hdc,small_bold_font);
 	store_bmp = SelectObject(hdc,text_bar_gworld);
-	sprintf(status_str,"%s",str);
+	format_to_buf(status_str,"{}",str);
 	c = GetNearestPaletteIndex(hpal,y);
 	SetTextColor(hdc,PALETTEINDEX(c));
 	win_draw_string(hdc,text_rect,status_str,2,9);
@@ -1156,25 +1156,25 @@ void put_text_bar(char *str)
 	if (monsters_going == FALSE) {
 		if (PSD[305][0] > 0) {
 			text_rect.left = xpos;
-			sprintf(status_str,"Stealth");
+			format_to_buf(status_str,"Stealth");
 			win_draw_string(hdc,text_rect,status_str,2,9);
 			xpos -= 60;
 			}
 		if (PSD[305][1] > 0) {
 			text_rect.left = xpos;
-			sprintf(status_str,"Flying");
+			format_to_buf(status_str,"Flying");
 			win_draw_string(hdc,text_rect,status_str,2,9);
 			xpos -= 60;
 			}
 		if (PSD[305][2] > 0) {
 			text_rect.left = xpos;
-			sprintf(status_str,"Detect Life");
+			format_to_buf(status_str,"Detect Life");
 			win_draw_string(hdc,text_rect,status_str,2,9);
 			xpos -= 60;
 			}
 		if (PSD[305][3] > 0) {
 			text_rect.left = xpos;
-			sprintf(status_str,"Firewalk");
+			format_to_buf(status_str,"Firewalk");
 			win_draw_string(hdc,text_rect,status_str,2,9);
 			xpos -= 60;
 			}
@@ -2315,7 +2315,7 @@ void pre_boom_space(location where,short mode,short type,short damage,short soun
 
 	if ((cartoon_happening == FALSE) && (dest_rect.right - dest_rect.left >= 28)
 		&& (dest_rect.bottom - dest_rect.top >= 36)) {
-				sprintf(dam_str,"%d",damage);
+				format_to_buf(dam_str,"{:d}",damage);
 		text_rect = dest_rect;
 		text_rect.top += 10;
 		if ((damage < 10) && (dest_rect.right - dest_rect.left > 19))
@@ -2488,7 +2488,7 @@ void draw_targeting_line(POINT where_curs)
 								 && (store_loc.y - which_space.y + 4 == 4)) {
 								 storec = GetTextColor(main_dc);
 								 SetTextColor(main_dc,PALETTEINDEX(c[1]));
-									sprintf(dam_str,"%d  ",num_targets_left);
+									format_to_buf(dam_str,"{:d}  ",num_targets_left);
 									DrawText(main_dc,dam_str,-1,&target_rect,DT_SINGLELINE | DT_VCENTER | DT_CENTER);
 									//WinDrawString(dam_str,((target_rect.left + target_rect.right) / 2) - 3,
 									// (target_rect.top + target_rect.bottom) / 2);

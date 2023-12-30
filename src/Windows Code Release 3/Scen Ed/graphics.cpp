@@ -1139,11 +1139,11 @@ void place_location()
 	draw_rect.left = terrain_rects[255].left + 20;
 	draw_rect.top = terrain_rects[255].top;
 	if (overall_mode < 60)
-		sprintf(draw_str,"Center: x = %d, y = %d  ",(short) cen_x, (short) cen_y);
+		format_to_buf(draw_str,"Center: x = {:d}, y = {:d}  ",(short) cen_x, (short) cen_y);
 		else {
 			draw_rect.left = 5;
 			draw_rect.top = terrain_rects[255].top + 28;
-			sprintf(draw_str,"Click terrain to edit. ");
+			format_to_buf(draw_str,"Click terrain to edit. ");
 			}
 
 	draw_rect.bottom = draw_rect.top + 14;
@@ -1227,11 +1227,11 @@ void place_just_location()
 	draw_rect.left = terrain_rects[255].left + 20;
 	draw_rect.top = terrain_rects[255].top;
 	if (overall_mode < 60)
-		sprintf(draw_str,"Center: x = %d, y = %d  ",cen_x,cen_y);
+		format_to_buf(draw_str,"Center: x = {:d}, y = {:d}  ",cen_x,cen_y);
 		else {
 			draw_rect.left = 5;
 			draw_rect.top = terrain_rects[255].top + 28;
-			sprintf(draw_str,"Click terrain to edit. ");
+			format_to_buf(draw_str,"Click terrain to edit. ");
 			}
 
 	draw_rect.bottom = draw_rect.top + 14;
@@ -1257,7 +1257,7 @@ void set_string(const char * string, const char * string2)
 //	if (strlen(string2) == 0)
 //		current_string2[0] = 0;
 //		else 
-//	sprintf(current_string2,"Bob");
+//	format_to_buf(current_string2,"Bob");
 	strcpy(current_string2, string2);
 	c2p(current_string2);
 
@@ -1552,7 +1552,7 @@ void GetIndString(char *str,short i, short j) {
 
 	len = LoadString(store_hInstance,resnum,str,256);
 	if (len == 0) {
-		sprintf(str,"");
+		format_to_buf(str,"");
 		return;
 		}
 	for (k = 0; k < 256; k++)  {

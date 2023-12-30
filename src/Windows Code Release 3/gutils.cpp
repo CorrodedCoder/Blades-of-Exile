@@ -1044,7 +1044,7 @@ void adjust_monst_menu()
 	for (i = 0; i < 256; i++)
 		if (on_monst_menu[i] >= 0) {
 			//GetIndString(monst_name, 2,on_monst_menu[i]);
-			sprintf(monst_name,"%s",scenario_monster_name(on_monst_menu[i]));
+			format_to_buf(monst_name,"{}",scenario_monster_name(on_monst_menu[i]));
 			if ((total_added % 24 == 0) && (total_added > 0))
 				InsertMenu(menu,599,MF_MENUBREAK | MF_BYCOMMAND | MF_ENABLED | MF_STRING, 600 + i, monst_name);
 				else InsertMenu(menu,599,MF_BYCOMMAND | MF_ENABLED | MF_STRING, 600 + i, monst_name);

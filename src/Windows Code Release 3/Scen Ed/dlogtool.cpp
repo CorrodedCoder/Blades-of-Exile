@@ -379,7 +379,7 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 			dlg_highest_item[free_slot] = i;
 			str_stored = FALSE;
 			if (strlen(item_str) == 0) {
-				sprintf(item_str, "+");
+				format_to_buf(item_str, "+");
 				type = 3;
 				flag = 0;
 	            str_stored = TRUE;
@@ -487,10 +487,10 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 									item_key[free_item] = 255;
 							break;
 						case 3: case 4: case 7: case 8: case 9: case 10: case 11:
-							sprintf(((free_item < 10) ? text_long_str[free_item] : text_short_str[free_item - 10]),"");
+							format_to_buf(((free_item < 10) ? text_long_str[free_item] : text_short_str[free_item - 10]),"");
 							if (str_stored == TRUE) {
 								if (free_item < 10) {
-									sprintf(text_long_str[free_item],"%s",
+									format_to_buf(text_long_str[free_item],"{}",
 									  item_str + str_offset);
 									for (k = 0; k < 256; k++) {
 										if (text_long_str[free_item][k] == '|')
@@ -503,7 +503,7 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 										item_rect[free_item].right += 20;
 									}
 								else {
-									sprintf(text_short_str[free_item - 10],"%-34s",
+									format_to_buf(text_short_str[free_item - 10],"{:<34s}",
 									  item_str + str_offset);
 									for (k = 0; k < 35; k++) {
 										if (text_short_str[free_item][k] == '|')
@@ -818,7 +818,7 @@ void cd_get_item_text(short dlog_num, short item_num, char *str)
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
 		return ;
 	if (item_type[item_index] == 6) {
-		sprintf(str,"");
+		format_to_buf(str,"");
 		for (i = 0; i < 80; i++)
 			if ((store_edit_parent_num[i] == dlog_num) && (store_edit_item[i] = item_num)
 				&& (edit_box[i] != NULL))
@@ -830,8 +830,8 @@ void cd_get_item_text(short dlog_num, short item_num, char *str)
 		return;
 		}
 	if (item_index < 10)
-		sprintf(str,"%s",text_long_str[item_index]);
-		else sprintf(str,"%s",text_short_str[item_index - 10]);
+		format_to_buf(str,"{}",text_long_str[item_index]);
+		else format_to_buf(str,"{}",text_short_str[item_index - 10]);
 }
 
 
@@ -882,7 +882,7 @@ void cd_set_text_edit_num(short dlog_num, short item_num, short num)
 	short i;
 	char store_ptr[256];
 	
-		sprintf(store_ptr,"%d",num);
+		format_to_buf(store_ptr,"{:d}",num);
 		for (i = 0; i < 80; i++)
 			if ((store_edit_parent_num[i] == dlog_num) && (store_edit_item[i] == item_num)
 				&& (edit_box[i] != NULL))
@@ -920,8 +920,8 @@ void cd_set_item_text(short dlog_num, short item_num, const char * str)
 		return;
 		}
 	if (item_index < 10)
-		sprintf(text_long_str[item_index],"%s",str);
-		else sprintf(text_short_str[item_index - 10],"%-34s",str);
+		format_to_buf(text_long_str[item_index],"{}",str);
+		else format_to_buf(text_short_str[item_index - 10],"{:<34s}",str);
 	cd_draw_item( dlog_num,item_num);
 }
 
@@ -935,8 +935,8 @@ void cd_set_item_num(short dlog_num, short item_num, short num)
 		return;
 		}
 	if (item_index < 10)
-		sprintf(text_long_str[item_index],"%d",num);
-		else sprintf(text_short_str[item_index - 10],"%d",num);
+		format_to_buf(text_long_str[item_index],"{:d}",num);
+		else format_to_buf(text_short_str[item_index - 10],"{:d}",num);
 	cd_draw_item( dlog_num,item_num);
 }
 
@@ -1066,7 +1066,7 @@ void cd_add_label(short dlog_num, short item_num, const char *label, short label
 		}
       else cd_erase_item(dlog_num,item_num + 100);
 	label_loc = item_label_loc[item_index];
-	sprintf(labels[label_loc],"%-24s",label);
+	format_to_buf(labels[label_loc],"{:<24s}",label);
 	if (item_active[item_index] > 0)
 		cd_draw_item(dlog_num,item_num);
 }
@@ -1087,7 +1087,7 @@ void cd_key_label(short dlog_num, short item_num,short loc)
 	char str[10];
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
 		return;
-	sprintf(str," ");
+	format_to_buf(str," ");
 	str[0] = item_key[item_index];
 	cd_add_label(dlog_num,item_num, str, 7 + loc * 100);
 }

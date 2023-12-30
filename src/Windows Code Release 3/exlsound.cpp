@@ -137,7 +137,7 @@ if (err != 0) {
 	for (i = 0; i < NUM_SOUNDS; i++) {
 		sound_handles[i] = NULL;
 		if (load_when_play[i] == FALSE) {
-		sprintf(snd_name,"#%d",i + 1);
+		format_to_buf(snd_name,"#{:d}",i + 1);
 		h = FindResource(store_hInstance,snd_name,"#100");
 
 		sound_handles[i] = LoadResource(store_hInstance,h);
@@ -207,7 +207,7 @@ void force_play_sound(short which)
 	if ((load_when_play[which] == TRUE) && (sound_handles[which] == NULL)) {
 	  //	if (can_ignore[which] != 4)
 			asyn = FALSE;
-		sprintf(snd_name,"#%d",which + 1);
+		format_to_buf(snd_name,"#{:d}",which + 1);
 		h = FindResource(store_hInstance,snd_name,"#100");
 
 		sound_handles[which] = LoadResource(store_hInstance,h);
