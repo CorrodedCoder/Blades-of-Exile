@@ -16,11 +16,11 @@
 #include "exlsound.h"
 #include "boe/hacks.hpp"
 #include "boe/utility.hpp"
+#include "scenario.hpp"
 
 extern short overall_mode;
 extern party_record_type party;
 extern talking_record_type talking;
-extern scenario_data_type scenario;
 
 extern current_town_type	c_town;
 extern unsigned char out[96][96];
@@ -129,18 +129,18 @@ Boolean run_trap(short pc_num,short trap_type,short trap_level,short diff)
 	num_hits += trap_level;
 		
 	if (trap_type == 0)
-		trap_type = get_ran(1,1,4);
+		trap_type = rand_short(1,4);
 	if ((trap_type ==  5) || (trap_type == 6))
 		return TRUE;
 		
 	if (pc_num < 6) {
-			i = stat_adj(adven[pc_num],1);
+			i = stat_adj(adven[pc_num], skill::Dexterity);
 			if ((i_level = pc_prot_level(adven[pc_num],42)) > 0)
 				i = i + i_level / 2;
-			skill = boe_clamp(adven[pc_num].skills[14] + 
-				+ adven[pc_num].skills[18] / 2 + 1 - c_town.difficulty + 2 * i,0,20);
+			skill = boe_clamp(adven[pc_num].skills[skill::DisarmTraps] + 
+				+ adven[pc_num].skills[skill::Luck] / 2 + 1 - c_town.difficulty + 2 * i,0,20);
 	
-			r1 = get_ran(1,0,100) + diff;
+			r1 = rand_short(0,100) + diff;
 			// Nimble?
 			if (adven[pc_num].traits[trait::NimbleFingers] == FALSE)
 				r1 -= 6;
@@ -300,5 +300,5 @@ short handle_lever(location w)
 
 void switch_lever(location w)
 {
-	alter_space(w.x,w.y,scenario.ter_types[t_d.terrain[w.x][w.y]].trans_to_what);
+	alter_space(w.x,w.y, scenario_ter_type(t_d.terrain[w.x][w.y]).trans_to_what);
 }

@@ -147,7 +147,7 @@ void start_town_mode(short which_town, short entry_dir)
 	
 	former_town = town_number = which_town;
 	
-	if ((town_number < 0) || (town_number >= scenario.num_towns)) {
+	if ((town_number < 0) || (town_number >= scenario_num_towns())) {
 		SetPort(mainPtr);
 		give_error("The scenario tried to put you into a town that doesn't exist.","",0);
 		return;
@@ -171,7 +171,7 @@ void start_town_mode(short which_town, short entry_dir)
 
 		
 		
-	if ((town_number < 0) || (town_number >= scenario.num_towns)) {
+	if ((town_number < 0) || (town_number >= scenario_num_towns())) {
 		SetPort(mainPtr);
 		give_error("The scenario tried to put you into a town that doesn't exist.","",0);
 		return;
@@ -767,9 +767,9 @@ short end_town_combat()
 {
 	short num_tries = 0,r1,i;
 	
-	r1 = get_ran(1,0,5);
+	r1 = rand_short(0,5);
 	while ((adven[r1].main_status != status::Normal) && (num_tries++ < 1000))
-			r1 = get_ran(1,0,5);
+			r1 = rand_short(0,5);
 	c_town.p_loc = pc_pos[r1];
 	overall_mode = 1;
 	current_pc = store_current_pc;
@@ -807,7 +807,7 @@ void place_party(short direction)
 		
 		check_loc.y -= y_adj;		
 		pos_locs[i] = check_loc;
-		if ((is_blocked(check_loc) == FALSE) && (is_special(check_loc) == FALSE) && (get_obscurity(check_loc.x,check_loc.y) == 0)
+		if (is_not_blocked(check_loc) && (is_special(check_loc) == FALSE) && (get_obscurity(check_loc.x,check_loc.y) == 0)
 			&& (can_see(c_town.p_loc,check_loc,1) < 1) && (loc_off_act_area(check_loc) == FALSE)) {
 			spot_ok[i] = TRUE;
 			how_many_ok += (i > 1) ? 1 : 0;
@@ -925,7 +925,7 @@ item_record_type store_i;
 	for (i = 0; i < 48; i++)
 		for (j = 0; j < 48; j++) 
 			for (k = 0; k < 5; k++)
-				if ((t_d.terrain[i][j] != 90) && (get_ran(1,1,1000) < terrain_odds[ter_type][k * 2 + 1]))
+				if ((t_d.terrain[i][j] != 90) && (rand_short(1,1000) < terrain_odds[ter_type][k * 2 + 1]))
 					t_d.terrain[i][j] = terrain_odds[ter_type][k * 2];
 	
 	t_d.terrain[0][0] = ter_base[ter_type];
@@ -947,7 +947,7 @@ item_record_type store_i;
 	// Now place special lakes, etc.
 	if (ter_type == 2)
 		for (i = 0; i < 15; i++)
-			if (get_ran(1,0,5) == 1) {
+			if (rand_short(0,5) == 1) {
 				stuff_ul = special_ter_locs[i];
 				for (j = 0; j < 4; j++)
 					for (k = 0; k < 4; k++)
@@ -955,7 +955,7 @@ item_record_type store_i;
 				}
 	if (t_d.terrain[0][0] == 0)
 		for (i = 0; i < 15; i++)
-			if (get_ran(1,0,25) == 1) {
+			if (rand_short(0,25) == 1) {
 				stuff_ul = special_ter_locs[i];
 				for (j = 0; j < 4; j++)
 					for (k = 0; k < 4; k++)
@@ -963,7 +963,7 @@ item_record_type store_i;
 				}
 	if (t_d.terrain[0][0] == 0)
 		for (i = 0; i < 15; i++)
-			if (get_ran(1,0,40) == 1) {
+			if (rand_short(0,40) == 1) {
 				stuff_ul = special_ter_locs[i];
 				for (j = 0; j < 4; j++)
 					for (k = 0; k < 4; k++)
@@ -971,7 +971,7 @@ item_record_type store_i;
 				}
 	if (t_d.terrain[0][0] == 2)
 		for (i = 0; i < 15; i++)
-			if (get_ran(1,0,40) == 1) {
+			if (rand_short(0,40) == 1) {
 				stuff_ul = special_ter_locs[i];
 				for (j = 0; j < 4; j++)
 					for (k = 0; k < 4; k++)
@@ -981,7 +981,7 @@ item_record_type store_i;
 
 	if (ground_type[ter_type] == 0) {
 	for (i = 0; i < num_walls; i++) {
-		r1 = get_ran(1,0,3);
+		r1 = rand_short(0,3);
 		for (j = 9; j < 35; j++)
 			switch (r1) {
 				case 0:
@@ -1009,7 +1009,7 @@ item_record_type store_i;
 	}
 	if (ground_type[ter_type] == 36) {
 	for (i = 0; i < num_walls; i++) {
-		r1 = get_ran(1,0,3);
+		r1 = rand_short(0,3);
 		for (j = 9; j < 35; j++)
 			switch (r1) {
 				case 0:
@@ -1099,13 +1099,13 @@ void pick_lock(location where,short pc_num)
 		return;
 		}
 
-	r1 = get_ran(1,0,100) + adven[pc_num].items[which_item].ability_strength * 7;
+	r1 = rand_short(0,100) + adven[pc_num].items[which_item].ability_strength * 7;
 
 	if (r1 < 75)
 		will_break = TRUE;
 
-	r1 = get_ran(1,0,100) - 5 * stat_adj(pc_num,1) + c_town.difficulty * 7
-	 - 5 * adven[pc_num].skills[15] - adven[pc_num].items[which_item].ability_strength * 7;
+	r1 = rand_short(0,100) - 5 * stat_adj(pc_num, skill::Dexterity) + c_town.difficulty * 7
+	 - 5 * adven[pc_num].skills[skill::Lockpicking] - adven[pc_num].items[which_item].ability_strength * 7;
 
 	// Nimble?
 	if (adven[pc_num].traits[trait::NimbleFingers] == FALSE)
@@ -1140,7 +1140,7 @@ void bash_door(location where,short pc_num) ////
 	short r1,unlock_adjust;
 
 	terrain = t_d.terrain[where.x][where.y];
-	r1 = get_ran(1,0,100) - 15 * stat_adj(pc_num,0) + c_town.difficulty * 4;
+	r1 = rand_short(0,100) - 15 * stat_adj(pc_num, skill::Strength) + c_town.difficulty * 4;
 	
 	if ((scenario.ter_types[terrain].special < 9) || (scenario.ter_types[terrain].special > 10)) {
 		add_string_to_buf("  Wrong terrain type.           ");
@@ -1150,7 +1150,7 @@ void bash_door(location where,short pc_num) ////
 	unlock_adjust = scenario.ter_types[terrain].flag2;
 	if ((unlock_adjust >= 5) || (r1 > (unlock_adjust * 15 + 40)) || (scenario.ter_types[terrain].special != 10))  {
 					add_string_to_buf("  Didn't work.                ");
-					damage_pc(pc_num,get_ran(1,1,4),4,-1);					
+					damage_pc(pc_num,rand_short(1,4),4,-1);					
 				} 
 				else {
 						add_string_to_buf("  Lock breaks.                ");
@@ -1238,7 +1238,7 @@ void erase_out_specials()
 			if (quadrant_legal(i,j) == TRUE) {
 			for (k = 0; k < 18; k++) 
 				if (outdoors[i][j].special_id[k] >= 0) {
-				out_num = scenario.out_width * (party.outdoor_corner.y + j) + party.outdoor_corner.x + i;
+				out_num = scenario_out_width() * (party.outdoor_corner.y + j) + party.outdoor_corner.x + i;
 
 				sn = outdoors[i][j].specials[outdoors[i][j].special_id[k]];
 				sd1 = sn.sd1; sd2 = sn.sd2;
@@ -1732,9 +1732,9 @@ void check_done() {
 
 Boolean quadrant_legal(short i, short j) 
 {
-	if (party.outdoor_corner.x + i >= scenario.out_width)
+	if (party.outdoor_corner.x + i >= scenario_out_width())
 		return FALSE;
-	if (party.outdoor_corner.y + j >= scenario.out_height)
+	if (party.outdoor_corner.y + j >= scenario_out_height())
 		return FALSE;
 	if (party.outdoor_corner.x + i < 0)
 		return FALSE;

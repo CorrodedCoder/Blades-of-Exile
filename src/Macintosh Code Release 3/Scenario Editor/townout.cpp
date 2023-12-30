@@ -731,7 +731,7 @@ void pick_town_num_event_filter (short item_hit)
 	switch (item_hit) {
 		case 3:
 			dialog_answer = CDGN(store_whigh_dlog,2);
-			if ((dialog_answer < 0) || (dialog_answer >= scenario.num_towns)) {
+			if ((dialog_answer < 0) || (dialog_answer >= scenario_num_towns())) {
 				give_error("This number is out of the correct range. (0 to the number of towns minus 1)","",store_whigh_dlog);
 				break;
 				}
@@ -757,7 +757,7 @@ short pick_town_num(short which_dlog,short def)
 	
 	CDSN(store_whigh_dlog,2,def);
 	cd_get_item_text(which_dlog,7,(char *) temp_str);
-	sprintf(str2,"%s (0 - %d)",(char *) temp_str,scenario.num_towns - 1);
+	sprintf(str2,"%s (0 - %d)",(char *) temp_str,scenario_num_towns() - 1);
 	csit(which_dlog,7,(char *) str2);
 	
 	while (dialog_not_toast)
@@ -1681,7 +1681,7 @@ void pick_out_event_filter (short item_hit)
 				else store_cur_loc.x--;
 			break;
 		case 13:
-			if (store_cur_loc.x >= scenario.out_width - 1) SysBeep(20);
+			if (store_cur_loc.x >= scenario_out_width() - 1) SysBeep(20);
 				else store_cur_loc.x++;
 			break;
 		case 14:
@@ -1689,7 +1689,7 @@ void pick_out_event_filter (short item_hit)
 				else store_cur_loc.y--;
 			break;
 		case 15:
-			if (store_cur_loc.y >= scenario.out_height - 1) SysBeep(20);
+			if (store_cur_loc.y >= scenario_out_height() - 1) SysBeep(20);
 				else store_cur_loc.y++;
 			break;
 		}
@@ -1709,8 +1709,8 @@ short pick_out(location default_loc)
 	
 	cd_create_dialog_parent_num(854,0);
 	
-	cdsin(854,7,scenario.out_width);	
-	cdsin(854,10,scenario.out_height);
+	cdsin(854,7,scenario_out_width());	
+	cdsin(854,10,scenario_out_height());
 	sprintf(temp_str,"X = %d",store_cur_loc.x);
 	csit(854,8,(char *) temp_str);
 	sprintf(temp_str,"Y = %d",store_cur_loc.y);
@@ -1792,9 +1792,9 @@ Boolean new_town(short which_town)
 					break;
 				case 2:
 					t_d.terrain[i][j] = 2;
-					if (get_ran(1,0,8) == 0)
+					if (rand_short(0,8) == 0)
 						t_d.terrain[i][j] = 3;
-						else  if (get_ran(1,0,10) == 0)
+						else  if (rand_short(0,10) == 0)
 						t_d.terrain[i][j] = 4;
 					break;
 				}
@@ -1814,13 +1814,13 @@ void delete_last_town()
 	scenario.town_data_size[scenario.num_towns][2] = 0;
 	scenario.town_data_size[scenario.num_towns][3] = 0;
 	scenario.town_data_size[scenario.num_towns][4] = 0;
-	scenario.flag_a = sizeof(scenario_data_type) + get_ran(1,-1000,1000);
+	scenario.flag_a = sizeof(scenario_data_type) + rand_short(-1000,1000);
 	scenario.flag_b = town_s(user_given_password);
 	scenario.flag_c = out_s(user_given_password);
 	scenario.flag_e = str_size_1(user_given_password);
 	scenario.flag_f = str_size_2(user_given_password);
 	scenario.flag_h = str_size_3(user_given_password);
-	scenario.flag_g = 10000 + get_ran(1,0,5000);
+	scenario.flag_g = 10000 + rand_short(0,5000);
 	scenario.flag_d = init_data(user_given_password);
 	save_scenario();
 }

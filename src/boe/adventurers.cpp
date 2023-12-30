@@ -11,21 +11,17 @@ namespace
 
 bool cave_lore_present(const Adventurers& adven)
 {
-	auto has_cavelore = [](const auto& adventurer) { return adventurer.traits[trait::CaveLore] > 0; };
-	auto v = adven | std::views::filter(is_active);
-	return std::ranges::any_of(v, has_cavelore);
+	return std::ranges::any_of(adven, pc_has_cave_lore);
 }
 
 bool woodsman_present(const Adventurers& adven)
 {
-	auto has_woodsman = [](const auto& adventurer) { return adventurer.traits[trait::Woodsman] > 0; };
-	auto v = adven | std::views::filter(is_active);
-	return std::ranges::any_of(v, has_woodsman);
+	return std::ranges::any_of(adven, pc_has_woodsman);
 }
 
 short mage_lore_total(const Adventurers& adven)
 {
-	auto pc_mage_lore = [](const auto& adventurer) { return adventurer.skills[11]; };
+	auto pc_mage_lore = [](const auto& adventurer) { return adventurer.skills[skill::MageLore]; };
 	auto v = adven | std::views::filter(is_active) | std::views::transform(pc_mage_lore);
 #if defined(__cpp_lib_ranges_fold) && __cpp_lib_ranges_fold
 	return static_cast<short>(std::ranges::fold_left(v, 0, std::plus<int>()));

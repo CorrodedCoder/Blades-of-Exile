@@ -14,6 +14,8 @@
 #include "exlsound.h"
 #include "graphutl.h"
 #include "graphutl_helpers.hpp"
+#include "scenario.hpp"
+
 
 extern HWND	mainPtr;
 extern RECT	windRect;
@@ -25,7 +27,6 @@ extern short anim_step;
 extern party_record_type party;
 extern piles_of_stuff_dumping_type data_store;
 extern talking_record_type talking;
-extern scenario_data_type scenario;
 
 extern Adventurers adven;
 extern big_tr_type  t_d;
@@ -35,7 +36,7 @@ extern town_item_list  t_i;
 extern unsigned char out[96][96];
 extern unsigned char out_e[96][96];
 extern unsigned char combat_terrain[64][64];
-extern effect_pat_type current_pat;
+extern std::reference_wrapper<const effect_pat_type> current_pat;
 extern Boolean web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern short ulx,uly;
 extern location pc_pos[6],pc_dir[6],center;
@@ -1662,11 +1663,7 @@ void put_graphics_in_template()
 // right now, trying a restrictive rule (just cave floor and grass, mainly)
 Boolean is_nature(char x, char y)
 {
-	short pic;
-	unsigned char ter_type;
-	
-	ter_type = coord_to_ter((short) x,(short) y);
-	pic = scenario.ter_types[ter_type].picture;
+	const auto pic = scenario_ter_type(coord_to_ter(x, y)).picture;
 	if ((pic >= 0) && (pic <= 45))
 		return TRUE;
 	if ((pic >= 67) && (pic <= 73))
@@ -2149,7 +2146,7 @@ Boolean extend_road_terrain(unsigned char ter)
 							192,193,194,195,196, 197,191,200,201};
 	
 	for (i = 0; i < 39; i++)
-		if (scenario.ter_types[ter].picture == extend_pics[i])
+		if (scenario_ter_type(ter).picture == extend_pics[i])
 			return TRUE;
 	return FALSE;
 }
@@ -2426,7 +2423,7 @@ void draw_targeting_line(POINT where_curs)
 		from_loc = pc_pos[current_pc];
 		else from_loc = c_town.p_loc;
 	if ((overall_mode == 11) || (overall_mode == 12) || (overall_mode == 13) || (overall_mode == 14)
-	  || ((overall_mode == 3) && (current_pat.pattern[4][4] != 0))) {
+	  || ((overall_mode == 3) && (current_pat.get().pattern[4][4] != 0))) {
 
 		OffsetRect(&on_screen_terrain_area,ulx,uly);
 		OffsetRect(&terrain_rect,18,18);
@@ -2471,7 +2468,7 @@ void draw_targeting_line(POINT where_curs)
 						store_loc.y = center.y + j - 4;
 						if ((a_v(store_loc.x - which_space.x) <= 4) &&
 							(a_v(store_loc.y - which_space.y) <= 4) &&
-							(current_pat.pattern[store_loc.x - which_space.x + 4][store_loc.y - which_space.y + 4] != 0)) {
+							(current_pat.get().pattern[store_loc.x - which_space.x + 4][store_loc.y - which_space.y + 4] != 0)) {
 								target_rect.left = 13 + BITMAP_WIDTH * i + 5;// + ulx;
 								target_rect.right = target_rect.left + BITMAP_WIDTH;
 								target_rect.top = 13 + BITMAP_HEIGHT * j + 5;// + uly;

@@ -4,6 +4,7 @@
 #include <compare>
 #include <algorithm>
 #include "boe/utility.hpp"
+#include "boe/compatibility.hpp"
 
 const auto NUM_TOWN_ITEMS = 115;
 
@@ -55,9 +56,39 @@ struct talking_record_type {
 };
 static_assert(sizeof(talking_record_type) == 1400);
 
+enum class terrain_special : unsigned char
+{
+	None = 0,
+	ChangeWhenStepOn = 1,
+	DoesFireDamage = 2,
+	DoesColdDamage = 3,
+	DoesMagicalDamage = 4,
+	PoisonLand = 5,
+	DiseasedLand = 6,
+	CrumblingTerrain = 7,
+	LockableTerrain = 8,
+	UnlockableTerrain = 9,
+	UnlockableOrBashable = 10,
+	IsASign = 11,
+	CallLocalSpecial = 12,
+	CallScenarioSpecial = 13,
+	IsAContainer = 14,
+	Waterfall = 15,
+	ConveyorNorth = 16,
+	ConveyorEast = 17,
+	ConveyorSouth = 18,
+	ConveyorWest = 19,
+	BlockedToMonsters = 20,
+	TownEntrance = 21,
+	CanBeUsed = 22,
+	CallSpecialWhenUsed = 23,
+};
+
 struct terrain_type_type {
 	short picture;
-	unsigned char blockage, flag1, flag2, special, trans_to_what, fly_over, boat_over;
+	unsigned char blockage, flag1, flag2;
+	terrain_special special;
+	unsigned char trans_to_what, fly_over, boat_over;
 	unsigned char block_horse, light_radius, step_sound, shortcut_key, res1, res2, res3;
 	auto operator<=>(const terrain_type_type&) const = default;
 	bool operator==(const terrain_type_type&) const = default;
@@ -464,6 +495,29 @@ enum class affect: short {
 	Acid = 13,
 };
 
+enum skill
+{
+	Strength = 0,
+	Dexterity = 1,
+	Intelligence = 2,
+	EdgedWeapon = 3,
+	BashingWeapon = 4,
+	PoleWeapon = 5,
+	ThrownMissile = 6,
+	Archery = 7,
+	Defense = 8,
+	MageSpells = 9,
+	PriestSpells = 10,
+	MageLore = 11,
+	Alchemy = 12,
+	ItemLore = 13,
+	DisarmTraps = 14,
+	Lockpicking = 15,
+	Assassination = 16,
+	Poison = 17,
+	Luck = 18
+};
+
 // for game
 struct talk_save_type {
 	short personality;
@@ -483,6 +537,16 @@ struct creature_data_type {
 	Boolean mobile;
 	short summoned;
 	creature_start_type monst_start;
+
+	[[nodiscard]] short gaffect(affect type) const
+	{
+		return m_d.mstatus[to_underlying(type)];
+	}
+
+	[[nodiscard]] short& gaffect(affect type)
+	{
+		return m_d.mstatus[to_underlying(type)];
+	}
 
 	auto operator<=>(const creature_data_type&) const = default;
 	bool operator==(const creature_data_type&) const = default;
@@ -585,22 +649,22 @@ struct pc_record_type {
 
 	[[nodiscard]] bool has_trait(trait trait) const
 	{
-		return traits[static_cast<int>(trait)];
+		return traits[to_underlying(trait)];
 	}
 
 	[[nodiscard]] short gaffect(affect type) const
 	{
-		return status[static_cast<int>(type)];
+		return status[to_underlying(type)];
 	}
 
 	[[nodiscard]] short& gaffect(affect type)
 	{
-		return status[static_cast<int>(type)];
+		return status[to_underlying(type)];
 	}
 
 	void reduce_affect(affect type)
 	{
-		status[static_cast<short>(type)] = move_to_zero(status[static_cast<short>(type)]);
+		status[to_underlying(type)] = move_to_zero(status[to_underlying(type)]);
 	}
 };
 static_assert(sizeof(pc_record_type) == 1898);

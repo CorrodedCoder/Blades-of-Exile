@@ -8,6 +8,7 @@
 #include "exlsound.h"
 #include "text.h"
 #include "fields.h"
+#include "scenario.hpp"
 
 #define	NUM_SOUNDS	100
 
@@ -15,7 +16,6 @@ HGLOBAL sound_handles[NUM_SOUNDS];
 LPCSTR snds[NUM_SOUNDS];
 
 extern HINSTANCE store_hInstance;
-extern scenario_data_type scenario;
 
 extern Boolean play_sounds,in_startup_mode;
 extern HWND mainPtr;
@@ -341,28 +341,26 @@ void sound_pause(long len) {
 }
 void move_sound(unsigned char ter,short step)
 {
-	short pic,spec;
-	
-	pic = scenario.ter_types[ter].picture;
-	spec = scenario.ter_types[ter].special;
-	
-						if ((monsters_going == FALSE) && (overall_mode < 10) && (party.in_boat >= 0)) {
-							if (spec == 21)
-								return;
-							play_sound(48);
-							}
-						else if ((monsters_going == FALSE) && (overall_mode < 10) && (party.in_horse >= 0)) {////
-							play_sound(85);
-							}
-							else if ((ter >= 84) && (ter <= 89))
-								play_sound(47);
-								else if ((pic == 80) || (pic == 76)) // already played in special terrain check
-									; 
-									else if (pic == 180)
-									play_sound(55);
-									else if (step % 2 == 0)
-										play_sound(49);
-										else play_sound(50);
+	const auto& terrain = scenario_ter_type(ter);
+
+	if ((monsters_going == FALSE) && (overall_mode < 10) && (party.in_boat >= 0)) {
+		if (terrain.special == terrain_special::TownEntrance)
+			return;
+		play_sound(48);
+	}
+	else if ((monsters_going == FALSE) && (overall_mode < 10) && (party.in_horse >= 0)) {////
+		play_sound(85);
+	}
+	else if ((ter >= 84) && (ter <= 89))
+		play_sound(47);
+	else if ((terrain.picture == 80) || (terrain.picture == 76)) // already played in special terrain check
+		; 
+	else if (terrain.picture == 180)
+		play_sound(55);
+	else if (step % 2 == 0)
+		play_sound(49);
+	else
+		play_sound(50);
 }
 
 void incidental_noises()

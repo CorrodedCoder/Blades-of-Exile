@@ -15,6 +15,7 @@
 #include <cstdio>
 #include "graphutl_helpers.hpp"
 #include "boe/item.hpp"
+#include "scenario.hpp"
 
 extern HWND	mainPtr;
 extern short overall_mode;
@@ -22,8 +23,6 @@ extern short town_type;
 extern Boolean in_startup_mode,cartoon_happening;
 extern short town_size[3];
 extern party_record_type party;
-extern piles_of_stuff_dumping_type2 data_store2;
-extern scenario_data_type scenario;
 
 extern Adventurers adven;
 extern big_tr_type  t_d;
@@ -321,7 +320,7 @@ void draw_monsters()
 						ter = t_d.terrain[c_town.monst.dudes[i].m_loc.x][c_town.monst.dudes[i].m_loc.y];
 						// in bed?
 						if ((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
-							(scenario.ter_types[ter].picture == 143) && 
+							(scenario_ter_type(ter).picture == 143) && 
 							((c_town.monst.dudes[i].m_d.m_type < 7) 
 							&& (c_town.monst.dudes[i].m_d.m_type != 1) && (c_town.monst.dudes[i].m_d.m_type != 2))
 							&& ((c_town.monst.dudes[i].active == 1) || (monst_target[i] == 6)) &&
@@ -358,7 +357,7 @@ void draw_monsters()
 								 ,k);
 								ter = t_d.terrain[c_town.monst.dudes[i].m_loc.x][c_town.monst.dudes[i].m_loc.y];
 								if ((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
-									(scenario.ter_types[ter].picture == 143) && 
+									(scenario_ter_type(ter).picture == 143) && 
 									((c_town.monst.dudes[i].m_d.m_type < 7) 
 										&& (c_town.monst.dudes[i].m_d.m_type != 1) && (c_town.monst.dudes[i].m_d.m_type != 2))
 									&& ((c_town.monst.dudes[i].active == 1) || (monst_target[i] == 6)) &&
@@ -691,7 +690,7 @@ void draw_party_symbol(short mode,location center)
 			source_rect = get_party_template_rect(i,(party.direction < 4) ? 0 : 1);
 
 			// now wedge in bed graphic
-			if ((is_town()) && (scenario.ter_types[t_d.terrain[c_town.p_loc.x][c_town.p_loc.y]].picture == 143))
+			if ((is_town()) && (scenario_ter_type(t_d.terrain[c_town.p_loc.x][c_town.p_loc.y]).picture == 143))
 				draw_one_terrain_spot((short) target.x,(short) target.y,10230,0);
 				else Draw_Some_Item(party_template_gworld, source_rect, terrain_screen_gworld, target, 1, 0);
 		}
@@ -821,10 +820,8 @@ unsigned char get_t_t(char x,char y)  // returns terrain type at where
 // Is this is subterranean fluid that gets shore plopped down on it?
 Boolean is_fluid(unsigned char ter_type)////
 {
-
 	if (((ter_type >= 71) && (ter_type <= 76)) || (ter_type == 90))
 		return TRUE;
-	
 	return FALSE;
 }
 
@@ -849,20 +846,14 @@ Boolean is_shore(unsigned char ter_type)////
 // These two functions used to determine wall round-cornering
 Boolean is_wall(unsigned char ter_type)////
 {
-	short pic;
-
-	pic = scenario.ter_types[ter_type].picture;
-	
+	const auto pic = scenario_ter_type(ter_type).picture;
 	if ((pic >= 88) && (pic <= 120))
 		return TRUE;
-	
 	return FALSE;
 }
 Boolean is_ground(unsigned char ter_type)
 {
-	short pic;
-
-	pic = scenario.ter_types[ter_type].picture;
+	const auto pic = scenario_ter_type(ter_type).picture;
 	if ((pic >= 0) && (pic <= 87))
 		return TRUE;
 	if ((pic >= 121) && (pic <= 122))
@@ -1053,7 +1044,8 @@ void adjust_monst_menu()
 	for (i = 0; i < 256; i++)
 		if (on_monst_menu[i] >= 0) {
 			//GetIndString(monst_name, 2,on_monst_menu[i]);
-			sprintf(monst_name,"%s",data_store2.scen_item_list.monst_names[on_monst_menu[i]]);			if ((total_added % 24 == 0) && (total_added > 0))
+			sprintf(monst_name,"%s",scenario_monster_name(on_monst_menu[i]));
+			if ((total_added % 24 == 0) && (total_added > 0))
 				InsertMenu(menu,599,MF_MENUBREAK | MF_BYCOMMAND | MF_ENABLED | MF_STRING, 600 + i, monst_name);
 				else InsertMenu(menu,599,MF_BYCOMMAND | MF_ENABLED | MF_STRING, 600 + i, monst_name);
 			total_added++;

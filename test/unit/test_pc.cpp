@@ -4,6 +4,7 @@
 #include <ranges>
 
 #include "boe/pc.hpp"
+#include "boe/compatibility.hpp"
 
 namespace {
 
@@ -2431,6 +2432,64 @@ TEST_CASE("pc_sort_items", "[pc]")
 			pc_sort_items(pc2);
 			return pc2.items[0].variety;
 		};
+	}
+}
+
+TEST_CASE("pc_has_cave_lore", "[pc]")
+{
+	SECTION("Empty pc has no cave lore") {
+		pc_record_type pc{};
+		REQUIRE(!pc_has_cave_lore(pc));
+	}
+	SECTION("pc has no cave lore") {
+		pc_record_type pc{.main_status = status::Normal};
+		REQUIRE(!pc_has_cave_lore(pc));
+	}
+	SECTION("pc has cave lore") {
+		pc_record_type pc{ .main_status = status::Normal };
+		pc.traits[trait::CaveLore] = BOE_TRUE;
+		REQUIRE(pc_has_cave_lore(pc));
+	}
+	SECTION("pc has cave lore but is not normal") {
+		pc_record_type pc{};
+		pc.traits[trait::CaveLore] = BOE_TRUE;
+		for (pc.main_status = status::Absent; pc.main_status <= status::Won; pc.main_status = static_cast<status>(to_underlying(pc.main_status) + 1))
+		{
+			INFO("Checking status: " << to_underlying(pc.main_status));
+			if (pc.main_status != status::Normal)
+			{
+				REQUIRE(!pc_has_cave_lore(pc));
+			}
+		}
+	}
+}
+
+TEST_CASE("pc_has_woodsman", "[pc]")
+{
+	SECTION("Empty pc has no woodsman") {
+		pc_record_type pc{};
+		REQUIRE(!pc_has_woodsman(pc));
+	}
+	SECTION("pc has no woodsman") {
+		pc_record_type pc{ .main_status = status::Normal };
+		REQUIRE(!pc_has_woodsman(pc));
+	}
+	SECTION("pc has woodsman") {
+		pc_record_type pc{ .main_status = status::Normal };
+		pc.traits[trait::Woodsman] = BOE_TRUE;
+		REQUIRE(pc_has_woodsman(pc));
+	}
+	SECTION("pc has woodsman but is not normal") {
+		pc_record_type pc{};
+		pc.traits[trait::Woodsman] = BOE_TRUE;
+		for (pc.main_status = status::Absent; pc.main_status <= status::Won; pc.main_status = static_cast<status>(to_underlying(pc.main_status) + 1))
+		{
+			INFO("Checking status: " << to_underlying(pc.main_status));
+			if (pc.main_status != status::Normal)
+			{
+				REQUIRE(!pc_has_woodsman(pc));
+			}
+		}
 	}
 }
 

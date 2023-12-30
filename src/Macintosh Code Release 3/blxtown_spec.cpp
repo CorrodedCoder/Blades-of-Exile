@@ -149,18 +149,18 @@ Boolean run_trap(short pc_num,short trap_type,short trap_level,short diff)
 	num_hits += trap_level;
 		
 	if (trap_type == 0)
-		trap_type = get_ran(1,1,4);
+		trap_type = rand_short(1,4);
 	if ((trap_type ==  5) || (trap_type == 6))
 		return TRUE;
 		
 	if (pc_num < 6) {
-			i = stat_adj(pc_num,1);
+			i = stat_adj(pc_num, skill::Dexterity);
 			if ((i_level = get_prot_level(pc_num,42)) > 0)
 				i = i + i_level / 2;
-			skill = boe_clamp(adven[pc_num].skills[14] + 
-				+ adven[pc_num].skills[18] / 2 + 1 - c_town.difficulty + 2 * i,0,20);
+			skill = boe_clamp(adven[pc_num].skills[skill::DisarmTraps] + 
+				+ adven[pc_num].skills[skill::Luck] / 2 + 1 - c_town.difficulty + 2 * i,0,20);
 	
-			r1 = get_ran(1,0,100) + diff;
+			r1 = rand_short(0,100) + diff;
 			// Nimble?
 			if (adven[pc_num].traits[trait::NimbleFingers] == FALSE)
 				r1 -= 6;

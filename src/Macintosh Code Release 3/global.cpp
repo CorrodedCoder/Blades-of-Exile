@@ -4,18 +4,6 @@
 
 extern short give_delays;
 
-short get_ran (short times,short  min,short  max)
-{
-	long int store;
-	short i, to_ret = 0;
-	
-	for (i = 1; i < times + 1; i++) {
-		store = Random();
-		to_ret = to_ret + min + (((store + 32767) * (max - min + 1)) / 65536);
-		}
-	return to_ret;
-}
-
 Boolean same_point(location p1,location p2)
 {
 	if ((p1.x == p2.x) & (p1.y == p2.y))

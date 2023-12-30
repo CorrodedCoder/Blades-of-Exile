@@ -19,6 +19,7 @@
 #include "graphutl_helpers.hpp"
 #include "boe/utility.hpp"
 #include "boe/item.hpp"
+#include "scenario.hpp"
 
 static const std::array heal_types{"Heal Damage","Cure Poison","Cure Disease","Cure Paralysis",
 		"Uncurse Items","Cure Stoned Character","Raise Dead","Resurrection","Cure Dumbfounding"};
@@ -32,7 +33,6 @@ extern Boolean play_sounds,boom_anim_active,cartoon_happening,in_startup_mode;
 extern HBITMAP fields_gworld,mixed_gworld,dlg_buttons_gworld,terrain_screen_gworld,missiles_gworld;
 extern party_record_type party;
 extern talking_record_type talking;
-extern scenario_data_type scenario;
 
 extern Adventurers adven;
 extern RECT sbar_rect,item_sbar_rect,shop_sbar_rect;
@@ -395,7 +395,7 @@ void add_explosion(location dest,short val_to_place,short place_type,short boom_
 	for (i = 0; i < 30; i++)
 		if (store_booms[i].boom_type < 0) {
 			have_boom = TRUE;
-			store_booms[i].offset = (i == 0) ? 0 : -1 * get_ran(1,0,2);
+			store_booms[i].offset = (i == 0) ? 0 : -1 * rand_short(0,2);
 			store_booms[i].dest = dest;
 			store_booms[i].val_to_place = val_to_place;
 			store_booms[i].place_type = place_type;
@@ -682,8 +682,8 @@ void do_explosion_anim(short sound_num,short special_draw)
 				13 + 36 * (store_booms[i].dest.y - screen_ul.y) + store_booms[i].y_adj);
 				
 			if ((store_booms[i].place_type == 1) && (special_draw < 2)) {
-				temp_val = get_ran(1,0,50) - 25;
-				temp_val2 = get_ran(1,0,50) - 25;
+				temp_val = rand_short(0,50) - 25;
+				temp_val2 = rand_short(0,50) - 25;
 				OffsetRect(&explode_place_rect[i],temp_val,temp_val2);
 				}
 			
@@ -1191,7 +1191,7 @@ void place_talk_str(char *str_to_place,const char *str_to_place2,short color,REC
 
 	// Place face of talkee
 	if ((color == 0) && (c_rect.right == 0)) {
-		face_to_draw = scenario.scen_monsters[store_monst_type].default_facial_pic;
+		face_to_draw = scenario_monster(store_monst_type).default_facial_pic;
 		if (store_talk_face_pic >= 0)
 			face_to_draw = store_talk_face_pic;
 		if (store_talk_face_pic >= 1000) {
@@ -1222,9 +1222,7 @@ void place_talk_str(char *str_to_place,const char *str_to_place2,short color,REC
 		else SetTextColor(hdc,PALETTEINDEX(c[6]));
 	for (i = 0; i < 9; i++)
 		if ((talk_end_forced == FALSE) || (i == 6) || (i == 5)) {
-			RECT tmp{ preset_words[i].word_rect };
-			OffsetRect(&tmp,0,-2);
-			char_win_draw_string(hdc,tmp,preset_words[i].word,2,18);
+			char_win_draw_string(hdc, offset_rect(preset_words[i].word_rect, 0, -2),preset_words[i].word,2,18);
 			}
 	// Place bulk of what said. Save words.
 	//TextSize(14);

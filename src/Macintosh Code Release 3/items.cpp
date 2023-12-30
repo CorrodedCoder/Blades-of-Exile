@@ -262,7 +262,7 @@ Boolean party_check_class(short item_class,short mode) ////
 }
 short amount_pc_can_carry(short pc_num)
 {
-	return 100 + (15 * min(adven[pc_num].skills[0],20)) + ((adven[pc_num].traits[trait::ExceptionalStr] == 0) ? 0 : 30)
+	return 100 + (15 * min(adven[pc_num].skills[skill::Strength],20)) + ((adven[pc_num].traits[trait::ExceptionalStr] == 0) ? 0 : 30)
 		+ ((adven[pc_num].traits[trait::BadBack] == 0) ? 0 : -50);
 }
 short pc_carry_weight(short pc_num)
@@ -628,7 +628,7 @@ void destroy_an_item()
 			t_i.items[i].variety = 0;
 			return;
 			}
-	i = get_ran(1,0,NUM_TOWN_ITEMS);
+	i = rand_short(0,NUM_TOWN_ITEMS);
 	t_i.items[i].variety = 0;
 	
 }
@@ -1110,7 +1110,7 @@ short fancy_choice_dialog(short which_dlog,short parent)
 	cd_create_dialog_parent_num(which_dlog,parent);
 	
 	if (which_dlog == 1062) {
-		//i = get_ran(1,0,12);
+		//i = rand_short(0,12);
 		//get_str(temp_str,11,10 + i);
 		//csit(1062,10,(char *) temp_str);
 		}
@@ -1374,7 +1374,7 @@ void place_glands(location where,unsigned char m_type)
 	
 	monst = return_monster_template(m_type);
 	
-	if ((monst.corpse_item >= 0) && (monst.corpse_item < 400) && (get_ran(1,0,100) < monst.corpse_item_chance)) {
+	if ((monst.corpse_item >= 0) && (monst.corpse_item < 400) && (rand_short(0,100) < monst.corpse_item_chance)) {
 		store_i = get_stored_item(monst.corpse_item);
 		place_item(store_i,where,FALSE);
 		}
@@ -1422,7 +1422,7 @@ void place_treasure(location where,short level,short loot,short mode)
 	
 	if (loot == 1)
 		amt = get_ran(2,1,7) + 1;
-		else amt = loot * (get_ran(1,0,10 + (loot * 6) + (level * 2)) + 5);
+		else amt = loot * (rand_short(0,10 + (loot * 6) + (level * 2)) + 5);
 
 	if (adventurers_level_total(adven) <= 12)
 		amt += 1;	
@@ -1432,27 +1432,27 @@ void place_treasure(location where,short level,short loot,short mode)
 	if (amt > 3) {	
 			new_item = get_stored_item(0);
 			new_item.item_level = amt;
-			r1 = get_ran(1,1,9);
+			r1 = rand_short(1,9);
 			if (((loot > 1) && (r1 < 7)) || ((loot == 1) && (r1 < 5)) || (mode == 1)
 				|| ((r1 < 6) && (adventurers_level_total(adven) < 30)) || (loot > 2) )
 				place_item(new_item,where,FALSE);
 		}
 	for (j = 0; j < 5; j++) {
-		r1 = get_ran(1,0,100);
+		r1 = rand_short(0,100);
 		if ((treas_chart[loot][j] >= 0) && (r1 <= treas_odds[loot][j] + adventurers_luck_total(adven))) {
-			r1 = get_ran(1,0,9);
+			r1 = rand_short(0,9);
 			min = min_chart[treas_chart[loot][j]][r1];
-			r1 = get_ran(1,0,9);
+			r1 = rand_short(0,9);
 			max = (min + level + (2 * (loot - 1)) + (adventurers_luck_total(adven) / 3)) * max_mult[treas_chart[loot][j]][r1];
-			if (get_ran(1,0,1000) == 500) {
+			if (rand_short(0,1000) == 500) {
 				max = 10000;
 				min = 100;
 				}
 				
 			// reality check
-			if ((loot == 1) && (max > 100) && (get_ran(1,0,8) < 7))
+			if ((loot == 1) && (max > 100) && (rand_short(0,8) < 7))
 				max = 100;
-			if ((loot == 2) && (max > 200) && (get_ran(1,0,8) < 6))
+			if ((loot == 2) && (max > 200) && (rand_short(0,8) < 6))
 				max = 200;
 				
 				
@@ -1468,11 +1468,11 @@ void place_treasure(location where,short level,short loot,short mode)
 
 			// not many magic items
 			if (mode == 0) {
-				if (is_magic(new_item) && (level < 2) && (get_ran(1,0,5) < 3))
+				if (is_magic(new_item) && (level < 2) && (rand_short(0,5) < 3))
 					new_item.variety = 0;
-				if (is_magic(new_item) && (level == 2) && (get_ran(1,0,5) < 2))
+				if (is_magic(new_item) && (level == 2) && (rand_short(0,5) < 2))
 					new_item.variety = 0;
-				if (is_cursed(new_item) && (get_ran(1,0,5) < 3))
+				if (is_cursed(new_item) && (rand_short(0,5) < 3))
 					new_item.variety = 0;
 				}
 				
@@ -1484,13 +1484,13 @@ void place_treasure(location where,short level,short loot,short mode)
 				}
 
 			// Not many cursed items
-			if (is_cursed(new_item) && (get_ran(1,0,2) == 1))
+			if (is_cursed(new_item) && (rand_short(0,2) == 1))
 				new_item.variety = 0;
 							
 			if (new_item.variety != 0) {
 				for (i = 0; i < 6; i++)
 					if ((adven[i].main_status == status::Normal) 
-						&& (get_ran(1,0,100) < id_odds[adven[i].skills[13]]))
+						&& (rand_short(0,100) < id_odds[adven[i].skills[skill::ItemLore]]))
 							new_item.item_properties = new_item.item_properties | 1;
 				place_item(new_item,where,FALSE);
 				}			
@@ -1511,7 +1511,7 @@ item_record_type return_treasure(short loot,short level,short mode)
 	short r1;
 	
 	treas.variety = 0;
-	r1 = get_ran(1,0,41);
+	r1 = rand_short(0,41);
 	if (loot >= 3)
 		r1 += 3;
 	if (loot == 4)

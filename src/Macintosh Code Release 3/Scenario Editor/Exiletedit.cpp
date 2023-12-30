@@ -448,12 +448,12 @@ void handle_scenario_menu(int item_hit)
 					"",0);
 				return;
 				}
-			if (scenario.num_towns >= 200) {
+			if (scenario_num_towns() >= 200) {
 				give_error("You have reached the limit of 200 towns you can have in one scenario.",
 					"",0);
 				return;
 				}
-			if (new_town(scenario.num_towns) == TRUE)
+			if (new_town(scenario_num_towns()) == TRUE)
 				set_up_main_screen();
 			break;
 		case 3:
@@ -509,17 +509,17 @@ void handle_scenario_menu(int item_hit)
 					"",0);
 				return;
 				}
-			if (scenario.num_towns == 1) {
+			if (scenario_num_towns() == 1) {
 				give_error("You can't delete the last town in a scenario. All scenarios must have at least 1 town.",
 					"",0);
 				return;
 				}
-			if (scenario.num_towns - 1 == cur_town) {
+			if (scenario_num_towns() - 1 == cur_town) {
 				give_error("You can't delete the last town in a scenario while you're working on it. Load a different town, and try this again.",
 					"",0);
 				return;
 				}
-			if (scenario.num_towns - 1 == scenario.which_town_start) {
+			if (scenario_num_towns() - 1 == scenario_which_town_start()) {
 				give_error("You can't delete the last town in a scenario while it's the town the party starts the scenario in. Change the parties starting point and try this again.",
 					"",0);
 				return;

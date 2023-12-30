@@ -21,6 +21,7 @@
 #include "fileio.h"
 #include "boe/utility.hpp"
 #include "boe/item.hpp"
+#include "scenario.hpp"
 
 short mage_spell_pos = 0,priest_spell_pos = 0,skill_pos = 0;
 static pc_record_type *store_pc;
@@ -47,7 +48,6 @@ extern short on_monst_menu[256],cur_town_talk_loaded;
 extern big_tr_type  t_d;
 extern location tinraya_portculli[12];
 extern char scen_strs2[110][256];
-extern scenario_data_type scenario;
 extern piles_of_stuff_dumping_type3 data_store3;
 extern piles_of_stuff_dumping_type5 data_store5;
 
@@ -292,7 +292,7 @@ static const std::array c_item_types{ "","1-Handed weapon","2-Handed weapon","",
 
 static const char * item_types(item_variety variety)
 {
-	return c_item_types[static_cast<short>(variety)];
+	return c_item_types[to_underlying(variety)];
 }
 
 void put_item_info(short pc,short item)
@@ -809,7 +809,7 @@ void display_pc_info()
 			adven[pc].cur_sp,adven[pc].max_sp);
 	csit(1019,67,(char *) str);
 
-	for (i = 0; i < 19; i++) {
+	for (i = skill::Strength; i <= skill::Luck; ++i) {
 		cdsin(1019,18 + i * 2,adven[pc].skills[i]);
 		}
 	store = pc_encumberance(adven[pc]);
@@ -831,12 +831,12 @@ void display_pc_info()
 						else weap2 = i;
 					}
 				
-	hit_adj = stat_adj(adven[pc],1) * 5 - (pc_encumberance(adven[pc])) * 5
+	hit_adj = stat_adj(adven[pc], skill::Dexterity) * 5 - (pc_encumberance(adven[pc])) * 5
 		+ (5 * boe_clamp(adven[pc].gaffect(affect::CursedBlessed),-8,8));
 	if ((adven[pc].traits[trait::Ambidextrous] == FALSE) && (weap2 < 24))
 		hit_adj -= 25;
 
-	dam_adj = stat_adj(adven[pc],0) + boe_clamp(adven[pc].gaffect(affect::CursedBlessed),-8,8);
+	dam_adj = stat_adj(adven[pc], skill::Strength) + boe_clamp(adven[pc].gaffect(affect::CursedBlessed),-8,8);
 	if ((skill_item = text_pc_has_abil_equip(pc,101)) < 24) {
 		hit_adj += 5 * (adven[pc].items[skill_item].item_level + 1);
 		dam_adj += adven[pc].items[skill_item].item_level;
@@ -976,8 +976,8 @@ void adventure_notes_event_filter (short item_hit)
 							else strcpy(place_str,scen_strs2[(party.special_notes_str[i][0] % 1000) - 160]);
 						break;
 				case 1:
-					 load_outdoors(party.special_notes_str[i][1] % scenario.out_width,
-						party.special_notes_str[i][1] / scenario.out_width,
+					 load_outdoors(party.special_notes_str[i][1] % scenario_out_width(),
+						party.special_notes_str[i][1] / scenario_out_width(),
 					 0,0,1,party.special_notes_str[i][0] % 1000,(char *)place_str);
 					break;
 				case 2: load_town(party.special_notes_str[i][1],2,party.special_notes_str[i][0],(char *)place_str); break;
@@ -997,8 +997,8 @@ void adventure_notes_event_filter (short item_hit)
 							else strcpy(place_str,scen_strs2[(party.special_notes_str[i][0] % 1000) - 160]); 
 					break;
 				case 1:
-					 load_outdoors(party.special_notes_str[i][1] % scenario.out_width,
-					 	party.special_notes_str[i][1] / scenario.out_width, 
+					 load_outdoors(party.special_notes_str[i][1] % scenario_out_width(),
+					 	party.special_notes_str[i][1] / scenario_out_width(), 
 					 0,0,1,party.special_notes_str[i][0] % 1000,(char *)place_str);
 					break;
 				case 2: load_town(party.special_notes_str[i][1],2,party.special_notes_str[i][0] % 1000,(char *)place_str); break;
@@ -1044,8 +1044,8 @@ void adventure_notes()
 							else strcpy(place_str,scen_strs2[(party.special_notes_str[i][0] % 1000) - 160]);
 					break;
 				case 1:
-					 load_outdoors(party.special_notes_str[i][1] % scenario.out_width,
-					 	party.special_notes_str[i][1] / scenario.out_width, 
+					 load_outdoors(party.special_notes_str[i][1] % scenario_out_width(),
+					 	party.special_notes_str[i][1] / scenario_out_width(), 
 					 0,0,1,party.special_notes_str[i][0] % 1000,(char *)place_str);
 					break;
 				case 2: load_town(party.special_notes_str[i][1],2,party.special_notes_str[i][0] % 1000,(char *)place_str); break;
@@ -1218,7 +1218,7 @@ void put_spec_item_info (short which_i)
 {
 	display_strings(data_store5.scen_strs[60 + 1 + which_i * 2],"",
 	-1,-1,-1,-1,
-	data_store5.scen_strs[60 + which_i * 2],57,1600 + scenario.intro_pic,0);
+	data_store5.scen_strs[60 + which_i * 2],57,1600 + scenario_intro_pic(),0);
 }
 
 void display_strings_event_filter (short item_hit)

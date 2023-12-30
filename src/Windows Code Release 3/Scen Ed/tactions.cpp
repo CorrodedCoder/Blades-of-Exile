@@ -14,6 +14,7 @@
 #include "../graphutl.h"
 #include "buttonmg.h"
 #include "boe/utility.hpp"
+#include "../scenario.hpp"
 
 
 RECT world_screen;
@@ -183,12 +184,12 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 									"",0);
 								return are_done;
 								}
-							if (scenario.num_towns >= 200) {
+							if (scenario_num_towns() >= 200) {
 								give_error("You have reached the limit of 200 towns you can have in one scenario.",
 									"",0);
 								return are_done;
 								}
-							if (new_town(scenario.num_towns) == TRUE)
+							if (new_town(scenario_num_towns()) == TRUE)
 								set_up_main_screen();
 							break;
 						case 6:
@@ -402,7 +403,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 			 	 && (current_terrain_type <= 35) && (current_terrain_type != 23)) ||
 			 ((is_erasable_water(spot_hit.x,spot_hit.y)) && (current_terrain_type >= 50)&& (current_terrain_type <= 62)) ||
 			 ((is_correctable_wall((short) spot_hit.x,(short) spot_hit.y)) 
-			 	&& (current_terrain_type >= 5) && (current_terrain_type <= 21) && (scenario.ter_types[current_terrain_type].blockage == 5)) ||
+			 	&& (current_terrain_type >= 5) && (current_terrain_type <= 21) && (scenario_ter_type(current_terrain_type).blockage == 5)) ||
 			 ((is_hill(spot_hit.x,spot_hit.y)) && (current_terrain_type >= 36) && (current_terrain_type <= 49)
 			 	&& (current_terrain_type != 37)))) ||
 			 	((mouse_button_held == TRUE) && (erasing_mode == TRUE))) {
@@ -532,7 +533,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 						town.preset_items[x].ability = -1;
 						if ((scen_item_list.scen_items[mode_count].variety == item_variety::Gold) ||
 							(scen_item_list.scen_items[mode_count].variety == item_variety::Food))
-								town.preset_items[x].ability = get_ran(1,4,6);
+								town.preset_items[x].ability = rand_short(4,6);
 						//town.preset_items[x].charges = 0;
 						town.preset_items[x].always_there = 0;
 						town.preset_items[x].property = 0;
@@ -571,11 +572,11 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 					if (t_d.creatures[i].number == 0) {
 						t_d.creatures[i] = last_placed_monst;
 						t_d.creatures[i].start_loc = spot_hit;
-						if ((i >= 30) && (scenario.town_size[cur_town] == 2)) {
+						if ((i >= 30) && (scenario_town_size(cur_town) == 2)) {
 							give_error("Small towns can have at most 30 preset monsters.","",0); // error
 							t_d.creatures[i].number = 0;
 							}
-						else if ((i >= 40) && (scenario.town_size[cur_town] == 1)) {
+						else if ((i >= 40) && (scenario_town_size(cur_town) == 1)) {
 							give_error("Medium towns can have at most 40 preset monsters.","",0); // error
 							t_d.creatures[i].number = 0;
 							}
@@ -590,7 +591,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 						t_d.creatures[i].start_loc = spot_hit;
 						t_d.creatures[i].number = mode_count;
 						t_d.creatures[i].start_attitude =
-							scenario.scen_monsters[mode_count].default_attitude;
+							scenario_monster(mode_count).default_attitude;
 						t_d.creatures[i].mobile = 1;
 						t_d.creatures[i].time_flag = 0;
 						t_d.creatures[i].extra1 = 0;
@@ -602,12 +603,12 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 						t_d.creatures[i].monster_time = 0;
 						t_d.creatures[i].personality = -1;
 						t_d.creatures[i].special_on_kill = -1;
-						t_d.creatures[i].facial_pic = scenario.scen_monsters[mode_count].default_facial_pic;
-						if ((i >= 30) && (scenario.town_size[cur_town] == 2)) {
+						t_d.creatures[i].facial_pic = scenario_monster(mode_count).default_facial_pic;
+						if ((i >= 30) && (scenario_town_size(cur_town) == 2)) {
 							give_error("Small towns can have at most 30 preset monsters.","",0); // error
 							t_d.creatures[i].number = 0;
 							}
-						else if ((i >= 40) && (scenario.town_size[cur_town] == 1)) {
+						else if ((i >= 40) && (scenario_town_size(cur_town) == 1)) {
 							give_error("Medium towns can have at most 40 preset monsters.","",0); // error
 							t_d.creatures[i].number = 0;
 							}
@@ -615,7 +616,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 							
 						i = 70;	
 						}
-				if ((i < 70) && (scenario.town_size[cur_town] == 0)) {
+				if ((i < 70) && (scenario_town_size(cur_town) == 0)) {
 					give_error("Large towns can have at most 60 preset monsters.","",0); // error
 					}
 				overall_mode = 0;
@@ -683,7 +684,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 				if (editing_town == TRUE) {
 					for (x = 0; x < 15; x++)
 						if ((town.sign_locs[x].x == spot_hit.x) && (town.sign_locs[x].y == spot_hit.y)) {
-							edit_sign(x,scenario.ter_types[t_d.terrain[spot_hit.x][spot_hit.y]].picture);
+							edit_sign(x, scenario_ter_type(t_d.terrain[spot_hit.x][spot_hit.y]).picture);
 							x = 30;
 							}
 					if (x == 15) {
@@ -694,7 +695,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 				if (editing_town == FALSE) {
 					for (x = 0; x < 8; x++)
 						if ((current_terrain.sign_locs[x].x == spot_hit.x) && (current_terrain.sign_locs[x].y == spot_hit.y)) {
-							edit_sign(x,scenario.ter_types[current_terrain.terrain[spot_hit.x][spot_hit.y]].picture);
+							edit_sign(x, scenario_ter_type(current_terrain.terrain[spot_hit.x][spot_hit.y]).picture);
 							x = 30;
 							}
 					if (x == 8) {
@@ -1157,11 +1158,11 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 		//draw_frames();
 		}
 
-	if ((get_ran(1,0,100) == 50) && (check_p2(user_given_password) == FALSE)) {
+	if ((rand_short(0,100) == 50) && (check_p2(user_given_password) == FALSE)) {
 		fancy_choice_dialog(868,0);
 		return are_done;
 		}
-	if ((get_ran(1,0,100) == 50) && (check_p3(user_given_password) == FALSE)) {
+	if ((rand_short(0,100) == 50) && (check_p3(user_given_password) == FALSE)) {
 		fancy_choice_dialog(868,0);
 		return are_done;
 		}
@@ -1195,7 +1196,7 @@ void swap_terrain()
 		for (j = 0; j < ((editing_town == TRUE) ? max_dim[town_type] : 48); j++) 
 		{
 			ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
-			if ((ter == a) && (get_ran(1,1,100) <= c)) {
+			if ((ter == a) && (rand_short(1,100) <= c)) {
 				if (editing_town == TRUE)
 					t_d.terrain[i][j] = b;
 					else current_terrain.terrain[i][j] = b;
@@ -1327,7 +1328,7 @@ Boolean handle_keystroke(UINT wParam,LONG lParam)
 					for (i = 0; i < 256; i++) {
 						j = current_terrain_type + i + 1;
 						j = j % 256;
-						if (scenario.ter_types[j].shortcut_key == chr) {
+						if (scenario_ter_type(j).shortcut_key == chr) {
 							set_new_terrain(j);
 							i = 256;
 							}
@@ -1434,7 +1435,7 @@ Boolean where_lit[64][64];
 	for (i = 0; i < max_dim[town_type]; i++)
 		for (j = 0; j < max_dim[town_type]; j++) {
 			l.x = i; l.y = j;
-			rad = scenario.ter_types[t_d.terrain[i][j]].light_radius;
+			rad = scenario_ter_type(t_d.terrain[i][j]).light_radius;
 			if (rad > 0) {
 				for (where.x = max(0,i - rad); where.x < min(max_dim[town_type],i + rad + 1); where.x++)
 					for (where.y = max(0,j - rad); where.y < min(max_dim[town_type],j + rad + 1); where.y++)
@@ -1465,7 +1466,7 @@ Boolean is_wall(short i,short j)
 	short pic;
 	
 	ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
-	pic = scenario.ter_types[ter].picture;
+	pic = scenario_ter_type(ter).picture;
 	
 	if ((editing_town == TRUE) && ((i < 0) || (i > max_dim[town_type] - 1) || (j < 0) || (j > max_dim[town_type] - 1)))
 		return TRUE;
@@ -1516,7 +1517,7 @@ Boolean is_mountain(short i,short j)
 	unsigned char ter;
 	
 	ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
-	pic = scenario.ter_types[ter].picture;
+	pic = scenario_ter_type(ter).picture;
 	if ((editing_town == TRUE) && ((i < 0) || (i > max_dim[town_type] - 1) || (j < 0) || (j > max_dim[town_type] - 1)))
 		return TRUE;
 	if ((editing_town == FALSE) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
@@ -1540,7 +1541,7 @@ Boolean is_hill(short i,short j)
 	unsigned char ter;
 	
 	ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
-	pic = scenario.ter_types[ter].picture;
+	pic = scenario_ter_type(ter).picture;
 	if ((editing_town == TRUE) && ((i < 0) || (i > max_dim[town_type] - 1) || (j < 0) || (j > max_dim[town_type] - 1)))
 		return TRUE;
 	if ((editing_town == FALSE) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
@@ -1572,7 +1573,7 @@ Boolean is_erasable_water(short i,short j)
 	unsigned char ter;
 	
 	ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
-	pic = scenario.ter_types[ter].picture;
+	pic = scenario_ter_type(ter).picture;
 	if ((editing_town == TRUE) && ((i < 0) || (i > max_dim[town_type] - 1) || (j < 0) || (j > max_dim[town_type] - 1)))
 		return FALSE;
 	if ((editing_town == FALSE) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
@@ -1591,7 +1592,7 @@ Boolean is_water(short i,short j)
 	unsigned char ter;
 	
 	ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
-	pic = scenario.ter_types[ter].picture;
+	pic = scenario_ter_type(ter).picture;
 	if ((editing_town == TRUE) && ((i < 0) || (i > max_dim[town_type] - 1) || (j < 0) || (j > max_dim[town_type] - 1)))
 		return TRUE;
 	if ((editing_town == FALSE) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
@@ -1609,7 +1610,7 @@ Boolean is_correctable_water(short i,short j)
 	unsigned char ter;
 	
 	ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
-	pic = scenario.ter_types[ter].picture;
+	pic = scenario_ter_type(ter).picture;
 	if ((editing_town == TRUE) && ((i < 0) || (i > max_dim[town_type] - 1) || (j < 0) || (j > max_dim[town_type] - 1)))
 		return FALSE;
 	if ((editing_town == FALSE) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
@@ -1633,7 +1634,7 @@ for (i = 0; i < ((editing_town == TRUE) ? max_dim[town_type] : 48); i++)
 		l.x = i;
 		l.y = j;
 		ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
-		if ((dist(center,l) <= radius) && (get_ran(1,1,20) <= probability) 
+		if ((dist(center,l) <= radius) && (rand_short(1,20) <= probability) 
 			&& (ter < 5))
 			set_terrain(l,terrain_type);
 		}
@@ -1649,7 +1650,7 @@ for (i = 0; i < ((editing_town == TRUE) ? max_dim[town_type] : 48); i++)
 	for (j = 0; j < ((editing_town == TRUE) ? max_dim[town_type] : 48); j++) {
 		l.x = i;
 		l.y = j;
-		if ((dist(center,l) <= radius) && (get_ran(1,1,20) <= probability))
+		if ((dist(center,l) <= radius) && (rand_short(1,20) <= probability))
 			set_terrain(l,terrain_type);
 		}
 }
@@ -1666,7 +1667,7 @@ for (i = 0; i < ((editing_town == TRUE) ? max_dim[town_type] : 48); i++)
 		l.y = j;
 		if ((i >= r.left) && (i <= r.right) && (j >= r.top) && (j <= r.bottom)
 		&& ((hollow == FALSE) || (i == r.left) || (i == r.right) || (j == r.top) || (j == r.bottom))
-		  && ((hollow == TRUE) || (get_ran(1,1,20) <= probability)))
+		  && ((hollow == TRUE) || (rand_short(1,20) <= probability)))
 			set_terrain(l,terrain_type);
 		}
 }
@@ -1680,13 +1681,13 @@ void frill_up_terrain()
 		for (j = 0; j < ((editing_town == TRUE) ? max_dim[town_type] : 48); j++) {
 		terrain_type = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
 
-		if ((terrain_type == 2) && (get_ran(1,1,20) < 3))
+		if ((terrain_type == 2) && (rand_short(1,20) < 3))
 			terrain_type = 3;
-		if ((terrain_type == 2) && (get_ran(1,1,20) < 2))
+		if ((terrain_type == 2) && (rand_short(1,20) < 2))
 			terrain_type = 4;
-		if ((terrain_type == 0) && (get_ran(1,1,20) < 2))
+		if ((terrain_type == 0) && (rand_short(1,20) < 2))
 			terrain_type = 1;
-		if ((terrain_type == 36) && (get_ran(1,1,20) < 5))
+		if ((terrain_type == 36) && (rand_short(1,20) < 5))
 			terrain_type = 37;
 		if (editing_town == TRUE)
 			t_d.terrain[i][j] = terrain_type;
@@ -1795,7 +1796,7 @@ void set_terrain(location l,unsigned char terrain_type)
 	adjust_space(l);
 	l.y--;
 	
-	if ((scenario.ter_types[terrain_type].special == 11) && (editing_town == TRUE)) { /// it's a sign
+	if ((scenario_ter_type(terrain_type).special == terrain_special::IsASign) && (editing_town == TRUE)) { /// it's a sign
 		for (i = 0; i < 15; i++) 
 			if (which_sign < 0) {
 				if ((town.sign_locs[i].x == l.x) && (town.sign_locs[i].y == l.y))
@@ -1807,13 +1808,13 @@ void set_terrain(location l,unsigned char terrain_type)
 				which_sign = i;
 				else {
 					ter = t_d.terrain[town.sign_locs[i].x][town.sign_locs[i].y];
-					if (scenario.ter_types[ter].special != 11)
+					if (scenario_ter_type(ter).special != terrain_special::IsASign)
 						which_sign = i;
 					}
 			}
 		if (which_sign >= 0) {
 			town.sign_locs[which_sign] = l;
-			edit_sign(which_sign,scenario.ter_types[terrain_type].picture);
+			edit_sign(which_sign, scenario_ter_type(terrain_type).picture);
 			sign_error_received = FALSE;
 			}
 			else {
@@ -1825,7 +1826,7 @@ void set_terrain(location l,unsigned char terrain_type)
 				}
 		mouse_button_held = FALSE;
 		}
-	if ((scenario.ter_types[terrain_type].special == 11) && (editing_town == FALSE)) { /// it's a sign
+	if ((scenario_ter_type(terrain_type).special == terrain_special::IsASign) && (editing_town == FALSE)) { /// it's a sign
 		if ((l.x == 0) || (l.x == 47) || (l.y == 0) || (l.y == 47)) {
 			fancy_choice_dialog(870,0);
 			mouse_button_held = FALSE;
@@ -1842,13 +1843,13 @@ void set_terrain(location l,unsigned char terrain_type)
 				which_sign = i;
 				else {
 					ter = current_terrain.terrain[current_terrain.sign_locs[i].x][current_terrain.sign_locs[i].y];
-					if (scenario.ter_types[ter].special != 11)
+					if (scenario_ter_type(ter).special != terrain_special::IsASign)
 						which_sign = i;
 					}
 			}
 		if (which_sign >= 0) {
 			current_terrain.sign_locs[which_sign] = l;
-			edit_sign(which_sign,scenario.ter_types[terrain_type].picture);
+			edit_sign(which_sign, scenario_ter_type(terrain_type).picture);
 			sign_error_received = FALSE;
 			}
 			else {
@@ -2175,7 +2176,7 @@ else // wall(i-1,j) == TRUE
 }
 }
 			ter_to_fix += 14;
-			//if ((ter_to_fix == 36) && (get_ran(1,0,15) == 5))
+			//if ((ter_to_fix == 36) && (rand_short(0,15) == 5))
 			//	ter_to_fix++; 
 			if ((t_d.terrain[i][j] != 37) || (ter_to_fix != 36))
 				t_d.terrain[i][j] = ter_to_fix; 				
@@ -2601,7 +2602,7 @@ else // wall(i-1,j) == TRUE
 }
 }
 			ter_to_fix += 14;
-			//if ((ter_to_fix == 36) && (get_ran(1,0,15) == 5))
+			//if ((ter_to_fix == 36) && (rand_short(0,15) == 5))
 			//	ter_to_fix++; 
 			if ((current_terrain.terrain[i][j] != 37) || (ter_to_fix != 36))
 				current_terrain.terrain[i][j] = ter_to_fix; 				
@@ -2766,11 +2767,9 @@ void adjust_space(location l)
 
 }
 
-Boolean is_lava(short x,short y)
+bool is_lava(short x,short y)
 {
-	if ((coord_to_ter(x,y) == 75) || (coord_to_ter(x,y) == 76))
-		return TRUE;
-		else return FALSE;
+	return (coord_to_ter(x, y) == 75) || (coord_to_ter(x, y) == 76);
 }
 
 unsigned char coord_to_ter(short x,short y)
@@ -2791,7 +2790,7 @@ short get_obscurity(short x,short y)
 	
 	what_terrain = coord_to_ter(x,y);
 		
-	store = scenario.ter_types[what_terrain].blockage;
+	store = scenario_ter_type(what_terrain).blockage;
 	if ((store == 1) || (store == 5))
 		return 5;
 	if (store == 4)
@@ -2811,7 +2810,7 @@ short can_see(location p1,location p2,short mode)
 		if (p1.x > p2.x) {
 			for (count = p2.x + 1; count < p1.x; count++) {
 				storage = storage + get_obscurity(count, p1.y);
-				if (((scenario.ter_types[coord_to_ter(count,p1.y)].blockage > 2) || (is_lava(count,p1.y) == TRUE)) && (mode == 1))
+				if (((scenario_ter_type(coord_to_ter(count,p1.y)).blockage > 2) || is_lava(count,p1.y)) && (mode == 1))
 					return 5;
 				}
 			}
@@ -2819,7 +2818,7 @@ short can_see(location p1,location p2,short mode)
 				for (count = p1.x + 1; count < p2.x; count++) {
 
 				storage = storage + get_obscurity(count, p1.y);
-				if (((scenario.ter_types[coord_to_ter(count,p1.y)].blockage > 2) || (is_lava(count,p1.y) == TRUE)) && (mode == 1))
+				if (((scenario_ter_type(coord_to_ter(count,p1.y)).blockage > 2) || is_lava(count,p1.y)) && (mode == 1))
 					return 5;
 				}
 			}
@@ -2829,14 +2828,14 @@ short can_see(location p1,location p2,short mode)
 		if (p1.y > p2.y) {
 			for (count = p1.y - 1; count > p2.y; count--) {
 				storage = storage + get_obscurity(p1.x, count);
-				if (((scenario.ter_types[coord_to_ter(p1.x,count)].blockage > 2) || (is_lava(p1.x,count) == TRUE)) && (mode == 1))
+				if (((scenario_ter_type(coord_to_ter(p1.x,count)).blockage > 2) || is_lava(p1.x,count)) && (mode == 1))
 					return 5;
 				}
 			}
 			else {
 				for (count = p1.y + 1; count < p2.y; count++) {
 					storage = storage + get_obscurity(p1.x, count);
-					if (((scenario.ter_types[coord_to_ter(p1.x,count)].blockage > 2) || (is_lava(p1.x,count) == TRUE))  && (mode == 1))
+					if (((scenario_ter_type(coord_to_ter(p1.x,count)).blockage > 2) || is_lava(p1.x,count))  && (mode == 1))
 						return 5;
 					}
 			}
@@ -2849,8 +2848,8 @@ short can_see(location p1,location p2,short mode)
 		if (p2.y > p1.y) {
 			for (count = 1; count < dy; count++) {
 				storage = storage + get_obscurity(p1.x + (count * dx) / dy, p1.y + count);
-				if ( ((scenario.ter_types[coord_to_ter(p1.x + (count * dx) / dy,p1.y + count)].blockage > 2) ||
-					(is_lava(p1.x + (count * dx) / dy,p1.y + count) == TRUE))
+				if ( ((scenario_ter_type(coord_to_ter(p1.x + (count * dx) / dy,p1.y + count)).blockage > 2) ||
+					is_lava(p1.x + (count * dx) / dy,p1.y + count))
 					 && (mode == 1))
 					return 5;
 				}			
@@ -2858,8 +2857,8 @@ short can_see(location p1,location p2,short mode)
 		else {
 			for (count = -1; count > dy; count--) {
 				storage = storage + get_obscurity(p1.x + (count * dx) / dy, p1.y + count);
-				if ( ((scenario.ter_types[coord_to_ter(p1.x + (count * dx) / dy, p1.y + count)].blockage > 2) ||
-					(is_lava(p1.x + (count * dx) / dy, p1.y + count) == TRUE))
+				if ( ((scenario_ter_type(coord_to_ter(p1.x + (count * dx) / dy, p1.y + count)).blockage > 2) ||
+					is_lava(p1.x + (count * dx) / dy, p1.y + count))
 					&& (mode == 1))
 					return 5;				
 				}
@@ -2870,8 +2869,8 @@ short can_see(location p1,location p2,short mode)
 		if (p2.x > p1.x) {
 			for (count = 1; count < dx; count++) {
 				storage = storage + get_obscurity(p1.x + count, p1.y + (count * dy) / dx);
-				if (((scenario.ter_types[coord_to_ter(p1.x + count,p1.y + (count * dy) / dx)].blockage > 2) ||
-					(is_lava(p1.x + count,p1.y + (count * dy) / dx) == TRUE))
+				if (((scenario_ter_type(coord_to_ter(p1.x + count,p1.y + (count * dy) / dx)).blockage > 2) ||
+					is_lava(p1.x + count,p1.y + (count * dy) / dx))
 					&& (mode == 1))
 					return 5;
 				}
@@ -2879,8 +2878,8 @@ short can_see(location p1,location p2,short mode)
 		else {
 			for (count = -1; count > dx; count--) {
 				storage = storage + get_obscurity(p1.x + count, p1.y + (count * dy) / dx);
-				if ( ((scenario.ter_types[coord_to_ter(p1.x + count,p1.y + (count * dy) / dx)].blockage > 2) ||
-					(is_lava(p1.x + count,p1.y + (count * dy) / dx) == TRUE))
+				if ( ((scenario_ter_type(coord_to_ter(p1.x + count,p1.y + (count * dy) / dx)).blockage > 2) ||
+					is_lava(p1.x + count,p1.y + (count * dy) / dx))
 					&& (mode == 1))
 					return 5;
 				}
@@ -2902,7 +2901,7 @@ Boolean place_item(location spot_hit,short which_item,short property,short alway
 		return TRUE;
 	if (scen_item_list.scen_items[which_item].variety == item_variety::None)
 		return TRUE;
-	if (get_ran(1,1,100) > odds)
+	if (rand_short(1,100) > odds)
 		return FALSE;
 	for (x = 0; x < 64; x++) 
 		if (town.preset_items[x].item_code < 0) {
@@ -2912,7 +2911,7 @@ Boolean place_item(location spot_hit,short which_item,short property,short alway
 			town.preset_items[x].ability = -1;
 			if ((scen_item_list.scen_items[which_item].variety == item_variety::Gold) ||
 				(scen_item_list.scen_items[which_item].variety == item_variety::Food))
-					town.preset_items[x].ability = get_ran(1,4,6);
+					town.preset_items[x].ability = rand_short(4,6);
 
 			//town.preset_items[x].charges = 0;
 			town.preset_items[x].always_there = always;
@@ -3074,7 +3073,7 @@ void town_entry(location spot_hit)
 	unsigned char ter;
 	
 	ter = current_terrain.terrain[spot_hit.x][spot_hit.y];
-	if (scenario.ter_types[ter].special != 21) {
+	if (scenario_ter_type(ter).special != terrain_special::TownEntrance) {
 		give_error("This space isn't a town entrance. Town entrances are marked by a small brown castle icon.","",0);
 		return;
 		}
@@ -3082,7 +3081,7 @@ void town_entry(location spot_hit)
 	for (x = 0; x < 8; x++)
 		if (current_terrain.exit_locs[x].x < 100) {
 			ter = current_terrain.terrain[current_terrain.exit_locs[x].x][current_terrain.exit_locs[x].y];
-			if (scenario.ter_types[ter].special != 21) 
+			if (scenario_ter_type(ter).special != terrain_special::TownEntrance)
 				current_terrain.exit_locs[x].x = 100;
 			}
 				y = -2;
@@ -3338,9 +3337,9 @@ Boolean monst_on_space(location loc,short m_num)
 	if (t_d.creatures[m_num].number == 0)
 		return FALSE;
 	if ((loc.x - t_d.creatures[m_num].start_loc.x >= 0) && 
-	(loc.x - t_d.creatures[m_num].start_loc.x <= scenario.scen_monsters[t_d.creatures[m_num].number].x_width - 1) &&
+	(loc.x - t_d.creatures[m_num].start_loc.x <= scenario_monster(t_d.creatures[m_num].number).x_width - 1) &&
 	(loc.y - t_d.creatures[m_num].start_loc.y >= 0) && 
-	(loc.y - t_d.creatures[m_num].start_loc.y <= scenario.scen_monsters[t_d.creatures[m_num].number].y_width - 1))
+	(loc.y - t_d.creatures[m_num].start_loc.y <= scenario_monster(t_d.creatures[m_num].number).y_width - 1))
 		return TRUE;
 	return FALSE;	
 	
