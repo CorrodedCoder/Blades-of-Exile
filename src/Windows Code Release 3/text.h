@@ -1,3 +1,7 @@
+#pragma once
+
+#include <string_view>
+
 short text_pc_has_abil_equip(short pc_num,short abil);
 void put_pc_screen();
 void put_item_screen(short screen_num,short suppress_buttons);
@@ -24,7 +28,7 @@ void monst_breathe_note(unsigned char number);
 void monst_damaged_mes(short which_m,short how_much,short how_much_spec);
 void monst_killed_mes(short which_m);
 void print_nums(short a,short b,short c);
-void add_string_to_buf(const char *string);
+void add_string_to_buf(std::string_view str);
 void init_buf();
 void print_buf () ;
 void through_sending();

@@ -1,3 +1,7 @@
+#pragma once
+
+#include <string_view>
+
 short text_pc_has_abil_equip(short pc_num,short abil);
 void put_pc_screen();
 void place_buy_button(short position,short pc_num,short item_num);
@@ -31,7 +35,7 @@ void monst_damaged_mes(short which_m,short how_much,short how_much_spec);
 void monst_killed_mes(short which_m);
 void print_nums(short a,short b,short c);
 short print_terrain(location space);
-void add_string_to_buf(char *string);
+void add_string_to_buf(std::string_view str);
 void init_buf();
 void print_buf () ;
 void restart_printing();

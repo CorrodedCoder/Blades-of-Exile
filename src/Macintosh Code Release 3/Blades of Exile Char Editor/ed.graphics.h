@@ -1,3 +1,5 @@
+#include <string_view>
+
 void init_main_buttons();
 void Set_up_win ();
 void redraw_screen();
@@ -7,7 +9,7 @@ GWorldPtr load_pict(short picture_to_get);
 void draw_items(short clear_first);
 void display_party(short mode,short clear_first);
 void undo_clip();
-void add_string_to_buf(char *str) ;
+void add_string_to_buf(std::string_view str);
 void rect_draw_some_item (GWorldPtr	src_gworld, Rect	src_rect, GWorldPtr	targ_gworld,Rect targ_rect, 
 char masked,short main_win);
 void char_win_draw_string(GrafPtr dest_window,Rect dest_rect,char *str,short mode,short line_height);

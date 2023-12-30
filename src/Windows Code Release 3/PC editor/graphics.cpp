@@ -850,7 +850,7 @@ void display_party(short mode,short clear_first)
 SetTextColor(main_dc,PALETTEINDEX(c[0]));
 }
 
-void add_string_to_buf(const char * str) {
+void add_string_to_buf(std::string_view str) {
 
 	}
 	

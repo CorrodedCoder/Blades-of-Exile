@@ -1269,7 +1269,7 @@ short print_terrain(location space)
 }
 
 
-void add_string_to_buf(char *string)
+void add_string_to_buf(std::string_view str)
 {
 	if (in_startup_mode == TRUE)
 		return;
@@ -1280,7 +1280,7 @@ void add_string_to_buf(char *string)
 		print_buf();
 		through_sending();
 		}
-	sprintf(text_buffer[buf_pointer].line, "%-49.49s", string);
+	sprintf(text_buffer[buf_pointer].line, "%-49.49s", str.data());
 //	c2pstr((char *)text_buffer[buf_pointer].line);
 	if (buf_pointer == (TEXT_BUF_LEN - 1))
 		buf_pointer = 0;

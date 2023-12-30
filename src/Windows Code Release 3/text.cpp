@@ -1346,7 +1346,7 @@ static short print_terrain(location space)
 }
 
 
-void add_string_to_buf(const char * str)
+void add_string_to_buf(std::string_view str)
 {
 	//SetControlValue(text_sbar,58);
 	SetScrollPos(text_sbar,SB_CTL,58,TRUE);
@@ -1356,7 +1356,7 @@ void add_string_to_buf(const char * str)
 		print_buf();
 		through_sending();
 		}
-	sprintf(text_buffer[buf_pointer].data(), "%-49.49s", str);
+	sprintf(text_buffer[buf_pointer].data(), "%-49.49s", str.data());
    text_buffer[buf_pointer][49] = 0;
 //	c2pstr(text_buffer[buf_pointer].data());
 	if (buf_pointer == (TEXT_BUF_LEN - 1))
