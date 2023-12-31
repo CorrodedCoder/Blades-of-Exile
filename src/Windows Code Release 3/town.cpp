@@ -3,7 +3,6 @@
 #include <cstdio>
 
 #include "global.h"
-
 #include "gutils.h"
 #include "graphics.h"
 #include "newgraph.h"
@@ -28,10 +27,10 @@
 
 extern HBITMAP mixed_gworld,spec_scen_g;
 extern current_town_type c_town;
-extern party_record_type far	party;
+extern party_record_type party;
 extern Adventurers adven;
-extern town_item_list  t_i;
-extern short stat_window,overall_mode,store_spell_target,which_combat_type,current_pc,combat_active_pc;
+extern town_item_list t_i;
+extern short overall_mode,which_combat_type,current_pc,combat_active_pc;
 extern location center;
 extern HWND mainPtr;
 extern short monst_target[T_M]; // 0-5 target that pc   6 - no target  100 + x - target monster x
@@ -39,21 +38,14 @@ extern unsigned char combat_terrain[64][64];
 extern outdoor_record_type outdoors[2][2];
 extern unsigned char misc_i[64][64];
 extern short store_current_pc,current_ground;
-extern Boolean cd_event_filter();
-extern Boolean dialog_not_toast;
-
 extern short store_pre_shop_mode,store_pre_talk_mode;
 extern location monster_targs[T_M];
-
-extern Boolean modeless_exists[18],diff_depth_ok,belt_present;
-extern short modeless_key[18];
+extern Boolean modeless_exists[18],belt_present;
 extern HWND modeless_dialogs[18];
 extern unsigned char out[96][96];
 extern unsigned char out_e[96][96];
 extern unsigned char sfx[64][64];
 extern stored_items_list_type stored_items[3];
-extern stored_town_maps_type maps;
-extern stored_outdoor_maps_type o_maps;
 extern big_tr_type  t_d;
 extern short town_size[3];
 extern short town_type;
@@ -61,41 +53,41 @@ extern setup_save_type setup_save;
 extern Boolean web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern location pc_pos[6];
 extern short last_attacked[6], pc_dir[6], pc_parry[6];
-extern std::array<short, 6> pc_moves;
-
 extern const location hor_vert_place[14];
 extern const location diag_place[14];
 extern short terrain_pic[256];
-extern char terrain_blocked[256];
-extern location golem_m_locs[16];
 extern std::array< short, 20 > special_queue;
-
 extern HPALETTE hpal;
-extern PALETTEENTRY ape[256];
-extern HDC main_dc,main_dc2,main_dc3;
+extern HDC main_dc;
 extern HINSTANCE store_hInstance;
 extern stored_town_maps_type town_maps,town_maps2;
 extern piles_of_stuff_dumping_type data_store;
-extern stored_town_maps_type town_maps,town_maps2;
-
 extern short ulx,uly;
+extern HFONT small_bold_font;
 
-DLGPROC map_proc = NULL;
-
-// extra devices for maps
-	HBRUSH hbrush[6] = {NULL, NULL, NULL, NULL, NULL, NULL};
-	HPEN hpen[6];
-	COLORREF map_colors[6] = {RGB(0,0,0),RGB(63,223,95),RGB(0,0,255),
-			RGB(191,0,191),RGB(255,0,0),RGB(204,204,204)};
-
-RECT store_map_window_rect = {0,0,0,0};
-
-Boolean need_map_full_refresh = TRUE,forcing_map_button_redraw = FALSE;
+// Globals
+unsigned char map_graphic_placed[8][64]; // keeps track of what's been filled on map
 HBITMAP map_gworld;
-HBRUSH	bg[14];
+HBRUSH bg[14];
 HBRUSH map_brush[25];
 HBITMAP map_bitmap[25];
-extern HFONT small_bold_font;
+
+// statics
+static DLGPROC map_proc = NULL;
+// extra devices for maps
+static HBRUSH hbrush[6] = { NULL, NULL, NULL, NULL, NULL, NULL };
+static HPEN hpen[6];
+static RECT store_map_window_rect{ 0,0,0,0 };
+static Boolean need_map_full_refresh = TRUE;
+static short town_force = 200;
+static location town_force_loc;
+static Boolean kludge_force_full_refresh = FALSE;
+
+// const vars
+static const COLORREF map_colors[6]{
+	RGB(0,0,0),RGB(63,223,95),RGB(0,0,255),
+	RGB(191,0,191),RGB(255,0,0),RGB(204,204,204)
+};
 
 static const unsigned char map_pats[256] = {1,1,2,2,2,7,7,7,7,7, ////
 						7,7,7,7,7,7,7,7,3,3,
@@ -178,26 +170,11 @@ static const short terrain_odds[14][10] = { {3,80,4,40,115,20,114,10,112,1},
 						{3,100,4,250,115,120,114,30,112,2},
 						{1,25,84,15,98,300,97,280,0,0} }; // ter then odds then ter then odds ...
 
-long pause_dummy;
-
-location town_map_adj = {0,0};
-short town_force = 200,store_which_shop,store_min,store_max,store_shop,store_selling_pc;
-short sell_offset = 0;
-location town_force_loc;
-Boolean shop_button_active[12];
-	RECT map_title_rect = {50,8,300,20}; /**/
-//	Rect map_bar_rect = {285,47,301,218};
-	RECT map_bar_rect = {230,2,400,10};
-unsigned char map_graphic_placed[8][64]; // keeps track of what's been filled on map
-char the_string[256];
-Boolean kludge_force_full_refresh = FALSE;
-
 void force_town_enter(short which_town,location where_start)
 {
 	town_force = which_town;
 	town_force_loc = where_start;
 }
-
 
 void start_town_mode(short which_town, short entry_dir)
 //short entry_dir; // if 9, go to forced
@@ -1368,8 +1345,6 @@ void draw_map (HWND the_dialog, short the_item)
 		}
 
 
-	town_map_adj.x = 0;
-	town_map_adj.y = 0;
 	// view rect is rect that is visible, redraw rect is area to redraw now
 	// area_to_draw_from is final draw from rect
 	// area_to_draw_on is final draw to rect

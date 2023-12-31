@@ -137,27 +137,24 @@ short text_pc_has_abil_equip(short pc_num,short abil)
 
 }
 
+const RECT c_final_from_draw_rect{ 0,0,271,116 };
+const RECT c_final_to_draw_rect{ 0,0,271,116 };
+const RECT c_small_erase_rects[3]{ {34,101,76,114},{106,101,147,114},{174,101,201,114} };
+const RECT c_info_from{ 1,0,13,12 };
+const COLORREF c_colors[6]{ RGB(0,0,0),RGB(255,0,0),RGB(128,0,0),RGB(0,160,0),RGB(0,0,255),RGB(255,255,255) };
+
 // Draws the pc area in upper right
 void put_pc_screen()
 {
-	short i = 0,j;
-	RECT erase_rect = {2,17,270,99},to_draw_rect,from_rect;
-	RECT final_from_draw_rect = {0,0,271,116},final_to_draw_rect = {0,0,271,116};
-	RECT small_erase_rects[3] = {{34,101,76,114},{106,101,147,114},{174,101,201,114}};
-	RECT info_from = {1,0,13,12};
-
-	HDC hdc;
-	COLORREF colors[6] = {RGB(0,0,0),RGB(255,0,0),RGB(128,0,0),RGB(0,160,0),RGB(0,0,255),RGB(255,255,255)};
-	UINT c[6];
-	HGDIOBJ store_bmp;
 	Boolean right_buttons_same = TRUE;
 
-	for (i = 0; i < 6; i++)
+	for (short i = 0; i < 6; i++)
 		if (((adven[i].main_status != status::Absent) && (pc_button_state[i] != 1)) ||
 			((adven[i].main_status == status::Absent) && (pc_button_state[i] != 0)))
 				right_buttons_same = FALSE;
 
 	// First refresh gworld with the pc info
+	RECT erase_rect{ 2,17,270,99 };
 	//rect_draw_some_item_bmp(orig_pc_info_screen_gworld, erase_rect, pc_info_screen_gworld, erase_rect, 0, 0);
 	// First clean up gworld with pretty patterns
 	// Will rewrite later
@@ -165,7 +162,7 @@ void put_pc_screen()
 	erase_rect.right -= 13;
 	//if (right_buttons_same == TRUE)
 	//	erase_rect.right -= 15;
-	from_rect = erase_rect;
+	RECT from_rect{ erase_rect };
 	OffsetRect(&from_rect,-1 * from_rect.left,-1 * from_rect.top);
 	rect_draw_some_item_bmp(status_pattern_gworld,from_rect,
 		pc_stats_gworld,erase_rect,0,0);
@@ -177,35 +174,35 @@ void put_pc_screen()
 		rect_draw_some_item_bmp(status_pattern_gworld,from_rect,
 			pc_stats_gworld,erase_rect,0,0);
 	//	}
-	for (i = 0; i < 3; i++) {
+	for (short i = 0; i < 3; i++) {
 		//	FillCRECT(&small_erase_rects[i],bg[7]);
-		from_rect = small_erase_rects[i];
+		from_rect = c_small_erase_rects[i];
 		OffsetRect(&from_rect,-1 * from_rect.left + 208,-1 * from_rect.top + 136);
 		rect_draw_some_item_bmp(mixed_gworld,from_rect,
-			pc_stats_gworld,small_erase_rects[i],0,0);
+			pc_stats_gworld, c_small_erase_rects[i],0,0);
 		}
 
-	hdc = CreateCompatibleDC(main_dc);
+	HDC hdc = CreateCompatibleDC(main_dc);
 	//store_text_hdc = hdc;
 	SelectPalette(hdc,hpal,0);
 	SetBkMode(hdc,TRANSPARENT);
 	SelectObject(hdc,small_bold_font);
 
-	for (i = 0; i < 6; i++)
-		c[i] = GetNearestPaletteIndex(hpal,colors[i]);
-	store_bmp = SelectObject(hdc,pc_stats_gworld);
-
+	UINT c[6];
+	for (short i = 0; i < 6; i++)
+		c[i] = GetNearestPaletteIndex(hpal, c_colors[i]);
+	HGDIOBJ store_bmp = SelectObject(hdc,pc_stats_gworld);
 
 	// Put food, gold, day
 	SetTextColor(hdc,PALETTEINDEX(c[5]));
-	win_draw_string(hdc,small_erase_rects[1], std::format("{:d}", (short)party.gold),0,10);
-	win_draw_string(hdc,small_erase_rects[0], std::format("{:d}", (short)party.food),0,10);
-	win_draw_string(hdc,small_erase_rects[2], std::format("{:d}", calc_day()),0,10);
+	win_draw_string(hdc, c_small_erase_rects[1], std::format("{:d}", (short)party.gold),0,10);
+	win_draw_string(hdc, c_small_erase_rects[0], std::format("{:d}", (short)party.food),0,10);
+	win_draw_string(hdc, c_small_erase_rects[2], std::format("{:d}", calc_day()),0,10);
 	SetTextColor(hdc,PALETTEINDEX(c[0]));
 
-	for (i = 0; i < 6; i++) {
+	for (short i = 0; i < 6; i++) {
 		if (adven[i].main_status != status::Absent) {
-			for (j = 0; j < 5; j++)
+			for (short j = 0; j < 5; j++)
 				pc_area_button_active[i][j] = 1;
 			if (i == current_pc) {
 				//TextFace(italic | bold);
@@ -219,7 +216,7 @@ void put_pc_screen()
 			SelectObject(hdc,small_bold_font);
 			SetTextColor(hdc,PALETTEINDEX(c[0]));
 
-			to_draw_rect = pc_buttons[i][1];      
+			RECT to_draw_rect = pc_buttons[i][1];      
 			to_draw_rect.right += 20;
 			switch (adven[i].main_status) {
 				case status::Normal:
@@ -265,7 +262,7 @@ void put_pc_screen()
 			// do faster!
 			to_draw_rect = pc_buttons[i][3];
 			to_draw_rect.right = pc_buttons[i][4].right + 1;
-			from_rect = info_from;
+			from_rect = c_info_from;
 			from_rect.right = from_rect.left + to_draw_rect.right - to_draw_rect.left;
 
 				pc_button_state[i] = 1;
@@ -275,7 +272,7 @@ void put_pc_screen()
 				
 			}
 			else {
-				for (j = 0; j < 5; j++)
+				for (short j = 0; j < 5; j++)
 					pc_area_button_active[i][j] = 0;
 				pc_button_state[i] = 0;
 				}
@@ -286,8 +283,7 @@ void put_pc_screen()
 	DeleteObject(hdc);
 
 	// Now put text on window.
-	OffsetRect(&final_to_draw_rect,PC_WIN_UL_X,PC_WIN_UL_Y);
-	rect_draw_some_item_bmp(pc_stats_gworld, final_from_draw_rect, pc_stats_gworld, final_to_draw_rect, 0, 1);
+	rect_draw_some_item_bmp(pc_stats_gworld, c_final_from_draw_rect, pc_stats_gworld, offset_rect(c_final_to_draw_rect, PC_WIN_UL_X, PC_WIN_UL_Y), 0, 1);
 
 	// Sometimes this gets called when character is slain. when that happens, if items for
 	// that PC are up, switch item page.

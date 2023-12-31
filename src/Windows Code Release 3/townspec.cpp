@@ -3,37 +3,26 @@
 
 #include "global.h"
 #include "party.h"
-#include "town.h"
 #include "items.h"
-#include "combat.h"
 #include "monster.h"
 #include "infodlgs.h"
 #include "locutils.h"
-#include "fields.h"
 #include "text.h"
-#include "itemdata.h"
 #include "townspec.h"
 #include "exlsound.h"
 #include "boe/hacks.hpp"
-#include "boe/utility.hpp"
 #include "scenario.hpp"
 
-extern short overall_mode;
 extern party_record_type party;
-extern talking_record_type talking;
-
-extern current_town_type	c_town;
-extern unsigned char out[96][96];
-extern unsigned char combat_terrain[64][64];
-extern short current_pc,stat_window;
-extern outdoor_record_type outdoors[2][2];
-extern location pc_pos[6],center;
-extern town_item_list 	t_i;
+extern current_town_type c_town;
+extern short current_pc, stat_window;
+extern location center;
 extern Adventurers adven;
-extern big_tr_type  t_d;
+extern big_tr_type t_d;
 
-static const short trap_odds[30] = { 5,30,35,42,48, 55,63,69,75,77,
-						78,80,82,84,86, 88,90,92,94,96,98,99,99,99,99,99,99,99,99,99 };
+static const short trap_odds[30]{
+	5,30,35,42,48, 55,63,69,75,77, 78,80,82,84,86, 88,90,92,94,96,98,99,99,99,99,99,99,99,99,99
+};
 
 void activate_monster_enc(short enc_num,short str1,short str2,short strsnd,short *flip_bit)
 {
