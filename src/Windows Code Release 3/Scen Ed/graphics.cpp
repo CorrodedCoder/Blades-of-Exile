@@ -361,7 +361,7 @@ void draw_lb_slot (short which,short mode)
 	if (mode > 0)
 		SetTextColor(main_dc,PALETTEINDEX(c));
 
-	char_win_draw_string(main_dc,text_rect,(char *)data_store.strings_ls[which],0,12);
+	win_draw_string(main_dc,text_rect,(char *)data_store.strings_ls[which],0,12);
 	SetTextColor(main_dc,PALETTEINDEX(c2));
 
 	SelectObject(main_dc,font);
@@ -403,7 +403,7 @@ void draw_rb_slot (short which,short mode)
 	if (mode > 0)
 		SetTextColor(main_dc,PALETTEINDEX(c));
    OffsetRect(&text_rect,0,-1);
-	char_win_draw_string(main_dc,text_rect,(char *)data_store.strings_rs[which],0,12);
+	win_draw_string(main_dc,text_rect,(char *)data_store.strings_rs[which],0,12);
 	SetTextColor(main_dc,PALETTEINDEX(c2));
 }
 
@@ -1467,11 +1467,6 @@ Boolean container_there(location l)
 	return 0;		
 }
 
-
-void char_win_draw_string(HDC dest_window,RECT dest_rect, std::string_view str,short mode,short line_height)
-{
-	win_draw_string( dest_window, dest_rect, str, mode, line_height);
-}
 
 // mode: 0 - align up and left, 1 - center on one line
 // str is a c string, 256 characters

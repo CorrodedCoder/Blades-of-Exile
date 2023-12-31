@@ -112,7 +112,6 @@ short text_pc_has_abil_equip(short pc_num,short abil)
 }
 
 // Draws the pc area in upper right
-//void win_draw_string(WindowPtr dest_window,Rect dest_rect,char *str,short mode,short line_height)
 void put_pc_screen()
 {
 	Str255 to_draw;
@@ -489,7 +488,7 @@ void place_buy_button(short position,short pc_num,short item_num)
 		format_to_buf(store_str,"        {:d}",val_to_place);
 		if (val_to_place >= 10000)
 			TextFace(0);
-		char_win_draw_string((GrafPtr) item_stats_gworld,item_buttons[position][5],
+		win_draw_string((GrafPtr) item_stats_gworld,item_buttons[position][5],
  		  store_str,2,10);	
 		TextFace(bold);
 		}
@@ -1582,11 +1581,6 @@ short string_length(char *str)
 		if ((text_len[i] > total_width) && (i <= len))
 			total_width = text_len[i];
 	return total_width;
-}
-
-void char_win_draw_string(GrafPtr dest_window,Rect dest_rect, std::string_view str,short mode,short line_height)
-{
-	win_draw_string( dest_window, dest_rect,str, mode, line_height);
 }
 
 // mode: 0 - align up and left, 1 - center on one line

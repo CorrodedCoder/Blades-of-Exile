@@ -56,7 +56,6 @@ Boolean is_quickfire(short i,short j);
 void make_quickfire(short i,short j);
 void take_quickfire(short i,short j);
 Boolean container_there(location l);
-void char_win_draw_string(GrafPtr dest_window,Rect dest_rect, std::string_view str,short mode,short line_height);
 void win_draw_string(GrafPtr dest_window,Rect dest_rect, std::string_view str,short mode,short line_height);
 void c2p(Str255 str) ;
 void p2c(Str255 str);

@@ -318,10 +318,10 @@ void draw_lb_slot (short which,short mode)
 		else OffsetRect(&text_rect,0,2);
 	if (mode > 0)
 		ForeColor(blueColor);
-	char_win_draw_string(mainPtr,text_rect,(char *)data_store->strings_ls[which],0,12);
+	win_draw_string(mainPtr,text_rect,(char *)data_store->strings_ls[which],0,12);
 	ForeColor(blackColor);
 	
-	//char_win_draw_string(mainPtr,text_rect,"FIsh.",1,12);
+	//win_draw_string(mainPtr,text_rect,"FIsh.",1,12);
 	TextSize(10);
 	TextFace(bold);
 }
@@ -352,7 +352,7 @@ void draw_rb_slot (short which,short mode)
 	
 	if (mode > 0)
 		ForeColor(redColor);
-	char_win_draw_string(mainPtr,text_rect,(char *)data_store->strings_rs[which],0,12);
+	win_draw_string(mainPtr,text_rect,(char *)data_store->strings_rs[which],0,12);
 	ForeColor(blackColor);
 	TextSize(10);
 	TextFace(bold);
@@ -1420,11 +1420,6 @@ Boolean container_there(location l)
 	if (is_crate(l.x,l.y) == TRUE)
 		return TRUE;
 	return 0;		
-}
-
-void char_win_draw_string(GrafPtr dest_window,Rect dest_rect, std::string_view str,short mode,short line_height)
-{
-	win_draw_string( dest_window, dest_rect,str, mode, line_height);
 }
 
 // mode: 0 - align up and left, 1 - center on one line

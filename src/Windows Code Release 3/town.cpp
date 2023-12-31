@@ -1607,7 +1607,7 @@ void draw_map (HWND the_dialog, short the_item)
 
 
 
-			//char_win_draw_string(hdc2,
+			//win_draw_string(hdc2,
 			//	map_title_rect,"Your map:      (Hit Escape to close.)",0,12);
 
 			//ShowOwnedPopups(the_dialog,TRUE);

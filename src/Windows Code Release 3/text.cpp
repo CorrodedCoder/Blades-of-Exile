@@ -138,7 +138,6 @@ short text_pc_has_abil_equip(short pc_num,short abil)
 }
 
 // Draws the pc area in upper right
-//void win_draw_string(HWND dest_window,RECT dest_rect,char *str,short mode,short line_height)
 void put_pc_screen()
 {
 	short i = 0,j;
@@ -567,7 +566,7 @@ static void place_buy_button(short position,short pc_num,short item_num,HDC hdc)
 		//if (val_to_place >= 10000)
 		//	TextFace(0);
 		store_bmp = SelectObject(hdc,item_stats_gworld);
-		char_win_draw_string(hdc,item_buttons[position][5], std::format("        {:d}", val_to_place), 2, 10);
+		win_draw_string(hdc,item_buttons[position][5], std::format("        {:d}", val_to_place), 2, 10);
 		SelectObject(hdc,store_bmp);
 		//TextFace(bold);
 		}
@@ -1406,12 +1405,6 @@ short string_length(char *str,HDC hdc)
 	return total_width;
 }
 
-
-void char_win_draw_string(HDC dest_window,RECT dest_rect, std::string_view str,short mode,short line_height)
-{
-	win_draw_string( dest_window, dest_rect, str, mode, line_height);
-
-}
 
 // mode: 0 - align up and left, 1 - center on one line
 // str is a c string, 256 characters

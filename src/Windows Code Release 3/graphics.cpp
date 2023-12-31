@@ -391,7 +391,7 @@ void draw_startup_stats()
 		//TextSize(20);
 		SelectObject(main_dc,fantasy_font);
 		OffsetRect(&to_rect,175,40);
-		char_win_draw_string(main_dc,to_rect,
+		win_draw_string(main_dc,to_rect,
 			"No Party in Memory",0,18);
 		}
 	if (party_in_memory == TRUE) {
@@ -403,7 +403,7 @@ void draw_startup_stats()
 
 		SelectObject(main_dc,fantasy_font);
 		OffsetRect(&to_rect,213,25);
-		char_win_draw_string(main_dc,to_rect,
+		win_draw_string(main_dc,to_rect,
 			"Your party:",0,18);
 		SelectObject(main_dc,small_bold_font);
 		for (i = 0; i < 6; i++) {
@@ -425,7 +425,7 @@ void draw_startup_stats()
 
 				SelectObject(main_dc,bold_font);
 				OffsetRect(&pc_rect,35,0);
-				char_win_draw_string(main_dc,pc_rect,
+				win_draw_string(main_dc,pc_rect,
 					adven[i].name,0,18);
 				OffsetRect(&to_rect,pc_rect.left + 8,pc_rect.top + 8);
 
@@ -440,20 +440,20 @@ void draw_startup_stats()
 						case 1: str = std::format("Level {:d} Nephilim",adven[i].level); break;
 						case 2: str = std::format("Level {:d} Slithzerikai",adven[i].level); break;
 						}
-					char_win_draw_string(main_dc,pc_rect, str.c_str(), 0, 18);
+					win_draw_string(main_dc,pc_rect, str.c_str(), 0, 18);
 					OffsetRect(&pc_rect,0,13);
 					str = std::format("Health {:d}, Spell pts. {:d}",
 						adven[i].max_health,adven[i].max_sp);
-					char_win_draw_string(main_dc,pc_rect, str.c_str(), 0, 18);
+					win_draw_string(main_dc,pc_rect, str.c_str(), 0, 18);
 					break;
 				case status::Dead:
-					char_win_draw_string(main_dc,pc_rect,"Dead",0,18);
+					win_draw_string(main_dc,pc_rect,"Dead",0,18);
 					break;
 				case status::Dust:
-					char_win_draw_string(main_dc,pc_rect,"Dust",0,18);
+					win_draw_string(main_dc,pc_rect,"Dust",0,18);
 					break;
 				case status::Stone:
-					char_win_draw_string(main_dc,pc_rect,"Stone",0,18);
+					win_draw_string(main_dc,pc_rect,"Stone",0,18);
 					break;
 				default:
 					// CC: This wasn't in the original source
@@ -467,10 +467,10 @@ void draw_startup_stats()
 	OffsetRect(&pc_rect,5,5);
 	pc_rect.top = pc_rect.bottom - 28;
 	pc_rect.left = pc_rect.right - 275;
-	char_win_draw_string(main_dc,pc_rect,"Copyright 1997-8, All Rights Reserved, v1.0.1",0,18);
+	win_draw_string(main_dc,pc_rect,"Copyright 1997-8, All Rights Reserved, v1.0.1",0,18);
 	if (registered == FALSE) {
 		pc_rect.left = startup_from[0].left + 22;
-		char_win_draw_string(main_dc,pc_rect,"Unregistered copy. To order, select How To Order.",0,18);
+		win_draw_string(main_dc,pc_rect,"Unregistered copy. To order, select How To Order.",0,18);
 		}
 
 	SetTextColor(main_dc,PALETTEINDEX(c[0]));
@@ -529,20 +529,20 @@ void draw_start_button(short which_position,short which_button)
 		OffsetRect(&to_rect,-7,0);
 	SetTextColor(main_dc,PALETTEINDEX(c[0]));
 	OffsetRect(&to_rect,0,1);
-	char_win_draw_string(main_dc,to_rect,
+	win_draw_string(main_dc,to_rect,
 		button_labels[which_position],1,18);
 	OffsetRect(&to_rect,0,-2);
-	char_win_draw_string(main_dc,to_rect,
+	win_draw_string(main_dc,to_rect,
 		button_labels[which_position],1,18);
 	OffsetRect(&to_rect,1,1);
-	char_win_draw_string(main_dc,to_rect,
+	win_draw_string(main_dc,to_rect,
 		button_labels[which_position],1,18);
 	OffsetRect(&to_rect,-2,0);
-	char_win_draw_string(main_dc,to_rect,
+	win_draw_string(main_dc,to_rect,
 		button_labels[which_position],1,18);
 	OffsetRect(&to_rect,1,0);
 	SetTextColor(main_dc,PALETTEINDEX(c[2]));
-	char_win_draw_string(main_dc,to_rect,
+	win_draw_string(main_dc,to_rect,
 		button_labels[which_position],1,18);
 	SelectObject(main_dc,font);
 	SetTextColor(main_dc,PALETTEINDEX(c[0]));
@@ -2316,7 +2316,7 @@ void pre_boom_space(location where,short mode,short type,short damage,short soun
 		if ((damage < 10) && (dest_rect.right - dest_rect.left > 19))
 			text_rect.left += 2;
 		OffsetRect(&text_rect,-4,-5);
-		//char_win_draw_string(main_dc,text_rect,std::format("{:d}",damage),1,10);
+		//win_draw_string(main_dc,text_rect,std::format("{:d}",damage),1,10);
 		if ((type == 1) || (type == 4))
 			WinBlackDrawString(std::format("{:d}", damage),text_rect.left + 12,text_rect.top + 6);
 		else

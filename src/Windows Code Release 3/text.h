@@ -37,7 +37,6 @@ RECT coord_to_rect(short i,short j);
 constexpr void c2p(char* str) {};
 void get_str(char *str,short i, short j);
 short string_length(char *str,HDC hdc);
-void char_win_draw_string(HDC dest_window,RECT dest_rect, std::string_view str,short mode,short line_height);
 void win_draw_string(HDC dest_window,RECT dest_rect, std::string_view str,short mode,short line_height);
 short calc_day();
 Boolean day_reached(unsigned char which_day, unsigned char which_event);

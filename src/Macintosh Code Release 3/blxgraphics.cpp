@@ -516,7 +516,7 @@ void draw_startup_stats()
 	if (party_in_memory == FALSE) {
 		TextSize(20);
 		OffsetRect(&to_rect,175,40);
-		char_win_draw_string((GrafPtr) mainPtr,to_rect,
+		win_draw_string((GrafPtr) mainPtr,to_rect,
 			"No Party in Memory",0,18);
 		}
 	if (party_in_memory == TRUE) {
@@ -528,7 +528,7 @@ void draw_startup_stats()
 		FrameRect(&frame_rect);
 
 		OffsetRect(&to_rect,203,37);
-		char_win_draw_string((GrafPtr) mainPtr,to_rect,
+		win_draw_string((GrafPtr) mainPtr,to_rect,
 			"Your party:",0,18);
 		TextSize(12);	
 		TextFace(bold);
@@ -548,7 +548,7 @@ void draw_startup_stats()
 
 				TextSize(14);	
 				OffsetRect(&pc_rect,35,0);
-				char_win_draw_string((GrafPtr) mainPtr,pc_rect,
+				win_draw_string((GrafPtr) mainPtr,pc_rect,
 					adven[i].name,0,18);
 				OffsetRect(&to_rect,pc_rect.left + 8,pc_rect.top + 8);
 				
@@ -562,20 +562,20 @@ void draw_startup_stats()
 						case 1: format_to_buf(str,"Level {:d} Nephilim",adven[i].level); break;
 						case 2: format_to_buf(str,"Level {:d} Slithzerikai",adven[i].level); break;
 						}
-					char_win_draw_string((GrafPtr) mainPtr,pc_rect,str,0,18);
+					win_draw_string((GrafPtr) mainPtr,pc_rect,str,0,18);
 					OffsetRect(&pc_rect,0,13);
 					format_to_buf(str,"Health {:d}, Spell pts. {:d}",
 						adven[i].max_health,adven[i].max_sp);
-					char_win_draw_string((GrafPtr) mainPtr,pc_rect,str,0,18);
+					win_draw_string((GrafPtr) mainPtr,pc_rect,str,0,18);
 					break;
 				case 2:
-					char_win_draw_string((GrafPtr) mainPtr,pc_rect,"Dead",0,18);
+					win_draw_string((GrafPtr) mainPtr,pc_rect,"Dead",0,18);
 					break;
 				case 3:
-					char_win_draw_string((GrafPtr) mainPtr,pc_rect,"Dust",0,18);
+					win_draw_string((GrafPtr) mainPtr,pc_rect,"Dust",0,18);
 					break;
 				case 4:
-					char_win_draw_string((GrafPtr) mainPtr,pc_rect,"Stone",0,18);
+					win_draw_string((GrafPtr) mainPtr,pc_rect,"Stone",0,18);
 					break;
 				}
 			}
@@ -588,10 +588,10 @@ void draw_startup_stats()
 	OffsetRect(&pc_rect,5,5);
 	pc_rect.top = pc_rect.bottom - 25;
 	pc_rect.left = pc_rect.right - 300;
-	char_win_draw_string((GrafPtr) mainPtr,pc_rect,"Copyright 1997, All Rights Reserved, v1.0.2",0,18);
+	win_draw_string((GrafPtr) mainPtr,pc_rect,"Copyright 1997, All Rights Reserved, v1.0.2",0,18);
 	if (registered == FALSE) {
 		pc_rect.left = startup_from[0].left + 6;
-		char_win_draw_string((GrafPtr) mainPtr,pc_rect,"Unregistered copy. To order, select How To Order.",0,18);
+		win_draw_string((GrafPtr) mainPtr,pc_rect,"Unregistered copy. To order, select How To Order.",0,18);
 		}
 		
 	ForeColor(blackColor);
@@ -627,7 +627,7 @@ void draw_start_button(short which_position,short which_button)
 	RGBForeColor(&base_color);
 	if (which_position == 3)
 		OffsetRect(&to_rect,-7,0);
-	char_win_draw_string((GrafPtr) mainPtr,to_rect,button_labels[which_position],1,18);
+	win_draw_string((GrafPtr) mainPtr,to_rect,button_labels[which_position],1,18);
 	ForeColor(blackColor);
 	TextFont(geneva_font_num);
 	TextFace(bold);
@@ -2322,7 +2322,7 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 		if ((damage < 10) && (dest_rect.right - dest_rect.left > 19))
 			text_rect.left += 10;
 		OffsetRect(&text_rect,-4,-5);
-		char_win_draw_string((GrafPtr) mainPtr,text_rect,dam_str,1,10);
+		win_draw_string((GrafPtr) mainPtr,text_rect,dam_str,1,10);
 		TextSize(0);
 		TextFace(0);
 		}

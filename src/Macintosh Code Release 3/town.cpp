@@ -1443,7 +1443,7 @@ void draw_map (DialogPtr the_dialog, short the_item)
 			//SetIText (the_handle, comb_mess);
 			//FillCRect(&map_bar_rect,bg[4]);
 			
-			//char_win_draw_string((GrafPtr) modeless_dialogs[5],
+			//win_draw_string((GrafPtr) modeless_dialogs[5],
 			//	map_bar_rect,"No map in combat.",0,12);
 			draw_pcs = FALSE;
 			}
@@ -1457,7 +1457,7 @@ void draw_map (DialogPtr the_dialog, short the_item)
 			if (modeless_exists[5] == TRUE) {
 				SetPort(the_dialog);
 				FillCRect(&map_bar_rect,bg[4]);
-				char_win_draw_string((GrafPtr) modeless_dialogs[5],
+				win_draw_string((GrafPtr) modeless_dialogs[5],
 					map_bar_rect,"No map here.",0,12);
 				draw_pcs = FALSE;
 				SetPort((GrafPtr) map_gworld);
@@ -1472,7 +1472,7 @@ void draw_map (DialogPtr the_dialog, short the_item)
 		//SetPort(the_dialog);
 		//FillCRect(&map_bar_rect,bg[4]);
 		SetPort((GrafPtr) map_gworld);
-		//char_win_draw_string((GrafPtr) modeless_dialogs[5],
+		//win_draw_string((GrafPtr) modeless_dialogs[5],
 		//	map_bar_rect,"Hit Escape to close.",0,12);
 		}
 
@@ -1600,7 +1600,7 @@ void draw_map (DialogPtr the_dialog, short the_item)
 			draw_dialog_graphic((GrafPtr) the_dialog, dlogpicrect, 
  				721, FALSE,0);
  			ForeColor(whiteColor);
-			char_win_draw_string((GrafPtr) modeless_dialogs[5],
+			win_draw_string((GrafPtr) modeless_dialogs[5],
 				map_title_rect,"Your map:      (Hit Escape to close.)",0,12);
  			ForeColor(blackColor);
 	
@@ -1708,7 +1708,7 @@ void display_map()
 //	draw_dialog_graphic((GrafPtr) modeless_dialogs[5], dlogpicrect, 
  //		721, TRUE,0);
  //DrawDialog(modeless_dialogs[5]);
-//	char_win_draw_string((GrafPtr) modeless_dialogs[5],
+//	win_draw_string((GrafPtr) modeless_dialogs[5],
 //		map_title_rect,"Your map:",0,12);
 
 #ifndef EXILE_BIG_GUNS

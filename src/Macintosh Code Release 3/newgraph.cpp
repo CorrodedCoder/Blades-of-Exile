@@ -718,7 +718,7 @@ void do_explosion_anim(short sound_num,short special_draw)
 						format_to_buf(str,"{:d}",store_booms[i].val_to_place);
 						SetPort((GrafPtr) temp_gworld);
 						ForeColor(whiteColor);
-						char_win_draw_string((GrafPtr) temp_gworld,text_rect,str,1,12);
+						win_draw_string((GrafPtr) temp_gworld,text_rect,str,1,12);
 						ForeColor(blackColor);
 						SetPort((GrafPtr) mainPtr);
 						}
@@ -831,10 +831,10 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 	RGBForeColor(&c[3]);
 	dest_rect = title_rect;
 	OffsetRect(&dest_rect,1,1);
-	char_win_draw_string((GrafPtr) talk_gworld,dest_rect,store_store_name,2,18);
+	win_draw_string((GrafPtr) talk_gworld,dest_rect,store_store_name,2,18);
 	OffsetRect(&dest_rect,-1,-1);
 	RGBForeColor(&c[4]);
-	char_win_draw_string((GrafPtr) talk_gworld,dest_rect,store_store_name,2,18);	
+	win_draw_string((GrafPtr) talk_gworld,dest_rect,store_store_name,2,18);	
 
 	TextFont(geneva_font_num);
 	TextSize(12);
@@ -849,7 +849,7 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 		case 4: format_to_buf(cur_name,"Buying Food.");break;
 		default:format_to_buf(cur_name,"Shopping for {}.",adven[current_pc].name); break;
 		}
-	char_win_draw_string((GrafPtr) talk_gworld,shopper_name,cur_name,2,18);	
+	win_draw_string((GrafPtr) talk_gworld,shopper_name,cur_name,2,18);	
 
 	// Place help and done buttons
 	ForeColor(blackColor);
@@ -927,11 +927,11 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 		// 0 - whole area, 1 - active area 2 - graphic 3 - item name
 		// 4 - item cost 5 - item extra str  6 - item help button
 		TextSize(12);
-		char_win_draw_string((GrafPtr) talk_gworld,shopping_rects[i][3],cur_name,0,12);
+		win_draw_string((GrafPtr) talk_gworld,shopping_rects[i][3],cur_name,0,12);
 		format_to_buf(cur_name,"Cost: {:d}",cur_cost);
-		char_win_draw_string((GrafPtr) talk_gworld,shopping_rects[i][4],cur_name,0,12);
+		win_draw_string((GrafPtr) talk_gworld,shopping_rects[i][4],cur_name,0,12);
 		TextSize(10);
-		char_win_draw_string((GrafPtr) talk_gworld,shopping_rects[i][5],cur_info_str,0,12);
+		win_draw_string((GrafPtr) talk_gworld,shopping_rects[i][5],cur_info_str,0,12);
 		if ((store_shop_type != 3) && (store_shop_type != 4))
 			rect_draw_some_item(mixed_gworld,item_info_from,talk_gworld,shopping_rects[i][6],1 - draw_mode,0);
 
@@ -941,11 +941,11 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 	TextSize(12);
 	format_to_buf(cur_name,"Prices here are {}.",cost_strs[store_cost_mult]);
 	TextSize(10);
-	char_win_draw_string((GrafPtr) talk_gworld,bottom_help_rects[0],cur_name,0,12);
-	char_win_draw_string((GrafPtr) talk_gworld,bottom_help_rects[1],"Click on item name (or type 'a'-'h') to buy.",0,12);
-	char_win_draw_string((GrafPtr) talk_gworld,bottom_help_rects[2],"Hit done button (or Esc.) to quit.",0,12);
+	win_draw_string((GrafPtr) talk_gworld,bottom_help_rects[0],cur_name,0,12);
+	win_draw_string((GrafPtr) talk_gworld,bottom_help_rects[1],"Click on item name (or type 'a'-'h') to buy.",0,12);
+	win_draw_string((GrafPtr) talk_gworld,bottom_help_rects[2],"Hit done button (or Esc.) to quit.",0,12);
 	if ((store_shop_type != 3) && (store_shop_type != 4))
-		char_win_draw_string((GrafPtr) talk_gworld,bottom_help_rects[3],"'I' button brings up description.",0,12);
+		win_draw_string((GrafPtr) talk_gworld,bottom_help_rects[3],"'I' button brings up description.",0,12);
 	
 	
 	ForeColor(blackColor);
@@ -1160,10 +1160,10 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 	RGBForeColor(&c[3]);
 	dest_rect = title_rect;
 	OffsetRect(&dest_rect,1,1);
-	char_win_draw_string((GrafPtr) talk_gworld,dest_rect,title_string,2,18);
+	win_draw_string((GrafPtr) talk_gworld,dest_rect,title_string,2,18);
 	OffsetRect(&dest_rect,-1,-1);
 	RGBForeColor(&c[4]);
-	char_win_draw_string((GrafPtr) talk_gworld,dest_rect,title_string,2,18);
+	win_draw_string((GrafPtr) talk_gworld,dest_rect,title_string,2,18);
 		
 	// Place buttons at bottom.
 	if (color == 0)
@@ -1172,7 +1172,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 	for (i = 0; i < 9; i++) 
 		if ((talk_end_forced == false) || (i == 6) || (i == 5)) {
 			OffsetRect(&preset_words[i].word_rect,0,8);
-			char_win_draw_string((GrafPtr) talk_gworld,preset_words[i].word_rect,preset_words[i].word,2,18);
+			win_draw_string((GrafPtr) talk_gworld,preset_words[i].word_rect,preset_words[i].word,2,18);
 			OffsetRect(&preset_words[i].word_rect,0,-8);
 			}
 	// Place bulk of what said. Save words.

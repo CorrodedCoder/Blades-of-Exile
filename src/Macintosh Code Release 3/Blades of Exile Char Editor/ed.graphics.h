@@ -12,7 +12,6 @@ void undo_clip();
 void add_string_to_buf(std::string_view str);
 void rect_draw_some_item (GWorldPtr	src_gworld, Rect	src_rect, GWorldPtr	targ_gworld,Rect targ_rect, 
 char masked,short main_win);
-void char_win_draw_string(GrafPtr dest_window,Rect dest_rect, std::string_view str,short mode,short line_height);
 void win_draw_string(GrafPtr dest_window,Rect dest_rect, std::string_view str,short mode,short line_height);
 void display_strings_event_filter (short item_hit);
 void display_strings(short str1a,short str1b,short str2a,short str2b,

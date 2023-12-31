@@ -314,7 +314,7 @@ void draw_main_screen()
 	TextSize(12);
 	TextFace(bold + underline);
 		// set the pen
-	//char_win_draw_string(mainPtr,dest_rect,"Characters",0,10);
+	//win_draw_string(mainPtr,dest_rect,"Characters",0,10);
 		// This draws a chunk of text on the screen
 	TextSize(10); /// reset text size
 	TextFace(0); // reset text pen
@@ -336,19 +336,19 @@ void draw_main_screen()
 	//Off0setRect(&dest_rect,0,45);
 	OffsetRect(&dest_rect,0,21);
 	if (file_in_mem == TRUE)
-		char_win_draw_string(mainPtr,dest_rect,"Click on character to edit it.",0,10);
-		else char_win_draw_string(mainPtr,dest_rect,"Select Open from File menu.",0,10);
+		win_draw_string(mainPtr,dest_rect,"Click on character to edit it.",0,10);
+		else win_draw_string(mainPtr,dest_rect,"Select Open from File menu.",0,10);
 	OffsetRect(&dest_rect,0,12);
 	if (file_in_mem == TRUE)
-		char_win_draw_string(mainPtr,dest_rect,"Press 'I' button to identify item, and 'D' button to drop item.",0,10);
+		win_draw_string(mainPtr,dest_rect,"Press 'I' button to identify item, and 'D' button to drop item.",0,10);
 	TextSize(12);
 	OffsetRect(&dest_rect,0,16);
 	if (file_in_mem == TRUE)
-		char_win_draw_string(mainPtr,dest_rect,"Back up save file before editing it!",0,10);
+		win_draw_string(mainPtr,dest_rect,"Back up save file before editing it!",0,10);
 	TextSize(10);
 	TextFace(0);
 	OffsetRect(&dest_rect,300,0);
-	char_win_draw_string(mainPtr,dest_rect,"Copyright 1997, Spiderweb Software, Inc.",0,10);
+	win_draw_string(mainPtr,dest_rect,"Copyright 1997, Spiderweb Software, Inc.",0,10);
 	TextFace(bold);
 	
 	
@@ -475,7 +475,7 @@ void draw_items(short clear_first)
 			//	else format_to_buf(to_draw, "{:d} {:d} {:d} {:d}",
 			//	name_rect.left,name_rect.right,name_rect.top,name_rect.bottom);
 
-			char_win_draw_string(mainPtr,item_string_rects[i][0],(char *) to_draw,0,10);
+			win_draw_string(mainPtr,item_string_rects[i][0],(char *) to_draw,0,10);
 
 			//Draw id/drop buttons
 			rect_draw_some_item(mixed_gworld,d_from,mixed_gworld,item_string_rects[i][1],1,1);
@@ -553,15 +553,15 @@ void display_party(short mode,short clear_first)
 		no_party_rect=pc_info_rect;
 		no_party_rect.top+=5;
 		no_party_rect.left+=5;
-		char_win_draw_string(mainPtr,no_party_rect,"No party loaded.",0,10);
+		win_draw_string(mainPtr,no_party_rect,"No party loaded.",0,10);
 	}
 	else {
 
 		from_rect = pc_info_rect;
 		from_rect.top = from_rect.bottom - 14;
 		if (party_in_scen == FALSE)
-			char_win_draw_string(mainPtr,from_rect,"Party not in a scenario.",0,10);
-			else char_win_draw_string(mainPtr,from_rect,"Party is in a scenario.",0,10);
+			win_draw_string(mainPtr,from_rect,"Party not in a scenario.",0,10);
+			else win_draw_string(mainPtr,from_rect,"Party is in a scenario.",0,10);
 			
 			for (i = 0; i < 6; i++) {
 				if (i == current_active_pc) // active pc is drawn in red
@@ -614,11 +614,11 @@ void display_party(short mode,short clear_first)
 							if (i == current_active_pc) {
 								//Draw in race
 								if (adven[i].race == 0)
-									char_win_draw_string(mainPtr,pc_race_rect,"Human   ",1,10);
+									win_draw_string(mainPtr,pc_race_rect,"Human   ",1,10);
 								if (adven[i].race == 1)
-									char_win_draw_string(mainPtr,pc_race_rect,"Nephilim   ",1,10);
+									win_draw_string(mainPtr,pc_race_rect,"Nephilim   ",1,10);
 								if (adven[i].race == 2)
-									char_win_draw_string(mainPtr,pc_race_rect,"Slithzerikai  ",1,10);
+									win_draw_string(mainPtr,pc_race_rect,"Slithzerikai  ",1,10);
 								// Draw in skills	
 								
 								format_to_buf(to_draw, "Skills:");
@@ -664,7 +664,7 @@ void display_party(short mode,short clear_first)
 									{
 										if (cur_rect <= 9)
 										{
-											char_win_draw_string(mainPtr, pc_status_rect[cur_rect], std::get<0>(c_status_text[int_index]), 0, 9);
+											win_draw_string(mainPtr, pc_status_rect[cur_rect], std::get<0>(c_status_text[int_index]), 0, 9);
 											++cur_rect;
 										}
 									}
@@ -672,7 +672,7 @@ void display_party(short mode,short clear_first)
 									{
 										if (cur_rect <= 9)
 										{
-											char_win_draw_string(mainPtr, pc_status_rect[cur_rect], std::get<1>(c_status_text[int_index]), 0, 9);
+											win_draw_string(mainPtr, pc_status_rect[cur_rect], std::get<1>(c_status_text[int_index]), 0, 9);
 											++cur_rect;
 										}
 									}
@@ -695,7 +695,7 @@ void display_party(short mode,short clear_first)
 									{
 										if (cur_rect <= 15)
 										{
-											char_win_draw_string(mainPtr, pc_traits_rect[cur_rect], c_trait_text[trait_index], 0, 9);
+											win_draw_string(mainPtr, pc_traits_rect[cur_rect], c_trait_text[trait_index], 0, 9);
 											++cur_rect;
 										}
 									}
@@ -706,7 +706,7 @@ void display_party(short mode,short clear_first)
 							ForeColor(whiteColor);
 							TextSize(9);
 							TextFace(0);
-							char_win_draw_string(mainPtr,pc_area_buttons[i][3],"Alive ",1,10);
+							win_draw_string(mainPtr,pc_area_buttons[i][3],"Alive ",1,10);
 							TextFace(bold);
 							TextSize(10);
 							break;
@@ -714,7 +714,7 @@ void display_party(short mode,short clear_first)
 							ForeColor(whiteColor);
 							TextSize(9);
 							TextFace(0);
-							char_win_draw_string(mainPtr,pc_area_buttons[i][3],"Dead ",1,10);
+							win_draw_string(mainPtr,pc_area_buttons[i][3],"Dead ",1,10);
 							TextFace(bold);
 							TextSize(10);
 							break;
@@ -722,7 +722,7 @@ void display_party(short mode,short clear_first)
 							ForeColor(whiteColor);
 							TextSize(9);
 							TextFace(0);
-							char_win_draw_string(mainPtr,pc_area_buttons[i][3],"Dust ",1,10);
+							win_draw_string(mainPtr,pc_area_buttons[i][3],"Dust ",1,10);
 							TextFace(bold);
 							TextSize(10);
 							break;
@@ -730,7 +730,7 @@ void display_party(short mode,short clear_first)
 							ForeColor(whiteColor);
 							TextSize(9);
 							TextFace(0);
-							char_win_draw_string(mainPtr,pc_area_buttons[i][3],"Stone ",1,10);
+							win_draw_string(mainPtr,pc_area_buttons[i][3],"Stone ",1,10);
 							TextFace(bold);
 							TextSize(10);
 							break;
@@ -738,7 +738,7 @@ void display_party(short mode,short clear_first)
 							ForeColor(whiteColor);
 							TextSize(9);
 							TextFace(0);
-							char_win_draw_string(mainPtr,pc_area_buttons[i][3],"Fled ",1,10);
+							win_draw_string(mainPtr,pc_area_buttons[i][3],"Fled ",1,10);
 							TextFace(bold);
 							TextSize(10);
 							break;
@@ -746,7 +746,7 @@ void display_party(short mode,short clear_first)
 							ForeColor(whiteColor);
 							TextSize(9);
 							TextFace(0); 
-							char_win_draw_string(mainPtr,pc_area_buttons[i][3],"Surface ",1,10);
+							win_draw_string(mainPtr,pc_area_buttons[i][3],"Surface ",1,10);
 							TextFace(bold);
 							TextSize(10);
 							break;
@@ -754,7 +754,7 @@ void display_party(short mode,short clear_first)
 							ForeColor(whiteColor);
 							TextFace(0);
 							TextSize(9);
-							char_win_draw_string(mainPtr,pc_area_buttons[i][3],"Absent ",1,10);
+							win_draw_string(mainPtr,pc_area_buttons[i][3],"Absent ",1,10);
 							TextFace(bold);
 							TextSize(10);
 							break;
@@ -779,19 +779,19 @@ void display_party(short mode,short clear_first)
 			ForeColor(whiteColor);			
 			switch(i) {
 				case 0:
-					char_win_draw_string(mainPtr,edit_rect[0][1],"  Add  Mage Spells ",0,10);
+					win_draw_string(mainPtr,edit_rect[0][1],"  Add  Mage Spells ",0,10);
 					break;
 				case 1:
-					char_win_draw_string(mainPtr,edit_rect[1][1],"  Add Priest Spells ",0,10);
+					win_draw_string(mainPtr,edit_rect[1][1],"  Add Priest Spells ",0,10);
 					break;
 				case 2: 
-					char_win_draw_string(mainPtr,edit_rect[2][1]," Edit  Traits",0,10);
+					win_draw_string(mainPtr,edit_rect[2][1]," Edit  Traits",0,10);
 					break;
 				case 3:
-					char_win_draw_string(mainPtr,edit_rect[3][1]," Edit  Skills",0,10);
+					win_draw_string(mainPtr,edit_rect[3][1]," Edit  Skills",0,10);
 					break;
 				case 4:
-					char_win_draw_string(mainPtr,edit_rect[4][1]," Edit   XP",0,10);
+					win_draw_string(mainPtr,edit_rect[4][1]," Edit   XP",0,10);
 					break;
 				default:
 					break;	
@@ -888,12 +888,6 @@ short string_length(char *str)
 		if ((text_len[i] > total_width) && (i <= len))
 			total_width = text_len[i];
 	return total_width;
-}
-
-void char_win_draw_string(GrafPtr dest_window,Rect dest_rect, std::string_view str,short mode,short line_height)
-{
-	win_draw_string( dest_window, dest_rect, str, mode, line_height);
-
 }
 
 // mode: 0 - align up and left, 1 - center on one line

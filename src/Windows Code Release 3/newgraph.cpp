@@ -725,7 +725,7 @@ void do_explosion_anim(short sound_num,short special_draw)
 						if (store_booms[i].val_to_place < 10)
 							text_rect.left += 4;
 						store_bmp = SelectObject(hdc,temp_gworld);
-						char_win_draw_string(hdc,text_rect, std::format("{:d}", store_booms[i].val_to_place), 1, 12);
+						win_draw_string(hdc,text_rect, std::format("{:d}", store_booms[i].val_to_place), 1, 12);
 						SelectObject(hdc,store_bmp);
 						}
 					}
@@ -862,10 +862,10 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 	SetTextColor(hdc,PALETTEINDEX(c[3]));
 	dest_rect = title_rect;
 	OffsetRect(&dest_rect,1,-5);
-	char_win_draw_string(hdc,dest_rect,store_store_name,2,18);
+	win_draw_string(hdc,dest_rect,store_store_name,2,18);
 	OffsetRect(&dest_rect,-1,-1);
 	SetTextColor(hdc,PALETTEINDEX(c[4]));
-	char_win_draw_string(hdc,dest_rect,store_store_name,2,18);
+	win_draw_string(hdc,dest_rect,store_store_name,2,18);
 	SelectObject(hdc,small_bold_font);
 
 	//TextFont(geneva_font_num);
@@ -880,7 +880,7 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 		case 4:		cur_name = "Buying Food."; break;
 		default:	cur_name = std::format("Shopping for {}.",adven[current_pc].name); break;
 	}
-	char_win_draw_string(hdc,shopper_name,cur_name, 2, 18);
+	win_draw_string(hdc,shopper_name,cur_name, 2, 18);
 
 	// Place help and done buttons
 	SetTextColor(hdc,PALETTEINDEX(c[0]));
@@ -967,21 +967,21 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 		// 0 - whole area, 1 - active area 2 - graphic 3 - item name
 		// 4 - item cost 5 - item extra str  6 - item help button
 		//TextSize(12);
-		char_win_draw_string(hdc,shopping_rects[i][3],cur_name, 0, 12);
-		char_win_draw_string(hdc,shopping_rects[i][4], std::format("Cost: {:d}", cur_cost), 0, 12);
+		win_draw_string(hdc,shopping_rects[i][3],cur_name, 0, 12);
+		win_draw_string(hdc,shopping_rects[i][4], std::format("Cost: {:d}", cur_cost), 0, 12);
 		//TextSize(10);
-		char_win_draw_string(hdc,shopping_rects[i][5],cur_info_str,0,12);
+		win_draw_string(hdc,shopping_rects[i][5],cur_info_str,0,12);
 
 		}
 
 	// Finally, cost info and help strs
 	//TextSize(12);
 	//TextSize(10);
-	char_win_draw_string(hdc,bottom_help_rects[0], std::format("Prices here are {}.", cost_strs[store_cost_mult]), 0, 12);
-	char_win_draw_string(hdc,bottom_help_rects[1],"Click on item name (or type 'a'-'h') to buy.",0,12);
-	char_win_draw_string(hdc,bottom_help_rects[2],"Hit done button (or Esc.) to quit.",0,12);
+	win_draw_string(hdc,bottom_help_rects[0], std::format("Prices here are {}.", cost_strs[store_cost_mult]), 0, 12);
+	win_draw_string(hdc,bottom_help_rects[1],"Click on item name (or type 'a'-'h') to buy.",0,12);
+	win_draw_string(hdc,bottom_help_rects[2],"Hit done button (or Esc.) to quit.",0,12);
 	if ((store_shop_type != 3) && (store_shop_type != 4))
-		char_win_draw_string(hdc,bottom_help_rects[3],"'I' button brings up description.",0,12);
+		win_draw_string(hdc,bottom_help_rects[3],"'I' button brings up description.",0,12);
 	
 	SelectObject(hdc,store_bmp);
 	DeleteObject(hdc);
@@ -1207,10 +1207,10 @@ void place_talk_str(char *str_to_place,const char *str_to_place2,short color,REC
 	SetTextColor(hdc,PALETTEINDEX(c[3]));
 	dest_rect = title_rect;
 	OffsetRect(&dest_rect,1,-5);
-	char_win_draw_string(hdc,dest_rect,title_string,2,18);
+	win_draw_string(hdc,dest_rect,title_string,2,18);
 	OffsetRect(&dest_rect,-1,-1);
 	SetTextColor(hdc,PALETTEINDEX(c[4]));
-	char_win_draw_string(hdc,dest_rect,title_string,2,18);
+	win_draw_string(hdc,dest_rect,title_string,2,18);
 
 	// Place buttons at bottom.
 	if (color == 0)
@@ -1218,7 +1218,7 @@ void place_talk_str(char *str_to_place,const char *str_to_place2,short color,REC
 		else SetTextColor(hdc,PALETTEINDEX(c[6]));
 	for (i = 0; i < 9; i++)
 		if ((talk_end_forced == FALSE) || (i == 6) || (i == 5)) {
-			char_win_draw_string(hdc, offset_rect(preset_words[i].word_rect, 0, -2),preset_words[i].word,2,18);
+			win_draw_string(hdc, offset_rect(preset_words[i].word_rect, 0, -2),preset_words[i].word,2,18);
 			}
 	// Place bulk of what said. Save words.
 	//TextSize(14);

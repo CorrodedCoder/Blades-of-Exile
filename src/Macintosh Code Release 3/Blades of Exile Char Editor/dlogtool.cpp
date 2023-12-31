@@ -808,11 +808,11 @@ void cd_draw_item(short dlog_num,short item_num)
 					if (item_type[item_index] < 2)
 						OffsetRect(&item_rect[item_index],-1 * button_left_adj[item_flag[item_index]],0);
 					if (item_type[item_index] < 2) {
-						char_win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
+						win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
 						 (char *) (button_strs[item_flag[item_index]]),1,8);
 						}
 						else {
-							char_win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
+							win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
 							 (char *) ((item_index < 10) ? text_long_str[item_index] : 
 							  text_short_str[item_index - 10]),1,8);
 							}
@@ -850,14 +850,14 @@ void cd_draw_item(short dlog_num,short item_num)
 						}
 					if (item_rect[item_index].bottom - item_rect[item_index].top < 20) {
 						item_rect[item_index].left += 3;
-							char_win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
+							win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
 							 (char *) ((item_index < 10) ? text_long_str[item_index] : 
 							  text_short_str[item_index - 10]),3,12);
 						item_rect[item_index].left -= 3;
 						}
 						else {
 							InsetRect(&item_rect[item_index],4,4);
-							char_win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
+							win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
 							 (char *) ((item_index < 10) ? text_long_str[item_index] : 
 							  text_short_str[item_index - 10]),0,(item_type[item_index] == 7) ? 14 : 12);
 							InsetRect(&item_rect[item_index],-4,-4);
@@ -921,7 +921,7 @@ void cd_draw_item(short dlog_num,short item_num)
 				if (item_active[item_index] != 0) {
 					ForeColor(whiteColor);
 
-					char_win_draw_string((GrafPtr) dlgs[dlg_index],to_rect,
+					win_draw_string((GrafPtr) dlgs[dlg_index],to_rect,
 						labels[item_label_loc[item_index]],2,12);
 					ForeColor(blackColor);
 
@@ -1099,12 +1099,12 @@ void cd_press_button(short dlog_num, short item_num)
 	RGBForeColor(&c[0]);
 	if (item_type[item_index] < 2) {
 		OffsetRect(&item_rect[item_index],-1 * button_left_adj[item_flag[item_index]],0);
-		char_win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
+		win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
 		 (char *) (button_strs[item_flag[item_index]]),1,8);
 		OffsetRect(&item_rect[item_index],button_left_adj[item_flag[item_index]],0);
 		}
 		else {
-			char_win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
+			win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
 			 (char *) ((item_index < 10) ? text_long_str[item_index] : 
 			  text_short_str[item_index - 10]),1,8);
 			}
@@ -1121,12 +1121,12 @@ void cd_press_button(short dlog_num, short item_num)
 	RGBForeColor(&c[1]);
 	if (item_type[item_index] < 2) {
 		OffsetRect(&item_rect[item_index],-1 * button_left_adj[item_flag[item_index]],0);
-		char_win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
+		win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
 		 (char *) (button_strs[item_flag[item_index]]),1,8);
 		OffsetRect(&item_rect[item_index],button_left_adj[item_flag[item_index]],0);
 		}
 		else {
-			char_win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
+			win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
 			 (char *) ((item_index < 10) ? text_long_str[item_index] : 
 			  text_short_str[item_index - 10]),1,8);
 			}
