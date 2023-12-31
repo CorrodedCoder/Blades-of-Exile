@@ -349,7 +349,7 @@ short i,next_to_last_slash = -1,last_slash = -1;
 			strcpy(real_name,file_path_name);
 			name_ptr = (char *) real_name;
 			name_ptr += last_slash + 1;
-			sprintf(name_ptr,"%s",name);
+			format_to_buf(name_ptr,"{}",name);
 			//real_name -= last_slash + 1;
 			//ASB(real_name);
 			}
@@ -604,7 +604,6 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect, RectDrawDestination dest,REC
 
  void fry_dc(HWND hwnd,HDC dc) {
 	if (ReleaseDC(hwnd,dc) == 0)
-	  //	add_string_to_buf("xx");
 		PostQuitMessage(0);
  }
 

@@ -899,10 +899,11 @@ void init_scenario()
 		scenario.scen_monsters[i] = return_monster_template(i);
 		get_str(temp_str,2,i);
 		if ((i > 187) || (i == 0))
-			sprintf(scen_item_list.monst_names[i], "Unused");
-			else sprintf(scen_item_list.monst_names[i], "%s", temp_str);
+			format_to_buf(scen_item_list.monst_names[i], "Unused");
+		else
+			format_to_buf(scen_item_list.monst_names[i], "{}", temp_str);
 		if (i == 0)
-			sprintf(scen_item_list.monst_names[i], "Empty");
+			format_to_buf(scen_item_list.monst_names[i], "Empty");
 		}
 	for (i = 0; i < 30; i++) {
 		scenario.scen_boats[i] = null_boat;
@@ -913,7 +914,7 @@ void init_scenario()
 		scenario.ter_types[i].blockage = ter_block[i];
 		scenario.ter_types[i].special = ter_traits[i];
 		get_str(temp_str,1,i + 1);
-		sprintf(scen_item_list.ter_names[i], "%s", temp_str);
+		format_to_buf(scen_item_list.ter_names[i], "{}", temp_str);
 		
 		scenario.scen_specials[i] = null_spec_node;
 		}
@@ -939,11 +940,11 @@ void init_scenario()
 	for (i = 0; i < 270; i++) {
 		get_str(temp_str,35,i + 1);
 		if (i < 160) {
-			sprintf(scen_strs[i], "%s", temp_str);
+			format_to_buf(scen_strs[i], "{}", temp_str);
 			scenario.scen_str_len[i] = strlen(scen_strs[i]);
 			}
 			else {
-				sprintf(scen_strs2[i - 160], "%s", temp_str);
+				format_to_buf(scen_strs2[i - 160], "{}", temp_str);
 				scenario.scen_str_len[i] = strlen(scen_strs[i - 160]);
 				}
 		}
@@ -1033,7 +1034,7 @@ Boolean save_ter_info()
 
 	CDGT(813,2,(char *) str);
 	str[29] = 0;
-	sprintf(scen_item_list.ter_names[store_which_ter],"%s",str);
+	format_to_buf(scen_item_list.ter_names[store_which_ter],"{}",str);
 
 	scenario.ter_types[store_which_ter] = store_ter;
 	return TRUE;
@@ -1135,18 +1136,14 @@ short edit_ter_type(short which_ter)
 
 void put_monst_info_in_dlog()
 {
-	char str[256];
-
 	if (store_monst.picture_num < 1000)
 		csp(814,34,400 + store_monst.picture_num);
 		else csp(814,34,950);
 	cdsin(814,33,store_which_monst);
 	CDST(814,2,scen_item_list.monst_names[store_which_monst]);
 	CDSN(814,3,store_monst.picture_num);
-	sprintf(str,"Width = %d",store_monst.x_width);
-	csit(814,40,(char *) str);
-	sprintf(str,"Height = %d",store_monst.y_width);
-	csit(814,41,(char *) str);
+	csit(814,40, std::format("Width = {:d}", store_monst.x_width));
+	csit(814,41, std::format("Height = {:d}", store_monst.y_width));
 	CDSN(814,4,store_monst.level);
 	CDSN(814,5,store_monst.health);
 	CDSN(814,6,store_monst.armor);
@@ -1165,12 +1162,13 @@ void put_monst_info_in_dlog()
 
 	cd_set_led_range(814,29,32,store_monst.default_attitude);
 	
+	char str[256];
 	get_str(str,20,150 + store_monst.m_type);
-	csit(814,42,(char *) str);
+	csit(814,42, str);
 	get_str(str,20,130 + store_monst.a1_type);
-	csit(814,43,(char *) str);
+	csit(814,43, str);
 	get_str(str,20,130 + store_monst.a23_type);
-	csit(814,44,(char *) str);
+	csit(814,44, str);
 }
 
 Boolean save_monst_info()
@@ -1180,7 +1178,7 @@ Boolean save_monst_info()
 	
 	CDGT(814,2,(char *) str);
 	str[19] = 0;
-	sprintf(scen_item_list.monst_names[store_which_monst],"%s",str);
+	format_to_buf(scen_item_list.monst_names[store_which_monst],"{}",str);
 	//CDGT(814,2,scen_item_list.monst_names[store_which_monst]);
 	store_monst.picture_num = CDGN(814,3);
 	if (cre(store_monst.picture_num,0,5000,"Monster pic must be from 0 to 5000.","",814) > 0) return FALSE;
@@ -1523,10 +1521,10 @@ Boolean save_item_info()
 	
 	CDGT(818,2,(char *) str);
 	str[24] = 0;
-	sprintf(store_item.full_name,"%s",str);
+	format_to_buf(store_item.full_name,"{}",str);
 	CDGT(818,3,(char *) str);
 	str[14] = 0;
-	sprintf(store_item.name,"%s",str);
+	format_to_buf(store_item.name,"{}",str);
 	store_item.graphic_num = CDGN(818,4);
 
 	store_item.variety = static_cast<item_variety>(cd_get_led_range(818,18,45));
@@ -1845,7 +1843,7 @@ Boolean save_spec_item()
 	
 	CDGT(806,2,(char *) str);
 	str[25] = 0;
-	sprintf(scen_strs[60 + store_which_spec_item * 2 + 0],"%s",str);
+	format_to_buf(scen_strs[60 + store_which_spec_item * 2 + 0],"{}",str);
 	CDGT(806,3,scen_strs[60 + store_which_spec_item * 2 + 1]);
 	spec_item_spec = CDGN(806,4);
 	if (cre(scenario.special_item_special[store_which_spec_item],
@@ -2505,7 +2503,7 @@ void build_scenario()
 	
 	if (edit_make_scen_1((char *) f_name,(char *) title,&grass) == FALSE)
 		return;
-	sprintf(f_name2,"%s.exs",f_name);
+	format_to_buf(f_name2,"{}.exs",f_name);
 	if (edit_make_scen_2((short *) two_flags) == FALSE)
 		return;
 	user_given_password = given_password = get_password();
@@ -2621,7 +2619,6 @@ short get_password()
 
 void set_starting_loc_filter (short item_hit)
 {
-	char str[256];
 	short i,j,k;
 	
 	switch (item_hit) {
@@ -2630,8 +2627,7 @@ void set_starting_loc_filter (short item_hit)
 			j = CDGN(805,3);
 			k = CDGN(805,4);
 			if ((i < 0) || (i >= scenario_num_towns())) {
-				sprintf(str,"The starting town must be from 0 to %d.",scenario_num_towns() - 1);
-				give_error((char *) str,"",805);
+				give_error(std::format("The starting town must be from 0 to {:d}.", scenario_num_towns() - 1), "", 805);
 				break;
 				}
 			if ((j < 0) || (j >= max_dim[scenario_town_size(i)] - 1) ||

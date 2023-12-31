@@ -284,7 +284,7 @@ void process_new_window (WindowPtr hDlg) {
 			dlg_highest_item[free_slot]++;
 			str_stored = FALSE;
 			if (strlen(item_str) == 0) {
-				sprintf(item_str, "+");
+				format_to_buf(item_str, "+");
 				type = 3;
 				flag = 1;
 	            str_stored = TRUE;
@@ -393,13 +393,13 @@ void process_new_window (WindowPtr hDlg) {
                     		item_key[free_item] = 255;
 							break;
 						case 3: case 4: case 7: case 8: case 9: case 10: case 11: 
-							sprintf(((free_item < 10) ? text_long_str[free_item] : text_short_str[free_item - 10]),"");
+							format_to_buf(((free_item < 10) ? text_long_str[free_item] : text_short_str[free_item - 10]),"");
 							if (str_stored == TRUE) {
 								if (free_item < 10)
-								sprintf(text_long_str[free_item],"%s",
+								format_to_buf(text_long_str[free_item],"{}",
 								  (char *) (item_str + str_offset));
 								else
-								sprintf(text_short_str[free_item - 10],"%-39.39s",
+								format_to_buf(text_short_str[free_item - 10],"{:<39.39s}",
 								  (char *) (item_str + str_offset));
 								}
 							item_key[free_item] = 255; 
@@ -615,11 +615,11 @@ void cd_get_item_text(short dlog_num, short item_num, char *str)
 		return;
 		}
 	if (item_index < 10)
-		sprintf(str,"%s",text_long_str[item_index]);
-		else sprintf(str,"%s",text_short_str[item_index - 10]);
+		format_to_buf(str,"{}",text_long_str[item_index]);
+		else format_to_buf(str,"{}",text_short_str[item_index - 10]);
 }
 
-void csit(short dlog_num, short item_num, char *str)
+void csit(short dlog_num, short item_num, std::string_view str)
 {
 cd_set_item_text( dlog_num,  item_num, str);
 }
@@ -632,7 +632,7 @@ void cd_retrieve_text_edit_str(short dlog_num, short item_num, char *str)
 	Rect the_rect;
 	Str255 store_ptr;
 	
-	sprintf(str,"");
+	format_to_buf(str,"");
 	if ((dlg_index = cd_get_dlg_index(dlog_num)) < 0) {
 		SysBeep(50); return ;
 		}
@@ -662,7 +662,7 @@ short cd_retrieve_text_edit_num(short dlog_num, short item_num)
 
 
 // NOTE!!! Expects a c string
-void cd_set_text_edit_str(short dlog_num, short item_num, char *str)
+void cd_set_text_edit_str(short dlog_num, short item_num, std::string_view str)
 {
 	short dlg_index,item_index;
 	short the_type;
@@ -673,7 +673,7 @@ void cd_set_text_edit_str(short dlog_num, short item_num, char *str)
 	if ((dlg_index = cd_get_dlg_index(dlog_num)) < 0) {
 		SysBeep(50); return ;
 		}
-	strcpy(store_ptr,str);
+	strcpy(store_ptr,str.data());
 	c2p(store_ptr);
 	GetDItem( dlgs[dlg_index], item_num, &the_type, &the_handle, &the_rect );
 	SetIText ( the_handle, store_ptr);	
@@ -691,13 +691,13 @@ void cd_set_text_edit_num(short dlog_num, short item_num, short num)
 		SysBeep(50); return ;
 		}
 		
-	sprintf(store_ptr,"%d",num);
+	format_to_buf(store_ptr,"{:d}",num);
 	c2p(store_ptr);
 	GetDItem( dlgs[dlg_index], item_num, &the_type, &the_handle, &the_rect );
 	SetIText ( the_handle, store_ptr);	
 }
 
-void cd_set_item_text(short dlog_num, short item_num, char *str)
+void cd_set_item_text(short dlog_num, short item_num, std::string_view str)
 {
 	short dlg_index,item_index;
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
@@ -707,8 +707,8 @@ void cd_set_item_text(short dlog_num, short item_num, char *str)
 		return;
 		}
 	if (item_index < 10)
-		sprintf(text_long_str[item_index],"%s",str);
-		else sprintf(text_short_str[item_index - 10],"%-39.39s",str);
+		format_to_buf(text_long_str[item_index],"{}",str);
+		else format_to_buf(text_short_str[item_index - 10],"{:<39.39s}",str);
 	cd_draw_item( dlog_num,item_num);
 }
 
@@ -728,8 +728,8 @@ void cd_set_item_num(short dlog_num, short item_num, short num)
 		return;
 		}
 	if (item_index < 10)
-		sprintf(text_long_str[item_index],"%d",num);
-		else sprintf(text_short_str[item_index - 10],"%d",num);
+		format_to_buf(text_long_str[item_index],"{:d}",num);
+		else format_to_buf(text_short_str[item_index - 10],"{:d}",num);
 	cd_draw_item( dlog_num,item_num);
 }
 
@@ -837,7 +837,7 @@ void cd_text_frame(short dlog_num,short item_num,short frame)
 	cd_draw_item(dlog_num,item_num);
 }
 
-void cd_add_label(short dlog_num, short item_num, char *label, short label_flag)
+void cd_add_label(short dlog_num, short item_num, std::string_view label, short label_flag)
 {
 	short dlg_index,item_index,label_loc = -1;
 	short i;
@@ -861,7 +861,7 @@ void cd_add_label(short dlog_num, short item_num, char *label, short label_flag)
 		}
       else cd_erase_item(dlog_num,item_num + 100);
 	label_loc = item_label_loc[item_index];
-	sprintf(labels[label_loc],"%-24s",label);
+	format_to_buf(labels[label_loc],"{:<24s}",label);
 	if (item_active[item_index] > 0)
 		cd_draw_item(dlog_num,item_num);
 }
@@ -882,7 +882,7 @@ void cd_key_label(short dlog_num, short item_num,short loc)
 	char str[10];
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
 		return;
-	sprintf(str,"  ");
+	format_to_buf(str,"  ");
 	str[0] = item_key[item_index];
 	cd_add_label(dlog_num,item_num, str, 7 + loc * 100);
 }
@@ -922,11 +922,11 @@ void cd_draw_item(short dlog_num,short item_num)
 					if (item_type[item_index] < 2)
 						OffsetRect(&item_rect[item_index],-1 * button_left_adj[item_flag[item_index]],0);
 					if (item_type[item_index] < 2) {
-						char_win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
+						win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
 						 (char *) (button_strs[item_flag[item_index]]),1,8);
 						}
 						else {
-							char_win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
+							win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
 							 (char *) ((item_index < 10) ? text_long_str[item_index] : 
 							  text_short_str[item_index - 10]),1,8);
 							}
@@ -960,14 +960,14 @@ void cd_draw_item(short dlog_num,short item_num)
 						}
 					if (item_rect[item_index].bottom - item_rect[item_index].top < 20) {
 						item_rect[item_index].left += 3;
-							char_win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
+							win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
 							 (char *) ((item_index < 10) ? text_long_str[item_index] : 
 							  text_short_str[item_index - 10]),3,12);
 						item_rect[item_index].left -= 3;
 						}
 						else {
 							InsetRect(&item_rect[item_index],4,4);
-							char_win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
+							win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
 							 (char *) ((item_index < 10) ? text_long_str[item_index] : 
 							  text_short_str[item_index - 10]),0,(item_type[item_index] == 7) ? 14 : 12);
 							InsetRect(&item_rect[item_index],-4,-4);
@@ -1028,7 +1028,7 @@ void cd_draw_item(short dlog_num,short item_num)
 				//cd_erase_rect(dlog_num,to_rect);
 				if (item_active[item_index] != 0) {
 
-					char_win_draw_string((GrafPtr) dlgs[dlg_index],to_rect,
+					win_draw_string((GrafPtr) dlgs[dlg_index],to_rect,
 						labels[item_label_loc[item_index]],2,12);
 
 					}
@@ -1211,12 +1211,12 @@ void cd_press_button(short dlog_num, short item_num)
 	RGBForeColor(&c[0]);
 	if (item_type[item_index] < 2) {
 		OffsetRect(&item_rect[item_index],-1 * button_left_adj[item_flag[item_index]],0);
-		char_win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
+		win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
 		 (char *) (button_strs[item_flag[item_index]]),1,8);
 		OffsetRect(&item_rect[item_index],button_left_adj[item_flag[item_index]],0);
 		}
 		else {
-			char_win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
+			win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
 			 (char *) ((item_index < 10) ? text_long_str[item_index] : 
 			  text_short_str[item_index - 10]),1,8);
 			}
@@ -1233,12 +1233,12 @@ void cd_press_button(short dlog_num, short item_num)
 	RGBForeColor(&c[1]);
 	if (item_type[item_index] < 2) {
 		OffsetRect(&item_rect[item_index],-1 * button_left_adj[item_flag[item_index]],0);
-		char_win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
+		win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
 		 (char *) (button_strs[item_flag[item_index]]),1,8);
 		OffsetRect(&item_rect[item_index],button_left_adj[item_flag[item_index]],0);
 		}
 		else {
-			char_win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
+			win_draw_string((GrafPtr) dlgs[dlg_index],item_rect[item_index],
 			 (char *) ((item_index < 10) ? text_long_str[item_index] : 
 			  text_short_str[item_index - 10]),1,8);
 			}

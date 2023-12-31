@@ -175,13 +175,13 @@ void end_shop_mode()
 	
 	ShowScrollBar(shop_sbar,SB_CTL,FALSE);
 	if (store_pre_shop_mode == 20) {
-		sprintf(old_str1,"You conclude your business.");
-		sprintf(old_str2,"");
-		sprintf(one_back1,"You conclude your business.");
-		sprintf(one_back2,"");
+		format_to_buf(old_str1,"You conclude your business.");
+		format_to_buf(old_str2,"");
+		format_to_buf(one_back1,"You conclude your business.");
+		format_to_buf(one_back2,"");
 
 		strnum1 = strnum2 = oldstrnum1 = oldstrnum2 = 0;
-		place_talk_str((char *)old_str1,"",0,dummy_rect);
+		place_talk_str(old_str1,"",0,dummy_rect);
 		}
 		else {
 			DisposeGWorld(talk_gworld);
@@ -536,7 +536,7 @@ void start_talk_mode(short m_num,short personality,unsigned char monst_type,shor
 	store_responses();
 
 	// Dredge up critter's name
-	sprintf(title_string,"%s:",data_store3.talk_strs[personality % 10]);
+	format_to_buf(title_string,"{}:",data_store3.talk_strs[personality % 10]);
 	
 	store_pre_talk_mode = overall_mode;
 	overall_mode = 20;
@@ -545,14 +545,14 @@ void start_talk_mode(short m_num,short personality,unsigned char monst_type,shor
 	stat_screen_mode = 1;
 	
 	// Bring up and place first strings.
-	sprintf(place_string1,"%s",data_store3.talk_strs[personality % 10 + 10]);
+	format_to_buf(place_string1,"{}",data_store3.talk_strs[personality % 10 + 10]);
 	strnum1 = personality % 10 + 10;
 	strnum2 = 0;
 	strcpy(old_str1, place_string1);
 	strcpy(old_str2, place_string2);
 	strcpy(one_back1, place_string1);
 	strcpy(one_back2, place_string2);
-	place_talk_str((char *) place_string1,(char *) place_string2,0,dummy_rect);
+	place_talk_str( place_string1, place_string2,0,dummy_rect);
 	
 	put_item_screen(stat_window,0);
 	give_help(5,6,0);
@@ -599,7 +599,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 
 	for (i = 0; i < 9; i++)
 		if ((PtInRect(&preset_words[i].word_rect,p)) && ((talk_end_forced == FALSE) || (i == 6) || (i == 5))) {
-			click_talk_rect((char *) old_str1,(char *) old_str2,preset_words[i].word_rect);
+			click_talk_rect( old_str1, old_str2,preset_words[i].word_rect);
 			switch (i) {
 				case 0: case 1: case 2: case 7: case 8:
 					force_special = i + 1;
@@ -654,7 +654,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 	if (i < 100) {
 		for (i = 0; i < 50; i++) 
 			if ((PtInRect(&store_words[i].word_rect,p)) && (talk_end_forced == FALSE)) {
-				click_talk_rect((char *) old_str1,(char *) old_str2,store_words[i].word_rect);
+				click_talk_rect( old_str1, old_str2,store_words[i].word_rect);
 				for (j = 0; j < 4; j++)
 					asked[j] = store_words[i].word[j];
 			
@@ -687,7 +687,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 			case 1: case 2: case 3:
 				get_str(place_string1,120 + ((store_personality - 1) / 10),
 				 ((store_personality - 1) % 10) * 3 + 10 + force_special);
-				sprintf(place_string1,"%s",data_store3.talk_strs[store_personality % 10 + 10 * force_special]);
+				format_to_buf(place_string1,"{}",data_store3.talk_strs[store_personality % 10 + 10 * force_special]);
 					
 				oldstrnum1 = strnum1; oldstrnum2 = strnum2;
 				strnum1 =  store_personality % 10 + 10 * force_special;
@@ -696,7 +696,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 				strcpy(one_back2, old_str2);
 				strcpy(old_str1, place_string1);
 				strcpy(old_str2, place_string2);
-				place_talk_str((char *) place_string1,(char *) place_string2,0,dummy_rect);
+				place_talk_str(place_string1, place_string2,0,dummy_rect);
 				return;
 				break;
 			case 4: // buy button
@@ -729,7 +729,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 				strcpy(one_back2, old_str2);
 				strcpy(old_str1, place_string1);
 				strcpy(old_str2, place_string2);
-				place_talk_str((char *) place_string1,(char *) place_string2,0,dummy_rect);
+				place_talk_str(place_string1, place_string2,0,dummy_rect);
 				return;
 				break;
 			}
@@ -739,11 +739,11 @@ void handle_talk_event(POINT p,Boolean right_button)
 	if ((which_talk_entry < 0) || (which_talk_entry > 59)) {
 		strcpy(one_back1, old_str1);
 		strcpy(one_back2, old_str2);
-		sprintf(old_str2,"");
-		sprintf(old_str1,"%s",data_store3.talk_strs[store_personality % 10 + 160]);
+		format_to_buf(old_str2,"");
+		format_to_buf(old_str1,"{}",data_store3.talk_strs[store_personality % 10 + 160]);
 		if (strlen(old_str1) < 2)
-			sprintf(old_str1,"You get no response.");
-		place_talk_str((char *) old_str1,(char *) old_str2,0,dummy_rect);
+			format_to_buf(old_str1,"You get no response.");
+		place_talk_str(old_str1, old_str2,0,dummy_rect);
 		strnum1 = -1;
 		return;	
 		}
@@ -754,8 +754,8 @@ void handle_talk_event(POINT p,Boolean right_button)
 	c = talking.talk_nodes[which_talk_entry].extras[2];
 	d = talking.talk_nodes[which_talk_entry].extras[3];
 
-	sprintf(place_string1,"%s",data_store3.talk_strs[40 + which_talk_entry * 2]);
-	sprintf(place_string2,"%s",data_store3.talk_strs[40 + which_talk_entry * 2 + 1]);
+	format_to_buf(place_string1,"{}",data_store3.talk_strs[40 + which_talk_entry * 2]);
+	format_to_buf(place_string2,"{}",data_store3.talk_strs[40 + which_talk_entry * 2 + 1]);
 	
 	oldstrnum1 = strnum1; oldstrnum2 = strnum2;
 	strnum1 =  40 + which_talk_entry * 2; strnum2 = 40 + which_talk_entry * 2 + 1;
@@ -768,7 +768,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 				strnum1 = strnum2;
 				strcpy(place_string1, place_string2);
 				}
-			sprintf(place_string2,"");					
+			format_to_buf(place_string2,"");					
 			strnum2 = 0;
 			break;
 		case 2:
@@ -791,14 +791,14 @@ void handle_talk_event(POINT p,Boolean right_button)
 					center = c_town.p_loc;
 					}
 			strnum2 = 0;
-			sprintf(place_string2,"");					
+			format_to_buf(place_string2,"");					
 			break;
 		case 4:
 			if (day_reached((unsigned char) a,0) == TRUE) {
 				strnum1 = strnum2;
 				strcpy(place_string1, place_string2);
 				}
-			sprintf(place_string2,"");					
+			format_to_buf(place_string2,"");					
 			strnum2 = 0;
 			break;
 		case 5:
@@ -806,7 +806,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 				strnum1 = strnum2;
 				strcpy(place_string1, place_string2);
 				}
-			sprintf(place_string2,"");					
+			format_to_buf(place_string2,"");					
 			strnum2 = 0;
 			break;
 		case 6:
@@ -814,13 +814,13 @@ void handle_talk_event(POINT p,Boolean right_button)
 				strnum1 = strnum2;
 				strcpy(place_string1, place_string2);
 				}
-			sprintf(place_string2,"");					
+			format_to_buf(place_string2,"");					
 			strnum2 = 0;
 			break;
 		case 7: 
 			c = boe_clamp(c,1,30);
 			start_shop_mode(2,b,
-				b + c - 1,a,(char *)place_string1);
+				b + c - 1,a,place_string1);
 			strnum1 = -1;
 			return;
 		case 8: 
@@ -828,18 +828,18 @@ void handle_talk_event(POINT p,Boolean right_button)
 				strnum1 = -1;
 				spend_xp(get_pc,1, 0);
 				}
-			sprintf(place_string1, "You conclude your training.");  
+			format_to_buf(place_string1, "You conclude your training.");  
 			return;
 		
 		case 9: case 10: case 11: 
 			c = boe_clamp(c,1,30);
 			start_shop_mode(ttype + 1,b,
-				b + c - 1,a,(char *)place_string1);
+				b + c - 1,a, place_string1);
 			strnum1 = -1;
 			return;
 		case 12: //healer
 			start_shop_mode(3,c_town.monst.dudes[store_m_num].monst_start.extra1,
-				c_town.monst.dudes[store_m_num].monst_start.extra2,a,(char *)place_string1);
+				c_town.monst.dudes[store_m_num].monst_start.extra2,a, place_string1);
 			strnum1 = -1;
 			return;
 			break;
@@ -878,12 +878,12 @@ void handle_talk_event(POINT p,Boolean right_button)
 					put_pc_screen();
 
 					}
-			sprintf(place_string2,"");					
+			format_to_buf(place_string2,"");					
 			strnum2 = 0;
 			break;
 		case 19:
 			if ((sd_legit(b,c) == TRUE) && (PSD[b][c] == d)) {
-				sprintf(place_string1, "You've already learned that.");  
+				format_to_buf(place_string1, "You've already learned that.");  
 				strnum1 = -1;
 				}
 			else if (party.gold < a) {
@@ -898,14 +898,14 @@ void handle_talk_event(POINT p,Boolean right_button)
 						else give_error("Invalid Stuff Done flag called in conversation.","",0);
 					}
 			strnum2 = 0;
-			sprintf(place_string2,"");					
+			format_to_buf(place_string2,"");					
 			break;
 		case 20:
 			if (party.gold < a) {
 				strnum1 = strnum2;
 				strnum2 = 0;
 				strcpy(place_string1, place_string2);
-				sprintf(place_string2,"");					
+				format_to_buf(place_string2,"");					
 				break;
 				}
 				else {
@@ -914,15 +914,15 @@ void handle_talk_event(POINT p,Boolean right_button)
 							party.gold -= a;
 							put_pc_screen();
 							party.boats[i].property = FALSE;
-							sprintf(place_string2,"");					
+							format_to_buf(place_string2,"");					
 							strnum2 = 0;
 							i = 1000;
 							}
 					if (i >= 1000)
 						break;
 					}
-			sprintf(place_string1, "There are no boats left.");  
-			sprintf(place_string2,"");					
+			format_to_buf(place_string1, "There are no boats left.");  
+			format_to_buf(place_string2,"");					
 			strnum1 = -1;
 			strnum2 = -1;
 			break;
@@ -931,7 +931,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 				strnum1 = strnum2;
 				strnum2 = 0;
 				strcpy(place_string1, place_string2);
-				sprintf(place_string2,"");					
+				format_to_buf(place_string2,"");					
 				break;
 				}
 				else {
@@ -940,21 +940,21 @@ void handle_talk_event(POINT p,Boolean right_button)
 							party.gold -= a;
 							put_pc_screen();
 							party.horses[i].property = FALSE;
-							sprintf(place_string2,"");					
+							format_to_buf(place_string2,"");					
 							strnum2 = 0;
 							i = 1000;
 							}
 					if (i >= 1000)
 						break;
 					}
-			sprintf(place_string1, "There are no horses left.");  
-			sprintf(place_string2,"");					
+			format_to_buf(place_string1, "There are no horses left.");  
+			format_to_buf(place_string2,"");					
 			strnum1 = -1;
 			strnum2 = -1;
 			break;
 		case 22:
 			if (party.spec_items[a] > 0) {
-				sprintf(place_string1, "You already have it.");  
+				format_to_buf(place_string1, "You already have it.");  
 				strnum1 = -1;
 				}
 			else if (party.gold < b) {
@@ -967,11 +967,11 @@ void handle_talk_event(POINT p,Boolean right_button)
 					party.spec_items[a] = 1;
 					}
 			strnum2 = 0;
-			sprintf(place_string2,"");					
+			format_to_buf(place_string2,"");					
 			break;
 		case 23:
 			start_shop_mode(5 + b,0,
-				9,a,(char *)place_string1);
+				9,a, place_string1);
 			strnum1 = -1;
 			return;
 		case 24:		
@@ -987,7 +987,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 						party.can_find_town[b] = 1;
 						}
 			strnum2 = 0;
-			sprintf(place_string2,"");					
+			format_to_buf(place_string2,"");					
 			break;
 		case 25:
 			talk_end_forced = TRUE;
@@ -1014,10 +1014,10 @@ void handle_talk_event(POINT p,Boolean right_button)
 			if ((s1 >= 0) || (s2 >= 0)) {
 				strnum1 = -1;
 				strnum2 = -1;
-				sprintf(place_string1,"");
-				sprintf(place_string2,"");
+				format_to_buf(place_string1,"");
+				format_to_buf(place_string2,"");
 				}
-			 get_strs((char *) place_string1,(char *) place_string2,2,s1,s2); 
+			 get_strs(place_string1, place_string2,2,s1,s2); 
 			 //strnum1 = -1;
 			 //strnum2 = -1;
 			 if (s1 >= 0) strnum1 = 2000 + s1;
@@ -1031,10 +1031,10 @@ void handle_talk_event(POINT p,Boolean right_button)
 			if ((s1 >= 0) || (s2 >= 0)) {
 				strnum1 = -1;
 				strnum2 = -1;
-				sprintf(place_string1,"");
-				sprintf(place_string2,"");
+				format_to_buf(place_string1,"");
+				format_to_buf(place_string2,"");
 				}
-			 get_strs((char *) place_string1,(char *) place_string2,0,s1,s2); 
+			 get_strs(place_string1, place_string2,0,s1,s2); 
 			 //strnum1 = -1;
 			 //strnum2 = -1;
 			 if (s1 >= 0) strnum1 = 3000 + s1;
@@ -1051,7 +1051,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 	strcpy(one_back2, old_str2);
 	strcpy(old_str1, place_string1);
 	strcpy(old_str2, place_string2);
-	place_talk_str((char *) old_str1,(char *) old_str2,0,dummy_rect);
+	place_talk_str(old_str1, old_str2,0,dummy_rect);
 	
 }
 
@@ -1101,12 +1101,12 @@ void do_sign(short town_num, short which_sign, short sign_type,location sign_loc
 	if (town_num >= 200) {
 		town_num -= 200;
 		load_outdoors(town_num % scenario_out_width(), town_num / scenario_out_width(),party.i_w_c.x,party.i_w_c.y,
-			1,which_sign + 100,(char *) sign_text);
+			1,which_sign + 100, sign_text);
 		}
 		else {
-			sprintf(sign_text,"%s",data_store.town_strs[120 + which_sign]);
+			format_to_buf(sign_text,"{}",data_store.town_strs[120 + which_sign]);
 			}
-	csit(1014,2,(char *) sign_text);
+	csit(1014,2, sign_text);
 	
 	while (dialog_not_toast)
 		ModalDialog();	
@@ -1142,7 +1142,7 @@ void do_registration_event_filter (short item_hit)
 {
 	char get_text[256];
 	
-	cd_get_text_edit_str(1075,(char *) get_text);
+	cd_get_text_edit_str(1075, get_text);
 	dialog_answer = 0;
 	sscanf(get_text,"%hd",&dialog_answer);
 	dialog_not_toast = FALSE;
@@ -1438,7 +1438,7 @@ void tip_of_day_event_filter (short item_hit)
 					if (store_tip_page_on == NUM_HINTS)
 						store_tip_page_on = 0;
 					get_str(place_str,12,50 + store_tip_page_on);
-					csit(958,3,(char *) place_str);
+					csit(958,3, place_str);
 					break;
 
 				case 7:
@@ -1460,7 +1460,7 @@ void tip_of_day()
 	cd_create_dialog_parent_num(958,0);
 
 	get_str(place_str,12,50 + store_tip_page_on);
-	csit(958,3,(char *) place_str);
+	csit(958,3, place_str);
 
 	cd_set_led(958,7,give_intro_hint);
 
@@ -1499,8 +1499,8 @@ void put_scen_info()
 	for (i = 0; i < 3; i++)
 		if (scen_headers[store_scen_page_on * 3 + i].flag1 != 0) {
 			cd_set_pict(947, 6 + i * 3,1600 + scen_headers[store_scen_page_on * 3 + i].intro_pic);
-			sprintf(place_str,
-				"%s v%d.%d.%d - |  Difficulty: %s, Rating: %s |%s |%s",
+			format_to_buf(place_str,
+				"{} v{:d}.{:d}.{:d} - |  Difficulty: {}, Rating: {} |{} |{}",
 				scenario_header_string(store_scen_page_on * 3 + i,0),
 				(short) scen_headers[store_scen_page_on * 3 + i].ver[0],
 				(short) scen_headers[store_scen_page_on * 3 + i].ver[1],
@@ -1509,7 +1509,7 @@ void put_scen_info()
 				ratings[scen_headers[store_scen_page_on * 3 + i].default_ground],
 				scenario_header_string(store_scen_page_on * 3 + i,1),
 				scenario_header_string(store_scen_page_on * 3 + i,2));
-			csit(947,7 + i * 3,(char *) place_str);
+			csit(947,7 + i * 3, place_str);
 			cd_activate_item(947,8 + i * 3,1);			
 			}
 			else {
@@ -1635,7 +1635,7 @@ Boolean enter_password()
 	while (dialog_not_toast)
 		ModalDialog();
 
-	cd_get_text_edit_str(823,(char *) temp_str);
+	cd_get_text_edit_str(823, temp_str);
 	i = wd_to_pwd(temp_str);
 	
 	cd_kill_dialog(823,0);

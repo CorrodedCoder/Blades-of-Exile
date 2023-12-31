@@ -607,7 +607,6 @@ void do_explosion_anim(short sound_num,short special_draw)
 {
 	RECT temp_rect,to_rect,from_rect;
 	RECT base_rect = {0,0,28,36},text_rect;
-	char str[256];
 	short i,temp_val,temp_val2;
 	location screen_ul;
 	
@@ -725,9 +724,8 @@ void do_explosion_anim(short sound_num,short special_draw)
 						text_rect.left -= 2;
 						if (store_booms[i].val_to_place < 10)
 							text_rect.left += 4;
-						sprintf(str,"%d",store_booms[i].val_to_place);
 						store_bmp = SelectObject(hdc,temp_gworld);
-						char_win_draw_string(hdc,text_rect,str,1,12);
+						win_draw_string(hdc,text_rect, std::format("{:d}", store_booms[i].val_to_place), 1, 12);
 						SelectObject(hdc,store_bmp);
 						}
 					}
@@ -808,7 +806,6 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 	short current_pos;
 	
 	short cur_cost,what_magic_shop,what_magic_shop_item;
-	char cur_name[256];
 	char cur_info_str[256];
 	item_record_type base_item;
 	HDC hdc;
@@ -865,24 +862,25 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 	SetTextColor(hdc,PALETTEINDEX(c[3]));
 	dest_rect = title_rect;
 	OffsetRect(&dest_rect,1,-5);
-	char_win_draw_string(hdc,dest_rect,store_store_name,2,18);
+	win_draw_string(hdc,dest_rect,store_store_name,2,18);
 	OffsetRect(&dest_rect,-1,-1);
 	SetTextColor(hdc,PALETTEINDEX(c[4]));
-	char_win_draw_string(hdc,dest_rect,store_store_name,2,18);
+	win_draw_string(hdc,dest_rect,store_store_name,2,18);
 	SelectObject(hdc,small_bold_font);
 
 	//TextFont(geneva_font_num);
 
 	SetTextColor(hdc,PALETTEINDEX(c[3]));
+	std::string cur_name;
 	switch (store_shop_type) {
-		case 3: sprintf(cur_name,"Healing for %s.",adven[current_pc].name); break;
-		case 10: sprintf(cur_name,"Mage Spells for %s.",adven[current_pc].name);break;
-		case 11: sprintf(cur_name,"Priest Spells for %s.",adven[current_pc].name); break;
-		case 12: sprintf(cur_name,"Buying Alchemy.");break;
-		case 4: sprintf(cur_name,"Buying Food.");break;
-		default:sprintf(cur_name,"Shopping for %s.",adven[current_pc].name); break;
-		}
-	char_win_draw_string(hdc,shopper_name,cur_name,2,18);
+		case 3:		cur_name = std::format("Healing for {}.",adven[current_pc].name); break;
+		case 10:	cur_name = std::format("Mage Spells for {}.",adven[current_pc].name); break;
+		case 11:	cur_name = std::format("Priest Spells for {}.",adven[current_pc].name); break;
+		case 12:	cur_name = "Buying Alchemy."; break;
+		case 4:		cur_name = "Buying Food."; break;
+		default:	cur_name = std::format("Shopping for {}.",adven[current_pc].name); break;
+	}
+	win_draw_string(hdc,shopper_name,cur_name, 2, 18);
 
 	// Place help and done buttons
 	SetTextColor(hdc,PALETTEINDEX(c[0]));
@@ -913,39 +911,39 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 				base_item = get_stored_item(what_chosen);
 				base_item.item_properties = base_item.item_properties | 1;
 				draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, FALSE);
-				strcpy(cur_name,base_item.full_name);
+				cur_name = base_item.full_name;
 				get_item_interesting_string(base_item,cur_info_str);
 				break;
 			case 5:
 				base_item = store_alchemy(what_chosen - 500);
 				draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1853, FALSE);//// all graphic nums
-				strcpy(cur_name,base_item.full_name);
-				sprintf(cur_info_str,"");
+				cur_name = base_item.full_name;
+				format_to_buf(cur_info_str,"");
 				break;
 			case 6:
 				//base_item = food_types[what_chosen - 600];
 				//draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],633, FALSE);
-				//strcpy(cur_name,base_item.full_name);
+				//cur_name = base_item.full_name;
 				//get_item_interesting_string(base_item,cur_info_str);
 				break;
 			case 7:
 				what_chosen -= 700;
 				draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1879, FALSE);
-				strcpy(cur_name,heal_types[what_chosen]);
-				sprintf(cur_info_str,"");
+				cur_name = heal_types[what_chosen];
+				format_to_buf(cur_info_str,"");
 				break;
 			case 8:
 				base_item = store_mage_spells(what_chosen - 800 - 30);
 				draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, FALSE);
 
-				strcpy(cur_name,base_item.full_name);
-				sprintf(cur_info_str,"");
+				cur_name = base_item.full_name;
+				format_to_buf(cur_info_str,"");
 				break;
 			case 9:
 				base_item = store_priest_spells(what_chosen - 900 - 30);
 				draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1853, FALSE);
-				strcpy(cur_name,base_item.full_name);
-				sprintf(cur_info_str,"");
+				cur_name = base_item.full_name;
+				format_to_buf(cur_info_str,"");
 				break;
 			default:
 				what_magic_shop = (what_chosen / 1000) - 1;
@@ -953,7 +951,7 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 				base_item = party.magic_store_items[what_magic_shop][what_magic_shop_item];
 				base_item.item_properties = base_item.item_properties | 1;
 				draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, FALSE);
-				strcpy(cur_name,base_item.full_name);
+				cur_name = base_item.full_name;
 				get_item_interesting_string(base_item,cur_info_str);
 				break;
 			}
@@ -969,23 +967,21 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 		// 0 - whole area, 1 - active area 2 - graphic 3 - item name
 		// 4 - item cost 5 - item extra str  6 - item help button
 		//TextSize(12);
-		char_win_draw_string(hdc,shopping_rects[i][3],cur_name,0,12);
-		sprintf(cur_name,"Cost: %d",cur_cost);
-		char_win_draw_string(hdc,shopping_rects[i][4],cur_name,0,12);
+		win_draw_string(hdc,shopping_rects[i][3],cur_name, 0, 12);
+		win_draw_string(hdc,shopping_rects[i][4], std::format("Cost: {:d}", cur_cost), 0, 12);
 		//TextSize(10);
-		char_win_draw_string(hdc,shopping_rects[i][5],cur_info_str,0,12);
+		win_draw_string(hdc,shopping_rects[i][5],cur_info_str,0,12);
 
 		}
 
 	// Finally, cost info and help strs
 	//TextSize(12);
-	sprintf(cur_name,"Prices here are %s.",cost_strs[store_cost_mult]);
 	//TextSize(10);
-	char_win_draw_string(hdc,bottom_help_rects[0],cur_name,0,12);
-	char_win_draw_string(hdc,bottom_help_rects[1],"Click on item name (or type 'a'-'h') to buy.",0,12);
-	char_win_draw_string(hdc,bottom_help_rects[2],"Hit done button (or Esc.) to quit.",0,12);
+	win_draw_string(hdc,bottom_help_rects[0], std::format("Prices here are {}.", cost_strs[store_cost_mult]), 0, 12);
+	win_draw_string(hdc,bottom_help_rects[1],"Click on item name (or type 'a'-'h') to buy.",0,12);
+	win_draw_string(hdc,bottom_help_rects[2],"Hit done button (or Esc.) to quit.",0,12);
 	if ((store_shop_type != 3) && (store_shop_type != 4))
-		char_win_draw_string(hdc,bottom_help_rects[3],"'I' button brings up description.",0,12);
+		win_draw_string(hdc,bottom_help_rects[3],"'I' button brings up description.",0,12);
 	
 	SelectObject(hdc,store_bmp);
 	DeleteObject(hdc);
@@ -1077,15 +1073,15 @@ short val[20] = {50,75,30,130,100,150, 200,200,300,250,300, 500,600,750,700,1000
 void get_item_interesting_string(const item_record_type& item,char *message)
 {
 	if (is_property(item)) {
-		sprintf(message,"Not yours.");
+		format_to_buf(message,"Not yours.");
 		return;
 		}
 	if (!is_ident(item)) {
-		sprintf(message,"");
+		format_to_buf(message,"");
 		return;
 		}
 	if (is_cursed(item)) {
-		sprintf(message,"Cursed item.");
+		format_to_buf(message,"Cursed item.");
 		return;
 		}
 	switch (item.variety) {
@@ -1096,8 +1092,8 @@ void get_item_interesting_string(const item_record_type& item,char *message)
 		case item_variety::Bolts:
 		case item_variety::MissileWeapon:
 			if (item.bonus != 0)
-				sprintf(message,"Damage: 1-%d + %d.",item.item_level,item.bonus);
-				else sprintf(message,"Damage: 1-%d.",item.item_level);
+				format_to_buf(message,"Damage: 1-{:d} + {:d}.",item.item_level,item.bonus);
+				else format_to_buf(message,"Damage: 1-{:d}.",item.item_level);
 			break;
 		case item_variety::Shield:
 		case item_variety::Armor:
@@ -1105,30 +1101,30 @@ void get_item_interesting_string(const item_record_type& item,char *message)
 		case item_variety::Gloves:
 		case item_variety::Shield2:
 		case item_variety::Boots:
-			sprintf(message,"Blocks %d-%d damage.",item.item_level + (item.protection > 0) ? 1 : 0,
+			format_to_buf(message,"Blocks {:d}-{:d} damage.",item.item_level + (item.protection > 0) ? 1 : 0,
 				item.item_level + item.protection);
 			break;
 		case item_variety::Bow:
 		case item_variety::Crossbow:
-			sprintf(message,"Bonus : +%d to hit.",item.bonus);
+			format_to_buf(message,"Bonus : +{:d} to hit.",item.bonus);
 			break;
 		case item_variety::Gold:
-			sprintf(message,"%d gold pieces.",item.item_level);
+			format_to_buf(message,"{:d} gold pieces.",item.item_level);
 			break;
 		case item_variety::Food:
-			sprintf(message,"%d food.",item.item_level);
+			format_to_buf(message,"{:d} food.",item.item_level);
 			break;
 		case item_variety::WeaponPoison:
-			sprintf(message,"Poison: Does %d-%d damage.",item.item_level,item.item_level * 6);
+			format_to_buf(message,"Poison: Does {:d}-{:d} damage.",item.item_level,item.item_level * 6);
 			break;
 		default:
-			sprintf(message,"");		
+			format_to_buf(message,"");		
 			if (item.charges > 0)
-				sprintf(message,"Uses: %d",item.charges);		
+				format_to_buf(message,"Uses: {:d}",item.charges);		
 			break;
 		}	
 	if (item.charges > 0)
-		sprintf(message,"Uses: %d",item.charges);
+		format_to_buf(message,"Uses: {:d}",item.charges);
 		}
 
 
@@ -1211,10 +1207,10 @@ void place_talk_str(char *str_to_place,const char *str_to_place2,short color,REC
 	SetTextColor(hdc,PALETTEINDEX(c[3]));
 	dest_rect = title_rect;
 	OffsetRect(&dest_rect,1,-5);
-	char_win_draw_string(hdc,dest_rect,title_string,2,18);
+	win_draw_string(hdc,dest_rect,title_string,2,18);
 	OffsetRect(&dest_rect,-1,-1);
 	SetTextColor(hdc,PALETTEINDEX(c[4]));
-	char_win_draw_string(hdc,dest_rect,title_string,2,18);
+	win_draw_string(hdc,dest_rect,title_string,2,18);
 
 	// Place buttons at bottom.
 	if (color == 0)
@@ -1222,7 +1218,7 @@ void place_talk_str(char *str_to_place,const char *str_to_place2,short color,REC
 		else SetTextColor(hdc,PALETTEINDEX(c[6]));
 	for (i = 0; i < 9; i++)
 		if ((talk_end_forced == FALSE) || (i == 6) || (i == 5)) {
-			char_win_draw_string(hdc, offset_rect(preset_words[i].word_rect, 0, -2),preset_words[i].word,2,18);
+			win_draw_string(hdc, offset_rect(preset_words[i].word_rect, 0, -2),preset_words[i].word,2,18);
 			}
 	// Place bulk of what said. Save words.
 	//TextSize(14);
@@ -1232,7 +1228,7 @@ void place_talk_str(char *str_to_place,const char *str_to_place2,short color,REC
 
 	str_len = (short) strlen(str_to_place);
 	if (str_len == 0) {
-		sprintf(str_to_place,".");
+		format_to_buf(str_to_place,".");
 		}
 	strcpy(str,str_to_place);
 	strcpy(p_str,str_to_place);
@@ -1300,9 +1296,9 @@ void place_talk_str(char *str_to_place,const char *str_to_place2,short color,REC
 	 		store_last_word_break = last_word_break;
 	 		if (i == str_len - 1)
 	 			last_word_break = i + 2;
-			sprintf(str_to_draw,"                                                         ");
+			format_to_buf(str_to_draw,"                                                         ");
 			strncpy(str_to_draw, str + last_line_break,(size_t) (last_word_break - last_line_break - 1));
-			sprintf(str_to_draw2," %s",str_to_draw);
+			format_to_buf(str_to_draw2," {}",str_to_draw);
 			str_to_draw2[0] = (char) strlen(str_to_draw);
 			MoveToDrawString((str_to_draw2 + 1),hdc);
 			on_what_line++;
@@ -1390,9 +1386,9 @@ void place_talk_str(char *str_to_place,const char *str_to_place2,short color,REC
 			store_last_word_break = last_word_break;
 			if (i == str_len - 1)
 				last_word_break = i + 2;
-			sprintf(str_to_draw,"                                                         ");
+			format_to_buf(str_to_draw,"                                                         ");
 			strncpy(str_to_draw, str + last_line_break,(size_t) (last_word_break - last_line_break - 1));
-			sprintf(str_to_draw2," %s",str_to_draw);
+			format_to_buf(str_to_draw2," {}",str_to_draw);
 			str_to_draw2[0] = (char) strlen(str_to_draw);
 			MoveToDrawString((str_to_draw2 + 1),hdc);
 			on_what_line++;

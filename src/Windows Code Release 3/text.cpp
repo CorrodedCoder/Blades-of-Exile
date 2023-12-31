@@ -35,7 +35,6 @@ static const std::array m_priest_sp{"Minor Bless","Light Heal","Wrack","Stumble"
 
 static std::array < std::array<char, 50>, TEXT_BUF_LEN> text_buffer;
 short buf_pointer = 30, num_added_since_stop = 0;
-char store_string[256];
 char store_string2[256];
 short start_print_point= 0;
 short mark_where_printing_long;
@@ -139,10 +138,8 @@ short text_pc_has_abil_equip(short pc_num,short abil)
 }
 
 // Draws the pc area in upper right
-//void win_draw_string(HWND dest_window,RECT dest_rect,char *str,short mode,short line_height)
 void put_pc_screen()
 {
-	char to_draw[256];
 	short i = 0,j;
 	RECT erase_rect = {2,17,270,99},to_draw_rect,from_rect;
 	RECT final_from_draw_rect = {0,0,271,116},final_to_draw_rect = {0,0,271,116};
@@ -201,16 +198,9 @@ void put_pc_screen()
 
 	// Put food, gold, day
 	SetTextColor(hdc,PALETTEINDEX(c[5]));
-	sprintf(to_draw, "%d", (short) party.gold);
-	win_draw_string(hdc,small_erase_rects[1],
-	  to_draw,0,10);
-	sprintf(to_draw, "%d", (short) party.food);
-	win_draw_string(hdc,small_erase_rects[0],
-	  to_draw,0,10);
-	i = calc_day();
-	sprintf(to_draw, "%d", i);
-	win_draw_string(hdc,small_erase_rects[2],
-	  to_draw,0,10);
+	win_draw_string(hdc,small_erase_rects[1], std::format("{:d}", (short)party.gold),0,10);
+	win_draw_string(hdc,small_erase_rects[0], std::format("{:d}", (short)party.food),0,10);
+	win_draw_string(hdc,small_erase_rects[2], std::format("{:d}", calc_day()),0,10);
 	SetTextColor(hdc,PALETTEINDEX(c[0]));
 
 	for (i = 0; i < 6; i++) {
@@ -223,10 +213,7 @@ void put_pc_screen()
 				SelectObject(hdc,italic_font);
 				SetTextColor(hdc,PALETTEINDEX(c[4]));
 				}
-
-			sprintf(to_draw, "%d. %-20s             ", i + 1, adven[i].name);
-			win_draw_string(hdc,pc_buttons[i][0],
-			 to_draw,0,10);
+			win_draw_string(hdc,pc_buttons[i][0], std::format("{:d}. {:<20s}             ", i + 1, adven[i].name),0,10);
 			//TextFace(bold);
 			//ForeColor(blackColor);
 			SelectObject(hdc,small_bold_font);
@@ -239,46 +226,39 @@ void put_pc_screen()
 					if (adven[i].cur_health == adven[i].max_health)
 						SetTextColor(hdc,PALETTEINDEX(c[3]));
 						else SetTextColor(hdc,PALETTEINDEX(c[1]));
-					sprintf(to_draw, "%-3d              ",adven[i].cur_health);
-					win_draw_string(hdc,pc_buttons[i][1],
-					  to_draw,0,10);
+					win_draw_string(hdc,pc_buttons[i][1], std::format("{:-3d}              ", adven[i].cur_health),0,10);
 					if (adven[i].cur_sp == adven[i].max_sp)
 						SetTextColor(hdc,PALETTEINDEX(c[4]));
-						else SetTextColor(hdc,PALETTEINDEX(c[2]));
-					sprintf(to_draw, "%-3d              ",adven[i].cur_sp);
-					win_draw_string(hdc,pc_buttons[i][2],
-					  to_draw,0,10);
+					else
+						SetTextColor(hdc,PALETTEINDEX(c[2]));
+					win_draw_string(hdc,pc_buttons[i][2], std::format("{:-3d}              ", adven[i].cur_sp),0,10);
 					SetTextColor(hdc,PALETTEINDEX(c[0]));
 					SelectObject(hdc,store_bmp);
 					draw_pc_effects_bmp(i, pc_stats_gworld);
 					SelectObject(hdc,pc_stats_gworld);
 					break;
 				case status::Dead:
-					sprintf(to_draw, "Dead");
+					win_draw_string(hdc, to_draw_rect, "Dead", 0, 10);
 					break;
 				case status::Dust:
-					sprintf(to_draw, "Dust");
+					win_draw_string(hdc, to_draw_rect, "Dust", 0, 10);
 					break;
 				case status::Stone:
-					sprintf(to_draw, "Stone");
+					win_draw_string(hdc, to_draw_rect, "Stone", 0, 10);
 					break;
 				case status::Fled:
-					sprintf(to_draw, "Fled");
+					win_draw_string(hdc, to_draw_rect, "Fled", 0, 10);
 					break;
 				case status::Surface:
-					sprintf(to_draw, "Surface");
+					win_draw_string(hdc, to_draw_rect, "Surface", 0, 10);
 					break;
 				case status::Won:
-					sprintf(to_draw, "Won");
+					win_draw_string(hdc, to_draw_rect, "Won", 0, 10);
 					break;
 				default:
-					sprintf(to_draw, "Absent");
+					win_draw_string(hdc, to_draw_rect, "Absent", 0, 10);
 					break;
 				}
-			if (adven[i].main_status != status::Normal)
-				win_draw_string(hdc,to_draw_rect,
-				 to_draw,0,10);
-
 			// Now put trade and info buttons
 			//rect_draw_some_item_bmp(mixed_gworld,info_from,pc_stats_gworld,pc_buttons[i][3],1,0);
 			//rect_draw_some_item_bmp(mixed_gworld,switch_from,pc_stats_gworld,pc_buttons[i][4],1,0);
@@ -329,7 +309,6 @@ void put_pc_screen()
 void put_item_screen(short screen_num,short suppress_buttons)
 // if suppress_buttons > 0, save time by not redrawing buttons
 {
-	char to_draw[256];
 	short i_num,item_offset;
 	short i = 0,j,pc;
 	RECT erase_rect = {2,17,255,123},dest_rect,from_rect,to_rect;
@@ -403,16 +382,12 @@ void put_item_screen(short screen_num,short suppress_buttons)
 		case 6: // On special items page
 			//TextFace(bold);
 			SelectObject(hdc,bold_font);
-			sprintf(to_draw, "Special items:");
-			win_draw_string(hdc,upper_frame_rect,
-				to_draw,0,10);
+			win_draw_string(hdc,upper_frame_rect, "Special items:",0,10);
 		 	SetTextColor(hdc,PALETTEINDEX(c[0]));
 			for (i = 0; i < 8; i++) {
 				i_num = i + item_offset;
 				if (spec_item_array[i_num] >= 0){
-					strcpy(to_draw,data_store5.scen_strs[60 + spec_item_array[i_num] * 2]);
-					win_draw_string(hdc,item_buttons[i][0],to_draw,0,10);
-
+					win_draw_string(hdc,item_buttons[i][0], data_store5.scen_strs[60 + spec_item_array[i_num] * 2],0,10);
 					SelectObject(hdc,store_bmp);
 					place_item_button(3,i,4,0);
 					if ((scenario_special_item(spec_item_array[i_num]) % 10 == 1)
@@ -427,21 +402,13 @@ void put_item_screen(short screen_num,short suppress_buttons)
 
 		default: // on an items page
 			pc = screen_num;
-			sprintf(to_draw, "%s inventory:",
-				adven[pc].name);
-			win_draw_string(hdc,upper_frame_rect,
-			  to_draw,0,10);
-
+			win_draw_string(hdc,upper_frame_rect, std::format("{} inventory:", adven[pc].name),0,10);
 		 	SetTextColor(hdc,PALETTEINDEX(c[0]));
 			for (i = 0; i < 8; i++) {
 				i_num = i + item_offset;
-				sprintf(to_draw, "%d.",i_num + 1);
-				win_draw_string(hdc,item_buttons[i][0],
-				  to_draw,0,10);
-
+				win_draw_string(hdc,item_buttons[i][0], std::format("{:d}.", i_num + 1),0,10);
 				dest_rect = item_buttons[i][0];
 				dest_rect.left += 36;
-
 				if (adven[pc].items[i_num].variety == item_variety::None) {
 
 					}
@@ -459,15 +426,18 @@ void put_item_screen(short screen_num,short suppress_buttons)
 					// Place object graphic here
 					//if (adven[pc].items[i_num].variety != item_variety::None)
 					//	draw_obj_graphic(i + ((which_item_page[pc] == 1) ? 1 : 0),adven[pc].items[i_num].graphic_num,text_panel_rect); // rect is space holder
-
-							if (!is_ident(adven[pc].items[i_num]))
-								sprintf(to_draw, "%s  ",adven[pc].items[i_num].name);
-								else { /// Don't place # of charges when Sell button up and space tight
-									if ((adven[pc].items[i_num].charges > 0) && (adven[pc].items[i_num].type != 2)
-										&& (stat_screen_mode <= 1))
-										sprintf(to_draw, "%s (%d)",adven[pc].items[i_num].full_name,adven[pc].items[i_num].charges);
-										else sprintf(to_draw, "%s",adven[pc].items[i_num].full_name);
-									}
+						std::string to_draw;
+						if (!is_ident(adven[pc].items[i_num]))
+						{
+							to_draw = std::format("{}  ", adven[pc].items[i_num].name);
+						}
+						else /// Don't place # of charges when Sell button up and space tight
+						{
+							if ((adven[pc].items[i_num].charges > 0) && (adven[pc].items[i_num].type != 2) && (stat_screen_mode <= 1))
+								to_draw = std::format("{} ({:d})",adven[pc].items[i_num].full_name,adven[pc].items[i_num].charges);
+							else
+								to_draw = adven[pc].items[i_num].full_name;
+						}
 						dest_rect.left -= 2;
 						win_draw_string(hdc,dest_rect,to_draw,0,10);
 						//TextFace(0);
@@ -478,7 +448,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 
 						// this is kludgy, awkwark, and has redundant code. Done this way to
 						// make go faster, and I got lazy.
-					SelectObject(hdc,store_bmp);
+						SelectObject(hdc,store_bmp);
 						if ((stat_screen_mode == 0) &&
 						 ((is_town()) || (is_out()) || ((is_combat()) && (pc == current_pc)))) { // place give and drop and use
 							place_item_button(0,i,0,adven[pc].items[i_num].graphic_num); // item_graphic
@@ -593,12 +563,10 @@ static void place_buy_button(short position,short pc_num,short item_num,HDC hdc)
 		dest_rect.right = dest_rect.left + 30;
 		rect_draw_some_item_bmp(mixed_gworld, source_rect,
 		  item_stats_gworld, dest_rect, 1, 0);
-		sprintf(store_string,"        %d",val_to_place);
 		//if (val_to_place >= 10000)
 		//	TextFace(0);
 		store_bmp = SelectObject(hdc,item_stats_gworld);
-		char_win_draw_string(hdc,item_buttons[position][5],
-		  store_string,2,10);
+		win_draw_string(hdc,item_buttons[position][5], std::format("        {:d}", val_to_place), 2, 10);
 		SelectObject(hdc,store_bmp);
 		//TextFace(bold);
 		}
@@ -889,18 +857,13 @@ static void draw_pc_effects_bmp(short pc, HBITMAP dest_bmp)
 
 void print_party_stats() {
 	add_string_to_buf("PARTY STATS:");
-	sprintf(store_string, "  Number of kills: %d                   ", party.total_m_killed);
-	add_string_to_buf( store_string);
+	add_string_to_buf("  Number of kills: {:d}                   ", party.total_m_killed);
 	if ((is_town()) || ((is_combat()) && (which_combat_type == 1))) {
-		sprintf(store_string, "  Kills in this town: %d                   ", party.m_killed[c_town.town_num]);
-		add_string_to_buf( store_string);
+		add_string_to_buf("  Kills in this town: {:d}                   ", party.m_killed[c_town.town_num]);
 		}
-	sprintf(store_string, "  Total experience: %d                   ", party.total_xp_gained);
-	add_string_to_buf( store_string);
-	sprintf(store_string, "  Total damage done: %d                   ", party.total_dam_done);
-	add_string_to_buf( store_string);
-	sprintf(store_string, "  Total damage taken: %d                   ", party.total_dam_taken);
-	add_string_to_buf( store_string);
+	add_string_to_buf("  Total experience: {:d}                   ", party.total_xp_gained);
+	add_string_to_buf("  Total damage done: {:d}                   ", party.total_dam_done);
+	add_string_to_buf("  Total damage taken: {:d}                   ", party.total_dam_taken);
 	print_buf();
 }
 
@@ -921,8 +884,7 @@ short do_look(location space)
 		for (i = 0; i < 6; i++)
 			if ((same_point(space,pc_pos[i]) == TRUE) && (adven[i].main_status == status::Normal)
 				&& (is_lit == TRUE) && (can_see(pc_pos[current_pc],space,0) < 5)) {
-				sprintf(store_string, "    %s", adven[i].name);
-				add_string_to_buf( store_string);
+				add_string_to_buf("    {}", adven[i].name);
 				}
 
 	if (is_out() == FALSE) {
@@ -934,20 +896,21 @@ short do_look(location space)
 
 
 				get_m_name(store_string2,c_town.monst.dudes[i].number);
-				if (c_town.monst.dudes[i].m_d.health < c_town.monst.dudes[i].m_d.m_health) {
+				if (c_town.monst.dudes[i].m_d.health < c_town.monst.dudes[i].m_d.m_health)
+				{
 					if (c_town.monst.dudes[i].attitude % 2 == 1)
-						sprintf(store_string, "    Wounded %s (H)", store_string2);
-						else sprintf(store_string, "    Wounded %s (F)", store_string2);
-					}
-				else {
-					if (c_town.monst.dudes[i].attitude % 2 == 1)
-						sprintf(store_string, "    %s (H)", store_string2);
-						else sprintf(store_string, "    %s (F)", store_string2);
-					}
-
-				add_string_to_buf( store_string);
-
+						add_string_to_buf("    Wounded {} (H)", store_string2);
+					else
+						add_string_to_buf("    Wounded {} (F)", store_string2);
 				}
+				else
+				{
+					if (c_town.monst.dudes[i].attitude % 2 == 1)
+						add_string_to_buf("    {} (H)", store_string2);
+					else
+						add_string_to_buf("    {} (F)", store_string2);
+				}
+			}
 		}
 	if (is_out()) {
 		for (i = 0; i < 10; i++) {
@@ -956,8 +919,7 @@ short do_look(location space)
 					for (j = 0; j < 7; j++)
 						if (party.out_c[i].what_monst.monst[j] != 0) {
 							get_m_name(store_string2,party.out_c[i].what_monst.monst[j]);
-							sprintf(store_string, "    %s", store_string2);
-							add_string_to_buf( store_string);
+							add_string_to_buf("    {}", store_string2);
 							j = 7;
 
 							}
@@ -1039,9 +1001,8 @@ short do_look(location space)
 				if ((t_i.items[i].variety != item_variety::None) && (t_i.items[i].variety != item_variety::Gold) &&(t_i.items[i].variety != item_variety::Food) &&
 					 (same_point(space,t_i.items[i].item_loc) == TRUE) && !is_contained(t_i.items[i])) {
 					if (is_ident(t_i.items[i]))
-						sprintf(store_string, "    %s",t_i.items[i].full_name);
-						else sprintf(store_string, "    %s",t_i.items[i].name);
-					add_string_to_buf( store_string);
+						add_string_to_buf("    {}",t_i.items[i].full_name);
+						else add_string_to_buf("    {}",t_i.items[i].name);
 					}
 				}
 		}
@@ -1101,8 +1062,7 @@ void notify_out_combat_began(out_wandering_type encounter,short *nums)
 {
 	short i;
 
-	sprintf(store_string, "COMBAT!                 ");				
-	add_string_to_buf( store_string);	
+	add_string_to_buf("COMBAT!                 ");
 
 	for (i = 0; i < 6; i++)
 		if (encounter.monst[i] != 0) {
@@ -1111,15 +1071,13 @@ void notify_out_combat_began(out_wandering_type encounter,short *nums)
 				
 				default:
 				get_m_name(store_string2,encounter.monst[i]);
-				sprintf(store_string, "  %d x %s        ",nums[i],store_string2);
+				add_string_to_buf("  {:d} x {}        ",nums[i],store_string2);
 				break;		
 			}				
-			add_string_to_buf( store_string);	
-			}
+		}
 	if (encounter.monst[6] != 0) {
 			get_m_name(store_string2,encounter.monst[6]);
-			sprintf(store_string, "  %s        ",store_string2);
-			add_string_to_buf( store_string);		
+			add_string_to_buf("  {}        ",store_string2);
 		}
 }
 
@@ -1130,22 +1088,18 @@ void get_m_name(char *str,unsigned char num)
 
 static void get_ter_name(char *str,unsigned char num)
 {
-	char store_name[256];
-	
-	////
 	if ((num == 90) && ((is_out()) || (is_town()) || ((is_combat()) && (which_combat_type == 1))))
-		sprintf(store_name,"Pit");
-		else {
-			strcpy(store_name, scenario_terrain_name(num));
-			}
-	strcpy(str, store_name);
+		strcpy(str,"Pit");
+	else
+	{
+		strcpy(str, scenario_terrain_name(num));
+	}
 }
 
 void print_monst_name(unsigned char m_type)
 {
 	get_m_name(store_string2,m_type);
-	sprintf(store_string, "%s:",store_string2);
-	add_string_to_buf( store_string);
+	add_string_to_buf("{}:",store_string2);
 }
 
 void print_monst_attacks(unsigned char m_type,short target)
@@ -1155,173 +1109,103 @@ void print_monst_attacks(unsigned char m_type,short target)
 	
 	get_m_name(store_string2,m_type);
 	if (target < 100)
-		sprintf(store_string, "%s attacks %s",
+		add_string_to_buf("{} attacks {}",
 			store_string2, adven[target].name);
 		else {
 			get_m_name(store_string3,c_town.monst.dudes[target - 100].number);
-			sprintf(store_string, "%s attacks %s",
+			add_string_to_buf("{} attacks {}",
 			store_string2,store_string3);
 			}
-	add_string_to_buf( store_string);
 }
 
 void damaged_message(short damage,short type)
 {
 	char str[256];
-	
 	get_str(str,20,130 + type);
-	sprintf(store_string, "  %s for %d",
-			str,damage);
-	add_string_to_buf( store_string);	
+	add_string_to_buf("  {} for {:d}", str,damage);
 }
 
 // This prepares the monster's string for the text bar
 void print_monster_going(char *combat_str,unsigned char m_num,short ap)
 {
 	get_m_name(store_string2,m_num);
-	sprintf(combat_str, "%s (ap: %d)",
+	format_to_buf(combat_str, "{} (ap: {:d})",
 		store_string2,ap);
 }
 
 void monst_spell_note(unsigned char number,short which_mess)
 {
 	get_m_name(store_string2,number);
-	switch (which_mess) {
-		case 1:
-	sprintf(store_string, "  %s scared. ",store_string2);break;
-	
-		case 2:
-	sprintf(store_string, "  %s slowed. ",store_string2);break;
-	
-		case 3:
-	sprintf(store_string, "  %s weakened.",store_string2);break;
-	
-		case 4:
-	sprintf(store_string, "  %s poisoned.",store_string2);break;
-	
-		case 5:
-	sprintf(store_string, "  %s cursed.",store_string2);break;
 
-		case 6:
-	sprintf(store_string, "  %s ravaged.",store_string2);break;
-
-		case 7:
-	sprintf(store_string, "  %s undamaged.",store_string2);break;
-
-		case 8:
-	sprintf(store_string, "  %s is stoned.",store_string2);break;
-		case 9:
-	sprintf(store_string, "  Gazes at %s.",store_string2);break;
-		case 10:
-	sprintf(store_string, "  %s resists.",store_string2);break;		
-		case 11:
-	sprintf(store_string, "  Drains %s.",store_string2);break;	
-		case 12:
-	sprintf(store_string, "  Shoots at %s.",store_string2);break;	
-		case 13:
-	sprintf(store_string, "  Throws spear at %s.",
-		store_string2);
-			break;	
-		case 14:
-	sprintf(store_string, "  Throws rock at %s.",
-		store_string2);
-			break;	
-		case 15:
-	sprintf(store_string, "  Throws razordisk at %s.",
-		store_string2);
-			break;
-		case 16:
-	sprintf(store_string, "  Hits %s.",
-		store_string2);
-			break;
-		case 17:
-	sprintf(store_string, "%s disappears.",
-		store_string2);
-			break;
-		case 18:
-	sprintf(store_string, "  Misses %s.",
-		store_string2);
-			break;
-		case 19:
-	sprintf(store_string, "  %s is webbed.",store_string2);break;
-		case 20:
-	sprintf(store_string, "  %s chokes.",store_string2);break;
-		case 21:
-	sprintf(store_string, "  %s summoned.",store_string2);break;
-		case 22:
-	sprintf(store_string, "  %s is dumbfounded.",store_string2);break;
-		case 23:
-	sprintf(store_string, "  %s is charmed.",store_string2);break;
-		case 24:
-	sprintf(store_string, "  %s is recorded.",store_string2);break;
-		case 25:
-	sprintf(store_string, "  %s is diseased.",store_string2);break;
-		case 26:
-	sprintf(store_string, "  %s is an avatar!",store_string2);break;
-		case 27:
-	sprintf(store_string, "  %s splits!",store_string2);break;
-		case 28:
-	sprintf(store_string, "  %s falls asleep.",store_string2);break;
-		case 29:
-	sprintf(store_string, "  %s wakes up.",store_string2);break;
-		case 30:
-	sprintf(store_string, "  %s paralyzed.",store_string2);break;
-		case 31:
-	sprintf(store_string, "  %s covered with acid.",store_string2);break;
-		case 32:
-	sprintf(store_string, "  Fires spines at %s.",store_string2);break;
-		}
-
-	if (which_mess > 0)
-		add_string_to_buf( store_string);
+	switch (which_mess)
+	{
+	case 1:		add_string_to_buf("  {} scared. ",store_string2);break;
+	case 2:		add_string_to_buf("  {} slowed. ",store_string2);break;
+	case 3:		add_string_to_buf("  {} weakened.",store_string2);break;
+	case 4:		add_string_to_buf("  {} poisoned.",store_string2);break;
+	case 5:		add_string_to_buf("  {} cursed.",store_string2);break;
+	case 6:		add_string_to_buf("  {} ravaged.",store_string2);break;
+	case 7:		add_string_to_buf("  {} undamaged.",store_string2);break;
+	case 8:		add_string_to_buf("  {} is stoned.",store_string2);break;
+	case 9:		add_string_to_buf("  Gazes at {}.",store_string2);break;
+	case 10:	add_string_to_buf("  {} resists.",store_string2);break;
+	case 11:	add_string_to_buf("  Drains {}.",store_string2);break;
+	case 12:	add_string_to_buf("  Shoots at {}.",store_string2);break;
+	case 13:	add_string_to_buf("  Throws spear at {}.", store_string2); break;	
+	case 14:	add_string_to_buf("  Throws rock at {}.", store_string2); break;	
+	case 15:	add_string_to_buf("  Throws razordisk at {}.", store_string2); break;
+	case 16:	add_string_to_buf("  Hits {}.", store_string2); break;
+	case 17:	add_string_to_buf("{} disappears.", store_string2); break;
+	case 18:	add_string_to_buf("  Misses {}.", store_string2); break;
+	case 19:	add_string_to_buf("  {} is webbed.",store_string2);break;
+	case 20:	add_string_to_buf("  {} chokes.",store_string2);break;
+	case 21:	add_string_to_buf("  {} summoned.",store_string2);break;
+	case 22:	add_string_to_buf("  {} is dumbfounded.",store_string2);break;
+	case 23:	add_string_to_buf("  {} is charmed.",store_string2);break;
+	case 24:	add_string_to_buf("  {} is recorded.",store_string2);break;
+	case 25:	add_string_to_buf("  {} is diseased.",store_string2);break;
+	case 26:	add_string_to_buf("  {} is an avatar!",store_string2);break;
+	case 27:	add_string_to_buf("  {} splits!",store_string2);break;
+	case 28:	add_string_to_buf("  {} falls asleep.",store_string2);break;
+	case 29:	add_string_to_buf("  {} wakes up.",store_string2);break;
+	case 30:	add_string_to_buf("  {} paralyzed.",store_string2);break;
+	case 31:	add_string_to_buf("  {} covered with acid.",store_string2);break;
+	case 32:	add_string_to_buf("  Fires spines at {}.",store_string2);break;
+	}
 }
 
 void monst_cast_spell_note(unsigned char number,short spell,short type)
 //short type; // 0 - mage 1- priest
 {
 	get_m_name(store_string2,number);
-	sprintf(store_string, "%s casts:",
-			store_string2);
-	add_string_to_buf( store_string);
-	sprintf(store_string, "  %s",
-			(type == 1) ? m_priest_sp[spell - 1] : m_mage_sp[spell - 1]);
-	add_string_to_buf( store_string);
+	add_string_to_buf("{} casts:", store_string2);
+	add_string_to_buf("  {}", (type == 1) ? m_priest_sp[spell - 1] : m_mage_sp[spell - 1]);
 }
 
 void monst_breathe_note(unsigned char number)
 {
 	get_m_name(store_string2,number);
-	sprintf(store_string, "%s breathes.",
-			store_string2);
-	add_string_to_buf( store_string);
-
+	add_string_to_buf("{} breathes.", store_string2);
 }
 
 void monst_damaged_mes(short which_m,short how_much,short how_much_spec)
 {
 	get_m_name(store_string2,c_town.monst.dudes[which_m].number);
 	if (how_much_spec > 0)
-		sprintf(store_string, "  %s takes %d+%d",
-			store_string2, how_much,how_much_spec);
-		else sprintf(store_string, "  %s takes %d",
-			store_string2, how_much);
- 
-	add_string_to_buf( store_string);
+		add_string_to_buf("  {} takes {:d}+{:d}", store_string2, how_much,how_much_spec);
+	else
+		add_string_to_buf("  {} takes {:d}", store_string2, how_much);
 }
 
 void monst_killed_mes(short which_m)
 {
 	get_m_name(store_string2,c_town.monst.dudes[which_m].number);
-	sprintf(store_string, "  %s dies.",
-		store_string2);
-	add_string_to_buf( store_string);
+	add_string_to_buf("  {} dies.", store_string2);
 }
 
 void print_nums(short a,short b,short c)
 {
-	sprintf(store_string, "debug: %d %d %d", a,b,c);
-	add_string_to_buf( store_string);
-
+	add_string_to_buf("debug: {:d} {:d} {:d}", a,b,c);
 }
 
 static short print_terrain(location space)
@@ -1338,14 +1222,13 @@ static short print_terrain(location space)
 		which_terrain = combat_terrain[space.x][space.y];
 		}
 	get_ter_name(store_string2,which_terrain);
-	sprintf(store_string, "    %s", store_string2);
-	add_string_to_buf( store_string);
+	add_string_to_buf("    {}", store_string2);
 
 	return (short) which_terrain;
 }
 
 
-void add_string_to_buf(const char * str)
+void add_string_to_buf(std::string_view str)
 {
 	//SetControlValue(text_sbar,58);
 	SetScrollPos(text_sbar,SB_CTL,58,TRUE);
@@ -1355,7 +1238,7 @@ void add_string_to_buf(const char * str)
 		print_buf();
 		through_sending();
 		}
-	sprintf(text_buffer[buf_pointer].data(), "%-49.49s", str);
+	format_to_buf(text_buffer[buf_pointer].data(), "{:<49.49s}", str.data());
    text_buffer[buf_pointer][49] = 0;
 //	c2pstr(text_buffer[buf_pointer].data());
 	if (buf_pointer == (TEXT_BUF_LEN - 1))
@@ -1372,9 +1255,6 @@ void init_buf()
 	}
 }
 
-
-
-
 void print_buf () 
 {
 	short num_lines_printed = 0,ctrl_val;
@@ -1385,7 +1265,6 @@ void print_buf ()
 	RECT from_rect,to_rect;
 	HDC hdc;
 	HGDIOBJ store_bmp;
-
 
 	if (string_added == TRUE) {
 
@@ -1527,52 +1406,54 @@ short string_length(char *str,HDC hdc)
 }
 
 
-void char_win_draw_string(HDC dest_window,RECT dest_rect, const char * str,short mode,short line_height)
-{
-	char store_s[256];
-	
-	strcpy(store_s,str);
-	win_draw_string( dest_window, dest_rect,store_s, mode, line_height);
-
-}
-
 // mode: 0 - align up and left, 1 - center on one line
 // str is a c string, 256 characters
 // uses current font
-void win_draw_string(HDC dest_hdc,RECT dest_rect,char *str,short mode,short line_height)
+void win_draw_string(HDC dest_hdc,RECT dest_rect, std::string_view str,short mode,short line_height)
 {
-	short i;
+	std::string adjusted;
+	adjusted.reserve(str.size());
 
-// this will need formatting for '|' line breaks
-	for (i = 0; i < 256; i++)  {
-		if (str[i] == 0)
-			i = 256;
-			else {
-			if (str[i] == '|') {
-				str[i] = 13;
-            }
-			if (str[i] == '_')
-				str[i] = 34;
-			}
+	// this will need formatting for '|' line breaks
+	for (const auto c: str)
+	{
+		if (c == '|')
+		{
+			adjusted.push_back(13);
+        }
+		else if (c == '_')
+		{
+			adjusted.push_back(34);
 		}
+		else
+		{
+			adjusted.push_back(c);
+		}
+	}
+
 	// if dest is main window, add ulx, uly
 	if (dest_hdc == main_dc)
-   	OffsetRect(&dest_rect,ulx,uly);
-	switch (mode) {
-		case 0:
-         dest_rect.bottom += 6;
-			DrawText(dest_hdc,str,strlen(str),&dest_rect,DT_LEFT | DT_NOPREFIX | DT_WORDBREAK); break;
-		case 1:
-			dest_rect.bottom += 6; dest_rect.top -= 6;
-			DrawText(dest_hdc,str,strlen(str),&dest_rect,
-			DT_CENTER | DT_NOPREFIX | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE); break;
-		case 2: case 3:
-			dest_rect.bottom += 6; dest_rect.top -= 6;
-			DrawText(dest_hdc,str,strlen(str),&dest_rect,
-			DT_LEFT | DT_NOPREFIX | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE); break;
-		}
+	{
+		OffsetRect(&dest_rect, ulx, uly);
+	}
+
+	switch (mode)
+	{
+	case 0:
+        dest_rect.bottom += 6;
+		DrawText(dest_hdc, adjusted.c_str(), adjusted.size(), &dest_rect, DT_LEFT | DT_NOPREFIX | DT_WORDBREAK);
+		break;
+	case 1:
+		dest_rect.bottom += 6; dest_rect.top -= 6;
+		DrawText(dest_hdc, adjusted.c_str(), adjusted.size(), &dest_rect, DT_CENTER | DT_NOPREFIX | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE);
+		break;
+	case 2:
+	case 3:
+		dest_rect.bottom += 6; dest_rect.top -= 6;
+		DrawText(dest_hdc, adjusted.c_str(), adjusted.size(), &dest_rect, DT_LEFT | DT_NOPREFIX | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE);
+		break;
+	}
 	// not yet done adjusts for 1, 2, 3
-	
 }
 
 short calc_day()
@@ -1601,7 +1482,7 @@ Boolean day_reached(unsigned char which_day, unsigned char which_event)
 
 // BEGIN EXTRA WINDOWS STUFF
 
-void WinDrawString(char *string,short x,short y)
+void WinDrawString(std::string_view str,short x,short y)
 {
 	HDC hdc;
 	COLORREF colors[2] = {RGB(0,0,0),RGB(255,255,255)};
@@ -1616,20 +1497,18 @@ void WinDrawString(char *string,short x,short y)
 	SelectObject(hdc,small_bold_font);
 	SetBkMode(hdc,TRANSPARENT);
 	SetTextColor(hdc,PALETTEINDEX(c[1]));
-	DrawString(string,x,y,hdc);
+	DrawString(str.data(), x, y, hdc);
 	fry_dc(mainPtr,hdc);
 }
 
-void WinBlackDrawString(char *string,short x,short y)
+void WinBlackDrawString(std::string_view str,short x,short y)
 {
-	HDC hdc;
-
-	hdc = GetDC(mainPtr);
+	HDC hdc = GetDC(mainPtr);
 	SelectPalette(hdc,hpal,0);
  	SetViewportOrgEx(hdc,ulx,uly,nullptr);
 	SelectObject(hdc,small_bold_font);
 	SetBkMode(hdc,TRANSPARENT);
-	DrawString(string,x,y,hdc);
+	DrawString(str.data(), x, y, hdc);
 	fry_dc(mainPtr,hdc);
 }
 
@@ -1689,9 +1568,9 @@ void GetIndString(char *str,short i, short j) {
 
 	len = LoadString(store_hInstance,resnum,str,256);
 	if (len == 0) {
-		sprintf(str,"");
+		str[0] = '\0';
 		return;
-		}
+	}
 	for (k = 0; k < 256; k++)  {
 		if (str[k] == '|')
 			str[k] = 13;

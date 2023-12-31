@@ -57,7 +57,7 @@ OPENFILENAME ofn;
 	OFSTRUCT store;
 Boolean suppress_load_file_name = FALSE;
 
-static short FSWrite(HFILE file, long* len, char* buffer);
+static short FSWrite(HFILE file, long* len, const char* buffer);
 static short FSRead(HFILE file, long* len, char* buffer);
 static short SetFPos(HFILE file, short mode, long len);
 
@@ -537,7 +537,7 @@ void load_spec_graphics()
 		}
 
 	//build_scen_file_name(file_name);
-	sprintf(file_name,"%s",szFileName);
+	format_to_buf(file_name,"{}",szFileName);
 	for (i = 0; i < 256; i++) {
 		if (file_name[i] == '.') {
   			file_name[i + 1] = 'b';
@@ -803,7 +803,8 @@ void import_town(short which_town)
 	short import_user_given_password;
 	char szFileName3 [128] = "scen.exs";
 
-	if (which_town >= 0) {
+	if (which_town >= 0)
+	{
 		ofn.hwndOwner = mainPtr;
 		ofn.lpstrFile = szFileName3;
 		ofn.lpstrFileTitle = szTitleName;
@@ -811,11 +812,12 @@ void import_town(short which_town)
 
 		if (GetOpenFileName(&ofn) == 0)
 			return;
-		}
-		else {
-			sprintf(szFileName3,"BLADBASE.EXS");
-			which_town = 0;
-			}
+	}
+	else
+	{
+		format_to_buf(szFileName3,"BLADBASE.EXS");
+		which_town = 0;
+	}
 
 	file_id = _lopen(szFileName3,OF_READ | OF_SHARE_DENY_WRITE /* | OF_SEARCH */ );
 	if (file_id == HFILE_ERROR) {
@@ -1228,13 +1230,11 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 
 void oops_error(short error)
 {
-	char error_str[256];
-	
-		SysBeep(50);
-		SysBeep(50);
-		SysBeep(50);
-	sprintf(error_str,"You may need more memory ... run the editor with no other programs running. Be sure to back your scenario up often. Error number: %d.",error);
-	give_error("The program encountered an error while loading/saving/creating the scenario. To prevent future problems, the program will now terminate. Trying again may solve the problem.",(char *) error_str,0);
+	SysBeep(50);
+	SysBeep(50);
+	SysBeep(50);
+	const auto error_str{ std::format("You may need more memory ... run the editor with no other programs running. Be sure to back your scenario up often. Error number: {:d}.",error) };
+	give_error("The program encountered an error while loading/saving/creating the scenario. To prevent future problems, the program will now terminate. Trying again may solve the problem.", error_str, 0);
 	PostQuitMessage(0);
 }
 
@@ -1449,219 +1449,240 @@ void reset_pwd()
 
 void start_data_dump()
 {
-	short i;
-	char get_text[280];
-	HFILE data_dump_file_id;
-	long len;
+	HFILE data_dump_file_id = _lcreat("SCENDATA.TXT", 0);
 
-	if (HFILE_ERROR == (data_dump_file_id = _lcreat("SCENDATA.TXT", 0))) {
-			SysBeep(50);
-			return;
-			}
+	if (HFILE_ERROR == data_dump_file_id)
+	{
+		SysBeep(50);
+		return;
+	}
 
 	SetFPos (data_dump_file_id, 2, 0);
 
-	sprintf(get_text,"Scenario data for %s:\n",scen_strs[0]);
-	len = (long) (strlen(get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	sprintf(get_text,"\n");
-	len = (long) (strlen(get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
+	auto get_text{ std::format("Scenario data for {}:\n",scen_strs[0]) };
+	long len = (long)get_text.size();
+	FSWrite(data_dump_file_id, &len, get_text.c_str());
 
-	sprintf(get_text,"Terrain types for %s:\n",scen_strs[0]);
-	len = (long) (strlen(get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
+	get_text = "\n";
+	len = (long)get_text.size();
+	FSWrite(data_dump_file_id, &len, get_text.c_str());
 
+	get_text = std::format("Terrain types for {}:\n",scen_strs[0]);
+	len = (long)get_text.size();
+	FSWrite(data_dump_file_id, &len, get_text.c_str());
 
-	for (i = 0; i < 256; i++) {
-		sprintf(get_text,"  Terrain type %d: %s\n",i,scen_item_list.ter_names[i]);
-		len = (long) (strlen(get_text));
-		FSWrite(data_dump_file_id, &len, (char *) get_text);
+	for (short i = 0; i < 256; i++)
+	{
+		get_text = std::format("  Terrain type {:d}: {}\n",i,scen_item_list.ter_names[i]);
+		len = (long)get_text.size();
+		FSWrite(data_dump_file_id, &len, get_text.c_str());
+	}
 
-		}
+	get_text = "\n";
+	len = (long)get_text.size();
+	FSWrite(data_dump_file_id, &len, get_text.c_str());
 
-	sprintf(get_text,"\n");
-	len = (long) (strlen(get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
+	get_text = std::format("Monster types for {}:\n",scen_strs[0]);
+	len = (long)get_text.size();
+	FSWrite(data_dump_file_id, &len, get_text.c_str());
 
-	sprintf(get_text,"Monster types for %s:\n",scen_strs[0]);
-	len = (long) (strlen(get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
+	for (short i = 0; i < 256; i++)
+	{
+		get_text = std::format("  Monster type {:d}: {}\n",i,scen_item_list.monst_names[i]);
+		len = (long)get_text.size();
+		FSWrite(data_dump_file_id, &len, get_text.c_str());
+	}
 
-	for (i = 0; i < 256; i++) {
-		sprintf(get_text,"  Monster type %d: %s\n",i,scen_item_list.monst_names[i]);
-		len = (long) (strlen(get_text));
-		FSWrite(data_dump_file_id, &len, (char *) get_text);
+	get_text = "\n";
+	len = (long)get_text.size();
+	FSWrite(data_dump_file_id, &len, get_text.c_str());
 
-		}
+	get_text = std::format("Item types for {}:\n",scen_strs[0]);
+	len = (long)get_text.size();
+	FSWrite(data_dump_file_id, &len, get_text.c_str());
 
-	sprintf(get_text,"\n");
-	len = (long) (strlen(get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-
-	sprintf(get_text,"Item types for %s:\n",scen_strs[0]);
-	len = (long) (strlen(get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-
-	for (i = 0; i < 400; i++) {
-		sprintf(get_text,"  Item type %d: %s\n",i,scen_item_list.scen_items[i].full_name);
-		len = (long) (strlen(get_text));
-		FSWrite(data_dump_file_id, &len, (char *) get_text);
-
-		}
+	for (short i = 0; i < 400; i++)
+	{
+		get_text = std::format("  Item type {:d}: {}\n",i,scen_item_list.scen_items[i].full_name);
+		len = (long)get_text.size();
+		FSWrite(data_dump_file_id, &len, get_text.c_str());
+	}
 	_lclose(data_dump_file_id);
-
 }
 
 void scen_text_dump()
 {
+	HFILE data_dump_file_id = _lcreat("SCENTEXT.TXT", 0);
+	if (HFILE_ERROR == data_dump_file_id)
+	{
+		SysBeep(50);
+		return;
+	}
+
 	short i;
 	short j;
-	HFILE data_dump_file_id;
-	char get_text[300];
-	long len;
 	location out_sec;
-	
-	if (HFILE_ERROR == (data_dump_file_id = _lcreat("SCENTEXT.TXT", 0))) {
-			SysBeep(50);
-			return;
-			}
 
-
-//	sprintf(empty_line,"\r");
-//	empty_len = (long) (strlen(empty_line));
+	//	format_to_buf(empty_line,"\r");
+	//	empty_len = (long) (strlen(empty_line));
 
 	SetFPos (data_dump_file_id, 2, 0);
 
-	sprintf(get_text,"Scenario text for %s:\n",scen_strs[0]);
-	len = (long) (strlen(get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	sprintf(get_text,"\n");
-	len = (long) (strlen(get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
+	auto get_text{ std::format("Scenario text for {}:\n",scen_strs[0]) };
+	long len = (long)get_text.size();
+	FSWrite(data_dump_file_id, &len, get_text.c_str());
 
-	sprintf(get_text,"Scenario Text:\n");
-	len = (long) (strlen(get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	sprintf(get_text,"\n");
-	len = (long) (strlen(get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
+	get_text = "\n";
+	len = (long)get_text.size();
+	FSWrite(data_dump_file_id, &len, get_text.c_str());
+
+	get_text = std::format("Scenario Text:\n");
+	len = (long)get_text.size();
+	FSWrite(data_dump_file_id, &len, get_text.c_str());
+
+	get_text = "\n";
+	len = (long)get_text.size();
+	FSWrite(data_dump_file_id, &len, get_text.c_str());
+
 	for (i = 0; i < 260; i++)
-		if (((i < 160) ? scen_strs[i][0] : scen_strs2[i - 160][0]) != '*') {
+		if (((i < 160) ? scen_strs[i][0] : scen_strs2[i - 160][0]) != '*')
+		{
 			if (i < 160)
-				sprintf(get_text,"  Message %d: %s\n",i,scen_strs[i]);
-				else sprintf(get_text,"  Message %d: %s\n",i,scen_strs2[i - 160]);
-			len = (long) (strlen(get_text));
-			FSWrite(data_dump_file_id, &len, (char *) get_text);
-			}
+				get_text = std::format("  Message {:d}: {}\n",i,scen_strs[i]);
+			else
+				get_text = std::format("  Message {:d}: {}\n",i,scen_strs2[i - 160]);
+			len = (long)get_text.size();
+			FSWrite(data_dump_file_id, &len, get_text.c_str());
+		}
 
-		sprintf(get_text,"\n");
-		len = (long) (strlen(get_text));
-		FSWrite(data_dump_file_id, &len, (char *) get_text);
-	sprintf(get_text,"Outdoor Sections Text:\n");
-	len = (long) (strlen(get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	sprintf(get_text,"\n");
-	len = (long) (strlen(get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
+	get_text = "\n";
+	len = (long)get_text.size();
+	FSWrite(data_dump_file_id, &len, get_text.c_str());
+
+	get_text = std::format("Outdoor Sections Text:\n");
+	len = (long)get_text.size();
+	FSWrite(data_dump_file_id, &len, get_text.c_str());
+
+	get_text = "\n";
+	len = (long)get_text.size();
+	FSWrite(data_dump_file_id, &len, get_text.c_str());
+
 	for (out_sec.x = 0; out_sec.x < scenario_out_width() ; out_sec.x++)
-		for (out_sec.y = 0; out_sec.y < scenario_out_height() ; out_sec.y++) {
-			sprintf(get_text,"  Section X = %d, Y = %d:\n",(short) out_sec.x,(short) out_sec.y);
-			len = (long) (strlen(get_text));
-			FSWrite(data_dump_file_id, &len, (char *) get_text);
-			sprintf(get_text,"\n");
-			len = (long) (strlen(get_text));
-			FSWrite(data_dump_file_id, &len, (char *) get_text);
+		for (out_sec.y = 0; out_sec.y < scenario_out_height() ; out_sec.y++)
+		{
+			get_text = std::format("  Section X = {:d}, Y = {:d}:\n",(short) out_sec.x,(short) out_sec.y);
+			len = (long)get_text.size();
+			FSWrite(data_dump_file_id, &len, get_text.c_str());
+
+			get_text = "\n";
+			len = (long)get_text.size();
+			FSWrite(data_dump_file_id, &len, get_text.c_str());
 
 			load_outdoors(out_sec,0);
+
 			for (i = 0; i < 108; i++)
-				if (data_store.out_strs[i][0] != '*') {
-					sprintf(get_text,"  Message %d: %s\n",i,data_store.out_strs[i]);
-					len = (long) (strlen(get_text));
-					FSWrite(data_dump_file_id, &len, (char *) get_text);
-					}
-			sprintf(get_text,"\n");
-			len = (long) (strlen(get_text));
-			FSWrite(data_dump_file_id, &len, (char *) get_text);
+				if (data_store.out_strs[i][0] != '*')
+				{
+					get_text = std::format("  Message {:d}: {}\n",i,data_store.out_strs[i]);
+					len = (long)get_text.size();
+					FSWrite(data_dump_file_id, &len, get_text.c_str());
+				}
+
+			get_text = "\n";
+			len = (long)get_text.size();
+			FSWrite(data_dump_file_id, &len, get_text.c_str());
 		}
+
 	augment_terrain(out_sec);
 
-	sprintf(get_text,"Town Text:\n");
-	len = (long) (strlen(get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	sprintf(get_text,"\n");
-	len = (long) (strlen(get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	for (j = 0; j < scenario_num_towns(); j++) {
+	get_text = std::format("Town Text:\n");
+	len = (long)get_text.size();
+	FSWrite(data_dump_file_id, &len, get_text.c_str());
+
+	get_text = "\n";
+	len = (long)get_text.size();
+	FSWrite(data_dump_file_id, &len, get_text.c_str());
+
+	for (j = 0; j < scenario_num_towns(); j++)
+	{
 		load_town(j);
 
-		sprintf(get_text,"  Town: %s\n",town_strs[0]);
-		len = (long) (strlen(get_text));
-		FSWrite(data_dump_file_id, &len, (char *) get_text);
-		sprintf(get_text,"\n");
-		len = (long) (strlen(get_text));
-		FSWrite(data_dump_file_id, &len, (char *) get_text);
-		sprintf(get_text,"  Town Messages:");
-		len = (long) (strlen(get_text));
-		FSWrite(data_dump_file_id, &len, (char *) get_text);
-		sprintf(get_text,"\n");
-		len = (long) (strlen(get_text));
-		FSWrite(data_dump_file_id, &len, (char *) get_text);
+		get_text = std::format("  Town: {}\n",town_strs[0]);
+		len = (long)get_text.size();
+		FSWrite(data_dump_file_id, &len, get_text.c_str());
 
-			for (i = 0; i < 135; i++)
-				if (town_strs[i][0] != '*') {
-					sprintf(get_text,"  Message %d: %s\n",i,town_strs[i]);
-					len = (long) (strlen(get_text));
-					FSWrite(data_dump_file_id, &len, (char *) get_text);
-					}
+		get_text = "\n";
+		len = (long)get_text.size();
+		FSWrite(data_dump_file_id, &len, get_text.c_str());
 
-		sprintf(get_text,"  Town Dialogue:");
-		len = (long) (strlen(get_text));
-		FSWrite(data_dump_file_id, &len, (char *) get_text);
-		sprintf(get_text,"\n");
-		len = (long) (strlen(get_text));
-		FSWrite(data_dump_file_id, &len, (char *) get_text);
+		get_text = std::format("  Town Messages:");
+		len = (long)get_text.size();
+		FSWrite(data_dump_file_id, &len, get_text.c_str());
 
-		for (i = 0; i < 10; i++) {
-			sprintf(get_text,"  Personality %d name: %s\n",j * 10 + i,talk_strs[i]);
-			len = (long) (strlen(get_text));
-			FSWrite(data_dump_file_id, &len, (char *) get_text);
-			sprintf(get_text,"  Personality %d look: %s\n",j * 10 + i,talk_strs[i + 10]);
-			len = (long) (strlen(get_text));
-			FSWrite(data_dump_file_id, &len, (char *) get_text);
-			sprintf(get_text,"  Personality %d ask name: %s\n",j * 10 + i,talk_strs[i + 20]);
-			len = (long) (strlen(get_text));
-			FSWrite(data_dump_file_id, &len, (char *) get_text);
-			sprintf(get_text,"  Personality %d ask job: %s\n",j * 10 + i,talk_strs[i + 30]);
-			len = (long) (strlen(get_text));
-			FSWrite(data_dump_file_id, &len, (char *) get_text);
-			sprintf(get_text,"  Personality %d confused: %s\n",j * 10 + i,talk_strs[i + 160]);
-			len = (long) (strlen(get_text));
-			FSWrite(data_dump_file_id, &len, (char *) get_text);
+		get_text = "\n";
+		len = (long)get_text.size();
+		FSWrite(data_dump_file_id, &len, get_text.c_str());
+
+		for (i = 0; i < 135; i++)
+			if (town_strs[i][0] != '*')
+			{
+				get_text = std::format("  Message {:d}: {}\n",i,town_strs[i]);
+				len = (long)get_text.size();
+				FSWrite(data_dump_file_id, &len, get_text.c_str());
 			}
 
-			for (i = 40; i < 160; i++)
-				if (strlen((talk_strs[i])) > 0) {
-					sprintf(get_text,"  Node %d: %s\n",(i - 40) / 2,talk_strs[i]);
-					len = (long) (strlen(get_text));
-					FSWrite(data_dump_file_id, &len, (char *) get_text);
-					}
+		get_text = std::format("  Town Dialogue:");
+		len = (long)get_text.size();
+		FSWrite(data_dump_file_id, &len, get_text.c_str());
 
-			sprintf(get_text,"\n");
-			len = (long) (strlen(get_text));
-			FSWrite(data_dump_file_id, &len, (char *) get_text);
+		get_text = "\n";
+		len = (long)get_text.size();
+		FSWrite(data_dump_file_id, &len, get_text.c_str());
 
+		for (i = 0; i < 10; i++)
+		{
+			get_text = std::format("  Personality {:d} name: {}\n",j * 10 + i,talk_strs[i]);
+			len = (long)get_text.size();
+			FSWrite(data_dump_file_id, &len, get_text.c_str());
+
+			get_text = std::format("  Personality {:d} look: {}\n",j * 10 + i,talk_strs[i + 10]);
+			len = (long)get_text.size();
+			FSWrite(data_dump_file_id, &len, get_text.c_str());
+
+			get_text = std::format("  Personality {:d} ask name: {}\n",j * 10 + i,talk_strs[i + 20]);
+			len = (long)get_text.size();
+			FSWrite(data_dump_file_id, &len, get_text.c_str());
+
+			get_text = std::format("  Personality {:d} ask job: {}\n",j * 10 + i,talk_strs[i + 30]);
+			len = (long)get_text.size();
+			FSWrite(data_dump_file_id, &len, get_text.c_str());
+
+			get_text = std::format("  Personality {:d} confused: {}\n",j * 10 + i,talk_strs[i + 160]);
+			len = (long)get_text.size();
+			FSWrite(data_dump_file_id, &len, get_text.c_str());
 		}
 
-	_lclose(data_dump_file_id);
+		for (i = 40; i < 160; i++)
+			if (strlen((talk_strs[i])) > 0)
+			{
+				get_text = std::format("  Node {:d}: {}\n",(i - 40) / 2,talk_strs[i]);
+				len = (long)get_text.size();
+				FSWrite(data_dump_file_id, &len, get_text.c_str());
+			}
 
+		get_text = "\n";
+		len = (long)get_text.size();
+		FSWrite(data_dump_file_id, &len, get_text.c_str());
+	}
+
+	_lclose(data_dump_file_id);
 }
 
-static short FSWrite(HFILE file,long *len,char *buffer)
+static short FSWrite(HFILE file,long *len, const char *buffer)
 {
 	long error = 0;
 
-	if ((error = _lwrite(file, (char *) buffer, (UINT) (*len)))  == HFILE_ERROR)
+	if ((error = _lwrite(file, buffer, (UINT) (*len)))  == HFILE_ERROR)
 		return -1;
 	return 0;
 }
@@ -1670,7 +1691,7 @@ static short FSRead(HFILE file,long *len,char *buffer)
 {
 	long error = 0;
 
-	if ((error = _lread(file, (char *) buffer, (UINT) (*len)))  == HFILE_ERROR)
+	if ((error = _lread(file, buffer, (UINT) (*len)))  == HFILE_ERROR)
 		return -1;
 	return 0;
 		

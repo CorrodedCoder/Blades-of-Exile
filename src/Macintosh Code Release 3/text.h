@@ -1,3 +1,7 @@
+#pragma once
+
+#include <string_view>
+
 short text_pc_has_abil_equip(short pc_num,short abil);
 void put_pc_screen();
 void place_buy_button(short position,short pc_num,short item_num);
@@ -31,7 +35,7 @@ void monst_damaged_mes(short which_m,short how_much,short how_much_spec);
 void monst_killed_mes(short which_m);
 void print_nums(short a,short b,short c);
 short print_terrain(location space);
-void add_string_to_buf(char *string);
+void add_string_to_buf(std::string_view str);
 void init_buf();
 void print_buf () ;
 void restart_printing();
@@ -44,8 +48,7 @@ void c2p(Str255 str) ;
 void p2c(Str255 str);
 void get_str(Str255 str,short i, short j);
 short string_length(char *str);
-void char_win_draw_string(GrafPtr dest_window,Rect dest_rect,char *str,short mode,short line_height);
-void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,short line_height);
+void win_draw_string(GrafPtr dest_window,Rect dest_rect, std::string_view str,short mode,short line_height);
 short calc_day();
 Boolean day_reached(unsigned char which_day, unsigned char which_event);
 void display_string(char *str);

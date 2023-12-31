@@ -249,7 +249,7 @@ void load_file()
 
 	len = sizeof(flag_type);
 
-//	sprintf(debug, "  Len %d               ", (short) len);
+//	format_to_buf(debug, "  Len {:d}               ", (short) len);
 //	add_string_to_buf( debug);
 
 	for (i = 0; i < 3; i++) {
@@ -772,7 +772,7 @@ void set_terrain(location l, unsigned char terrain_type)
 
 void build_scen_file_name (Str255 file_n)
 {
-	sprintf(file_n,":Blades of Exile Scenarios:%s",party.scen_name);
+	format_to_buf(file_n,":Blades of Exile Scenarios:{}",party.scen_name);
 	c2p(file_n);
 }
 
@@ -1401,29 +1401,29 @@ void start_data_dump()
 
 	SetFPos (data_dump_file_id, 2, 0);
 
-	sprintf(get_text,"Begin data dump:\r");
+	format_to_buf(get_text,"Begin data dump:\r");
 	len = (long) (strlen(get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	sprintf(get_text,"  Overall mode  %d\r",overall_mode);
+	format_to_buf(get_text,"  Overall mode  {:d}\r",overall_mode);
 	len = (long) (strlen(get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	sprintf(get_text,"  Outdoor loc  %d %d  Ploc %d %d\r",party.outdoor_corner.x,party.outdoor_corner.y,
+	format_to_buf(get_text,"  Outdoor loc  {:d} {:d}  Ploc {:d} {:d}\r",party.outdoor_corner.x,party.outdoor_corner.y,
 		party.p_loc.x,party.p_loc.y);
 	len = (long) (strlen(get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
 	if ((is_town()) || (is_combat())) {
-		sprintf(get_text,"  Town num %d  Town loc  %d %d \r",c_town.town_num,
+		format_to_buf(get_text,"  Town num {:d}  Town loc  {:d} {:d} \r",c_town.town_num,
 			c_town.p_loc.x,c_town.p_loc.y);
 		len = (long) (strlen(get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
 		if (is_combat()) {
-			sprintf(get_text,"  Combat type %d \r",which_combat_type);
+			format_to_buf(get_text,"  Combat type {:d} \r",which_combat_type);
 			len = (long) (strlen(get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			}
 
 		for (i = 0; i < T_M; i++) {
-			sprintf(get_text,"  Monster %d   Status %d  Loc %d %d  Number %d  Att %d  Tf %d\r",
+			format_to_buf(get_text,"  Monster {:d}   Status {:d}  Loc {:d} {:d}  Number {:d}  Att {:d}  Tf {:d}\r",
 				(short) i,(short) c_town.monst.dudes[i].active,(short) c_town.monst.dudes[i].m_loc.x,
 				(short) c_town.monst.dudes[i].m_loc.y,(short) c_town.monst.dudes[i].number,
 				(short) c_town.monst.dudes[i].attitude,(short) c_town.monst.dudes[i].monst_start.time_flag);
@@ -1526,7 +1526,7 @@ void oops_error(short error)
 		SysBeep(50);
 		SysBeep(50);
 		SysBeep(50);
-	sprintf(error_str,"Giving the scenario editor more memory might also help. Be sure to back your scenario up often. Error number: %d.",error);
+	format_to_buf(error_str,"Giving the scenario editor more memory might also help. Be sure to back your scenario up often. Error number: {:d}.",error);
 	give_error("The program encountered an error while loading/saving/creating the scenario. To prevent future problems, the program will now terminate. Trying again may solve the problem.",(char *) error_str,0);
 	//ExitToShell();
 }

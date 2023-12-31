@@ -207,9 +207,9 @@ Boolean cre(short val,short min,short max,const char *text1, const char *text2,s
 	return FALSE;
 }
 
-void give_error(const char *text1, const char *text2,short parent_num)
+void give_error(std::string_view text1, std::string_view text2,short parent_num)
 {
-	display_strings(text1,text2,"Error!",57,716,parent_num);
+	display_strings(text1.data(), text2.data(), "Error!", 57, 716, parent_num);
 }
 
 void display_strings_event_filter (short item_hit)
@@ -490,8 +490,9 @@ void edit_area_rect_event_filter (short item_hit)
 			dialog_not_toast = FALSE; 
 			CDGT(840,2,str);
 			if (store_str_mode == 0)
-				sprintf(data_store.out_strs[store_which_str + 1],"%-29.29s", str);
-				else sprintf(town_strs[store_which_str + 1],"%-29.29s", str);
+				format_to_buf(data_store.out_strs[store_which_str + 1],"{:<29.29s}", str);
+			else
+				format_to_buf(town_strs[store_which_str + 1],"{:<29.29s}", str);
 			break;
 
 		case 3:
@@ -1143,13 +1144,13 @@ void edit_dialog_text(short mode,short *str1,short parent)
 			for (i = *str1; i < *str1 + 6; i++) {
 				switch (store_spec_str_mode) {
 					case 0:
-						sprintf(scen_strs2[i],"");
+						format_to_buf(scen_strs2[i],"");
 						break;				
 					case 1:
-						sprintf(data_store.out_strs[10 + i],"");
+						format_to_buf(data_store.out_strs[10 + i],"");
 						break;				
 					case 2:
-						sprintf(town_strs[20 + i],"");
+						format_to_buf(town_strs[20 + i],"");
 						break;				
 					}			
 				}

@@ -516,7 +516,7 @@ void draw_startup_stats()
 	if (party_in_memory == FALSE) {
 		TextSize(20);
 		OffsetRect(&to_rect,175,40);
-		char_win_draw_string((GrafPtr) mainPtr,to_rect,
+		win_draw_string((GrafPtr) mainPtr,to_rect,
 			"No Party in Memory",0,18);
 		}
 	if (party_in_memory == TRUE) {
@@ -528,7 +528,7 @@ void draw_startup_stats()
 		FrameRect(&frame_rect);
 
 		OffsetRect(&to_rect,203,37);
-		char_win_draw_string((GrafPtr) mainPtr,to_rect,
+		win_draw_string((GrafPtr) mainPtr,to_rect,
 			"Your party:",0,18);
 		TextSize(12);	
 		TextFace(bold);
@@ -548,7 +548,7 @@ void draw_startup_stats()
 
 				TextSize(14);	
 				OffsetRect(&pc_rect,35,0);
-				char_win_draw_string((GrafPtr) mainPtr,pc_rect,
+				win_draw_string((GrafPtr) mainPtr,pc_rect,
 					adven[i].name,0,18);
 				OffsetRect(&to_rect,pc_rect.left + 8,pc_rect.top + 8);
 				
@@ -558,24 +558,24 @@ void draw_startup_stats()
 			switch (adven[i].main_status) {
 				case 1:
 					switch (adven[i].race) {
-						case 0: sprintf(str,"Level %d Human",adven[i].level); break;
-						case 1: sprintf(str,"Level %d Nephilim",adven[i].level); break;
-						case 2: sprintf(str,"Level %d Slithzerikai",adven[i].level); break;
+						case 0: format_to_buf(str,"Level {:d} Human",adven[i].level); break;
+						case 1: format_to_buf(str,"Level {:d} Nephilim",adven[i].level); break;
+						case 2: format_to_buf(str,"Level {:d} Slithzerikai",adven[i].level); break;
 						}
-					char_win_draw_string((GrafPtr) mainPtr,pc_rect,(char *) str,0,18);
+					win_draw_string((GrafPtr) mainPtr,pc_rect,str,0,18);
 					OffsetRect(&pc_rect,0,13);
-					sprintf(str,"Health %d, Spell pts. %d",
+					format_to_buf(str,"Health {:d}, Spell pts. {:d}",
 						adven[i].max_health,adven[i].max_sp);
-					char_win_draw_string((GrafPtr) mainPtr,pc_rect,(char *) str,0,18);
+					win_draw_string((GrafPtr) mainPtr,pc_rect,str,0,18);
 					break;
 				case 2:
-					char_win_draw_string((GrafPtr) mainPtr,pc_rect,"Dead",0,18);
+					win_draw_string((GrafPtr) mainPtr,pc_rect,"Dead",0,18);
 					break;
 				case 3:
-					char_win_draw_string((GrafPtr) mainPtr,pc_rect,"Dust",0,18);
+					win_draw_string((GrafPtr) mainPtr,pc_rect,"Dust",0,18);
 					break;
 				case 4:
-					char_win_draw_string((GrafPtr) mainPtr,pc_rect,"Stone",0,18);
+					win_draw_string((GrafPtr) mainPtr,pc_rect,"Stone",0,18);
 					break;
 				}
 			}
@@ -588,10 +588,10 @@ void draw_startup_stats()
 	OffsetRect(&pc_rect,5,5);
 	pc_rect.top = pc_rect.bottom - 25;
 	pc_rect.left = pc_rect.right - 300;
-	char_win_draw_string((GrafPtr) mainPtr,pc_rect,"Copyright 1997, All Rights Reserved, v1.0.2",0,18);
+	win_draw_string((GrafPtr) mainPtr,pc_rect,"Copyright 1997, All Rights Reserved, v1.0.2",0,18);
 	if (registered == FALSE) {
 		pc_rect.left = startup_from[0].left + 6;
-		char_win_draw_string((GrafPtr) mainPtr,pc_rect,"Unregistered copy. To order, select How To Order.",0,18);
+		win_draw_string((GrafPtr) mainPtr,pc_rect,"Unregistered copy. To order, select How To Order.",0,18);
 		}
 		
 	ForeColor(blackColor);
@@ -627,8 +627,7 @@ void draw_start_button(short which_position,short which_button)
 	RGBForeColor(&base_color);
 	if (which_position == 3)
 		OffsetRect(&to_rect,-7,0);
-	char_win_draw_string((GrafPtr) mainPtr,to_rect,
-		(char *) button_labels[which_position],1,18);
+	win_draw_string((GrafPtr) mainPtr,to_rect,button_labels[which_position],1,18);
 	ForeColor(blackColor);
 	TextFont(geneva_font_num);
 	TextFace(bold);
@@ -1074,7 +1073,7 @@ void draw_text_bar(short mode)
 						return;
 						}
 		if (remember_tiny_text != 50 + party.i_w_c.x + party.i_w_c.y) {
-			put_text_bar((char *) outdoor_text[party.i_w_c.x][party.i_w_c.y].out_strs[0]);
+			put_text_bar(outdoor_text[party.i_w_c.x][party.i_w_c.y].out_strs[0]);
 			remember_tiny_text = 50 + party.i_w_c.x + party.i_w_c.y;
 			}
 		}
@@ -1089,29 +1088,29 @@ void draw_text_bar(short mode)
 						return;
 						}
 		if (remember_tiny_text != 250) {
-			put_text_bar((char *) data_store->town_strs[0]); ////
+			put_text_bar(data_store->town_strs[0]); ////
 			remember_tiny_text = 250;
 			}
 	
 		}
 	if ((is_combat()) && (current_pc < 6) && (monsters_going == FALSE)) {
-		sprintf(combat_string,"%s (ap: %d)",
+		format_to_buf(combat_string,"{} (ap: {:d})",
 			adven[current_pc].name,pc_moves[current_pc]);
-		put_text_bar((char *) combat_string);
+		put_text_bar(combat_string);
 		remember_tiny_text = 500;
 		}
 	if ((is_combat()) && (monsters_going == TRUE))	// Print bar for 1st monster with >0 ap -
 	   // that is monster that is going
 	   for (i = 0; i < T_M; i++)
 	   	if ((c_town.monst.dudes[i].active > 0) && (c_town.monst.dudes[i].m_d.ap > 0)) {
-	   		print_monster_going((char *) combat_string,c_town.monst.dudes[i].number,c_town.monst.dudes[i].m_d.ap);
-			put_text_bar((char *) combat_string);
+	   		print_monster_going(combat_string,c_town.monst.dudes[i].number,c_town.monst.dudes[i].m_d.ap);
+			put_text_bar(combat_string);
 			remember_tiny_text = 500;
 			i = 400;	   
 	   }
 }
 
-void put_text_bar(char *str)
+void put_text_bar(std::string_view str)
 {
 	GrafPtr old_port;
 	char status_str[60];
@@ -1128,25 +1127,25 @@ void put_text_bar(char *str)
 	if (monsters_going == FALSE) {
 		if (PSD[305][0] > 0) {
 			MoveTo(xpos,14);
-			sprintf(status_str,"Stealth");
+			format_to_buf(status_str,"Stealth");
 			drawstring(status_str);
 			xpos -= 60;
 			}
 		if (PSD[305][1] > 0) {
 			MoveTo(xpos,14);
-			sprintf(status_str,"Flying");
+			format_to_buf(status_str,"Flying");
 			drawstring(status_str);
 			xpos -= 60;
 			}
 		if (PSD[305][2] > 0) {
 			MoveTo(xpos,14);
-			sprintf(status_str,"Detect Life");
+			format_to_buf(status_str,"Detect Life");
 			drawstring(status_str);
 			xpos -= 60;
 			}
 		if (PSD[305][3] > 0) {
 			MoveTo(xpos,14);
-			sprintf(status_str,"Firewalk");
+			format_to_buf(status_str,"Firewalk");
 			drawstring(status_str);
 			xpos -= 60;
 			}
@@ -1630,7 +1629,7 @@ GWorldPtr load_pict(short picture_to_get)
     	print_nums(10,1000,x);
     	}
 	if (current_pic_handle == NIL)  {
-		sprintf(d_s, "Stuck on %d  ",(short) picture_to_get);
+		format_to_buf(d_s, "Stuck on {:d}  ",(short) picture_to_get);
 		add_string_to_buf(d_s);
 		Alert(1076,NIL);
 		return NULL;
@@ -1647,7 +1646,7 @@ GWorldPtr load_pict(short picture_to_get)
  			ReleaseResource ((Handle) current_pic_handle);
    			return NULL;
    			}
-		sprintf(d_s, "Stuck on %d  error %d ",(short) picture_to_get,check_error);
+		format_to_buf(d_s, "Stuck on {:d}  error {:d} ",(short) picture_to_get,check_error);
 		add_string_to_buf(d_s);
 		print_buf(); 
 		Alert(1076,NIL);
@@ -2313,7 +2312,7 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 	
 	if ((cartoon_happening == FALSE) && (dest_rect.right - dest_rect.left >= 28)
 		&& (dest_rect.bottom - dest_rect.top >= 36)) {
-		sprintf(dam_str,"%d",damage);
+		format_to_buf(dam_str,"{:d}",damage);
 		TextSize(10);
 		TextFace(bold);
 		//text_rect = coord_to_rect(where_draw.x,where_draw.y);
@@ -2323,7 +2322,7 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 		if ((damage < 10) && (dest_rect.right - dest_rect.left > 19))
 			text_rect.left += 10;
 		OffsetRect(&text_rect,-4,-5);
-		char_win_draw_string((GrafPtr) mainPtr,text_rect,(char *) dam_str,1,10);
+		win_draw_string((GrafPtr) mainPtr,text_rect,dam_str,1,10);
 		TextSize(0);
 		TextFace(0);
 		}

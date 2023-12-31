@@ -27,7 +27,7 @@ void draw_buttons(short mode);
 void draw_text_area(short mode);
 void reset_text_bar();
 void draw_text_bar(short mode);
-void put_text_bar(char *str);
+void put_text_bar(std::string_view str);
 void load_area_graphics();
 void add_to_wish_list(short which_g);
 Boolean reserve_graphic_num_in_array(short which_g);

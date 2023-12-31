@@ -271,15 +271,15 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 						edit_monst_type(j); 
 						update_item_menu();
 						start_monster_editing(1);
-						//sprintf(str,"%d - %s",j, scen_item_list.monst_names[j]);
-						//set_rb(j - 1,2000 + j,(char *) str,0);
+						//format_to_buf(str,"{:d} - {}",j, scen_item_list.monst_names[j]);
+						//set_rb(j - 1,2000 + j, str,0);
 						break;
 					case 3: 
 						edit_item_type(j);
 						update_item_menu();
 						start_item_editing(1);
-						//sprintf(str,"%d - %s",j, scen_item_list.scen_items[j].full_name);
-						//set_rb(j,3000 + j,(char *) str,0);
+						//format_to_buf(str,"{:d} - {}",j, scen_item_list.scen_items[j].full_name);
+						//set_rb(j,3000 + j, str,0);
 						break;
 					case 4:
 						if (option_hit == TRUE) {
@@ -287,8 +287,8 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 							} 
 							else edit_spec_enc(j,0,0); 
 						//get_str(s2,22,scenario.scen_specials[j].type + 1);
-						//sprintf(str,"%d - %-30.30s",j, s2);
-						//set_rb(j,4000 + j,(char *) str,0);
+						//format_to_buf(str,"{:d} - {:<30.30s}",j, s2);
+						//set_rb(j,4000 + j, str,0);
 						start_special_editing(0,1);
 						break;
 					case 5: 
@@ -297,8 +297,8 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 							} 
 							else edit_spec_enc(j,1,0); 
 						//get_str(s2,22,current_terrain.specials[j].type + 1);
-						//sprintf(str,"%d - %-30.30s",j, s2);
-						//set_rb(j,5000 + j,(char *) str,0);
+						//format_to_buf(str,"{:d} - {:<30.30s}",j, s2);
+						//set_rb(j,5000 + j, str,0);
 						start_special_editing(1,1);
 						break;
 					case 6: 
@@ -307,8 +307,8 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 							} 
 							else edit_spec_enc(j,2,0); 
 						//get_str(s2,22,town.specials[j].type + 1);
-						//sprintf(str,"%d - %-30.30s",j, s2);
-						//set_rb(j,6000 + j,(char *) str,0);
+						//format_to_buf(str,"{:d} - {:<30.30s}",j, s2);
+						//set_rb(j,6000 + j, str,0);
 						start_special_editing(2,1);
 						break;
 					case 7:
@@ -319,8 +319,8 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 								else strcpy(scen_strs2[j - 160], s2);
 							} 
 							else edit_text_str(j,0);
-						//sprintf(str,"%d - %-30.30s",j,scen_strs[j]);
-						//set_rb(j,7000 + j,(char *) str,0);
+						//format_to_buf(str,"{:d} - {:<30.30s}",j,scen_strs[j]);
+						//set_rb(j,7000 + j, str,0);
 						start_string_editing(0,1);
 						break;
 
@@ -330,8 +330,8 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 							strcpy(data_store.out_strs[j], s2);
 							} 
 							else edit_text_str(j,1);
-						//sprintf(str,"%d - %-30.30s",j, data_store.out_strs[j]);
-						//set_rb(j,8000 + j,(char *) str,0);
+						//format_to_buf(str,"{:d} - {:<30.30s}",j, data_store.out_strs[j]);
+						//set_rb(j,8000 + j, str,0);
 						start_string_editing(1,1);
 						break;
 					case 9:
@@ -340,14 +340,14 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 							strcpy(town_strs[j], s2);
 							} 
 							else edit_text_str(j,2);
-						//sprintf(str,"%d - %-30.30s",j, town_strs[j]);
-						//set_rb(j,9000 + j,(char *) str,0);
+						//format_to_buf(str,"{:d} - {:<30.30s}",j, town_strs[j]);
+						//set_rb(j,9000 + j, str,0);
 						start_string_editing(2,1);
 						break;
 					case 10:
 						edit_spec_item(j);
-						//sprintf(str,"%d - %s",j, scen_strs[60 + j * 2]);
-						//set_rb(j,10000 + j,(char *) str,0);
+						//format_to_buf(str,"{:d} - {}",j, scen_strs[60 + j * 2]);
+						//set_rb(j,10000 + j, str,0);
 						start_special_item_editing();
 					break;
 					case 12:
@@ -448,7 +448,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 									for (x = 0; x < 16; x++)
 									if (t_d.room_rect[x].right == 0) {
 										t_d.room_rect[x] = working_rect;
-										sprintf(town_strs[x + 1],"");
+										format_to_buf(town_strs[x + 1],"");
 										if (edit_area_rect_str(x,1) == FALSE)
 											t_d.room_rect[x].right = 0;
 										x = 500;
@@ -458,7 +458,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 									for (x = 0; x < 8; x++)
 									if (current_terrain.info_rect[x].right == 0) {
 										current_terrain.info_rect[x] = working_rect;
-										sprintf(data_store.out_strs[x + 1],"");
+										format_to_buf(data_store.out_strs[x + 1],"");
 										if (edit_area_rect_str(x,0) == FALSE)
 											current_terrain.info_rect[x].right = 0;
 										x = 500;
@@ -3128,8 +3128,6 @@ void set_up_start_screen()
 
 void set_up_main_screen()
 {
-	char message[50];
-	
 	reset_lb();
 	reset_rb();
 	set_lb(-1,2,"Blades of Exile",0);
@@ -3142,14 +3140,12 @@ void set_up_main_screen()
 	set_lb(-1,11,"Edit Special Items",0);
 	set_lb(-1,1,"",0);
 	set_lb(-1,1,"Outdoors Options",0);
-	sprintf(message,"  Section x = %d, y = %d",(short) cur_out.x,(short) cur_out.y);
-	set_lb(-1,1,(char *) message,0);
+	set_lb(-1,1, std::format("  Section x = {:d}, y = {:d}", (short)cur_out.x, (short)cur_out.y), 0);
 	set_lb(-1,11,"Load New Section",0);
 	set_lb(-1,11,"Edit Outdoor Terrain",0);
 	set_lb(-1,1,"",0);
 	set_lb(-1,1,"Town/Dungeon Options",0);
-	sprintf(message,"  Town %d: %s",cur_town,town_strs[0]);
-	set_lb(-1,1,(char *) message,0);
+	set_lb(-1,1, std::format("  Town {:d}: {}", cur_town, town_strs[0]), 0);
 	set_lb(-1,11,"Load Another Town",0);
 	set_lb(-1,11,"Edit Town Terrain",0);
 	set_lb(-1,11,"Edit Town Dialogue",0);
@@ -3296,8 +3292,8 @@ void start_terrain_editing()
 	reset_rb();
 	SetControlMaximum(right_sbar,256 - NRSONPAGE);
 	for (i = 0; i < 256; i++) {
-		sprintf(str,"%d - %s",i, scen_item_list.ter_names[i]);
-		set_rb(i,1000 + i,(char *) str,0);
+		format_to_buf(str,"{:d} - {}",i, scen_item_list.ter_names[i]);
+		set_rb(i,1000 + i, str,0);
 		}
 	for (i = 0; i < NRSONPAGE; i++)
 		draw_rb_slot(i); */
@@ -3306,7 +3302,6 @@ void start_terrain_editing()
 void start_monster_editing(short just_redo_text)
 {
 	short i;
-	char str[256];
 	Boolean draw_full = FALSE;
 
 	if (overall_mode == 62)
@@ -3320,8 +3315,7 @@ void start_monster_editing(short just_redo_text)
 		SetScrollRange(right_sbar,SB_CTL,0,255 - NRSONPAGE,TRUE);
 		}
 	for (i = 1; i < 256; i++) {
-		sprintf(str,"%d - %s",i, scen_item_list.monst_names[i]);
-		set_rb(i - 1,2000 + i,(char *) str,0);
+		set_rb(i - 1,2000 + i, std::format("{:d} - {}", i, scen_item_list.monst_names[i]),0);
 		}
 	if (draw_full == TRUE)
 		redraw_screen();
@@ -3348,7 +3342,6 @@ Boolean monst_on_space(location loc,short m_num)
 void start_item_editing(short just_redo_text)
 {
 	short i;
-	char str[256];
 	Boolean draw_full = FALSE;
 	
 	if (just_redo_text == 0) {
@@ -3364,8 +3357,7 @@ void start_item_editing(short just_redo_text)
 		SetScrollRange(right_sbar,SB_CTL,0,400 - NRSONPAGE,TRUE);
 		}
 	for (i = 0; i < 400; i++) {
-		sprintf(str,"%d - %s",i, scen_item_list.scen_items[i].full_name);
-		set_rb(i,3000 + i,(char *) str,0);
+		set_rb(i,3000 + i, std::format("{:d} - {}", i, scen_item_list.scen_items[i].full_name),0);
 		}
 	if (draw_full == TRUE)
 		redraw_screen();
@@ -3377,7 +3369,6 @@ void start_item_editing(short just_redo_text)
 void start_special_item_editing()
 {
 	short i;
-	char str[256];
 	Boolean draw_full = FALSE;
 
 	if (overall_mode < 60)
@@ -3390,8 +3381,7 @@ void start_special_item_editing()
 		SetScrollRange(right_sbar,SB_CTL,0,50 - NRSONPAGE,TRUE);
 		reset_rb();
 	for (i = 0; i < 50; i++) {
-		sprintf(str,"%d - %s",i, scen_strs[60 + i * 2]);
-		set_rb(i,10000 + i,(char *) str,0);
+		set_rb(i,10000 + i, std::format("{:d} - {}", i, scen_strs[60 + i * 2]),0);
 		}
 	if (draw_full == TRUE)
 		redraw_screen();
@@ -3405,7 +3395,6 @@ void start_special_item_editing()
 void start_string_editing(short mode,short just_redo_text)
 {
 	short i,pos;
-	char str[256];
 	short num_strs[3] = {260,108,140};
 	Boolean draw_full = FALSE;
 
@@ -3417,26 +3406,23 @@ void start_string_editing(short mode,short just_redo_text)
 		overall_mode = 60;
 		ShowScrollBar(right_sbar,SB_CTL,TRUE);
 		SetScrollPos(right_sbar,SB_CTL,0,TRUE);
-	
 		reset_rb();
 		SetScrollRange(right_sbar,SB_CTL,0,num_strs[mode] - NRSONPAGE,TRUE);
+	}
 
-		}
 	for (i = 0; i < num_strs[mode]; i++) {
 		switch (mode) {
 			case 0:
 				if (i < 160)
-					sprintf(str,"%d - %-30.30s",i, scen_strs[i]);
-					else sprintf(str,"%d - %-30.30s",i, scen_strs2[i - 160]);
-				set_rb(i,7000 + i,(char *) str,0);
+					set_rb(i, 7000 + i, std::format("{:d} - {:<30.30s}",i, scen_strs[i]), 0);
+				else
+					set_rb(i, 7000 + i, std::format("{:d} - {:<30.30s}",i, scen_strs2[i - 160]), 0);
 				break;
 			case 1:
-				sprintf(str,"%d - %-30.30s",i, data_store.out_strs[i]);
-				set_rb(i,8000 + i,(char *) str,0);
+				set_rb(i,8000 + i, std::format("{:d} - {:<30.30s}", i, data_store.out_strs[i]),0);
 				break;
 			case 2:
-				sprintf(str,"%d - %-30.30s",i, town_strs[i]);
-				set_rb(i,9000 + i,(char *) str,0);
+				set_rb(i,9000 + i, std::format("{:d} - {:<30.30s}", i, town_strs[i]),0);
 				break;
 			}
 		}
@@ -3454,7 +3440,7 @@ void start_string_editing(short mode,short just_redo_text)
 void start_special_editing(short mode,short just_redo_text)
 {
 	short i;
-	char str[256],s2[256];
+	char s2[256];
 	short num_specs[3] = {256,60,100};
 	Boolean draw_full = FALSE;
 
@@ -3475,18 +3461,15 @@ void start_special_editing(short mode,short just_redo_text)
 		switch (mode) {
 			case 0:
 				get_str(s2,22,scenario.scen_specials[i].type + 1);
-				sprintf(str,"%d - %-30.30s",i, s2);
-				set_rb(i,4000 + i,(char *) str,0);
+				set_rb(i,4000 + i, std::format("{:d} - {:<30.30s}", i, s2),0);
 				break;
 			case 1:
 				get_str(s2,22,current_terrain.specials[i].type + 1);
-				sprintf(str,"%d - %-30.30s",i, s2);
-				set_rb(i,5000 + i,(char *) str,0);
+				set_rb(i,5000 + i, std::format("{:d} - {:<30.30s}", i, s2),0);
 				break;
 			case 2:
 				get_str(s2,22,town.specials[i].type + 1);
-				sprintf(str,"%d - %-30.30s",i, s2);
-				set_rb(i,6000 + i,(char *) str,0);
+				set_rb(i,6000 + i, std::format("{:d} - {:<30.30s}", i, s2),0);
 				break;
 			}
 		}
@@ -3501,7 +3484,6 @@ void start_special_editing(short mode,short just_redo_text)
 void start_dialogue_editing(short restoring)
 {
 	short i,j;
-	char str[256];
 	char s[15] = "    ,      ";
 	Boolean draw_full = FALSE;
 	
@@ -3518,19 +3500,15 @@ void start_dialogue_editing(short restoring)
 		SetScrollRange(right_sbar,SB_CTL,0,70 - NRSONPAGE,TRUE);
 		}
 	for (i = 0; i < 10; i++) {
-		sprintf(str,"Personality %d - %s",i + cur_town * 10,
-			 talk_strs[i]);
-		set_rb(i,13000 + i,(char *) str,0);
+		set_rb(i,13000 + i, std::format("Personality {:d} - {}", i + cur_town * 10, talk_strs[i]),0);
 		}
 	for (i = 0; i < 60; i++) {
 		for (j = 0; j < 4; j++) {
 			s[j] = talking.talk_nodes[i].link1[j];
 			s[j + 6] = talking.talk_nodes[i].link2[j];
 			}
-		sprintf(str,"Node %d - Per. %d, %s",i,
-			talking.talk_nodes[i].personality,s);
-		set_rb(10 + i,12000 + i,(char *) str,0);
-		}
+		set_rb(10 + i,12000 + i, std::format("Node {:d} - Per. {:d}, {}", i, talking.talk_nodes[i].personality, s),0);
+	}
 	if (draw_full == TRUE)
 		redraw_screen();
 		else for (i = 0; i < NRSONPAGE; i++)
@@ -3559,8 +3537,6 @@ void update_item_menu()
 {
 	short i,j;
 	HMENU menu[13],big_menu;
-	char item_name[256];
-
 	big_menu = GetMenu(mainPtr);
 
 	for (i = 0; i < 13; i++)
@@ -3569,31 +3545,39 @@ void update_item_menu()
 //	for (i = 0; i < 400; i++)
 //		DeleteMenu(big_menu,600 + i,MF_BYCOMMAND);
 
-	for (j = 0; j < 8; j++) {
-		for (i = 0; i < 50; i++) {
+	for (j = 0; j < 8; j++)
+	{
+		for (i = 0; i < 50; i++)
+		{
 			DeleteMenu(menu[j],0,MF_BYPOSITION);
-			}
-		if (overall_mode < 61) {
-			for (i = 0; i < 50; i++) {
-					sprintf(item_name, "%s",scen_item_list.scen_items[i + j * 50].full_name);
-					if ((i % 25 == 0) && (i > 0))
-						AppendMenu(menu[j],MF_MENUBREAK | MF_BYCOMMAND | MF_ENABLED | MF_STRING, 600 + (50 * j) + i, item_name);
-						else AppendMenu(menu[j],MF_BYCOMMAND | MF_ENABLED | MF_STRING, 600 + (50 * j) + i, item_name);
-					}
+		}
+		if (overall_mode < 61)
+		{
+			for (i = 0; i < 50; i++)
+			{
+				if ((i % 25 == 0) && (i > 0))
+					AppendMenu(menu[j],MF_MENUBREAK | MF_BYCOMMAND | MF_ENABLED | MF_STRING, 600 + (50 * j) + i, scen_item_list.scen_items[i + j * 50].full_name);
+				else
+					AppendMenu(menu[j],MF_BYCOMMAND | MF_ENABLED | MF_STRING, 600 + (50 * j) + i, scen_item_list.scen_items[i + j * 50].full_name);
 			}
 		}
+	}
 
-	for (j = 0; j < 5; j++) {
-		for (i = 0; i < 51; i++) {
+	for (j = 0; j < 5; j++)
+	{
+		for (i = 0; i < 51; i++)
+		{
 			DeleteMenu(menu[j + 8],0,MF_BYPOSITION);
+		}
+		if (overall_mode < 61)
+		{
+			for (i = 0; i < 51; i++)
+			{
+				if ((i % 26 == 0) && (i > 0))
+					AppendMenu(menu[j + 8],MF_MENUBREAK | MF_BYCOMMAND | MF_ENABLED | MF_STRING, 1001 + (51 * j) + i, scen_item_list.monst_names[i + j * 51]);
+				else
+					AppendMenu(menu[j + 8],MF_BYCOMMAND | MF_ENABLED | MF_STRING, 1001 + (51 * j) + i, scen_item_list.monst_names[i + j * 51]);
 			}
-		if (overall_mode < 61) {
-			for (i = 0; i < 51; i++) {
-					sprintf(item_name, "%s",scen_item_list.monst_names[i + j * 51]);
-					if ((i % 26 == 0) && (i > 0))
-						AppendMenu(menu[j + 8],MF_MENUBREAK | MF_BYCOMMAND | MF_ENABLED | MF_STRING, 1001 + (51 * j) + i, item_name);
-						else AppendMenu(menu[j + 8],MF_BYCOMMAND | MF_ENABLED | MF_STRING, 1001 + (51 * j) + i, item_name);
-					}
-				}
-			}
+		}
+	}
 }

@@ -323,16 +323,16 @@ BYTE * GetDibBitsAddr(BYTE * lpDib)
 	}
 
 HBITMAP ReadDib(const char * name,HDC hdc) {
-BITMAPFILEHEADER bmfh;
-BYTE * lpDib;
-DWORD dwDibSize, dwOffset, dwHeaderSize;
-int hFile;
-WORD wDibRead;
-BYTE * lpDibBits;
-HBITMAP bmap;
-OFSTRUCT store;
-char real_name[256] = "",*name_ptr;
-short i,last_slash = -1;
+	BITMAPFILEHEADER bmfh;
+	BYTE * lpDib;
+	DWORD dwDibSize, dwOffset, dwHeaderSize;
+	int hFile;
+	WORD wDibRead;
+	BYTE * lpDibBits;
+	HBITMAP bmap;
+	OFSTRUCT store;
+	char real_name[256] = "",*name_ptr;
+	short i,last_slash = -1;
 
 	for (i = 0; i < 256; i++)
 		if ((file_path_name[i] == 92) || (file_path_name[i] == '/'))
@@ -344,7 +344,7 @@ short i,last_slash = -1;
 			strcpy(real_name,file_path_name);
 			name_ptr = (char *) real_name;
 			name_ptr += last_slash + 1;
-			sprintf(name_ptr,"%s",name);
+			format_to_buf(name_ptr,"{}",name);
 			//real_name -= last_slash + 1;
 			//ASB(real_name);
 			}
@@ -609,7 +609,6 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect, RectDrawDestination dest,REC
 
  void fry_dc(HWND hwnd,HDC dc) {
 	if (ReleaseDC(hwnd,dc) == 0)
-	  //	add_string_to_buf("xx");
 		PostQuitMessage(0);
  }
 

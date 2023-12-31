@@ -784,7 +784,7 @@ void update_item_menu()
 		item_menu[i] = GetMHandle(750 + i);
 	for (j = 0; j < 4; j++)
 	for (i = 0; i < 94; i++) {
-			sprintf(item_name, " %s",item_list[i + j * 94].full_name);
+			format_to_buf(item_name, " {}",item_list[i + j * 94].full_name);
 			c2pstr((char *) item_name);
 			AppendMenu(item_menu[j],item_name);
 			} 

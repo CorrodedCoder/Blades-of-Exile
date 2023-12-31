@@ -313,7 +313,6 @@ void draw_main_screen()
 {
 	RECT	source_rect, dest_rec,dest_rect;
 	RECT reg_rect;
-	char temp_str[256];
 	RECT top_pic_from = {3,16,41,54};
 
 
@@ -333,7 +332,7 @@ void draw_main_screen()
 	dest_rect.bottom = dest_rect.top + 50;
 	dest_rect.right += 40;
 	SelectObject(main_dc,bold_font);
-	char_win_draw_string(main_dc,dest_rect,"Your party:",0,10);
+	win_draw_string(main_dc,dest_rect,"Your party:",0,10);
 
 
 	dest_rec = whole_win_rect;
@@ -351,19 +350,19 @@ void draw_main_screen()
 	//Off0setRect(&dest_rect,0,45);
 	OffsetRect(&dest_rect,0,21);
 	if (file_in_mem == TRUE)
-		char_win_draw_string(main_dc,dest_rect,"Click on character to edit it.",0,10);
-		else char_win_draw_string(main_dc,dest_rect,"Select Open from File menu.",0,10);
+		win_draw_string(main_dc,dest_rect,"Click on character to edit it.",0,10);
+		else win_draw_string(main_dc,dest_rect,"Select Open from File menu.",0,10);
 	OffsetRect(&dest_rect,0,12);
 	if (file_in_mem == TRUE)
-		char_win_draw_string(main_dc,dest_rect,"Press 'I' button to identify item, and 'D' button to drop item.",0,10);
+		win_draw_string(main_dc,dest_rect,"Press 'I' button to identify item, and 'D' button to drop item.",0,10);
 	//TextSize(12);
 	OffsetRect(&dest_rect,0,16);
 	if (file_in_mem == TRUE)
-		char_win_draw_string(main_dc,dest_rect,"Back up save file before editing it!",0,10);
+		win_draw_string(main_dc,dest_rect,"Back up save file before editing it!",0,10);
 	//TextSize(10);
 	//TextFace(0);
 	OffsetRect(&dest_rect,275,0);
-	char_win_draw_string(main_dc,dest_rect,"Copyright 1997, Spiderweb Software, Inc.",0,10);
+	win_draw_string(main_dc,dest_rect,"Copyright 1997, Spiderweb Software, Inc.",0,10);
 	//TextFace(bold);
 
 
@@ -373,10 +372,10 @@ void draw_main_screen()
 	reg_rect.bottom = pc_info_rect.top;
 	
 
-	if (ed_reg == FALSE) {
-		sprintf(temp_str,"Unregistered Copy |To find out how to order, |select How To Order from File Menu.");
-		win_draw_string(main_dc,reg_rect,temp_str,0,12);
-		}
+	if (ed_reg == FALSE)
+	{
+		win_draw_string(main_dc,reg_rect, "Unregistered Copy |To find out how to order, |select How To Order from File Menu.",0,12);
+	}
 }
 
 void do_button_action(short which_pc,short which_button)
@@ -398,7 +397,6 @@ void draw_items(short clear_first)
 //short clear_first; // 0 - redraw over, 1 - don't redraw over
 {
 	short i;
-	char to_draw[256];
 	RECT d_from = {28,12,42,24},i_from = {42,12,56,24},dest_rect;
 
 	if (file_in_mem == FALSE)
@@ -422,27 +420,29 @@ void draw_items(short clear_first)
 		return; // If PC is dead, it has no items
 	}
 	for (i = 0; i < 24; i++) // Loop through items and draw each
-		if (adven[current_active_pc].items[i].variety > item_variety::None) { // i.e. does item exist
-			sprintf(to_draw, "");
+		if (adven[current_active_pc].items[i].variety > item_variety::None) // i.e. does item exist
+		{
+			std::string to_draw;
 			if (adven[current_active_pc].items[i].item_properties % 2 == 0)
-				sprintf(to_draw, "%d. %s  ",i + 1,adven[current_active_pc].items[i].name);
-				else if (adven[current_active_pc].items[i].charges > 0)
-					sprintf(to_draw, "%d. %s (%d)",i + 1,adven[current_active_pc].items[i].full_name,
-					adven[current_active_pc].items[i].charges);
-				else sprintf(to_draw, "%d. %s ",i + 1,adven[current_active_pc].items[i].full_name);			
+				to_draw = std::format("{:d}. {}  ", i + 1, adven[current_active_pc].items[i].name);
+			else
+				if (adven[current_active_pc].items[i].charges > 0)
+					to_draw = std::format("{:d}. {} ({:d})",i + 1,adven[current_active_pc].items[i].full_name, adven[current_active_pc].items[i].charges);
+				else
+					to_draw = std::format("{:d}. {} ",i + 1,adven[current_active_pc].items[i].full_name);
 
 			//if (i % 2 == 0)
-			//	sprintf(to_draw, "%d %d %d %d",
+			//	format_to_buf(to_draw, "{:d} {:d} {:d} {:d}",
 			//	pc_info_rect.left,pc_info_rect.right,pc_info_rect.top,pc_info_rect.bottom);
-			//	else sprintf(to_draw, "%d %d %d %d",
+			//	else format_to_buf(to_draw, "{:d} {:d} {:d} {:d}",
 			//	name_rect.left,name_rect.right,name_rect.top,name_rect.bottom);
 
-			char_win_draw_string(main_dc,item_string_rects[i][0],(char *) to_draw,0,10);
+			win_draw_string(main_dc,item_string_rects[i][0], to_draw.c_str(), 0, 10);
 
 			//Draw id/drop buttons
 			rect_draw_some_item_bmp(mixed_gworld,d_from,mixed_gworld,item_string_rects[i][1],1,1);
 			rect_draw_some_item_bmp(mixed_gworld,i_from,mixed_gworld,item_string_rects[i][2],1,1);
-			}
+		}
 	frame_dlog_rect(mainPtr,pc_info_rect,0); // re draw entire frame
 	frame_dlog_rect(mainPtr,name_rect,0); // draw the frame
 	frame_dlog_rect(mainPtr,pc_race_rect,0); // draw the frame
@@ -497,7 +497,6 @@ void display_party(short mode,short clear_first)
 //short clear_first; // 0 - redraw over, 1 - don't redraw over
 {
 	short i;
-	char to_draw[256],skill_value[256];
 	RECT from_base = {0,0,28,36},from_rect;
 	COLORREF colors[4] = {RGB(0,0,0),RGB(255,0,0),RGB(0,0,102),RGB(255,255,255)};
 	UINT c[4];
@@ -524,7 +523,7 @@ void display_party(short mode,short clear_first)
 		no_party_rect=pc_info_rect;
 		no_party_rect.top+=5;
 		no_party_rect.left+=5;
-		char_win_draw_string(main_dc,no_party_rect,"No party loaded.",0,10);
+		win_draw_string(main_dc,no_party_rect,"No party loaded.",0,10);
 		}
 		else {
 
@@ -533,8 +532,8 @@ void display_party(short mode,short clear_first)
 		from_rect.top = from_rect.bottom - 14;
 		from_rect.left += 3;
 		if (party_in_scen == FALSE)
-			char_win_draw_string(main_dc,from_rect,"Party not in a scenario.",0,10);
-			else char_win_draw_string(main_dc,from_rect,"Party is in a scenario.",0,10);
+			win_draw_string(main_dc,from_rect,"Party not in a scenario.",0,10);
+			else win_draw_string(main_dc,from_rect,"Party is in a scenario.",0,10);
 			
 			for (i = 0; i < 6; i++) {
 				if (i == current_active_pc)
@@ -559,30 +558,26 @@ void display_party(short mode,short clear_first)
 					//frame_dlog_rect((GrafPtr) mainPtr,pc_area_buttons[i][1],0); 
 					// draw name
 					//TextSize(9);
-					if( (strlen(adven[i].name)) >= 0) {
+					if( (strlen(adven[i].name)) >= 0)
+					{
 						//TextFace(0);
 						SelectObject(main_dc,font);
-						sprintf(to_draw, "%-s", adven[i].name);
 						//TextSize(6);
-						}
-					else {
-						sprintf(to_draw, "%-s", adven[i].name);
-						}
-
+					}
 					if (i == current_active_pc)
 						SetTextColor(main_dc,PALETTEINDEX(c[1]));
-						else SetTextColor(main_dc,PALETTEINDEX(c[3]));
-					win_draw_string(main_dc,pc_area_buttons[i][2],to_draw,1,10);
+					else
+						SetTextColor(main_dc,PALETTEINDEX(c[3]));
+					win_draw_string(main_dc,pc_area_buttons[i][2], std::format("{:>s}", adven[i].name),1,10);
 					SelectObject(main_dc,bold_font);
 					//TextFace(bold);
 					//TextSize(10);
-
-					if (i == current_active_pc){
-						sprintf(to_draw, "%-.18s  ", adven[i].name);
+					if (i == current_active_pc)
+					{
 						if( (strlen(adven[i].name)) > 12)
 							SelectObject(main_dc,font);
 						SetTextColor(main_dc,PALETTEINDEX(c[0]));
-						win_draw_string(main_dc,name_rect,to_draw,1,10);
+						win_draw_string(main_dc,name_rect, std::format("{:>.18s}  ", adven[i].name),1,10);
 						SelectObject(main_dc,bold_font);
 					}
 					if ((current_pressed_button < 0) || (current_pressed_button == i))
@@ -592,20 +587,15 @@ void display_party(short mode,short clear_first)
 							if (i == current_active_pc) {
 								//Draw in race
 								if (adven[i].race == 0)
-									char_win_draw_string(main_dc,pc_race_rect,"Human   ",1,10);
+									win_draw_string(main_dc,pc_race_rect,"Human   ",1,10);
 								if (adven[i].race == 1)
-									char_win_draw_string(main_dc,pc_race_rect,"Nephilim   ",1,10);
+									win_draw_string(main_dc,pc_race_rect,"Nephilim   ",1,10);
 								if (adven[i].race == 2)
-									char_win_draw_string(main_dc,pc_race_rect,"Slithzerikai  ",1,10);
+									win_draw_string(main_dc,pc_race_rect,"Slithzerikai  ",1,10);
 								// Draw in skills	
 								
-								sprintf(to_draw, "Skills:");
-								win_draw_string(main_dc,skill_rect,to_draw,0,10);
-								sprintf(to_draw, "Hp: %d/%d  Sp: %d/%d",adven[i].cur_health,adven[i].max_health,adven[i].cur_sp,
-									adven[i].max_sp);
-								win_draw_string(main_dc,hp_sp_rect,to_draw,0,10);
-								
-								
+								win_draw_string(main_dc,skill_rect, "Skills:",0,10);
+								win_draw_string(main_dc,hp_sp_rect, std::format("Hp: {:d}/{:d}  Sp: {:d}/{:d}", adven[i].cur_health, adven[i].max_health, adven[i].cur_sp, adven[i].max_sp),0,10);
 								SelectObject(main_dc,font);
 								string_num=1;
 								for( k = skill::Strength; k <= skill::Luck; ++k)
@@ -613,13 +603,13 @@ void display_party(short mode,short clear_first)
 									temp_rect = pc_skills_rect[k];
 									temp_rect.left = pc_skills_rect[k].left + ((k < 10) ? 90 : 83);
 									
+									char to_draw[256];
 									get_str(to_draw,9,string_num);
 									win_draw_string(main_dc,pc_skills_rect[k],to_draw,0,9);
 									
-									sprintf(skill_value,"%d",adven[i].skills[k]);
 									OffsetRect(&temp_rect,-8,0);
-                           temp_rect.right += 10;
-									win_draw_string(main_dc,temp_rect,skill_value,0,9);	
+									temp_rect.right += 10;
+									win_draw_string(main_dc,temp_rect, std::format("{:d}", adven[i].skills[k]),0,9);
 									//frame_dlog_rect((GrafPtr) mainPtr,pc_skills_rect[k],0);
 									string_num+=2;
 								}
@@ -627,8 +617,7 @@ void display_party(short mode,short clear_first)
 								
 								//Write in pc Status
 								SelectObject(main_dc,bold_font);
-								sprintf(to_draw, "Status:");
-								win_draw_string(main_dc,status_rect,to_draw,0,10);
+								win_draw_string(main_dc,status_rect, "Status:",0,10);
 								
 								SelectObject(main_dc,font);
 								//for(k = 0 ; k < 10; k++)
@@ -641,7 +630,7 @@ void display_party(short mode,short clear_first)
 									{
 										if (cur_rect <= 9)
 										{
-											char_win_draw_string(main_dc, pc_status_rect[cur_rect], std::get<0>(c_status_text[int_index]), 0, 9);
+											win_draw_string(main_dc, pc_status_rect[cur_rect], std::get<0>(c_status_text[int_index]), 0, 9);
 											++cur_rect;
 										}
 									}
@@ -649,7 +638,7 @@ void display_party(short mode,short clear_first)
 									{
 										if (cur_rect <= 9)
 										{
-											char_win_draw_string(main_dc, pc_status_rect[cur_rect], std::get<1>(c_status_text[int_index]), 0, 9);
+											win_draw_string(main_dc, pc_status_rect[cur_rect], std::get<1>(c_status_text[int_index]), 0, 9);
 											++cur_rect;
 										}
 									}
@@ -658,8 +647,7 @@ void display_party(short mode,short clear_first)
 								
 								//Write in Traits
 								SelectObject(main_dc,bold_font);
-								sprintf(to_draw, "Traits:");
-								win_draw_string(main_dc,traits_rect,to_draw,0,10);
+								win_draw_string(main_dc,traits_rect, "Traits:",0,10);
 								//for(k = 0 ; k < 16; k++)
 									//frame_dlog_rect((GrafPtr) mainPtr,pc_traits_rect[k],0);
 								SelectObject(main_dc,font);
@@ -670,7 +658,7 @@ void display_party(short mode,short clear_first)
 									{
 										if (cur_rect <= c_rect_limit[trait_index])
 										{
-											char_win_draw_string(main_dc, pc_traits_rect[cur_rect], c_trait_text[trait_index], 0, 9);
+											win_draw_string(main_dc, pc_traits_rect[cur_rect], c_trait_text[trait_index], 0, 9);
 											++cur_rect;
 										}
 									}
@@ -680,43 +668,43 @@ void display_party(short mode,short clear_first)
 							
 							SetTextColor(main_dc,PALETTEINDEX(c[0]));
 							SelectObject(main_dc,bold_font);
-							char_win_draw_string(main_dc,pc_area_buttons[i][3],"Alive ",1,10);
+							win_draw_string(main_dc,pc_area_buttons[i][3],"Alive ",1,10);
 							SelectObject(main_dc,bold_font);
 							break;
 						case status::Dead:
 							SetTextColor(main_dc,PALETTEINDEX(c[0]));
 							SelectObject(main_dc,bold_font);
-							char_win_draw_string(main_dc,pc_area_buttons[i][3],"Dead ",1,10);
+							win_draw_string(main_dc,pc_area_buttons[i][3],"Dead ",1,10);
 							SelectObject(main_dc,bold_font);
 							break;
 						case status::Dust:
 							SetTextColor(main_dc,PALETTEINDEX(c[0]));
 							SelectObject(main_dc,bold_font);
-							char_win_draw_string(main_dc,pc_area_buttons[i][3],"Dust ",1,10);
+							win_draw_string(main_dc,pc_area_buttons[i][3],"Dust ",1,10);
 							SelectObject(main_dc,bold_font);
 							break;
 						case status::Stone:
 							SetTextColor(main_dc,PALETTEINDEX(c[0]));
 							SelectObject(main_dc,bold_font);
-							char_win_draw_string(main_dc,pc_area_buttons[i][3],"Stone ",1,10);
+							win_draw_string(main_dc,pc_area_buttons[i][3],"Stone ",1,10);
 							SelectObject(main_dc,bold_font);
 							break;
 						case status::Fled:
 							SetTextColor(main_dc,PALETTEINDEX(c[0]));
 							SelectObject(main_dc,bold_font);
-							char_win_draw_string(main_dc,pc_area_buttons[i][3],"Fled ",1,10);
+							win_draw_string(main_dc,pc_area_buttons[i][3],"Fled ",1,10);
 							SelectObject(main_dc,bold_font);
 							break;
 						case status::Surface:
 							SetTextColor(main_dc,PALETTEINDEX(c[0]));
 							SelectObject(main_dc,bold_font);
-							char_win_draw_string(main_dc,pc_area_buttons[i][3],"Surface ",1,10);
+							win_draw_string(main_dc,pc_area_buttons[i][3],"Surface ",1,10);
 							SelectObject(main_dc,bold_font);
 							break;
 						default:
 							SetTextColor(main_dc,PALETTEINDEX(c[0]));
 							SelectObject(main_dc,bold_font);
-							char_win_draw_string(main_dc,pc_area_buttons[i][3],"Absent ",1,10);
+							win_draw_string(main_dc,pc_area_buttons[i][3],"Absent ",1,10);
 							SelectObject(main_dc,bold_font);
 							break;
 						}
@@ -740,19 +728,19 @@ void display_party(short mode,short clear_first)
 			SetTextColor(main_dc,PALETTEINDEX(c[3]));
 			switch(i) {
 				case 0:
-					char_win_draw_string(main_dc,edit_rect[0][1]," Add|Mage|Spells ",0,10);
+					win_draw_string(main_dc,edit_rect[0][1]," Add|Mage|Spells ",0,10);
 					break;
 				case 1:
-					char_win_draw_string(main_dc,edit_rect[1][1]," Add|Priest|Spells ",0,10);
+					win_draw_string(main_dc,edit_rect[1][1]," Add|Priest|Spells ",0,10);
 					break;
 				case 2:
-					char_win_draw_string(main_dc,edit_rect[2][1]," Edit|Traits",0,10);
+					win_draw_string(main_dc,edit_rect[2][1]," Edit|Traits",0,10);
 					break;
 				case 3:
-					char_win_draw_string(main_dc,edit_rect[3][1]," Edit|Skills",0,10);
+					win_draw_string(main_dc,edit_rect[3][1]," Edit|Skills",0,10);
 					break;
 				case 4:
-					char_win_draw_string(main_dc,edit_rect[4][1]," Edit|  XP",0,10);
+					win_draw_string(main_dc,edit_rect[4][1]," Edit|  XP",0,10);
 					break;
 				default:
 					break;
@@ -761,13 +749,12 @@ void display_party(short mode,short clear_first)
 			 
 		}
 //			MoveTo(start_h + 10, start_v + 127);	
-//			sprintf(to_draw, " Gold: %d       Food: %d ",(short) party.gold, (short) party.food);
-//			DrawString(to_draw);
-		}
-SetTextColor(main_dc,PALETTEINDEX(c[0]));
+//			DrawString(std::format(" Gold: {:d}       Food: {:d} ",(short) party.gold, (short) party.food).c_str());
+	}
+	SetTextColor(main_dc,PALETTEINDEX(c[0]));
 }
 
-void add_string_to_buf(const char * str) {
+void add_string_to_buf(std::string_view str) {
 
 	}
 	
@@ -838,47 +825,54 @@ void get_str(char *str,short i, short j)
 }
 
 
-void char_win_draw_string(HDC dest_window,RECT dest_rect, const char * str,short mode,short line_height)
-{
-	char store_s[256];
-	
-	strcpy(store_s,str);
-	win_draw_string( dest_window, dest_rect,store_s, mode, line_height);
-
-}
-
 // mode: 0 - align up and left, 1 - center on one line
 // str is a c string, 256 characters
 // uses current font
-void win_draw_string(HDC dest_hdc,RECT dest_rect,char *str,short mode,short line_height)
+void win_draw_string(HDC dest_hdc,RECT dest_rect, std::string_view str,short mode,short line_height)
 {
-	short i;
+	std::string adjusted;
+	adjusted.reserve(str.size());
 
-// this will need formatting for '|' line breaks
-	for (i = 0; i < 256; i++)  {
-		if (str[i] == '|')
-			str[i] = 13;
-		if (str[i] == '_')
-      	str[i] = 34;
+	// this will need formatting for '|' line breaks
+	for (const auto c : str)
+	{
+		if (c == '|')
+		{
+			adjusted.push_back(13);
 		}
+		else if (c == '_')
+		{
+			adjusted.push_back(34);
+		}
+		else
+		{
+			adjusted.push_back(c);
+		}
+	}
+
 	// if dest is main window, add ulx, uly
 	if (dest_hdc == main_dc)
+	{
 		OffsetRect(&dest_rect,ulx,uly);
-	switch (mode) {
-		case 0:
-         dest_rect.bottom += 6;
-			DrawText(dest_hdc,str,strlen(str),&dest_rect,DT_LEFT | DT_WORDBREAK); break;
-		case 1:
-			dest_rect.bottom += 6; dest_rect.top -= 6;
-			DrawText(dest_hdc,str,strlen(str),&dest_rect,
-			DT_CENTER | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE); break;
-		case 2: case 3:
-			dest_rect.bottom += 6; dest_rect.top -= 6;
-			DrawText(dest_hdc,str,strlen(str),&dest_rect,
-			DT_LEFT | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE); break;
-		}
-	// not yet done adjusts for 1, 2, 3
-	
+	}
+
+	switch (mode)
+	{
+	case 0:
+        dest_rect.bottom += 6;
+		DrawText(dest_hdc, adjusted.c_str(), adjusted.size(), &dest_rect, DT_LEFT | DT_WORDBREAK);
+		break;
+	case 1:
+		dest_rect.bottom += 6; dest_rect.top -= 6;
+		DrawText(dest_hdc, adjusted.c_str(), adjusted.size(), &dest_rect, DT_CENTER | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE);
+		break;
+	case 2:
+	case 3:
+		dest_rect.bottom += 6; dest_rect.top -= 6;
+		DrawText(dest_hdc, adjusted.c_str(), adjusted.size(), &dest_rect, DT_LEFT | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE);
+		break;
+	}
+	// not yet done adjusts for 1, 2, 3	
 }
 
 short string_length(char *str,HDC hdc)
@@ -951,9 +945,9 @@ void GetIndString(char *str,short i, short j) {
 
 	len = LoadString(store_hInstance,resnum,str,256);
 	if (len == 0) {
-		sprintf(str,"");
+		str[0] = '\0';
 		return;
-		}
+	}
 	for (k = 0; k < 256; k++)  {
 		if (str[k] == '|')
 			str[k] = 13;

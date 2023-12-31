@@ -710,7 +710,7 @@ Boolean handle_action(EventRecord event)
 					add_string_to_buf("Pause.");
 					for (k = 0; k < 6; k++)
 						if ((adven[k].main_status == status::Normal) && (adven[k].gaffect(affect::Webbed) > 0)) {
-							sprintf(str,"%s cleans webs.",adven[k].name);
+							format_to_buf(str,"{} cleans webs.",adven[k].name);
 							add_string_to_buf( str);
 							adven[k].reduce_affect(affect::Webbed);
 							adven[k].reduce_affect(affect::Webbed);
@@ -875,7 +875,7 @@ Boolean handle_action(EventRecord event)
 						}
 
 				}
-//			sprintf(store_str,"  Mod: %d",event.modifiers);
+//			format_to_buf(store_str,"  Mod: {:d}",event.modifiers);
 //			add_string_to_buf(store_str);
 
 			// If option not pressed, looking done, so restore center
@@ -1064,19 +1064,19 @@ Boolean handle_action(EventRecord event)
 									current_pc = i;
 									set_stat_window (i);
 									if (overall_mode == 21)
-										sprintf(str,"Now shopping: %s",adven[i].name);
-										else sprintf(str,"Now active: %s",adven[i].name);
+										format_to_buf(str,"Now shopping: {}",adven[i].name);
+										else format_to_buf(str,"Now active: {}",adven[i].name);
 									add_string_to_buf(str);
 									adjust_spell_menus();
 									}
 							break;
 						case 1:
-							sprintf(str,"%s has %d health out of %d.",adven[i].name,
+							format_to_buf(str,"{} has {:d} health out of {:d}.",adven[i].name,
 								adven[i].cur_health,adven[i].max_health);
 							add_string_to_buf(str);
 							break;
 						case 2:
-							sprintf(str,"%s has %d spell pts. out of %d.",adven[i].name,
+							format_to_buf(str,"{} has {:d} spell pts. out of {:d}.",adven[i].name,
 								adven[i].cur_sp,adven[i].max_sp);
 							add_string_to_buf(str);
 							break;
@@ -1126,7 +1126,7 @@ Boolean handle_action(EventRecord event)
 										add_string_to_buf("Set active: PC must be here & active.");
 										else {
 											current_pc = i;
-											sprintf(str,"Now active: %s",adven[i].name);
+											format_to_buf(str,"Now active: {}",adven[i].name);
 											add_string_to_buf(str);
 											adjust_spell_menus();
 											}
@@ -1625,7 +1625,7 @@ Boolean handle_keystroke(char chr,char chr2,EventRecord event)
 	SetPort(mainPtr);
 	
 // DEBUG
-//	sprintf(debug, "%d    ",(short) chr2); 
+//	format_to_buf(debug, "{:d}    ",(short) chr2); 
 //	add_string_to_buf( debug);
 //	print_buf();
 	if (overall_mode == 20) {
@@ -2344,7 +2344,7 @@ void handle_cave_lore()////
 	for (i = 0; i < 6; i++)
 		if ( pc_has_cave_lore(adven[i]) && (rand_short(0,12) == 5)
 			&& (((pic >= 0) && (pic <= 1)) || ((pic >= 70) && (pic <= 76))) ) {
-			sprintf(str,"%s hunts.",adven[i].name);
+			format_to_buf(str,"{} hunts.",adven[i].name);
 			party.food += get_ran(2,1,6);
 			add_string_to_buf(str);
 			put_pc_screen();
@@ -2352,7 +2352,7 @@ void handle_cave_lore()////
 	for (i = 0; i < 6; i++)
 		if ( pc_has_woodsman(adven[i]) && (rand_short(0,12) == 5)
 			&& (((pic >= 2) && (pic <= 4)) || ((pic >= 79) && (pic <= 84)))) {
-			sprintf(str,"%s hunts.",adven[i].name);
+			format_to_buf(str,"{} hunts.",adven[i].name);
 			party.food += get_ran(2,1,6);
 			add_string_to_buf(str);
 			put_pc_screen();
@@ -2684,7 +2684,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 		party.i_w_c.x = (party.p_loc.x > 47) ? 1 : 0;
 		party.i_w_c.y = (party.p_loc.y > 47) ? 1 : 0;
 		party.loc_in_sec = global_to_local(party.p_loc);
-		sprintf(create_line, "Moved: %s",dir_string[party.direction]);//, party.p_loc.x, party.p_loc.y, party.loc_in_sec.x, party.loc_in_sec.y);
+		format_to_buf(create_line, "Moved: {}",dir_string[party.direction]);//, party.p_loc.x, party.p_loc.y, party.loc_in_sec.x, party.loc_in_sec.y);
 		add_string_to_buf( create_line);
 		move_sound(out[real_dest.x][real_dest.y],num_out_moves);
 		num_out_moves++;
@@ -2730,7 +2730,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 		return TRUE;
 		}
 		else {
-			sprintf(create_line, "Blocked: %s",dir_string[set_direction(party.p_loc, destination)]);		
+			format_to_buf(create_line, "Blocked: {}",dir_string[set_direction(party.p_loc, destination)]);		
 			add_string_to_buf( create_line);	
 			return FALSE;
 			}
@@ -2850,7 +2850,7 @@ Boolean town_move_party(location destination,short forced)////
 				}
 			party.direction = set_direction(c_town.p_loc, destination);
 			c_town.p_loc = destination;
-			sprintf(create_line, "Moved: %s",dir_string[party.direction]);
+			format_to_buf(create_line, "Moved: {}",dir_string[party.direction]);
 			add_string_to_buf( create_line);
 //			place_treasure(destination,5,3);
 
@@ -2869,8 +2869,8 @@ Boolean town_move_party(location destination,short forced)////
 			}
 		else {
 			if (is_door(destination) == TRUE)
-				sprintf(create_line, "Door locked: %s               ",dir_string[set_direction(c_town.p_loc, destination)]);		
-				else sprintf(create_line, "Blocked: %s               ",dir_string[set_direction(c_town.p_loc, destination)]);		
+				format_to_buf(create_line, "Door locked: {}               ",dir_string[set_direction(c_town.p_loc, destination)]);		
+				else format_to_buf(create_line, "Blocked: {}               ",dir_string[set_direction(c_town.p_loc, destination)]);		
 			add_string_to_buf( create_line);
 			return FALSE;
 			}

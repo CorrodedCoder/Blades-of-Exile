@@ -393,7 +393,7 @@ short cd_create_custom_dialog(HWND parent,
 			item_label[free_item] = 0;
            	item_label_loc[free_item] = -1;
             item_key[free_item] = 0;
- 			sprintf(text_long_str[free_item],"%s", strs[i]);
+ 			format_to_buf(text_long_str[free_item],"{}", strs[i]);
       		cur_item++;
        		}
 	
@@ -569,7 +569,7 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 			dlg_highest_item[free_slot] = i;
 			str_stored = FALSE;
 			if (strlen(item_str) == 0) {
-				sprintf(item_str, "+");
+				format_to_buf(item_str, "+");
 				type = 3;
 				flag = 0;
 	            str_stored = TRUE;
@@ -684,10 +684,10 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 									item_key[free_item] = 255;
 							break;
 						case 3: case 4: case 7: case 8: case 9: case 10: case 11:
-							sprintf(((free_item < 10) ? text_long_str[free_item] : text_short_str[free_item - 10]),"");
+							format_to_buf(((free_item < 10) ? text_long_str[free_item] : text_short_str[free_item - 10]),"");
 							if (str_stored == TRUE) {
 								if (free_item < 10) {
-									sprintf(text_long_str[free_item],"%s",
+									format_to_buf(text_long_str[free_item],"{}",
 									  item_str + str_offset);
 									for (k = 0; k < 256; k++) {
 										if (text_long_str[free_item][k] == '|')
@@ -700,7 +700,7 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 									//	item_rect[free_item].right += 20;
 									}
 								else {
-									sprintf(text_short_str[free_item - 10],"%-34s",
+									format_to_buf(text_short_str[free_item - 10],"{:<34s}",
 									  item_str + str_offset);
 									for (k = 0; k < 35; k++) {
 										if (text_short_str[free_item][k] == '|')
@@ -985,7 +985,7 @@ void cd_get_item_text(short dlog_num, short item_num, char *str)
 		//print_nums(0,0,GetWindowText(edit_box,str,255));
 		if (edit_box != NULL)
 			GetWindowText(edit_box,str,255);
-			else sprintf(str,"");
+			else format_to_buf(str,"");
 		//add_string_to_buf(str);
 		return;
 		}
@@ -994,8 +994,8 @@ void cd_get_item_text(short dlog_num, short item_num, char *str)
 		return;
 		}
 	if (item_index < 10)
-		sprintf(str,"%s",text_long_str[item_index]);
-		else sprintf(str,"%s",text_short_str[item_index - 10]);
+		format_to_buf(str,"{}",text_long_str[item_index]);
+		else format_to_buf(str,"{}",text_short_str[item_index - 10]);
 }
 
 void cd_get_text_edit_str(short dlog_num, char *str)
@@ -1005,16 +1005,16 @@ void cd_get_text_edit_str(short dlog_num, char *str)
 			else str[0] = 0;
 }
 // NOTE!!! Expects a c string
-void cd_set_text_edit_str(short dlog_num, const char * str)
+void cd_set_text_edit_str(short dlog_num, std::string_view str)
 {
 		if (edit_box != NULL)
-			SetWindowText(edit_box,str);
+			SetWindowText(edit_box,str.data());
 }
 void cdsin(short dlog_num, short item_num, short num) 
 {
 	cd_set_item_num( dlog_num,  item_num,  num);
 }
-void csit(short dlog_num, short item_num, const char * str)
+void csit(short dlog_num, short item_num, std::string_view str)
 {
 	cd_set_item_text( dlog_num,  item_num, str);
 }
@@ -1024,14 +1024,14 @@ void csp(short dlog_num, short item_num, short pict_num)
 }
 
 
-void cd_set_item_text(short dlog_num, short item_num, const char * str)
+void cd_set_item_text(short dlog_num, short item_num, std::string_view str)
 {
 	short k,dlg_index,item_index;
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
 		return ;
 	if (item_type[item_index] == 6) {
 		if (edit_box != NULL)
-			SetWindowText(edit_box,str);
+			SetWindowText(edit_box,str.data());
 		return;
 		}
 	if (item_index >= 150) {
@@ -1039,7 +1039,7 @@ void cd_set_item_text(short dlog_num, short item_num, const char * str)
 		return;
 		}
 	if (item_index < 10) {
-		sprintf(text_long_str[item_index],"%s",str);
+		format_to_buf(text_long_str[item_index],"{}",str);
 		for (k = 0; k < 256; k++) {
 			if (text_long_str[item_index][k] == '|')
 				text_long_str[item_index][k] = 13;
@@ -1048,7 +1048,7 @@ void cd_set_item_text(short dlog_num, short item_num, const char * str)
 			}
 
 		}
-		else sprintf(text_short_str[item_index - 10],"%-34s",str);
+		else format_to_buf(text_short_str[item_index - 10],"{:<34s}",str);
 	cd_draw_item( dlog_num,item_num);
 }
 
@@ -1062,8 +1062,8 @@ void cd_set_item_num(short dlog_num, short item_num, short num)
 		return;
 		}
 	if (item_index < 10)
-		sprintf(text_long_str[item_index],"%d",num);
-		else sprintf(text_short_str[item_index - 10],"%d",num);
+		format_to_buf(text_long_str[item_index],"{:d}",num);
+		else format_to_buf(text_short_str[item_index - 10],"{:d}",num);
 	cd_draw_item( dlog_num,item_num);
 }
 
@@ -1123,7 +1123,7 @@ void cd_text_frame(short dlog_num,short item_num,short frame)
 	cd_draw_item(dlog_num,item_num);
 }
 
-void cd_add_label(short dlog_num, short item_num, const char *label, short label_flag)
+void cd_add_label(short dlog_num, short item_num, std::string_view label, short label_flag)
 {
 	short dlg_index,item_index,label_loc = -1;
 	short i;
@@ -1147,7 +1147,7 @@ void cd_add_label(short dlog_num, short item_num, const char *label, short label
 		}
       else cd_erase_item(dlog_num,item_num + 100);
 	label_loc = item_label_loc[item_index];
-	sprintf(labels[label_loc],"%-24s",label);
+	format_to_buf(labels[label_loc],"{:<24s}",label);
 	if (item_active[item_index] > 0)
 		cd_draw_item(dlog_num,item_num);
 }
@@ -1168,8 +1168,8 @@ void cd_key_label(short dlog_num, short item_num,short loc)
 	char str[10];
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
 		return;
-	sprintf(str," ");
 	str[0] = item_key[item_index];
+	str[1] = '\0';
 	cd_add_label(dlog_num,item_num, str, 7 + loc * 100);
 }
 
@@ -1215,11 +1215,11 @@ void cd_draw_item(short dlog_num,short item_num)
 					if (item_type[item_index] < 2)
 						OffsetRect(&item_rect[item_index],-1 * button_left_adj[item_flag[item_index]],0);
 					if (item_type[item_index] < 2) {
-						char_win_draw_string(win_dc,item_rect[item_index],
+						win_draw_string(win_dc,item_rect[item_index],
 						 button_strs[item_flag[item_index]],1,8);
 						}
 						else {
-							char_win_draw_string(win_dc,item_rect[item_index],
+							win_draw_string(win_dc,item_rect[item_index],
 							 ((item_index < 10) ? text_long_str[item_index] :
 							  text_short_str[item_index - 10]),1,8);
 							}
@@ -1529,11 +1529,11 @@ void cd_press_button(short dlog_num, short item_num)
 	if (item_type[item_index] < 2)
 		OffsetRect(&item_rect[item_index],-1 * button_left_adj[item_flag[item_index]],0);
 	if (item_type[item_index] < 2) {
-		char_win_draw_string(win_dc,item_rect[item_index],
+		win_draw_string(win_dc,item_rect[item_index],
 		button_strs[item_flag[item_index]],1,8);
 		}
 		else {
-			char_win_draw_string(win_dc,item_rect[item_index],
+			win_draw_string(win_dc,item_rect[item_index],
 			 ((item_index < 10) ? text_long_str[item_index] : 
 			text_short_str[item_index - 10]),1,8);
 			}
@@ -1554,11 +1554,11 @@ void cd_press_button(short dlog_num, short item_num)
 	if (item_type[item_index] < 2)
 		OffsetRect(&item_rect[item_index],-1 * button_left_adj[item_flag[item_index]],0);
 	if (item_type[item_index] < 2) {
-		char_win_draw_string(win_dc,item_rect[item_index],
+		win_draw_string(win_dc,item_rect[item_index],
 		 button_strs[item_flag[item_index]],1,8);
 		}
 		else {
-			char_win_draw_string(win_dc,item_rect[item_index],
+			win_draw_string(win_dc,item_rect[item_index],
 			  ((item_index < 10) ? text_long_str[item_index] : 
 			text_short_str[item_index - 10]),1,8);
 			}

@@ -1,3 +1,7 @@
+#pragma once
+
+#include <string_view>
+
 void cd_init_dialogs();
 short cd_create_dialog_parent_num(short dlog_num,short parent);
 short cd_create_dialog(short dlog_num,WindowPtr parent);
@@ -13,17 +17,17 @@ void cd_set_pict(short dlog_num, short item_num, short pict_num);
 void cd_activate_item(short dlog_num, short item_num, short status);
 short cd_get_active(short dlog_num, short item_num);
 void cd_get_item_text(short dlog_num, short item_num, char *str);
-void csit(short dlog_num, short item_num, char *str);
+void csit(short dlog_num, short item_num, std::string_view str);
 void cd_retrieve_text_edit_str(short dlog_num, char *str);
-void cd_set_text_edit_str(short dlog_num, char *str);
-void cd_set_item_text(short dlog_num, short item_num, char *str);
+void cd_set_text_edit_str(short dlog_num, std::string_view str);
+void cd_set_item_text(short dlog_num, short item_num, std::string_view str);
 void cdsin(short dlog_num, short item_num, short num) ;
 void cd_set_item_num(short dlog_num, short item_num, short num);
 void cd_set_led(short dlog_num,short item_num,short state);
 void cd_set_flag(short dlog_num,short item_num,short flag);
 short cd_get_led(short dlog_num,short item_num);
 void cd_text_frame(short dlog_num,short item_num,short frame);
-void cd_add_label(short dlog_num, short item_num, char *label, short label_flag);
+void cd_add_label(short dlog_num, short item_num, std::string_view label, short label_flag);
 void cd_take_label(short dlog_num, short item_num);
 void cd_key_label(short dlog_num, short item_num,short loc);
 void cd_draw_item(short dlog_num,short item_num);

@@ -189,7 +189,7 @@ void edit_gold_or_food(short which_to_edit)
 	
 	cd_create_dialog((which_to_edit == 0) ? 1012 : 947,mainPtr);
 		
-	sprintf(sign_text,"%d",(short) ((which_to_edit == 0) ? party.gold : party.food));
+	format_to_buf(sign_text,"{:d}",(short) ((which_to_edit == 0) ? party.gold : party.food));
 	cd_set_text_edit_str((which_to_edit == 0) ? 1012 : 947,(char *) sign_text);
 	
 #ifndef EXILE_BIG_GUNS
@@ -239,7 +239,7 @@ void edit_day()
 	
 	cd_create_dialog(917,mainPtr);
 		
-	sprintf(sign_text,"%d",(short) ( ((party.age) / 3700) + 1));
+	format_to_buf(sign_text,"{:d}",(short) ( ((party.age) / 3700) + 1));
 	cd_set_text_edit_str(917,(char *) sign_text);
 	
 #ifndef EXILE_BIG_GUNS
@@ -446,7 +446,7 @@ void do_xp_draw()
 
 	pc_num = store_train_pc;
 
-			sprintf(get_text, "%s",(char *) adven[pc_num].name);
+			format_to_buf(get_text, "{}",(char *) adven[pc_num].name);
 
 
 	cd_set_item_text (1010, 51,get_text);
@@ -622,14 +622,14 @@ Boolean spend_xp(short pc_num, short mode, short parent)
 	make_cursor_sword();
 
 	cd_create_dialog_parent_num(1010,parent);
-	sprintf(get_text,"Health (%d/%d)",1,10);
+	format_to_buf(get_text,"Health ({:d}/{:d})",1,10);
 	cd_add_label(1010,52,(char *) get_text,1075);
-	sprintf(get_text,"Spell Pts. (%d/%d)",1,15);
+	format_to_buf(get_text,"Spell Pts. ({:d}/{:d})",1,15);
 	//cd_add_label(1010,5,get_text,1040);
 	cd_add_label(1010,53,(char *) get_text,1075);
 	for (i = 54; i < 73; i++) {
 		get_str(text2,9,1 + 2 * (i - 54));
-		sprintf(get_text,"%s (%d/%d)",text2,skill_cost[i - 54],skill_g_cost[i - 54]);
+		format_to_buf(get_text,"{} ({:d}/{:d})",text2,skill_cost[i - 54],skill_g_cost[i - 54]);
 		cd_add_label(1010,i,(char *) get_text,(i < 63) ? 1075 : 1069);
 		}
 	do_xp_draw();
@@ -716,7 +716,7 @@ void edit_xp(pc_record_type *pc)
 	
 	cd_create_dialog(1024,mainPtr);
 		
-	sprintf(sign_text,"%d",(short)pc->experience);
+	format_to_buf(sign_text,"{:d}",(short)pc->experience);
 	cd_set_text_edit_str(1024,(char *) sign_text);
 	item_hit = get_tnl(store_xp_pc);
 	cdsin(1024,8,item_hit);

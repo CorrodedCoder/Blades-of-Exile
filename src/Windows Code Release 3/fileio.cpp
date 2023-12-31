@@ -417,12 +417,12 @@ void build_scen_file_name(char* file_n)
 		if ((file_path_name[i] == 92) || (file_path_name[i] == '/'))
 			last_slash = i;
 	if (last_slash < 0) {
-		sprintf(file_n, "BLADSCEN/%s", party.scen_name);
+		format_to_buf(file_n, "BLADSCEN/{}", party.scen_name);
 		return;
 	}
 	strcpy(file_n, file_path_name);
 	file_n += last_slash + 1;
-	sprintf(file_n, "BLADSCEN/%s", party.scen_name);
+	format_to_buf(file_n, "BLADSCEN/{}", party.scen_name);
 }
 
 void build_scen_ed_name(char* file_n)
@@ -433,12 +433,12 @@ void build_scen_ed_name(char* file_n)
 		if ((file_path_name[i] == 92) || (file_path_name[i] == '/'))
 			last_slash = i;
 	if (last_slash < 0) {
-		sprintf(file_n, "BLSCENED/bladdata.bld");
+		format_to_buf(file_n, "BLSCENED/bladdata.bld");
 		return;
 	}
 	strcpy(file_n, file_path_name);
 	file_n += last_slash + 1;
-	sprintf(file_n, "BLSCENED/bladdata.bld");
+	format_to_buf(file_n, "BLSCENED/bladdata.bld");
 }
 
 // mode 0 want town and talking, 1 talking only, 2 want a string only, and extra is string num
@@ -1108,8 +1108,7 @@ void build_data_file(short mode)
 			file_read_type(f, s_vals[i]);
 		}
 
-		//sprintf(debug_str,"Starting %d: %d",i,(short) s_vals[i]);
-		//add_string_to_buf(debug_str);
+		//add_string_to_buf("Starting {:d}: {:d}",i,(short) s_vals[i]);
 	}
 
 	if (f.fail()) {
@@ -1244,13 +1243,11 @@ void set_up_ter_pics()
 }
 void oops_error(short error)
 {
-	char error_str[256];
-
 	SysBeep(50);
 	SysBeep(50);
 	SysBeep(50);
-	sprintf(error_str, "Giving the scenario editor more memory might also help. Be sure to back your scenario up often. Error number: %d.", error);
-	give_error("The program encountered an error while loading/saving/creating the scenario. To prevent future problems, the program will now terminate. Trying again may solve the problem.", (char*)error_str, 0);
+	const auto error_str{ std::format("Giving the scenario editor more memory might also help. Be sure to back your scenario up often. Error number: {:d}.", error) };
+	give_error("The program encountered an error while loading/saving/creating the scenario. To prevent future problems, the program will now terminate. Trying again may solve the problem.", error_str.c_str(), 0);
 	//ExitToShell();
 }
 
@@ -1282,7 +1279,7 @@ void build_scen_headers()
 
 	for (i = 0; i < count; i++) {
 		SendMessage(listbox, LB_GETTEXT, i, reinterpret_cast<LPARAM>(filename2));
-		sprintf(filename, "BLADSCEN/%s", filename2);
+		format_to_buf(filename, "BLADSCEN/{}", filename2);
 
 		if (load_scenario_header(filename, cur_entry) == TRUE) {
 			// now we need to store the file name, first stripping any path that occurs
@@ -1369,7 +1366,7 @@ void load_spec_graphics()
 		spec_scen_g = NULL;
 	}
 	//build_scen_file_name(file_name);
-	sprintf(file_name, "bladscen/%s", party.scen_name);
+	format_to_buf(file_name, "bladscen/{}", party.scen_name);
 	for (i = 0; i < 256; i++) {
 		if (file_name[i] == '.') {
 			file_name[i + 1] = 'b';

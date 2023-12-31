@@ -300,8 +300,7 @@ void do_monsters()
 						target = 6;	
 					}
 			monst_target[i] = target;
-//			sprintf(debug,"  t: %d targets %d.",i,monst_target[i]);
-//			add_string_to_buf( debug);			
+//			add_string_to_buf("  t: {:d} targets {:d}.",i,monst_target[i]);
 
 			if ((c_town.monst.dudes[i].active == 2)
 				 || ((c_town.monst.dudes[i].active != 0) && (c_town.monst.dudes[i].attitude % 2 != 1))) {
@@ -1317,8 +1316,6 @@ void charm_monst(creature_data_type *which_m,short penalty,short which_status,sh
 void record_monst(creature_data_type *which_m)
 {
 	short r1;
-	char str[60];
-	
 	r1 = rand_short(0,100);
 	r1 = (r1 * 7) / 10;
 	
@@ -1340,8 +1337,7 @@ void record_monst(creature_data_type *which_m)
 					party.imprisoned_monst[r1] = which_m->number;
 					}
 			ASB("Capture Soul: Success!");
-			sprintf(str,"  Caught in slot %d.",r1 + 1);
-			add_string_to_buf(str);
+			add_string_to_buf("  Caught in slot {:d}.",r1 + 1);
 			play_sound(53);
 			}
 }

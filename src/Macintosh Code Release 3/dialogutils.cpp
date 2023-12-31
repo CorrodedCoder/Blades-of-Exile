@@ -167,10 +167,10 @@ void end_shop_mode()
 	
 	HideControl(shop_sbar);
 	if (store_pre_shop_mode == 20) {
-		sprintf(old_str1,"You conclude your business.");
-		sprintf(old_str2,"");
-		sprintf(one_back1,"You conclude your business.");
-		sprintf(one_back2,"");
+		format_to_buf(old_str1,"You conclude your business.");
+		format_to_buf(old_str2,"");
+		format_to_buf(one_back1,"You conclude your business.");
+		format_to_buf(one_back2,"");
 
 		strnum1 = strnum2 = oldstrnum1 = oldstrnum2 = 0;
 		place_talk_str((char *)old_str1,"",0,dummy_rect);
@@ -537,7 +537,7 @@ void start_talk_mode(short m_num,short personality,unsigned char monst_type,shor
 	store_responses();
 
 	// Dredge up critter's name
-	sprintf(title_string,"%s:",data_store->talk_strs[personality % 10]);
+	format_to_buf(title_string,"{}:",data_store->talk_strs[personality % 10]);
 	
 	store_pre_talk_mode = overall_mode;
 	overall_mode = 20;
@@ -546,7 +546,7 @@ void start_talk_mode(short m_num,short personality,unsigned char monst_type,shor
 	stat_screen_mode = 1;
 	
 	// Bring up and place first strings.
-	sprintf(place_string1,"%s",data_store->talk_strs[personality % 10 + 10]);
+	format_to_buf(place_string1,"{}",data_store->talk_strs[personality % 10 + 10]);
 	strnum1 = personality % 10 + 10;
 	strnum2 = 0;
 	
@@ -692,7 +692,7 @@ void handle_talk_event(Point p)
 			case 1: case 2: case 3:
 				get_str(place_string1,120 + ((store_personality - 1) / 10),
 				 ((store_personality - 1) % 10) * 3 + 10 + force_special);
-				sprintf(place_string1,"%s",data_store->talk_strs[store_personality % 10 + 10 * force_special]);
+				format_to_buf(place_string1,"{}",data_store->talk_strs[store_personality % 10 + 10 * force_special]);
 					
 				oldstrnum1 = strnum1; oldstrnum2 = strnum2;
 				strnum1 =  store_personality % 10 + 10 * force_special;
@@ -744,10 +744,10 @@ void handle_talk_event(Point p)
 	if ((which_talk_entry < 0) || (which_talk_entry > 59)) {
 		strcpy(one_back1,(char *) old_str1);
 		strcpy(one_back2,(char *) old_str2);
-		sprintf(old_str2,"");
-		sprintf(old_str1,"%s",data_store->talk_strs[store_personality % 10 + 160]);
+		format_to_buf(old_str2,"");
+		format_to_buf(old_str1,"{}",data_store->talk_strs[store_personality % 10 + 160]);
 		if (strlen(old_str1) < 2)
-			sprintf(old_str1,"You get no response.");
+			format_to_buf(old_str1,"You get no response.");
 		place_talk_str((char *) old_str1,(char *) old_str2,0,dummy_rect);
 		strnum1 = -1;
 		return;	
@@ -759,8 +759,8 @@ void handle_talk_event(Point p)
 	c = talking.talk_nodes[which_talk_entry].extras[2];
 	d = talking.talk_nodes[which_talk_entry].extras[3];
 
-	sprintf(place_string1,"%s",data_store->talk_strs[40 + which_talk_entry * 2]);
-	sprintf(place_string2,"%s",data_store->talk_strs[40 + which_talk_entry * 2 + 1]);
+	format_to_buf(place_string1,"{}",data_store->talk_strs[40 + which_talk_entry * 2]);
+	format_to_buf(place_string2,"{}",data_store->talk_strs[40 + which_talk_entry * 2 + 1]);
 	
 	oldstrnum1 = strnum1; oldstrnum2 = strnum2;
 	strnum1 =  40 + which_talk_entry * 2; strnum2 = 40 + which_talk_entry * 2 + 1;
@@ -773,7 +773,7 @@ void handle_talk_event(Point p)
 				strnum1 = strnum2;
 				strcpy(place_string1,(char *) place_string2);
 				}
-			sprintf(place_string2,"");					
+			format_to_buf(place_string2,"");					
 			strnum2 = 0;
 			break;
 		case 2:
@@ -796,14 +796,14 @@ void handle_talk_event(Point p)
 					center = c_town.p_loc;
 					}
 			strnum2 = 0;
-			sprintf(place_string2,"");					
+			format_to_buf(place_string2,"");					
 			break;
 		case 4:
 			if (day_reached((unsigned char) a,0) == TRUE) {
 				strnum1 = strnum2;
 				strcpy(place_string1,(char *) place_string2);
 				}
-			sprintf(place_string2,"");					
+			format_to_buf(place_string2,"");					
 			strnum2 = 0;
 			break;
 		case 5:
@@ -811,7 +811,7 @@ void handle_talk_event(Point p)
 				strnum1 = strnum2;
 				strcpy(place_string1,(char *) place_string2);
 				}
-			sprintf(place_string2,"");					
+			format_to_buf(place_string2,"");					
 			strnum2 = 0;
 			break;
 		case 6:
@@ -819,7 +819,7 @@ void handle_talk_event(Point p)
 				strnum1 = strnum2;
 				strcpy(place_string1,(char *) place_string2);
 				}
-			sprintf(place_string2,"");					
+			format_to_buf(place_string2,"");					
 			strnum2 = 0;
 			break;
 		case 7: 
@@ -833,7 +833,7 @@ void handle_talk_event(Point p)
 				strnum1 = -1;
 				spend_xp(get_pc,1, 0);
 				}
-			sprintf(place_string1, "You conclude your training.");  
+			format_to_buf(place_string1, "You conclude your training.");  
 			return;
 		
 		case 9: case 10: case 11: 
@@ -883,12 +883,12 @@ void handle_talk_event(Point p)
 					put_pc_screen();
 
 					}
-			sprintf(place_string2,"");					
+			format_to_buf(place_string2,"");					
 			strnum2 = 0;
 			break;
 		case 19:
 			if ((sd_legit(b,c) == TRUE) && (PSD[b][c] == d)) {
-				sprintf(place_string1, "You've already learned that.");  
+				format_to_buf(place_string1, "You've already learned that.");  
 				strnum1 = -1;
 				}
 			else if (party.gold < a) {
@@ -903,14 +903,14 @@ void handle_talk_event(Point p)
 						else give_error("Invalid Stuff Done flag called in conversation.","",0);
 					}
 			strnum2 = 0;
-			sprintf(place_string2,"");					
+			format_to_buf(place_string2,"");					
 			break;
 		case 20:
 			if (party.gold < a) {
 				strnum1 = strnum2;
 				strnum2 = 0;
 				strcpy(place_string1,(char *) place_string2);
-				sprintf(place_string2,"");					
+				format_to_buf(place_string2,"");					
 				break;
 				}
 				else {
@@ -919,15 +919,15 @@ void handle_talk_event(Point p)
 							party.gold -= a;
 							put_pc_screen();
 							party.boats[i].property = FALSE;
-							sprintf(place_string2,"");					
+							format_to_buf(place_string2,"");					
 							strnum2 = 0;
 							i = 1000;
 							}
 					if (i >= 1000)
 						break;
 					}
-			sprintf(place_string1, "There are no boats left.");  
-			sprintf(place_string2,"");					
+			format_to_buf(place_string1, "There are no boats left.");  
+			format_to_buf(place_string2,"");					
 			strnum1 = -1;
 			strnum2 = -1;
 			break;
@@ -936,7 +936,7 @@ void handle_talk_event(Point p)
 				strnum1 = strnum2;
 				strnum2 = 0;
 				strcpy(place_string1,(char *) place_string2);
-				sprintf(place_string2,"");					
+				format_to_buf(place_string2,"");					
 				break;
 				}
 				else {
@@ -945,21 +945,21 @@ void handle_talk_event(Point p)
 							party.gold -= a;
 							put_pc_screen();
 							party.horses[i].property = FALSE;
-							sprintf(place_string2,"");					
+							format_to_buf(place_string2,"");					
 							strnum2 = 0;
 							i = 1000;
 							}
 					if (i >= 1000)
 						break;
 					}
-			sprintf(place_string1, "There are no horses left.");  
-			sprintf(place_string2,"");					
+			format_to_buf(place_string1, "There are no horses left.");  
+			format_to_buf(place_string2,"");					
 			strnum1 = -1;
 			strnum2 = -1;
 			break;
 		case 22:
 			if (party.spec_items[a] > 0) {
-				sprintf(place_string1, "You already have it.");  
+				format_to_buf(place_string1, "You already have it.");  
 				strnum1 = -1;
 				}
 			else if (party.gold < b) {
@@ -972,7 +972,7 @@ void handle_talk_event(Point p)
 					party.spec_items[a] = 1;
 					}
 			strnum2 = 0;
-			sprintf(place_string2,"");					
+			format_to_buf(place_string2,"");					
 			break;
 		case 23:
 			start_shop_mode(5 + b,0,
@@ -992,7 +992,7 @@ void handle_talk_event(Point p)
 						party.can_find_town[b] = 1;
 						}
 			strnum2 = 0;
-			sprintf(place_string2,"");					
+			format_to_buf(place_string2,"");					
 			break;
 		case 25:
 			talk_end_forced = TRUE;
@@ -1019,8 +1019,8 @@ void handle_talk_event(Point p)
 			if ((s1 >= 0) || (s2 >= 0)) {
 				strnum1 = -1;
 				strnum2 = -1;
-				sprintf(place_string1,"");
-				sprintf(place_string2,"");
+				format_to_buf(place_string1,"");
+				format_to_buf(place_string2,"");
 				}
 			 get_strs((char *) place_string1,(char *) place_string2,2,s1,s2); 
 			 //strnum1 = -1;
@@ -1036,8 +1036,8 @@ void handle_talk_event(Point p)
 			if ((s1 >= 0) || (s2 >= 0)) {
 				strnum1 = -1;
 				strnum2 = -1;
-				sprintf(place_string1,"");
-				sprintf(place_string2,"");
+				format_to_buf(place_string1,"");
+				format_to_buf(place_string2,"");
 				}
 			 get_strs((char *) place_string1,(char *) place_string2,0,s1,s2); 
 			 //strnum1 = -1;
@@ -1167,7 +1167,7 @@ void do_sign(short town_num, short which_sign, short sign_type,location sign_loc
 			1,which_sign + 100,(char *) sign_text);
 		}
 		else {
-			sprintf(sign_text,"%s",data_store->town_strs[120 + which_sign]);
+			format_to_buf(sign_text,"{}",data_store->town_strs[120 + which_sign]);
 			}
 	csit(1014,2,(char *) sign_text);
 	
@@ -1814,8 +1814,8 @@ void put_scen_info()
 	for (i = 0; i < 3; i++)
 		if (scen_headers[store_scen_page_on * 3 + i].flag1 != 0) {
 			cd_set_pict(947, 6 + i * 3,1600 + scen_headers[store_scen_page_on * 3 + i].intro_pic);
-			sprintf(place_str,
-				"%s v%d.%d.%d - |  Difficulty: %s, Rating: %s |%s |%s",
+			format_to_buf(place_str,
+				"{} v{:d}.{:d}.{:d} - |  Difficulty: {}, Rating: {} |{} |{}",
 				data_store->scen_header_strs[store_scen_page_on * 3 + i][0],
 				(short) scen_headers[store_scen_page_on * 3 + i].ver[0],
 				(short) scen_headers[store_scen_page_on * 3 + i].ver[1],

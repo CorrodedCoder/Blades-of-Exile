@@ -74,10 +74,10 @@ Boolean handle_startup_press(POINT the_point)
 						}
 
 					switch (scen) {
-						case 0: sprintf(party.scen_name,"valleydy.exs"); break;
+						case 0: format_to_buf(party.scen_name,"valleydy.exs"); break;
 						// if not reg, rub out
-						case 1: sprintf(party.scen_name,"stealth.exs"); break;
-						case 2: sprintf(party.scen_name,"zakhazi.exs"); break;
+						case 1: format_to_buf(party.scen_name,"stealth.exs"); break;
+						case 2: format_to_buf(party.scen_name,"zakhazi.exs"); break;
 						}
 					put_party_in_scen();
 					break;
@@ -101,7 +101,7 @@ Boolean handle_startup_press(POINT the_point)
 					if (scen >= 0) {
 						if (registered == FALSE)
 							unreg_party_in_scen_not_check = TRUE;
-						sprintf(party.scen_name,"%s", scenario_name_string(scen));
+						format_to_buf(party.scen_name,"{}", scenario_name_string(scen));
 						put_party_in_scen();
 						}
 

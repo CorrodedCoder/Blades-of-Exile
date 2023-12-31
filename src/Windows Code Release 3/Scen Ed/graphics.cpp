@@ -361,7 +361,7 @@ void draw_lb_slot (short which,short mode)
 	if (mode > 0)
 		SetTextColor(main_dc,PALETTEINDEX(c));
 
-	char_win_draw_string(main_dc,text_rect,(char *)data_store.strings_ls[which],0,12);
+	win_draw_string(main_dc,text_rect,(char *)data_store.strings_ls[which],0,12);
 	SetTextColor(main_dc,PALETTEINDEX(c2));
 
 	SelectObject(main_dc,font);
@@ -403,7 +403,7 @@ void draw_rb_slot (short which,short mode)
 	if (mode > 0)
 		SetTextColor(main_dc,PALETTEINDEX(c));
    OffsetRect(&text_rect,0,-1);
-	char_win_draw_string(main_dc,text_rect,(char *)data_store.strings_rs[which],0,12);
+	win_draw_string(main_dc,text_rect,(char *)data_store.strings_rs[which],0,12);
 	SetTextColor(main_dc,PALETTEINDEX(c2));
 }
 
@@ -1112,7 +1112,6 @@ RECT get_template_rect (unsigned char type_wanted)
 
 void place_location()
 {
-	char draw_str[256];
 	RECT draw_rect,source_rect,erase_rect;
 	short picture_wanted;
 	HGDIOBJ store_bmp;
@@ -1138,17 +1137,22 @@ void place_location()
 
 	draw_rect.left = terrain_rects[255].left + 20;
 	draw_rect.top = terrain_rects[255].top;
+
+	std::string draw_str;
 	if (overall_mode < 60)
-		sprintf(draw_str,"Center: x = %d, y = %d  ",(short) cen_x, (short) cen_y);
-		else {
-			draw_rect.left = 5;
-			draw_rect.top = terrain_rects[255].top + 28;
-			sprintf(draw_str,"Click terrain to edit. ");
-			}
+	{
+		draw_str = std::format("Center: x = {:d}, y = {:d}  ",(short) cen_x, (short) cen_y);
+	}
+	else
+	{
+		draw_rect.left = 5;
+		draw_rect.top = terrain_rects[255].top + 28;
+		draw_str = "Click terrain to edit. ";
+	}
 
 	draw_rect.bottom = draw_rect.top + 14;
 	draw_rect.right = draw_rect.left + 200;
-	win_draw_string(hdc,draw_rect,draw_str,0,12);
+	win_draw_string(hdc,draw_rect, draw_str,0,12);
 	SelectObject(hdc,store_bmp);
 
 
@@ -1206,7 +1210,6 @@ void place_location()
 // klugde for speed ...exactly like place location above, but just writes location
 void place_just_location()
 {
-	char draw_str[256];
 	RECT from_rect,draw_rect,erase_rect;
 	HGDIOBJ store_bmp;
 	HDC hdc;
@@ -1226,13 +1229,18 @@ void place_just_location()
 	
 	draw_rect.left = terrain_rects[255].left + 20;
 	draw_rect.top = terrain_rects[255].top;
+
+	std::string draw_str;
 	if (overall_mode < 60)
-		sprintf(draw_str,"Center: x = %d, y = %d  ",cen_x,cen_y);
-		else {
-			draw_rect.left = 5;
-			draw_rect.top = terrain_rects[255].top + 28;
-			sprintf(draw_str,"Click terrain to edit. ");
-			}
+	{
+		draw_str = std::format("Center: x = {:d}, y = {:d}  ", cen_x, cen_y);
+	}
+	else
+	{
+		draw_rect.left = 5;
+		draw_rect.top = terrain_rects[255].top + 28;
+		draw_str = std::format("Click terrain to edit. ");
+	}
 
 	draw_rect.bottom = draw_rect.top + 14;
 	draw_rect.right = draw_rect.left + 200;
@@ -1257,7 +1265,7 @@ void set_string(const char * string, const char * string2)
 //	if (strlen(string2) == 0)
 //		current_string2[0] = 0;
 //		else 
-//	sprintf(current_string2,"Bob");
+//	format_to_buf(current_string2,"Bob");
 	strcpy(current_string2, string2);
 	c2p(current_string2);
 
@@ -1460,47 +1468,54 @@ Boolean container_there(location l)
 }
 
 
-void char_win_draw_string(HDC dest_window,RECT dest_rect, const char * str,short mode,short line_height)
-{
-	char store_s[256];
-	
-	strcpy(store_s,str);
-	win_draw_string( dest_window, dest_rect,store_s, mode, line_height);
-
-}
-
 // mode: 0 - align up and left, 1 - center on one line
 // str is a c string, 256 characters
 // uses current font
-void win_draw_string(HDC dest_hdc,RECT dest_rect,char *str,short mode,short line_height)
+void win_draw_string(HDC dest_hdc,RECT dest_rect, std::string_view str,short mode,short line_height)
 {
-	short i;
+	std::string adjusted;
+	adjusted.reserve(str.size());
 
-// this will need formatting for '|' line breaks
-	for (i = 0; i < 256; i++)  {
-		if (str[i] == '|')
-			str[i] = 13;
-		if (str[i] == '_')
-      	str[i] = 34;
+	// this will need formatting for '|' line breaks
+	for (const auto c : str)
+	{
+		if (c == '|')
+		{
+			adjusted.push_back(13);
 		}
+		else if (c == '_')
+		{
+			adjusted.push_back(34);
+		}
+		else
+		{
+			adjusted.push_back(c);
+		}
+	}
+
 	// if dest is main window, add ulx, uly
 	if (dest_hdc == main_dc)
+	{
 		OffsetRect(&dest_rect,ulx,uly);
-	switch (mode) {
-		case 0:
-         dest_rect.bottom += 6;
-			DrawText(dest_hdc,str,strlen(str),&dest_rect,DT_LEFT | DT_WORDBREAK); break;
-		case 1:
-			dest_rect.bottom += 6; dest_rect.top -= 6;
-			DrawText(dest_hdc,str,strlen(str),&dest_rect,
-			DT_CENTER | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE); break;
-		case 2: case 3:
-			dest_rect.bottom += 6; dest_rect.top -= 6;
-			DrawText(dest_hdc,str,strlen(str),&dest_rect,
-			DT_LEFT | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE); break;
-		}
-	// not yet done adjusts for 1, 2, 3
-	
+	}
+
+	switch (mode)
+	{
+	case 0:
+		dest_rect.bottom += 6;
+		DrawText(dest_hdc, adjusted.c_str(), adjusted.size(), &dest_rect, DT_LEFT | DT_WORDBREAK);
+		break;
+	case 1:
+		dest_rect.bottom += 6; dest_rect.top -= 6;
+		DrawText(dest_hdc, adjusted.c_str(), adjusted.size(), &dest_rect, DT_CENTER | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE);
+		break;
+	case 2:
+	case 3:
+		dest_rect.bottom += 6; dest_rect.top -= 6;
+		DrawText(dest_hdc, adjusted.c_str(), adjusted.size(), &dest_rect, DT_LEFT | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE);
+		break;
+	}
+	// not yet done adjusts for 1, 2, 3	
 }
 
 // Adapted from Wine source: https://github.com/reactos/wine/blob/master/dlls/gdi.exe16/gdi.c
@@ -1552,9 +1567,9 @@ void GetIndString(char *str,short i, short j) {
 
 	len = LoadString(store_hInstance,resnum,str,256);
 	if (len == 0) {
-		sprintf(str,"");
+		str[0] = '\0';
 		return;
-		}
+	}
 	for (k = 0; k < 256; k++)  {
 		if (str[k] == '|')
 			str[k] = 13;

@@ -69,9 +69,6 @@ static short display_item(location from_loc, short pc_num, short mode, bool chec
 
 Boolean give_to_pc(short pc_num,const item_record_type& item,short  print_result)
 {
-	short free_space;
-	char announce_string[60];
-	
 	if (item.variety == item_variety::None)
 		return TRUE;
 	if (item.variety == item_variety::Gold) {
@@ -92,29 +89,30 @@ Boolean give_to_pc(short pc_num,const item_record_type& item,short  print_result
 			}
 		return FALSE;
 	  	}
-	if (((free_space = pc_has_space(adven[pc_num])) == 24) || (adven[pc_num].main_status != status::Normal))
+	const auto free_space{ pc_has_space(adven[pc_num]) };
+	if ((free_space == 24) || (adven[pc_num].main_status != status::Normal))
 		return FALSE;
-		else {
+	else
+	{
 			adven[pc_num].items[free_space] = item;
 			adven[pc_num].items[free_space].item_properties &= 253; // not property
 			adven[pc_num].items[free_space].item_properties &= 247; // not contained
-
-			if (print_result == 1) {
+			if (print_result == 1)
+			{
 				if (stat_window == pc_num)
 					put_item_screen(stat_window,0);
 			}
-			if (in_startup_mode == FALSE) {
+			if ( (in_startup_mode == FALSE) && (print_result == TRUE) )
+			{
 				if (is_ident(adven[pc_num].items[free_space]) == 0)
-					sprintf(announce_string,"  %s gets %s.",adven[pc_num].name,item.name);
-					else sprintf(announce_string,"  %s gets %s.",adven[pc_num].name,item.full_name);
-				if (print_result == TRUE)
-					add_string_to_buf(announce_string);
-				}
-
+					add_string_to_buf("  {} gets {}.",adven[pc_num].name,item.name);
+				else
+					add_string_to_buf("  {} gets {}.",adven[pc_num].name,item.full_name);
+			}
 			combine_things(pc_num);
 			pc_sort_items(adven[pc_num]);
 			return TRUE;
-			}
+	}
 	return FALSE;
 }
 
@@ -135,7 +133,6 @@ Boolean forced_give(short item_num,short abil)
 {
 	short i,j;
 	item_record_type item;
-	char announce_string[60];
 
 	if ((item_num < 0) || (item_num > 399))
 		return TRUE;
@@ -146,11 +143,10 @@ Boolean forced_give(short item_num,short abil)
 		for (j = 0; j < 24; j++)
 			if ((adven[i].main_status == status::Normal) && (adven[i].items[j].variety == item_variety::None)) {
 				adven[i].items[j] = item;
-
 				if (is_ident(item) == 0)
-					sprintf(announce_string,"  %s gets %s.",adven[i].name,item.name);
-					else sprintf(announce_string,"  %s gets %s.",adven[i].name,item.full_name);
-				add_string_to_buf(announce_string);
+					add_string_to_buf("  {} gets {}.",adven[i].name,item.name);
+				else
+					add_string_to_buf("  {} gets {}.",adven[i].name,item.full_name);
 				combine_things(i);
 				pc_sort_items(adven[i]);
 				return TRUE;
@@ -301,7 +297,7 @@ void remove_charge(short pc_num,short which_item)
 
 void enchant_weapon(short pc_num,short item_hit,short enchant_type,short new_val)
 {
-	char store_name[60];
+	std::string store_name;
 
 	////
 	if (is_magic(adven[pc_num].items[item_hit]) ||
@@ -310,39 +306,39 @@ void enchant_weapon(short pc_num,short item_hit,short enchant_type,short new_val
 	adven[pc_num].items[item_hit].item_properties |= 4;
 	switch (enchant_type) {
 		case 0:
-			sprintf(store_name,"%s (+1)",adven[pc_num].items[item_hit].full_name);
+			store_name = std::format("{} (+1)",adven[pc_num].items[item_hit].full_name);
 			adven[pc_num].items[item_hit].bonus++;
 			adven[pc_num].items[item_hit].value = new_val;
 			break;
 		case 1:
-			sprintf(store_name,"%s (+2)",adven[pc_num].items[item_hit].full_name);
+			store_name = std::format("{} (+2)",adven[pc_num].items[item_hit].full_name);
 			adven[pc_num].items[item_hit].bonus += 2;
 			adven[pc_num].items[item_hit].value = new_val;
 			break;
 		case 2:
-			sprintf(store_name,"%s (+3)",adven[pc_num].items[item_hit].full_name);
+			store_name = std::format("{} (+3)",adven[pc_num].items[item_hit].full_name);
 			adven[pc_num].items[item_hit].bonus += 3;
 			adven[pc_num].items[item_hit].value = new_val;
 			break;
 		case 3:
-			sprintf(store_name,"%s (F)",adven[pc_num].items[item_hit].full_name);
+			store_name = std::format("{} (F)",adven[pc_num].items[item_hit].full_name);
 			adven[pc_num].items[item_hit].ability = 110;
 			adven[pc_num].items[item_hit].ability_strength = 5;
 			adven[pc_num].items[item_hit].charges = 8;
 			break;
 		case 4:
-			sprintf(store_name,"%s (F!)",adven[pc_num].items[item_hit].full_name);
+			store_name = std::format("{} (F!)",adven[pc_num].items[item_hit].full_name);
 			adven[pc_num].items[item_hit].value = new_val;
 			adven[pc_num].items[item_hit].ability = 1;
 			adven[pc_num].items[item_hit].ability_strength = 5;
 			break;
 		case 5:
-			sprintf(store_name,"%s (+5)",adven[pc_num].items[item_hit].full_name);
+			store_name = std::format("{} (+5)",adven[pc_num].items[item_hit].full_name);
 			adven[pc_num].items[item_hit].value = new_val;
 			adven[pc_num].items[item_hit].bonus += 5;
 			break;
 		case 6:
-			sprintf(store_name,"%s (B)",adven[pc_num].items[item_hit].full_name);
+			store_name = std::format("{} (B)",adven[pc_num].items[item_hit].full_name);
 			adven[pc_num].items[item_hit].bonus++;
 			adven[pc_num].items[item_hit].ability = 71;
 			adven[pc_num].items[item_hit].ability_strength = 5;
@@ -350,14 +346,14 @@ void enchant_weapon(short pc_num,short item_hit,short enchant_type,short new_val
 			adven[pc_num].items[item_hit].charges = 8;
 			break;
 		default:
-			strcpy(store_name,adven[pc_num].items[item_hit].full_name);
+			store_name = adven[pc_num].items[item_hit].full_name;
 			break;
 		}
 	if (adven[pc_num].items[item_hit].value > 15000)
 		adven[pc_num].items[item_hit].value = 15000;
 	if (adven[pc_num].items[item_hit].value < 0)
 		adven[pc_num].items[item_hit].value = 15000;
-	strcpy(adven[pc_num].items[item_hit].full_name,store_name);
+	strcpy(adven[pc_num].items[item_hit].full_name,store_name.c_str());
 }
 
 void equip_item(short pc_num,short item_num)
@@ -726,7 +722,6 @@ void put_item_graphics()
 {
 	short i,storage;
 	item_record_type item;
-	char message[256];
 
 	// First make sure all arrays for who can get stuff are in order.
 	if ((current_getting_pc < 6) && ((adven[current_getting_pc].main_status != status::Normal) 
@@ -765,34 +760,31 @@ void put_item_graphics()
 
 		if (item_array[i + first_item_shown] != 200) { // display an item in window
 			item = t_i.items[item_array[i + first_item_shown]]; 
-
-					sprintf(message, "%s",
-					 (is_ident(item) == TRUE) ? item.full_name : item.name);
-					csit(987,21 + i * 4,(char *) message);
-					if (item.graphic_num >= 150)
-						csp(987,20 + i * 4,3000 + 2000 + item.graphic_num - 150);
-						else csp(987,20 + i * 4,4800 + item.graphic_num);////
-					get_item_interesting_string(item,(char *) message);
-					csit(987,22 + i * 4,(char *) message);
-					storage = item_weight(item);
-					sprintf(message, "Weight: %d",storage);
-					csit(987,53 + i,(char *) message);
-
-		  			}
-			else { // erase the spot
-				sprintf(message, "");
-				csit(987,21 + i * 4,(char *) message);
-				csit(987,22 + i * 4,(char *) message);
-				csit(987,53 + i,(char *) message);
-				}
+			csit(987,21 + i * 4, std::format("{}", (is_ident(item) == TRUE) ? item.full_name : item.name));
+			if (item.graphic_num >= 150)
+				csp(987,20 + i * 4,3000 + 2000 + item.graphic_num - 150);
+				else csp(987,20 + i * 4,4800 + item.graphic_num);////
+			char message[256];
+			get_item_interesting_string(item, message);
+			csit(987,22 + i * 4, message);
+			storage = item_weight(item);
+			csit(987,53 + i, std::format("Weight: {:d}", storage));
+	  	}
+		else
+		{
+			// erase the spot
+			csit(987,21 + i * 4, "");
+			csit(987,22 + i * 4, "");
+			csit(987,53 + i, "");
 		}
+	}
 	
-	if (current_getting_pc < 6) {
+	if (current_getting_pc < 6)
+	{
 		i = pc_amount_can_carry(adven[current_getting_pc]);
 		storage = pc_carry_weight(adven[current_getting_pc]);
-		sprintf(message, "%s is carrying %d out of %d.",adven[current_getting_pc].name,storage,i);
-		csit(987,52,(char *) message);
-		}
+		csit(987,52, std::format("{} is carrying {:d} out of {:d}.", adven[current_getting_pc].name, storage, i));
+	}
 		
 	for (i = 0; i < 6; i++) 
 		if (adven[i].main_status == status::Normal) {
@@ -995,7 +987,7 @@ short fancy_choice_dialog(short which_dlog,short parent)
 	if (which_dlog == 1062) {
 		i = rand_short(0,12);
 		get_str(temp_str,11,10 + i);
-		csit(1062,10,(char *) temp_str);
+		csit(1062,10, temp_str);
 		}
 	while (dialog_not_toast)
 		ModalDialog();	
@@ -1069,7 +1061,7 @@ void get_num_of_items_event_filter (short item_hit)
 {
 	char get_text[256];
 	
-	cd_get_text_edit_str(1012,(char *) get_text);
+	cd_get_text_edit_str(1012, get_text);
 	dialog_answer = 0;
 	sscanf(get_text,"%hd",&dialog_answer);
 	dialog_not_toast = FALSE;
@@ -1079,17 +1071,10 @@ short get_num_of_items(short max_num)
 //town_num; // Will be 0 - 200 for town, 200 - 290 for outdoors
 //short sign_type; // terrain type
 {
-
-	char sign_text[256];
-
 	make_cursor_sword();
-	
 	cd_create_dialog(1012,mainPtr);
-		
-	sprintf(sign_text,"How many? (0-%d) ",max_num);
-	csit(1012,4,(char *)sign_text);	
-	sprintf(sign_text,"%d",max_num);
-	cd_set_text_edit_str(1012,(char *) sign_text);
+	csit(1012,4, std::format("How many? (0-{:d}) ", max_num));
+	cd_set_text_edit_str(1012, std::format("{:d}", max_num));
 	cd_set_edit_focus();
 		
 	while (dialog_not_toast)
@@ -1404,7 +1389,7 @@ void refresh_store_items()
 
 void get_text_response_event_filter (short item_hit)
 {
-	cd_get_text_edit_str(store_dnum,(char *) store_str);
+	cd_get_text_edit_str(store_dnum, store_str);
 	dialog_not_toast = FALSE;
 }
 
@@ -1415,7 +1400,7 @@ void get_text_response(short dlg,char *str,short parent_num)
 
 	make_cursor_sword();
 	
-	store_str = (char *) str;
+	store_str = str;
 	store_dnum = dlg;
 	
 	cd_create_dialog_parent_num(dlg,parent_num);
@@ -1426,7 +1411,7 @@ void get_text_response(short dlg,char *str,short parent_num)
 	for (i = 0; i < 15; i++)
 		if ((str[i] > 64) && (str[i] < 91))
 			str[i] = str[i] + 32;
-	//ASB((char *) str);
+	//ASB(str);
 	final_process_dialog(dlg);
 	//cd_kill_dialog(dlg,0);
 		

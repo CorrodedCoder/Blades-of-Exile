@@ -150,7 +150,6 @@ void start_town_mode(short which_town, short entry_dir)
 //short entry_dir; // if 9, go to forced
 {
 	short i,m,n;
-	char message[60];
 	short j,k,town_number;
 	short at_which_save_slot,former_town;
 	Boolean monsters_loaded = FALSE,town_toast = FALSE;
@@ -522,9 +521,7 @@ void start_town_mode(short which_town, short entry_dir)
 	party.stuff_done[305][9] = 0;
 		
 	add_string_to_buf("Now entering:");
-	sprintf(message, "   %-30.30s ",data_store.town_strs[0]);
-	add_string_to_buf( message);                       
-
+	add_string_to_buf("   {:<30.30s} ",data_store.town_strs[0]);
 
 	// clear entry space, and check exploration
 	misc_i[c_town.p_loc.x][c_town.p_loc.y] = misc_i[c_town.p_loc.x][c_town.p_loc.y] & 3;
@@ -1610,7 +1607,7 @@ void draw_map (HWND the_dialog, short the_item)
 
 
 
-			//char_win_draw_string(hdc2,
+			//win_draw_string(hdc2,
 			//	map_title_rect,"Your map:      (Hit Escape to close.)",0,12);
 
 			//ShowOwnedPopups(the_dialog,TRUE);

@@ -94,8 +94,8 @@ Boolean give_to_pc(short pc_num,item_record_type  item,short  print_result)
 			}
 			if (in_startup_mode == FALSE) {
 				if (!is_ident(item))
-					sprintf(announce_string,"  %s gets %s.",adven[pc_num].name,item.name);
-					else sprintf(announce_string,"  %s gets %s.",adven[pc_num].name,item.full_name);
+					format_to_buf(announce_string,"  {} gets {}.",adven[pc_num].name,item.name);
+					else format_to_buf(announce_string,"  {} gets {}.",adven[pc_num].name,item.full_name);
 				if (print_result == TRUE)
 					add_string_to_buf(announce_string);
 				}
@@ -137,8 +137,8 @@ Boolean forced_give(short item_num,short abil) ////
 				adven[i].items[j] = item;
 			
 				if (!is_ident(item))
-					sprintf(announce_string,"  %s gets %s.",adven[i].name,item.name);
-					else sprintf(announce_string,"  %s gets %s.",adven[i].name,item.full_name);
+					format_to_buf(announce_string,"  {} gets {}.",adven[i].name,item.name);
+					else format_to_buf(announce_string,"  {} gets {}.",adven[i].name,item.full_name);
 				add_string_to_buf(announce_string);
 				combine_things(i);
 				sort_pc_items(adven[i]);
@@ -405,39 +405,39 @@ void enchant_weapon(short pc_num,short item_hit,short enchant_type,short new_val
 	adven[pc_num].items[item_hit].item_properties |= 4;
 	switch (enchant_type) {
 		case 0:
-			sprintf(store_name,"%s (+1)",adven[pc_num].items[item_hit].full_name);
+			format_to_buf(store_name,"{} (+1)",adven[pc_num].items[item_hit].full_name);
 			adven[pc_num].items[item_hit].bonus++;
 			adven[pc_num].items[item_hit].value = new_val;
 			break;
 		case 1:
-			sprintf(store_name,"%s (+2)",adven[pc_num].items[item_hit].full_name);
+			format_to_buf(store_name,"{} (+2)",adven[pc_num].items[item_hit].full_name);
 			adven[pc_num].items[item_hit].bonus += 2;
 			adven[pc_num].items[item_hit].value = new_val;
 			break;
 		case 2:
-			sprintf(store_name,"%s (+3)",adven[pc_num].items[item_hit].full_name);
+			format_to_buf(store_name,"{} (+3)",adven[pc_num].items[item_hit].full_name);
 			adven[pc_num].items[item_hit].bonus += 3;
 			adven[pc_num].items[item_hit].value = new_val;
 			break;
 		case 3:
-			sprintf(store_name,"%s (F)",adven[pc_num].items[item_hit].full_name);
+			format_to_buf(store_name,"{} (F)",adven[pc_num].items[item_hit].full_name);
 			adven[pc_num].items[item_hit].ability = 110;
 			adven[pc_num].items[item_hit].ability_strength = 5;
 			adven[pc_num].items[item_hit].charges = 8;
 			break;
 		case 4:
-			sprintf(store_name,"%s (F!)",adven[pc_num].items[item_hit].full_name);
+			format_to_buf(store_name,"{} (F!)",adven[pc_num].items[item_hit].full_name);
 			adven[pc_num].items[item_hit].value = new_val;
 			adven[pc_num].items[item_hit].ability = 1;
 			adven[pc_num].items[item_hit].ability_strength = 5;
 			break;
 		case 5:
-			sprintf(store_name,"%s (+5)",adven[pc_num].items[item_hit].full_name);
+			format_to_buf(store_name,"{} (+5)",adven[pc_num].items[item_hit].full_name);
 			adven[pc_num].items[item_hit].value = new_val;
 			adven[pc_num].items[item_hit].bonus += 5;
 			break;
 		case 6:
-			sprintf(store_name,"%s (B)",adven[pc_num].items[item_hit].full_name);
+			format_to_buf(store_name,"{} (B)",adven[pc_num].items[item_hit].full_name);
 			adven[pc_num].items[item_hit].bonus++;
 			adven[pc_num].items[item_hit].ability = 71;
 			adven[pc_num].items[item_hit].ability_strength = 5;
@@ -864,7 +864,7 @@ void put_item_graphics()
 		if (item_array[i + first_item_shown] != 200) { // display an item in window
 			item = t_i.items[item_array[i + first_item_shown]]; 
 
-					sprintf(message, "%s",
+					format_to_buf(message, "{}",
 					 is_ident(item) ? (char *) item.full_name : (char *) item.name);
 					csit(987,21 + i * 4,(char *) message);
 					if (item.graphic_num >= 150)
@@ -873,13 +873,13 @@ void put_item_graphics()
 					get_item_interesting_string(item,(char *) message);
 					csit(987,22 + i * 4,(char *) message);			
 					storage = item_weight(item);		
-					sprintf(message, "Weight: %d",storage);
+					format_to_buf(message, "Weight: {:d}",storage);
 					csit(987,53 + i,(char *) message);			
 					
 					
 			}
 			else { // erase the spot
-			 	sprintf(message, "");
+			 	format_to_buf(message, "");
 				csit(987,21 + i * 4,(char *) message);
 				csit(987,22 + i * 4,(char *) message);
 				csit(987,53 + i,(char *) message);
@@ -889,7 +889,7 @@ void put_item_graphics()
 	if (current_getting_pc < 6) {
 		i = amount_pc_can_carry(current_getting_pc);
 		storage = pc_carry_weight(current_getting_pc);
-		sprintf(message, "%s is carrying %d out of %d.",adven[current_getting_pc].name,storage,i);
+		format_to_buf(message, "{} is carrying {:d} out of {:d}.",adven[current_getting_pc].name,storage,i);
 		csit(987,52,(char *) message);
 		}
 		
@@ -1228,9 +1228,9 @@ short get_num_of_items(short max_num)
 	
 	cd_create_dialog(1012,mainPtr);
 		
-	sprintf(sign_text,"How many? (0-%d) ",max_num);
+	format_to_buf(sign_text,"How many? (0-{:d}) ",max_num);
 	csit(1012,4,(char *)sign_text);	
-	sprintf(sign_text,"%d",max_num);
+	format_to_buf(sign_text,"{:d}",max_num);
 	cd_set_text_edit_str(1012,(char *) sign_text);
 	
 #ifndef EXILE_BIG_GUNS
@@ -1615,10 +1615,10 @@ void put_num_in_dialog(DialogPtr dialog,short where,short value)
 	Rect the_rect;
 
 	if (value < 0) {
-					sprintf(get_text, " %d                                                  ", value);
+					format_to_buf(get_text, " {:d}                                                  ", value);
 		}
 		else {
-					sprintf(get_text, " %d                                                  ", value);
+					format_to_buf(get_text, " {:d}                                                  ", value);
 			}
 					GetDItem (dialog, where, &the_type, &the_handle, &the_rect);
 					SetIText (the_handle, get_text);
