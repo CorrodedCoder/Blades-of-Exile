@@ -396,7 +396,6 @@ creature_start_type edit_placed_monst_adv(creature_start_type monst_record)
 {
 	
 	short item_hit,i,store_dialog_answer;
-	Str255 temp_str;
 	char *time_labels[] = {"Always here","Appear on given day","Disappear on day",
 						"Sometimes here A","Sometimes here B","Sometimes here C",
 						"Appear when event","Disappear when event"};
@@ -411,8 +410,7 @@ creature_start_type edit_placed_monst_adv(creature_start_type monst_record)
 		cd_add_label(838,22 + i,time_labels[i],57);
 	cd_add_label(838,30,"None",18);
 	for (i = 0; i < 10; i++) {
-		format_to_buf(temp_str,"{:d}",i + 1);
-		cd_add_label(838,31 + i,(char *) temp_str,18);
+		cd_add_label(838,31 + i, std::format("{:d}", i + 1),18);
 		}
 		
 	while (dialog_not_toast)
@@ -424,12 +422,9 @@ creature_start_type edit_placed_monst_adv(creature_start_type monst_record)
 
 void put_placed_item_in_dlog()
 {
-	Str255 str;
 	short i;
-	
 	cdsin(836,17,store_which_placed_item);
-	format_to_buf(str,"X = {:d}, Y = {:d}",store_placed_item.item_loc.x,store_placed_item.item_loc.y);
-	csit(836,22,(char *) str);
+	csit(836,22, std::format("X = {:d}, Y = {:d}", store_placed_item.item_loc.x, store_placed_item.item_loc.y));
 	csit(836,15,data_store.scen_item_list.scen_items[store_placed_item.item_code].full_name);
 	CDSN(836,2,store_placed_item.ability);
 	if (store_placed_item.always_there == TRUE)
@@ -590,7 +585,7 @@ Boolean save_out_strs()
 	short i;
 	
 	for (i = 0; i < 8; i++) {
-		CDGT(850,2 + i,(char *) str);
+		CDGT(850,2 + i,str);
 		format_to_buf(data_store.out_strs[i + 1],"{:<29.29s}",str);
 		if (str_do_delete[i] > 0)
 			current_terrain.info_rect[i].right = 0;
@@ -600,20 +595,19 @@ Boolean save_out_strs()
 
 void put_out_strs_in_dlog()
 {
-	Str255 str;
-	short i;
-	
-	for (i = 0; i < 8; i++) {
-		if ((current_terrain.info_rect[i].right == 0) || (str_do_delete[i] > 0)) {
-			format_to_buf(str,"Not yet placed.");
+	for (short i = 0; i < 8; i++)
+	{
+		std::string str;
+		if ((current_terrain.info_rect[i].right == 0) || (str_do_delete[i] > 0))
+		{
+			str = "Not yet placed.";
 			cd_activate_item(850,25 + i,0);
-			}
-			else format_to_buf(str,"X = {:d}, Y = {:d}",current_terrain.info_rect[i].left,
-				current_terrain.info_rect[i].top);
-		csit(850,13 + i,(char *) str);
-		CDST(850,2 + i,data_store.out_strs[i + 1]);
 		}
-
+		else
+			str = std::format("X = {:d}, Y = {:d}",current_terrain.info_rect[i].left, current_terrain.info_rect[i].top);
+		csit(850,13 + i, str);
+		CDST(850,2 + i,data_store.out_strs[i + 1]);
+	}
 }
 
 void edit_out_strs_event_filter (short item_hit)
@@ -666,7 +660,7 @@ Boolean save_town_strs()
 	short i;
 	
 	for (i = 0; i < 16; i++) {
-		CDGT(839,2 + i,(char *) str);
+		CDGT(839,2 + i,str);
 		format_to_buf(data_store.town_strs[i + 1],"{:<29.29s}",str);
 		if (str_do_delete[i] > 0)
 			t_d.room_rect[i].right = 0;
@@ -676,20 +670,19 @@ Boolean save_town_strs()
 
 void put_town_strs_in_dlog()
 {
-	Str255 str;
-	short i;
-	
-	for (i = 0; i < 16; i++) {
-		if ((t_d.room_rect[i].right == 0) || (str_do_delete[i] > 0)) {
-			format_to_buf(str,"Not yet placed.");
+	for (short i = 0; i < 16; i++)
+	{
+		std::string str;
+		if ((t_d.room_rect[i].right == 0) || (str_do_delete[i] > 0))
+		{
+			str = "Not yet placed.";
 			cd_activate_item(839,41 + i,0);
-			}
-			else format_to_buf(str,"X = {:d}, Y = {:d}",t_d.room_rect[i].left,
-				t_d.room_rect[i].top);
-		csit(839,21 + i,(char *) str);
-		CDST(839,2 + i,data_store.town_strs[i + 1]);
 		}
-
+		else
+			str = std::format("X = {:d}, Y = {:d}",t_d.room_rect[i].left, t_d.room_rect[i].top);
+		csit(839,21 + i,str);
+		CDST(839,2 + i,data_store.town_strs[i + 1]);
+	}
 }
 
 void edit_town_strs_event_filter (short item_hit)
@@ -763,16 +756,15 @@ short pick_town_num(short which_dlog,short def)
 // ignore parent in Mac version
 {
 	short town_strs_hit,i,store_dialog_answer;
-	Str255 temp_str,str2;
+	Str255 temp_str;
 	
-	 store_whigh_dlog = which_dlog;
+	store_whigh_dlog = which_dlog;
 	
 	cd_create_dialog_parent_num(store_whigh_dlog,0);
 	
 	CDSN(store_whigh_dlog,2,def);
-	cd_get_item_text(which_dlog,7,(char *) temp_str);
-	format_to_buf(str2,"{} (0 - {:d})", temp_str,scenario_num_towns() - 1);
-	csit(which_dlog,7,(char *) str2);
+	cd_get_item_text(which_dlog,7,temp_str);
+	csit(which_dlog,7, std::format("{} (0 - {:d})", temp_str, scenario_num_towns() - 1));
 	
 	while (dialog_not_toast)
 		ModalDialog((ModalFilterProcPtr) cd_event_filter, &town_strs_hit);
@@ -839,7 +831,7 @@ void outdoor_details_event_filter (short item_hit)
 	
 	switch (item_hit) {
 		case 3:
-			CDGT(851,2,(char *) str);
+			CDGT(851,2,str);
 			str[29] = 0;
 			format_to_buf(data_store.out_strs[0],"{}", str);
 			dialog_not_toast = FALSE; 
@@ -852,14 +844,10 @@ void outdoor_details()
 // ignore parent in Mac version
 {
 	short town_strs_hit,i,store_dialog_answer;
-	Str255 temp_str;
-	
-	
+
 	cd_create_dialog_parent_num(851,0);
-	
 	CDST(851,2,data_store.out_strs[0]);
-	format_to_buf(temp_str,"X = {:d}, Y = {:d}",cur_out.x,cur_out.y);
-	csit(851,8,(char *) temp_str);
+	csit(851,8, std::format("X = {:d}, Y = {:d}", cur_out.x, cur_out.y));
 	
 	while (dialog_not_toast)
 		ModalDialog((ModalFilterProcPtr) cd_event_filter, &town_strs_hit);
@@ -878,14 +866,14 @@ void put_out_wand_in_dlog()
 			csit(852, i + 7, "Empty");
 			else {
 				get_str(str,-1,store_out_wand.monst[i]);
-				csit(852,i + 7,(char *) str);
+				csit(852,i + 7,str);
 				}
 	for (i = 0; i < 3; i++)
 		if (store_out_wand.friendly[i] == 0)
 			csit(852, i + 7 + 7, "Empty");
 			else {
 				get_str(str,-1,store_out_wand.friendly[i]);
-				csit(852,i + 7 + 7,(char *) str);
+				csit(852,i + 7 + 7,str);
 				}
 	if (store_out_wand.cant_flee % 10 == 1)
 		cd_set_led(852,51,1); 
@@ -1032,7 +1020,7 @@ Boolean save_town_details()
 	Str255 str;
 	short i;
 	
-	CDGT(832,2,(char *) str);
+	CDGT(832,2,str);
 	format_to_buf(data_store.town_strs[0],"{:<29.29s}",str);
 	town.town_chop_time = CDGN(832,3);
 	if (cre(town.town_chop_time,-1,10000,"The day the town becomes abandoned must be from 0 to 10000 (or -1 if it doesn't)."
@@ -1400,17 +1388,15 @@ Boolean save_talk_node()
 	Str255 str;
 	short i;
 	
-
 	store_talk_node.personality = CDGN(817,2);
 	if ((store_talk_node.personality >= 0) &&
-		((store_talk_node.personality < cur_town * 10) || (store_talk_node.personality >= (cur_town + 1) * 10))) {
-			format_to_buf(str,"The legal range for personalities in this town is from {:d} to {:d}.",
-				cur_town * 10,cur_town * 10 + 9,817);
-			give_error("Personalities in talk nodes must be -1 (for unused node), -2 (all personalities use) or in the legal range of personalities in this town.",
-				(char *) str,817);
-				return FALSE;
-				} 
-	CDGT(817,3,(char *) str);
+		((store_talk_node.personality < cur_town * 10) || (store_talk_node.personality >= (cur_town + 1) * 10)))
+	{
+		format_to_buf(str,"The legal range for personalities in this town is from {:d} to {:d}.", cur_town * 10,cur_town * 10 + 9,817);
+		give_error("Personalities in talk nodes must be -1 (for unused node), -2 (all personalities use) or in the legal range of personalities in this town.", str,817);
+		return FALSE;
+	} 
+	CDGT(817,3,str);
 	for (i = 0; i < 4; i++) {
 		store_talk_node.link1[i] = str[i];
 		if ((str[i] < 97) || (str[i] > 122)) {
@@ -1419,7 +1405,7 @@ Boolean save_talk_node()
 			return FALSE;
 			}
 		}
-	CDGT(817,4,(char *) str);
+	CDGT(817,4,str);
 	for (i = 0; i < 4; i++) {
 		store_talk_node.link2[i] = str[i];
 		if ((str[i] < 97) || (str[i] > 122)) {
@@ -1487,24 +1473,24 @@ void put_talk_node_in_dlog()
 	str[4] = 0;
 	for (i = 0; i < 4; i++)
 		str[i] = store_talk_node.link1[i];
-	CDST(817,3,(char *) str);
+	CDST(817,3,str);
 	for (i = 0; i < 4; i++)
 		str[i] = store_talk_node.link2[i];
-	CDST(817,4,(char *) str);
+	CDST(817,4,str);
 	get_str(str,40,store_talk_node.type * 7 + 1);
-	csit(817,15,(char *) str);
+	csit(817,15,str);
 	get_str(str,40,store_talk_node.type * 7 + 2);
-	csit(817,16,(char *) str);
+	csit(817,16,str);
 	get_str(str,40,store_talk_node.type * 7 + 3);
-	csit(817,17,(char *) str);
+	csit(817,17,str);
 	get_str(str,40,store_talk_node.type * 7 + 4);
-	csit(817,18,(char *) str);
+	csit(817,18,str);
 	get_str(str,40,store_talk_node.type * 7 + 5);
-	csit(817,19,(char *) str);
+	csit(817,19,str);
 	get_str(str,40,store_talk_node.type * 7 + 6);
-	csit(817,20,(char *) str);
+	csit(817,20,str);
 	get_str(str,40,store_talk_node.type * 7 + 7);
-	csit(817,21,(char *) str);
+	csit(817,21,str);
 	for (i = 0; i < 4; i++)
 		CDSN(817,5 + i,store_talk_node.extras[i]);
 	CDST(817,9,data_store.talk_strs[40 + store_which_talk_node * 2]);
@@ -1678,7 +1664,6 @@ void edit_talk_node(short which_node,short parent_num)
 
 void pick_out_event_filter (short item_hit)
 {
-	Str255 temp_str;
 	short i,j,spec;
 	
 	switch (item_hit) {
@@ -1707,17 +1692,14 @@ void pick_out_event_filter (short item_hit)
 				else store_cur_loc.y++;
 			break;
 		}
-	format_to_buf(temp_str,"X = {:d}",store_cur_loc.x);
-	csit(854,8,(char *) temp_str);
-	format_to_buf(temp_str,"Y = {:d}",store_cur_loc.y);
-	csit(854,11,(char *) temp_str);
+	csit(854,8, std::format("X = {:d}", store_cur_loc.x));
+	csit(854,11, std::format("Y = {:d}", store_cur_loc.y));
 }
 
 short pick_out(location default_loc)
 // ignore parent in Mac version
 {
 	short basic_dlog_hit,i,store_dialog_answer;
-	Str255 temp_str;
 	
 	store_cur_loc = default_loc;
 	
@@ -1725,10 +1707,8 @@ short pick_out(location default_loc)
 	
 	cdsin(854,7,scenario_out_width());	
 	cdsin(854,10,scenario_out_height());
-	format_to_buf(temp_str,"X = {:d}",store_cur_loc.x);
-	csit(854,8,(char *) temp_str);
-	format_to_buf(temp_str,"Y = {:d}",store_cur_loc.y);
-	csit(854,11,(char *) temp_str);
+	csit(854,8, std::format("X = {:d}", store_cur_loc.x));
+	csit(854,11, std::format("Y = {:d}", store_cur_loc.y));
 
 	while (dialog_not_toast)
 		ModalDialog((ModalFilterProcPtr) cd_event_filter, &basic_dlog_hit);
@@ -1773,14 +1753,14 @@ Boolean new_town(short which_town)
 	cd_set_led(830,12,1);
 	cd_set_led(830,18,1);
 	format_to_buf(temp_str,"Town name");
-	CDST(830,2,(char *) temp_str);
+	CDST(830,2,temp_str);
 	
 	while (dialog_not_toast)
 		ModalDialog((ModalFilterProcPtr) cd_event_filter, &basic_dlog_hit);
 
 	size = cd_get_led_range(830,11,13);
 	preset = cd_get_led_range(830,18,20);
-	CDGT(830,2,(char *) temp_str);
+	CDGT(830,2,temp_str);
 	temp_str[30] = 0;
 	cd_kill_dialog(830,0);
 	if (dialog_answer < 0)

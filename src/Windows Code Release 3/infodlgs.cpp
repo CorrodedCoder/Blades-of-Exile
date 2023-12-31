@@ -75,30 +75,33 @@ creature_data_type hold_m;
 
 void put_spell_info()
 {
-	char store_text[256];
 	short pos,res,ran;
-
 
 	pos = (store_display_mode == 0) ? mage_spell_pos : priest_spell_pos;
 	res = (store_display_mode == 0) ? 7 : 8;
 	ran = (store_display_mode == 0) ? mage_range[pos] : priest_range[pos];
 	
+	char store_text[256];
 	get_str (store_text, res, pos * 2 + 1);
 	cd_set_item_text(1096,4, store_text);
 
 	if (spell_cost[store_display_mode][pos] > 0)
-		format_to_buf(store_text, "{:d}/{:d}",spell_level[pos],spell_cost[store_display_mode][pos]);
-		else format_to_buf(store_text, "{:d}/?",spell_level[pos]);
-	cd_set_item_text(1096,5, store_text);
+		cd_set_item_text(1096, 5, std::format("{:d}/{:d}",spell_level[pos],spell_cost[store_display_mode][pos]));
+	else
+		cd_set_item_text(1096, 5, std::format("{:d}/?",spell_level[pos]));
 
-	if (ran == 0) {
+	if (ran == 0)
+	{
 		cd_set_item_text(1096,6,"");
-		}
-		else cd_set_item_num(1096,6,ran);
-	get_str (store_text, res, pos * 2 + 2);
+	}
+	else
+	{
+		cd_set_item_num(1096, 6, ran);
+	}
 
+	get_str(store_text, res, pos * 2 + 2);
 	cd_set_item_text(1096,7, store_text);
-	get_str (store_text, 11, 1 + spell_w_cast[store_display_mode][pos]);
+	get_str(store_text, 11, 1 + spell_w_cast[store_display_mode][pos]);
 	cd_set_item_text(1096,11, store_text);
 }
 
@@ -297,7 +300,6 @@ static const char * item_types(item_variety variety)
 
 void put_item_info(short pc,short item)
 {
-	char store_text[256];
 	char desc_str[256];
 	short i;	
 	item_record_type s_i;
@@ -349,17 +351,17 @@ void put_item_info(short pc,short item)
 		case item_variety::TwoHandedWeapon:
 			cd_set_item_num(998,6,s_i.item_level);
 			cd_set_item_num(998,7,s_i.bonus);
-		
-			switch (s_i.type) {
-				case 1:format_to_buf(store_text, "Edged weapon");
-					break;
-				case 2:format_to_buf(store_text, "Bashing weapon");
-					break;
-				case 3:format_to_buf(store_text, "Pole weapon");
-					break;
-				}
 			if (s_i.ability == 0)
-				cd_set_item_text(998,12,store_text);
+			{
+				std::string_view store_text;
+				switch (s_i.type)
+				{
+				case 1: store_text = "Edged weapon"; break;
+				case 2: store_text = "Bashing weapon"; break;
+				case 3: store_text = "Pole weapon"; break;
+				}
+				cd_set_item_text(998, 12, store_text);
+			}
 			break;
 		case item_variety::Bow:
 		case item_variety::Crossbow:
@@ -497,11 +499,8 @@ void put_monst_info()
 	
 	for (i = 0; i < 3; i++)
 		if (store_m->m_d.a[i] > 0) {
-			format_to_buf(store_text," {:d}d{:d}              ",
-				store_m->m_d.a[i] / 100 + 1, store_m->m_d.a[i] % 100);
-
-			cd_set_item_text(999,13 + i,store_text);
-			}				
+			cd_set_item_text(999,13 + i, std::format(" {:d}d{:d}              ", store_m->m_d.a[i] / 100 + 1, store_m->m_d.a[i] % 100));
+		}
 	cd_set_item_num(999,6,store_m->m_d.level);
 	cd_set_item_num(999,7,store_m->m_d.health);
 	cd_set_item_num(999,8,store_m->m_d.mp);

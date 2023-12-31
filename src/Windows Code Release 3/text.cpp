@@ -141,7 +141,6 @@ short text_pc_has_abil_equip(short pc_num,short abil)
 //void win_draw_string(HWND dest_window,RECT dest_rect,char *str,short mode,short line_height)
 void put_pc_screen()
 {
-	char to_draw[256];
 	short i = 0,j;
 	RECT erase_rect = {2,17,270,99},to_draw_rect,from_rect;
 	RECT final_from_draw_rect = {0,0,271,116},final_to_draw_rect = {0,0,271,116};
@@ -200,16 +199,9 @@ void put_pc_screen()
 
 	// Put food, gold, day
 	SetTextColor(hdc,PALETTEINDEX(c[5]));
-	format_to_buf(to_draw, "{:d}", (short) party.gold);
-	win_draw_string(hdc,small_erase_rects[1],
-	  to_draw,0,10);
-	format_to_buf(to_draw, "{:d}", (short) party.food);
-	win_draw_string(hdc,small_erase_rects[0],
-	  to_draw,0,10);
-	i = calc_day();
-	format_to_buf(to_draw, "{:d}", i);
-	win_draw_string(hdc,small_erase_rects[2],
-	  to_draw,0,10);
+	win_draw_string(hdc,small_erase_rects[1], std::format("{:d}", (short)party.gold),0,10);
+	win_draw_string(hdc,small_erase_rects[0], std::format("{:d}", (short)party.food),0,10);
+	win_draw_string(hdc,small_erase_rects[2], std::format("{:d}", calc_day()),0,10);
 	SetTextColor(hdc,PALETTEINDEX(c[0]));
 
 	for (i = 0; i < 6; i++) {
@@ -222,10 +214,7 @@ void put_pc_screen()
 				SelectObject(hdc,italic_font);
 				SetTextColor(hdc,PALETTEINDEX(c[4]));
 				}
-
-			format_to_buf(to_draw, "{:d}. {:<20s}             ", i + 1, adven[i].name);
-			win_draw_string(hdc,pc_buttons[i][0],
-			 to_draw,0,10);
+			win_draw_string(hdc,pc_buttons[i][0], std::format("{:d}. {:<20s}             ", i + 1, adven[i].name),0,10);
 			//TextFace(bold);
 			//ForeColor(blackColor);
 			SelectObject(hdc,small_bold_font);
@@ -238,46 +227,39 @@ void put_pc_screen()
 					if (adven[i].cur_health == adven[i].max_health)
 						SetTextColor(hdc,PALETTEINDEX(c[3]));
 						else SetTextColor(hdc,PALETTEINDEX(c[1]));
-					format_to_buf(to_draw, "{:-3d}              ",adven[i].cur_health);
-					win_draw_string(hdc,pc_buttons[i][1],
-					  to_draw,0,10);
+					win_draw_string(hdc,pc_buttons[i][1], std::format("{:-3d}              ", adven[i].cur_health),0,10);
 					if (adven[i].cur_sp == adven[i].max_sp)
 						SetTextColor(hdc,PALETTEINDEX(c[4]));
-						else SetTextColor(hdc,PALETTEINDEX(c[2]));
-					format_to_buf(to_draw, "{:-3d}              ",adven[i].cur_sp);
-					win_draw_string(hdc,pc_buttons[i][2],
-					  to_draw,0,10);
+					else
+						SetTextColor(hdc,PALETTEINDEX(c[2]));
+					win_draw_string(hdc,pc_buttons[i][2], std::format("{:-3d}              ", adven[i].cur_sp),0,10);
 					SetTextColor(hdc,PALETTEINDEX(c[0]));
 					SelectObject(hdc,store_bmp);
 					draw_pc_effects_bmp(i, pc_stats_gworld);
 					SelectObject(hdc,pc_stats_gworld);
 					break;
 				case status::Dead:
-					format_to_buf(to_draw, "Dead");
+					win_draw_string(hdc, to_draw_rect, "Dead", 0, 10);
 					break;
 				case status::Dust:
-					format_to_buf(to_draw, "Dust");
+					win_draw_string(hdc, to_draw_rect, "Dust", 0, 10);
 					break;
 				case status::Stone:
-					format_to_buf(to_draw, "Stone");
+					win_draw_string(hdc, to_draw_rect, "Stone", 0, 10);
 					break;
 				case status::Fled:
-					format_to_buf(to_draw, "Fled");
+					win_draw_string(hdc, to_draw_rect, "Fled", 0, 10);
 					break;
 				case status::Surface:
-					format_to_buf(to_draw, "Surface");
+					win_draw_string(hdc, to_draw_rect, "Surface", 0, 10);
 					break;
 				case status::Won:
-					format_to_buf(to_draw, "Won");
+					win_draw_string(hdc, to_draw_rect, "Won", 0, 10);
 					break;
 				default:
-					format_to_buf(to_draw, "Absent");
+					win_draw_string(hdc, to_draw_rect, "Absent", 0, 10);
 					break;
 				}
-			if (adven[i].main_status != status::Normal)
-				win_draw_string(hdc,to_draw_rect,
-				 to_draw,0,10);
-
 			// Now put trade and info buttons
 			//rect_draw_some_item_bmp(mixed_gworld,info_from,pc_stats_gworld,pc_buttons[i][3],1,0);
 			//rect_draw_some_item_bmp(mixed_gworld,switch_from,pc_stats_gworld,pc_buttons[i][4],1,0);
@@ -328,7 +310,6 @@ void put_pc_screen()
 void put_item_screen(short screen_num,short suppress_buttons)
 // if suppress_buttons > 0, save time by not redrawing buttons
 {
-	char to_draw[256];
 	short i_num,item_offset;
 	short i = 0,j,pc;
 	RECT erase_rect = {2,17,255,123},dest_rect,from_rect,to_rect;
@@ -402,16 +383,12 @@ void put_item_screen(short screen_num,short suppress_buttons)
 		case 6: // On special items page
 			//TextFace(bold);
 			SelectObject(hdc,bold_font);
-			format_to_buf(to_draw, "Special items:");
-			win_draw_string(hdc,upper_frame_rect,
-				to_draw,0,10);
+			win_draw_string(hdc,upper_frame_rect, "Special items:",0,10);
 		 	SetTextColor(hdc,PALETTEINDEX(c[0]));
 			for (i = 0; i < 8; i++) {
 				i_num = i + item_offset;
 				if (spec_item_array[i_num] >= 0){
-					strcpy(to_draw,data_store5.scen_strs[60 + spec_item_array[i_num] * 2]);
-					win_draw_string(hdc,item_buttons[i][0],to_draw,0,10);
-
+					win_draw_string(hdc,item_buttons[i][0], data_store5.scen_strs[60 + spec_item_array[i_num] * 2],0,10);
 					SelectObject(hdc,store_bmp);
 					place_item_button(3,i,4,0);
 					if ((scenario_special_item(spec_item_array[i_num]) % 10 == 1)
@@ -426,21 +403,13 @@ void put_item_screen(short screen_num,short suppress_buttons)
 
 		default: // on an items page
 			pc = screen_num;
-			format_to_buf(to_draw, "{} inventory:",
-				adven[pc].name);
-			win_draw_string(hdc,upper_frame_rect,
-			  to_draw,0,10);
-
+			win_draw_string(hdc,upper_frame_rect, std::format("{} inventory:", adven[pc].name),0,10);
 		 	SetTextColor(hdc,PALETTEINDEX(c[0]));
 			for (i = 0; i < 8; i++) {
 				i_num = i + item_offset;
-				format_to_buf(to_draw, "{:d}.",i_num + 1);
-				win_draw_string(hdc,item_buttons[i][0],
-				  to_draw,0,10);
-
+				win_draw_string(hdc,item_buttons[i][0], std::format("{:d}.", i_num + 1),0,10);
 				dest_rect = item_buttons[i][0];
 				dest_rect.left += 36;
-
 				if (adven[pc].items[i_num].variety == item_variety::None) {
 
 					}
@@ -458,15 +427,18 @@ void put_item_screen(short screen_num,short suppress_buttons)
 					// Place object graphic here
 					//if (adven[pc].items[i_num].variety != item_variety::None)
 					//	draw_obj_graphic(i + ((which_item_page[pc] == 1) ? 1 : 0),adven[pc].items[i_num].graphic_num,text_panel_rect); // rect is space holder
-
-							if (!is_ident(adven[pc].items[i_num]))
-								format_to_buf(to_draw, "{}  ",adven[pc].items[i_num].name);
-								else { /// Don't place # of charges when Sell button up and space tight
-									if ((adven[pc].items[i_num].charges > 0) && (adven[pc].items[i_num].type != 2)
-										&& (stat_screen_mode <= 1))
-										format_to_buf(to_draw, "{} ({:d})",adven[pc].items[i_num].full_name,adven[pc].items[i_num].charges);
-										else format_to_buf(to_draw, "{}",adven[pc].items[i_num].full_name);
-									}
+						std::string to_draw;
+						if (!is_ident(adven[pc].items[i_num]))
+						{
+							to_draw = std::format("{}  ", adven[pc].items[i_num].name);
+						}
+						else /// Don't place # of charges when Sell button up and space tight
+						{
+							if ((adven[pc].items[i_num].charges > 0) && (adven[pc].items[i_num].type != 2) && (stat_screen_mode <= 1))
+								to_draw = std::format("{} ({:d})",adven[pc].items[i_num].full_name,adven[pc].items[i_num].charges);
+							else
+								to_draw = adven[pc].items[i_num].full_name;
+						}
 						dest_rect.left -= 2;
 						win_draw_string(hdc,dest_rect,to_draw,0,10);
 						//TextFace(0);
@@ -477,7 +449,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 
 						// this is kludgy, awkwark, and has redundant code. Done this way to
 						// make go faster, and I got lazy.
-					SelectObject(hdc,store_bmp);
+						SelectObject(hdc,store_bmp);
 						if ((stat_screen_mode == 0) &&
 						 ((is_town()) || (is_out()) || ((is_combat()) && (pc == current_pc)))) { // place give and drop and use
 							place_item_button(0,i,0,adven[pc].items[i_num].graphic_num); // item_graphic
@@ -1284,9 +1256,6 @@ void init_buf()
 	}
 }
 
-
-
-
 void print_buf () 
 {
 	short num_lines_printed = 0,ctrl_val;
@@ -1297,7 +1266,6 @@ void print_buf ()
 	RECT from_rect,to_rect;
 	HDC hdc;
 	HGDIOBJ store_bmp;
-
 
 	if (string_added == TRUE) {
 
@@ -1441,50 +1409,58 @@ short string_length(char *str,HDC hdc)
 
 void char_win_draw_string(HDC dest_window,RECT dest_rect, std::string_view str,short mode,short line_height)
 {
-	char store_s[256];
-	
-	strcpy(store_s,str.data());
-	win_draw_string( dest_window, dest_rect,store_s, mode, line_height);
+	win_draw_string( dest_window, dest_rect, str, mode, line_height);
 
 }
 
 // mode: 0 - align up and left, 1 - center on one line
 // str is a c string, 256 characters
 // uses current font
-void win_draw_string(HDC dest_hdc,RECT dest_rect,char *str,short mode,short line_height)
+void win_draw_string(HDC dest_hdc,RECT dest_rect, std::string_view str,short mode,short line_height)
 {
-	short i;
+	std::string adjusted;
+	adjusted.reserve(str.size());
 
-// this will need formatting for '|' line breaks
-	for (i = 0; i < 256; i++)  {
-		if (str[i] == 0)
-			i = 256;
-			else {
-			if (str[i] == '|') {
-				str[i] = 13;
-            }
-			if (str[i] == '_')
-				str[i] = 34;
-			}
+	// this will need formatting for '|' line breaks
+	for (const auto c: str)
+	{
+		if (c == '|')
+		{
+			adjusted.push_back(13);
+        }
+		else if (c == '_')
+		{
+			adjusted.push_back(34);
 		}
+		else
+		{
+			adjusted.push_back(c);
+		}
+	}
+
 	// if dest is main window, add ulx, uly
 	if (dest_hdc == main_dc)
-   	OffsetRect(&dest_rect,ulx,uly);
-	switch (mode) {
-		case 0:
-         dest_rect.bottom += 6;
-			DrawText(dest_hdc,str,strlen(str),&dest_rect,DT_LEFT | DT_NOPREFIX | DT_WORDBREAK); break;
-		case 1:
-			dest_rect.bottom += 6; dest_rect.top -= 6;
-			DrawText(dest_hdc,str,strlen(str),&dest_rect,
-			DT_CENTER | DT_NOPREFIX | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE); break;
-		case 2: case 3:
-			dest_rect.bottom += 6; dest_rect.top -= 6;
-			DrawText(dest_hdc,str,strlen(str),&dest_rect,
-			DT_LEFT | DT_NOPREFIX | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE); break;
-		}
+	{
+		OffsetRect(&dest_rect, ulx, uly);
+	}
+
+	switch (mode)
+	{
+	case 0:
+        dest_rect.bottom += 6;
+		DrawText(dest_hdc, adjusted.c_str(), adjusted.size(), &dest_rect, DT_LEFT | DT_NOPREFIX | DT_WORDBREAK);
+		break;
+	case 1:
+		dest_rect.bottom += 6; dest_rect.top -= 6;
+		DrawText(dest_hdc, adjusted.c_str(), adjusted.size(), &dest_rect, DT_CENTER | DT_NOPREFIX | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE);
+		break;
+	case 2:
+	case 3:
+		dest_rect.bottom += 6; dest_rect.top -= 6;
+		DrawText(dest_hdc, adjusted.c_str(), adjusted.size(), &dest_rect, DT_LEFT | DT_NOPREFIX | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE);
+		break;
+	}
 	// not yet done adjusts for 1, 2, 3
-	
 }
 
 short calc_day()
@@ -1513,7 +1489,7 @@ Boolean day_reached(unsigned char which_day, unsigned char which_event)
 
 // BEGIN EXTRA WINDOWS STUFF
 
-void WinDrawString(char *string,short x,short y)
+void WinDrawString(std::string_view str,short x,short y)
 {
 	HDC hdc;
 	COLORREF colors[2] = {RGB(0,0,0),RGB(255,255,255)};
@@ -1528,20 +1504,18 @@ void WinDrawString(char *string,short x,short y)
 	SelectObject(hdc,small_bold_font);
 	SetBkMode(hdc,TRANSPARENT);
 	SetTextColor(hdc,PALETTEINDEX(c[1]));
-	DrawString(string,x,y,hdc);
+	DrawString(str.data(), x, y, hdc);
 	fry_dc(mainPtr,hdc);
 }
 
-void WinBlackDrawString(char *string,short x,short y)
+void WinBlackDrawString(std::string_view str,short x,short y)
 {
-	HDC hdc;
-
-	hdc = GetDC(mainPtr);
+	HDC hdc = GetDC(mainPtr);
 	SelectPalette(hdc,hpal,0);
  	SetViewportOrgEx(hdc,ulx,uly,nullptr);
 	SelectObject(hdc,small_bold_font);
 	SetBkMode(hdc,TRANSPARENT);
-	DrawString(string,x,y,hdc);
+	DrawString(str.data(), x, y, hdc);
 	fry_dc(mainPtr,hdc);
 }
 

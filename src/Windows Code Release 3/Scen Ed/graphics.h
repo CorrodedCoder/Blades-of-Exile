@@ -55,7 +55,7 @@ void make_quickfire(short i,short j);
 void take_quickfire(short i,short j);
 Boolean container_there(location l);
 void char_win_draw_string(HDC dest_window,RECT dest_rect, std::string_view str,short mode,short line_height);
-void win_draw_string(HDC dest_hdc,RECT dest_rect,char *str,short mode,short line_height);
+void win_draw_string(HDC dest_hdc,RECT dest_rect, std::string_view str,short mode,short line_height);
 void c2p(char *str) ;
 void p2c(char *str);
 void get_str(char *str,short i, short j);

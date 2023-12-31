@@ -3302,7 +3302,6 @@ void start_terrain_editing()
 void start_monster_editing(short just_redo_text)
 {
 	short i;
-	char str[256];
 	Boolean draw_full = FALSE;
 
 	if (overall_mode == 62)
@@ -3316,8 +3315,7 @@ void start_monster_editing(short just_redo_text)
 		SetScrollRange(right_sbar,SB_CTL,0,255 - NRSONPAGE,TRUE);
 		}
 	for (i = 1; i < 256; i++) {
-		format_to_buf(str,"{:d} - {}",i, scen_item_list.monst_names[i]);
-		set_rb(i - 1,2000 + i, str,0);
+		set_rb(i - 1,2000 + i, std::format("{:d} - {}", i, scen_item_list.monst_names[i]),0);
 		}
 	if (draw_full == TRUE)
 		redraw_screen();
@@ -3344,7 +3342,6 @@ Boolean monst_on_space(location loc,short m_num)
 void start_item_editing(short just_redo_text)
 {
 	short i;
-	char str[256];
 	Boolean draw_full = FALSE;
 	
 	if (just_redo_text == 0) {
@@ -3360,8 +3357,7 @@ void start_item_editing(short just_redo_text)
 		SetScrollRange(right_sbar,SB_CTL,0,400 - NRSONPAGE,TRUE);
 		}
 	for (i = 0; i < 400; i++) {
-		format_to_buf(str,"{:d} - {}",i, scen_item_list.scen_items[i].full_name);
-		set_rb(i,3000 + i, str,0);
+		set_rb(i,3000 + i, std::format("{:d} - {}", i, scen_item_list.scen_items[i].full_name),0);
 		}
 	if (draw_full == TRUE)
 		redraw_screen();
@@ -3373,7 +3369,6 @@ void start_item_editing(short just_redo_text)
 void start_special_item_editing()
 {
 	short i;
-	char str[256];
 	Boolean draw_full = FALSE;
 
 	if (overall_mode < 60)
@@ -3386,8 +3381,7 @@ void start_special_item_editing()
 		SetScrollRange(right_sbar,SB_CTL,0,50 - NRSONPAGE,TRUE);
 		reset_rb();
 	for (i = 0; i < 50; i++) {
-		format_to_buf(str,"{:d} - {}",i, scen_strs[60 + i * 2]);
-		set_rb(i,10000 + i, str,0);
+		set_rb(i,10000 + i, std::format("{:d} - {}", i, scen_strs[60 + i * 2]),0);
 		}
 	if (draw_full == TRUE)
 		redraw_screen();
@@ -3401,7 +3395,6 @@ void start_special_item_editing()
 void start_string_editing(short mode,short just_redo_text)
 {
 	short i,pos;
-	char str[256];
 	short num_strs[3] = {260,108,140};
 	Boolean draw_full = FALSE;
 
@@ -3413,26 +3406,23 @@ void start_string_editing(short mode,short just_redo_text)
 		overall_mode = 60;
 		ShowScrollBar(right_sbar,SB_CTL,TRUE);
 		SetScrollPos(right_sbar,SB_CTL,0,TRUE);
-	
 		reset_rb();
 		SetScrollRange(right_sbar,SB_CTL,0,num_strs[mode] - NRSONPAGE,TRUE);
+	}
 
-		}
 	for (i = 0; i < num_strs[mode]; i++) {
 		switch (mode) {
 			case 0:
 				if (i < 160)
-					format_to_buf(str,"{:d} - {:<30.30s}",i, scen_strs[i]);
-					else format_to_buf(str,"{:d} - {:<30.30s}",i, scen_strs2[i - 160]);
-				set_rb(i,7000 + i, str,0);
+					set_rb(i, 7000 + i, std::format("{:d} - {:<30.30s}",i, scen_strs[i]), 0);
+				else
+					set_rb(i, 7000 + i, std::format("{:d} - {:<30.30s}",i, scen_strs2[i - 160]), 0);
 				break;
 			case 1:
-				format_to_buf(str,"{:d} - {:<30.30s}",i, data_store.out_strs[i]);
-				set_rb(i,8000 + i, str,0);
+				set_rb(i,8000 + i, std::format("{:d} - {:<30.30s}", i, data_store.out_strs[i]),0);
 				break;
 			case 2:
-				format_to_buf(str,"{:d} - {:<30.30s}",i, town_strs[i]);
-				set_rb(i,9000 + i, str,0);
+				set_rb(i,9000 + i, std::format("{:d} - {:<30.30s}", i, town_strs[i]),0);
 				break;
 			}
 		}
@@ -3450,7 +3440,7 @@ void start_string_editing(short mode,short just_redo_text)
 void start_special_editing(short mode,short just_redo_text)
 {
 	short i;
-	char str[256],s2[256];
+	char s2[256];
 	short num_specs[3] = {256,60,100};
 	Boolean draw_full = FALSE;
 
@@ -3471,18 +3461,15 @@ void start_special_editing(short mode,short just_redo_text)
 		switch (mode) {
 			case 0:
 				get_str(s2,22,scenario.scen_specials[i].type + 1);
-				format_to_buf(str,"{:d} - {:<30.30s}",i, s2);
-				set_rb(i,4000 + i, str,0);
+				set_rb(i,4000 + i, std::format("{:d} - {:<30.30s}", i, s2),0);
 				break;
 			case 1:
 				get_str(s2,22,current_terrain.specials[i].type + 1);
-				format_to_buf(str,"{:d} - {:<30.30s}",i, s2);
-				set_rb(i,5000 + i, str,0);
+				set_rb(i,5000 + i, std::format("{:d} - {:<30.30s}", i, s2),0);
 				break;
 			case 2:
 				get_str(s2,22,town.specials[i].type + 1);
-				format_to_buf(str,"{:d} - {:<30.30s}",i, s2);
-				set_rb(i,6000 + i, str,0);
+				set_rb(i,6000 + i, std::format("{:d} - {:<30.30s}", i, s2),0);
 				break;
 			}
 		}
@@ -3497,7 +3484,6 @@ void start_special_editing(short mode,short just_redo_text)
 void start_dialogue_editing(short restoring)
 {
 	short i,j;
-	char str[256];
 	char s[15] = "    ,      ";
 	Boolean draw_full = FALSE;
 	
@@ -3514,19 +3500,15 @@ void start_dialogue_editing(short restoring)
 		SetScrollRange(right_sbar,SB_CTL,0,70 - NRSONPAGE,TRUE);
 		}
 	for (i = 0; i < 10; i++) {
-		format_to_buf(str,"Personality {:d} - {}",i + cur_town * 10,
-			 talk_strs[i]);
-		set_rb(i,13000 + i, str,0);
+		set_rb(i,13000 + i, std::format("Personality {:d} - {}", i + cur_town * 10, talk_strs[i]),0);
 		}
 	for (i = 0; i < 60; i++) {
 		for (j = 0; j < 4; j++) {
 			s[j] = talking.talk_nodes[i].link1[j];
 			s[j + 6] = talking.talk_nodes[i].link2[j];
 			}
-		format_to_buf(str,"Node {:d} - Per. {:d}, {}",i,
-			talking.talk_nodes[i].personality,s);
-		set_rb(10 + i,12000 + i, str,0);
-		}
+		set_rb(10 + i,12000 + i, std::format("Node {:d} - Per. {:d}, {}", i, talking.talk_nodes[i].personality, s),0);
+	}
 	if (draw_full == TRUE)
 		redraw_screen();
 		else for (i = 0; i < NRSONPAGE; i++)

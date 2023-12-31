@@ -1586,16 +1586,13 @@ short string_length(char *str)
 
 void char_win_draw_string(GrafPtr dest_window,Rect dest_rect, std::string_view str,short mode,short line_height)
 {
-	Str255 store_s;
-	strcpy(store_s,str.data());
-	win_draw_string( dest_window, dest_rect,store_s, mode, line_height);
-
+	win_draw_string( dest_window, dest_rect,str, mode, line_height);
 }
 
 // mode: 0 - align up and left, 1 - center on one line
 // str is a c string, 256 characters
 // uses current font
-void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,short line_height)
+void win_draw_string(GrafPtr dest_window,Rect dest_rect, std::string_view str,short mode,short line_height)
 {
 	GrafPtr old_port;
 	Str255 p_str,str_to_draw,str_to_draw2,c_str;

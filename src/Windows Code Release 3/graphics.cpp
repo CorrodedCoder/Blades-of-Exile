@@ -172,8 +172,6 @@ short startup_anim_pos = 43;
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
 Boolean supressing_some_spaces = FALSE;
 location ok_space[4] = {{0,0},{0,0},{0,0},{0,0}};
- 	char combat_string[100];
-
 
 static void undo_clip()
 {
@@ -1092,7 +1090,7 @@ void draw_text_bar(short mode)
 						return;
 						}
 		if (remember_tiny_text != 50 + party.i_w_c.x + party.i_w_c.y) {
-			put_text_bar((char *) data_store4.outdoor_text[party.i_w_c.x][party.i_w_c.y].out_strs[0]);
+			put_text_bar(data_store4.outdoor_text[party.i_w_c.x][party.i_w_c.y].out_strs[0]);
 			remember_tiny_text = 50 + party.i_w_c.x + party.i_w_c.y;
 			}
 		}
@@ -1107,31 +1105,35 @@ void draw_text_bar(short mode)
 						return;
 						}
 		if (remember_tiny_text != 250) {
-			put_text_bar((char *) data_store.town_strs[0]); ////
+			put_text_bar(data_store.town_strs[0]); ////
 			remember_tiny_text = 250;
 			}
 	
 		}
-  	if ((is_combat()) && (current_pc < 6) && (monsters_going == FALSE)) {
-		format_to_buf(combat_string,"{} (ap: {:d})",
-			adven[current_pc].name,pc_moves[current_pc]);
-		put_text_bar((char *) combat_string);
+  	if ((is_combat()) && (current_pc < 6) && (monsters_going == FALSE))
+	{
+		put_text_bar(std::format("{} (ap: {:d})", adven[current_pc].name, pc_moves[current_pc]));
 		remember_tiny_text = 500;
-		}
+	}
 	if ((is_combat()) && (monsters_going == TRUE))	// Print bar for 1st monster with >0 ap -
+	{
 		// that is monster that is going
 		for (i = 0; i < T_M; i++)
-			if ((c_town.monst.dudes[i].active > 0) && (c_town.monst.dudes[i].m_d.ap > 0)) {
-				print_monster_going((char *) combat_string,c_town.monst.dudes[i].number,c_town.monst.dudes[i].m_d.ap);
-			put_text_bar((char *) combat_string);
-			remember_tiny_text = 500;
-			i = 400;
+		{
+			if ((c_town.monst.dudes[i].active > 0) && (c_town.monst.dudes[i].m_d.ap > 0))
+			{
+				char combat_string[100];
+				print_monster_going(combat_string, c_town.monst.dudes[i].number, c_town.monst.dudes[i].m_d.ap);
+				put_text_bar(combat_string);
+				remember_tiny_text = 500;
+				i = 400;
+			}
 		}
+	}
 }
 
-void put_text_bar(char *str)
+void put_text_bar(std::string_view str)
 {
-	char status_str[256];
 	short xpos = 205;
 	HDC hdc;
 	HGDIOBJ store_bmp;
@@ -1146,36 +1148,31 @@ void put_text_bar(char *str)
 	SetBkMode(hdc,TRANSPARENT);
 	SelectObject(hdc,small_bold_font);
 	store_bmp = SelectObject(hdc,text_bar_gworld);
-	format_to_buf(status_str,"{}",str);
 	c = GetNearestPaletteIndex(hpal,y);
 	SetTextColor(hdc,PALETTEINDEX(c));
-	win_draw_string(hdc,text_rect,status_str,2,9);
+	win_draw_string(hdc,text_rect, str,2,9);
 	c = GetNearestPaletteIndex(hpal,x);
 	SetTextColor(hdc,PALETTEINDEX(c));
 
 	if (monsters_going == FALSE) {
 		if (PSD[305][0] > 0) {
 			text_rect.left = xpos;
-			format_to_buf(status_str,"Stealth");
-			win_draw_string(hdc,text_rect,status_str,2,9);
+			win_draw_string(hdc,text_rect, "Stealth",2,9);
 			xpos -= 60;
 			}
 		if (PSD[305][1] > 0) {
 			text_rect.left = xpos;
-			format_to_buf(status_str,"Flying");
-			win_draw_string(hdc,text_rect,status_str,2,9);
+			win_draw_string(hdc,text_rect, "Flying",2,9);
 			xpos -= 60;
 			}
 		if (PSD[305][2] > 0) {
 			text_rect.left = xpos;
-			format_to_buf(status_str,"Detect Life");
-			win_draw_string(hdc,text_rect,status_str,2,9);
+			win_draw_string(hdc,text_rect, "Detect Life",2,9);
 			xpos -= 60;
 			}
 		if (PSD[305][3] > 0) {
 			text_rect.left = xpos;
-			format_to_buf(status_str,"Firewalk");
-			win_draw_string(hdc,text_rect,status_str,2,9);
+			win_draw_string(hdc,text_rect, "Firewalk",2,9);
 			xpos -= 60;
 			}
 		}
@@ -2271,7 +2268,6 @@ void pre_boom_space(location where,short mode,short type,short damage,short soun
 	RECT terrain_from;
 	long dummy;
 	short del_len,sound_key;
-	char dam_str[20];
 	short x_adj = 0,y_adj = 0,which_m;
 	RECT mixed_square = {353,169,381,205};
 	short sound_to_play[20] = {97,69,70,71,72, 73,55,75,42,86,
@@ -2312,20 +2308,20 @@ void pre_boom_space(location where,short mode,short type,short damage,short soun
 	rect_draw_some_item_bmp(terrain_screen_gworld,terrain_from,mixed_gworld,mixed_square,0,0);
 	rect_draw_some_item_bmp(fields_gworld,source_rect,mixed_gworld,mixed_square,1,0);
 	rect_draw_some_item_bmp(mixed_gworld,mixed_square,mixed_gworld,dest_rect,0,1);
-
 	if ((cartoon_happening == FALSE) && (dest_rect.right - dest_rect.left >= 28)
-		&& (dest_rect.bottom - dest_rect.top >= 36)) {
-				format_to_buf(dam_str,"{:d}",damage);
+		&& (dest_rect.bottom - dest_rect.top >= 36))
+	{
 		text_rect = dest_rect;
 		text_rect.top += 10;
 		if ((damage < 10) && (dest_rect.right - dest_rect.left > 19))
 			text_rect.left += 2;
 		OffsetRect(&text_rect,-4,-5);
-		//char_win_draw_string(main_dc,text_rect,(char *) dam_str,1,10);
+		//char_win_draw_string(main_dc,text_rect,std::format("{:d}",damage),1,10);
 		if ((type == 1) || (type == 4))
-			WinBlackDrawString(dam_str,text_rect.left + 12,text_rect.top + 6);
-			else WinDrawString(dam_str,text_rect.left + 12,text_rect.top + 6);
-		}
+			WinBlackDrawString(std::format("{:d}", damage),text_rect.left + 12,text_rect.top + 6);
+		else
+			WinDrawString(std::format("{:d}", damage),text_rect.left + 12,text_rect.top + 6);
+	}
 		play_sound(sound_to_play[sound]);
 		if ((sound == 6) && (fast_bang == 0))
 			Delay(12, &dummy);
@@ -2406,7 +2402,6 @@ void draw_targeting_line(POINT where_curs)
 	RECT redraw_rect,redraw_rect2,terrain_rect = {0,0,279,351},target_rect;
 	location from_loc;
 	RECT on_screen_terrain_area = {18, 18, 269,341};
-	char dam_str[20];
 	HPEN white_pen;
 	HGDIOBJ store_pen;
 	static LOGPEN white_pen_data = { PS_SOLID,{2,2},RGB(255,255,255) };
@@ -2463,40 +2458,41 @@ void draw_targeting_line(POINT where_curs)
 
 				// Now place targeting pattern
 				for (i = 0; i < 9; i++)
-					for (j = 0; j < 9; j++) {
+					for (j = 0; j < 9; j++)
+					{
 						store_loc.x = center.x + i - 4;
 						store_loc.y = center.y + j - 4;
 						if ((a_v(store_loc.x - which_space.x) <= 4) &&
 							(a_v(store_loc.y - which_space.y) <= 4) &&
-							(current_pat.get().pattern[store_loc.x - which_space.x + 4][store_loc.y - which_space.y + 4] != 0)) {
-								target_rect.left = 13 + BITMAP_WIDTH * i + 5;// + ulx;
-								target_rect.right = target_rect.left + BITMAP_WIDTH;
-								target_rect.top = 13 + BITMAP_HEIGHT * j + 5;// + uly;
-								target_rect.bottom = target_rect.top + BITMAP_HEIGHT;
+							(current_pat.get().pattern[store_loc.x - which_space.x + 4][store_loc.y - which_space.y + 4] != 0))
+						{
+							target_rect.left = 13 + BITMAP_WIDTH * i + 5;// + ulx;
+							target_rect.right = target_rect.left + BITMAP_WIDTH;
+							target_rect.top = 13 + BITMAP_HEIGHT * j + 5;// + uly;
+							target_rect.bottom = target_rect.top + BITMAP_HEIGHT;
 
-								MoveToEx(main_dc,target_rect.left,target_rect.top, NULL);
-								LineTo(main_dc,target_rect.right,target_rect.top);
-								LineTo(main_dc,target_rect.right,target_rect.bottom);
-								LineTo(main_dc,target_rect.left,target_rect.bottom);
-								LineTo(main_dc,target_rect.left,target_rect.top);
+							MoveToEx(main_dc,target_rect.left,target_rect.top, NULL);
+							LineTo(main_dc,target_rect.right,target_rect.top);
+							LineTo(main_dc,target_rect.right,target_rect.bottom);
+							LineTo(main_dc,target_rect.left,target_rect.bottom);
+							LineTo(main_dc,target_rect.left,target_rect.top);
 
-								InflateRect(&target_rect,5,5);
-								UnionRect(&redraw_rect2,&target_rect,&redraw_rect2);
+							InflateRect(&target_rect,5,5);
+							UnionRect(&redraw_rect2,&target_rect,&redraw_rect2);
 
-								// Now place number of shots left, if drawing center of target
-								if ((overall_mode == 14) && (store_loc.x - which_space.x + 4 == 4)
-								 && (store_loc.y - which_space.y + 4 == 4)) {
-								 storec = GetTextColor(main_dc);
-								 SetTextColor(main_dc,PALETTEINDEX(c[1]));
-									format_to_buf(dam_str,"{:d}  ",num_targets_left);
-									DrawText(main_dc,dam_str,-1,&target_rect,DT_SINGLELINE | DT_VCENTER | DT_CENTER);
-									//WinDrawString(dam_str,((target_rect.left + target_rect.right) / 2) - 3,
-									// (target_rect.top + target_rect.bottom) / 2);
-									SetTextColor(main_dc,storec);
-									}
-
-								}
+							// Now place number of shots left, if drawing center of target
+							if ((overall_mode == 14) && (store_loc.x - which_space.x + 4 == 4)
+								&& (store_loc.y - which_space.y + 4 == 4))
+							{
+								storec = GetTextColor(main_dc);
+								SetTextColor(main_dc,PALETTEINDEX(c[1]));
+								DrawText(main_dc, std::format("{:d}  ", num_targets_left).c_str(), -1, &target_rect, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
+								//WinDrawString(std::format("{:d}  ", num_targets_left),((target_rect.left + target_rect.right) / 2) - 3,
+								// (target_rect.top + target_rect.bottom) / 2);
+								SetTextColor(main_dc,storec);
+							}
 						}
+					}
 				SelectObject(main_dc,store_pen);
 				DeleteObject(white_pen);
 

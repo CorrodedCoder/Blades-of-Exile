@@ -1138,19 +1138,21 @@ void place_location()
 	draw_rect.left = terrain_rects[255].left + 20;
 	draw_rect.top = terrain_rects[255].top;
 
-	char draw_str[256];
+	std::string draw_str;
 	if (overall_mode < 60)
-		format_to_buf(draw_str,"Center: x = {:d}, y = {:d}  ",(short) cen_x, (short) cen_y);
+	{
+		draw_str = std::format("Center: x = {:d}, y = {:d}  ",(short) cen_x, (short) cen_y);
+	}
 	else
 	{
 		draw_rect.left = 5;
 		draw_rect.top = terrain_rects[255].top + 28;
-		format_to_buf(draw_str,"Click terrain to edit. ");
+		draw_str = "Click terrain to edit. ";
 	}
 
 	draw_rect.bottom = draw_rect.top + 14;
 	draw_rect.right = draw_rect.left + 200;
-	win_draw_string(hdc,draw_rect,draw_str,0,12);
+	win_draw_string(hdc,draw_rect, draw_str,0,12);
 	SelectObject(hdc,store_bmp);
 
 
@@ -1208,7 +1210,6 @@ void place_location()
 // klugde for speed ...exactly like place location above, but just writes location
 void place_just_location()
 {
-	char draw_str[256];
 	RECT from_rect,draw_rect,erase_rect;
 	HGDIOBJ store_bmp;
 	HDC hdc;
@@ -1228,13 +1229,18 @@ void place_just_location()
 	
 	draw_rect.left = terrain_rects[255].left + 20;
 	draw_rect.top = terrain_rects[255].top;
+
+	std::string draw_str;
 	if (overall_mode < 60)
-		format_to_buf(draw_str,"Center: x = {:d}, y = {:d}  ",cen_x,cen_y);
-		else {
-			draw_rect.left = 5;
-			draw_rect.top = terrain_rects[255].top + 28;
-			format_to_buf(draw_str,"Click terrain to edit. ");
-			}
+	{
+		draw_str = std::format("Center: x = {:d}, y = {:d}  ", cen_x, cen_y);
+	}
+	else
+	{
+		draw_rect.left = 5;
+		draw_rect.top = terrain_rects[255].top + 28;
+		draw_str = std::format("Click terrain to edit. ");
+	}
 
 	draw_rect.bottom = draw_rect.top + 14;
 	draw_rect.right = draw_rect.left + 200;
@@ -1464,44 +1470,57 @@ Boolean container_there(location l)
 
 void char_win_draw_string(HDC dest_window,RECT dest_rect, std::string_view str,short mode,short line_height)
 {
-	char store_s[256];
-	strcpy(store_s,str.data());
-	win_draw_string( dest_window, dest_rect,store_s, mode, line_height);
-
+	win_draw_string( dest_window, dest_rect, str, mode, line_height);
 }
 
 // mode: 0 - align up and left, 1 - center on one line
 // str is a c string, 256 characters
 // uses current font
-void win_draw_string(HDC dest_hdc,RECT dest_rect,char *str,short mode,short line_height)
+void win_draw_string(HDC dest_hdc,RECT dest_rect, std::string_view str,short mode,short line_height)
 {
-	short i;
+	std::string adjusted;
+	adjusted.reserve(str.size());
 
-// this will need formatting for '|' line breaks
-	for (i = 0; i < 256; i++)  {
-		if (str[i] == '|')
-			str[i] = 13;
-		if (str[i] == '_')
-      	str[i] = 34;
+	// this will need formatting for '|' line breaks
+	for (const auto c : str)
+	{
+		if (c == '|')
+		{
+			adjusted.push_back(13);
 		}
+		else if (c == '_')
+		{
+			adjusted.push_back(34);
+		}
+		else
+		{
+			adjusted.push_back(c);
+		}
+	}
+
 	// if dest is main window, add ulx, uly
 	if (dest_hdc == main_dc)
+	{
 		OffsetRect(&dest_rect,ulx,uly);
-	switch (mode) {
-		case 0:
-         dest_rect.bottom += 6;
-			DrawText(dest_hdc,str,strlen(str),&dest_rect,DT_LEFT | DT_WORDBREAK); break;
-		case 1:
-			dest_rect.bottom += 6; dest_rect.top -= 6;
-			DrawText(dest_hdc,str,strlen(str),&dest_rect,
-			DT_CENTER | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE); break;
-		case 2: case 3:
-			dest_rect.bottom += 6; dest_rect.top -= 6;
-			DrawText(dest_hdc,str,strlen(str),&dest_rect,
-			DT_LEFT | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE); break;
-		}
-	// not yet done adjusts for 1, 2, 3
-	
+	}
+
+	switch (mode)
+	{
+	case 0:
+		dest_rect.bottom += 6;
+		DrawText(dest_hdc, adjusted.c_str(), adjusted.size(), &dest_rect, DT_LEFT | DT_WORDBREAK);
+		break;
+	case 1:
+		dest_rect.bottom += 6; dest_rect.top -= 6;
+		DrawText(dest_hdc, adjusted.c_str(), adjusted.size(), &dest_rect, DT_CENTER | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE);
+		break;
+	case 2:
+	case 3:
+		dest_rect.bottom += 6; dest_rect.top -= 6;
+		DrawText(dest_hdc, adjusted.c_str(), adjusted.size(), &dest_rect, DT_LEFT | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE);
+		break;
+	}
+	// not yet done adjusts for 1, 2, 3	
 }
 
 // Adapted from Wine source: https://github.com/reactos/wine/blob/master/dlls/gdi.exe16/gdi.c

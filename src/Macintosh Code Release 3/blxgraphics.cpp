@@ -562,11 +562,11 @@ void draw_startup_stats()
 						case 1: format_to_buf(str,"Level {:d} Nephilim",adven[i].level); break;
 						case 2: format_to_buf(str,"Level {:d} Slithzerikai",adven[i].level); break;
 						}
-					char_win_draw_string((GrafPtr) mainPtr,pc_rect,(char *) str,0,18);
+					char_win_draw_string((GrafPtr) mainPtr,pc_rect,str,0,18);
 					OffsetRect(&pc_rect,0,13);
 					format_to_buf(str,"Health {:d}, Spell pts. {:d}",
 						adven[i].max_health,adven[i].max_sp);
-					char_win_draw_string((GrafPtr) mainPtr,pc_rect,(char *) str,0,18);
+					char_win_draw_string((GrafPtr) mainPtr,pc_rect,str,0,18);
 					break;
 				case 2:
 					char_win_draw_string((GrafPtr) mainPtr,pc_rect,"Dead",0,18);
@@ -627,8 +627,7 @@ void draw_start_button(short which_position,short which_button)
 	RGBForeColor(&base_color);
 	if (which_position == 3)
 		OffsetRect(&to_rect,-7,0);
-	char_win_draw_string((GrafPtr) mainPtr,to_rect,
-		(char *) button_labels[which_position],1,18);
+	char_win_draw_string((GrafPtr) mainPtr,to_rect,button_labels[which_position],1,18);
 	ForeColor(blackColor);
 	TextFont(geneva_font_num);
 	TextFace(bold);
@@ -1074,7 +1073,7 @@ void draw_text_bar(short mode)
 						return;
 						}
 		if (remember_tiny_text != 50 + party.i_w_c.x + party.i_w_c.y) {
-			put_text_bar((char *) outdoor_text[party.i_w_c.x][party.i_w_c.y].out_strs[0]);
+			put_text_bar(outdoor_text[party.i_w_c.x][party.i_w_c.y].out_strs[0]);
 			remember_tiny_text = 50 + party.i_w_c.x + party.i_w_c.y;
 			}
 		}
@@ -1089,7 +1088,7 @@ void draw_text_bar(short mode)
 						return;
 						}
 		if (remember_tiny_text != 250) {
-			put_text_bar((char *) data_store->town_strs[0]); ////
+			put_text_bar(data_store->town_strs[0]); ////
 			remember_tiny_text = 250;
 			}
 	
@@ -1097,21 +1096,21 @@ void draw_text_bar(short mode)
 	if ((is_combat()) && (current_pc < 6) && (monsters_going == FALSE)) {
 		format_to_buf(combat_string,"{} (ap: {:d})",
 			adven[current_pc].name,pc_moves[current_pc]);
-		put_text_bar((char *) combat_string);
+		put_text_bar(combat_string);
 		remember_tiny_text = 500;
 		}
 	if ((is_combat()) && (monsters_going == TRUE))	// Print bar for 1st monster with >0 ap -
 	   // that is monster that is going
 	   for (i = 0; i < T_M; i++)
 	   	if ((c_town.monst.dudes[i].active > 0) && (c_town.monst.dudes[i].m_d.ap > 0)) {
-	   		print_monster_going((char *) combat_string,c_town.monst.dudes[i].number,c_town.monst.dudes[i].m_d.ap);
-			put_text_bar((char *) combat_string);
+	   		print_monster_going(combat_string,c_town.monst.dudes[i].number,c_town.monst.dudes[i].m_d.ap);
+			put_text_bar(combat_string);
 			remember_tiny_text = 500;
 			i = 400;	   
 	   }
 }
 
-void put_text_bar(char *str)
+void put_text_bar(std::string_view str)
 {
 	GrafPtr old_port;
 	char status_str[60];
@@ -2323,7 +2322,7 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 		if ((damage < 10) && (dest_rect.right - dest_rect.left > 19))
 			text_rect.left += 10;
 		OffsetRect(&text_rect,-4,-5);
-		char_win_draw_string((GrafPtr) mainPtr,text_rect,(char *) dam_str,1,10);
+		char_win_draw_string((GrafPtr) mainPtr,text_rect,dam_str,1,10);
 		TextSize(0);
 		TextFace(0);
 		}
