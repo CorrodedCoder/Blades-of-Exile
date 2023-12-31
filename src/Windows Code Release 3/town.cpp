@@ -1170,142 +1170,155 @@ void pick_lock(location where,short pc_num)
 
 void bash_door(location where,short pc_num)
 {
-	unsigned char terrain;
-	short r1,unlock_adjust;
-
-	terrain = t_d.terrain[where.x][where.y];
-	r1 = rand_short(0,100) - 15 * stat_adj(adven[pc_num], skill::Strength) + c_town.difficulty * 4;
-	
-	if ((scenario_ter_type(terrain).special < terrain_special::UnlockableTerrain) || (scenario_ter_type(terrain).special > terrain_special::UnlockableOrBashable)) {
+	const auto& terrain{ scenario_ter_type(t_d.terrain[where.x][where.y]) };
+	if ((terrain.special < terrain_special::UnlockableTerrain) || (terrain.special > terrain_special::UnlockableOrBashable))
+	{
 		add_string_to_buf("  Wrong terrain type.           ");
 		return;
-		}
+	}
 
-	unlock_adjust = scenario_ter_type(terrain).flag2;
-	if ((unlock_adjust >= 5) || (r1 > (unlock_adjust * 15 + 40)) || (scenario_ter_type(terrain).special != terrain_special::UnlockableOrBashable))  {
-					add_string_to_buf("  Didn't work.                ");
-					damage_pc(pc_num,rand_short(1,4),4,-1);					
-				} 
-				else {
-						add_string_to_buf("  Lock breaks.                ");
-						play_sound(9);
-						t_d.terrain[where.x][where.y] = scenario_ter_type(terrain).flag1;
-					}
+	const short unlock_adjust = terrain.flag2;
+	const short r1 = rand_short(0, 100) - 15 * stat_adj(adven[pc_num], skill::Strength) + c_town.difficulty * 4;
+	if ((unlock_adjust >= 5) || (r1 > (unlock_adjust * 15 + 40)) || (terrain.special != terrain_special::UnlockableOrBashable))
+	{
+		add_string_to_buf("  Didn't work.                ");
+		damage_pc(pc_num,rand_short(1,4),4,-1);					
+	}
+	else
+	{
+		add_string_to_buf("  Lock breaks.                ");
+		play_sound(9);
+		t_d.terrain[where.x][where.y] = terrain.flag1;
+	}
 }
 
 
 void erase_specials()
 {
-	location where;
-	short k,sd1,sd2;
-	special_node_type sn;
-	
 	if ((is_combat()) && (which_combat_type == 0))
+	{
 		return;
+	}
 	if ((is_town() == FALSE) && (is_combat() == FALSE))
+	{
 		return;
-	for (k = 0; k < 50; k++) {
-		if (c_town.town.spec_id[k] >= 0) {
-			sn = c_town.town.specials[c_town.town.spec_id[k]];
-			sd1 = sn.sd1; sd2 = sn.sd2;
-			if ((sd_legit(sd1,sd2) == TRUE) && (PSD[sd1][sd2] == 250)) {
-				where = c_town.town.special_locs[k];
+	}
+
+	for (short k = 0; k < 50; ++k)
+	{
+		if (c_town.town.spec_id[k] >= 0)
+		{
+			const special_node_type& sn{ c_town.town.specials[c_town.town.spec_id[k]] };
+			if ((sd_legit(sn.sd1, sn.sd2) == TRUE) && (PSD[sn.sd1][sn.sd2] == 250))
+			{
+				const location& where = c_town.town.special_locs[k];
 				if ((where.x != 100) && ((where.x > town_size[town_type]) || (where.y > town_size[town_type])
-				 || (where.x < 0) || (where.y < 0))) {
+					|| (where.x < 0) || (where.y < 0)))
+				{
 					SysBeep(2);
 					add_string_to_buf("Town corrupt. Problem fixed.");
 					print_nums(where.x,where.y,k);
 					c_town.town.special_locs[k].x = 0;
+				}				
+				if (where.x != 100)
+				{
+					switch (scenario_ter_type(t_d.terrain[where.x][where.y]).picture)
+					{
+					case 207: t_d.terrain[where.x][where.y] = 0; break;
+					case 208: t_d.terrain[where.x][where.y] = 170; break;
+					case 209: t_d.terrain[where.x][where.y] = 210; break;
+					case 210: t_d.terrain[where.x][where.y] = 217; break;
+					case 211: t_d.terrain[where.x][where.y] = 2; break;
+					case 212: t_d.terrain[where.x][where.y] = 36; break;
 					}
-				
-				if (where.x != 100) {
-					switch (scenario_ter_type(t_d.terrain[where.x][where.y]).picture) {
-						case 207: t_d.terrain[where.x][where.y] = 0; break;
-						case 208: t_d.terrain[where.x][where.y] = 170; break;
-						case 209: t_d.terrain[where.x][where.y] = 210; break;
-						case 210: t_d.terrain[where.x][where.y] = 217; break;
-						case 211: t_d.terrain[where.x][where.y] = 2; break;
-						case 212: t_d.terrain[where.x][where.y] = 36; break;
-						}
 					take_special(where.x,where.y);
-					}
 				}
-			
-
-				}
+			}
 		}
+	}
 }
 
 void erase_out_specials()
 {
-
-	short i,j,k,l,m,out_num;
-	special_node_type sn;
-	short sd1,sd2;
-	location where;
-	
-	for (k = 0; k < 2; k++)
-		for (l = 0; l < 2; l++)
-			if (quadrant_legal(k,l) == TRUE) {
-			for (m = 0; m < 8; m++)
-				if ((outdoors[k][l].exit_dests[m] >= 0) &&
-						(outdoors[k][l].exit_locs[m].x == boe_clamp(outdoors[k][l].exit_locs[m].x,0,47)) &&
-						(outdoors[k][l].exit_locs[m].y == boe_clamp(outdoors[k][l].exit_locs[m].y,0,47))) {
-					if (party.can_find_town[outdoors[k][l].exit_dests[m]] == 0) {
-					out[48 * k + outdoors[k][l].exit_locs[m].x][48 * l + outdoors[k][l].exit_locs[m].y] = 
-						scenario_ter_type(outdoors[k][l].terrain[outdoors[k][l].exit_locs[m].x][outdoors[k][l].exit_locs[m].y]).flag1;
-						//exit_g_type[out[48 * k + outdoors[k][l].exit_locs[m].x][48 * l + outdoors[k][l].exit_locs[m].y] - 217];
-					
-					}
-					else if (party.can_find_town[outdoors[k][l].exit_dests[m]] > 0) {
-					out[48 * k + outdoors[k][l].exit_locs[m].x][48 * l + outdoors[k][l].exit_locs[m].y] = 
-						outdoors[k][l].terrain[outdoors[k][l].exit_locs[m].x][outdoors[k][l].exit_locs[m].y];
-					
+	for (short k = 0; k < 2; k++)
+	{
+		for (short l = 0; l < 2; l++)
+		{
+			if (quadrant_legal(k, l) == TRUE)
+			{
+				for (short m = 0; m < 8; m++)
+				{
+					if ((outdoors[k][l].exit_dests[m] >= 0) &&
+						(outdoors[k][l].exit_locs[m].x == boe_clamp(outdoors[k][l].exit_locs[m].x, 0, 47)) &&
+						(outdoors[k][l].exit_locs[m].y == boe_clamp(outdoors[k][l].exit_locs[m].y, 0, 47)))
+					{
+						if (party.can_find_town[outdoors[k][l].exit_dests[m]] == 0)
+						{
+							out[48 * k + outdoors[k][l].exit_locs[m].x][48 * l + outdoors[k][l].exit_locs[m].y] =
+								scenario_ter_type(outdoors[k][l].terrain[outdoors[k][l].exit_locs[m].x][outdoors[k][l].exit_locs[m].y]).flag1;
+							//exit_g_type[out[48 * k + outdoors[k][l].exit_locs[m].x][48 * l + outdoors[k][l].exit_locs[m].y] - 217];
 						}
+						else if (party.can_find_town[outdoors[k][l].exit_dests[m]] > 0)
+						{
+							out[48 * k + outdoors[k][l].exit_locs[m].x][48 * l + outdoors[k][l].exit_locs[m].y] =
+								outdoors[k][l].terrain[outdoors[k][l].exit_locs[m].x][outdoors[k][l].exit_locs[m].y];
+						}
+					}
 				}
 			}
-	for (i = 0; i < 2; i++)
-		for (j = 0; j < 2; j++)
-			if (quadrant_legal(i,j) == TRUE) {
-			for (k = 0; k < 18; k++) 
-				if (outdoors[i][j].special_id[k] >= 0) {
-				out_num = scenario_out_width() * (party.outdoor_corner.y + j) + party.outdoor_corner.x + i;
+		}
+	}
 
-				sn = outdoors[i][j].specials[outdoors[i][j].special_id[k]];
-				sd1 = sn.sd1; sd2 = sn.sd2;
-				if ((sd_legit(sd1,sd2) == TRUE) && (PSD[sd1][sd2] == 250)) {
-					where = outdoors[i][j].special_locs[k];
-					if (where.x != 100) {
-						if ((where.x > 48) || (where.y > 48)
-						 || (where.x < 0) || (where.y < 0)) {
-							SysBeep(2);
-							add_string_to_buf("Outdoor section corrupt. Problem fixed.");
-							outdoors[i][j].special_id[k] = -1;
-							}
-				
-						switch (scenario_ter_type(outdoors[i][j].terrain[where.x][where.y]).picture) {
-							case 207: out[48 * i + where.x][48 * j + where.y] = 0; break;
-							case 208: out[48 * i + where.x][48 * j + where.y] = 170; break;
-							case 209: out[48 * i + where.x][48 * j + where.y] = 210; break;
-							case 210: out[48 * i + where.x][48 * j + where.y] = 217; break;
-							case 211: out[48 * i + where.x][48 * j + where.y] = 2; break;
-							case 212: out[48 * i + where.x][48 * j + where.y] = 36; break;
+	for (short i = 0; i < 2; i++)
+	{
+		for (short j = 0; j < 2; j++)
+		{
+			if (quadrant_legal(i, j) == TRUE)
+			{
+				for (short k = 0; k < 18; k++)
+				{
+					if (outdoors[i][j].special_id[k] >= 0)
+					{
+						const special_node_type& sn = outdoors[i][j].specials[outdoors[i][j].special_id[k]];
+						if ((sd_legit(sn.sd1, sn.sd2) == TRUE) && (PSD[sn.sd1][sn.sd2] == 250))
+						{
+							const location& where = outdoors[i][j].special_locs[k];
+							if (where.x != 100)
+							{
+								if ((where.x > 48) || (where.y > 48)
+									|| (where.x < 0) || (where.y < 0))
+								{
+									SysBeep(2);
+									add_string_to_buf("Outdoor section corrupt. Problem fixed.");
+									outdoors[i][j].special_id[k] = -1;
+								}
+
+								switch (scenario_ter_type(outdoors[i][j].terrain[where.x][where.y]).picture)
+								{
+								case 207: out[48 * i + where.x][48 * j + where.y] = 0; break;
+								case 208: out[48 * i + where.x][48 * j + where.y] = 170; break;
+								case 209: out[48 * i + where.x][48 * j + where.y] = 210; break;
+								case 210: out[48 * i + where.x][48 * j + where.y] = 217; break;
+								case 211: out[48 * i + where.x][48 * j + where.y] = 2; break;
+								case 212: out[48 * i + where.x][48 * j + where.y] = 36; break;
+								}
 							}
 						}
 					}
-
-			
 				}
+			}
 		}
+	}
 }
 
 // returns id # of special at where, or 40 if there is none.
 short get_town_spec_id(location where)
 {
 	short i = 0;
-
-	while ((same_point(c_town.town.special_locs[i],where) == FALSE)	&& (i < 40))
-		i++;
+	while ((same_point(c_town.town.special_locs[i], where) == FALSE) && (i < 40))
+	{
+		++i;
+	}
 	return i;
 }
 
@@ -1327,6 +1340,13 @@ void clear_map()
 }
 
 
+const RECT c_map_world_rect{ 0,0,321,321 };
+const RECT c_whole_map_win_rect{ 0,0,400,400 };
+const RECT c_dlogpicrect{ 6,6,42,42 };
+const RECT c_orig_draw_rect{ 0,0,6,6 };
+const RECT c_tiny_rect{ 0,0,32,32 };
+const RECT c_big_rect{ 0,0,64,64 };
+
 void draw_map (HWND the_dialog, short the_item)
 //short the_item; // Being sneaky - if this gets value of 5, this is not a full restore -
 				// just update near party, if it gets 11, blank out middle and leave
@@ -1335,14 +1355,6 @@ void draw_map (HWND the_dialog, short the_item)
 				// Also, can get a 5 even when the window is not up, so have to make
 				// sure dialog exists before accessing it.
 {
-
-//	RECT map_rect = {47,29,297,279},map_world_rect = {0,0,321,321};
-	const RECT map_world_rect{0,0,321,321};
-	const RECT whole_map_win_rect{0,0,400,400};
-	const RECT dlogpicrect{ 6,6,42,42 };
-	const RECT orig_draw_rect{ 0,0,6,6 };
-	const RECT tiny_rect{ 0,0,32,32 };
-	const RECT big_rect{ 0,0,64,64 };
 	const RECT area_to_draw_on{ offset_rect({47,29,287,269}, 0,-23) };
 	location map_adj = {0,0};
 	location where;
@@ -1367,29 +1379,40 @@ void draw_map (HWND the_dialog, short the_item)
 	UINT c;
 	RECT custom_from;
 
-	if (the_item == 4) {
+	if (the_item == 4)
+	{
 		draw_surroundings = TRUE;
 		the_item = 5;
-		}
+	}
+
 	if (kludge_force_full_refresh == TRUE)
+	{
 		draw_surroundings = TRUE;
+	}
+
 	if ((modeless_exists[5] == FALSE) && (the_item == 5) && (need_map_full_refresh == TRUE))
+	{
 		return;
-	if ((modeless_exists[5] == FALSE) && (the_item == 10)) {
+	}
+
+	if ((modeless_exists[5] == FALSE) && (the_item == 10))
+	{
 		need_map_full_refresh = TRUE;
 		return;
-		}
-	if ((modeless_exists[5] == TRUE) && (the_item != 11) && (need_map_full_refresh == TRUE)) {
+	}
+
+	if ((modeless_exists[5] == TRUE) && (the_item != 11) && (need_map_full_refresh == TRUE))
+	{
 		need_map_full_refresh = FALSE;
 		the_item = 10;
-		}
+	}
 
-	if (the_item == 10) {
+	if (the_item == 10)
+	{
 		for (i = 0; i < 8; i++)
 			for (j = 0; j < 64; j++)
 				map_graphic_placed[i][j] = 0;
-		}
-
+	}
 
 	// view rect is rect that is visible, redraw rect is area to redraw now
 	// area_to_draw_from is final draw from rect
@@ -1397,68 +1420,78 @@ void draw_map (HWND the_dialog, short the_item)
 	// extern short store_pre_shop_mode,store_pre_talk_mode;
 	if ((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
 		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
-		((overall_mode == 21) && (store_pre_shop_mode == 0))) {
+		((overall_mode == 21) && (store_pre_shop_mode == 0)))
+	{
 		view_rect.left = boe_clamp(party.loc_in_sec.x - 20,0,8);
 		view_rect.right = view_rect.left + 40;
 		view_rect.top = boe_clamp(party.loc_in_sec.y - 20,0,8);
 		view_rect.bottom = view_rect.top + 40;
 		redraw_rect = view_rect;
+	}
+	else
+	{
+		switch (town_type)
+		{
+		case 0:
+			view_rect.left = boe_clamp(c_town.p_loc.x - 20,0,24);
+			view_rect.right = view_rect.left + 40;
+			view_rect.top = boe_clamp(c_town.p_loc.y - 20,0,24);
+			view_rect.bottom = view_rect.top + 40;
+			if (the_item == 5)
+				redraw_rect = view_rect;
+				else redraw_rect = c_big_rect;
+			total_size = 64;
+			break;
+		case 1:
+			view_rect.left = boe_clamp(c_town.p_loc.x - 20,0,8);
+			view_rect.right = view_rect.left + 40;
+			view_rect.top = boe_clamp(c_town.p_loc.y - 20,0,8);
+			view_rect.bottom = view_rect.top + 40;
+			redraw_rect = view_rect;
+			break;
+		case 2:
+			view_rect = c_tiny_rect;
+			redraw_rect = view_rect;
+			//InsetRect(&area_to_draw_to,48,48);
+			total_size = 32;
+			break;
 		}
-		else {
-			switch (town_type) {
-				case 0:
-					view_rect.left = boe_clamp(c_town.p_loc.x - 20,0,24);
-					view_rect.right = view_rect.left + 40;
-					view_rect.top = boe_clamp(c_town.p_loc.y - 20,0,24);
-					view_rect.bottom = view_rect.top + 40;
-					if (the_item == 5)
-						redraw_rect = view_rect;
-						else redraw_rect = big_rect;
-					total_size = 64;
-					break;
-				case 1:
-					view_rect.left = boe_clamp(c_town.p_loc.x - 20,0,8);
-					view_rect.right = view_rect.left + 40;
-					view_rect.top = boe_clamp(c_town.p_loc.y - 20,0,8);
-					view_rect.bottom = view_rect.top + 40;
-					redraw_rect = view_rect;
-					break;
-				case 2:
-					view_rect = tiny_rect;
-					redraw_rect = view_rect;
-					//InsetRect(&area_to_draw_to,48,48);
-					total_size = 32;
-					break;
-				}
-			}
+	}
+
 	if ((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
 		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
 		((overall_mode == 21) && (store_pre_shop_mode == 0)) ||
-		(((is_town()) || (is_combat())) && (town_type != 2))) {
-			area_to_draw_from = view_rect;	
-			area_to_draw_from.left *= 6;
-			area_to_draw_from.right *= 6;
-			area_to_draw_from.top *= 6;
-			area_to_draw_from.bottom *= 6;
-			}
-			else {
-				area_to_draw_from = area_to_draw_on;
-				OffsetRect(&area_to_draw_from,-1 * area_to_draw_from.left,-1 * area_to_draw_from.top);
-				small_adj = 0;
-				}
+		(((is_town()) || (is_combat())) && (town_type != 2))
+		)
+	{
+		area_to_draw_from = view_rect;	
+		area_to_draw_from.left *= 6;
+		area_to_draw_from.right *= 6;
+		area_to_draw_from.top *= 6;
+		area_to_draw_from.bottom *= 6;
+	}
+	else
+	{
+		area_to_draw_from = area_to_draw_on;
+		OffsetRect(&area_to_draw_from,-1 * area_to_draw_from.left,-1 * area_to_draw_from.top);
+		small_adj = 0;
+	}
 			
 	if (is_combat())
+	{
 		draw_pcs = FALSE;
+	}
 
 	// make map pens
-	if (hbrush[0] == NULL) {
-		for (i = 0; i < 6; i++) {
+	if (hbrush[0] == NULL)
+	{
+		for (i = 0; i < 6; i++)
+		{
 			c = GetNearestPaletteIndex(hpal,map_colors[i]);
 			hbrush[i] = CreateSolidBrush(PALETTEINDEX(c));
 			hpen[i] = CreatePen(PS_SOLID,1,PALETTEINDEX(c));
-			}
 		}
-
+	}
 
 	hdc = CreateCompatibleDC(main_dc);
 	SelectPalette(hdc,hpal,0);
@@ -1466,184 +1499,208 @@ void draw_map (HWND the_dialog, short the_item)
 	old_brush = SelectObject(hdc,map_brush[0]);
 	old_pen = SelectObject(hdc,GetStockObject(NULL_PEN));
 	
-	if (the_item == 11) {
+	if (the_item == 11)
+	{
 			SelectObject(hdc,GetStockObject(WHITE_BRUSH));
-			Rectangle(hdc, map_world_rect.left,map_world_rect.top,map_world_rect.right,map_world_rect.bottom);
+			Rectangle(hdc, c_map_world_rect.left, c_map_world_rect.top, c_map_world_rect.right, c_map_world_rect.bottom);
 			draw_pcs = FALSE;
+	}
+	else
+	{
+		if (modeless_exists[5] == TRUE)
+		{
+			SetDlgItemText(the_dialog, 3, "");
 		}
-	else {
-	if (modeless_exists[5] == TRUE) {
-		SetDlgItemText(the_dialog,3,"");
+
+		if (is_out()) // for outside map, adjust for where in outdoors is being mapped	
+		{
+			if (party.i_w_c.x == 1)
+				map_adj.x += 48;
+			if (party.i_w_c.y == 1)
+				map_adj.y += 48;
 		}
 
-	if (is_out()) { // for outside map, adjust for where in outdoors is being mapped	
-	if (party.i_w_c.x == 1)
-		map_adj.x += 48;
-	if  (party.i_w_c.y == 1)
-		map_adj.y += 48;
-		}		
-
-	// Now, if doing just partial restore, crop redraw_rect to save time.
-	if (the_item == 5) {
-		if ((is_out())  || ((is_combat()) && (which_combat_type == 0)) ||
-		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
-		((overall_mode == 21) && (store_pre_shop_mode == 0)))
-			kludge = global_to_local(party.p_loc);
-		else if (is_combat())
-			kludge = pc_pos[current_pc];
-		else kludge = c_town.p_loc;
-		redraw_rect.left = max(0,kludge.x - 4);
-		redraw_rect.right = min(view_rect.right,kludge.x + 5);
-		redraw_rect.top = max(0,kludge.y - 4);
-		redraw_rect.bottom = min(view_rect.bottom,kludge.y + 5);
-		} 
-
-	// Now, if shopping or talking, just don't touch anything.
-	if ((overall_mode == 21) || (overall_mode == 20))
-		redraw_rect.right = -1;
-	
-	if ((is_out()) ||
-		((is_combat()) && (which_combat_type == 0)) ||
-		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
-		((overall_mode == 21) && (store_pre_shop_mode == 0)))
-		out_mode = TRUE;
-		else out_mode = FALSE;
-
-	area_to_put_on_map_rect = redraw_rect;
-	if (the_item == 10) {
-		area_to_put_on_map_rect.top = area_to_put_on_map_rect.left = 0; 
-		area_to_put_on_map_rect.right = area_to_put_on_map_rect.bottom = total_size; 
+		// Now, if doing just partial restore, crop redraw_rect to save time.
+		if (the_item == 5)
+		{
+			if ((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
+				((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
+				((overall_mode == 21) && (store_pre_shop_mode == 0)))
+				kludge = global_to_local(party.p_loc);
+			else if (is_combat())
+				kludge = pc_pos[current_pc];
+			else kludge = c_town.p_loc;
+			redraw_rect.left = max(0, kludge.x - 4);
+			redraw_rect.right = min(view_rect.right, kludge.x + 5);
+			redraw_rect.top = max(0, kludge.y - 4);
+			redraw_rect.bottom = min(view_rect.bottom, kludge.y + 5);
 		}
-		
-		
-		
-		for (where.x= area_to_put_on_map_rect.left; where.x < area_to_put_on_map_rect.right; where.x++)
-			for (where.y= area_to_put_on_map_rect.top; where.y < area_to_put_on_map_rect.bottom; where.y++)
-				if ((map_graphic_placed[where.x / 8][where.y] & (unsigned char)(s_pow(2,where.x % 8))) == 0)
+
+		// Now, if shopping or talking, just don't touch anything.
+		if ((overall_mode == 21) || (overall_mode == 20))
+			redraw_rect.right = -1;
+
+		if ((is_out()) ||
+			((is_combat()) && (which_combat_type == 0)) ||
+			((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
+			((overall_mode == 21) && (store_pre_shop_mode == 0)))
+		{
+			out_mode = TRUE;
+		}
+		else
+		{
+			out_mode = FALSE;
+		}
+
+		area_to_put_on_map_rect = redraw_rect;
+		if (the_item == 10)
+		{
+			area_to_put_on_map_rect.top = area_to_put_on_map_rect.left = 0;
+			area_to_put_on_map_rect.right = area_to_put_on_map_rect.bottom = total_size;
+		}
+
+		for (where.x = area_to_put_on_map_rect.left; where.x < area_to_put_on_map_rect.right; where.x++)
+		{
+			for (where.y = area_to_put_on_map_rect.top; where.y < area_to_put_on_map_rect.bottom; where.y++)
+			{
+				if ((map_graphic_placed[where.x / 8][where.y] & (unsigned char)(s_pow(2, where.x % 8))) == 0)
 				{
-					draw_rect = orig_draw_rect;
-					OffsetRect(&draw_rect,6 * where.x + small_adj, 6 * where.y + small_adj);
+					draw_rect = c_orig_draw_rect;
+					OffsetRect(&draw_rect, 6 * where.x + small_adj, 6 * where.y + small_adj);
 
 					if (out_mode == TRUE)
 						what_ter = out[where.x + 48 * party.i_w_c.x][where.y + 48 * party.i_w_c.y];
-						else what_ter = t_d.terrain[where.x][where.y];
-					
-					ter_temp_from = orig_draw_rect;
-					
+					else
+						what_ter = t_d.terrain[where.x][where.y];
+
+					ter_temp_from = c_orig_draw_rect;
+
 					if (out_mode == TRUE)
 						expl = out_e[where.x + 48 * party.i_w_c.x][where.y + 48 * party.i_w_c.y];
-						else expl = is_explored(where.x,where.y);
-						
-					if (expl != 0) {
-						map_graphic_placed[where.x / 8][where.y] = 
-							map_graphic_placed[where.x / 8][where.y] | (unsigned char)(s_pow(2,where.x % 8));
+					else
+						expl = is_explored(where.x, where.y);
+
+					if (expl != 0)
+					{
+						map_graphic_placed[where.x / 8][where.y] =
+							map_graphic_placed[where.x / 8][where.y] | (unsigned char)(s_pow(2, where.x % 8));
 						pic = scenario_ter_type(what_ter).picture;
-						if (pic >= 1000) {
-
-							if (spec_scen_g != NULL) {
-
+						if (pic >= 1000)
+						{
+							if (spec_scen_g != NULL)
+							{
 								pic = pic % 1000;
 								custom_from = coord_to_rect(pic % 10, pic / 10);
-								OffsetRect(&custom_from,-13,-13);
-								SelectObject(hdc,old_bmp);
-								rect_draw_some_item_bmp(spec_scen_g,custom_from,map_gworld,draw_rect,0,0);
- 								SelectObject(hdc,map_gworld);
-								}
+								OffsetRect(&custom_from, -13, -13);
+								SelectObject(hdc, old_bmp);
+								rect_draw_some_item_bmp(spec_scen_g, custom_from, map_gworld, draw_rect, 0, 0);
+								SelectObject(hdc, map_gworld);
 							}
-						else switch ((pic >= 400) ? anim_map_pats[pic - 400] : map_pats[pic]) {
-							case 0: case 10: case 11:
+						}
+						else
+						{
+							switch ((pic >= 400) ? anim_map_pats[pic - 400] : map_pats[pic])
+							{
+							case 0:
+							case 10:
+							case 11:
 								if (terrain_pic[what_ter] < 400)
-									OffsetRect(&ter_temp_from,
-										6 * (terrain_pic[what_ter] % 10) + 312,6 * (terrain_pic[what_ter] / 10));
-									else OffsetRect(&ter_temp_from,
-										24 * ((terrain_pic[what_ter] - 400) / 5) + 312,6 * ((terrain_pic[what_ter] - 400) % 5) + 163);
-								SelectObject(hdc,old_bmp);
-								rect_draw_some_item_bmp(mixed_gworld,ter_temp_from,
-									map_gworld,draw_rect,0,0);
-								SelectObject(hdc,map_gworld);
+									OffsetRect(&ter_temp_from, 6 * (terrain_pic[what_ter] % 10) + 312, 6 * (terrain_pic[what_ter] / 10));
+								else
+									OffsetRect(&ter_temp_from, 24 * ((terrain_pic[what_ter] - 400) / 5) + 312, 6 * ((terrain_pic[what_ter] - 400) % 5) + 163);
+								SelectObject(hdc, old_bmp);
+								rect_draw_some_item_bmp(mixed_gworld, ter_temp_from, map_gworld, draw_rect, 0, 0);
+								SelectObject(hdc, map_gworld);
 								break;
 
 							default:
-								if (((pic >= 400) ? anim_map_pats[pic - 400] : map_pats[pic]) < 30) {
+								if (((pic >= 400) ? anim_map_pats[pic - 400] : map_pats[pic]) < 30)
+								{
 									// Try a little optimization
-									if ((pic < 400) && (where.x < area_to_put_on_map_rect.right - 1)) {
+									if ((pic < 400) && (where.x < area_to_put_on_map_rect.right - 1))
+									{
 										if (out_mode == TRUE)
-											what_ter2 = out[(where.x + 1)+ 48 * party.i_w_c.x][where.y + 48 * party.i_w_c.y];
-											else what_ter2 = t_d.terrain[where.x + 1][where.y];	
+											what_ter2 = out[(where.x + 1) + 48 * party.i_w_c.x][where.y + 48 * party.i_w_c.y];
+										else
+											what_ter2 = t_d.terrain[where.x + 1][where.y];
 										if (out_mode == TRUE)
 											expl2 = out_e[(where.x + 1) + 48 * party.i_w_c.x][where.y + 48 * party.i_w_c.y];
-											else expl2 = is_explored(where.x + 1,where.y);									
+										else
+											expl2 = is_explored(where.x + 1, where.y);
 										pic2 = scenario_ter_type(what_ter2).picture;
-										if ((map_pats[pic] == map_pats[pic2]) && (expl2 != 0)) {
+										if ((map_pats[pic] == map_pats[pic2]) && (expl2 != 0))
+										{
 											draw_rect.right += 6;
-											map_graphic_placed[(where.x + 1)/ 8][where.y] = 
-												map_graphic_placed[(where.x + 1)/ 8][where.y] | (unsigned char)(s_pow(2,(where.x + 1)% 8));
-											}
+											map_graphic_placed[(where.x + 1) / 8][where.y] =
+												map_graphic_placed[(where.x + 1) / 8][where.y] | (unsigned char)(s_pow(2, (where.x + 1) % 8));
 										}
-									SelectObject(hdc,map_brush[((pic >= 400) ? anim_map_pats[pic - 400] : map_pats[pic]) - 1]);
-									Rectangle(hdc,draw_rect.left, draw_rect.top,draw_rect.right + 1,draw_rect.bottom + 1);
-									break;
 									}
-								OffsetRect(&ter_temp_from,
-									312 + 24 * ((map_pats[what_ter] - 30) / 5),
-									138 + 6 * ((map_pats[what_ter] - 30) % 5));
+									SelectObject(hdc, map_brush[((pic >= 400) ? anim_map_pats[pic - 400] : map_pats[pic]) - 1]);
+									Rectangle(hdc, draw_rect.left, draw_rect.top, draw_rect.right + 1, draw_rect.bottom + 1);
+									break;
+								}
+								OffsetRect(&ter_temp_from, 312 + 24 * ((map_pats[what_ter] - 30) / 5), 138 + 6 * ((map_pats[what_ter] - 30) % 5));
 								//OffsetRect(&ter_temp_from,0,115);
-								SelectObject(hdc,old_bmp);
-								rect_draw_some_item_bmp(mixed_gworld,ter_temp_from,
-									map_gworld,draw_rect,0,0);
-								SelectObject(hdc,map_gworld);
+								SelectObject(hdc, old_bmp);
+								rect_draw_some_item_bmp(mixed_gworld, ter_temp_from, map_gworld, draw_rect, 0, 0);
+								SelectObject(hdc, map_gworld);
 								break;
 							}
 						}
+					}
 				}
-
+			}
 		}
+	}
 	
 	SelectObject(hdc,old_brush);
 	SelectObject(hdc,old_pen);
 	SelectObject(hdc, old_bmp);
 	DeleteDC(hdc);
-	if (modeless_exists[5] == TRUE) {
+
+	if (modeless_exists[5] == TRUE)
+	{
 		hdc2 = GetDC(the_dialog);
 		SelectPalette(hdc2,hpal,0);
-		}
-  	// Now place terrain map gworld
-	if (modeless_exists[5] == TRUE) {
+	}
 
+  	// Now place terrain map gworld
+	if (modeless_exists[5] == TRUE)
+	{
 		// graphics goes here
-		if ((draw_surroundings == TRUE) || (the_item != 5)) { // redraw much stuff
+		if ((draw_surroundings == TRUE) || (the_item != 5)) // redraw much stuff
+		{
 			//old_brush = SelectObject(hdc2,bg[0]);
 			//old_pen = SelectObject(hdc2,GetStockObject(NULL_PEN));
 			//Rectangle(hdc2,whole_map_win_rect.left, whole_map_win_rect.top,whole_map_win_rect.right,whole_map_win_rect.bottom);
-			paint_pattern_dc(hdc2,whole_map_win_rect,0);
+			paint_pattern_dc(hdc2, c_whole_map_win_rect,0);
 			//SelectObject(hdc2,old_brush);
 			//SelectObject(hdc2,old_pen);
 			SetBkMode(hdc2,TRANSPARENT);
 			SelectObject(hdc2,small_bold_font);
-
-
-
 			//win_draw_string(hdc2,
 			//	map_title_rect,"Your map:      (Hit Escape to close.)",0,12);
-
 			//ShowOwnedPopups(the_dialog,TRUE);
-
 			GetClientRect(GetDlgItem(the_dialog,1),&draw_rect);
 			InvalidateRect(GetDlgItem(the_dialog,1),&draw_rect,FALSE);
-			}
-
-		rect_draw_some_item_dc(map_gworld,area_to_draw_from,hdc2,area_to_draw_on,0,2);
 		}
 
+		rect_draw_some_item_dc(map_gworld,area_to_draw_from,hdc2,area_to_draw_on,0,2);
+	}
+
 	// Now place PCs and monsters
-	if ((draw_pcs == TRUE) && (modeless_exists[5] == TRUE)) {
+	if ((draw_pcs == TRUE) && (modeless_exists[5] == TRUE))
+	{
 		if ((is_town()) && (party.stuff_done[305][2] > 0))
-			for (i = 0; i < T_M; i++) 
-				if (c_town.monst.dudes[i].active > 0) {
+		{
+			for (i = 0; i < T_M; i++)
+			{
+				if (c_town.monst.dudes[i].active > 0)
+				{
 					where = c_town.monst.dudes[i].m_loc;
-					if ((is_explored(where.x,where.y)) && 
-						((where.x >= view_rect.left) && (where.x <= view_rect.right) 
-						&& (where.y >= view_rect.top) && (where.x <= view_rect.bottom))){
+					if ((is_explored(where.x, where.y)) &&
+						((where.x >= view_rect.left) && (where.x <= view_rect.right)
+							&& (where.y >= view_rect.top) && (where.x <= view_rect.bottom))) {
 
 						draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
 						draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);
@@ -1654,103 +1711,114 @@ void draw_map (HWND the_dialog, short the_item)
 						draw_rect.right = draw_rect.left + 6;
 						draw_rect.bottom = draw_rect.top + 6;
 
-						map_graphic_placed[where.x / 8][where.y] = 
-							map_graphic_placed[where.x / 8][where.y] & ~((unsigned char)(s_pow(2,where.x % 8)));
-							SelectObject(hdc2,hpen[0]);
-							SelectObject(hdc2,hbrush[0]);
-							Rectangle(hdc2, draw_rect.left,draw_rect.top,draw_rect.right,draw_rect.bottom);
-							SelectObject(hdc2,hpen[4]);
-							SelectObject(hdc2,hbrush[5]);
-							Ellipse(hdc2, draw_rect.left,draw_rect.top,draw_rect.right,draw_rect.bottom);
-						}
+						map_graphic_placed[where.x / 8][where.y] =
+							map_graphic_placed[where.x / 8][where.y] & ~((unsigned char)(s_pow(2, where.x % 8)));
+						SelectObject(hdc2, hpen[0]);
+						SelectObject(hdc2, hbrush[0]);
+						Rectangle(hdc2, draw_rect.left, draw_rect.top, draw_rect.right, draw_rect.bottom);
+						SelectObject(hdc2, hpen[4]);
+						SelectObject(hdc2, hbrush[5]);
+						Ellipse(hdc2, draw_rect.left, draw_rect.top, draw_rect.right, draw_rect.bottom);
+					}
 				}
-
-		if ((overall_mode != 21) && (overall_mode != 20)) {
-			where = (is_town()) ? c_town.p_loc : global_to_local(party.p_loc);
-
-					draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
-					draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);
-					//if ((!is_out()) && (town_type == 2)) {
-					//	draw_rect.left += 48;
-					//	draw_rect.top += 48;
-					//	}
-					draw_rect.right = draw_rect.left + 6;
-					draw_rect.bottom = draw_rect.top + 6;
-					if ((where.x >= 0) && (where.x < 64) &&
-						(where.y >= 0) && (where.y < 64)) {
-							map_graphic_placed[where.x / 8][where.y] =  /* Crash! vvv */
-								map_graphic_placed[where.x / 8][where.y] & ~((unsigned char)(s_pow(2,where.x % 8)));
-
-							SelectObject(hdc2,hpen[0]);
-							SelectObject(hdc2,hbrush[0]);
-							Rectangle(hdc2, draw_rect.left,draw_rect.top,draw_rect.right,draw_rect.bottom);
-							SelectObject(hdc2,hpen[3]);
-							SelectObject(hdc2,hbrush[3]);
-							Ellipse(hdc2, draw_rect.left,draw_rect.top,draw_rect.right,draw_rect.bottom);
-						  }
-			}	
+			}
 		}
 
+		if ((overall_mode != 21) && (overall_mode != 20))
+		{
+			where = (is_town()) ? c_town.p_loc : global_to_local(party.p_loc);
 
-
+			draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
+			draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);
+			//if ((!is_out()) && (town_type == 2)) {
+			//	draw_rect.left += 48;
+			//	draw_rect.top += 48;
+			//	}
+			draw_rect.right = draw_rect.left + 6;
+			draw_rect.bottom = draw_rect.top + 6;
+			if ((where.x >= 0) && (where.x < 64) &&
+				(where.y >= 0) && (where.y < 64)
+				)
+			{
+				map_graphic_placed[where.x / 8][where.y] =  /* Crash! vvv */
+				map_graphic_placed[where.x / 8][where.y] & ~((unsigned char)(s_pow(2,where.x % 8)));
+				SelectObject(hdc2,hpen[0]);
+				SelectObject(hdc2,hbrush[0]);
+				Rectangle(hdc2, draw_rect.left,draw_rect.top,draw_rect.right,draw_rect.bottom);
+				SelectObject(hdc2,hpen[3]);
+				SelectObject(hdc2,hbrush[3]);
+				Ellipse(hdc2, draw_rect.left,draw_rect.top,draw_rect.right,draw_rect.bottom);
+			}
+		}	
+	}
 	
 	// Now exit gracefully
 	if (modeless_exists[5] == TRUE)
-		fry_dc(the_dialog,hdc2);
+	{
+		fry_dc(the_dialog, hdc2);
+	}
 
-	if (modeless_exists[5] == TRUE) {
-
+	if (modeless_exists[5] == TRUE)
+	{
 		// graphics goes here
-		if ((draw_surroundings == TRUE) || (the_item != 5)) { // redraw much stuff
-			draw_dialog_graphic_wnd(the_dialog, dlogpicrect, 721, FALSE); // draw the map graphic
-			}
+		if ((draw_surroundings == TRUE) || (the_item != 5)) // redraw much stuff
+		{
+			draw_dialog_graphic_wnd(the_dialog, c_dlogpicrect, 721, FALSE); // draw the map graphic
 		}
+	}
 }
 
 
-
-static INT_PTR CALLBACK map_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
-	switch (message) {
-		case WM_INITDIALOG:
-			if (store_map_window_rect.right > 0)
-				MoveWindow(hDlg,store_map_window_rect.left,store_map_window_rect.top,
-					store_map_window_rect.right - store_map_window_rect.left,
-					store_map_window_rect.bottom - store_map_window_rect.top,FALSE);
-				else {
-					GetWindowRect(hDlg,&store_map_window_rect);
-					MoveWindow(hDlg,294 + ulx, 47 + uly,
-						store_map_window_rect.right - store_map_window_rect.left,
-						store_map_window_rect.bottom - store_map_window_rect.top,FALSE);
-
-					}
-			kludge_force_full_refresh = TRUE;
-			draw_map(hDlg,10);
-			kludge_force_full_refresh = FALSE;
-			SetFocus(mainPtr);
-			break;
-		case WM_ERASEBKGND:
-			return 1;
-
-		case WM_PAINT:
-			kludge_force_full_refresh = TRUE;
-			draw_map(hDlg,5);
-			kludge_force_full_refresh = FALSE;
-		  // ShowOwnedPopups(hDlg,TRUE);
-			return FALSE;
-
-		case WM_KEYDOWN:
-		  //	force_play_sound(0);
-			if (wParam != VK_RETURN)
-				return 0;
-		case WM_COMMAND:
-			modeless_exists[5] = FALSE;
-			GetWindowRect(hDlg,&store_map_window_rect);
-			DestroyWindow(hDlg);
-			return TRUE;
-		case WM_DESTROY:
-			modeless_exists[5] = FALSE;
-			return 0;
+static INT_PTR CALLBACK map_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		if (store_map_window_rect.right > 0)
+		{
+			MoveWindow(hDlg, store_map_window_rect.left, store_map_window_rect.top,
+				store_map_window_rect.right - store_map_window_rect.left,
+				store_map_window_rect.bottom - store_map_window_rect.top, FALSE);
 		}
+		else
+		{
+			GetWindowRect(hDlg,&store_map_window_rect);
+			MoveWindow(hDlg,294 + ulx, 47 + uly,
+				store_map_window_rect.right - store_map_window_rect.left,
+				store_map_window_rect.bottom - store_map_window_rect.top,FALSE);
+
+		}
+		kludge_force_full_refresh = TRUE;
+		draw_map(hDlg,10);
+		kludge_force_full_refresh = FALSE;
+		SetFocus(mainPtr);
+		break;
+
+	case WM_ERASEBKGND:
+		return 1;
+
+	case WM_PAINT:
+		kludge_force_full_refresh = TRUE;
+		draw_map(hDlg,5);
+		kludge_force_full_refresh = FALSE;
+		// ShowOwnedPopups(hDlg,TRUE);
+		return FALSE;
+
+	case WM_KEYDOWN:
+		//	force_play_sound(0);
+		if (wParam != VK_RETURN)
+			return 0;
+
+	case WM_COMMAND:
+		modeless_exists[5] = FALSE;
+		GetWindowRect(hDlg,&store_map_window_rect);
+		DestroyWindow(hDlg);
+		return TRUE;
+
+	case WM_DESTROY:
+		modeless_exists[5] = FALSE;
+		return 0;
+	}
 	return FALSE;
 }
 
@@ -1759,25 +1827,27 @@ void display_map()
 {
 	if ( modeless_exists[5] == TRUE)
 		return;
-	
 	modeless_exists[5] = TRUE;
-	if (map_proc == NULL) {
+	if (map_proc == NULL)
+	{
 		map_proc = map_dialog_proc;
-		}
-	modeless_dialogs[5] = CreateDialog(store_hInstance,
-	 MAKEINTRESOURCE(1046),mainPtr,map_proc);
-
-//	 draw_map(modeless_dialogs[5],10);
+	}
+	modeless_dialogs[5] = CreateDialog(store_hInstance, MAKEINTRESOURCE(1046),mainPtr,map_proc);
+	//	 draw_map(modeless_dialogs[5],10);
 }
+
 
 Boolean is_door(location destination)
 {
 	if ((scenario_ter_type(t_d.terrain[destination.x][destination.y]).special == terrain_special::UnlockableTerrain) ||
 		(scenario_ter_type(t_d.terrain[destination.x][destination.y]).special == terrain_special::ChangeWhenStepOn) ||
 		(scenario_ter_type(t_d.terrain[destination.x][destination.y]).special == terrain_special::UnlockableOrBashable))
-			return TRUE;
+	{
+		return TRUE;
+	}
 	return FALSE;
 }
+
 
 Boolean quadrant_legal(short i, short j) 
 {
