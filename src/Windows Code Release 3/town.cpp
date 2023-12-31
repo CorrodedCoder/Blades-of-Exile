@@ -1355,30 +1355,7 @@ void draw_map (HWND the_dialog, short the_item)
 				// Also, can get a 5 even when the window is not up, so have to make
 				// sure dialog exists before accessing it.
 {
-	const RECT area_to_draw_on{ offset_rect({47,29,287,269}, 0,-23) };
-	location map_adj = {0,0};
-	location where;
-	location kludge;
-	RECT draw_rect;
-	RECT ter_temp_from;
-	Boolean draw_pcs = TRUE;
-	RECT view_rect{ 0,0,48,48 }; // RECTangle visible in view screen
-	RECT redraw_rect{ 0,0,48,48 };
-	HDC hdc = NULL,hdc2;
-	HGDIOBJ old_bmp;
-	HGDIOBJ old_brush;
-	HGDIOBJ old_pen;
-	short i,j,pic,pic2;
-	RECT area_to_draw_from;
-	Boolean draw_surroundings = FALSE,expl,expl2;
-	short total_size = 48; // if full redraw, use this to figure out everything
-	RECT area_to_put_on_map_rect;
-	short small_adj = 0;
-	unsigned char what_ter,what_ter2;
-	Boolean out_mode;
-	UINT c;
-	RECT custom_from;
-
+	Boolean draw_surroundings = FALSE;
 	if (the_item == 4)
 	{
 		draw_surroundings = TRUE;
@@ -1409,8 +1386,8 @@ void draw_map (HWND the_dialog, short the_item)
 
 	if (the_item == 10)
 	{
-		for (i = 0; i < 8; i++)
-			for (j = 0; j < 64; j++)
+		for (short i = 0; i < 8; i++)
+			for (short j = 0; j < 64; j++)
 				map_graphic_placed[i][j] = 0;
 	}
 
@@ -1418,6 +1395,9 @@ void draw_map (HWND the_dialog, short the_item)
 	// area_to_draw_from is final draw from rect
 	// area_to_draw_on is final draw to rect
 	// extern short store_pre_shop_mode,store_pre_talk_mode;
+	short total_size = 48; // if full redraw, use this to figure out everything
+	RECT view_rect{ 0,0,48,48 }; // RECTangle visible in view screen
+	RECT redraw_rect{ 0,0,48,48 };
 	if ((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
 		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
 		((overall_mode == 21) && (store_pre_shop_mode == 0)))
@@ -1458,6 +1438,9 @@ void draw_map (HWND the_dialog, short the_item)
 		}
 	}
 
+	const RECT area_to_draw_on{ offset_rect({47,29,287,269}, 0,-23) };
+	RECT area_to_draw_from;
+	short small_adj = 0;
 	if ((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
 		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
 		((overall_mode == 21) && (store_pre_shop_mode == 0)) ||
@@ -1476,7 +1459,8 @@ void draw_map (HWND the_dialog, short the_item)
 		OffsetRect(&area_to_draw_from,-1 * area_to_draw_from.left,-1 * area_to_draw_from.top);
 		small_adj = 0;
 	}
-			
+
+	Boolean draw_pcs = TRUE;
 	if (is_combat())
 	{
 		draw_pcs = FALSE;
@@ -1485,20 +1469,22 @@ void draw_map (HWND the_dialog, short the_item)
 	// make map pens
 	if (hbrush[0] == NULL)
 	{
-		for (i = 0; i < 6; i++)
+		for (short i = 0; i < 6; i++)
 		{
-			c = GetNearestPaletteIndex(hpal,map_colors[i]);
+			const UINT c = GetNearestPaletteIndex(hpal,map_colors[i]);
 			hbrush[i] = CreateSolidBrush(PALETTEINDEX(c));
 			hpen[i] = CreatePen(PS_SOLID,1,PALETTEINDEX(c));
 		}
 	}
 
-	hdc = CreateCompatibleDC(main_dc);
+	HDC hdc = CreateCompatibleDC(main_dc);
 	SelectPalette(hdc,hpal,0);
-	old_bmp = SelectObject(hdc, map_gworld);
-	old_brush = SelectObject(hdc,map_brush[0]);
-	old_pen = SelectObject(hdc,GetStockObject(NULL_PEN));
-	
+	HGDIOBJ old_bmp = SelectObject(hdc, map_gworld);
+	HGDIOBJ old_brush = SelectObject(hdc,map_brush[0]);
+	HGDIOBJ old_pen = SelectObject(hdc,GetStockObject(NULL_PEN));
+
+	RECT draw_rect;
+	location map_adj = { 0,0 };
 	if (the_item == 11)
 	{
 			SelectObject(hdc,GetStockObject(WHITE_BRUSH));
@@ -1523,13 +1509,17 @@ void draw_map (HWND the_dialog, short the_item)
 		// Now, if doing just partial restore, crop redraw_rect to save time.
 		if (the_item == 5)
 		{
+			location kludge;
 			if ((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
 				((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
-				((overall_mode == 21) && (store_pre_shop_mode == 0)))
+				((overall_mode == 21) && (store_pre_shop_mode == 0))
+				)
 				kludge = global_to_local(party.p_loc);
-			else if (is_combat())
-				kludge = pc_pos[current_pc];
-			else kludge = c_town.p_loc;
+			else
+				if (is_combat())
+					kludge = pc_pos[current_pc];
+				else
+					kludge = c_town.p_loc;
 			redraw_rect.left = max(0, kludge.x - 4);
 			redraw_rect.right = min(view_rect.right, kludge.x + 5);
 			redraw_rect.top = max(0, kludge.y - 4);
@@ -1540,6 +1530,7 @@ void draw_map (HWND the_dialog, short the_item)
 		if ((overall_mode == 21) || (overall_mode == 20))
 			redraw_rect.right = -1;
 
+		Boolean out_mode;
 		if ((is_out()) ||
 			((is_combat()) && (which_combat_type == 0)) ||
 			((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
@@ -1552,13 +1543,14 @@ void draw_map (HWND the_dialog, short the_item)
 			out_mode = FALSE;
 		}
 
-		area_to_put_on_map_rect = redraw_rect;
+		RECT area_to_put_on_map_rect = redraw_rect;
 		if (the_item == 10)
 		{
 			area_to_put_on_map_rect.top = area_to_put_on_map_rect.left = 0;
 			area_to_put_on_map_rect.right = area_to_put_on_map_rect.bottom = total_size;
 		}
 
+		location where;
 		for (where.x = area_to_put_on_map_rect.left; where.x < area_to_put_on_map_rect.right; where.x++)
 		{
 			for (where.y = area_to_put_on_map_rect.top; where.y < area_to_put_on_map_rect.bottom; where.y++)
@@ -1568,13 +1560,15 @@ void draw_map (HWND the_dialog, short the_item)
 					draw_rect = c_orig_draw_rect;
 					OffsetRect(&draw_rect, 6 * where.x + small_adj, 6 * where.y + small_adj);
 
+					unsigned char what_ter;
 					if (out_mode == TRUE)
 						what_ter = out[where.x + 48 * party.i_w_c.x][where.y + 48 * party.i_w_c.y];
 					else
 						what_ter = t_d.terrain[where.x][where.y];
 
-					ter_temp_from = c_orig_draw_rect;
+					RECT ter_temp_from = c_orig_draw_rect;
 
+					Boolean expl;
 					if (out_mode == TRUE)
 						expl = out_e[where.x + 48 * party.i_w_c.x][where.y + 48 * party.i_w_c.y];
 					else
@@ -1584,13 +1578,13 @@ void draw_map (HWND the_dialog, short the_item)
 					{
 						map_graphic_placed[where.x / 8][where.y] =
 							map_graphic_placed[where.x / 8][where.y] | (unsigned char)(s_pow(2, where.x % 8));
-						pic = scenario_ter_type(what_ter).picture;
+						short pic = scenario_ter_type(what_ter).picture;
 						if (pic >= 1000)
 						{
 							if (spec_scen_g != NULL)
 							{
 								pic = pic % 1000;
-								custom_from = coord_to_rect(pic % 10, pic / 10);
+								RECT custom_from = coord_to_rect(pic % 10, pic / 10);
 								OffsetRect(&custom_from, -13, -13);
 								SelectObject(hdc, old_bmp);
 								rect_draw_some_item_bmp(spec_scen_g, custom_from, map_gworld, draw_rect, 0, 0);
@@ -1619,15 +1613,17 @@ void draw_map (HWND the_dialog, short the_item)
 									// Try a little optimization
 									if ((pic < 400) && (where.x < area_to_put_on_map_rect.right - 1))
 									{
+										unsigned char what_ter2;
 										if (out_mode == TRUE)
 											what_ter2 = out[(where.x + 1) + 48 * party.i_w_c.x][where.y + 48 * party.i_w_c.y];
 										else
 											what_ter2 = t_d.terrain[where.x + 1][where.y];
+										Boolean expl2;
 										if (out_mode == TRUE)
 											expl2 = out_e[(where.x + 1) + 48 * party.i_w_c.x][where.y + 48 * party.i_w_c.y];
 										else
 											expl2 = is_explored(where.x + 1, where.y);
-										pic2 = scenario_ter_type(what_ter2).picture;
+										const short pic2 = scenario_ter_type(what_ter2).picture;
 										if ((map_pats[pic] == map_pats[pic2]) && (expl2 != 0))
 										{
 											draw_rect.right += 6;
@@ -1658,15 +1654,14 @@ void draw_map (HWND the_dialog, short the_item)
 	SelectObject(hdc, old_bmp);
 	DeleteDC(hdc);
 
-	if (modeless_exists[5] == TRUE)
-	{
-		hdc2 = GetDC(the_dialog);
-		SelectPalette(hdc2,hpal,0);
-	}
+	HDC hdc2 = nullptr;
 
   	// Now place terrain map gworld
 	if (modeless_exists[5] == TRUE)
 	{
+		hdc2 = GetDC(the_dialog);
+		SelectPalette(hdc2, hpal, 0);
+
 		// graphics goes here
 		if ((draw_surroundings == TRUE) || (the_item != 5)) // redraw much stuff
 		{
@@ -1693,11 +1688,11 @@ void draw_map (HWND the_dialog, short the_item)
 	{
 		if ((is_town()) && (party.stuff_done[305][2] > 0))
 		{
-			for (i = 0; i < T_M; i++)
+			for (short i = 0; i < T_M; i++)
 			{
 				if (c_town.monst.dudes[i].active > 0)
 				{
-					where = c_town.monst.dudes[i].m_loc;
+					location where = c_town.monst.dudes[i].m_loc;
 					if ((is_explored(where.x, where.y)) &&
 						((where.x >= view_rect.left) && (where.x <= view_rect.right)
 							&& (where.y >= view_rect.top) && (where.x <= view_rect.bottom))) {
@@ -1726,7 +1721,7 @@ void draw_map (HWND the_dialog, short the_item)
 
 		if ((overall_mode != 21) && (overall_mode != 20))
 		{
-			where = (is_town()) ? c_town.p_loc : global_to_local(party.p_loc);
+			location where = (is_town()) ? c_town.p_loc : global_to_local(party.p_loc);
 
 			draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
 			draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);
