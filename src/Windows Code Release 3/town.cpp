@@ -1119,15 +1119,15 @@ void dump_gold(short print_mes)
 
 void pick_lock(location where,short pc_num)
 {
-	const auto terrain = t_d.terrain[where.x][where.y];
-	const auto which_item = pc_has_abil_equip(adven[pc_num],161);
+	const auto which_item{ pc_has_abil_equip(adven[pc_num],161) };
 	if (which_item == 24)
 	{
 		add_string_to_buf("  Need lockpick equipped.        ");
 		return;
 	}
 
-	if ((scenario_ter_type(terrain).special < terrain_special::UnlockableTerrain) || (scenario_ter_type(terrain).special > terrain_special::UnlockableOrBashable))
+	const auto& terrain{ scenario_ter_type(t_d.terrain[where.x][where.y]) };
+	if ((terrain.special < terrain_special::UnlockableTerrain) || (terrain.special > terrain_special::UnlockableOrBashable))
 	{
 		add_string_to_buf("  Wrong terrain type.           ");
 		return;
@@ -1147,7 +1147,7 @@ void pick_lock(location where,short pc_num)
 		r1 -= 12;
 	}
 
-	const short unlock_adjust = scenario_ter_type(terrain).flag2;
+	const short unlock_adjust = terrain.flag2;
 	if ((unlock_adjust >= 5) || (r1 > (unlock_adjust * 15 + 30)))
 	{
 		add_string_to_buf("  Didn't work.                ");
@@ -1163,7 +1163,7 @@ void pick_lock(location where,short pc_num)
 	{
 		add_string_to_buf("  Door unlocked.                ");
 		play_sound(9);
-		t_d.terrain[where.x][where.y] = scenario_ter_type(terrain).flag1;
+		t_d.terrain[where.x][where.y] = terrain.flag1;
 	}
 }
 
