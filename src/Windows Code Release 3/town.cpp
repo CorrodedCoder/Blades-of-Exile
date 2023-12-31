@@ -1127,14 +1127,13 @@ void pick_lock(location where,short pc_num)
 		return;
 	}
 
-	Boolean will_break = FALSE;
-	auto r1 = rand_short(0,100) + adven[pc_num].items[which_item].ability_strength * 7;
-	if (r1 < 75)
+	if ((scenario_ter_type(terrain).special < terrain_special::UnlockableTerrain) || (scenario_ter_type(terrain).special > terrain_special::UnlockableOrBashable))
 	{
-		will_break = TRUE;
+		add_string_to_buf("  Wrong terrain type.           ");
+		return;
 	}
 
-	r1 = rand_short(0,100) - 5 * stat_adj(adven[pc_num], skill::Dexterity) + c_town.difficulty * 7
+	short r1 = rand_short(0,100) - 5 * stat_adj(adven[pc_num], skill::Dexterity) + c_town.difficulty * 7
 	 - 5 * adven[pc_num].skills[skill::Lockpicking] - adven[pc_num].items[which_item].ability_strength * 7;
 
 	// Nimble?
@@ -1148,16 +1147,12 @@ void pick_lock(location where,short pc_num)
 		r1 -= 12;
 	}
 
-	if ((scenario_ter_type(terrain).special < terrain_special::UnlockableTerrain) || (scenario_ter_type(terrain).special > terrain_special::UnlockableOrBashable))
-	{
-		add_string_to_buf("  Wrong terrain type.           ");
-		return;
-	}
 	const short unlock_adjust = scenario_ter_type(terrain).flag2;
 	if ((unlock_adjust >= 5) || (r1 > (unlock_adjust * 15 + 30)))
 	{
 		add_string_to_buf("  Didn't work.                ");
-		if (will_break == TRUE)
+		const bool will_break = (rand_short(0, 100) + adven[pc_num].items[which_item].ability_strength * 7) < 75;
+		if (will_break)
 		{
 			add_string_to_buf("  Pick breaks.                ");
 			remove_charge(pc_num,which_item);
