@@ -97,7 +97,7 @@ HBRUSH map_brush[25];
 HBITMAP map_bitmap[25];
 extern HFONT small_bold_font;
 
-unsigned char map_pats[256] = {1,1,2,2,2,7,7,7,7,7, ////
+static const unsigned char map_pats[256] = {1,1,2,2,2,7,7,7,7,7, ////
 						7,7,7,7,7,7,7,7,3,3,
 						3,3,3,3,3,3,3,3,3,3,
 						3,3,5,5,5,5,5,5,5,5,
@@ -123,8 +123,61 @@ unsigned char map_pats[256] = {1,1,2,2,2,7,7,7,7,7, ////
 						0,0,0,0,0,0,0,0,0,0,
 						0,0,0,0,0,0,0,0,0,0, 
 						0,0,0,0,0,0};// 250
-unsigned char anim_map_pats[18] = {14,0,0,0,22, 0,0,21,20,21, 20,0,0,0,0, 0,0,0};
-						
+static const unsigned char anim_map_pats[18] = {14,0,0,0,22, 0,0,21,20,21, 20,0,0,0,0, 0,0,0};
+
+// 0 grass 1 cave 2 mntn 3 bridge 4 cave bridge 5 rubble cave 6 cave tree 7 cave mush
+// 8 cave swamp 9 surfac eorcks 10 surf swamp 11 surface woods 12 s. shrub 13 stalags
+static const short general_types[260] = { 1,1,0,0,0,1,1,1,1,1,
+	1,1,1,1,1,1,1,1,2,2,
+	2,2,2,2,2,2,2,2,2,2,
+	2,2,2,2,2,2,2,2,2,2,
+	2,2,2,2,2,2,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,// 50
+	0,3,3,3,3,3,3,5,5,5,
+	6,6,7,7,1,1,8,9,10,11,
+	10,11,12,13,13,9,9,9,1,1,
+	1,1,1,1,1,1,1,1,1,1,
+	1,1,1,1,1,1,1,1,1,1,// 100
+	1,1,1,1,1,1,1,1,1,1,
+	1,1,1,1,1,1,1,1,1,1,
+	1,1,1,1,1,1,1,1,1,1,
+	1,1,1,1,1,1,1,1,1,1,
+	1,1,1,1,1,1,1,1,1,1,// 150
+	1,1,1,1,1,1,1,1,1,1,
+	1,1,1,1,1,1,1,1,1,1,
+	1,0,1,1,1,1,1,1,1,0,
+	0,0,0,0,1,0,0,0,0,0,
+	0,0,1,0,2,0,0,1,1,1,// 200
+	1,0,2,1,1,0,1,1,1,1,
+	1,1,0,0,0,0,1,0,1,1,
+	1,1,1,1,1,1,1,1,1,1,
+	1,1,1,1,1,1,1,1,1,1,
+	1,1,1,1,1,1,1,1,1,1 };// 250
+static const short ter_base[14] = { 2,0,36,50,71, 0,0,0,0,2, 2,2,2,0 };
+static const short ground_type[14] = { 2,0,36,50,71, 0,0,0,0,2,	2,2,2,0 };
+
+static const location special_ter_locs[15] = { {11,10},{11,14},{10,20},{11,26},{9,30},
+							{15,19},{23,19},{19,29},{20,11},{28,16},
+							{28,24},{27,19},{27,29},{15,28},{19,19} };
+static const unsigned char cave_pillar[4][4] = { {0,14,11,1},{14,19,20,11},{17,18,21,8},{1,17,8,0} };
+static const unsigned char mntn_pillar[4][4] = { {37,29,27,36},{29,33,34,27},{31,32,35,25},{36,31,25,37} };
+static const unsigned char surf_lake[4][4] = { {56,55,54,3},{57,50,61,54},{58,51,59,53},{3,4,58,52} };
+static const unsigned char cave_lake[4][4] = { {93,96,71,71},{96,71,71,71},{71,71,71,96},{71,71,71,96} };
+static const short terrain_odds[14][10] = { {3,80,4,40,115,20,114,10,112,1},
+						{1,50,93,25,94,5,98,10,95,1},
+						{37,20,0,0,0,0,0,0,0,0},
+						{64,3,63,1,0,0,0,0,0,0},
+						{74,1,0,0,0,0,0,0,0,0},
+						{84,700,97,30,98,20,92,4,95,1},
+						{93,280,91,300,92,270,95,7,98,10},
+						{1,800,93,600,94,10,92,10,95,4},
+						{1,700,96,200,95,100,92,10,112,5},
+						{3,600,87,90,110,20,114,6,113,2},
+						{3,200,4,400,111,250,0,0,0,0},
+						{3,200,4,300,112,50,113,60,114,100},
+						{3,100,4,250,115,120,114,30,112,2},
+						{1,25,84,15,98,300,97,280,0,0} }; // ter then odds then ter then odds ...
+
 long pause_dummy;
 
 location town_map_adj = {0,0};
@@ -866,60 +919,8 @@ void create_out_combat_terrain(short type,short num_walls,short spec_code)
 // spec_code is encounter's spec_code
 {
 	short i,j,k,r1,ter_type;
-// 0 grass 1 cave 2 mntn 3 bridge 4 cave bridge 5 rubble cave 6 cave tree 7 cave mush
-// 8 cave swamp 9 surfac eorcks 10 surf swamp 11 surface woods 12 s. shrub 13 stalags
-short general_types[260] = {1,1,0,0,0,1,1,1,1,1,
-1,1,1,1,1,1,1,1,2,2,
-2,2,2,2,2,2,2,2,2,2,
-2,2,2,2,2,2,2,2,2,2,
-2,2,2,2,2,2,0,0,0,0, 
-0,0,0,0,0,0,0,0,0,0,// 50
-0,3,3,3,3,3,3,5,5,5,
-6,6,7,7,1,1,8,9,10,11,
-10,11,12,13,13,9,9,9,1,1,
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,// 100
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,// 150
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,
-1,0,1,1,1,1,1,1,1,0,
-0,0,0,0,1,0,0,0,0,0,
-0,0,1,0,2,0,0,1,1,1,// 200
-1,0,2,1,1,0,1,1,1,1,
-1,1,0,0,0,0,1,0,1,1,
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1};// 250
-short ter_base[14] = {2,0,36,50,71, 0,0,0,0,2, 2,2,2,0};	
-short ground_type[14] = {2,0,36,50,71, 0,0,0,0,2,	2,2,2,0};
 
-location special_ter_locs[15] = {{11,10},{11,14},{10,20},{11,26},{9,30},
-								{15,19},{23,19},{19,29},{20,11},{28,16},
-								{28,24},{27,19},{27,29},{15,28},{19,19}};
-unsigned char cave_pillar[4][4] = {{0,14,11,1},{14,19,20,11},{17,18,21,8},{1,17,8,0}};
-unsigned char mntn_pillar[4][4] = {{37,29,27,36},{29,33,34,27},{31,32,35,25},{36,31,25,37}};
-unsigned char surf_lake[4][4] = {{56,55,54,3},{57,50,61,54},{58,51,59,53},{3,4,58,52}};
-unsigned char cave_lake[4][4] = {{93,96,71,71},{96,71,71,71},{71,71,71,96},{71,71,71,96}};
-location stuff_ul;
-short terrain_odds[14][10] = {{3,80,4,40,115,20,114,10,112,1}, 
-							{1,50,93,25,94,5,98,10,95,1}, 
-							{37,20,0,0,0,0,0,0,0,0}, 
-							{64,3,63,1,0,0,0,0,0,0}, 
-							{74,1,0,0,0,0,0,0,0,0}, 
-							{84,700,97,30,98,20,92,4,95,1}, 
-							{93,280,91,300,92,270,95,7,98,10}, 
-							{1,800,93,600,94,10,92,10,95,4}, 
-							{1,700,96,200,95,100,92,10,112,5}, 
-							{3,600,87,90,110,20,114,6,113,2}, 
-							{3,200,4,400,111,250,0,0,0,0}, 
-							{3,200,4,300,112,50,113,60,114,100}, 
-							{3,100,4,250,115,120,114,30,112,2}, 
-							{1,25,84,15,98,300,97,280,0,0}}; // ter then odds then ter then odds ...
-
+	location stuff_ul;
 	ter_type = scenario_ter_type(type).picture;
 	if (ter_type > 260)
 		ter_type = 1;
@@ -1288,27 +1289,18 @@ short get_town_spec_id(location where)
 
 void clear_map()
 {
-	RECT map_world_rect = {0,0,384,384};
-	HGDIOBJ old_bmp;
-	HDC hdc;
-	HGDIOBJ oldb;
-	HGDIOBJ oldp;
-
-	hdc = CreateCompatibleDC(main_dc);
-	SelectPalette(hdc,hpal,0);
-	old_bmp = SelectObject(hdc, map_gworld);
-
-	oldp = SelectObject(hdc,GetStockObject(BLACK_PEN));
-	oldb = SelectObject(hdc,GetStockObject(BLACK_BRUSH));
-	Rectangle(hdc, map_world_rect.left,map_world_rect.top,map_world_rect.right,map_world_rect.bottom);
-	SelectObject(hdc,oldp);
-	SelectObject(hdc,oldb);
-	SelectObject(hdc, old_bmp);
-	DeleteDC(hdc);
-
+	const RECT map_world_rect = {0,0,384,384};
+	HDC hdc = ::CreateCompatibleDC(main_dc);
+	::SelectPalette(hdc,hpal,0);
+	HGDIOBJ old_bmp = ::SelectObject(hdc, map_gworld);
+	HGDIOBJ old_pen = ::SelectObject(hdc, GetStockObject(BLACK_PEN));
+	HGDIOBJ old_brush = ::SelectObject(hdc, GetStockObject(BLACK_BRUSH));
+	::Rectangle(hdc, map_world_rect.left, map_world_rect.top, map_world_rect.right, map_world_rect.bottom);
+	(void)::SelectObject(hdc, old_pen);
+	(void)::SelectObject(hdc, old_brush);
+	(void)::SelectObject(hdc, old_bmp);
+	::DeleteDC(hdc);
 	draw_map(modeless_dialogs[5],10);
-
-
 }
 
 
@@ -1322,22 +1314,27 @@ void draw_map (HWND the_dialog, short the_item)
 {
 
 //	RECT map_rect = {47,29,297,279},map_world_rect = {0,0,321,321};
-	RECT map_world_rect = {0,0,321,321};
-	RECT whole_map_win_rect = {0,0,400,400};
+	const RECT map_world_rect{0,0,321,321};
+	const RECT whole_map_win_rect{0,0,400,400};
+	const RECT dlogpicrect{ 6,6,42,42 };
+	const RECT orig_draw_rect{ 0,0,6,6 };
+	const RECT tiny_rect{ 0,0,32,32 };
+	const RECT big_rect{ 0,0,64,64 };
+	const RECT area_to_draw_on{ offset_rect({47,29,287,269}, 0,-23) };
 	location map_adj = {0,0};
 	location where;
 	location kludge;
 	RECT draw_rect;
-	RECT ter_temp_from,dlogpicrect = {6,6,42,42},orig_draw_rect = {0,0,6,6};
+	RECT ter_temp_from;
 	Boolean draw_pcs = TRUE;
-	RECT view_rect= {0,0,48,48},tiny_rect = {0,0,32,32},
-		redraw_rect = {0,0,48,48},big_rect = {0,0,64,64}; // RECTangle visible in view screen
+	RECT view_rect{ 0,0,48,48 }; // RECTangle visible in view screen
+	RECT redraw_rect{ 0,0,48,48 };
 	HDC hdc = NULL,hdc2;
 	HGDIOBJ old_bmp;
 	HGDIOBJ old_brush;
 	HGDIOBJ old_pen;
 	short i,j,pic,pic2;
-	RECT area_to_draw_from,area_to_draw_on = {47,29,287,269};
+	RECT area_to_draw_from;
 	Boolean draw_surroundings = FALSE,expl,expl2;
 	short total_size = 48; // if full redraw, use this to figure out everything
 	RECT area_to_put_on_map_rect;
@@ -1363,8 +1360,6 @@ void draw_map (HWND the_dialog, short the_item)
 		need_map_full_refresh = FALSE;
 		the_item = 10;
 		}
-
-   OffsetRect(&area_to_draw_on,0,-23);
 
 	if (the_item == 10) {
 		for (i = 0; i < 8; i++)
