@@ -806,7 +806,6 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 	short current_pos;
 	
 	short cur_cost,what_magic_shop,what_magic_shop_item;
-	char cur_info_str[256];
 	item_record_type base_item;
 	HDC hdc;
 	COLORREF colors[7] = {RGB(0,0,0),RGB(255,0,130),RGB(128,0,70),RGB(0,0,100),RGB(0,0,220),
@@ -898,6 +897,7 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 
 
 	SelectObject(hdc,small_bold_font);
+
 	// Place all the items
 	for (i = 0; i < 8; i++) {
 		current_pos = i + GetScrollPos(shop_sbar,SB_CTL);
@@ -906,55 +906,52 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 		cur_cost = store_shop_costs[current_pos];
 		what_chosen = store_shop_items[current_pos];
 		SelectObject(hdc,store_bmp);
-		switch (what_chosen / 100) {
-			case 0: case 1: case 2: case 3: case 4:
-				base_item = get_stored_item(what_chosen);
-				base_item.item_properties = base_item.item_properties | 1;
-				draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, FALSE);
-				cur_name = base_item.full_name;
-				get_item_interesting_string(base_item,cur_info_str);
-				break;
-			case 5:
-				base_item = store_alchemy(what_chosen - 500);
-				draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1853, FALSE);//// all graphic nums
-				cur_name = base_item.full_name;
-				format_to_buf(cur_info_str,"");
-				break;
-			case 6:
-				//base_item = food_types[what_chosen - 600];
-				//draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],633, FALSE);
-				//cur_name = base_item.full_name;
-				//get_item_interesting_string(base_item,cur_info_str);
-				break;
-			case 7:
-				what_chosen -= 700;
-				draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1879, FALSE);
-				cur_name = heal_types[what_chosen];
-				format_to_buf(cur_info_str,"");
-				break;
-			case 8:
-				base_item = store_mage_spells(what_chosen - 800 - 30);
-				draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, FALSE);
-
-				cur_name = base_item.full_name;
-				format_to_buf(cur_info_str,"");
-				break;
-			case 9:
-				base_item = store_priest_spells(what_chosen - 900 - 30);
-				draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1853, FALSE);
-				cur_name = base_item.full_name;
-				format_to_buf(cur_info_str,"");
-				break;
-			default:
-				what_magic_shop = (what_chosen / 1000) - 1;
-				what_magic_shop_item = what_chosen % 1000;
-				base_item = party.magic_store_items[what_magic_shop][what_magic_shop_item];
-				base_item.item_properties = base_item.item_properties | 1;
-				draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, FALSE);
-				cur_name = base_item.full_name;
-				get_item_interesting_string(base_item,cur_info_str);
-				break;
-			}
+		std::string cur_info_str;
+		switch (what_chosen / 100)
+		{
+		case 0: case 1: case 2: case 3: case 4:
+			base_item = get_stored_item(what_chosen);
+			base_item.item_properties = base_item.item_properties | 1;
+			draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, FALSE);
+			cur_name = base_item.full_name;
+			cur_info_str = get_item_interesting_string(base_item);
+			break;
+		case 5:
+			base_item = store_alchemy(what_chosen - 500);
+			draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1853, FALSE);//// all graphic nums
+			cur_name = base_item.full_name;
+			break;
+		case 6:
+			//base_item = food_types[what_chosen - 600];
+			//draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],633, FALSE);
+			//cur_name = base_item.full_name;
+			//cur_info_str = get_item_interesting_string(base_item);
+			break;
+		case 7:
+			what_chosen -= 700;
+			draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1879, FALSE);
+			cur_name = heal_types[what_chosen];
+			break;
+		case 8:
+			base_item = store_mage_spells(what_chosen - 800 - 30);
+			draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, FALSE);
+			cur_name = base_item.full_name;
+			break;
+		case 9:
+			base_item = store_priest_spells(what_chosen - 900 - 30);
+			draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1853, FALSE);
+			cur_name = base_item.full_name;
+			break;
+		default:
+			what_magic_shop = (what_chosen / 1000) - 1;
+			what_magic_shop_item = what_chosen % 1000;
+			base_item = party.magic_store_items[what_magic_shop][what_magic_shop_item];
+			base_item.item_properties = base_item.item_properties | 1;
+			draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, FALSE);
+			cur_name = base_item.full_name;
+			cur_info_str = get_item_interesting_string(base_item);
+			break;
+		}
 
 		from_rect = item_info_from;
 		OffsetRect(&from_rect,0,1);
@@ -971,8 +968,7 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 		win_draw_string(hdc,shopping_rects[i][4], std::format("Cost: {:d}", cur_cost), 0, 12);
 		//TextSize(10);
 		win_draw_string(hdc,shopping_rects[i][5],cur_info_str,0,12);
-
-		}
+	}
 
 	// Finally, cost info and help strs
 	//TextSize(12);
@@ -1070,62 +1066,75 @@ short val[20] = {50,75,30,130,100,150, 200,200,300,250,300, 500,600,750,700,1000
 	return spell; 
 }
 
-void get_item_interesting_string(const item_record_type& item,char *message)
+std::string get_item_interesting_string(const item_record_type& item)
 {
-	if (is_property(item)) {
-		format_to_buf(message,"Not yours.");
-		return;
+	if (is_property(item))
+	{
+		return "Not yours.";
+	}
+
+	if (!is_ident(item))
+	{
+		return {};
+	}
+
+	if (is_cursed(item))
+	{
+		return "Cursed item.";
+	}
+
+	std::string message;
+	switch (item.variety)
+	{
+	case item_variety::OneHandedWeapon:
+	case item_variety::TwoHandedWeapon:
+	case item_variety::Arrows:
+	case item_variety::ThrownMissile:
+	case item_variety::Bolts:
+	case item_variety::MissileWeapon:
+		if (item.bonus != 0)
+		{
+			message = std::format("Damage: 1-{:d} + {:d}.", item.item_level, item.bonus);
 		}
-	if (!is_ident(item)) {
-		format_to_buf(message,"");
-		return;
+		else
+		{
+			message = std::format("Damage: 1-{:d}.", item.item_level);
 		}
-	if (is_cursed(item)) {
-		format_to_buf(message,"Cursed item.");
-		return;
+		break;
+	case item_variety::Shield:
+	case item_variety::Armor:
+	case item_variety::Helm:
+	case item_variety::Gloves:
+	case item_variety::Shield2:
+	case item_variety::Boots:
+		message = std::format("Blocks {:d}-{:d} damage.",item.item_level + (item.protection > 0) ? 1 : 0, item.item_level + item.protection);
+		break;
+	case item_variety::Bow:
+	case item_variety::Crossbow:
+		message = std::format("Bonus : +{:d} to hit.",item.bonus);
+		break;
+	case item_variety::Gold:
+		message = std::format("{:d} gold pieces.",item.item_level);
+		break;
+	case item_variety::Food:
+		message = std::format("{:d} food.",item.item_level);
+		break;
+	case item_variety::WeaponPoison:
+		message = std::format("Poison: Does {:d}-{:d} damage.",item.item_level,item.item_level * 6);
+		break;
+	default:
+		if (item.charges > 0)
+		{
+			message = std::format("Uses: {:d}", item.charges);
 		}
-	switch (item.variety) {
-		case item_variety::OneHandedWeapon:
-		case item_variety::TwoHandedWeapon:
-		case item_variety::Arrows:
-		case item_variety::ThrownMissile:
-		case item_variety::Bolts:
-		case item_variety::MissileWeapon:
-			if (item.bonus != 0)
-				format_to_buf(message,"Damage: 1-{:d} + {:d}.",item.item_level,item.bonus);
-				else format_to_buf(message,"Damage: 1-{:d}.",item.item_level);
-			break;
-		case item_variety::Shield:
-		case item_variety::Armor:
-		case item_variety::Helm:
-		case item_variety::Gloves:
-		case item_variety::Shield2:
-		case item_variety::Boots:
-			format_to_buf(message,"Blocks {:d}-{:d} damage.",item.item_level + (item.protection > 0) ? 1 : 0,
-				item.item_level + item.protection);
-			break;
-		case item_variety::Bow:
-		case item_variety::Crossbow:
-			format_to_buf(message,"Bonus : +{:d} to hit.",item.bonus);
-			break;
-		case item_variety::Gold:
-			format_to_buf(message,"{:d} gold pieces.",item.item_level);
-			break;
-		case item_variety::Food:
-			format_to_buf(message,"{:d} food.",item.item_level);
-			break;
-		case item_variety::WeaponPoison:
-			format_to_buf(message,"Poison: Does {:d}-{:d} damage.",item.item_level,item.item_level * 6);
-			break;
-		default:
-			format_to_buf(message,"");		
-			if (item.charges > 0)
-				format_to_buf(message,"Uses: {:d}",item.charges);		
-			break;
-		}	
+		break;
+	}
 	if (item.charges > 0)
-		format_to_buf(message,"Uses: {:d}",item.charges);
-		}
+	{
+		message = std::format("Uses: {:d}", item.charges);
+	}
+	return message;
+}
 
 
 void place_talk_str(char *str_to_place,const char *str_to_place2,short color,RECT c_rect)

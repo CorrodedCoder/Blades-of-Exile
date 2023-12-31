@@ -764,9 +764,7 @@ void put_item_graphics()
 			if (item.graphic_num >= 150)
 				csp(987,20 + i * 4,3000 + 2000 + item.graphic_num - 150);
 				else csp(987,20 + i * 4,4800 + item.graphic_num);////
-			char message[256];
-			get_item_interesting_string(item, message);
-			csit(987,22 + i * 4, message);
+			csit(987,22 + i * 4, get_item_interesting_string(item));
 			storage = item_weight(item);
 			csit(987,53 + i, std::format("Weight: {:d}", storage));
 	  	}
