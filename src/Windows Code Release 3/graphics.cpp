@@ -376,7 +376,7 @@ void draw_startup_stats()
 {
 	RECT from_rect,to_rect,party_from = {0,0,28,36},pc_rect,frame_rect;
 	short i;
-	char str[256];
+	std::string str;
 	COLORREF colors[5] = {RGB(0,0,0),RGB(255,255,255),RGB(0,204,255),RGB(0,160,0),RGB(0,0,255)};
 	UINT c[5];
 	HBRUSH hbrush;
@@ -438,15 +438,15 @@ void draw_startup_stats()
 			switch (adven[i].main_status) {
 				case status::Normal:
 					switch (adven[i].race) {
-						case 0: format_to_buf(str,"Level {:d} Human",adven[i].level); break;
-						case 1: format_to_buf(str,"Level {:d} Nephilim",adven[i].level); break;
-						case 2: format_to_buf(str,"Level {:d} Slithzerikai",adven[i].level); break;
+						case 0: str = std::format("Level {:d} Human",adven[i].level); break;
+						case 1: str = std::format("Level {:d} Nephilim",adven[i].level); break;
+						case 2: str = std::format("Level {:d} Slithzerikai",adven[i].level); break;
 						}
-					char_win_draw_string(main_dc,pc_rect,(char *) str,0,18);
+					char_win_draw_string(main_dc,pc_rect, str.c_str(), 0, 18);
 					OffsetRect(&pc_rect,0,13);
-					format_to_buf(str,"Health {:d}, Spell pts. {:d}",
+					str = std::format("Health {:d}, Spell pts. {:d}",
 						adven[i].max_health,adven[i].max_sp);
-					char_win_draw_string(main_dc,pc_rect,(char *) str,0,18);
+					char_win_draw_string(main_dc,pc_rect, str.c_str(), 0, 18);
 					break;
 				case status::Dead:
 					char_win_draw_string(main_dc,pc_rect,"Dead",0,18);

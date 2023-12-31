@@ -907,18 +907,18 @@ void draw_xp_skills()
 
 void do_xp_draw()
 {
-	char get_text[256];
+	std::string get_text;
 	const short mode = store_train_mode;
 	const short pc_num = store_train_pc;
 	if (mode == 0)
 	{
 		if (adven[pc_num].main_status == status::Normal)
-			format_to_buf(get_text, "{}", adven[pc_num].name);
+			get_text = adven[pc_num].name;
 		else
-			format_to_buf(get_text, "New PC");
+			get_text = "New PC";
 	}
 	else
-		format_to_buf(get_text, "{}", adven[pc_num].name);
+		get_text = adven[pc_num].name;
 
 	cd_set_item_text (1010, 51,get_text);
 
@@ -1137,24 +1137,21 @@ Boolean spend_xp(short pc_num, short mode, short parent)
 //short mode; // 0 - create  1 - train
 // returns 1 if cancelled
 {
-	char get_text[256],text2[256];
-
 	store_train_pc = pc_num;
 	store_train_mode = mode;
 
 	make_cursor_sword();
 
 	cd_create_dialog_parent_num(1010,parent);
-	format_to_buf(get_text,"Health ({:d}/{:d})",1,10);
-	cd_add_label(1010,52,(char *) get_text,1075);
-	format_to_buf(get_text,"Spell Pts. ({:d}/{:d})",1,15);
+	cd_add_label(1010,52, std::format("Health ({:d}/{:d})", 1, 10), 1075);
 	//cd_add_label(1010,5,get_text,1040);
-	cd_add_label(1010,53,(char *) get_text,1075);
-	for (short i = 54; i < 73; i++) {
+	cd_add_label(1010,53, std::format("Spell Pts. ({:d}/{:d})", 1, 15), 1075);
+	for (short i = 54; i < 73; i++)
+	{
+		char text2[256];
 		get_str(text2,9,1 + 2 * (i - 54));
-		format_to_buf(get_text,"{} ({:d}/{:d})",text2,skill_cost[i - 54],skill_g_cost[i - 54]);
-		cd_add_label(1010,i,(char *) get_text,(i < 63) ? 1075 : 1069);
-		}
+		cd_add_label(1010,i, std::format("{} ({:d}/{:d})", text2, skill_cost[i - 54], skill_g_cost[i - 54]), (i < 63) ? 1075 : 1069);
+	}
 	do_xp_draw();
 	
 	dialog_answer = 0;
@@ -2321,49 +2318,60 @@ void put_spell_led_buttons()
 
 void put_spell_list()
 {
-
 	short i;
-	char add_text[256];
-
-	if (on_which_spell_page == 0) {
+	if (on_which_spell_page == 0)
+	{
 		csit(1098,80,"Level 1:");
 		csit(1098,81,"Level 2:");
 		csit(1098,82,"Level 3:");
 		csit(1098,83,"Level 4:");
-		for (i = 0; i < 38; i++) {
-			if (store_situation == 0) {
+		for (i = 0; i < 38; i++)
+		{
+			std::string add_text;
+			if (store_situation == 0)
+			{
 				if (i == 35)
-					format_to_buf(add_text,"{} {:c} ?",mage_s_name[i],
-					(char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i));
-					else format_to_buf(add_text,"{} {:c} {:d}",mage_s_name[i],
-					(char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i),spell_cost[0][i]);
-				}
-				else format_to_buf(add_text,"{} {:c} {:d}",priest_s_name[i],
-				(char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i),spell_cost[1][i]);
+					add_text = std::format("{} {:c} ?",mage_s_name[i], (char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i));
+				else
+					add_text = std::format("{} {:c} {:d}",mage_s_name[i], (char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i),spell_cost[0][i]);
+			}
+			else
+			{
+				add_text = std::format("{} {:c} {:d}", priest_s_name[i], (char)((97 + i > 122) ? 65 + (i - 26) : 97 + i), spell_cost[1][i]);
+			}
 			//for (j = 0; j < 30; i++)
 			//	if (add_text[j] == '&')
 			//		add_text[j] = (char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i);
-			cd_add_label(1098,37 + i,(char *) add_text,53);
+			cd_add_label(1098,37 + i, add_text, 53);
 			if (spell_index[i] == 90)
+			{
 				cd_activate_item(1098,37 + i,1);
 			}
 		}
-		else {
-			csit(1098,80,"Level 5:");
-			csit(1098,81,"Level 6:");
-			csit(1098,82,"Level 7:");
-			csit(1098,83,"");
-			for (i = 0; i < 38; i++) 
-				if (spell_index[i] < 90) {
-					if (store_situation == 0)
-						format_to_buf(add_text,"{} {:c} {:d}",mage_s_name[spell_index[i]],
-						(char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i),spell_cost[0][spell_index[i]]);
-						else format_to_buf(add_text,"{} {:c} {:d}",priest_s_name[spell_index[i]],
-						(char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i),spell_cost[1][spell_index[i]]);
-					cd_add_label(1098,37 + i,(char *) add_text,53);
-					}
-					else cd_activate_item(1098,37 + i,0);
+	}
+	else
+	{
+		csit(1098,80,"Level 5:");
+		csit(1098,81,"Level 6:");
+		csit(1098,82,"Level 7:");
+		csit(1098,83,"");
+		for (i = 0; i < 38; i++)
+		{
+			if (spell_index[i] < 90)
+			{
+				std::string add_text;
+				if (store_situation == 0)
+					add_text = std::format("{} {:c} {:d}", mage_s_name[spell_index[i]], (char)((97 + i > 122) ? 65 + (i - 26) : 97 + i), spell_cost[0][spell_index[i]]);
+				else
+					add_text = std::format("{} {:c} {:d}", priest_s_name[spell_index[i]], (char)((97 + i > 122) ? 65 + (i - 26) : 97 + i), spell_cost[1][spell_index[i]]);
+				cd_add_label(1098, 37 + i, add_text, 53);
 			}
+			else
+			{
+				cd_activate_item(1098, 37 + i, 0);
+			}
+		}
+	}
 }
 
 
@@ -2798,26 +2806,26 @@ short alch_choice(short pc_num)
 {
 	short difficulty[20] = {1,1,1,3,3, 4,5,5,7,9, 9,10,12,12,9, 14,19,10,16,20};
 	short i,store_alchemy_pc;
-	char get_text[256];
 
 	make_cursor_sword();
 
 	store_alchemy_pc = pc_num;
 
 	cd_create_dialog(1047,mainPtr);
-	for (i = 0; i < 20; i++) {
+	for (i = 0; i < 20; i++)
+	{
 		cd_set_item_text(1047,10 + i * 2,alch_names[i]);
 		if ((adven[pc_num].skills[skill::Alchemy] < difficulty[i]) || (party.alchemy[i] == 0))
 			cd_activate_item(1047,9 + i * 2,0);
-		}
-	format_to_buf(get_text, "{} (skill {:d})",
-		adven[pc_num].name,adven[pc_num].skills[skill::Alchemy]);
-	cd_set_item_text(1047,4,get_text);
-	if (party.help_received[20] == 0) {
+	}
+	cd_set_item_text(1047,4, std::format("{} (skill {:d})", adven[pc_num].name, adven[pc_num].skills[skill::Alchemy]));
+	if (party.help_received[20] == 0)
+	{
 		cd_initial_draw(1047);
 		give_help(20,21,1047);
-		}
-while (dialog_not_toast)
+	}
+
+	while (dialog_not_toast)
 		ModalDialog();
 
 	final_process_dialog(1047);
@@ -3363,7 +3371,6 @@ void adjust_spell_menus()
 {
 	short i,j,spell_pos = 0;
 	short total_added = 0;
-	char spell_name[256];
 	short old_on_spell_menu[2][62];
 	Boolean need_menu_change = FALSE;
 	HMENU menu,big_menu;
@@ -3386,36 +3393,39 @@ void adjust_spell_menus()
 		if (pc_can_cast_spell(current_pc,0,i)) {
 			on_spell_menu[0][spell_pos] = i;
 			spell_pos++;
-			}
+		}
 
 	for (i = 0; i < 62; i++)
 		if (on_spell_menu[0][i] != old_on_spell_menu[0][i])
 			need_menu_change = TRUE;
 
-
-	if (need_menu_change) {
-		for (i = 0; i < 62; i++) {
-			DeleteMenu(menu,400 + i,MF_BYCOMMAND);
-			}
-
+	if (need_menu_change)
+	{
 		for (i = 0; i < 62; i++)
-			if (pc_can_cast_spell(current_pc,0,i)) {
-				if (spell_cost[0][i] > 0)
-					format_to_buf(spell_name,"L{:d} - {}, C {:d}",spell_level[i],
-						mage_s_name[i],spell_cost[0][i]);
-					else format_to_buf(spell_name,"L{:d} - {}, C ?",spell_level[i],
-						 mage_s_name[i]);
-				total_added++;
-				if (total_added % 24 == 0)
-					InsertMenu(menu,399,MF_MENUBREAK | MF_BYCOMMAND | MF_ENABLED | MF_STRING, 400 + i, spell_name);
-					else InsertMenu(menu,399,MF_BYCOMMAND | MF_ENABLED | MF_STRING, 400 + i, spell_name);
-
-				//InsertMenu(menu,399,MF_BYCOMMAND | MF_ENABLED | MF_STRING,
-				//	 400 + i, spell_name);
-				//beep();
-				}
+		{
+			DeleteMenu(menu,400 + i,MF_BYCOMMAND);
 		}
 
+		for (i = 0; i < 62; i++)
+		{
+			if (pc_can_cast_spell(current_pc, 0, i))
+			{
+				std::string spell_name;
+				if (spell_cost[0][i] > 0)
+					spell_name = std::format("L{:d} - {}, C {:d}", spell_level[i], mage_s_name[i], spell_cost[0][i]);
+				else
+					spell_name = std::format("L{:d} - {}, C ?", spell_level[i], mage_s_name[i]);
+				total_added++;
+				if (total_added % 24 == 0)
+					InsertMenu(menu, 399, MF_MENUBREAK | MF_BYCOMMAND | MF_ENABLED | MF_STRING, 400 + i, spell_name.c_str());
+				else
+					InsertMenu(menu, 399, MF_BYCOMMAND | MF_ENABLED | MF_STRING, 400 + i, spell_name.c_str());
+				//InsertMenu(menu,399,MF_BYCOMMAND | MF_ENABLED | MF_STRING,
+				//	 400 + i, spell_name.c_str());
+				//beep();
+			}
+		}
+	}
 	need_menu_change = FALSE;
 	spell_pos = 0;
 	total_added = 0;
@@ -3434,25 +3444,29 @@ void adjust_spell_menus()
 	for (i = 0; i < 62; i++)
 		if (on_spell_menu[1][i] != old_on_spell_menu[1][i])
 			need_menu_change = TRUE;
-	if (need_menu_change) {
-		for (i = 0; i < 62; i++) {
-			DeleteMenu(menu,500 + i,MF_BYCOMMAND);
-			}
+	if (need_menu_change)
+	{
 		for (i = 0; i < 62; i++)
-			if (pc_can_cast_spell(current_pc,1,i)) {
+		{
+			DeleteMenu(menu,500 + i,MF_BYCOMMAND);
+		}
+		for (i = 0; i < 62; i++)
+		{
+			if (pc_can_cast_spell(current_pc, 1, i))
+			{
 				//spell_name[0] = strlen(priest_s_name[on_spell_menu[1][i]]);
 				//strcpy((spell_name + 1),priest_s_name[on_spell_menu[1][i]]);
+				std::string spell_name;
 				if (spell_cost[1][i] > 0)
-					format_to_buf(spell_name," L{:d} - {}, C {:d}",spell_level[i],
-						 priest_s_name[i],spell_cost[1][i]);
-					else format_to_buf(spell_name," L{:d} - {}, C ?",spell_level[i],
-						priest_s_name[i]);
+					spell_name = std::format(" L{:d} - {}, C {:d}", spell_level[i], priest_s_name[i], spell_cost[1][i]);
+				else
+					spell_name = std::format(" L{:d} - {}, C ?", spell_level[i], priest_s_name[i]);
 				total_added++;
 				if (total_added % 24 == 0)
-					InsertMenu(menu,499,MF_MENUBREAK | MF_BYCOMMAND | MF_ENABLED | MF_STRING, 500 + i, spell_name);
-					else InsertMenu(menu,499,MF_BYCOMMAND | MF_ENABLED | MF_STRING, 500 + i, spell_name);
-				}
+					InsertMenu(menu, 499, MF_MENUBREAK | MF_BYCOMMAND | MF_ENABLED | MF_STRING, 500 + i, spell_name.c_str());
+				else
+					InsertMenu(menu, 499, MF_BYCOMMAND | MF_ENABLED | MF_STRING, 500 + i, spell_name.c_str());
+			}
 		}
-	
-
+	}
 }

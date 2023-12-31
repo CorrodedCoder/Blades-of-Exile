@@ -313,7 +313,6 @@ void draw_main_screen()
 {
 	RECT	source_rect, dest_rec,dest_rect;
 	RECT reg_rect;
-	char temp_str[256];
 	RECT top_pic_from = {3,16,41,54};
 
 
@@ -373,10 +372,12 @@ void draw_main_screen()
 	reg_rect.bottom = pc_info_rect.top;
 	
 
-	if (ed_reg == FALSE) {
+	if (ed_reg == FALSE)
+	{
+		char temp_str[256];
 		format_to_buf(temp_str,"Unregistered Copy |To find out how to order, |select How To Order from File Menu.");
 		win_draw_string(main_dc,reg_rect,temp_str,0,12);
-		}
+	}
 }
 
 void do_button_action(short which_pc,short which_button)
@@ -398,7 +399,6 @@ void draw_items(short clear_first)
 //short clear_first; // 0 - redraw over, 1 - don't redraw over
 {
 	short i;
-	char to_draw[256];
 	RECT d_from = {28,12,42,24},i_from = {42,12,56,24},dest_rect;
 
 	if (file_in_mem == FALSE)
@@ -422,14 +422,16 @@ void draw_items(short clear_first)
 		return; // If PC is dead, it has no items
 	}
 	for (i = 0; i < 24; i++) // Loop through items and draw each
-		if (adven[current_active_pc].items[i].variety > item_variety::None) { // i.e. does item exist
-			format_to_buf(to_draw, "");
+		if (adven[current_active_pc].items[i].variety > item_variety::None) // i.e. does item exist
+		{
+			std::string to_draw;
 			if (adven[current_active_pc].items[i].item_properties % 2 == 0)
-				format_to_buf(to_draw, "{:d}. {}  ",i + 1,adven[current_active_pc].items[i].name);
-				else if (adven[current_active_pc].items[i].charges > 0)
-					format_to_buf(to_draw, "{:d}. {} ({:d})",i + 1,adven[current_active_pc].items[i].full_name,
-					adven[current_active_pc].items[i].charges);
-				else format_to_buf(to_draw, "{:d}. {} ",i + 1,adven[current_active_pc].items[i].full_name);			
+				to_draw = std::format("{:d}. {}  ", i + 1, adven[current_active_pc].items[i].name);
+			else
+				if (adven[current_active_pc].items[i].charges > 0)
+					to_draw = std::format("{:d}. {} ({:d})",i + 1,adven[current_active_pc].items[i].full_name, adven[current_active_pc].items[i].charges);
+				else
+					to_draw = std::format("{:d}. {} ",i + 1,adven[current_active_pc].items[i].full_name);
 
 			//if (i % 2 == 0)
 			//	format_to_buf(to_draw, "{:d} {:d} {:d} {:d}",
@@ -437,12 +439,12 @@ void draw_items(short clear_first)
 			//	else format_to_buf(to_draw, "{:d} {:d} {:d} {:d}",
 			//	name_rect.left,name_rect.right,name_rect.top,name_rect.bottom);
 
-			char_win_draw_string(main_dc,item_string_rects[i][0],(char *) to_draw,0,10);
+			char_win_draw_string(main_dc,item_string_rects[i][0], to_draw.c_str(), 0, 10);
 
 			//Draw id/drop buttons
 			rect_draw_some_item_bmp(mixed_gworld,d_from,mixed_gworld,item_string_rects[i][1],1,1);
 			rect_draw_some_item_bmp(mixed_gworld,i_from,mixed_gworld,item_string_rects[i][2],1,1);
-			}
+		}
 	frame_dlog_rect(mainPtr,pc_info_rect,0); // re draw entire frame
 	frame_dlog_rect(mainPtr,name_rect,0); // draw the frame
 	frame_dlog_rect(mainPtr,pc_race_rect,0); // draw the frame
@@ -497,7 +499,7 @@ void display_party(short mode,short clear_first)
 //short clear_first; // 0 - redraw over, 1 - don't redraw over
 {
 	short i;
-	char to_draw[256],skill_value[256];
+	char skill_value[256];
 	RECT from_base = {0,0,28,36},from_rect;
 	COLORREF colors[4] = {RGB(0,0,0),RGB(255,0,0),RGB(0,0,102),RGB(255,255,255)};
 	UINT c[4];
@@ -559,6 +561,7 @@ void display_party(short mode,short clear_first)
 					//frame_dlog_rect((GrafPtr) mainPtr,pc_area_buttons[i][1],0); 
 					// draw name
 					//TextSize(9);
+					char to_draw[256];
 					if( (strlen(adven[i].name)) >= 0) {
 						//TextFace(0);
 						SelectObject(main_dc,font);
@@ -618,7 +621,7 @@ void display_party(short mode,short clear_first)
 									
 									format_to_buf(skill_value,"{:d}",adven[i].skills[k]);
 									OffsetRect(&temp_rect,-8,0);
-                           temp_rect.right += 10;
+									temp_rect.right += 10;
 									win_draw_string(main_dc,temp_rect,skill_value,0,9);	
 									//frame_dlog_rect((GrafPtr) mainPtr,pc_skills_rect[k],0);
 									string_num+=2;
@@ -838,11 +841,10 @@ void get_str(char *str,short i, short j)
 }
 
 
-void char_win_draw_string(HDC dest_window,RECT dest_rect, const char * str,short mode,short line_height)
+void char_win_draw_string(HDC dest_window,RECT dest_rect, std::string_view str,short mode,short line_height)
 {
 	char store_s[256];
-	
-	strcpy(store_s,str);
+	strcpy(store_s,str.data());
 	win_draw_string( dest_window, dest_rect,store_s, mode, line_height);
 
 }

@@ -70,7 +70,7 @@ void reset_lb() {
 
 // is slot >= 0, force that slot
 // if -1, use 1st free slot
-void set_lb(short slot, short mode, char *label, short do_draw) 
+void set_lb(short slot, short mode, std::string_view label, short do_draw) 
 {
 	short i;
 	
@@ -120,7 +120,7 @@ void reset_rb()
 
 // is slot >= 0, force that slot
 // if -1, use 1st free slot
-void set_rb(short slot, short mode, char *label, short do_draw) 
+void set_rb(short slot, short mode, std::string_view label, short do_draw)
 {
 	short i,highest_used = 0;
 	

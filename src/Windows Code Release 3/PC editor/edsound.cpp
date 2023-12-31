@@ -86,59 +86,57 @@ void load_sounds ()
 {
 	short i,t,err;
 	HRSRC h;
-	char snd_name[20];
 	WAVEOUTCAPS wavecaps;
 
 	t = waveOutGetNumDevs();
-	if (t == 0) {
+	if (t == 0)
+	{
 		sounds_fucked = TRUE;
 		return;
-		}
+	}
 	err = waveOutGetDevCaps(0,&wavecaps,sizeof(WAVEOUTCAPS));
-if (err != 0) {
-	sounds_fucked = TRUE;
-	switch (err) {
-		case MMSYSERR_BADDEVICEID:
-		MessageBox(mainPtr,"Cannot initialize sounds - No sound device detected. Game can still be played, but quietly.",
-	  "Sound Error",MB_OK | MB_ICONEXCLAMATION);
-		return;
-		case MMSYSERR_NODRIVER:
-		MessageBox(mainPtr,"Cannot initialize sounds - No driver installed. Game can still be played, but quietly.",
-	  "Sound Error",MB_OK | MB_ICONEXCLAMATION);
-		return;
-		case MMSYSERR_NOMEM :
-		MessageBox(mainPtr,"Cannot initialize sounds - can't find enough memory. Game can still be played, but quietly.",
-	  "Sound Error",MB_OK | MB_ICONEXCLAMATION);
-		return;
-		case MMSYSERR_ALLOCATED:
-		MessageBox(mainPtr,"Cannot initialize sounds - sound card already allocated. Game can still be played, but quietly.",
-	  "Sound Error",MB_OK | MB_ICONEXCLAMATION);
-		return;
-		case MMSYSERR_ERROR:
-		MessageBox(mainPtr,"Cannot initialize sounds - internal error. Game can still be played, but quietly.",
-	  "Sound Error",MB_OK | MB_ICONEXCLAMATION);
-		return;
-		default:
-		MessageBox(mainPtr,"Cannot initialize sounds - unidentified error. Game can still be played, but quietly.",
-	  "Sound Error",MB_OK | MB_ICONEXCLAMATION);
-		return;
-
+	if (err != 0)
+	{
+		sounds_fucked = TRUE;
+		switch (err) {
+			case MMSYSERR_BADDEVICEID:
+			MessageBox(mainPtr,"Cannot initialize sounds - No sound device detected. Game can still be played, but quietly.",
+		  "Sound Error",MB_OK | MB_ICONEXCLAMATION);
+			return;
+			case MMSYSERR_NODRIVER:
+			MessageBox(mainPtr,"Cannot initialize sounds - No driver installed. Game can still be played, but quietly.",
+		  "Sound Error",MB_OK | MB_ICONEXCLAMATION);
+			return;
+			case MMSYSERR_NOMEM :
+			MessageBox(mainPtr,"Cannot initialize sounds - can't find enough memory. Game can still be played, but quietly.",
+		  "Sound Error",MB_OK | MB_ICONEXCLAMATION);
+			return;
+			case MMSYSERR_ALLOCATED:
+			MessageBox(mainPtr,"Cannot initialize sounds - sound card already allocated. Game can still be played, but quietly.",
+		  "Sound Error",MB_OK | MB_ICONEXCLAMATION);
+			return;
+			case MMSYSERR_ERROR:
+			MessageBox(mainPtr,"Cannot initialize sounds - internal error. Game can still be played, but quietly.",
+		  "Sound Error",MB_OK | MB_ICONEXCLAMATION);
+			return;
+			default:
+			MessageBox(mainPtr,"Cannot initialize sounds - unidentified error. Game can still be played, but quietly.",
+		  "Sound Error",MB_OK | MB_ICONEXCLAMATION);
+			return;
 		}
-
 	}
 
-	for (i = 0; i < NUM_SOUNDS; i++) {
+	for (i = 0; i < NUM_SOUNDS; i++)
+	{
 		sound_handles[i] = NULL;
 		load_when_play[i] = TRUE;
-		if (load_when_play[i] == FALSE) {
-		format_to_buf(snd_name,"#{:d}",i + 1);
-		h = FindResource(store_hInstance,snd_name,"#100");
-
-		sound_handles[i] = LoadResource(store_hInstance,h);
-		snds[i] = reinterpret_cast<LPCSTR>(LockResource(sound_handles[i]));
+		if (load_when_play[i] == FALSE)
+		{
+			h = FindResource(store_hInstance, std::format("#{:d}", i + 1).c_str(), "#100");
+			sound_handles[i] = LoadResource(store_hInstance,h);
+			snds[i] = reinterpret_cast<LPCSTR>(LockResource(sound_handles[i]));
 		}
-		}
-
+	}
 }
 
 void play_sound(short which)  // if < 0, play asynch
@@ -156,7 +154,6 @@ void play_sound(short which)  // if < 0, play asynch
 void force_play_sound(short which)
 {
 	short i,num_fails = 0;
-	char snd_name[30];
 	Boolean asyn = FALSE,a_sound_did_get_played = FALSE;
 	Boolean check_sound;
 	HRSRC h;
@@ -183,28 +180,29 @@ void force_play_sound(short which)
 
 	//print_nums(1000 + can_ignore[which],which,(short) asyn);
 
-	if ((load_when_play[which] == TRUE) && (sound_handles[which] == NULL)) {
+	if ((load_when_play[which] == TRUE) && (sound_handles[which] == NULL))
+	{
 	  //	if (can_ignore[which] != 4)
-			asyn = FALSE;
-		format_to_buf(snd_name,"#{:d}",which + 1);
-		h = FindResource(store_hInstance,snd_name,"#100");
-
+		asyn = FALSE;
+		h = FindResource(store_hInstance, std::format("#{:d}", which + 1).c_str(), "#100");
 		sound_handles[which] = LoadResource(store_hInstance,h);
 		snds[which] = reinterpret_cast<LPCSTR>(LockResource(sound_handles[which]));
-
 	  //	ASB("Loaded sound:");
 	  //	print_nums(0,0,which);
-		}
+	}
 
-	if (store_last_sound_played == 6) {
+	if (store_last_sound_played == 6)
+	{
 		//ASB("Interrupted snd.");
 		sndPlaySound(NULL,0);
-		}
+	}
 
-	if (asyn == TRUE) {
+	if (asyn == TRUE)
+	{
 		if (can_ignore[which] >= 4)
 			check_sound = sndPlaySound(snds[which],SND_ASYNC | SND_MEMORY | SND_NOSTOP);
-			else check_sound = sndPlaySound(snds[which],SND_ASYNC | SND_MEMORY);
+		else
+			check_sound = sndPlaySound(snds[which],SND_ASYNC | SND_MEMORY);
 
 		while (check_sound == FALSE) {
 

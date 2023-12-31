@@ -1469,9 +1469,9 @@ void display_strings(char *text1, char *text2,short str_label_1,short str_label_
 	final_process_dialog(store_which_string_dlog);
 }
 
-void give_error(char *text1, char *text2,short parent_num)
+void give_error(std::string_view text1, std::string_view text2,short parent_num)
 {
-	display_strings(text1,text2,-1,-1,-1,-1,"Error!",57,716,parent_num);
+	display_strings(text1.data(), text2.data(), -1, -1, -1, -1, "Error!", 57, 716, parent_num);
 }
 
 void display_strings_with_nums(short a1,short a2, short b1, short b2,

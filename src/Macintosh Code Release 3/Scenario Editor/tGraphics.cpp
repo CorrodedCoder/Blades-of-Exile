@@ -1422,11 +1422,10 @@ Boolean container_there(location l)
 	return 0;		
 }
 
-void char_win_draw_string(GrafPtr dest_window,Rect dest_rect,char *str,short mode,short line_height)
+void char_win_draw_string(GrafPtr dest_window,Rect dest_rect, std::string_view str,short mode,short line_height)
 {
 	Str255 store_s;
-	
-	strcpy(store_s,str);
+	strcpy(store_s,str.data());
 	win_draw_string( dest_window, dest_rect,store_s, mode, line_height);
 
 }

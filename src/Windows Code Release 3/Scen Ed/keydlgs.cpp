@@ -207,9 +207,9 @@ Boolean cre(short val,short min,short max,const char *text1, const char *text2,s
 	return FALSE;
 }
 
-void give_error(const char *text1, const char *text2,short parent_num)
+void give_error(std::string_view text1, std::string_view text2,short parent_num)
 {
-	display_strings(text1,text2,"Error!",57,716,parent_num);
+	display_strings(text1.data(), text2.data(), "Error!", 57, 716, parent_num);
 }
 
 void display_strings_event_filter (short item_hit)
@@ -491,7 +491,8 @@ void edit_area_rect_event_filter (short item_hit)
 			CDGT(840,2,str);
 			if (store_str_mode == 0)
 				format_to_buf(data_store.out_strs[store_which_str + 1],"{:<29.29s}", str);
-				else format_to_buf(town_strs[store_which_str + 1],"{:<29.29s}", str);
+			else
+				format_to_buf(town_strs[store_which_str + 1],"{:<29.29s}", str);
 			break;
 
 		case 3:

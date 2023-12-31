@@ -323,16 +323,16 @@ BYTE * GetDibBitsAddr(BYTE * lpDib)
 	}
 
 HBITMAP ReadDib(const char * name,HDC hdc) {
-BITMAPFILEHEADER bmfh;
-BYTE * lpDib;
-DWORD dwDibSize, dwOffset, dwHeaderSize;
-int hFile;
-WORD wDibRead;
-BYTE * lpDibBits;
-HBITMAP bmap;
-OFSTRUCT store;
-char real_name[256] = "",*name_ptr;
-short i,last_slash = -1;
+	BITMAPFILEHEADER bmfh;
+	BYTE * lpDib;
+	DWORD dwDibSize, dwOffset, dwHeaderSize;
+	int hFile;
+	WORD wDibRead;
+	BYTE * lpDibBits;
+	HBITMAP bmap;
+	OFSTRUCT store;
+	char real_name[256] = "",*name_ptr;
+	short i,last_slash = -1;
 
 	for (i = 0; i < 256; i++)
 		if ((file_path_name[i] == 92) || (file_path_name[i] == '/'))

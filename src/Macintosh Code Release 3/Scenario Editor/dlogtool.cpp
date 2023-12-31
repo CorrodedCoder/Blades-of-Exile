@@ -619,7 +619,7 @@ void cd_get_item_text(short dlog_num, short item_num, char *str)
 		else format_to_buf(str,"{}",text_short_str[item_index - 10]);
 }
 
-void csit(short dlog_num, short item_num, char *str)
+void csit(short dlog_num, short item_num, std::string_view str)
 {
 cd_set_item_text( dlog_num,  item_num, str);
 }
@@ -662,7 +662,7 @@ short cd_retrieve_text_edit_num(short dlog_num, short item_num)
 
 
 // NOTE!!! Expects a c string
-void cd_set_text_edit_str(short dlog_num, short item_num, char *str)
+void cd_set_text_edit_str(short dlog_num, short item_num, std::string_view str)
 {
 	short dlg_index,item_index;
 	short the_type;
@@ -673,7 +673,7 @@ void cd_set_text_edit_str(short dlog_num, short item_num, char *str)
 	if ((dlg_index = cd_get_dlg_index(dlog_num)) < 0) {
 		SysBeep(50); return ;
 		}
-	strcpy(store_ptr,str);
+	strcpy(store_ptr,str.data());
 	c2p(store_ptr);
 	GetDItem( dlgs[dlg_index], item_num, &the_type, &the_handle, &the_rect );
 	SetIText ( the_handle, store_ptr);	
@@ -697,7 +697,7 @@ void cd_set_text_edit_num(short dlog_num, short item_num, short num)
 	SetIText ( the_handle, store_ptr);	
 }
 
-void cd_set_item_text(short dlog_num, short item_num, char *str)
+void cd_set_item_text(short dlog_num, short item_num, std::string_view str)
 {
 	short dlg_index,item_index;
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
@@ -837,7 +837,7 @@ void cd_text_frame(short dlog_num,short item_num,short frame)
 	cd_draw_item(dlog_num,item_num);
 }
 
-void cd_add_label(short dlog_num, short item_num, char *label, short label_flag)
+void cd_add_label(short dlog_num, short item_num, std::string_view label, short label_flag)
 {
 	short dlg_index,item_index,label_loc = -1;
 	short i;

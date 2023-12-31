@@ -1136,18 +1136,14 @@ short edit_ter_type(short which_ter)
 
 void put_monst_info_in_dlog()
 {
-	char str[256];
-
 	if (store_monst.picture_num < 1000)
 		csp(814,34,400 + store_monst.picture_num);
 		else csp(814,34,950);
 	cdsin(814,33,store_which_monst);
 	CDST(814,2,scen_item_list.monst_names[store_which_monst]);
 	CDSN(814,3,store_monst.picture_num);
-	format_to_buf(str,"Width = {:d}",store_monst.x_width);
-	csit(814,40,(char *) str);
-	format_to_buf(str,"Height = {:d}",store_monst.y_width);
-	csit(814,41,(char *) str);
+	csit(814,40, std::format("Width = {:d}", store_monst.x_width));
+	csit(814,41, std::format("Height = {:d}", store_monst.y_width));
 	CDSN(814,4,store_monst.level);
 	CDSN(814,5,store_monst.health);
 	CDSN(814,6,store_monst.armor);
@@ -1166,12 +1162,13 @@ void put_monst_info_in_dlog()
 
 	cd_set_led_range(814,29,32,store_monst.default_attitude);
 	
+	char str[256];
 	get_str(str,20,150 + store_monst.m_type);
-	csit(814,42,(char *) str);
+	csit(814,42, str);
 	get_str(str,20,130 + store_monst.a1_type);
-	csit(814,43,(char *) str);
+	csit(814,43, str);
 	get_str(str,20,130 + store_monst.a23_type);
-	csit(814,44,(char *) str);
+	csit(814,44, str);
 }
 
 Boolean save_monst_info()
@@ -2622,7 +2619,6 @@ short get_password()
 
 void set_starting_loc_filter (short item_hit)
 {
-	char str[256];
 	short i,j,k;
 	
 	switch (item_hit) {
@@ -2631,8 +2627,7 @@ void set_starting_loc_filter (short item_hit)
 			j = CDGN(805,3);
 			k = CDGN(805,4);
 			if ((i < 0) || (i >= scenario_num_towns())) {
-				format_to_buf(str,"The starting town must be from 0 to {:d}.",scenario_num_towns() - 1);
-				give_error((char *) str,"",805);
+				give_error(std::format("The starting town must be from 0 to {:d}.", scenario_num_towns() - 1), "", 805);
 				break;
 				}
 			if ((j < 0) || (j >= max_dim[scenario_town_size(i)] - 1) ||

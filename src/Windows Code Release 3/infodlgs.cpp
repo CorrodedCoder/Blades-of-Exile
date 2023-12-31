@@ -84,12 +84,12 @@ void put_spell_info()
 	ran = (store_display_mode == 0) ? mage_range[pos] : priest_range[pos];
 	
 	get_str (store_text, res, pos * 2 + 1);
-	cd_set_item_text(1096,4,(char *) store_text);
+	cd_set_item_text(1096,4, store_text);
 
 	if (spell_cost[store_display_mode][pos] > 0)
 		format_to_buf(store_text, "{:d}/{:d}",spell_level[pos],spell_cost[store_display_mode][pos]);
 		else format_to_buf(store_text, "{:d}/?",spell_level[pos]);
-	cd_set_item_text(1096,5,(char *) store_text);
+	cd_set_item_text(1096,5, store_text);
 
 	if (ran == 0) {
 		cd_set_item_text(1096,6,"");
@@ -97,9 +97,9 @@ void put_spell_info()
 		else cd_set_item_num(1096,6,ran);
 	get_str (store_text, res, pos * 2 + 2);
 
-	cd_set_item_text(1096,7,(char *) store_text);
+	cd_set_item_text(1096,7, store_text);
 	get_str (store_text, 11, 1 + spell_w_cast[store_display_mode][pos]);
-	cd_set_item_text(1096,11,(char *) store_text);
+	cd_set_item_text(1096,11, store_text);
 }
 
 
@@ -163,15 +163,15 @@ void put_skill_info()
 	pos = skill_pos;
 	
 	get_str(store_text,9,pos * 2 + 1);
-	cd_set_item_text(1097,3,(char *) store_text);
+	cd_set_item_text(1097,3, store_text);
 	cd_set_item_num(1097,4,skill_cost[pos]);
 	cd_set_item_num(1097,5,skill_g_cost[pos]);
 	cd_set_item_num(1097,6,skill_max[pos]);
 
 	get_str (store_text, 9, pos * 2 + 2);
-	cd_set_item_text(1097,7,(char *) store_text);
+	cd_set_item_text(1097,7, store_text);
 	get_str (store_text, 12, 1 + pos);
-	cd_set_item_text(1097,8,(char *) store_text);
+	cd_set_item_text(1097,8, store_text);
 }
 
 
@@ -276,7 +276,7 @@ void display_pc(short pc_num,short mode,short parent)
 
 	for (i = 3; i < 65; i++) {
 		get_str(label_str,(mode == 0) ? 7 : 8,(i - 3) * 2 + 1);
-		cd_add_label(991,i,(char *)label_str,46);
+		cd_add_label(991,i, label_str,46);
 		}
 	put_pc_graphics();
 
@@ -337,7 +337,7 @@ void put_item_info(short pc,short item)
 
 	if (s_i.ability > 0) {////
 		get_str(desc_str,23,s_i.ability + 1);
-		cd_set_item_text(998,12,(char *) desc_str);
+		cd_set_item_text(998,12, desc_str);
 		}	
 	if (s_i.charges > 0)
 		cd_set_item_num(998,10,s_i.charges);
@@ -482,7 +482,7 @@ void put_monst_info()
 			cd_set_pict(999,4,400 + store_m->m_d.picture_num);
 			else cd_set_pict(999,4,2000 + (store_m->m_d.picture_num % 1000));
 		
-	get_m_name((char *) store_text,store_m->number);
+	get_m_name(store_text,store_m->number);
 	cd_set_item_text(999,5,store_text);
 	// Clear fields
 	for (i = 6; i < 20; i++) {
@@ -491,9 +491,9 @@ void put_monst_info()
 
 	abil = store_m->m_d.spec_skill;
 	get_str(str,20,abil + 1);
-	cd_set_item_text(999,19,(char *) str);
+	cd_set_item_text(999,19, str);
 	get_str(str,20,store_m->m_d.radiate_1 + 50);
-	cd_set_item_text(999,31,(char *) str);
+	cd_set_item_text(999,31, str);
 	
 	for (i = 0; i < 3; i++)
 		if (store_m->m_d.a[i] > 0) {
@@ -632,7 +632,7 @@ Boolean display_help_event_filter (short item_hit)
 						cur_entry = (cur_entry == 3) ? num_entries + 2 : cur_entry - 1;
 						else cur_entry = (cur_entry == num_entries + 2) ? 3 : cur_entry + 1;
 					get_str (get_text, 25 + store_help_mode, cur_entry);
-					cd_set_item_text(997,7,(char *) get_text);
+					cd_set_item_text(997,7, get_text);
 					break;
 				}	
 			
@@ -652,12 +652,12 @@ void display_help(short mode,short parent)
 	cd_create_dialog_parent_num(997,parent);
 
 		get_str (get_text, 25 + mode, 1);
-		csit( 997,6,(char *) get_text);
+		csit( 997,6, get_text);
 		GetIndString (get_text, 25 + mode, 2);
 		StringToNum(get_text,&get_val);
 		num_entries = (short) get_val;
 		get_str (get_text, 25 + mode, cur_entry);
-		csit( 997,7,(char *) get_text);
+		csit( 997,7, get_text);
 
 	while (dialog_not_toast)
 		ModalDialog();	cd_kill_dialog(997,0);
@@ -742,14 +742,14 @@ void pick_race_abil_event_filter(short item_hit)
 						pc->race = item_hit - 4;
 					display_traits_graphics();
 					get_str(abil_str,5,12 + item_hit);
-					csit(1013,19,(char *) abil_str);
+					csit(1013,19, abil_str);
 					break;
 				case 36: case 37: case 38: case 39: case 40:
 					if (store_trait_mode != 1)
 						pc->traits[item_hit - 36 + 10] = (pc->traits[item_hit - 36 + 10] == TRUE) ? FALSE : TRUE;
 					display_traits_graphics();
 					get_str(abil_str,5,item_hit - 36 + 11);				
-					csit(1013,19,(char *) abil_str);
+					csit(1013,19, abil_str);
 					break;
 				default:
 					if (item_hit >= 100)
@@ -758,7 +758,7 @@ void pick_race_abil_event_filter(short item_hit)
 						pc->traits[item_hit - 7] = (pc->traits[item_hit - 7] == TRUE) ? FALSE : TRUE;
 					display_traits_graphics();
 					get_str(abil_str,5,item_hit - 6);				
-					csit(1013,19,(char *) abil_str);
+					csit(1013,19, abil_str);
 					break;
 				}	
 
@@ -789,9 +789,7 @@ void pick_race_abil(pc_record_type *pc,short mode,short parent_num)
 void display_pc_info()
 {
 	short i,store;
-	char str[256];
 	short pc;
-	char to_draw[60];
 	
 	short weap1 = 24,weap2 = 24,hit_adj = 0, dam_adj = 0,skill_item;
 
@@ -799,15 +797,9 @@ void display_pc_info()
 	
 	store = pc_carry_weight(adven[pc]);
 	i = pc_amount_can_carry(adven[pc]);
-	format_to_buf(to_draw, "{} is carrying {:d} stones out of {:d}.",adven[pc].name,store,i);
-	csit(1019,69,(char *) to_draw);
-
-	format_to_buf(str,"{:d} out of {:d}.",
-			adven[pc].cur_health,adven[pc].max_health);
-	csit(1019,65,(char *) str);
-	format_to_buf(str,"{:d} out of {:d}.",
-			adven[pc].cur_sp,adven[pc].max_sp);
-	csit(1019,67,(char *) str);
+	csit(1019,69, std::format("{} is carrying {:d} stones out of {:d}.", adven[pc].name, store, i));
+	csit(1019,65, std::format("{:d} out of {:d}.", adven[pc].cur_health,adven[pc].max_health));
+	csit(1019,67, std::format("{:d} out of {:d}.", adven[pc].cur_sp, adven[pc].max_sp));
 
 	for (i = skill::Strength; i <= skill::Luck; ++i) {
 		cdsin(1019,18 + i * 2,adven[pc].skills[i]);
@@ -853,35 +845,45 @@ void display_pc_info()
 	csit(1019,56,"No weapon.");	
 	csit(1019,57,"");	
 	csit(1019,59,"No weapon.");	
-	csit(1019,60,"");	
-	if (weap1 < 24) {
+	csit(1019,60,"");
+	if (weap1 < 24)
+	{
 		if (!is_ident(adven[pc].items[weap1]))
+		{
 			csit(1019,56,"Not identified.");
-			else {
-				if (hit_adj + 5 * adven[pc].items[weap1].bonus < 0)
-					format_to_buf(to_draw,"Penalty to hit: %{:d}",hit_adj + 5 * adven[pc].items[weap1].bonus);
-					else format_to_buf(to_draw,"Bonus to hit: +%{:d}",hit_adj + 5 * adven[pc].items[weap1].bonus);
-				csit(1019,56,to_draw);
-				format_to_buf(to_draw,"Damage: (1-{:d}) + {:d}",adven[pc].items[weap1].item_level
-					,dam_adj + adven[pc].items[weap1].bonus);
-				csit(1019,57,to_draw);
-
-				}
+		}
+		else
+		{
+			if (hit_adj + 5 * adven[pc].items[weap1].bonus < 0)
+			{
+				csit(1019, 56, std::format("Penalty to hit: %{:d}", hit_adj + 5 * adven[pc].items[weap1].bonus));
 			}
-	if (weap2 < 24) {
+			else
+			{
+				csit(1019, 56, std::format("Bonus to hit: +%{:d}", hit_adj + 5 * adven[pc].items[weap1].bonus));
+			}
+			csit(1019,57, std::format("Damage: (1-{:d}) + {:d}", adven[pc].items[weap1].item_level, dam_adj + adven[pc].items[weap1].bonus));
+		}
+	}
+	if (weap2 < 24)
+	{
 		if (!is_ident(adven[pc].items[weap2]))
+		{
 			csit(1019,59,"Not identified.");
-			else {
-				if (hit_adj + 5 * adven[pc].items[weap2].bonus < 0)
-					format_to_buf(to_draw,"Penalty to hit: %{:d}",hit_adj + 5 * adven[pc].items[weap2].bonus);
-					else format_to_buf(to_draw,"Bonus to hit: +%{:d}",hit_adj + 5 * adven[pc].items[weap2].bonus);
-				csit(1019,59,to_draw);
-				format_to_buf(to_draw,"Damage: (1-{:d}) + {:d}",adven[pc].items[weap2].item_level
-					,dam_adj + adven[pc].items[weap2].bonus);
-				csit(1019,60,to_draw);
-
-				}
+		}
+		else
+		{
+			if (hit_adj + 5 * adven[pc].items[weap2].bonus < 0)
+			{
+				csit(1019, 59, std::format("Penalty to hit: %{:d}", hit_adj + 5 * adven[pc].items[weap2].bonus));
 			}
+			else
+			{
+				csit(1019, 59, std::format("Bonus to hit: +%{:d}", hit_adj + 5 * adven[pc].items[weap2].bonus));
+			}
+			csit(1019,60, std::format("Damage: (1-{:d}) + {:d}", adven[pc].items[weap2].item_level, dam_adj + adven[pc].items[weap2].bonus));
+		}
+	}
 
 }
 
@@ -934,7 +936,7 @@ void give_pc_info(short pc_num)
 
 	for (i = 0; i < 19; i++) {
 		get_str(str,9,1 + i * 2);
-		csit(1019,17 + i * 2,(char *) str);
+		csit(1019,17 + i * 2, str);
 		}
 	display_pc_info(); 
 	while (dialog_not_toast)
@@ -978,13 +980,13 @@ void adventure_notes_event_filter (short item_hit)
 				case 1:
 					 load_outdoors(party.special_notes_str[i][1] % scenario_out_width(),
 						party.special_notes_str[i][1] / scenario_out_width(),
-					 0,0,1,party.special_notes_str[i][0] % 1000,(char *)place_str);
+					 0,0,1,party.special_notes_str[i][0] % 1000, place_str);
 					break;
-				case 2: load_town(party.special_notes_str[i][1],2,party.special_notes_str[i][0],(char *)place_str); break;
+				case 2: load_town(party.special_notes_str[i][1],2,party.special_notes_str[i][0], place_str); break;
 				}
 
 			get_str(place_str,party.special_notes_str[i][0],party.special_notes_str[i][1]);
-			csit(961,3 + i,(char *) place_str);
+			csit(961,3 + i, place_str);
 			cd_activate_item(961,9 + i,1);
 			}
 			else cd_activate_item(961,9 + i,0);
@@ -999,13 +1001,13 @@ void adventure_notes_event_filter (short item_hit)
 				case 1:
 					 load_outdoors(party.special_notes_str[i][1] % scenario_out_width(),
 					 	party.special_notes_str[i][1] / scenario_out_width(), 
-					 0,0,1,party.special_notes_str[i][0] % 1000,(char *)place_str);
+					 0,0,1,party.special_notes_str[i][0] % 1000, place_str);
 					break;
-				case 2: load_town(party.special_notes_str[i][1],2,party.special_notes_str[i][0] % 1000,(char *)place_str); break;
+				case 2: load_town(party.special_notes_str[i][1],2,party.special_notes_str[i][0] % 1000, place_str); break;
 				}
 
 
-			csit(961,3 + (i - store_page_on * 3),(char *) place_str);
+			csit(961,3 + (i - store_page_on * 3), place_str);
 			cd_activate_item(961,9 + (i - store_page_on * 3),1);
 			}
 			else {
@@ -1046,12 +1048,12 @@ void adventure_notes()
 				case 1:
 					 load_outdoors(party.special_notes_str[i][1] % scenario_out_width(),
 					 	party.special_notes_str[i][1] / scenario_out_width(), 
-					 0,0,1,party.special_notes_str[i][0] % 1000,(char *)place_str);
+					 0,0,1,party.special_notes_str[i][0] % 1000, place_str);
 					break;
-				case 2: load_town(party.special_notes_str[i][1],2,party.special_notes_str[i][0] % 1000,(char *)place_str); break;
+				case 2: load_town(party.special_notes_str[i][1],2,party.special_notes_str[i][0] % 1000, place_str); break;
 				}
 
-			csit(961,3 + i,(char *) place_str);
+			csit(961,3 + i, place_str);
 			cd_activate_item(961,9 + i,1);
 			}
 			else cd_activate_item(961,9 + i,0);
@@ -1079,8 +1081,8 @@ void put_talk()
 		if (personality / 10 != cur_town_talk_loaded)
 			load_town(personality / 10,1,0,NULL);
 
-		load_town(party.talk_save[store_page_on].town_num,2,0,(char *) place_str);
-		csit(960,9,(char *) place_str);
+		load_town(party.talk_save[store_page_on].town_num,2,0, place_str);
+		csit(960,9, place_str);
 		
 		//get_str(place_str,120 + ((personality - 1) / 10),((personality - 1) % 10) + 1);
 		csit(960,7,data_store3.talk_strs[personality % 10]);
@@ -1094,8 +1096,8 @@ void put_talk()
 				}
 				else {
 					load_town(party.talk_save[store_page_on].town_num,2,
-						party.talk_save[store_page_on].str1 - 2000 ,(char *) place_str);
-					csit(960,3,(char *) place_str);
+						party.talk_save[store_page_on].str1 - 2000 , place_str);
+					csit(960,3, place_str);
 					}
 			}
 			else if ((party.talk_save[store_page_on].str1 > 0) &&
@@ -1111,8 +1113,8 @@ void put_talk()
 				}
 				else {
 					load_town(party.talk_save[store_page_on].town_num,2,
-						party.talk_save[store_page_on].str2 - 2000 + 20,(char *) place_str);
-					csit(960,5,(char *) place_str);
+						party.talk_save[store_page_on].str2 - 2000 + 20, place_str);
+					csit(960,5, place_str);
 					}
 			}
 			else if ((party.talk_save[store_page_on].str2 > 0) &&
@@ -1209,8 +1211,8 @@ void give_help(short help1,short help2,short parent_num)
 	if (help2 > 0)
 		get_str(str2,10,help2);
 	if (help2 == 0)
-		display_strings((char *)str1, "",-1,-1,-1,-1,"Instant Help",57,724, parent_num);
-		else display_strings((char *)str1,(char *)str2,-1,-1,-1,-1,"Instant Help",57,724, parent_num);
+		display_strings(str1, "",-1,-1,-1,-1,"Instant Help",57,724, parent_num);
+		else display_strings(str1,str2,-1,-1,-1,-1,"Instant Help",57,724, parent_num);
 
 }
 
@@ -1305,9 +1307,9 @@ void display_strings(const char *text1, const char *text2,short str_label_1,shor
 	final_process_dialog(store_which_string_dlog);
 }
 
-void give_error(const char *text1, const char *text2,short parent_num)
+void give_error(std::string_view text1, std::string_view text2,short parent_num)
 {
-	display_strings(text1,text2,-1,-1,-1,-1,"Error!",57,716,parent_num);
+	display_strings(text1.data(), text2.data(), -1, -1, -1, -1, "Error!", 57, 716, parent_num);
 }
 
 void display_strings_with_nums(short a1,short a2, short b1, short b2, const char * title,short sound_num,short graphic_num,short parent_num)

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <variant>
+#include <string_view>
 
 using DialogDrawDestination = std::variant<HWND, HBITMAP>;
 
@@ -26,11 +27,11 @@ void cd_attach_key(short dlog_num,short item_num,char key);
 void cd_set_pict(short dlog_num, short item_num, short pict_num);
 void cd_activate_item(short dlog_num, short item_num, short status);
 void cd_get_item_text(short dlog_num, short item_num, char *str);
-void cd_set_item_text(short dlog_num, short item_num, const char * str);
+void cd_set_item_text(short dlog_num, short item_num, std::string_view str);
 void cd_set_item_num(short dlog_num, short item_num, short num);
 void cd_set_led(short dlog_num,short item_num,short state);
 void cd_text_frame(short dlog_num,short item_num,short frame);
-void cd_add_label(short dlog_num, short item_num, const char *label, short label_flag);
+void cd_add_label(short dlog_num, short item_num, std::string_view label, short label_flag);
 void cd_take_label(short dlog_num, short item_num);
 void cd_key_label(short dlog_num, short item_num,short loc);
 void cd_draw_item(short dlog_num,short item_num);
@@ -51,9 +52,9 @@ void draw_dialog_graphic(DialogDrawDestination hDlg, RECT rect, short which_g, B
 void showcursor(Boolean a);
 
 void cd_get_text_edit_str(short dlog_num, char *str);
-void cd_set_text_edit_str(short dlog_num, const char * str);
+void cd_set_text_edit_str(short dlog_num, std::string_view str);
 void cdsin(short dlog_num, short item_num, short num); 
-void csit(short dlog_num, short item_num, const char *str);
+void csit(short dlog_num, short item_num, std::string_view str);
 void csp(short dlog_num, short item_num, short pict_num);
 void ModalDialog();
 

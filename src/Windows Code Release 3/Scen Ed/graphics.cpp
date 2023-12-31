@@ -1112,7 +1112,6 @@ RECT get_template_rect (unsigned char type_wanted)
 
 void place_location()
 {
-	char draw_str[256];
 	RECT draw_rect,source_rect,erase_rect;
 	short picture_wanted;
 	HGDIOBJ store_bmp;
@@ -1138,13 +1137,16 @@ void place_location()
 
 	draw_rect.left = terrain_rects[255].left + 20;
 	draw_rect.top = terrain_rects[255].top;
+
+	char draw_str[256];
 	if (overall_mode < 60)
 		format_to_buf(draw_str,"Center: x = {:d}, y = {:d}  ",(short) cen_x, (short) cen_y);
-		else {
-			draw_rect.left = 5;
-			draw_rect.top = terrain_rects[255].top + 28;
-			format_to_buf(draw_str,"Click terrain to edit. ");
-			}
+	else
+	{
+		draw_rect.left = 5;
+		draw_rect.top = terrain_rects[255].top + 28;
+		format_to_buf(draw_str,"Click terrain to edit. ");
+	}
 
 	draw_rect.bottom = draw_rect.top + 14;
 	draw_rect.right = draw_rect.left + 200;
@@ -1460,11 +1462,10 @@ Boolean container_there(location l)
 }
 
 
-void char_win_draw_string(HDC dest_window,RECT dest_rect, const char * str,short mode,short line_height)
+void char_win_draw_string(HDC dest_window,RECT dest_rect, std::string_view str,short mode,short line_height)
 {
 	char store_s[256];
-	
-	strcpy(store_s,str);
+	strcpy(store_s,str.data());
 	win_draw_string( dest_window, dest_rect,store_s, mode, line_height);
 
 }

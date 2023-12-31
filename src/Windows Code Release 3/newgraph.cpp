@@ -607,7 +607,6 @@ void do_explosion_anim(short sound_num,short special_draw)
 {
 	RECT temp_rect,to_rect,from_rect;
 	RECT base_rect = {0,0,28,36},text_rect;
-	char str[256];
 	short i,temp_val,temp_val2;
 	location screen_ul;
 	
@@ -725,9 +724,8 @@ void do_explosion_anim(short sound_num,short special_draw)
 						text_rect.left -= 2;
 						if (store_booms[i].val_to_place < 10)
 							text_rect.left += 4;
-						format_to_buf(str,"{:d}",store_booms[i].val_to_place);
 						store_bmp = SelectObject(hdc,temp_gworld);
-						char_win_draw_string(hdc,text_rect,str,1,12);
+						char_win_draw_string(hdc,text_rect, std::format("{:d}", store_booms[i].val_to_place), 1, 12);
 						SelectObject(hdc,store_bmp);
 						}
 					}
@@ -808,7 +806,6 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 	short current_pos;
 	
 	short cur_cost,what_magic_shop,what_magic_shop_item;
-	char cur_name[256];
 	char cur_info_str[256];
 	item_record_type base_item;
 	HDC hdc;
@@ -874,15 +871,16 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 	//TextFont(geneva_font_num);
 
 	SetTextColor(hdc,PALETTEINDEX(c[3]));
+	std::string cur_name;
 	switch (store_shop_type) {
-		case 3: format_to_buf(cur_name,"Healing for {}.",adven[current_pc].name); break;
-		case 10: format_to_buf(cur_name,"Mage Spells for {}.",adven[current_pc].name);break;
-		case 11: format_to_buf(cur_name,"Priest Spells for {}.",adven[current_pc].name); break;
-		case 12: format_to_buf(cur_name,"Buying Alchemy.");break;
-		case 4: format_to_buf(cur_name,"Buying Food.");break;
-		default:format_to_buf(cur_name,"Shopping for {}.",adven[current_pc].name); break;
-		}
-	char_win_draw_string(hdc,shopper_name,cur_name,2,18);
+		case 3:		cur_name = std::format("Healing for {}.",adven[current_pc].name); break;
+		case 10:	cur_name = std::format("Mage Spells for {}.",adven[current_pc].name); break;
+		case 11:	cur_name = std::format("Priest Spells for {}.",adven[current_pc].name); break;
+		case 12:	cur_name = "Buying Alchemy."; break;
+		case 4:		cur_name = "Buying Food."; break;
+		default:	cur_name = std::format("Shopping for {}.",adven[current_pc].name); break;
+	}
+	char_win_draw_string(hdc,shopper_name,cur_name, 2, 18);
 
 	// Place help and done buttons
 	SetTextColor(hdc,PALETTEINDEX(c[0]));
@@ -913,38 +911,38 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 				base_item = get_stored_item(what_chosen);
 				base_item.item_properties = base_item.item_properties | 1;
 				draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, FALSE);
-				strcpy(cur_name,base_item.full_name);
+				cur_name = base_item.full_name;
 				get_item_interesting_string(base_item,cur_info_str);
 				break;
 			case 5:
 				base_item = store_alchemy(what_chosen - 500);
 				draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1853, FALSE);//// all graphic nums
-				strcpy(cur_name,base_item.full_name);
+				cur_name = base_item.full_name;
 				format_to_buf(cur_info_str,"");
 				break;
 			case 6:
 				//base_item = food_types[what_chosen - 600];
 				//draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],633, FALSE);
-				//strcpy(cur_name,base_item.full_name);
+				//cur_name = base_item.full_name;
 				//get_item_interesting_string(base_item,cur_info_str);
 				break;
 			case 7:
 				what_chosen -= 700;
 				draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1879, FALSE);
-				strcpy(cur_name,heal_types[what_chosen]);
+				cur_name = heal_types[what_chosen];
 				format_to_buf(cur_info_str,"");
 				break;
 			case 8:
 				base_item = store_mage_spells(what_chosen - 800 - 30);
 				draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, FALSE);
 
-				strcpy(cur_name,base_item.full_name);
+				cur_name = base_item.full_name;
 				format_to_buf(cur_info_str,"");
 				break;
 			case 9:
 				base_item = store_priest_spells(what_chosen - 900 - 30);
 				draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1853, FALSE);
-				strcpy(cur_name,base_item.full_name);
+				cur_name = base_item.full_name;
 				format_to_buf(cur_info_str,"");
 				break;
 			default:
@@ -953,7 +951,7 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 				base_item = party.magic_store_items[what_magic_shop][what_magic_shop_item];
 				base_item.item_properties = base_item.item_properties | 1;
 				draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, FALSE);
-				strcpy(cur_name,base_item.full_name);
+				cur_name = base_item.full_name;
 				get_item_interesting_string(base_item,cur_info_str);
 				break;
 			}
@@ -969,9 +967,8 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 		// 0 - whole area, 1 - active area 2 - graphic 3 - item name
 		// 4 - item cost 5 - item extra str  6 - item help button
 		//TextSize(12);
-		char_win_draw_string(hdc,shopping_rects[i][3],cur_name,0,12);
-		format_to_buf(cur_name,"Cost: {:d}",cur_cost);
-		char_win_draw_string(hdc,shopping_rects[i][4],cur_name,0,12);
+		char_win_draw_string(hdc,shopping_rects[i][3],cur_name, 0, 12);
+		char_win_draw_string(hdc,shopping_rects[i][4], std::format("Cost: {:d}", cur_cost), 0, 12);
 		//TextSize(10);
 		char_win_draw_string(hdc,shopping_rects[i][5],cur_info_str,0,12);
 
@@ -979,9 +976,8 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 
 	// Finally, cost info and help strs
 	//TextSize(12);
-	format_to_buf(cur_name,"Prices here are {}.",cost_strs[store_cost_mult]);
 	//TextSize(10);
-	char_win_draw_string(hdc,bottom_help_rects[0],cur_name,0,12);
+	char_win_draw_string(hdc,bottom_help_rects[0], std::format("Prices here are {}.", cost_strs[store_cost_mult]), 0, 12);
 	char_win_draw_string(hdc,bottom_help_rects[1],"Click on item name (or type 'a'-'h') to buy.",0,12);
 	char_win_draw_string(hdc,bottom_help_rects[2],"Hit done button (or Esc.) to quit.",0,12);
 	if ((store_shop_type != 3) && (store_shop_type != 4))

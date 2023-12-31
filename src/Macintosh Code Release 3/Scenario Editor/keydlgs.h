@@ -2,7 +2,7 @@ void fancy_choice_dialog_event_filter (short item_hit);
 short fancy_choice_dialog(short which_dlog,short parent);
 void display_strings_event_filter (short item_hit);
 Boolean cre(short val,short min,short max,char *text1, char *text2,short parent_num) ;
-void give_error(char *text1, char *text2,short parent_num);
+void give_error(std::string_view text1, std::string_view text2,short parent_num);
 void display_strings_event_filter (short item_hit);
 void display_strings(char *text1, char *text2,
 	char *title,short sound_num,short graphic_num,short parent_num);

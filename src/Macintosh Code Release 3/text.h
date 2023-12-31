@@ -48,7 +48,7 @@ void c2p(Str255 str) ;
 void p2c(Str255 str);
 void get_str(Str255 str,short i, short j);
 short string_length(char *str);
-void char_win_draw_string(GrafPtr dest_window,Rect dest_rect,char *str,short mode,short line_height);
+void char_win_draw_string(GrafPtr dest_window,Rect dest_rect, std::string_view str,short mode,short line_height);
 void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,short line_height);
 short calc_day();
 Boolean day_reached(unsigned char which_day, unsigned char which_event);

@@ -42,10 +42,11 @@ extern HWND right_sbar;
 
 void init_lb() {
 	short i;
-	for (i = 0; i < NLS; i++) {
+	for (i = 0; i < NLS; i++)
+	{
 		left_button_status[i] = 0;
-		format_to_buf(data_store.strings_ls[i], "");
-		}
+		data_store.strings_ls[i][0] = '\0';
+	}
 }
 
 void reset_lb() {
@@ -58,7 +59,7 @@ void reset_lb() {
 
 // is slot >= 0, force that slot
 // if -1, use 1st free slot
-void set_lb(short slot, short mode, const char * label, short do_draw) 
+void set_lb(short slot, short mode, std::string_view label, short do_draw)
 {
 	short i;
 	
@@ -90,8 +91,8 @@ void init_rb()
 	SetScrollRange(right_sbar,SB_CTL,0,0,TRUE);
 	for (i = 0; i < NRS; i++) {
 		right_button_status[i] = 0;
-		format_to_buf(data_store.strings_rs[i], "");
-		}
+		data_store.strings_rs[i][0] = '\0';
+	}
 }
 
 void reset_rb() 
@@ -109,7 +110,7 @@ void reset_rb()
 
 // is slot >= 0, force that slot
 // if -1, use 1st free slot
-void set_rb(short slot, short mode, char *label, short do_draw) 
+void set_rb(short slot, short mode, std::string_view label, short do_draw)
 {
 	short i;
 	

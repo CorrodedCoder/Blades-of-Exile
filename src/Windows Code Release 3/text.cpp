@@ -592,13 +592,10 @@ static void place_buy_button(short position,short pc_num,short item_num,HDC hdc)
 		dest_rect.right = dest_rect.left + 30;
 		rect_draw_some_item_bmp(mixed_gworld, source_rect,
 		  item_stats_gworld, dest_rect, 1, 0);
-		char store_string[256];
-		format_to_buf(store_string,"        {:d}",val_to_place);
 		//if (val_to_place >= 10000)
 		//	TextFace(0);
 		store_bmp = SelectObject(hdc,item_stats_gworld);
-		char_win_draw_string(hdc,item_buttons[position][5],
-		  store_string,2,10);
+		char_win_draw_string(hdc,item_buttons[position][5], std::format("        {:d}", val_to_place), 2, 10);
 		SelectObject(hdc,store_bmp);
 		//TextFace(bold);
 		}
@@ -1120,15 +1117,12 @@ void get_m_name(char *str,unsigned char num)
 
 static void get_ter_name(char *str,unsigned char num)
 {
-	char store_name[256];
-	
-	////
 	if ((num == 90) && ((is_out()) || (is_town()) || ((is_combat()) && (which_combat_type == 1))))
-		format_to_buf(store_name,"Pit");
-		else {
-			strcpy(store_name, scenario_terrain_name(num));
-			}
-	strcpy(str, store_name);
+		strcpy(str,"Pit");
+	else
+	{
+		strcpy(str, scenario_terrain_name(num));
+	}
 }
 
 void print_monst_name(unsigned char m_type)
@@ -1170,113 +1164,57 @@ void print_monster_going(char *combat_str,unsigned char m_num,short ap)
 
 void monst_spell_note(unsigned char number,short which_mess)
 {
-	char store_string[256];
 	get_m_name(store_string2,number);
-	switch (which_mess) {
-		case 1:
-	format_to_buf(store_string, "  {} scared. ",store_string2);break;
-	
-		case 2:
-	format_to_buf(store_string, "  {} slowed. ",store_string2);break;
-	
-		case 3:
-	format_to_buf(store_string, "  {} weakened.",store_string2);break;
-	
-		case 4:
-	format_to_buf(store_string, "  {} poisoned.",store_string2);break;
-	
-		case 5:
-	format_to_buf(store_string, "  {} cursed.",store_string2);break;
 
-		case 6:
-	format_to_buf(store_string, "  {} ravaged.",store_string2);break;
-
-		case 7:
-	format_to_buf(store_string, "  {} undamaged.",store_string2);break;
-
-		case 8:
-	format_to_buf(store_string, "  {} is stoned.",store_string2);break;
-		case 9:
-	format_to_buf(store_string, "  Gazes at {}.",store_string2);break;
-		case 10:
-	format_to_buf(store_string, "  {} resists.",store_string2);break;		
-		case 11:
-	format_to_buf(store_string, "  Drains {}.",store_string2);break;	
-		case 12:
-	format_to_buf(store_string, "  Shoots at {}.",store_string2);break;	
-		case 13:
-	format_to_buf(store_string, "  Throws spear at {}.",
-		store_string2);
-			break;	
-		case 14:
-	format_to_buf(store_string, "  Throws rock at {}.",
-		store_string2);
-			break;	
-		case 15:
-	format_to_buf(store_string, "  Throws razordisk at {}.",
-		store_string2);
-			break;
-		case 16:
-	format_to_buf(store_string, "  Hits {}.",
-		store_string2);
-			break;
-		case 17:
-	format_to_buf(store_string, "{} disappears.",
-		store_string2);
-			break;
-		case 18:
-	format_to_buf(store_string, "  Misses {}.",
-		store_string2);
-			break;
-		case 19:
-	format_to_buf(store_string, "  {} is webbed.",store_string2);break;
-		case 20:
-	format_to_buf(store_string, "  {} chokes.",store_string2);break;
-		case 21:
-	format_to_buf(store_string, "  {} summoned.",store_string2);break;
-		case 22:
-	format_to_buf(store_string, "  {} is dumbfounded.",store_string2);break;
-		case 23:
-	format_to_buf(store_string, "  {} is charmed.",store_string2);break;
-		case 24:
-	format_to_buf(store_string, "  {} is recorded.",store_string2);break;
-		case 25:
-	format_to_buf(store_string, "  {} is diseased.",store_string2);break;
-		case 26:
-	format_to_buf(store_string, "  {} is an avatar!",store_string2);break;
-		case 27:
-	format_to_buf(store_string, "  {} splits!",store_string2);break;
-		case 28:
-	format_to_buf(store_string, "  {} falls asleep.",store_string2);break;
-		case 29:
-	format_to_buf(store_string, "  {} wakes up.",store_string2);break;
-		case 30:
-	format_to_buf(store_string, "  {} paralyzed.",store_string2);break;
-		case 31:
-	format_to_buf(store_string, "  {} covered with acid.",store_string2);break;
-		case 32:
-	format_to_buf(store_string, "  Fires spines at {}.",store_string2);break;
-		}
-
-	if (which_mess > 0)
-		add_string_to_buf( store_string);
+	switch (which_mess)
+	{
+	case 1:		add_string_to_buf("  {} scared. ",store_string2);break;
+	case 2:		add_string_to_buf("  {} slowed. ",store_string2);break;
+	case 3:		add_string_to_buf("  {} weakened.",store_string2);break;
+	case 4:		add_string_to_buf("  {} poisoned.",store_string2);break;
+	case 5:		add_string_to_buf("  {} cursed.",store_string2);break;
+	case 6:		add_string_to_buf("  {} ravaged.",store_string2);break;
+	case 7:		add_string_to_buf("  {} undamaged.",store_string2);break;
+	case 8:		add_string_to_buf("  {} is stoned.",store_string2);break;
+	case 9:		add_string_to_buf("  Gazes at {}.",store_string2);break;
+	case 10:	add_string_to_buf("  {} resists.",store_string2);break;
+	case 11:	add_string_to_buf("  Drains {}.",store_string2);break;
+	case 12:	add_string_to_buf("  Shoots at {}.",store_string2);break;
+	case 13:	add_string_to_buf("  Throws spear at {}.", store_string2); break;	
+	case 14:	add_string_to_buf("  Throws rock at {}.", store_string2); break;	
+	case 15:	add_string_to_buf("  Throws razordisk at {}.", store_string2); break;
+	case 16:	add_string_to_buf("  Hits {}.", store_string2); break;
+	case 17:	add_string_to_buf("{} disappears.", store_string2); break;
+	case 18:	add_string_to_buf("  Misses {}.", store_string2); break;
+	case 19:	add_string_to_buf("  {} is webbed.",store_string2);break;
+	case 20:	add_string_to_buf("  {} chokes.",store_string2);break;
+	case 21:	add_string_to_buf("  {} summoned.",store_string2);break;
+	case 22:	add_string_to_buf("  {} is dumbfounded.",store_string2);break;
+	case 23:	add_string_to_buf("  {} is charmed.",store_string2);break;
+	case 24:	add_string_to_buf("  {} is recorded.",store_string2);break;
+	case 25:	add_string_to_buf("  {} is diseased.",store_string2);break;
+	case 26:	add_string_to_buf("  {} is an avatar!",store_string2);break;
+	case 27:	add_string_to_buf("  {} splits!",store_string2);break;
+	case 28:	add_string_to_buf("  {} falls asleep.",store_string2);break;
+	case 29:	add_string_to_buf("  {} wakes up.",store_string2);break;
+	case 30:	add_string_to_buf("  {} paralyzed.",store_string2);break;
+	case 31:	add_string_to_buf("  {} covered with acid.",store_string2);break;
+	case 32:	add_string_to_buf("  Fires spines at {}.",store_string2);break;
+	}
 }
 
 void monst_cast_spell_note(unsigned char number,short spell,short type)
 //short type; // 0 - mage 1- priest
 {
 	get_m_name(store_string2,number);
-	add_string_to_buf("{} casts:",
-			store_string2);
-	add_string_to_buf("  {}",
-			(type == 1) ? m_priest_sp[spell - 1] : m_mage_sp[spell - 1]);
+	add_string_to_buf("{} casts:", store_string2);
+	add_string_to_buf("  {}", (type == 1) ? m_priest_sp[spell - 1] : m_mage_sp[spell - 1]);
 }
 
 void monst_breathe_note(unsigned char number)
 {
 	get_m_name(store_string2,number);
-	add_string_to_buf("{} breathes.",
-			store_string2);
+	add_string_to_buf("{} breathes.", store_string2);
 }
 
 void monst_damaged_mes(short which_m,short how_much,short how_much_spec)
@@ -1291,8 +1229,7 @@ void monst_damaged_mes(short which_m,short how_much,short how_much_spec)
 void monst_killed_mes(short which_m)
 {
 	get_m_name(store_string2,c_town.monst.dudes[which_m].number);
-	add_string_to_buf("  {} dies.",
-		store_string2);
+	add_string_to_buf("  {} dies.", store_string2);
 }
 
 void print_nums(short a,short b,short c)
@@ -1502,11 +1439,11 @@ short string_length(char *str,HDC hdc)
 }
 
 
-void char_win_draw_string(HDC dest_window,RECT dest_rect, const char * str,short mode,short line_height)
+void char_win_draw_string(HDC dest_window,RECT dest_rect, std::string_view str,short mode,short line_height)
 {
 	char store_s[256];
 	
-	strcpy(store_s,str);
+	strcpy(store_s,str.data());
 	win_draw_string( dest_window, dest_rect,store_s, mode, line_height);
 
 }

@@ -207,9 +207,9 @@ Boolean cre(short val,short min,short max,char *text1, char *text2,short parent_
 	return FALSE;
 }
 
-void give_error(char *text1, char *text2,short parent_num)
+void give_error(std::string_view text1, std::string_view text2,short parent_num)
 {
-	display_strings(text1,text2,"Error!",57,716,parent_num);
+	display_strings(text1.data(), text2.data(), "Error!", 57, 716, parent_num);
 }
 
 void display_strings_event_filter (short item_hit)

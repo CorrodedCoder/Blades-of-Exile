@@ -171,16 +171,14 @@ void edit_gold_or_food_event_filter (short item_hit)
 void edit_gold_or_food(short which_to_edit)
 //0 - gold 1 - food
 {
-	char sign_text[256];
-
 	store_which_to_edit = which_to_edit;
 
 	make_cursor_sword();
 	
 	cd_create_dialog((which_to_edit == 0) ? 1012 : 947,mainPtr);
 		
-	format_to_buf(sign_text,"{:d}",(short) ((which_to_edit == 0) ? party.gold : party.food));
-	cd_set_text_edit_str((which_to_edit == 0) ? 1012 : 947,(char *) sign_text);
+	const auto sign_text{ std::format("{:d}",(short)((which_to_edit == 0) ? party.gold : party.food)) };
+	cd_set_text_edit_str((which_to_edit == 0) ? 1012 : 947, sign_text);
 	
 	cd_set_edit_focus();
 	while (dialog_not_toast)
@@ -191,19 +189,21 @@ void edit_gold_or_food(short which_to_edit)
 
 	if (dialog_answer < 0)
 		dialog_answer = -1;
-		else dialog_answer = boe_clamp(dialog_answer,0,25000);
+	else
+		dialog_answer = boe_clamp(dialog_answer,0,25000);
 	
-	if (dialog_answer >= 0) {
+	if (dialog_answer >= 0)
+	{
 		if (which_to_edit == 0) 
 			party.gold = dialog_answer;
-			else party.food = dialog_answer;
-		}
+		else
+			party.food = dialog_answer;
+	}
 }
 
 void edit_day_event_filter (short item_hit)
 {
 	char get_text[256];
-	
 	cd_get_text_edit_str(917,(char *) get_text);
 	dialog_answer = 0;
 	sscanf(get_text,"%hd",&dialog_answer);
@@ -212,24 +212,15 @@ void edit_day_event_filter (short item_hit)
 
 void edit_day()
 {
-	char sign_text[256];
-
 	make_cursor_sword();
-	
 	cd_create_dialog(917,mainPtr);
-		
-	format_to_buf(sign_text,"{:d}",(short) ( ((party.age) / 3700) + 1));
-	cd_set_text_edit_str(917,(char *) sign_text);
-	
+	const auto sign_text{ std::format("{:d}",(short)(((party.age) / 3700) + 1)) };
+	cd_set_text_edit_str(917, sign_text);
 	cd_set_edit_focus();
 	while (dialog_not_toast)
 		ModalDialog();	
-	
-	
 	cd_kill_dialog(917,0);
-	
 	dialog_answer = boe_clamp(dialog_answer,0,500);
-	
 	party.age = (long) (3700) * (long) (dialog_answer);
 }
 
@@ -403,15 +394,9 @@ void draw_xp_skills()
 
 void do_xp_draw()
 {
-	char get_text[256];
-	short pc_num;
+	const short pc_num = store_train_pc;
 
-	pc_num = store_train_pc;
-
-	format_to_buf(get_text, "{}", adven[pc_num].name);
-
-
-	cd_set_item_text (1010, 51,get_text);
+	cd_set_item_text (1010, 51, adven[pc_num].name);
 
 	for (short i = 0; i < 20; i++)
 		store_skills[i] = adven[pc_num].skills[i];
@@ -575,33 +560,25 @@ Boolean spend_xp(short pc_num, short mode, short parent)
 //short mode; // 0 - create  1 - train
 // returns 1 if cancelled
 {
-	char get_text[256],text2[256];
-
 	store_train_pc = pc_num;
-
 	make_cursor_sword();
-
 	cd_create_dialog_parent_num(1010,parent);
-	format_to_buf(get_text,"Health ({:d}/{:d})",1,10);
-	cd_add_label(1010,52,(char *) get_text,1075);
-	format_to_buf(get_text,"Spell Pts. ({:d}/{:d})",1,15);
+	cd_add_label(1010,52, std::format("Health ({:d}/{:d})", 1, 10), 1075);
 	//cd_add_label(1010,5,get_text,1040);
-	cd_add_label(1010,53,(char *) get_text,1075);
-	for (short i = 54; i < 73; i++) {
+	cd_add_label(1010,53, std::format("Spell Pts. ({:d}/{:d})", 1, 15), 1075);
+	for (short i = 54; i < 73; i++)
+	{
+		char text2[256];
 		get_str(text2,9,1 + 2 * (i - 54));
-		format_to_buf(get_text,"{} ({:d}/{:d})",text2,skill_cost[i - 54],skill_g_cost[i - 54]);
-		cd_add_label(1010,i,(char *) get_text,(i < 63) ? 1075 : 1069);
-		}
+		cd_add_label(1010,i, std::format("{} ({:d}/{:d})", text2, skill_cost[i - 54], skill_g_cost[i - 54]), (i < 63) ? 1075 : 1069);
+	}
 	do_xp_draw();
-	
 	dialog_answer = 0;
 
 	while (dialog_not_toast)
 		ModalDialog();	
 	
-
 	cd_kill_dialog(1010,0);
-
 	return dialog_answer;
 }
 
@@ -686,29 +663,20 @@ void edit_xp_event_filter (short item_hit)
 
 void edit_xp(pc_record_type *pc)
 {
-
-	short item_hit;
-	char sign_text[256];
-
 	store_xp_pc = pc;
-
 	make_cursor_sword();
-	
 	cd_create_dialog(1024,mainPtr);
-		
-	format_to_buf(sign_text,"{:d}",(short)pc->experience);
-	cd_set_text_edit_str(1024,(char *) sign_text);
-	item_hit = pc_get_tnl(*store_xp_pc);
-	cdsin(1024,8,item_hit);
+	cd_set_text_edit_str(1024, std::format("{:d}", (short)pc->experience));
+	cdsin(1024,8, pc_get_tnl(*store_xp_pc));
 	
 	while (dialog_not_toast)
 		ModalDialog();
 	
 	cd_kill_dialog(1024,0);
-	
+
 	if (dialog_answer < 0)
 		dialog_answer = dialog_answer * -1;
+
 	dialog_answer = boe_clamp(dialog_answer,0,10000);
-	
 	pc->experience = dialog_answer;
 }

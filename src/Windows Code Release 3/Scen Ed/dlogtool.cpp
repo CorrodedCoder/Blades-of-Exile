@@ -865,33 +865,30 @@ short cd_retrieve_text_edit_num(short dlog_num, short item_num)
 
 
 // NOTE!!! Expects a c string
-void cd_set_text_edit_str(short dlog_num, short item_num, const char *str)
+void cd_set_text_edit_str(short dlog_num, short item_num, std::string_view str)
 {
 	short i;
 		for (i = 0; i < 80; i++)
 			if ((store_edit_parent_num[i] == dlog_num) && (store_edit_item[i] == item_num)
 				&& (edit_box[i] != NULL))
-					SetWindowText(edit_box[i],str);
+					SetWindowText(edit_box[i],str.data());
 
 }
 // NOTE!!! Expects a c string
 void cd_set_text_edit_num(short dlog_num, short item_num, short num)
 {
-	short i;
-	char store_ptr[256];
-	
-		format_to_buf(store_ptr,"{:d}",num);
-		for (i = 0; i < 80; i++)
-			if ((store_edit_parent_num[i] == dlog_num) && (store_edit_item[i] == item_num)
-				&& (edit_box[i] != NULL))
-					SetWindowText(edit_box[i],store_ptr);
+	const auto store_ptr{ std::format("{:d}",num) };
+	for (short i = 0; i < 80; i++)
+		if ((store_edit_parent_num[i] == dlog_num) && (store_edit_item[i] == item_num)
+			&& (edit_box[i] != NULL))
+				SetWindowText(edit_box[i],store_ptr.c_str());
 }
 
 void cdsin(short dlog_num, short item_num, short num) 
 {
 	cd_set_item_num( dlog_num,  item_num,  num);
 }
-void csit(short dlog_num, short item_num, const char * str)
+void csit(short dlog_num, short item_num, std::string_view str)
 {
 	cd_set_item_text( dlog_num,  item_num, str);
 }
@@ -901,7 +898,7 @@ void csp(short dlog_num, short item_num, short pict_num)
 }
 
 
-void cd_set_item_text(short dlog_num, short item_num, const char * str)
+void cd_set_item_text(short dlog_num, short item_num, std::string_view str)
 {
 	short dlg_index,item_index,i;
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
@@ -910,7 +907,7 @@ void cd_set_item_text(short dlog_num, short item_num, const char * str)
 		for (i = 0; i < 80; i++)
 			if ((store_edit_parent_num[i] == dlog_num) && (store_edit_item[i] = item_num)
 				&& (edit_box[i] != NULL))
-					SetWindowText(edit_box[i],str);
+					SetWindowText(edit_box[i],str.data());
 		return;
 		}
 	if (item_index >= 150) {
@@ -1038,7 +1035,7 @@ void cd_text_frame(short dlog_num,short item_num,short frame)
 	cd_draw_item(dlog_num,item_num);
 }
 
-void cd_add_label(short dlog_num, short item_num, const char *label, short label_flag)
+void cd_add_label(short dlog_num, short item_num, std::string_view label, short label_flag)
 {
 	short dlg_index,item_index,label_loc = -1;
 	short i;
@@ -1080,11 +1077,11 @@ void cd_take_label(short dlog_num, short item_num)
 void cd_key_label(short dlog_num, short item_num,short loc)
 {
 	short dlg_index,item_index;
-	char str[10];
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
 		return;
-	format_to_buf(str," ");
+	char str[10];
 	str[0] = item_key[item_index];
+	str[1] = '\0';
 	cd_add_label(dlog_num,item_num, str, 7 + loc * 100);
 }
 

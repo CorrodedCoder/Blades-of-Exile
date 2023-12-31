@@ -1243,13 +1243,11 @@ void set_up_ter_pics()
 }
 void oops_error(short error)
 {
-	char error_str[256];
-
 	SysBeep(50);
 	SysBeep(50);
 	SysBeep(50);
-	format_to_buf(error_str, "Giving the scenario editor more memory might also help. Be sure to back your scenario up often. Error number: {:d}.", error);
-	give_error("The program encountered an error while loading/saving/creating the scenario. To prevent future problems, the program will now terminate. Trying again may solve the problem.", (char*)error_str, 0);
+	const auto error_str{ std::format("Giving the scenario editor more memory might also help. Be sure to back your scenario up often. Error number: {:d}.", error) };
+	give_error("The program encountered an error while loading/saving/creating the scenario. To prevent future problems, the program will now terminate. Trying again may solve the problem.", error_str.c_str(), 0);
 	//ExitToShell();
 }
 

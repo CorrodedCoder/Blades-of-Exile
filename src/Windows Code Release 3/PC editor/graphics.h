@@ -10,7 +10,7 @@ void do_button_action(short which_pc,short which_button);
 void draw_items(short clear_first);
 void display_party(short mode,short clear_first);
 void add_string_to_buf(std::string_view str) ;
-void char_win_draw_string(HDC dest_window,RECT dest_rect, const char * str,short mode,short line_height);
+void char_win_draw_string(HDC dest_window,RECT dest_rect, std::string_view str,short mode,short line_height);
 void win_draw_string(HDC dest_hdc,RECT dest_rect,char *str,short mode,short line_height);
 void display_strings_event_filter (short item_hit);
 void display_strings(short str1a,short str1b,short str2a,short str2b,
