@@ -2688,11 +2688,9 @@ void print_spell_cast(short spell_num,short which)
 		(which == 0) ? mage_s_name[spell_num] : priest_s_name[spell_num]);
 }
 
-short stat_adj(pc_record_type& pc,skill which)
+short stat_adj(const pc_record_type& pc,skill which)
 {
-	short tr;
-	
-	tr = skill_bonus[pc.skills[which]];
+	short tr = skill_bonus[pc.skills[which]];
 	if (which == skill::Intelligence) {
 		if (pc.traits[trait::MagicallyApt] == TRUE)
 			tr++;

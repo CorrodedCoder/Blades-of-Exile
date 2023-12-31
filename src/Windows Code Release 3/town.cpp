@@ -744,48 +744,45 @@ void handle_leave_town_specials(short town_number, short which_spec,location sta
 
 Boolean abil_exists(short abil) // use when outdoors
 {
-	short i,j;
-
-	for (i = 0; i < 6; i++)
-		for (j = 0; j < 24; j++)
+	for (short i = 0; i < 6; i++)
+		for (short j = 0; j < 24; j++)
 			if ((adven[i].items[j].variety != item_variety::None) && (adven[i].items[j].ability == abil))
 				return TRUE;
-	for (i = 0; i < 3; i++)
-		for (j = 0; j < NUM_TOWN_ITEMS; j++)
+	for (short i = 0; i < 3; i++)
+		for (short j = 0; j < NUM_TOWN_ITEMS; j++)
 			if ((stored_items[i].items[j].variety != item_variety::None) && (stored_items[i].items[j].ability == abil))
 				return TRUE;
 
 	return FALSE;
 }
 
-
-
-
 void start_town_combat(short direction)
 {
-	short i;
-
 	create_town_combat_terrain();
 
 	place_party(direction);
 
-	if (current_pc == 6) {
-		for (i = 0; i < 6; i++)
-			if (adven[i].main_status == status::Normal) {
+	if (current_pc == 6)
+	{
+		for (short i = 0; i < 6; i++)
+		{
+			if (adven[i].main_status == status::Normal)
+			{
 				current_pc = i;
 				i = 6;
-            }
+			}
 		}
+	}
 	center = pc_pos[current_pc];
 
 	which_combat_type = 1;
 	overall_mode = 10;
 
 	combat_active_pc = 6;
-	for (i = 0; i < T_M; i++)
-		monst_target[i] = 6;
+	for (auto& tar: monst_target)
+		tar = 6;
 
-	for (i = 0; i < 6; i++) {
+	for (short i = 0; i < 6; i++) {
 		last_attacked[i] = T_M + 10;
 		pc_parry[i] = 0;
 		pc_dir[i] = direction;
@@ -808,172 +805,210 @@ void start_town_combat(short direction)
 
 short end_town_combat()
 {
-	short num_tries = 0,r1,i;
-	
-	r1 = rand_short(0,5);
+	short num_tries = 0;
+	short r1 = rand_short(0,5);
 	while ((adven[r1].main_status != status::Normal) && (num_tries++ < 1000))
-			r1 = rand_short(0,5);
+	{
+		r1 = rand_short(0, 5);
+	}
 	c_town.p_loc = pc_pos[r1];
 	overall_mode = 1;
 	current_pc = store_current_pc;
 	if (adven[current_pc].main_status != status::Normal)
+	{
 		current_pc = first_active_pc();
-	for (i = 0; i < 6; i++) {
-		pc_parry[i] = 0;
-		}
+	}
+	for (auto& pcp: pc_parry)
+	{
+		pcp = 0;
+	}
 	return pc_dir[r1];
 }
 
 void place_party(short direction)
 {
-	Boolean spot_ok[14] = {TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,
-							TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE};
+	Boolean spot_ok[14] = {TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE};
 	location pos_locs[14];
 	location check_loc;
-	short x_adj,y_adj,how_many_ok = 1,where_in_a = 0,i;
+	short x_adj,y_adj,how_many_ok = 1,where_in_a = 0;
 	
-	for (i = 0; i < 14; i++) {
+	for (short i = 0; i < 14; i++)
+	{
 		check_loc = c_town.p_loc;
 		if (direction % 4 < 2)
 			x_adj = ((direction % 2 == 0) ? hor_vert_place[i].x : diag_place[i].x);
-			else x_adj = ((direction % 2 == 0) ? hor_vert_place[i].y : diag_place[i].y);
+		else
+			x_adj = ((direction % 2 == 0) ? hor_vert_place[i].y : diag_place[i].y);
 		if (direction % 2 == 0)
 			x_adj = (direction < 4) ? x_adj : -1 * x_adj;
-			else x_adj = ((direction == 1) || (direction == 7)) ? -1 * x_adj : x_adj;
+		else
+			x_adj = ((direction == 1) || (direction == 7)) ? -1 * x_adj : x_adj;
 		check_loc.x -= x_adj;
 		if (direction % 4 < 2)
 			y_adj = ((direction % 2 == 0) ? hor_vert_place[i].y : diag_place[i].y);
-			else y_adj = ((direction % 2 == 0) ? hor_vert_place[i].x : diag_place[i].x);
+		else
+			y_adj = ((direction % 2 == 0) ? hor_vert_place[i].x : diag_place[i].x);
 		if (direction % 2 == 0)
 			y_adj = ((direction > 1) && (direction < 6)) ? y_adj : -1 * y_adj;
-			else y_adj = ((direction == 3) || (direction == 1)) ? -1 * y_adj : y_adj;
+		else
+			y_adj = ((direction == 3) || (direction == 1)) ? -1 * y_adj : y_adj;
 		
 		check_loc.y -= y_adj;		
 		pos_locs[i] = check_loc;
 		if ((loc_off_act_area(check_loc) == FALSE) &&
 			is_not_blocked(check_loc) && (is_special(check_loc) == FALSE) && (get_obscurity(check_loc.x,check_loc.y) == 0)
-			&& (can_see(c_town.p_loc,check_loc,1) < 1)) {
+			&& (can_see(c_town.p_loc,check_loc,1) < 1))
+		{
 			spot_ok[i] = TRUE;
 			how_many_ok += (i > 1) ? 1 : 0;
-			}
-			else spot_ok[i] = FALSE;
+		}
+		else
+		{
+			spot_ok[i] = FALSE;
+		}
 
 		if (i == 0)
+		{
 			spot_ok[i] = TRUE;
 		}
-	i = 0;
-	while (i < 6) {
-		if (adven[i].main_status == status::Normal) {
-				if (how_many_ok == 1)
-					pc_pos[i] = pos_locs[where_in_a];
-					else {
-						pc_pos[i] = pos_locs[where_in_a];
-						if (how_many_ok > 1)
-							where_in_a++;
-						how_many_ok--;
-//						if (how_many_ok > 1) {
-							while (spot_ok[where_in_a] == FALSE)
-								where_in_a++;
-//							}
-						}
+	}
+	for(short i = 0; i < 6; ++i)
+	{
+		if (adven[i].main_status == status::Normal)
+		{
+			if (how_many_ok == 1)
+			{
+				pc_pos[i] = pos_locs[where_in_a];
 			}
-		i++;	
+			else
+			{
+				pc_pos[i] = pos_locs[where_in_a];
+				if (how_many_ok > 1)
+				{
+					++where_in_a;
+				}
+				how_many_ok--;
+//				if (how_many_ok > 1) {
+				while (spot_ok[where_in_a] == FALSE)
+				{
+					++where_in_a;
+				}
+//				}
+			}
 		}
+	}
 }
-
-
 
 void create_town_combat_terrain()
 {
-	location where;
-	
-	for (where.x = 0; where.x < town_size[town_type]; where.x++)
-		for (where.y = 0; where.y < town_size[town_type]; where.y++) 
-					combat_terrain[where.x][where.y] = t_d.terrain[where.x][where.y];
+	for (size_t where_x = 0; where_x < town_size[town_type]; ++where_x)
+	{
+		for (size_t where_y = 0; where_y < town_size[town_type]; ++where_y)
+		{
+			combat_terrain[where_x][where_y] = t_d.terrain[where_x][where_y];
+		}
+	}
 }
 
 void create_out_combat_terrain(short type,short num_walls,short spec_code)
 // spec_code is encounter's spec_code
 {
-	short i,j,k,r1,ter_type;
-
-	location stuff_ul;
-	ter_type = scenario_ter_type(type).picture;
+	short ter_type = scenario_ter_type(type).picture;
 	if (ter_type > 260)
 		ter_type = 1;
-		else ter_type = general_types[ter_type];
-	
-	for (i = 0; i < 48; i++)
-		for (j = 0; j < 48; j++) {
+	else
+		ter_type = general_types[ter_type];
+
+	for (short i = 0; i < 48; ++i)
+	{
+		for (short j = 0; j < 48; ++j)
+		{
 			c_town.explored[i][j] = 0;
 			misc_i[i][j] = 0;
 			sfx[i][j] = 0;
 			if ((j <= 8) || (j >= 35) || (i <= 8) || (i >= 35))
+			{
 				t_d.terrain[i][j] = 90;
-				else t_d.terrain[i][j] = ter_base[ter_type];
 			}
-	for (i = 0; i < 48; i++)
-		for (j = 0; j < 48; j++) 
-			for (k = 0; k < 5; k++)
+			else
+			{
+				t_d.terrain[i][j] = ter_base[ter_type];
+			}
+		}
+	}
+
+	for (short i = 0; i < 48; ++i)
+		for (short j = 0; j < 48; ++j)
+			for (short k = 0; k < 5; ++k)
 				if ((t_d.terrain[i][j] != 90) && (rand_short(1,1000) < terrain_odds[ter_type][k * 2 + 1]))
 					t_d.terrain[i][j] = terrain_odds[ter_type][k * 2];
 	
 	t_d.terrain[0][0] = ter_base[ter_type];
 	
-	if ((ter_type == 3) || (ter_type == 4) ) {
+	if ((ter_type == 3) || (ter_type == 4) )
+	{
 		t_d.terrain[0][0] = 83;
-		for (i = 15; i < 26; i++)
-			for (j = 9; j < 35; j++)
+		for (short i = 15; i < 26; ++i)
+			for (short j = 9; j < 35; ++j)
 				t_d.terrain[i][j] = 83;
-		}
-	if ((type >= 79) && (type <= 81)) {
-		t_d.terrain[0][0] = 82;
-		for (i = 19; i < 23; i++)
-			for (j = 9; j < 35; j++)
-				t_d.terrain[i][j] = 82;
-		}
+	}
 
+	if ((type >= 79) && (type <= 81))
+	{
+		t_d.terrain[0][0] = 82;
+		for (short i = 19; i < 23; ++i)
+			for (short j = 9; j < 35; ++j)
+				t_d.terrain[i][j] = 82;
+	}
 
 	// Now place special lakes, etc.
+	location stuff_ul;
 	if (ter_type == 2)
-		for (i = 0; i < 15; i++)
-			if (rand_short(0,5) == 1) {
+		for (short i = 0; i < 15; ++i)
+			if (rand_short(0,5) == 1)
+			{
 				stuff_ul = special_ter_locs[i];
-				for (j = 0; j < 4; j++)
-					for (k = 0; k < 4; k++)
+				for (short j = 0; j < 4; ++j)
+					for (short k = 0; k < 4; ++k)
 						t_d.terrain[stuff_ul.x + j][stuff_ul.y + k] = mntn_pillar[k][j];
-				}
+			}
 	if (t_d.terrain[0][0] == 0)
-		for (i = 0; i < 15; i++)
-			if (rand_short(0,25) == 1) {
+		for (short i = 0; i < 15; ++i)
+			if (rand_short(0,25) == 1)
+			{
 				stuff_ul = special_ter_locs[i];
-				for (j = 0; j < 4; j++)
-					for (k = 0; k < 4; k++)
+				for (short j = 0; j < 4; ++j)
+					for (short k = 0; k < 4; ++k)
 						t_d.terrain[stuff_ul.x + j][stuff_ul.y + k] = cave_pillar[k][j];
-				}
+			}
 	if (t_d.terrain[0][0] == 0)
-		for (i = 0; i < 15; i++)
-			if (rand_short(0,40) == 1) {
+		for (short i = 0; i < 15; ++i)
+			if (rand_short(0,40) == 1)
+			{
 				stuff_ul = special_ter_locs[i];
-				for (j = 0; j < 4; j++)
-					for (k = 0; k < 4; k++)
+				for (short j = 0; j < 4; ++j)
+					for (short k = 0; k < 4; ++k)
 						t_d.terrain[stuff_ul.x + j][stuff_ul.y + k] = cave_lake[k][j];
-				}
+			}
 	if (t_d.terrain[0][0] == 2)
-		for (i = 0; i < 15; i++)
-			if (rand_short(0,40) == 1) {
+		for (short i = 0; i < 15; ++i)
+			if (rand_short(0,40) == 1)
+			{
 				stuff_ul = special_ter_locs[i];
-				for (j = 0; j < 4; j++)
-					for (k = 0; k < 4; k++)
+				for (short j = 0; j < 4; ++j)
+					for (short k = 0; k < 4; ++k)
 						t_d.terrain[stuff_ul.x + j][stuff_ul.y + k] = surf_lake[k][j];
-				}
+			}
 
-
-	if (ground_type[ter_type] == 0) {
-	for (i = 0; i < num_walls; i++) {
-		r1 = rand_short(0,3);
-		for (j = 9; j < 35; j++)
-			switch (r1) {
+	if (ground_type[ter_type] == 0)
+	{
+		for (short i = 0; i < num_walls; ++i)
+		{
+			const short r1 = rand_short(0,3);
+			for (short j = 9; j < 35; ++j)
+			{
+				switch (r1)
+				{
 				case 0:
 					t_d.terrain[j][8] = 6;
 					break;
@@ -986,22 +1021,27 @@ void create_out_combat_terrain(short type,short num_walls,short spec_code)
 				case 3:
 					t_d.terrain[32][j] = 15;
 					break;
-			}			
+				}
+			}
 		}
-	if ((t_d.terrain[17][8] == 6) && (t_d.terrain[8][20] == 9))
-		t_d.terrain[8][8] = 21;
-	if ((t_d.terrain[32][20] == 15) && (t_d.terrain[17][35] == 12))
-		t_d.terrain[32][35] = 19;	
-	if ((t_d.terrain[17][8] == 6) && (t_d.terrain[32][20] == 15))
-		t_d.terrain[32][8] = 32;
-	if ((t_d.terrain[8][20] == 9) && (t_d.terrain[17][35] == 12))
-		t_d.terrain[8][35] = 20;	
+		if ((t_d.terrain[17][8] == 6) && (t_d.terrain[8][20] == 9))
+			t_d.terrain[8][8] = 21;
+		if ((t_d.terrain[32][20] == 15) && (t_d.terrain[17][35] == 12))
+			t_d.terrain[32][35] = 19;	
+		if ((t_d.terrain[17][8] == 6) && (t_d.terrain[32][20] == 15))
+			t_d.terrain[32][8] = 32;
+		if ((t_d.terrain[8][20] == 9) && (t_d.terrain[17][35] == 12))
+			t_d.terrain[8][35] = 20;	
 	}
-	if (ground_type[ter_type] == 36) {
-	for (i = 0; i < num_walls; i++) {
-		r1 = rand_short(0,3);
-		for (j = 9; j < 35; j++)
-			switch (r1) {
+	if (ground_type[ter_type] == 36)
+	{
+		for (short i = 0; i < num_walls; ++i)
+		{
+			const short r1 = rand_short(0,3);
+			for (short j = 9; j < 35; ++j)
+			{
+				switch (r1)
+				{
 				case 0:
 					t_d.terrain[j][8] = 24;
 					break;
@@ -1014,20 +1054,21 @@ void create_out_combat_terrain(short type,short num_walls,short spec_code)
 				case 3:
 					t_d.terrain[32][j] = 30;
 					break;
-			}			
+				}
+			}
 		}
-	if ((t_d.terrain[17][8] == 6) && (t_d.terrain[8][20] == 9))
-		t_d.terrain[8][8] = 35;
-	if ((t_d.terrain[32][20] == 15) && (t_d.terrain[17][35] == 12))
-		t_d.terrain[32][35] = 33;	
-	if ((t_d.terrain[17][8] == 6) && (t_d.terrain[32][20] == 15))
-		t_d.terrain[32][8] = 32;
-	if ((t_d.terrain[8][20] == 9) && (t_d.terrain[17][35] == 12))
-		t_d.terrain[8][35] = 34;	
+		if ((t_d.terrain[17][8] == 6) && (t_d.terrain[8][20] == 9))
+			t_d.terrain[8][8] = 35;
+		if ((t_d.terrain[32][20] == 15) && (t_d.terrain[17][35] == 12))
+			t_d.terrain[32][35] = 33;	
+		if ((t_d.terrain[17][8] == 6) && (t_d.terrain[32][20] == 15))
+			t_d.terrain[32][8] = 32;
+		if ((t_d.terrain[8][20] == 9) && (t_d.terrain[17][35] == 12))
+			t_d.terrain[8][35] = 34;	
 	}
-	
-	for (i = 0; i < 48; i++)
-		for (j = 0; j < 48; j++) 
+
+	for (short i = 0; i < 48; ++i)
+		for (short j = 0; j < 48; ++j)
 			combat_terrain[i][j] = t_d.terrain[i][j];
 			
 	make_town_trim(1);
@@ -1036,91 +1077,101 @@ void create_out_combat_terrain(short type,short num_walls,short spec_code)
 
 void elim_monst(unsigned char which,short spec_a,short spec_b)
 {
-	short i;
-	
-	if (party.stuff_done[spec_a][spec_b] > 0) {
-		for (i = 0; i < T_M; i++)
-			if (c_town.monst.dudes[i].number == which) {
+	if (party.stuff_done[spec_a][spec_b] > 0)
+	{
+		for (short i = 0; i < T_M; ++i)
+		{
+			if (c_town.monst.dudes[i].number == which)
+			{
 				c_town.monst.dudes[i].active = 0;
-				}
+			}
 		}
-
+	}
 }
-
 
 
 void dump_gold(short print_mes)
 //short print_mes; // 0 - no 1 - yes
 {
 	// Mildly kludgy gold check
-	if (party.gold > 30000) {
+	if (party.gold > 30000)
+	{
 		party.gold = 30000;
-		if (print_mes == 1) {
+		if (print_mes == 1)
+		{
 			put_pc_screen();
 			add_string_to_buf("Excess gold dropped.            ");
 			print_buf();
-			}
 		}
-	if (party.food > 25000) {
+	}
+	if (party.food > 25000)
+	{
 		party.food = 25000;
-		if (print_mes == 1) {
+		if (print_mes == 1)
+		{
 			put_pc_screen();
 			add_string_to_buf("Excess food dropped.            ");
 			print_buf();
-			}
 		}
+	}
 }
-
 
 
 void pick_lock(location where,short pc_num)
 {
-	unsigned char terrain;
-	short r1,which_item;
-	Boolean will_break = FALSE;
-	short unlock_adjust;
-	
-	terrain = t_d.terrain[where.x][where.y];
-	which_item = pc_has_abil_equip(adven[pc_num],161);
-	if (which_item == 24) {
+	const auto terrain = t_d.terrain[where.x][where.y];
+	const auto which_item = pc_has_abil_equip(adven[pc_num],161);
+	if (which_item == 24)
+	{
 		add_string_to_buf("  Need lockpick equipped.        ");
 		return;
-		}
+	}
 
-	r1 = rand_short(0,100) + adven[pc_num].items[which_item].ability_strength * 7;
-
+	Boolean will_break = FALSE;
+	auto r1 = rand_short(0,100) + adven[pc_num].items[which_item].ability_strength * 7;
 	if (r1 < 75)
+	{
 		will_break = TRUE;
+	}
 
 	r1 = rand_short(0,100) - 5 * stat_adj(adven[pc_num], skill::Dexterity) + c_town.difficulty * 7
 	 - 5 * adven[pc_num].skills[skill::Lockpicking] - adven[pc_num].items[which_item].ability_strength * 7;
 
 	// Nimble?
 	if (adven[pc_num].traits[trait::NimbleFingers] == FALSE)
+	{
 		r1 -= 8;
+	}
 
-	if (pc_has_abil_equip(adven[pc_num],42) < 24)
-		r1 = r1 - 12;	
+	if (pc_has_abil_equip(adven[pc_num], 42) < 24)
+	{
+		r1 -= 12;
+	}
 
-	if ((scenario_ter_type(terrain).special < terrain_special::UnlockableTerrain) || (scenario_ter_type(terrain).special > terrain_special::UnlockableOrBashable)) {
+	if ((scenario_ter_type(terrain).special < terrain_special::UnlockableTerrain) || (scenario_ter_type(terrain).special > terrain_special::UnlockableOrBashable))
+	{
 		add_string_to_buf("  Wrong terrain type.           ");
 		return;
+	}
+	const short unlock_adjust = scenario_ter_type(terrain).flag2;
+	if ((unlock_adjust >= 5) || (r1 > (unlock_adjust * 15 + 30)))
+	{
+		add_string_to_buf("  Didn't work.                ");
+		if (will_break == TRUE)
+		{
+			add_string_to_buf("  Pick breaks.                ");
+			remove_charge(pc_num,which_item);
 		}
-	unlock_adjust = scenario_ter_type(terrain).flag2;
-	if ((unlock_adjust >= 5) || (r1 > (unlock_adjust * 15 + 30))) {
-					add_string_to_buf("  Didn't work.                ");
-					if (will_break == TRUE) {
-						add_string_to_buf("  Pick breaks.                ");
-						remove_charge(pc_num,which_item);
-						}
-				play_sound(41);
-				} 
-				else {
-						add_string_to_buf("  Door unlocked.                ");
-						play_sound(9);
-						t_d.terrain[where.x][where.y] = scenario_ter_type(terrain).flag1;
-					}
+		play_sound(41);
+	}
+	else
+	{
+		add_string_to_buf("  Door unlocked.                ");
+		play_sound(9);
+		t_d.terrain[where.x][where.y] = scenario_ter_type(terrain).flag1;
+	}
 }
+
 
 void bash_door(location where,short pc_num)
 {
