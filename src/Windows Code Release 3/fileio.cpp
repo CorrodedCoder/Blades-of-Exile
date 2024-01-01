@@ -409,7 +409,7 @@ void change_rect_terrain(BoeRect r, unsigned char terrain_type, short probabilit
 		}
 }
 
-void build_scen_file_name(char* file_n)
+static void build_scen_file_name(char* file_n)
 {
 	short i, last_slash = -1;
 
@@ -423,6 +423,13 @@ void build_scen_file_name(char* file_n)
 	strcpy(file_n, file_path_name);
 	file_n += last_slash + 1;
 	format_to_buf(file_n, "BLADSCEN/{}", party.scen_name);
+}
+
+static std::string build_scen_file_name(void)
+{
+	char file_name[256];
+	build_scen_file_name(file_name);
+	return file_name;
 }
 
 void build_scen_ed_name(char* file_n)
@@ -453,7 +460,6 @@ void load_town(short town_num, short mode, short extra, char* str)
 	bool success = false;
 	long len_to_jump = 0;
 	short which_town;
-	char file_name[256];
 
 	if (town_num != boe_clamp(town_num, 0, scenario_num_towns() - 1)) {
 		give_error("The scenario tried to place you into a non-existant town.", "", 0);
@@ -463,9 +469,8 @@ void load_town(short town_num, short mode, short extra, char* str)
 	which_town = town_num;
 
 	//HGetVol((StringPtr) start_name,&start_volume,&start_dir);
-	build_scen_file_name(file_name);
-	// Was: OpenFile(file_name, &store_str, OF_READ /* | OF_SEARCH */);
-	file_id.open(file_name, std::ios_base::binary);
+	// Was: OpenFile(build_scen_file_name(), &store_str, OF_READ /* | OF_SEARCH */);
+	file_id.open(build_scen_file_name(), std::ios_base::binary);
 	if (file_id.fail()) {
 		FCD(949, 0);
 		return;
@@ -968,7 +973,6 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 	std::ifstream file_id;
 	bool success = false;
 	short i, j, out_sec_num;
-	char file_name[256];
 	long len_to_jump = 0, store = 0;
 
 	if ((to_create_x != boe_clamp(to_create_x, 0, scenario_out_width() - 1)) ||
@@ -983,9 +987,8 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 		return;
 	}
 
-	build_scen_file_name(file_name);
-	// Was: OpenFile(file_name, &store_str, OF_READ /* | OF_SEARCH */);
-	file_id.open(file_name, std::ios_base::binary);
+	// Was: OpenFile(build_scen_file_name(), &store_str, OF_READ /* | OF_SEARCH */);
+	file_id.open(build_scen_file_name(), std::ios_base::binary);
 	if (file_id.fail()) {
 		outdoor_alert();
 		PostQuitMessage(0);
@@ -1178,11 +1181,9 @@ Boolean load_scenario()
 	short i;
 	std::ifstream file_id;
 	Boolean file_ok = FALSE;
-	char file_name[256];
-	build_scen_file_name(file_name);
 
-	// Was: OpenFile(file_name, &store, OF_READ /* | OF_SEARCH */);
-	file_id.open(file_name, std::ios_base::binary);
+	// Was: OpenFile(build_scen_file_name(), &store, OF_READ /* | OF_SEARCH */);
+	file_id.open(build_scen_file_name(), std::ios_base::binary);
 	if (file_id.fail()) {
 		oops_error(10000);
 		SysBeep(2);	return FALSE;
@@ -1365,7 +1366,7 @@ void load_spec_graphics()
 		DeleteObject(spec_scen_g);
 		spec_scen_g = NULL;
 	}
-	//build_scen_file_name(file_name);
+	//const std::string file_name{ build_scen_file_name() };
 	format_to_buf(file_name, "bladscen/{}", party.scen_name);
 	for (i = 0; i < 256; i++) {
 		if (file_name[i] == '.') {
@@ -1555,12 +1556,8 @@ void reg_alert()
 Boolean load_blades_data()
 {
 	std::ifstream file_id;
-	char file_name[256];
-
-	build_scen_ed_name(file_name);
-
-	// Was: OpenFile(file_name, &store, OF_READ /* | OF_SEARCH */);
-	file_id.open(file_name, std::ios_base::binary);
+	// Was: OpenFile(build_scen_file_name(), &store, OF_READ /* | OF_SEARCH */);
+	file_id.open(build_scen_file_name(), std::ios_base::binary);
 	if (file_id.fail()) {
 		return FALSE;
 	}

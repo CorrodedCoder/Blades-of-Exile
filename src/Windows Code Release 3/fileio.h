@@ -29,7 +29,6 @@ void build_scen_headers();
 Boolean load_scenario_header(char *filename,short header_entry);
 void load_spec_graphics();
 Boolean check_p (short pword);
-void build_scen_file_name (char *file_n);
 short town_s(short flag);
 short out_s(short flag);
 short get_buf_ptr(short flag);
