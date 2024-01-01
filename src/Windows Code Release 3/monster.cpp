@@ -1016,7 +1016,7 @@ Boolean monst_check_special_terrain(location where_check,short mode,short which_
 	if (which_m->attitude == 0)
 		guts = guts / 2;
 		
-	if ((is_antimagic(where_check.x,where_check.y)) && (mage == TRUE))
+	if (is_antimagic(where_check.x,where_check.y) && (mage == TRUE))
 		return FALSE;
 	if ((is_fire_wall(where_check.x,where_check.y)) && (which_m->m_d.spec_skill != 22)) {
 			if (guts < 3) return FALSE;

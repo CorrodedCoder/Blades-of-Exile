@@ -2833,20 +2833,18 @@ Boolean monst_cast_mage(creature_data_type *caster,short targ)
 		}
 	if (targ >= 100)
 		vict_loc = c_town.monst.dudes[targ - 100].m_loc;
-	if ((targ == 6) && (is_antimagic(target.x,target.y)))
+	if ((targ == 6) && is_antimagic(target.x,target.y))
 		return FALSE;
 
 	// check antimagic
 	if (is_combat())
-		if ((targ < 6) && (is_antimagic(pc_pos[targ].x,pc_pos[targ].y)))
+		if ((targ < 6) && is_antimagic(pc_pos[targ].x,pc_pos[targ].y))
 			return FALSE;
 	if (is_town())
-		if ((targ < 6) && (is_antimagic(c_town.p_loc.x,c_town.p_loc.y)))
+		if ((targ < 6) && is_antimagic(c_town.p_loc.x,c_town.p_loc.y))
 			return FALSE;
-	if ((targ >= 100) && (is_antimagic(c_town.monst.dudes[targ - 100].m_loc.x,
-	 c_town.monst.dudes[targ - 100].m_loc.y)))
+	if ((targ >= 100) && is_antimagic(c_town.monst.dudes[targ - 100].m_loc.x, c_town.monst.dudes[targ - 100].m_loc.y))
 		return FALSE;
-
 
 	// How about shockwave? Good idea?
 	if ((spell == 27) && (caster->attitude % 2 != 1))
@@ -3139,12 +3137,11 @@ Boolean monst_cast_priest(creature_data_type *caster,short targ)
 		vict_loc = is_town() ? c_town.p_loc : pc_pos[targ];
 	if (targ >= 100)
 		vict_loc = c_town.monst.dudes[targ - 100].m_loc;
-	if ((targ == 6) && (is_antimagic(target.x,target.y)))
+	if ((targ == 6) && is_antimagic(target.x,target.y))
 		return FALSE;
-	if ((targ < 6) && (is_antimagic(pc_pos[targ].x,pc_pos[targ].y)))
+	if ((targ < 6) && is_antimagic(pc_pos[targ].x,pc_pos[targ].y))
 		return FALSE;
-	if ((targ >= 100) && (is_antimagic(c_town.monst.dudes[targ - 100].m_loc.x,
-	 c_town.monst.dudes[targ - 100].m_loc.y)))
+	if ((targ >= 100) && is_antimagic(c_town.monst.dudes[targ - 100].m_loc.x, c_town.monst.dudes[targ - 100].m_loc.y))
 		return FALSE;
 
 	
@@ -3781,7 +3778,7 @@ void hit_space(location target,short dam,short type,short report,short hit_all)
 		hit_all -= 10;
 		}
 	
-	if ((is_antimagic(target.x,target.y)) && ((type == 1) || (type == 3) || (type == 5))) {
+	if (is_antimagic(target.x,target.y) && ((type == 1) || (type == 3) || (type == 5))) {
 		return;
 		}
 	

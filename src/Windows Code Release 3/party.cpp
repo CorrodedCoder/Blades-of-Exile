@@ -1215,27 +1215,32 @@ void cast_spell(short type,short situation)
 {
 	short spell;
 	
-	if (is_town() && (is_antimagic(c_town.p_loc.x,c_town.p_loc.y))) {
+	if (is_town() && is_antimagic(c_town.p_loc.x,c_town.p_loc.y))
+	{
 		add_string_to_buf("  Not in antimagic field.");
 		return;
-		}
+	}
 		
-		if (spell_forced == FALSE)
-			spell = pick_spell(6, type, situation);
-			else {
-				if (repeat_cast_ok(type) == FALSE)
-					return;
-				spell = (type == 0) ? store_mage : store_priest;
-				}
-		if (spell < 70) {
-			print_spell_cast(spell,type);
+	if (spell_forced == FALSE)
+	{
+		spell = pick_spell(6, type, situation);
+	}
+	else
+	{
+		if (repeat_cast_ok(type) == FALSE)
+			return;
+		spell = (type == 0) ? store_mage : store_priest;
+	}
 
-			if (type == 0)
-				do_mage_spell(pc_casting,spell);
-				else do_priest_spell(pc_casting,spell);
-			put_pc_screen();
-		
-			}
+	if (spell < 70)
+	{
+		print_spell_cast(spell,type);
+		if (type == 0)
+			do_mage_spell(pc_casting,spell);
+		else
+			do_priest_spell(pc_casting,spell);
+		put_pc_screen();
+	}
 }
 
 Boolean repeat_cast_ok(short type)

@@ -36,7 +36,7 @@ void take_force_wall(short i,short j);
 Boolean is_fire_wall(short i,short j);
 void make_fire_wall(short i,short j);
 void take_fire_wall(short i,short j);
-Boolean is_antimagic(short i,short j);
+bool is_antimagic(short i,short j);
 void make_antimagic(short i,short j);
 void take_antimagic(short i,short j);
 Boolean is_scloud(short i,short j);

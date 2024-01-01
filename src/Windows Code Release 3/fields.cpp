@@ -160,7 +160,7 @@ Boolean is_fire_barrier(short i,short j)
 }
 void make_fire_barrier(short i,short j)
 /**/{
-	if ((is_antimagic(i,j)) && (rand_short(0,3) < 3))
+	if (is_antimagic(i,j) && (rand_short(0,3) < 3))
 		return;
 	if (misc_i[i][j] & 248)
 		return;
@@ -180,7 +180,7 @@ Boolean is_force_barrier(short i,short j)
 }
 void make_force_barrier(short i,short j)
 /**/{
-	if ((is_antimagic(i,j)) && (rand_short(0,2) < 2))
+	if (is_antimagic(i,j) && (rand_short(0,2) < 2))
 		return;
 	if (misc_i[i][j] & 248)
 		return;
@@ -200,7 +200,7 @@ Boolean is_quickfire(short i,short j)
 }
 void make_quickfire(short i,short j)
 {
-	if ((is_antimagic(i,j)) && (rand_short(0,1) == 0))
+	if (is_antimagic(i,j) && (rand_short(0,1) == 0))
 		return;
 	if ((is_force_barrier(i,j)) || (is_fire_barrier(i,j)))
 		return;
@@ -259,10 +259,11 @@ void take_fire_wall(short i,short j)
 	c_town.explored[i][j] = c_town.explored[i][j] & 251;
 }
 
-Boolean is_antimagic(short i,short j)
-/**/{
-	return (c_town.explored[i][j] & 8) ? TRUE : FALSE;
+bool is_antimagic(short i,short j)
+{
+	return c_town.explored[i][j] & 8;
 }
+
 void make_antimagic(short i,short j)
 /**/{
 	if (spot_impassable(i,j))
