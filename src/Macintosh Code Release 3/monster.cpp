@@ -853,7 +853,7 @@ location random_shift(location start)
 Boolean outdoor_move_monster(short num,location dest)
 {
 
-	if ((outd_is_blocked(dest) == FALSE) && (outd_is_special(dest) == FALSE) && 
+	if ((outd_is_blocked(dest) == FALSE) && outd_is_not_special(dest) && 
 		(same_point(dest, party.p_loc) != TRUE) && 
 		((out[dest.x][dest.y] > 21) || (out[dest.x][dest.y] < 5))) {
 		party.out_c[num].direction = 

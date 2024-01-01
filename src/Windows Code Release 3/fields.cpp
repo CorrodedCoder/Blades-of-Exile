@@ -86,30 +86,30 @@ bool is_not_combat(void)
 }
 
 Boolean special(short i,short j)
-/**/{
+{
 	if (((misc_i[i][j]) & 2) != 0)
 		return TRUE;
 		else return FALSE;
 }
 void flip_special(short i,short j)
-/**/{
+{
 	misc_i[i][j] = misc_i[i][j] ^ (char) (2);
 }
 void make_special(short i,short j)
-/**/{
+{
 	misc_i[i][j] =  misc_i[i][j] | (char) (2);
 }
 void take_special(short i,short j)
-/**/{
+{
 	misc_i[i][j] =  misc_i[i][j] & 253;
 }
 
-Boolean is_web(short i,short j)
-/**/{
-	return (misc_i[i][j] & 4) ? TRUE : FALSE;
+bool is_web(short i,short j)
+{
+	return misc_i[i][j] & 4;
 }
 void make_web(short i,short j)
-/**/{
+{
 	if (spot_impassable(i,j))
 		return;
 	if ((misc_i[i][j] & 224) || (c_town.explored[i][j] & 238))
@@ -118,48 +118,49 @@ void make_web(short i,short j)
 	web = TRUE;
 }
 void take_web(short i,short j)
-/**/{
+{
 	misc_i[i][j] = misc_i[i][j] & 251;
 }
 
-Boolean is_crate(short i,short j)
-/**/{
-	return (misc_i[i][j] & 8) ? TRUE : FALSE;
+bool is_crate(short i,short j)
+{
+	return misc_i[i][j] & 8;
 }
 void make_crate(short i,short j)
-/**/{
+{
 //	if (misc_i[i][j] & 240)
 //		return;
 	misc_i[i][j] = misc_i[i][j] | 8;
 	crate = TRUE;
 }
 void take_crate(short i,short j)
-/**/{
+{
 	misc_i[i][j] = misc_i[i][j] & 247;
 }
 
-Boolean is_barrel(short i,short j)
-/**/{
-	return (misc_i[i][j] & 16) ? TRUE : FALSE;
+bool is_barrel(short i,short j)
+{
+	return misc_i[i][j] & 16;
 }
 void make_barrel(short i,short j)
-/**/{
+{
 //	if (misc_i[i][j] & 234)
 //		return;
 	misc_i[i][j] = misc_i[i][j] | 16;
 	barrel = TRUE;
 }
 void take_barrel(short i,short j)
-/**/{
+{
 	misc_i[i][j] = misc_i[i][j] & 239;
 }
 
-Boolean is_fire_barrier(short i,short j)
-/**/{
-	return (misc_i[i][j] & 32) ? TRUE : FALSE;
+bool is_fire_barrier(short i,short j)
+{
+	return misc_i[i][j] & 32;
 }
+
 void make_fire_barrier(short i,short j)
-/**/{
+{
 	if (is_antimagic(i,j) && (rand_short(0,3) < 3))
 		return;
 	if (misc_i[i][j] & 248)
@@ -170,16 +171,17 @@ void make_fire_barrier(short i,short j)
 	fire_barrier = TRUE;
 }
 void take_fire_barrier(short i,short j)
-/**/{
+{
 	misc_i[i][j] = misc_i[i][j] & 223;
 }
 
-Boolean is_force_barrier(short i,short j)
-/**/{
-	return (misc_i[i][j] & 64) ? TRUE : FALSE;
+bool is_force_barrier(short i,short j)
+{
+	return misc_i[i][j] & 64;
 }
+
 void make_force_barrier(short i,short j)
-/**/{
+{
 	if (is_antimagic(i,j) && (rand_short(0,2) < 2))
 		return;
 	if (misc_i[i][j] & 248)
@@ -190,19 +192,20 @@ void make_force_barrier(short i,short j)
 	force_barrier = TRUE;
 }
 void take_force_barrier(short i,short j)
-/**/{
+{
 	misc_i[i][j] = misc_i[i][j] & 191;
 }
 
-Boolean is_quickfire(short i,short j)
-/**/{
-	return (misc_i[i][j] & 128) ? TRUE : FALSE;
+bool is_quickfire(short i,short j)
+{
+	return misc_i[i][j] & 128;
 }
+
 void make_quickfire(short i,short j)
 {
 	if (is_antimagic(i,j) && (rand_short(0,1) == 0))
 		return;
-	if ((is_force_barrier(i,j)) || (is_fire_barrier(i,j)))
+	if (is_force_barrier(i,j) || is_fire_barrier(i,j))
 		return;
 	const auto& terrain{ scenario_ter_type(coord_to_ter(i, j)) };
 	if (terrain.blockage == 1)
@@ -215,16 +218,16 @@ void make_quickfire(short i,short j)
 	quickfire = TRUE;
 }
 void take_quickfire(short i,short j)
-/**/{
+{
 	misc_i[i][j] = misc_i[i][j] & 127;
 }
 
 Boolean is_force_wall(short i,short j)
-/**/{
+{
 	return (c_town.explored[i][j] & 2) ? TRUE : FALSE;
 }
 void make_force_wall(short i,short j)
-/**/{
+{
 	if (spot_impassable(i,j))
 		return;
 	if ((c_town.explored[i][j] & 74) || (misc_i[i][j] & 248))
@@ -235,17 +238,17 @@ void make_force_wall(short i,short j)
 	force_wall = TRUE;
 }
 void take_force_wall(short i,short j)
-/**/{
+{
 	c_town.explored[i][j] = c_town.explored[i][j] & 253;
 }
 
 
 Boolean is_fire_wall(short i,short j)
-/**/{
+{
 	return (c_town.explored[i][j] & 4) ? TRUE : FALSE;
 }
 void make_fire_wall(short i,short j)
-/**/{
+{
 	if (spot_impassable(i,j))
 		return;
 	if ((c_town.explored[i][j] & 248) || (misc_i[i][j] & 254))
@@ -255,7 +258,7 @@ void make_fire_wall(short i,short j)
 	fire_wall = TRUE;
 }
 void take_fire_wall(short i,short j)
-/**/{
+{
 	c_town.explored[i][j] = c_town.explored[i][j] & 251;
 }
 
@@ -265,7 +268,7 @@ bool is_antimagic(short i,short j)
 }
 
 void make_antimagic(short i,short j)
-/**/{
+{
 	if (spot_impassable(i,j))
 		return;
 	if (misc_i[i][j] & 224)
@@ -276,16 +279,16 @@ void make_antimagic(short i,short j)
 	antimagic = TRUE;
 }
 void take_antimagic(short i,short j)
-/**/{
+{
 	c_town.explored[i][j] = c_town.explored[i][j] & 247;
 }
 
 Boolean is_scloud(short i,short j)
-/**/{
+{
 	return (c_town.explored[i][j] & 16) ? TRUE : FALSE;
 }
 void make_scloud(short i,short j)
-/**/{
+{
 	if (spot_impassable(i,j))
 		return;
 		
@@ -295,16 +298,16 @@ void make_scloud(short i,short j)
 	scloud = TRUE;
 }
 void take_scloud(short i,short j)
-/**/{
+{
 	c_town.explored[i][j] = c_town.explored[i][j] & 239;
 }
 
 Boolean is_ice_wall(short i,short j)
-/**/{
+{
 	return (c_town.explored[i][j] & 32) ? TRUE : FALSE;
 }
 void make_ice_wall(short i,short j)
-/**/{
+{
 	if (spot_impassable(i,j))
 		return;
 	if ((c_town.explored[i][j] & 74) || (misc_i[i][j] & 252))
@@ -315,17 +318,17 @@ void make_ice_wall(short i,short j)
 	ice_wall = TRUE;
 }
 void take_ice_wall(short i,short j)
-/**/{
+{
 	c_town.explored[i][j] = c_town.explored[i][j] & 223;
 }
 
 
 Boolean is_blade_wall(short i,short j)
-/**/{
+{
 	return (c_town.explored[i][j] & 64) ? TRUE : FALSE;
 }
 void make_blade_wall(short i,short j)
-/**/{
+{
 	if (spot_impassable(i,j))
 		return;
 	if ((c_town.explored[i][j] & 8) || (misc_i[i][j] & 224))
@@ -335,15 +338,15 @@ void make_blade_wall(short i,short j)
 	blade_wall = TRUE;
 }
 void take_blade_wall(short i,short j)
-/**/{
+{
 	c_town.explored[i][j] = c_town.explored[i][j] & 191;
 }
 Boolean is_sleep_cloud(short i,short j)
-/**/{
+{
 	return (c_town.explored[i][j] & 128) ? TRUE : FALSE;
 }
 void make_sleep_cloud(short i,short j)
-/**/{
+{
 	if (spot_impassable(i,j))
 		return;
 	if ((c_town.explored[i][j] & 8) || (misc_i[i][j] & 224))
@@ -353,7 +356,7 @@ void make_sleep_cloud(short i,short j)
 	sleep_field = TRUE;
 }
 void take_sleep_cloud(short i,short j)
-/**/{
+{
 	c_town.explored[i][j] = c_town.explored[i][j] & 127;
 }
 

@@ -2595,7 +2595,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 
 		ter = out[real_dest.x][real_dest.y];
 	if (party.in_boat >= 0) {
-		if ((outd_is_blocked(real_dest) == FALSE) //&& (outd_is_special(real_dest) == FALSE)
+		if (!outd_is_blocked(real_dest) //&& (outd_is_special(real_dest) == FALSE)
 		// not in towns
 		&& ((scenario_ter_type(ter).boat_over == FALSE)
 			|| ((real_dest.x != party.p_loc.x) && (real_dest.y != party.p_loc.y)))
@@ -2773,7 +2773,7 @@ Boolean town_move_party(location destination,short forced)////
 	
 	if (keep_going == TRUE) {
 		if (party.in_boat >= 0) {
-				if (is_not_blocked(destination) && (is_special(destination) == FALSE)
+				if (is_not_blocked(destination) && is_not_special(destination)
 				// If to bridge, exit if heading diagonal, keep going is head horiz or vert
 		&& ( (scenario_ter_type(ter).boat_over == FALSE)
 		|| ((destination.x != c_town.p_loc.x) && (destination.y != c_town.p_loc.y)))) {

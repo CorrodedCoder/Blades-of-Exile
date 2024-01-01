@@ -552,7 +552,7 @@ void draw_terrain()
 				OffsetRect(&tiny_to,0,-7);
 				}
 				
-				if (is_special(cen_x + q - 4,cen_y + r - 4) == TRUE) {
+				if (is_special(cen_x + q - 4,cen_y + r - 4)) {
 					tiny_from = base_small_button_from;
 					OffsetRect(&tiny_from,7 * (7),7 * (0));
 					rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to,0,0);
@@ -1243,20 +1243,22 @@ void undo_clip()
 }
 
 
-Boolean is_special(short i,short j)
+bool is_special(short i,short j)
 {
-	short k;
-	
 	if (editing_town == TRUE)
-		for (k = 0; k < 50; k++)
+		for (short k = 0; k < 50; k++)
 			if ((town.special_locs[k].x == i) && (town.special_locs[k].y == j))
-				return TRUE;
+				return true;
 	if (editing_town == FALSE)
-		for (k = 0; k < 18; k++)
+		for (short k = 0; k < 18; k++)
 			if ((current_terrain.special_locs[k].x == i) && (current_terrain.special_locs[k].y == j))
-				return TRUE;
+				return true;
+	return false;
+}
 
-	return FALSE;
+bool is_not_special(short i, short j)
+{
+	return !is_special(i, j);
 }
 
 void take_special(short i,short j)

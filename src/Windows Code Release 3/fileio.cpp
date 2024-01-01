@@ -290,17 +290,17 @@ void load_file()
 		for (short j = 0; j < town_size[town_type]; j++)
 			for (short k = 0; k < town_size[town_type]; k++) {
 				// Set up field booleans
-				if (is_web(j, k) == TRUE)
+				if (is_web(j, k))
 					web = TRUE;
-				if (is_crate(j, k) == TRUE)
+				if (is_crate(j, k))
 					crate = TRUE;
-				if (is_barrel(j, k) == TRUE)
+				if (is_barrel(j, k))
 					barrel = TRUE;
-				if (is_fire_barrier(j, k) == TRUE)
+				if (is_fire_barrier(j, k))
 					fire_barrier = TRUE;
-				if (is_force_barrier(j, k) == TRUE)
+				if (is_force_barrier(j, k))
 					force_barrier = TRUE;
-				if (is_quickfire(j, k) == TRUE)
+				if (is_quickfire(j, k))
 					quickfire = TRUE;
 			}
 		force_wall = TRUE; fire_wall = TRUE; antimagic = TRUE; scloud = TRUE; ice_wall = TRUE; blade_wall = TRUE;

@@ -27,7 +27,8 @@ void place_location();
 void place_just_location();
 void set_string(char *string,char *string2);
 void undo_clip();
-Boolean is_special(short i,short j);
+bool is_special(short i,short j);
+bool is_not_special(short i, short j)
 void take_special(short i,short j);
 void make_special(short i,short j);
 void sort_specials();

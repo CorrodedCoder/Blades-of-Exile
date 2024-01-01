@@ -4433,11 +4433,11 @@ void process_fields()
 		r = c_town.town.in_town_rect;
 		for (i = 0; i < town_size[town_type]; i++)
 			for (j = 0; j < town_size[town_type]; j++) 
-				qf[i][j] = (is_quickfire(i,j)) ? 2 : 0;
+				qf[i][j] = is_quickfire(i,j) ? 2 : 0;
 		for (k = 0; k < (is_combat() ? 4 : 1); k++) {
 			for (i = r.left + 1; i < r.right ; i++)
 				for (j = r.top + 1; j < r.bottom ; j++) 			
-					if (is_quickfire(i,j) > 0) {
+					if (is_quickfire(i,j)) {
 						r1 = rand_short(1,8);
 						if (r1 != 1) {
 							qf[i - 1][j] = 1;

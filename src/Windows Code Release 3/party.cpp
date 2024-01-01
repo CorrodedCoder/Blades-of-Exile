@@ -1988,7 +1988,7 @@ void cast_town_spell(location where)
 				break;
 				
 			case 41:
-				if ((is_fire_barrier(where.x,where.y)) || (is_force_barrier(where.x,where.y))) {
+				if (is_fire_barrier(where.x,where.y) || is_force_barrier(where.x,where.y)) {
 						r1 = rand_short(0,100) - 5 * stat_adj(adven[who_cast], skill::Intelligence) + 5 * (c_town.difficulty / 10);
 						if (is_fire_barrier(where.x,where.y))
 							r1 -= 8;

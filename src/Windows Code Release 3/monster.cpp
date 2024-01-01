@@ -935,7 +935,7 @@ void monst_inflict_fields(short which_monst)
 				curse_monst(which_m,r1);
 				break;
 				}
-			if ((is_web(where_check.x,where_check.y)) && (which_m->m_d.m_type != 12)) {
+			if (is_web(where_check.x,where_check.y) && (which_m->m_d.m_type != 12)) {
 				monst_spell_note(which_m->number,19);
 				r1 = rand_short(2,3);
 				web_monst(which_m,r1);
@@ -954,8 +954,8 @@ void monst_inflict_fields(short which_monst)
 		for (j = 0; j < c_town.monst.dudes[which_monst].m_d.y_width; j++) {
 			where_check.x = c_town.monst.dudes[which_monst].m_loc.x + i; 
 			where_check.y = c_town.monst.dudes[which_monst].m_loc.y + j;
-			if ((is_crate(where_check.x,where_check.y)) ||
-				(is_barrel(where_check.x,where_check.y)) )
+			if (is_crate(where_check.x,where_check.y) ||
+				is_barrel(where_check.x,where_check.y) )
 				for (k = 0; k < NUM_TOWN_ITEMS; k++)
 					if ((t_i.items[k].variety > item_variety::None) && is_contained(t_i.items[k])
 					&& (same_point(t_i.items[k].item_loc,where_check) == TRUE))
@@ -1039,7 +1039,7 @@ Boolean monst_check_special_terrain(location where_check,short mode,short which_
 	if (is_scloud(where_check.x,where_check.y)) {
 		if (guts < 4) return FALSE;
 		}
-	if ((is_web(where_check.x,where_check.y)) && (which_m->m_d.m_type != 12)) {
+	if (is_web(where_check.x,where_check.y) && (which_m->m_d.m_type != 12)) {
 		if (guts < 3) return FALSE;
 		}
 	if (is_fire_barrier(where_check.x,where_check.y)) {
@@ -1403,7 +1403,7 @@ Boolean summon_monster(unsigned char which,location where,short duration,short g
 				if (where.x == 0)
 					return FALSE;
 				}
-			if ((is_barrel(where.x,where.y)) || (is_crate(where.x,where.y)))
+			if ( is_barrel(where.x,where.y) || is_crate(where.x,where.y))
 				return FALSE;
 			loc = where;
 			}

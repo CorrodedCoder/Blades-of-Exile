@@ -556,34 +556,30 @@ Boolean special_which_blocks_monst(location to_check)
 }
 
 // Checks if space is a special that prevents movement into or placement of a PC on
-Boolean is_special(location to_check)
+bool is_special(location to_check)
 {
-	unsigned char which_ter;
-
 	if (special_which_blocks_monst(to_check) == FALSE)
-		return FALSE;
-	which_ter = coord_to_ter(to_check.x,to_check.y);
-	if (terrain_blocked[which_ter] == 2)
-			return TRUE;
-			else return FALSE;
+		return false;
+	return terrain_blocked[coord_to_ter(to_check.x, to_check.y)] == 2;
 }
 
-Boolean outd_is_special(location to_check)
+bool is_not_special(location to_check)
 {
-	if (overall_mode == 0) {
-		if (terrain_blocked[out[to_check.x][to_check.y]] == 2) {
-			return TRUE;
-			}
-			else return FALSE;
-		}
-	return FALSE;
+	return !is_special(to_check);
+}
+
+bool outd_is_special(location to_check)
+{
+	if (overall_mode == 0)
+	{
+		return terrain_blocked[out[to_check.x][to_check.y]] == 2;
+	}
+	return false;
 }
 
 bool impassable(unsigned char terrain_to_check)
 {
-	if (terrain_blocked[terrain_to_check] > 2)
-		return true;
-		else return false;
+	return terrain_blocked[terrain_to_check] > 2;
 }
 
 short get_blockage(unsigned char terrain_type)

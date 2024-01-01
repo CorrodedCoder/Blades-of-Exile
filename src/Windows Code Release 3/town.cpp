@@ -444,17 +444,17 @@ void start_town_mode(short which_town, short entry_dir)
 						misc_i[j][k] = misc_i[j][k] & 3;
 
 					// Set up field booleans
-					if (is_web(j,k) == TRUE)
+					if (is_web(j,k))
 						web = TRUE;
-					if (is_crate(j,k) == TRUE)
+					if (is_crate(j,k))
 						crate = TRUE;
-					if (is_barrel(j,k) == TRUE)
+					if (is_barrel(j,k))
 						barrel = TRUE;
-					if (is_fire_barrier(j,k) == TRUE)
+					if (is_fire_barrier(j,k))
 						fire_barrier = TRUE;
-					if (is_force_barrier(j,k) == TRUE)
+					if (is_force_barrier(j,k))
 						force_barrier = TRUE;
-					if (is_quickfire(j,k) == TRUE)
+					if (is_quickfire(j,k))
 						quickfire = TRUE;
 					}
 		
@@ -856,7 +856,7 @@ void place_party(short direction)
 		check_loc.y -= y_adj;		
 		pos_locs[i] = check_loc;
 		if ((loc_off_act_area(check_loc) == FALSE) &&
-			is_not_blocked(check_loc) && (is_special(check_loc) == FALSE) && (get_obscurity(check_loc.x,check_loc.y) == 0)
+			is_not_blocked(check_loc) && is_not_special(check_loc) && (get_obscurity(check_loc.x,check_loc.y) == 0)
 			&& (can_see(c_town.p_loc,check_loc,1) < 1))
 		{
 			spot_ok[i] = TRUE;
