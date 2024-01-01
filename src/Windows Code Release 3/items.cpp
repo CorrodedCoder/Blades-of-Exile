@@ -1,5 +1,6 @@
 #include <Windows.h>
 #include <array>
+#include <span>
 
 #include "global.h"
 #include "graphics.h"
@@ -939,13 +940,12 @@ static short display_item(location from_loc,short pc_num,short mode, bool check_
 	return dialog_answer;
 }
 
-short custom_choice_dialog(const std::array<std::array<char, 256>, 6>& strs,short pic_num,short buttons[3]) ////
+short custom_choice_dialog(const std::span<const std::string_view, 6>& strs,short pic_num,short buttons[3])
 {
-	short store_dialog_answer;
-	store_dialog_answer = dialog_answer;
+	short store_dialog_answer = dialog_answer;
 	make_cursor_sword();
 
-	cd_create_custom_dialog(mainPtr,strs,pic_num, buttons);
+	cd_create_custom_dialog(mainPtr, strs, pic_num, buttons);
 
 	while (dialog_not_toast)
 		ModalDialog();
@@ -960,6 +960,12 @@ short custom_choice_dialog(const std::array<std::array<char, 256>, 6>& strs,shor
 	const short i = dialog_answer;
 	dialog_answer = store_dialog_answer;
 	return i;
+}
+
+short custom_choice_dialog(const std::array<std::array<char, 256>, 6>& strs, short pic_num, short buttons[3])
+{
+	const std::array< std::string_view, 6> strs_arr{ strs[0].data(), strs[1].data(), strs[2].data(), strs[3].data(), strs[4].data(), strs[5].data() };
+	return custom_choice_dialog(strs_arr, pic_num, buttons);
 }
 
 void fancy_choice_dialog_event_filter (short item_hit)

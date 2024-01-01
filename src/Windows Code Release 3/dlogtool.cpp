@@ -225,10 +225,8 @@ short cd_create_dialog_parent_num(short dlog_num,short parent)
 
 }
 
-short cd_create_custom_dialog(HWND parent,
-	const std::array<std::array<char, 256>, 6>& strs,short pic_num,short buttons[3])
+short cd_create_custom_dialog(HWND parent, const std::span<const std::string_view, 6>& strs, short pic_num, short buttons[3])
 {
-
 	short i,j,free_slot = -1,free_item = -1,str_width,cur_but_right = 0;
 	short total_len = 0;
 

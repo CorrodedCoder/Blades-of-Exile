@@ -435,8 +435,6 @@ void init_party_scen_data()
 void put_party_in_scen()
 {
 	short i,j;
-	std::array< std::array<char, 256>, 6> strs{};
-	short buttons[3] = {-1,-1,-1};
 	Boolean item_took = FALSE;
 
 	for (j = 0; j < 6; j++)
@@ -508,12 +506,12 @@ void put_party_in_scen()
 
 
 	// Throw up intro dialog
-	buttons[0] = 1;
 	for (j = 0; j < 6; j++)
-		if (strlen(data_store5.scen_strs[4 + j]) > 0) {
-			for (i = 0; i < 6; i++)
-				strcpy(strs[i].data(), data_store5.scen_strs[4 + i]);
-			custom_choice_dialog(strs,-1 * (1600 + scenario_intro_pic()),buttons) ;
+		if (strlen(data_store5.scen_strs[4 + j]) > 0)
+		{
+			short buttons[3] = { 1,-1,-1 };
+			const std::array< std::string_view, 6> strs_arr{ data_store5.scen_strs[4], data_store5.scen_strs[5], data_store5.scen_strs[6], data_store5.scen_strs[7], data_store5.scen_strs[8], data_store5.scen_strs[9] };
+			custom_choice_dialog(strs_arr,-1 * (1600 + scenario_intro_pic()),buttons);
 			j = 6;
 		}
 	give_help(1,2,0);

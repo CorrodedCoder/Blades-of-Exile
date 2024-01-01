@@ -1,6 +1,7 @@
 #pragma once
 
 #include <span>
+#include <string_view>
 
 Boolean give_to_pc(short pc_num,const item_record_type& item,short  print_result);
 Boolean give_to_party(const item_record_type& item,short print_result);
@@ -48,5 +49,6 @@ void frame_button(RECT button_rect);
 void refresh_store_items();
 void get_text_response_event_filter (short item_hit);
 void get_text_response(short dlg,char *str,short parent_num);
-short custom_choice_dialog(const std::array<std::array<char, 256>, 6>& strs,short pic_num,short buttons[3]) ;
+short custom_choice_dialog(const std::span<const std::string_view, 6>& strs,short pic_num,short buttons[3]) ;
+short custom_choice_dialog(const std::array<std::array<char, 256>, 6>& strs, short pic_num, short buttons[3]);
 Boolean party_check_class(short item_class,short mode);

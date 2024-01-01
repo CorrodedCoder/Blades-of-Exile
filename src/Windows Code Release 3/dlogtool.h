@@ -9,9 +9,8 @@ using DialogDrawDestination = std::variant<HWND, HBITMAP>;
 void cd_set_flag(short dlog_num,short item_num,short flag);
 void cd_erase_rect(short dlog_num,RECT to_fry);
 short cd_get_led(short dlog_num,short item_num);
-short cd_create_custom_dialog(HWND parent,
-	const std::array<std::array<char, 256>, 6>& strs,short pic_num,short buttons[3]);
-	void frame_di(HWND hDlg, short item_num, short val);
+short cd_create_custom_dialog(HWND parent, const std::span<const std::string_view, 6>& strs, short pic_num, short buttons[3]);
+void frame_di(HWND hDlg, short item_num, short val);
 void cd_kill_dc(short which_slot,HDC hdc);
 HDC cd_get_dlog_dc(short which_slot);
 short cd_get_active(short dlog_num, short item_num);
