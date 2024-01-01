@@ -1080,9 +1080,9 @@ void damaged_message(short damage,short type)
 }
 
 // This prepares the monster's string for the text bar
-void print_monster_going(char *combat_str,unsigned char m_num,short ap)
+std::string format_monster_going(unsigned char m_num,short ap)
 {
-	format_to_buf(combat_str, "{} (ap: {:d})",scenario_monster_name(m_num),ap);
+	return std::format("{} (ap: {:d})",scenario_monster_name(m_num),ap);
 }
 
 void monst_spell_note(unsigned char number,short which_mess)

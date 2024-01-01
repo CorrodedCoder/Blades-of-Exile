@@ -1053,10 +1053,7 @@ void draw_text_bar(short mode)
 //short mode; // 0 - no redraw  1 - forced
 {
 	short i,num_rect[3] = {12,10,4};
-	location loc;
-	char combat_string[100];
-	
-	loc = (is_out()) ? global_to_local(party.p_loc) : c_town.p_loc;
+	location loc = (is_out()) ? global_to_local(party.p_loc) : c_town.p_loc;
 
 	if (mode == 1)
 		remember_tiny_text = 500;	   
@@ -1094,17 +1091,14 @@ void draw_text_bar(short mode)
 	
 		}
 	if ((is_combat()) && (current_pc < 6) && (monsters_going == FALSE)) {
-		format_to_buf(combat_string,"{} (ap: {:d})",
-			adven[current_pc].name,pc_moves[current_pc]);
-		put_text_bar(combat_string);
+		put_text_bar(std::format("{} (ap: {:d})", adven[current_pc].name, pc_moves[current_pc]));
 		remember_tiny_text = 500;
 		}
 	if ((is_combat()) && (monsters_going == TRUE))	// Print bar for 1st monster with >0 ap -
 	   // that is monster that is going
 	   for (i = 0; i < T_M; i++)
 	   	if ((c_town.monst.dudes[i].active > 0) && (c_town.monst.dudes[i].m_d.ap > 0)) {
-	   		print_monster_going(combat_string,c_town.monst.dudes[i].number,c_town.monst.dudes[i].m_d.ap);
-			put_text_bar(combat_string);
+			put_text_bar(format_monster_going(c_town.monst.dudes[i].number, c_town.monst.dudes[i].m_d.ap));
 			remember_tiny_text = 500;
 			i = 400;	   
 	   }

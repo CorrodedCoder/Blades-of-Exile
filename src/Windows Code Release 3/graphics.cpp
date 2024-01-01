@@ -1122,9 +1122,7 @@ void draw_text_bar(short mode)
 		{
 			if ((c_town.monst.dudes[i].active > 0) && (c_town.monst.dudes[i].m_d.ap > 0))
 			{
-				char combat_string[100];
-				print_monster_going(combat_string, c_town.monst.dudes[i].number, c_town.monst.dudes[i].m_d.ap);
-				put_text_bar(combat_string);
+				put_text_bar(format_monster_going(c_town.monst.dudes[i].number, c_town.monst.dudes[i].m_d.ap));
 				remember_tiny_text = 500;
 				i = 400;
 			}

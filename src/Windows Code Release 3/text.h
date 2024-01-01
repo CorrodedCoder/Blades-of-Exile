@@ -21,7 +21,7 @@ void notify_out_combat_began(out_wandering_type encounter,short *nums);
 void print_monst_name(unsigned char m_type);
 void print_monst_attacks(unsigned char m_type,short target);
 void damaged_message(short damage,short type);
-void print_monster_going(char *combat_str,unsigned char m_num,short ap);
+std::string format_monster_going(unsigned char m_num,short ap);
 void monst_spell_note(unsigned char number,short which_mess);
 void monst_cast_spell_note(unsigned char number,short spell,short type);
 void monst_breathe_note(unsigned char number);
