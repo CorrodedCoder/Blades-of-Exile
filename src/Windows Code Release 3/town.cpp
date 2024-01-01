@@ -1195,11 +1195,11 @@ void bash_door(location where,short pc_num)
 
 void erase_specials()
 {
-	if ((is_combat()) && (which_combat_type == 0))
+	if (is_combat() && (which_combat_type == 0))
 	{
 		return;
 	}
-	if (is_not_town() && (is_combat() == FALSE))
+	if (is_not_town() && (is_not_combat()))
 	{
 		return;
 	}
@@ -1398,7 +1398,7 @@ void draw_map (HWND the_dialog, short the_item)
 	short total_size = 48; // if full redraw, use this to figure out everything
 	RECT view_rect{ 0,0,48,48 }; // RECTangle visible in view screen
 	RECT redraw_rect{ 0,0,48,48 };
-	if (is_out() || ((is_combat()) && (which_combat_type == 0)) ||
+	if (is_out() || (is_combat() && (which_combat_type == 0)) ||
 		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
 		((overall_mode == 21) && (store_pre_shop_mode == 0)))
 	{
@@ -1441,10 +1441,10 @@ void draw_map (HWND the_dialog, short the_item)
 	const RECT area_to_draw_on{ offset_rect({47,29,287,269}, 0,-23) };
 	RECT area_to_draw_from;
 	short small_adj = 0;
-	if (is_out() || ((is_combat()) && (which_combat_type == 0)) ||
+	if (is_out() || (is_combat() && (which_combat_type == 0)) ||
 		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
 		((overall_mode == 21) && (store_pre_shop_mode == 0)) ||
-		((is_town() || (is_combat())) && (town_type != 2))
+		((is_town() || is_combat()) && (town_type != 2))
 		)
 	{
 		area_to_draw_from = view_rect;	
@@ -1510,7 +1510,7 @@ void draw_map (HWND the_dialog, short the_item)
 		if (the_item == 5)
 		{
 			location kludge;
-			if (is_out() || ((is_combat()) && (which_combat_type == 0)) ||
+			if (is_out() || (is_combat() && (which_combat_type == 0)) ||
 				((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
 				((overall_mode == 21) && (store_pre_shop_mode == 0))
 				)
@@ -1532,7 +1532,7 @@ void draw_map (HWND the_dialog, short the_item)
 
 		Boolean out_mode;
 		if (is_out() ||
-			((is_combat()) && (which_combat_type == 0)) ||
+			(is_combat() && (which_combat_type == 0)) ||
 			((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
 			((overall_mode == 21) && (store_pre_shop_mode == 0)))
 		{

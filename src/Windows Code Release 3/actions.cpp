@@ -701,7 +701,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 			} */
 
 // Begin : click in terrain
-	if ((PtInRect ( &world_screen,the_point)) && (is_out() || is_town() || (is_combat())) ){
+	if ((PtInRect ( &world_screen,the_point)) && (is_out() || is_town() || is_combat()) ){
 		i = (the_point.x - 23) / 28;
 		j = (the_point.y - 23) / 36;
 
@@ -840,14 +840,14 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 			need_reprint = TRUE;
 			
 //			if ((can_see(cur_loc,destination) >= 4) || ((overall_mode != 35) && (loc_off_world(destination) == TRUE)))
-				if ((is_combat() == FALSE) && (party_can_see(destination) == 6))
+				if ((is_not_combat()) && (party_can_see(destination) == 6))
 					add_string_to_buf("  Can't see space.         ");
-				else if ((is_combat() == TRUE) && (can_see(pc_pos[current_pc],destination,0) >= 4))
+				else if (is_combat() && (can_see(pc_pos[current_pc],destination,0) >= 4))
 					add_string_to_buf("  Can't see space.         ");
 				else {
 					add_string_to_buf("You see...               ");
 					ter_looked_at = do_look(destination);
-					if (is_town() || (is_combat()))
+					if (is_town() || is_combat())
 						if (adjacent(c_town.p_loc,destination) == TRUE)
 							if (adj_town_look(destination) == TRUE)
 								need_redraw = TRUE;
@@ -1132,7 +1132,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 						if ((prime_time() == FALSE) && (overall_mode != 20) && (overall_mode != 21))
 							add_string_to_buf("Set active: Finish what you're doing first.");
 							else {
-								if (!(is_combat())) {
+								if (is_not_combat()) {
 									if ((adven[i].main_status != status::Normal) &&
 									((overall_mode != 21) || (store_shop_type != 12)))
 										add_string_to_buf("Set active: PC must be here & active.");
@@ -1922,7 +1922,7 @@ Boolean handle_keystroke(UINT wParam,LONG lParam)
 		case 'K':
 			if (debug_on) {
 				for (i = 0; i < T_M; i++) {
-				if ((is_combat()) && (c_town.monst.dudes[i].active > 0) && (c_town.monst.dudes[i].attitude % 2 == 1))
+				if (is_combat() && (c_town.monst.dudes[i].active > 0) && (c_town.monst.dudes[i].attitude % 2 == 1))
 					c_town.monst.dudes[i].active = 0;
 					
 				if ((c_town.monst.dudes[i].active > 0) && (c_town.monst.dudes[i].attitude % 2 == 1)

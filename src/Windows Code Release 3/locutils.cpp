@@ -321,7 +321,7 @@ short get_obscurity(short x,short y)
 			store++;
 		}
 
-	if (is_town() || (is_combat())) {
+	if (is_town() || is_combat()) {
 		if (is_web(x,y))
 			store += 2;
 		if ((is_fire_barrier(x,y)) || (is_force_barrier(x,y)))
@@ -413,7 +413,7 @@ bool is_blocked(location to_check)
 		return false;
 		}
 		
-	if (is_town() || (is_combat())) {
+	if (is_town() || is_combat()) {
 		ter = is_town() ? t_d.terrain[to_check.x][to_check.y] : combat_terrain[to_check.x][to_check.y];
 		gr = scenario_ter_type(ter).picture;
 		
@@ -423,9 +423,9 @@ bool is_blocked(location to_check)
 			}
 			
 		// Keep away from marked specials during combat
-		if ((is_combat()) && (gr <= 212) && (gr >= 207))
+		if (is_combat() && (gr <= 212) && (gr >= 207))
 			return true;
-		if ((is_combat()) && (gr == 406))
+		if (is_combat() && (gr == 406))
 			return true;
 			
 		// Party there?
@@ -615,7 +615,7 @@ bool impassable(unsigned char terrain_to_check)
 short get_blockage(unsigned char terrain_type)
 {
 	// little kludgy in here for pits
-	if ((terrain_type == 90) && (is_combat()) && (which_combat_type == 0))
+	if ((terrain_type == 90) && is_combat() && (which_combat_type == 0))
 		return 5;
 	if ((terrain_blocked[terrain_type] == 5) || (terrain_blocked[terrain_type] == 1))
 		return 5;
@@ -633,7 +633,7 @@ short light_radius()
 	short store = 1,i;
 	short extra_levels[6] = {10,20,50,75,110,140};
 	
-	if (((which_combat_type == 0) && (is_combat()))
+	if (((which_combat_type == 0) && is_combat())
 		|| is_out() || (c_town.town.lighting == 0))
 				return 200;
 	for (i = 0; i < 6; i++)

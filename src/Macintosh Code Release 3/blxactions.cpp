@@ -687,7 +687,7 @@ Boolean handle_action(EventRecord event)
 			} */
 			
 // Begin : click in terrain
-	if ((PtInRect (the_point, &world_screen)) && (is_out() || is_town() || (is_combat())) ){		
+	if ((PtInRect (the_point, &world_screen)) && (is_out() || is_town() || is_combat()) ){		
 		i = (the_point.h - 23) / 28;
 		j = (the_point.v - 23) / 36;
 
@@ -1120,7 +1120,7 @@ Boolean handle_action(EventRecord event)
 						if ((prime_time() == FALSE) && (overall_mode != 20) && (overall_mode != 21))
 							add_string_to_buf("Set active: Finish what you're doing first.");
 							else {
-								if (!(is_combat())) {
+								if (is_not_combat()) {
 									if ((adven[i].main_status != status::Normal) &&
 									((overall_mode != 21) || (store_shop_type != 12)))
 										add_string_to_buf("Set active: PC must be here & active.");
@@ -1518,7 +1518,7 @@ void handle_menu_spell(short spell_picked,short spell_type)
 				if ((store_spell_target = char_select_pc(2 - priest_need_select[spell_picked],0,"Cast spell on who?")) == 6)
 					return;
 			}
-/*	if ((is_combat()) && (((spell_type == 0) && (refer_mage[spell_picked] > 0)) || 
+/*	if (is_combat() && (((spell_type == 0) && (refer_mage[spell_picked] > 0)) || 
 	((spell_type == 1) && (refer_priest[spell_picked] > 0)))){
 		if ((spell_type == 0) && (mage_need_select[spell_picked] > 0))
 			store_spell_target = char_select_pc(2 - mage_need_select[spell_picked],0,"Cast spell on who?");
@@ -1806,7 +1806,7 @@ Boolean handle_keystroke(char chr,char chr2,EventRecord event)
 		case 'K':
 			if (debug_on) {
 				for (i = 0; i < T_M; i++) {
-				if ((is_combat()) && (c_town.monst.dudes[i].active > 0) && (c_town.monst.dudes[i].attitude % 2 == 1))
+				if (is_combat() && (c_town.monst.dudes[i].active > 0) && (c_town.monst.dudes[i].attitude % 2 == 1))
 					c_town.monst.dudes[i].active = 0;
 					
 				if ((c_town.monst.dudes[i].active > 0) && (c_town.monst.dudes[i].attitude % 2 == 1)

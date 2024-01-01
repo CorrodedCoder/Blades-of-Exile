@@ -406,7 +406,7 @@ if ((overall_mode == 10) && (adven[pc_num].items[item_num].variety == item_varie
 								}
 						}
 
-					if ((is_combat()) && (adven[pc_num].items[item_num].variety == item_variety::Armor))
+					if (is_combat() && (adven[pc_num].items[item_num].variety == item_variety::Armor))
 						add_string_to_buf("Equip: Not armor in combat");
 						else if ((2 - num_hands_occupied) < num_hands_to_use(adven[pc_num].items[item_num].variety))
 							add_string_to_buf("Equip: Not enough free hands");
@@ -650,7 +650,7 @@ short get_item(location place,short pc_num,bool check_container)
 		if (t_i.items[i].variety != item_variety::None)
 			if (((adjacent(place,t_i.items[i].item_loc) == TRUE) || 
 			 ((mass_get == 1) && !check_container &&
-			 ((dist(place,t_i.items[i].item_loc) <= 4) || ((is_combat()) && (which_combat_type == 0)))
+			 ((dist(place,t_i.items[i].item_loc) <= 4) || (is_combat() && (which_combat_type == 0)))
 			  && (can_see(place,t_i.items[i].item_loc,0) < 5))) 
 			  && (!is_contained(t_i.items[i]) || check_container)) {
 				taken = 1;
@@ -732,7 +732,7 @@ void put_item_graphics()
 	 	}
 	for (i = 0; i < 6; i++)
 		if ((adven[i].main_status == status::Normal) && (pc_has_space(adven[i]) < 24)
-		 && ((!is_combat()) || (current_pc == i))) {
+		 && ((is_not_combat()) || (current_pc == i))) {
 			if (current_getting_pc == 6)
 				current_getting_pc = i;
 			cd_activate_item(987,3 + i,1);
@@ -896,7 +896,7 @@ static short display_item(location from_loc,short pc_num,short mode, bool check_
 		{
 			if (((adjacent(from_loc,t_i.items[i].item_loc) == TRUE) || 
 				 ((mode == 1) && !check_container &&
-				 ((dist(from_loc,t_i.items[i].item_loc) <= 4) || ((is_combat()) && (which_combat_type == 0)))
+				 ((dist(from_loc,t_i.items[i].item_loc) <= 4) || (is_combat() && (which_combat_type == 0)))
 				  && (can_see(from_loc,t_i.items[i].item_loc,0) < 5))) &&
 				  (is_contained(t_i.items[i]) == check_container) &&
 				  (!check_container || (same_point(t_i.items[i].item_loc,from_loc) == TRUE))) 

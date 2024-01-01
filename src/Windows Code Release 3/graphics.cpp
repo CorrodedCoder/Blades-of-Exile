@@ -815,7 +815,7 @@ void create_clip_region()
 	for (i = 0; i < 6; i++) {
 		store_rect = win_to_rects[i];
 		OffsetRect(&store_rect,ulx,uly);
-		if (is_out() || is_town() || (is_combat()) ||
+		if (is_out() || is_town() || is_combat() ||
 			(i == 2) || (i == 3) || (i == 5)) {
 				temp_rgn = CreateRectRgn(store_rect.left,store_rect.top,store_rect.right,store_rect.bottom);
 				CombineRgn(clip_region,clip_region,temp_rgn,RGN_DIFF);
@@ -1110,12 +1110,12 @@ void draw_text_bar(short mode)
 			}
 	
 		}
-  	if ((is_combat()) && (current_pc < 6) && (monsters_going == FALSE))
+  	if (is_combat() && (current_pc < 6) && (monsters_going == FALSE))
 	{
 		put_text_bar(std::format("{} (ap: {:d})", adven[current_pc].name, pc_moves[current_pc]));
 		remember_tiny_text = 500;
 	}
-	if ((is_combat()) && (monsters_going == TRUE))	// Print bar for 1st monster with >0 ap -
+	if (is_combat() && (monsters_going == TRUE))	// Print bar for 1st monster with >0 ap -
 	{
 		// that is monster that is going
 		for (i = 0; i < T_M; i++)
@@ -1198,7 +1198,7 @@ void load_area_graphics()
 	// Build wish list
 	if (is_out())
 		load_outdoor_graphics();
-	if (is_town() || (is_combat()))
+	if (is_town() || is_combat())
 		load_town_graphics();
 	
 	// Reserve all in wish list not taken
@@ -1402,7 +1402,7 @@ short m_pict;
 		if ((c_town.monst.dudes[i].active > 0) && (c_town.monst.dudes[i].m_d.picture_num == m_pict))
 			return FALSE;
 
-	if (is_town() || ((is_combat()) && (which_combat_type == 1))) {
+	if (is_town() || (is_combat() && (which_combat_type == 1))) {
 		for (i = 0; i < 4; i++)
 			for (j = 0; j < 4; j++)
 			if (get_monst_picnum(c_town.town.wandering[i].monst[j]) == m_pict)
@@ -1802,7 +1802,7 @@ void draw_terrain(short	mode)
 
 						
 				if ((can_draw != 0) && (overall_mode != 50)) { // if can see, not a pit, and not resting
-					if ((is_combat()) && (cartoon_happening == FALSE)) {
+					if (is_combat() && (cartoon_happening == FALSE)) {
 						anim_ticks = 0;
 						}
 						
@@ -1961,7 +1961,7 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 	location targ;
 	
 	// FIrst quick check ... if a pit or barrier in outdoor combat, no trim
-	if ((is_combat()) && (which_combat_type == 0) && (ter_type == 86))
+	if (is_combat() && (which_combat_type == 0) && (ter_type == 86))
 		return;
 	if (PSD[296][0] > 0)
 		return;
@@ -1994,7 +1994,7 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 		}
 		
 	// First, trim for fluids
-	if ((is_town() || (is_combat())) && (town_trim[where.x][where.y] != 0)) {
+	if ((is_town() || is_combat()) && (town_trim[where.x][where.y] != 0)) {
 
 		if (town_trim[where.x][where.y] & 1)
 				draw_trim(q,r,1,0);	

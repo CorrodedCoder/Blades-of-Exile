@@ -368,7 +368,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 					SelectObject(hdc,store_bmp);
 					place_item_button(3,i,4,0);
 					if ((scenario_special_item(spec_item_array[i_num]) % 10 == 1)
-						&& (!(is_combat())))
+						&& (is_not_combat()))
 							place_item_button(0,i,3,0);
 					SelectObject(hdc,item_stats_gworld);
 					}
@@ -427,7 +427,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 						// make go faster, and I got lazy.
 						SelectObject(hdc,store_bmp);
 						if ((stat_screen_mode == 0) &&
-						 (is_town() || is_out() || ((is_combat()) && (pc == current_pc)))) { // place give and drop and use
+						 (is_town() || is_out() || (is_combat() && (pc == current_pc)))) { // place give and drop and use
 							place_item_button(0,i,0,adven[pc].items[i_num].graphic_num); // item_graphic
 							if (abil_chart[adven[pc].items[i_num].ability] != 4) // place use if can
 								place_item_button(10,i,1,0);
@@ -437,7 +437,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 								place_item_button(0,i,0,adven[pc].items[i_num].graphic_num); // item_graphic
 								place_item_button(3,i,4,0); // info button
 								if ((stat_screen_mode == 0) &&
-								 (is_town() || is_out() || ((is_combat()) && (pc == current_pc)))) { // place give and drop and use
+								 (is_town() || is_out() || (is_combat() && (pc == current_pc)))) { // place give and drop and use
 									place_item_button(1,i,2,0);
 									place_item_button(2,i,3,0);
 									if (abil_chart[adven[pc].items[i_num].ability] != 4) // place use if can
@@ -835,7 +835,7 @@ static void draw_pc_effects_bmp(short pc, HBITMAP dest_bmp)
 void print_party_stats() {
 	add_string_to_buf("PARTY STATS:");
 	add_string_to_buf("  Number of kills: {:d}                   ", party.total_m_killed);
-	if (is_town() || ((is_combat()) && (which_combat_type == 1))) {
+	if (is_town() || (is_combat() && (which_combat_type == 1))) {
 		add_string_to_buf("  Kills in this town: {:d}                   ", party.m_killed[c_town.town_num]);
 		}
 	add_string_to_buf("  Total experience: {:d}                   ", party.total_xp_gained);
@@ -1055,7 +1055,7 @@ void notify_out_combat_began(out_wandering_type encounter,short *nums)
 
 static const char * get_ter_name(unsigned char num)
 {
-	if ((num == 90) && (is_out() || is_town() || ((is_combat()) && (which_combat_type == 1))))
+	if ((num == 90) && (is_out() || is_town() || (is_combat() && (which_combat_type == 1))))
 		return "Pit";
 	else
 	{

@@ -1167,9 +1167,9 @@ void erase_specials()////
 	unsigned char floors[6] = {0,150,186,193,2,36};
 	special_node_type sn;
 	
-	if ((is_combat()) && (which_combat_type == 0))
+	if (is_combat() && (which_combat_type == 0))
 		return;
-	if (is_not_town() && (is_combat() == FALSE))
+	if (is_not_town() && is_not_combat())
 		return;
 	for (k = 0; k < 50; k++) {
 		if (c_town.town.spec_id[k] >= 0) {
@@ -1367,7 +1367,7 @@ void draw_map (DialogPtr the_dialog, short the_item)
 	// area_to_draw_from is final draw from rect
 	// area_to_draw_on is final draw to rect
 	// extern short store_pre_shop_mode,store_pre_talk_mode;
-	if (is_out() || ((is_combat()) && (which_combat_type == 0)) ||
+	if (is_out() || (is_combat() && (which_combat_type == 0)) ||
 		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
 		((overall_mode == 21) && (store_pre_shop_mode == 0))) {
 		view_rect.left = boe_clamp(party.loc_in_sec.x - 20,0,8);
@@ -1403,10 +1403,10 @@ void draw_map (DialogPtr the_dialog, short the_item)
 					break;
 				}
 			}
-	if (is_out() || ((is_combat()) && (which_combat_type == 0)) ||
+	if (is_out() || (is_combat() && (which_combat_type == 0)) ||
 		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
 		((overall_mode == 21) && (store_pre_shop_mode == 0)) ||
-		((is_town() || (is_combat())) && (town_type != 2))) {
+		((is_town() || is_combat()) && (town_type != 2))) {
 			area_to_draw_from = view_rect;	
 			area_to_draw_from.left *= 6;
 			area_to_draw_from.right *= 6;
@@ -1435,7 +1435,7 @@ void draw_map (DialogPtr the_dialog, short the_item)
 			PaintRect(&map_world_rect);
 			draw_pcs = FALSE;
 		}
-/*	else if ((is_combat()) && (which_combat_type == 0)) {
+/*	else if (is_combat() && (which_combat_type == 0)) {
 		if (modeless_exists[5] == TRUE) {
 			PaintRect(&map_world_rect);
 
@@ -1482,7 +1482,7 @@ void draw_map (DialogPtr the_dialog, short the_item)
 
 	// Now, if doing just partial restore, crop redraw_rect to save time.
 	if (the_item == 5) {
-		if (is_out() || ((is_combat()) && (which_combat_type == 0)) ||
+		if (is_out() || (is_combat() && (which_combat_type == 0)) ||
 		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
 		((overall_mode == 21) && (store_pre_shop_mode == 0)))
 			kludge = global_to_local(party.p_loc);
@@ -1500,7 +1500,7 @@ void draw_map (DialogPtr the_dialog, short the_item)
 		redraw_rect.right = -1;
 	
 	if (is_out() ||
-		((is_combat()) && (which_combat_type == 0)) ||
+		(is_combat() && (which_combat_type == 0)) ||
 		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
 		((overall_mode == 21) && (store_pre_shop_mode == 0)))	
 		out_mode = TRUE;

@@ -143,7 +143,7 @@ void apply_unseen_mask()
 	{
 		return;
 	}
-	if ((is_combat()) && (which_combat_type == 0))
+	if (is_combat() && (which_combat_type == 0))
 	{
 		return;
 	}

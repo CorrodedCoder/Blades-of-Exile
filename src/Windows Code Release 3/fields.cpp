@@ -75,14 +75,15 @@ bool is_not_town(void)
 	return !is_town();
 }
 
-Boolean is_combat()
+bool is_combat(void)
 {
-	if (((overall_mode >= 10) && (overall_mode < 20)) || (overall_mode == 37))
-		return TRUE;
-		else return FALSE;
+	return ((overall_mode >= 10) && (overall_mode < 20)) || (overall_mode == 37);
 }
 
-
+bool is_not_combat(void)
+{
+	return !is_combat();
+}
 
 Boolean special(short i,short j)
 /**/{

@@ -423,7 +423,7 @@ short monst_pick_target(short which_m)
 		if (adven[monst_target[which_m]].main_status != status::Normal)
 			monst_target[which_m] = 6;		
 	
-	if ((is_combat()) && (cur_monst->attitude % 2 == 1)) {
+	if (is_combat() && (cur_monst->attitude % 2 == 1)) {
 		if (spell_caster < 6)
 			if ((rand_short(1,5) < 5) && (monst_can_see(which_m,pc_pos[spell_caster]) == TRUE)
 					&& (adven[spell_caster].main_status == status::Normal)) 
@@ -598,7 +598,7 @@ short switch_target_to_adjacent(short which_m,short orig_target)
 		return orig_target;
 		
 	// If target is already adjacent, we're done here.
-	if ((is_combat()) && (orig_target < 6))
+	if (is_combat() && (orig_target < 6))
 		if ((adven[orig_target].main_status == status::Normal) && (monst_adjacent(pc_pos[orig_target],which_m) == TRUE))
 			return orig_target;
 	if (orig_target >= 100)
@@ -818,7 +818,7 @@ location find_clear_spot(location from_where,short mode)
 		loc.y = loc.y + r1;
 		if ((loc_off_act_area(loc) == FALSE) && is_not_blocked(loc)
 			&& (can_see(from_where,loc,1) == 0)
-			&& (!(is_combat()) || (pc_there(loc) == 6))
+			&& (is_not_combat() || (pc_there(loc) == 6))
 			&& (is_not_town() || (same_point(loc,c_town.p_loc) == FALSE))
 			 && (!(misc_i[loc.x][loc.y] & 248)) &&
 			(!(c_town.explored[loc.x][loc.y] & 254))) {
@@ -1099,7 +1099,7 @@ Boolean monst_check_special_terrain(location where_check,short mode,short which_
 	if ((scenario_ter_type(ter).picture <= 212) && (scenario_ter_type(ter).picture >= 207))
 		can_enter = FALSE;
 	if (ter == 90) {
-			if ((is_combat()) && (which_combat_type == 0)) {
+			if (is_combat() && (which_combat_type == 0)) {
 				c_town.monst.dudes[which_monst].active = 0;
 				add_string_to_buf("Monster escaped! ");
 				}
