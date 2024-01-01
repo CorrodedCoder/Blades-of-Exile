@@ -791,25 +791,25 @@ void click_shop_rect(RECT area_rect)
 static const std::array cost_strs{ "Extremely Cheap","Very Reasonable","Pretty Average","Somewhat Pricey",
 	"Expensive","Exorbitant","Utterly Ridiculous" };
 
+const COLORREF c_colors[7]{ RGB(0,0,0),RGB(255,0,130),RGB(128,0,70),RGB(0,0,100),RGB(0,0,220), RGB(0,220,0),RGB(255,110,255) };
+const RECT c_item_info_from{ 42,11,56,24 };
+const RECT c_face_rect{ 6,6,38,38 };
+const RECT c_title_rect{ 48,15,260,42 };
+const RECT c_help_from{ 126,23,142,36 };
+const RECT c_done_from{ 0,23,63,46 };
+const short c_faces[13]{ 1,1,1,42,43, 1,1,1,1,1, 44,44,44 };
+const RECT c_shopper_name{ 6,44,260,56 };
+
 void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 // mode 1 - drawing dark for button press
 {
-	RECT area_rect,from_rect,item_info_from = {42,11,56,24};
-	
-	RECT face_rect = {6,6,38,38};
-	RECT title_rect = {48,15,260,42};
-	RECT dest_rect,help_from = {126,23,142,36},done_from = {0,23,63,46}; /**/
-	short faces[13] = {1,1,1,42,43, 1,1,1,1,1, 44,44,44};
-	
+	RECT area_rect, from_rect;
+	RECT dest_rect;
 	short i,what_chosen;
-	RECT shopper_name = {6,44,260,56};
 	short current_pos;
-	
 	short cur_cost,what_magic_shop,what_magic_shop_item;
 	item_record_type base_item;
 	HDC hdc;
-	COLORREF colors[7] = {RGB(0,0,0),RGB(255,0,130),RGB(128,0,70),RGB(0,0,100),RGB(0,0,220),
-		RGB(0,220,0),RGB(255,110,255)};
 	UINT c[7];
 	HGDIOBJ store_bmp;
 	HGDIOBJ old_brush;
@@ -819,7 +819,7 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 	SetBkMode(hdc,TRANSPARENT);
 	SelectObject(hdc,small_bold_font);
 	for (i = 0; i < 7; i++)
-		c[i] = GetNearestPaletteIndex(hpal,colors[i]);
+		c[i] = GetNearestPaletteIndex(hpal,c_colors[i]);
 	store_bmp = SelectObject(hdc,talk_gworld);
 
 	if (draw_mode > 0) {
@@ -851,15 +851,15 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 	SelectObject(hdc,store_bmp);
 	// Place store icon
 	if (draw_mode == 0) {
-		i = faces[store_shop_type];
-		draw_dialog_graphic_bmp(talk_gworld, face_rect, 1000 + i, FALSE);
+		i = c_faces[store_shop_type];
+		draw_dialog_graphic_bmp(talk_gworld, c_face_rect, 1000 + i, FALSE);
 		}
 	SelectObject(hdc,talk_gworld);
 
 	// Place name of store and shopper name
 	SelectObject(hdc,fantasy_font);
 	SetTextColor(hdc,PALETTEINDEX(c[3]));
-	dest_rect = title_rect;
+	dest_rect = c_title_rect;
 	OffsetRect(&dest_rect,1,-5);
 	win_draw_string(hdc,dest_rect,store_store_name,2,18);
 	OffsetRect(&dest_rect,-1,-1);
@@ -879,17 +879,17 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 		case 4:		cur_name = "Buying Food."; break;
 		default:	cur_name = std::format("Shopping for {}.",adven[current_pc].name); break;
 	}
-	win_draw_string(hdc,shopper_name,cur_name, 2, 18);
+	win_draw_string(hdc,c_shopper_name,cur_name, 2, 18);
 
 	// Place help and done buttons
 	SetTextColor(hdc,PALETTEINDEX(c[0]));
 	SelectObject(hdc,store_bmp);
-	talk_help_rect.right = talk_help_rect.left + help_from.right - help_from.left;
-	talk_help_rect.bottom = talk_help_rect.top + help_from.bottom - help_from.top;
-	rect_draw_some_item_bmp(dlg_buttons_gworld,help_from,talk_gworld,talk_help_rect,0,0);
-	//talk_help_rect.right = talk_help_rect.left + help_from.right - help_from.left;
-	//talk_help_rect.bottom = talk_help_rect.top + help_from.bottom - help_from.top;
-	rect_draw_some_item_bmp(dlg_buttons_gworld,done_from,talk_gworld,shop_done_rect,0,0);
+	talk_help_rect.right = talk_help_rect.left + c_help_from.right - c_help_from.left;
+	talk_help_rect.bottom = talk_help_rect.top + c_help_from.bottom - c_help_from.top;
+	rect_draw_some_item_bmp(dlg_buttons_gworld, c_help_from,talk_gworld,talk_help_rect,0,0);
+	//talk_help_rect.right = talk_help_rect.left + c_help_from.right - c_help_from.left;
+	//talk_help_rect.bottom = talk_help_rect.top + c_help_from.bottom - c_help_from.top;
+	rect_draw_some_item_bmp(dlg_buttons_gworld,c_done_from,talk_gworld,shop_done_rect,0,0);
 	SelectObject(hdc,talk_gworld);
 	if (draw_mode == 0)
 		SetTextColor(hdc,PALETTEINDEX(c[0]));
@@ -953,12 +953,12 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 			break;
 		}
 
-		from_rect = item_info_from;
+		from_rect = c_item_info_from;
 		OffsetRect(&from_rect,0,1);
 		shopping_rects[i][6].bottom = shopping_rects[i][6].top +
 			(from_rect.bottom - from_rect.top);
 		if ((store_shop_type != 3) && (store_shop_type != 4))
-			rect_draw_some_item_bmp(mixed_gworld,item_info_from,talk_gworld,shopping_rects[i][6],1,0);
+			rect_draw_some_item_bmp(mixed_gworld,c_item_info_from,talk_gworld,shopping_rects[i][6],1,0);
 		SelectObject(hdc,talk_gworld);
 		// Now draw item shopping_rects[i][7]
 		// 0 - whole area, 1 - active area 2 - graphic 3 - item name
@@ -986,83 +986,78 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 	ShowScrollBar(shop_sbar,SB_CTL,TRUE);
 }
 
+const RECT c_from_rects[4] = { {0,0,279,62},{0,62,253,352},{269,62,279,352},{0,352,279,415} };
+
 void refresh_shopping()
 {
-	RECT from_rects[4] = {{0,0,279,62},{0,62,253,352},{269,62,279,352},{0,352,279,415}},to_rect;
-	/**/
-	short i;
-	
-	for (i = 0; i < 4; i++) {
-		to_rect = from_rects[i];
-		OffsetRect(&to_rect,5,5);
-		rect_draw_some_item_bmp(talk_gworld,from_rects[i],talk_gworld,to_rect,0,1);
-		}
+	for (const auto& rect: c_from_rects)
+	{
+		rect_draw_some_item_bmp(talk_gworld,rect,talk_gworld, offset_rect(rect, 5, 5),0,1);
+	}
 }
 
 void click_talk_rect(char *str_to_place,char *str_to_place2,RECT c_rect)
 {
 	long dum;
-
 	place_talk_str(str_to_place,str_to_place2,1,c_rect);
 	if (play_sounds == TRUE)
 		play_sound(37);
-		else Delay(5,&dum);
+	else
+		Delay(5,&dum);
 	place_talk_str(str_to_place,str_to_place2,0,c_rect);
 }
 
+const short c_mage_spell_cost[32]{
+	150,200,150,1000,1200,400,300,200,
+	200,250,500,1500,300,  250,125,150,
+	400,450, 800,600,700,600,7500, 500,
+	5000,3000,3500,4000,4000,4500,7000,5000
+};
+
 item_record_type store_mage_spells(short which_s) 
 {
-	item_record_type spell = { item_variety::GemStoneEtc,0, 0,0,0,0,0,0, 53,0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
-
- short cost[32] = {150,200,150,1000,1200,400,300,200,
- 200,250,500,1500,300,  250,125,150, 
-  400,450, 800,600,700,600,7500, 500,
- 5000,3000,3500,4000,4000,4500,7000,5000};
-
-	char str[256];
-	
-	if (which_s != boe_clamp(which_s,0,31))
+	if (which_s != boe_clamp(which_s, 0, 31))
+	{
 		which_s = 0;
+	}
+	item_record_type spell = { item_variety::GemStoneEtc,0, 0,0,0,0,0,0, 53,0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0 };
 	spell.item_level = which_s + 30;
-	spell.value = cost[which_s];
-	get_str(str,38,which_s + 1);
-	strcpy(spell.full_name, str);
+	spell.value = c_mage_spell_cost[which_s];
+	get_str(spell.full_name,38,which_s + 1);
 	return spell;
 }
+
+const short c_priest_spell_cost[32]{
+	100,150,75,400,200, 100,80,250,
+	400,400,1200,600,300, 600,350,250,
+	500,500,600,800, 1000,900,400,600,
+	2500,2000,4500,4500,3000,3000,2000,2000
+};
 
 // which_s = 0 means that it returns first 4th level spell
 item_record_type store_priest_spells(short which_s)
 {
-	item_record_type spell = { item_variety::GemStoneEtc,0, 0,0,0,0,0,0, 53,0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
-
-short cost[32] = {100,150,75,400,200, 100,80,250,
-
-400,400,1200,600,300, 600,350,250,
-
-500,500,600,800, 1000,900,400,600,
-2500,2000,4500,4500,3000,3000,2000,2000};
-	char str[256];
-
 	if (which_s != boe_clamp(which_s,0,31))
 		which_s = 0;
+	item_record_type spell = { item_variety::GemStoneEtc,0, 0,0,0,0,0,0, 53,0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0 };
 	spell.item_level = which_s + 30;
-	spell.value = cost[which_s];
-	get_str(str,38,which_s + 50);
-	strcpy(spell.full_name, str);
+	spell.value = c_priest_spell_cost[which_s];
+	get_str(spell.full_name,38,which_s + 50);
 	return spell;
 }
+
+const short c_alchemy_spell_value[20]{
+	50,75,30,130,100,150, 200,200,300,250,300, 500,600,750,700,1000,10000,5000,7000,12000
+};
+
 item_record_type store_alchemy(short which_s)
 {
-	item_record_type spell = { item_variety::GemStoneEtc,0, 0,0,0,0,0,0, 53,0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
-short val[20] = {50,75,30,130,100,150, 200,200,300,250,300, 500,600,750,700,1000,10000,5000,7000,12000};
-	char str[256];
-	
 	if (which_s != boe_clamp(which_s,0,19))
 		which_s = 0;
+	item_record_type spell = { item_variety::GemStoneEtc,0, 0,0,0,0,0,0, 53,0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0 };
 	spell.item_level = which_s;
-	spell.value = val[which_s];
-	get_str(str,38,which_s + 100);
-	strcpy(spell.full_name, str);
+	spell.value = c_alchemy_spell_value[which_s];
+	get_str(spell.full_name,38,which_s + 100);
 	return spell; 
 }
 
@@ -1136,16 +1131,14 @@ std::string get_item_interesting_string(const item_record_type& item)
 	return message;
 }
 
+const RECT c_title_rect2{ 48,19,260,42 };
+const COLORREF c_colors2[7]{ RGB(0,0,0),RGB(0,0,204),RGB(0,0,102),RGB(0,0,100),RGB(0,0,220),RGB(51,153,51),RGB(0,204,0) };
 
 void place_talk_str(char *str_to_place,const char *str_to_place2,short color,RECT c_rect)
 // color 0 - regular  1 - darker
 {
 	RECT area_rect;
-	
-	RECT face_rect = {6,6,38,38};
-	RECT title_rect = {48,19,260,42};
-	RECT dest_rect,help_from = {126,23,142,36}; /**/
-
+	RECT dest_rect;
 	short i,j,str_len,line_height = 18;
 	char p_str[256],str[256],str_to_draw[256],str_to_draw2[256];
 	short text_len[257],current_rect,store_last_word_break = 0,start_of_last_kept_word = -1;
@@ -1154,8 +1147,6 @@ void place_talk_str(char *str_to_place,const char *str_to_place2,short color,REC
 	short face_to_draw;
 	
 	HDC hdc;
-	COLORREF colors[7] = {RGB(0,0,0),RGB(0,0,204),RGB(0,0,102),RGB(0,0,100),RGB(0,0,220),
-		RGB(51,153,51),RGB(0,204,0)};
 	UINT c[7];
 	HGDIOBJ store_bmp;
 	HGDIOBJ old_brush;
@@ -1166,7 +1157,7 @@ void place_talk_str(char *str_to_place,const char *str_to_place2,short color,REC
 	SetBkMode(hdc,TRANSPARENT);
 	store_font = SelectObject(hdc,fantasy_font);
 	for (i = 0; i < 7; i++)
-		c[i] = GetNearestPaletteIndex(hpal,colors[i]);
+		c[i] = GetNearestPaletteIndex(hpal,c_colors2[i]);
 	store_bmp = SelectObject(hdc,talk_gworld);
 
 	if (c_rect.right > 0) {
@@ -1190,9 +1181,9 @@ void place_talk_str(char *str_to_place,const char *str_to_place2,short color,REC
 		else paint_pattern_bmp(talk_gworld,area_rect,3);
 
 	// Put help button
-	talk_help_rect.right = talk_help_rect.left + help_from.right - help_from.left;
-	talk_help_rect.bottom = talk_help_rect.top + help_from.bottom - help_from.top;
-	rect_draw_some_item_bmp(dlg_buttons_gworld,help_from,talk_gworld,talk_help_rect,0,0);
+	talk_help_rect.right = talk_help_rect.left + c_help_from.right - c_help_from.left;
+	talk_help_rect.bottom = talk_help_rect.top + c_help_from.bottom - c_help_from.top;
+	rect_draw_some_item_bmp(dlg_buttons_gworld, c_help_from,talk_gworld,talk_help_rect,0,0);
 
 	// Place face of talkee
 	if ((color == 0) && (c_rect.right == 0)) {
@@ -1200,21 +1191,21 @@ void place_talk_str(char *str_to_place,const char *str_to_place2,short color,REC
 		if (store_talk_face_pic >= 0)
 			face_to_draw = store_talk_face_pic;
 		if (store_talk_face_pic >= 1000) {
-			draw_dialog_graphic_bmp(talk_gworld, face_rect, 2400 + store_talk_face_pic - 1000, FALSE);
+			draw_dialog_graphic_bmp(talk_gworld, c_face_rect, 2400 + store_talk_face_pic - 1000, FALSE);
 			}
 			else {
 				i = get_monst_picnum(store_monst_type);
 
 				if (face_to_draw <= 0)
-					draw_dialog_graphic_bmp(talk_gworld, face_rect, 400 + i, FALSE);
-					else draw_dialog_graphic_bmp(talk_gworld, face_rect, 1000 + face_to_draw, FALSE);
+					draw_dialog_graphic_bmp(talk_gworld, c_face_rect, 400 + i, FALSE);
+					else draw_dialog_graphic_bmp(talk_gworld, c_face_rect, 1000 + face_to_draw, FALSE);
 				}
 		}
 	SelectObject(hdc,talk_gworld);
 
 	// Place name oftalkee
 	SetTextColor(hdc,PALETTEINDEX(c[3]));
-	dest_rect = title_rect;
+	dest_rect = c_title_rect2;
 	OffsetRect(&dest_rect,1,-5);
 	win_draw_string(hdc,dest_rect,title_string,2,18);
 	OffsetRect(&dest_rect,-1,-1);
@@ -1437,16 +1428,13 @@ void place_talk_str(char *str_to_place,const char *str_to_place2,short color,REC
 
 void refresh_talking()
 {
-	RECT from = {0,0,279,415};
-	rect_draw_some_item_bmp(talk_gworld,from,talk_gworld,talk_area_rect,0,1);
+	rect_draw_some_item_bmp(talk_gworld, { 0,0,279,415 },talk_gworld,talk_area_rect,0,1);
 }
 
 short scan_for_response(char *str)
 // returns -1 if no go
 {
-	short i;
-	
-	for (i = 0; i < 60; i++) { // 60 response in each bunch
+	for (short i = 0; i < 60; i++) { // 60 response in each bunch
 		if ((talking.talk_nodes[i].personality != -1) &&
 			((talking.talk_nodes[i].personality == store_personality)
 		 || (talking.talk_nodes[i].personality == -2)) && 
