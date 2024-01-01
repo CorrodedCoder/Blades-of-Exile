@@ -18,7 +18,6 @@ short out_boat_there(location where);
 short town_horse_there(location where);
 short out_horse_there(location where);
 void notify_out_combat_began(out_wandering_type encounter,short *nums);
-const char* get_m_name(unsigned char num);
 void print_monst_name(unsigned char m_type);
 void print_monst_attacks(unsigned char m_type,short target);
 void damaged_message(short damage,short type);

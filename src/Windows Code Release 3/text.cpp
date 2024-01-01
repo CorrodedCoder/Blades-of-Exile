@@ -870,7 +870,7 @@ short do_look(location space)
 				&& (monst_on_space(space,i) == TRUE) &&
 				((is_town()) || (can_see(pc_pos[current_pc],space,0) < 5))
 				&& (c_town.monst.dudes[i].m_d.picture_num != 0)) {
-				const char * monster_name = get_m_name(c_town.monst.dudes[i].number);
+				const char * monster_name = scenario_monster_name(c_town.monst.dudes[i].number);
 				if (c_town.monst.dudes[i].m_d.health < c_town.monst.dudes[i].m_d.m_health)
 				{
 					if (c_town.monst.dudes[i].attitude % 2 == 1)
@@ -893,7 +893,7 @@ short do_look(location space)
 				&& (same_point(space,party.out_c[i].m_loc) == TRUE)) {
 					for (j = 0; j < 7; j++)
 						if (party.out_c[i].what_monst.monst[j] != 0) {
-							add_string_to_buf("    {}", get_m_name(party.out_c[i].what_monst.monst[j]));
+							add_string_to_buf("    {}", scenario_monster_name(party.out_c[i].what_monst.monst[j]));
 							j = 7;
 
 							}
@@ -1043,19 +1043,14 @@ void notify_out_combat_began(out_wandering_type encounter,short *nums)
 			switch (encounter.monst[i])
 			{
 			default:
-				add_string_to_buf("  {:d} x {}        ",nums[i], get_m_name(encounter.monst[i]));
+				add_string_to_buf("  {:d} x {}        ",nums[i], scenario_monster_name(encounter.monst[i]));
 				break;		
 			}				
 		}
 	if (encounter.monst[6] != 0)
 	{
-		add_string_to_buf("  {}        ", get_m_name(encounter.monst[6]));
+		add_string_to_buf("  {}        ", scenario_monster_name(encounter.monst[6]));
 	}
-}
-
-const char * get_m_name(unsigned char num)
-{
-	return scenario_monster_name(num);
 }
 
 static const char * get_ter_name(unsigned char num)
@@ -1070,7 +1065,7 @@ static const char * get_ter_name(unsigned char num)
 
 void print_monst_name(unsigned char m_type)
 {
-	add_string_to_buf("{}:", get_m_name(m_type));
+	add_string_to_buf("{}:", scenario_monster_name(m_type));
 }
 
 void print_monst_attacks(unsigned char m_type,short target)
@@ -1078,11 +1073,11 @@ void print_monst_attacks(unsigned char m_type,short target)
 {
 	if (target < 100)
 	{
-		add_string_to_buf("{} attacks {}", get_m_name(m_type), adven[target].name);
+		add_string_to_buf("{} attacks {}", scenario_monster_name(m_type), adven[target].name);
 	}
 	else
 	{
-		add_string_to_buf("{} attacks {}", get_m_name(m_type), get_m_name(c_town.monst.dudes[target - 100].number));
+		add_string_to_buf("{} attacks {}", scenario_monster_name(m_type), scenario_monster_name(c_town.monst.dudes[target - 100].number));
 	}
 }
 
@@ -1096,12 +1091,12 @@ void damaged_message(short damage,short type)
 // This prepares the monster's string for the text bar
 void print_monster_going(char *combat_str,unsigned char m_num,short ap)
 {
-	format_to_buf(combat_str, "{} (ap: {:d})", get_m_name(m_num),ap);
+	format_to_buf(combat_str, "{} (ap: {:d})", scenario_monster_name(m_num),ap);
 }
 
 void monst_spell_note(unsigned char number,short which_mess)
 {
-	const char * const monster_name = get_m_name(number);
+	const char * const monster_name = scenario_monster_name(number);
 
 	switch (which_mess)
 	{
@@ -1143,26 +1138,26 @@ void monst_spell_note(unsigned char number,short which_mess)
 void monst_cast_spell_note(unsigned char number,short spell,short type)
 //short type; // 0 - mage 1- priest
 {
-	add_string_to_buf("{} casts:", get_m_name(number));
+	add_string_to_buf("{} casts:", scenario_monster_name(number));
 	add_string_to_buf("  {}", (type == 1) ? m_priest_sp[spell - 1] : m_mage_sp[spell - 1]);
 }
 
 void monst_breathe_note(unsigned char number)
 {
-	add_string_to_buf("{} breathes.", get_m_name(number));
+	add_string_to_buf("{} breathes.", scenario_monster_name(number));
 }
 
 void monst_damaged_mes(short which_m,short how_much,short how_much_spec)
 {
 	if (how_much_spec > 0)
-		add_string_to_buf("  {} takes {:d}+{:d}", get_m_name(c_town.monst.dudes[which_m].number), how_much,how_much_spec);
+		add_string_to_buf("  {} takes {:d}+{:d}", scenario_monster_name(c_town.monst.dudes[which_m].number), how_much,how_much_spec);
 	else
-		add_string_to_buf("  {} takes {:d}", get_m_name(c_town.monst.dudes[which_m].number), how_much);
+		add_string_to_buf("  {} takes {:d}", scenario_monster_name(c_town.monst.dudes[which_m].number), how_much);
 }
 
 void monst_killed_mes(short which_m)
 {
-	add_string_to_buf("  {} dies.", get_m_name(c_town.monst.dudes[which_m].number));
+	add_string_to_buf("  {} dies.", scenario_monster_name(c_town.monst.dudes[which_m].number));
 }
 
 void print_nums(short a,short b,short c)
