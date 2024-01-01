@@ -592,7 +592,7 @@ short switch_target_to_adjacent(short which_m,short orig_target)
 		}
 
 	// If we get here while in town, just need to check if switch to pc
-	if ((is_town()) && (monst_adjacent(c_town.p_loc,which_m) == TRUE))
+	if (is_town() && (monst_adjacent(c_town.p_loc,which_m) == TRUE))
 		return 0;
 	if (is_town())
 		return orig_target;
@@ -818,7 +818,7 @@ location find_clear_spot(location from_where,short mode)
 		if ((loc_off_act_area(loc) == FALSE) && is_not_blocked(loc)
 			&& (can_see(from_where,loc,1) == 0)
 			&& (!(is_combat()) || (pc_there(loc) == 6))
-			&& (!(is_town()) || (same_point(loc,c_town.p_loc) == FALSE))
+			&& (is_not_town() || (same_point(loc,c_town.p_loc) == FALSE))
 			 && (!(misc_i[loc.x][loc.y] & 248)) &&
 			(!(c_town.explored[loc.x][loc.y] & 254))) {
 				if ((mode == 0) || ((mode == 1) && (adjacent(from_where,loc) == TRUE)))
@@ -1357,7 +1357,7 @@ Boolean summon_monster(unsigned char which,location where,short duration,short g
 	location loc;
 	short which_m,spot;
 
-	if ((is_town()) || (monsters_going)) {
+	if (is_town() || (monsters_going)) {
 		// Ooooh ... mondo kludge. Need to find caster's attitude to give it to monst.
 		which_m = monst_there(where);
 //		if (pc_there(where) < 6) 

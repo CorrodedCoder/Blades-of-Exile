@@ -800,7 +800,7 @@ Boolean handle_menu (short item, HMENU menu)
 			
 			
 		case 23:
-			if (!(is_town())) {
+			if (is_not_town()) {
 				add_string_to_buf("Add PC: Town mode only.");
 				print_buf();
 				break;

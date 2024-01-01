@@ -942,7 +942,7 @@ void handle_options_menu(int item_hit)
 			
 			
 		case 3:
-			if (!(is_town())) {
+			if (is_not_town()) {
 				add_string_to_buf("Add PC: Town mode only.");
 				print_buf();
 				break;

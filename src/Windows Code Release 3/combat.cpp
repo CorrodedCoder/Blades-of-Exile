@@ -1834,7 +1834,7 @@ void do_monster_turn()
 
 				// Now if in town and monster about to attack, do a redraw, so we see monster
 				// in right place
-				if ((target != 6) && (is_town() == TRUE) && (redraw_not_yet_done == TRUE)
+				if ((target != 6) && is_town() && (redraw_not_yet_done == TRUE)
 					&& (party_can_see_monst(i) == TRUE)) {
 					draw_terrain(0);					
 					redraw_not_yet_done = FALSE;
@@ -3136,7 +3136,7 @@ Boolean monst_cast_priest(creature_data_type *caster,short targ)
 	if (monst_priest_area_effect[spell - 1] > 0)
 		targ = 6;
 	if (targ < 6)
-		vict_loc = (is_town()) ? c_town.p_loc : pc_pos[targ];
+		vict_loc = is_town() ? c_town.p_loc : pc_pos[targ];
 	if (targ >= 100)
 		vict_loc = c_town.monst.dudes[targ - 100].m_loc;
 	if ((targ == 6) && (is_antimagic(target.x,target.y)))
@@ -3497,7 +3497,7 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,Boolean 
 		modify_pattern(&pat,type);
 
 	// first clip out special results.
-	if (((is_town()) || ((is_combat()) && (which_combat_type == 1))) && (c_town.town_num == 46) && (center.x == 24) && (center.y == 41)
+	if ((is_town() || ((is_combat()) && (which_combat_type == 1))) && (c_town.town_num == 46) && (center.x == 24) && (center.y == 41)
 		&& (PSD[46][9] == 0) && (type >= 50) && (type < 90)) {
 		end_missile_anim();
 		run_a_missile(pc_pos[current_pc],center,2,1,11,0,0,200);
@@ -3511,7 +3511,7 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,Boolean 
 		}
 	for (i = 0; i < 5; i++)
 		store += PSD[20][i];
-	if (((is_town()) || ((is_combat()) && (which_combat_type == 1))) && (c_town.town_num == 23))
+	if ((is_town() || ((is_combat()) && (which_combat_type == 1))) && (c_town.town_num == 23))
 		for (i = 0; i < 5; i++)
 			if ((center.x == pool_locs[i].x) && (center.y == pool_locs[i].y)
 				&& (PSD[20][i] == 0) && (type >= 50) && (type < 90)) {
@@ -3579,7 +3579,7 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,Boolean 
 				spot_hit.y = j;
 				if ((get_obscurity(i,j) < 5) && (adven[k].main_status == status::Normal)
 					&& (((is_combat()) &&(same_point(pc_pos[k],spot_hit) == TRUE)) ||
-					((is_town()) && (same_point(c_town.p_loc,spot_hit) == TRUE)))) {
+					(is_town() && (same_point(c_town.p_loc,spot_hit) == TRUE)))) {
 					effect = pat.pattern[i - center.x + 4][j - center.y + 4];
 					switch (effect) {
 						case 4: 

@@ -371,7 +371,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 						// this is kludgy, awkwark, and has redundant code. Done this way to 
 						// make go faster, and I got lazy.
 						if ((stat_screen_mode == 0) && 
-						 ((is_town()) || is_out() || ((is_combat()) && (pc == current_pc)))) { // place give and drop and use
+						 (is_town() || is_out() || ((is_combat()) && (pc == current_pc)))) { // place give and drop and use
 							place_item_button(0,i,0,adven[pc].items[i_num].graphic_num); // item_graphic 
 							if (abil_chart[adven[pc].items[i_num].ability] != 4) // place use if can
 								place_item_button(10,i,1,0);
@@ -381,7 +381,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 								place_item_button(0,i,0,adven[pc].items[i_num].graphic_num); // item_graphic 
 								place_item_button(3,i,4,0); // info button
 								if ((stat_screen_mode == 0) && 
-								 ((is_town()) || is_out() || ((is_combat()) && (pc == current_pc)))) { // place give and drop and use
+								 (is_town() || is_out() || ((is_combat()) && (pc == current_pc)))) { // place give and drop and use
 									place_item_button(1,i,2,0);
 									place_item_button(2,i,3,0);
 									if (abil_chart[adven[pc].items[i_num].ability] != 4) // place use if can
@@ -809,7 +809,7 @@ void print_party_stats() {
 	add_string_to_buf("PARTY STATS:");
 	format_to_buf(store_string, "  Number of kills: {:d}                   ", party.total_m_killed);
 	add_string_to_buf( store_string);
-	if ((is_town()) || ((is_combat()) && (which_combat_type == 1))) {
+	if (is_town() || ((is_combat()) && (which_combat_type == 1))) {
 		format_to_buf(store_string, "  Kills in this town: {:d}                   ", party.m_killed[c_town.town_num]);
 		add_string_to_buf( store_string);
 		}
@@ -1043,7 +1043,7 @@ const char * scenario_monster_name(unsigned char num)
 
 static const char * get_ter_name(unsigned char num)
 {
-	if ((num == 90) && (is_out() || (is_town()) || ((is_combat()) && (which_combat_type == 1))))
+	if ((num == 90) && (is_out() || is_town() || ((is_combat()) && (which_combat_type == 1))))
 	{
 		return "Pit";
 	}

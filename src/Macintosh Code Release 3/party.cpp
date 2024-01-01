@@ -1444,7 +1444,7 @@ void cast_spell(short type,short situation)
 	short spell;
 	location loc;
 	
-	if ((is_town()) && (is_antimagic(c_town.p_loc.x,c_town.p_loc.y))) {
+	if (is_town() && (is_antimagic(c_town.p_loc.x,c_town.p_loc.y))) {
 		add_string_to_buf("  Not in antimagic field.");
 		return;
 		}

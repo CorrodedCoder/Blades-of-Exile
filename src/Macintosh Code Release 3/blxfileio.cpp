@@ -542,7 +542,7 @@ void save_file(short mode)
 	char *party_encryptor;	
 	char debug[60];
 
-	if ((in_startup_mode == FALSE) && (is_town()))
+	if ((in_startup_mode == FALSE) && is_town())
 		town_save = TRUE;
 
 	strcpy ((char *) store_name, (char *) last_load_file);
@@ -1411,7 +1411,7 @@ void start_data_dump()
 		party.p_loc.x,party.p_loc.y);
 	len = (long) (strlen(get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	if ((is_town()) || (is_combat())) {
+	if (is_town() || (is_combat())) {
 		format_to_buf(get_text,"  Town num {:d}  Town loc  {:d} {:d} \r",c_town.town_num,
 			c_town.p_loc.x,c_town.p_loc.y);
 		len = (long) (strlen(get_text));

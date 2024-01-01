@@ -286,7 +286,7 @@ short get_obscurity(short x,short y)
 			store++;
 		}
 
-	if ((is_town()) || (is_combat())) {
+	if (is_town() || (is_combat())) {
 		if (is_web(x,y))
 			store += 2;
 		if ((is_fire_barrier(x,y)) || (is_force_barrier(x,y)))
@@ -384,8 +384,8 @@ bool is_blocked(location to_check)
 		return false;
 		}
 		
-	if ((is_town()) || (is_combat())) {
-		ter = (is_town()) ? t_d.terrain[to_check.x][to_check.y] : combat_terrain[to_check.x][to_check.y];
+	if (is_town() || (is_combat())) {
+		ter = is_town() ? t_d.terrain[to_check.x][to_check.y] : combat_terrain[to_check.x][to_check.y];
 		gr = scenario_ter_type(ter).picture;
 	
 		////

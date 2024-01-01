@@ -339,7 +339,7 @@ void save_file(short mode)
 //mode;  // 0 - normal  1 - save as
 {
 	Boolean town_save = FALSE;
-	if ((in_startup_mode == FALSE) && (is_town()))
+	if ((in_startup_mode == FALSE) && is_town())
 		town_save = TRUE;
 
 	ofn.hwndOwner = mainPtr;

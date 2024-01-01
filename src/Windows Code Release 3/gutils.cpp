@@ -220,7 +220,7 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw,short dest)
 
 		if (anim_type >= 0)
 		 {
-			if ((is_town()) || is_out())
+			if (is_town() || is_out())
 				anim_onscreen = TRUE;
 			}
 
@@ -629,7 +629,7 @@ void draw_one_field(unsigned char flag,short source_x,short source_y)
 								OffsetRect(&source_rect,28 * source_x,36 * source_y);
 								Draw_Some_Item(fields_gworld,source_rect,terrain_screen_gworld,loc,
 								 1,0);
-								if ((is_town()) && ((flag == 32) || (flag == 64)))
+								if (is_town() && ((flag == 32) || (flag == 64)))
 									anim_onscreen = TRUE;		
 								}
 							}
@@ -677,7 +677,7 @@ void draw_party_symbol(short mode,location center)
 		return;
 	if (party_toast() == TRUE)
 		return;
-	if ((is_town()) && (c_town.p_loc.x > 70))
+	if (is_town() && (c_town.p_loc.x > 70))
 		return;
 	if (overall_mode == 36) {
 		target.x += c_town.p_loc.x - center.x;
@@ -690,7 +690,7 @@ void draw_party_symbol(short mode,location center)
 			source_rect = get_party_template_rect(i,(party.direction < 4) ? 0 : 1);
 
 			// now wedge in bed graphic
-			if ((is_town()) && (scenario_ter_type(t_d.terrain[c_town.p_loc.x][c_town.p_loc.y]).picture == 143))
+			if (is_town() && (scenario_ter_type(t_d.terrain[c_town.p_loc.x][c_town.p_loc.y]).picture == 143))
 				draw_one_terrain_spot((short) target.x,(short) target.y,10230,0);
 				else Draw_Some_Item(party_template_gworld, source_rect, terrain_screen_gworld, target, 1, 0);
 		}

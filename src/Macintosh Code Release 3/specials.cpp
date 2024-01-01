@@ -1396,7 +1396,7 @@ void kill_monst(creature_data_type *which_m,short who_killed)
 	
 
 
-	if (((is_town()) || (which_combat_type == 1)) && (which_m->summoned == 0)) {
+	if ((is_town() || (which_combat_type == 1)) && (which_m->summoned == 0)) {
 		party.m_killed[c_town.town_num]++;
 		}
 
@@ -1538,7 +1538,7 @@ void special_increase_age()
 	
 	for (i = 0; i < 8; i++)
 		if ((c_town.town.timer_spec_times[i] > 0) && (party.age % c_town.town.timer_spec_times[i] == 0)
-			&& ((is_town() == TRUE) || ((is_combat() == TRUE) && (which_combat_type == 1)))) {
+			&& (is_town() || ((is_combat() == TRUE) && (which_combat_type == 1)))) {
 			run_special(9,2,c_town.town.timer_specs[i],null_loc,&s1,&s2,&s3);
 			stat_area = TRUE;
 			if (s3 > 0)
@@ -1739,7 +1739,7 @@ void general_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 			break;	
 		case 8:
 			if (is_town()) *next_spec = -1;
-			if ((is_town()) && (spec.ex1a != 0) && (which_mode == 1)) {
+			if (is_town() && (spec.ex1a != 0) && (which_mode == 1)) {
 				ASB("Can't go here while in town mode.");
 				*a = 1;
 				}
@@ -2289,7 +2289,7 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 				}
 			break;
 		case 131:
-			if (((is_town()) || (is_combat())) && (c_town.town_num == spec.ex1a))
+			if ((is_town() || (is_combat())) && (c_town.town_num == spec.ex1a))
 				*next_spec = spec.ex1b;
 			break;
 		case 132:
@@ -2311,7 +2311,7 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 				else give_error("A Stuff Done flag is out of range.","",0);	
 			break;
 		case 135:
-			if (((is_town()) || (is_combat())) && (t_d.terrain[spec.ex1a][spec.ex1b] == spec.ex2a))
+			if ((is_town() || (is_combat())) && (t_d.terrain[spec.ex1a][spec.ex1b] == spec.ex2a))
 				*next_spec = spec.ex2b;
 			break;
 		case 136:

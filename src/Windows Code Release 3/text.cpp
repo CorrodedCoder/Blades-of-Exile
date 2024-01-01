@@ -427,7 +427,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 						// make go faster, and I got lazy.
 						SelectObject(hdc,store_bmp);
 						if ((stat_screen_mode == 0) &&
-						 ((is_town()) || is_out() || ((is_combat()) && (pc == current_pc)))) { // place give and drop and use
+						 (is_town() || is_out() || ((is_combat()) && (pc == current_pc)))) { // place give and drop and use
 							place_item_button(0,i,0,adven[pc].items[i_num].graphic_num); // item_graphic
 							if (abil_chart[adven[pc].items[i_num].ability] != 4) // place use if can
 								place_item_button(10,i,1,0);
@@ -437,7 +437,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 								place_item_button(0,i,0,adven[pc].items[i_num].graphic_num); // item_graphic
 								place_item_button(3,i,4,0); // info button
 								if ((stat_screen_mode == 0) &&
-								 ((is_town()) || is_out() || ((is_combat()) && (pc == current_pc)))) { // place give and drop and use
+								 (is_town() || is_out() || ((is_combat()) && (pc == current_pc)))) { // place give and drop and use
 									place_item_button(1,i,2,0);
 									place_item_button(2,i,3,0);
 									if (abil_chart[adven[pc].items[i_num].ability] != 4) // place use if can
@@ -835,7 +835,7 @@ static void draw_pc_effects_bmp(short pc, HBITMAP dest_bmp)
 void print_party_stats() {
 	add_string_to_buf("PARTY STATS:");
 	add_string_to_buf("  Number of kills: {:d}                   ", party.total_m_killed);
-	if ((is_town()) || ((is_combat()) && (which_combat_type == 1))) {
+	if (is_town() || ((is_combat()) && (which_combat_type == 1))) {
 		add_string_to_buf("  Kills in this town: {:d}                   ", party.m_killed[c_town.town_num]);
 		}
 	add_string_to_buf("  Total experience: {:d}                   ", party.total_xp_gained);
@@ -855,7 +855,7 @@ short do_look(location space)
 	is_lit = pt_in_light(from_where,space);
 
 	if ((is_out() && (same_point(space,party.p_loc) == TRUE)) ||
-		((is_town()) && (same_point(space,c_town.p_loc))))
+		(is_town() && (same_point(space,c_town.p_loc))))
 			add_string_to_buf("    Your party");
 	if (is_combat())
 		for (i = 0; i < 6; i++)
@@ -868,7 +868,7 @@ short do_look(location space)
 		for (i = 0; i < T_M; i++)
 			if ((c_town.monst.dudes[i].active != 0) && (is_lit == TRUE)
 				&& (monst_on_space(space,i) == TRUE) &&
-				((is_town()) || (can_see(pc_pos[current_pc],space,0) < 5))
+				(is_town() || (can_see(pc_pos[current_pc],space,0) < 5))
 				&& (c_town.monst.dudes[i].m_d.picture_num != 0)) {
 				const char * monster_name = scenario_monster_name(c_town.monst.dudes[i].number);
 				if (c_town.monst.dudes[i].m_d.health < c_town.monst.dudes[i].m_d.m_health)
@@ -1055,7 +1055,7 @@ void notify_out_combat_began(out_wandering_type encounter,short *nums)
 
 static const char * get_ter_name(unsigned char num)
 {
-	if ((num == 90) && (is_out() || (is_town()) || ((is_combat()) && (which_combat_type == 1))))
+	if ((num == 90) && (is_out() || is_town() || ((is_combat()) && (which_combat_type == 1))))
 		return "Pit";
 	else
 	{

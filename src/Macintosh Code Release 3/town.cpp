@@ -1169,7 +1169,7 @@ void erase_specials()////
 	
 	if ((is_combat()) && (which_combat_type == 0))
 		return;
-	if ((is_town() == FALSE) && (is_combat() == FALSE))
+	if (is_not_town() && (is_combat() == FALSE))
 		return;
 	for (k = 0; k < 50; k++) {
 		if (c_town.town.spec_id[k] >= 0) {
@@ -1406,7 +1406,7 @@ void draw_map (DialogPtr the_dialog, short the_item)
 	if (is_out() || ((is_combat()) && (which_combat_type == 0)) ||
 		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
 		((overall_mode == 21) && (store_pre_shop_mode == 0)) ||
-		(((is_town()) || (is_combat())) && (town_type != 2))) {
+		((is_town() || (is_combat())) && (town_type != 2))) {
 			area_to_draw_from = view_rect;	
 			area_to_draw_from.left *= 6;
 			area_to_draw_from.right *= 6;
@@ -1452,7 +1452,7 @@ void draw_map (DialogPtr the_dialog, short the_item)
 				return;
 				}
 		} */
-	else if ((is_town()) && ((c_town.town_num == -1) || (c_town.town_num == -1)))
+	else if (is_town() && ((c_town.town_num == -1) || (c_town.town_num == -1)))
 		 {
 			if (modeless_exists[5] == TRUE) {
 				SetPort(the_dialog);
@@ -1618,7 +1618,7 @@ void draw_map (DialogPtr the_dialog, short the_item)
 							
 	// Now place PCs and monsters
 	if ((draw_pcs == TRUE) && (modeless_exists[5] == TRUE)) {
-		if ((is_town()) && (party.stuff_done[305][2] > 0))
+		if (is_town() && (party.stuff_done[305][2] > 0))
 			for (i = 0; i < T_M; i++) 
 				if (c_town.monst.dudes[i].active > 0) {
 					where = c_town.monst.dudes[i].m_loc;
@@ -1644,7 +1644,7 @@ void draw_map (DialogPtr the_dialog, short the_item)
 						}
 				}
 		if ((overall_mode != 21) && (overall_mode != 20)) {
-			where = (is_town()) ? c_town.p_loc : global_to_local(party.p_loc);
+			where = is_town() ? c_town.p_loc : global_to_local(party.p_loc);
 
 					draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
 					draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);

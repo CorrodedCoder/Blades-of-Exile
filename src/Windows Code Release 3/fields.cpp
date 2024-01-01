@@ -65,12 +65,16 @@ bool is_not_out(void)
 	return !is_out();
 }
 
-Boolean is_town()
+bool is_town(void)
 {
-	if (((overall_mode > 0) && (overall_mode < 10)) || (overall_mode == 36))
-		return TRUE;
-		else return FALSE;
+	return ((overall_mode > 0) && (overall_mode < 10)) || (overall_mode == 36);
 }
+
+bool is_not_town(void)
+{
+	return !is_town();
+}
+
 Boolean is_combat()
 {
 	if (((overall_mode >= 10) && (overall_mode < 20)) || (overall_mode == 37))

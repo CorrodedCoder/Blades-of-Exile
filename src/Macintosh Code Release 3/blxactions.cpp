@@ -687,7 +687,7 @@ Boolean handle_action(EventRecord event)
 			} */
 			
 // Begin : click in terrain
-	if ((PtInRect (the_point, &world_screen)) && (is_out() || (is_town()) || (is_combat())) ){		
+	if ((PtInRect (the_point, &world_screen)) && (is_out() || is_town() || (is_combat())) ){		
 		i = (the_point.h - 23) / 28;
 		j = (the_point.v - 23) / 36;
 
@@ -808,7 +808,7 @@ Boolean handle_action(EventRecord event)
 								which_t = outdoors[party.i_w_c.x][party.i_w_c.y].exit_dests[i];
 								if (which_t >= 0)
 									start_town_mode(outdoors[party.i_w_c.x][party.i_w_c.y].exit_dests[i], find_direction_from);
-								if (is_town() == TRUE) {
+								if (is_town()) {
 									need_redraw = FALSE;
 									i = 8;
 									if (party.in_boat >= 0)
@@ -1194,7 +1194,7 @@ Boolean handle_action(EventRecord event)
 									else {
 										add_string_to_buf("Drop item: Click where to drop item.");
 										store_drop_item = item_hit;
-										overall_mode = (is_town()) ? 5 : 15;
+										overall_mode = is_town() ? 5 : 15;
 										}
 								break;
 							case 4: // info

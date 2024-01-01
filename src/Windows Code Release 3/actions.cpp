@@ -701,7 +701,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 			} */
 
 // Begin : click in terrain
-	if ((PtInRect ( &world_screen,the_point)) && (is_out() || (is_town()) || (is_combat())) ){
+	if ((PtInRect ( &world_screen,the_point)) && (is_out() || is_town() || (is_combat())) ){
 		i = (the_point.x - 23) / 28;
 		j = (the_point.y - 23) / 36;
 
@@ -817,7 +817,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 								which_t = outdoors[party.i_w_c.x][party.i_w_c.y].exit_dests[i];
 								if (which_t >= 0)
 									start_town_mode(outdoors[party.i_w_c.x][party.i_w_c.y].exit_dests[i], find_direction_from);
-								if (is_town() == TRUE) {
+								if (is_town()) {
 									need_redraw = FALSE;
 									i = 8;
 									if (party.in_boat >= 0)
@@ -847,7 +847,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 				else {
 					add_string_to_buf("You see...               ");
 					ter_looked_at = do_look(destination);
-					if ((is_town()) || (is_combat()))
+					if (is_town() || (is_combat()))
 						if (adjacent(c_town.p_loc,destination) == TRUE)
 							if (adj_town_look(destination) == TRUE)
 								need_redraw = TRUE;
@@ -1211,7 +1211,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 									else {
 										add_string_to_buf("Drop item: Click where to drop item.");
 										store_drop_item = item_hit;
-										overall_mode = (is_town()) ? 5 : 15;
+										overall_mode = is_town() ? 5 : 15;
 										}
 								break;
 							case 4: // info
