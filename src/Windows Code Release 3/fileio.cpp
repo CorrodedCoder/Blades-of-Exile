@@ -1243,7 +1243,6 @@ void build_scen_headers()
 	short cur_entry = 0;
 	HWND listbox;
 	WORD count;
-	char filename[256], filename2[256];
 
 	for (i = 0; i < 25; i++)
 		scen_headers[i].flag1 = 0;
@@ -1255,11 +1254,13 @@ void build_scen_headers()
 
 	count = min(count, 20);
 
-	for (i = 0; i < count; i++) {
+	for (i = 0; i < count; i++)
+	{
+		char filename2[256];
 		SendMessage(listbox, LB_GETTEXT, i, reinterpret_cast<LPARAM>(filename2));
-		format_to_buf(filename, "BLADSCEN/{}", filename2);
 
-		if (load_scenario_header(filename, cur_entry) == TRUE) {
+		if (load_scenario_header(std::format("BLADSCEN/{}", filename2), cur_entry) == TRUE)
+		{
 			// now we need to store the file name, first stripping any path that occurs
 			// before it
 			strcpy(data_store2.scen_names[cur_entry], filename2);
@@ -1272,18 +1273,17 @@ void build_scen_headers()
 
 // This is only called at startup, when bringing headers of active scenarios.
 // This wipes out the scenario record, so be sure not to call it while in an active scenario.
-Boolean load_scenario_header(char* filename, short header_entry)
+Boolean load_scenario_header(std::string_view filename, short header_entry)
 {
-
 	short i;
-	std::ifstream file_id;
 	short store;
 	Boolean file_ok = FALSE;
 	char load_str[256];
 	Boolean mac_header = TRUE;
 
 	// Was: OpenFile(filename, &store_str, OF_READ /* | OF_SEARCH */);
-	file_id.open(filename, std::ios_base::binary);
+	std::ifstream file_id;
+	file_id.open(filename.data(), std::ios_base::binary);
 	if (file_id.fail()) {
 		ASB(filename);
 		return FALSE;

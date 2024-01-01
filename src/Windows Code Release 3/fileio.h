@@ -26,7 +26,7 @@ void set_up_ter_pics();
 Boolean load_scenario();
 short onm(char x_sector,char y_sector);
 void build_scen_headers();
-Boolean load_scenario_header(char *filename,short header_entry);
+Boolean load_scenario_header(std::string_view filename,short header_entry);
 void load_spec_graphics();
 Boolean check_p (short pword);
 short town_s(short flag);

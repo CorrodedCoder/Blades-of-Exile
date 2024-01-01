@@ -1586,7 +1586,7 @@ void build_scen_headers()
 
 // This is only called at startup, when bringing headers of active scenarios.
 // This wipes out the scenario record, so be sure not to call it while in an active scenario.
-Boolean load_scenario_header(Str255 filename,short header_entry)
+Boolean load_scenario_header(std::string_view filename,short header_entry)
 {
 
 	short i,j,k,l,file_id;
