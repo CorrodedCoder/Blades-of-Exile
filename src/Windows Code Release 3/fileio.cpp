@@ -409,43 +409,20 @@ void change_rect_terrain(BoeRect r, unsigned char terrain_type, short probabilit
 		}
 }
 
-static void build_scen_file_name(char* file_n)
-{
-	short i, last_slash = -1;
-
-	for (i = 0; i < 256; i++)
-		if ((file_path_name[i] == 92) || (file_path_name[i] == '/'))
-			last_slash = i;
-	if (last_slash < 0) {
-		format_to_buf(file_n, "BLADSCEN/{}", party.scen_name);
-		return;
-	}
-	strcpy(file_n, file_path_name);
-	file_n += last_slash + 1;
-	format_to_buf(file_n, "BLADSCEN/{}", party.scen_name);
-}
-
 static std::string build_scen_file_name(void)
 {
-	char file_name[256];
-	build_scen_file_name(file_name);
-	return file_name;
-}
-
-void build_scen_ed_name(char* file_n)
-{
-	short i, last_slash = -1;
-
-	for (i = 0; i < 256; i++)
+	short last_slash = -1;
+	for (short i = 0; i < 256; i++)
 		if ((file_path_name[i] == 92) || (file_path_name[i] == '/'))
 			last_slash = i;
-	if (last_slash < 0) {
-		format_to_buf(file_n, "BLSCENED/bladdata.bld");
-		return;
+	if (last_slash < 0)
+	{
+		return std::format("BLADSCEN/{}", party.scen_name);
 	}
-	strcpy(file_n, file_path_name);
-	file_n += last_slash + 1;
-	format_to_buf(file_n, "BLSCENED/bladdata.bld");
+	char file_name[256];
+	strcpy(file_name, file_path_name);
+	format_to_buf(file_name + last_slash + 1, "BLADSCEN/{}", party.scen_name);
+	return file_name;
 }
 
 // mode 0 want town and talking, 1 talking only, 2 want a string only, and extra is string num

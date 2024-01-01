@@ -34,5 +34,4 @@ short out_s(short flag);
 short get_buf_ptr(short flag);
 void outdoor_alert(),town_alert(),reg_alert();
 void build_data_file(short mode);
-void build_scen_ed_name (char *file_n);
 Boolean load_blades_data();
