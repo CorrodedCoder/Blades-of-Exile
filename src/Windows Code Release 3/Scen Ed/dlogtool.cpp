@@ -812,24 +812,31 @@ short cd_get_active(short dlog_num, short item_num)
 }
 
 
-void cd_get_item_text(short dlog_num, short item_num, char *str)
+std::string cd_get_item_text(short dlog_num, short item_num)
 {
-	short dlg_index,item_index,i;
-	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
-		return ;
-	if (item_type[item_index] == 6) {
-		format_to_buf(str,"");
-		for (i = 0; i < 80; i++)
-			if ((store_edit_parent_num[i] == dlog_num) && (store_edit_item[i] = item_num)
-				&& (edit_box[i] != NULL))
-				GetWindowText(edit_box[i],str,255);
-		return;
+	short dlg_index,item_index;
+	if (cd_get_indices(dlog_num, item_num, &dlg_index, &item_index) < 0)
+	{
+		return {};
+	}
+	if (item_type[item_index] == 6)
+	{
+		char buffer[256]{};
+		for (short i = 0; i < 80; i++)
+		{
+			if ((store_edit_parent_num[i] == dlog_num) && (store_edit_item[i] = item_num) && (edit_box[i] != NULL))
+			{
+				GetWindowText(edit_box[i], buffer, 255);
+			}
 		}
-	if (item_index >= 150) {
+		return buffer;
+	}
+	if (item_index >= 150)
+	{
 		beep();
-		return;
-		}
-	format_to_buf(str,"{}",text_short_str[(item_index < 10) ? item_index : item_index - 10]);
+		return {};
+	}
+	return text_short_str[(item_index < 10) ? item_index : item_index - 10];
 }
 
 

@@ -756,16 +756,16 @@ short pick_town_num(short which_dlog,short def)
 // ignore parent in Mac version
 {
 	short town_strs_hit,i,store_dialog_answer;
-	Str255 temp_str;
 	
 	store_whigh_dlog = which_dlog;
 	
 	cd_create_dialog_parent_num(store_whigh_dlog,0);
 	
 	CDSN(store_whigh_dlog,2,def);
-	cd_get_item_text(which_dlog,7,temp_str);
+
+	const auto temp_str{ cd_get_item_text(which_dlog,7) };
 	csit(which_dlog,7, std::format("{} (0 - {:d})", temp_str, scenario_num_towns() - 1));
-	
+
 	while (dialog_not_toast)
 		ModalDialog((ModalFilterProcPtr) cd_event_filter, &town_strs_hit);
 

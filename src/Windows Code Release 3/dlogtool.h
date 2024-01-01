@@ -26,7 +26,6 @@ void cd_init_button(short dlog_num,short item_num, short button_num, short statu
 void cd_attach_key(short dlog_num,short item_num,char key);
 void cd_set_pict(short dlog_num, short item_num, short pict_num);
 void cd_activate_item(short dlog_num, short item_num, short status);
-void cd_get_item_text(short dlog_num, short item_num, char *str);
 void cd_set_item_text(short dlog_num, short item_num, std::string_view str);
 void cd_set_item_num(short dlog_num, short item_num, short num);
 void cd_set_led(short dlog_num,short item_num,short state);

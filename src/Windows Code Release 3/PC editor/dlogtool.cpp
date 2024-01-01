@@ -955,7 +955,8 @@ short cd_get_active(short dlog_num, short item_num)
 	return item_active[item_index];
 }
 
-
+#if 0
+// Unreferenced
 void cd_get_item_text(short dlog_num, short item_num, char *str)
 {
 	short dlg_index,item_index;
@@ -976,6 +977,7 @@ void cd_get_item_text(short dlog_num, short item_num, char *str)
 		}
 	format_to_buf(str,"{}",text_long_str[(item_index < 10) ? item_index : (item_index - 10)]);
 }
+#endif
 
 void cd_get_text_edit_str(short dlog_num, char *str)
 {
