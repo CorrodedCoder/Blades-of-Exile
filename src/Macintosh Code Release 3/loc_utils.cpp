@@ -608,7 +608,7 @@ short light_radius()
 	short extra_levels[6] = {10,20,50,75,110,140};
 	
 	if (((which_combat_type == 0) && (is_combat()))
-		|| (is_out()) || (c_town.town.lighting == 0))
+		|| is_out() || (c_town.town.lighting == 0))
 				return 200;
 	for (i = 0; i < 6; i++)
 		if (party.light_level > extra_levels[i])

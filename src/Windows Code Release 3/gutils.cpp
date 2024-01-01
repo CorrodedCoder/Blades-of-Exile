@@ -220,7 +220,7 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw,short dest)
 
 		if (anim_type >= 0)
 		 {
-			if ((is_town()) || (is_out()))
+			if ((is_town()) || is_out())
 				anim_onscreen = TRUE;
 			}
 

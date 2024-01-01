@@ -687,7 +687,7 @@ Boolean handle_action(EventRecord event)
 			} */
 			
 // Begin : click in terrain
-	if ((PtInRect (the_point, &world_screen)) && ((is_out()) || (is_town()) || (is_combat())) ){		
+	if ((PtInRect (the_point, &world_screen)) && (is_out() || (is_town()) || (is_combat())) ){		
 		i = (the_point.h - 23) / 28;
 		j = (the_point.v - 23) / 36;
 
@@ -1354,7 +1354,7 @@ Boolean handle_action(EventRecord event)
 			}
 		else {
 			increase_age();
-			if (!(is_out()) || ((is_out()) && (party.age % 10 == 0))) // no monst move is party outdoors and on horse
+			if (is_not_out() || (is_out() && (party.age % 10 == 0))) // no monst move is party outdoors and on horse
 				do_monsters();
 			if (overall_mode != 0)
 				do_monster_turn();
@@ -2336,7 +2336,7 @@ void handle_cave_lore()////
 	short i,pic;
 	unsigned char ter;
 	
-	if (!is_out())
+	if (is_not_out())
 		return;
 	
 	ter = out[party.p_loc.x][party.p_loc.y];

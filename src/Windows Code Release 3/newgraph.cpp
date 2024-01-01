@@ -147,7 +147,7 @@ void apply_unseen_mask()
 	{
 		return;
 	}
-	if (!(is_out()) && (c_town.town.lighting > 0))
+	if (is_not_out() && (c_town.town.lighting > 0))
 	{
 		return;
 	}

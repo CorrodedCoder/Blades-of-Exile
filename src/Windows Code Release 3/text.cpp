@@ -427,7 +427,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 						// make go faster, and I got lazy.
 						SelectObject(hdc,store_bmp);
 						if ((stat_screen_mode == 0) &&
-						 ((is_town()) || (is_out()) || ((is_combat()) && (pc == current_pc)))) { // place give and drop and use
+						 ((is_town()) || is_out() || ((is_combat()) && (pc == current_pc)))) { // place give and drop and use
 							place_item_button(0,i,0,adven[pc].items[i_num].graphic_num); // item_graphic
 							if (abil_chart[adven[pc].items[i_num].ability] != 4) // place use if can
 								place_item_button(10,i,1,0);
@@ -437,7 +437,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 								place_item_button(0,i,0,adven[pc].items[i_num].graphic_num); // item_graphic
 								place_item_button(3,i,4,0); // info button
 								if ((stat_screen_mode == 0) &&
-								 ((is_town()) || (is_out()) || ((is_combat()) && (pc == current_pc)))) { // place give and drop and use
+								 ((is_town()) || is_out() || ((is_combat()) && (pc == current_pc)))) { // place give and drop and use
 									place_item_button(1,i,2,0);
 									place_item_button(2,i,3,0);
 									if (abil_chart[adven[pc].items[i_num].ability] != 4) // place use if can
@@ -854,7 +854,7 @@ short do_look(location space)
 	from_where = get_cur_loc();
 	is_lit = pt_in_light(from_where,space);
 
-	if (((is_out()) && (same_point(space,party.p_loc) == TRUE)) ||
+	if ((is_out() && (same_point(space,party.p_loc) == TRUE)) ||
 		((is_town()) && (same_point(space,c_town.p_loc))))
 			add_string_to_buf("    Your party");
 	if (is_combat())
@@ -864,7 +864,7 @@ short do_look(location space)
 				add_string_to_buf("    {}", adven[i].name);
 				}
 
-	if (is_out() == FALSE) {
+	if (is_not_out()) {
 		for (i = 0; i < T_M; i++)
 			if ((c_town.monst.dudes[i].active != 0) && (is_lit == TRUE)
 				&& (monst_on_space(space,i) == TRUE) &&
@@ -907,7 +907,7 @@ short do_look(location space)
 			add_string_to_buf("    Horse                ");
 		}
 
-	if (is_out() == FALSE) {
+	if (is_not_out()) {
 		if (town_boat_there(space) < 30)
 			add_string_to_buf("    Boat               ");
 		if (town_horse_there(space) < 30)
@@ -1055,7 +1055,7 @@ void notify_out_combat_began(out_wandering_type encounter,short *nums)
 
 static const char * get_ter_name(unsigned char num)
 {
-	if ((num == 90) && ((is_out()) || (is_town()) || ((is_combat()) && (which_combat_type == 1))))
+	if ((num == 90) && (is_out() || (is_town()) || ((is_combat()) && (which_combat_type == 1))))
 		return "Pit";
 	else
 	{

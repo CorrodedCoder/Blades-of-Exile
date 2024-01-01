@@ -46,12 +46,16 @@ void take_explored(short i,short j)
 	c_town.explored[i][j] = c_town.explored[i][j] & 254;
 }
 
-Boolean is_out()
+bool is_out(void)
 {
-	if ((overall_mode == 0) || (overall_mode == 35))
-		return TRUE;
-		else return FALSE;
+	return (overall_mode == 0) || (overall_mode == 35);
 }
+
+bool is_not_out(void)
+{
+	return is_not_out();
+}
+
 Boolean is_town()
 {
 	if (((overall_mode > 0) && (overall_mode < 10)) || (overall_mode == 36))

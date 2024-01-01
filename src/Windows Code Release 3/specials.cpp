@@ -225,7 +225,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 	if (can_enter == FALSE)
 		return FALSE;
 	
-	if ((!is_out()) && (overall_mode < 20)) {
+	if ((is_not_out()) && (overall_mode < 20)) {
 	check_fields(where_check,mode,which_pc);
 
 	if (is_web(where_check.x,where_check.y)) {
@@ -1720,7 +1720,7 @@ void general_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 			check_mess = TRUE;break;	
 		case 7:
 			if (is_out()) *next_spec = -1;
-			if ((is_out()) && (spec.ex1a != 0) && (which_mode == 0)) {
+			if (is_out() && (spec.ex1a != 0) && (which_mode == 0)) {
 				ASB("Can't go here while outdoors.");
 				*a = 1;
 				}
@@ -2304,7 +2304,7 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 		case 136:
 			l.x = spec.ex1a; l.y = spec.ex1b;
 			l = local_to_global(l);
-			if ((is_out()) && (out[l.x][l.y] == spec.ex2a))
+			if (is_out() && (out[l.x][l.y] == spec.ex2a))
 				*next_spec = spec.ex2b;
  			break;
 		case 137:
@@ -2849,7 +2849,7 @@ void outdoor_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 	spec = cur_node;
 	*next_spec = cur_node.jumpto;
 	
-	if (is_out() == FALSE) return;
+	if (is_not_out()) return;
 	
 	switch (cur_node.type) {
 		case 225: create_wand_monst();
@@ -2931,12 +2931,12 @@ void handle_message(short which_mode,short cur_type,short mess1,short mess2,shor
 		mess2 + ((mess2 >= 0) ? mess_adj[cur_type] : 0)) ;
 	if (mess1 >= 0) {
 		label1 = 1000 * cur_type + mess1 + mess_adj[cur_type];
-		label1b = (is_out()) ? (party.outdoor_corner.x + party.i_w_c.x) +
+		label1b = is_out() ? (party.outdoor_corner.x + party.i_w_c.x) +
 			scenario_out_width() * (party.outdoor_corner.y + party.i_w_c.y) : c_town.town_num;
 		}
 	if (mess2 >= 0) {
 		label2 = 1000 * cur_type + mess2 + mess_adj[cur_type];
-		label2b = (is_out()) ? (party.outdoor_corner.x + party.i_w_c.x) +
+		label2b = is_out() ? (party.outdoor_corner.x + party.i_w_c.x) +
 			scenario_out_width() * (party.outdoor_corner.y + party.i_w_c.y) : c_town.town_num;
 		}
 	display_strings(str1, str2,label1,label2, label1b,label2b, 

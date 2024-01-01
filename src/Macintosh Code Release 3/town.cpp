@@ -1367,7 +1367,7 @@ void draw_map (DialogPtr the_dialog, short the_item)
 	// area_to_draw_from is final draw from rect
 	// area_to_draw_on is final draw to rect
 	// extern short store_pre_shop_mode,store_pre_talk_mode;
-	if ((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
+	if (is_out() || ((is_combat()) && (which_combat_type == 0)) ||
 		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
 		((overall_mode == 21) && (store_pre_shop_mode == 0))) {
 		view_rect.left = boe_clamp(party.loc_in_sec.x - 20,0,8);
@@ -1403,7 +1403,7 @@ void draw_map (DialogPtr the_dialog, short the_item)
 					break;
 				}
 			}
-	if ((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
+	if (is_out() || ((is_combat()) && (which_combat_type == 0)) ||
 		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
 		((overall_mode == 21) && (store_pre_shop_mode == 0)) ||
 		(((is_town()) || (is_combat())) && (town_type != 2))) {
@@ -1482,7 +1482,7 @@ void draw_map (DialogPtr the_dialog, short the_item)
 
 	// Now, if doing just partial restore, crop redraw_rect to save time.
 	if (the_item == 5) {
-		if ((is_out())  || ((is_combat()) && (which_combat_type == 0)) ||
+		if (is_out() || ((is_combat()) && (which_combat_type == 0)) ||
 		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
 		((overall_mode == 21) && (store_pre_shop_mode == 0)))
 			kludge = global_to_local(party.p_loc);
@@ -1499,7 +1499,7 @@ void draw_map (DialogPtr the_dialog, short the_item)
 	if ((overall_mode == 21) || (overall_mode == 20))
 		redraw_rect.right = -1;
 	
-	if ((is_out()) ||
+	if (is_out() ||
 		((is_combat()) && (which_combat_type == 0)) ||
 		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
 		((overall_mode == 21) && (store_pre_shop_mode == 0)))	
@@ -1628,7 +1628,7 @@ void draw_map (DialogPtr the_dialog, short the_item)
 
 						draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
 						draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);
-						//if ((!is_out()) && (town_type == 2)) {
+						//if ((is_not_out()) && (town_type == 2)) {
 						//	draw_rect.left += 48;
 						//	draw_rect.top += 48;
 						//	}
@@ -1648,7 +1648,7 @@ void draw_map (DialogPtr the_dialog, short the_item)
 
 					draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
 					draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);
-					//if ((!is_out()) && (town_type == 2)) {
+					//if ((is_not_out()) && (town_type == 2)) {
 					//	draw_rect.left += 48;
 					//	draw_rect.top += 48;
 					//	}

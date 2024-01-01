@@ -1398,7 +1398,7 @@ void draw_map (HWND the_dialog, short the_item)
 	short total_size = 48; // if full redraw, use this to figure out everything
 	RECT view_rect{ 0,0,48,48 }; // RECTangle visible in view screen
 	RECT redraw_rect{ 0,0,48,48 };
-	if ((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
+	if (is_out() || ((is_combat()) && (which_combat_type == 0)) ||
 		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
 		((overall_mode == 21) && (store_pre_shop_mode == 0)))
 	{
@@ -1441,7 +1441,7 @@ void draw_map (HWND the_dialog, short the_item)
 	const RECT area_to_draw_on{ offset_rect({47,29,287,269}, 0,-23) };
 	RECT area_to_draw_from;
 	short small_adj = 0;
-	if ((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
+	if (is_out() || ((is_combat()) && (which_combat_type == 0)) ||
 		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
 		((overall_mode == 21) && (store_pre_shop_mode == 0)) ||
 		(((is_town()) || (is_combat())) && (town_type != 2))
@@ -1510,7 +1510,7 @@ void draw_map (HWND the_dialog, short the_item)
 		if (the_item == 5)
 		{
 			location kludge;
-			if ((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
+			if (is_out() || ((is_combat()) && (which_combat_type == 0)) ||
 				((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
 				((overall_mode == 21) && (store_pre_shop_mode == 0))
 				)
@@ -1531,7 +1531,7 @@ void draw_map (HWND the_dialog, short the_item)
 			redraw_rect.right = -1;
 
 		Boolean out_mode;
-		if ((is_out()) ||
+		if (is_out() ||
 			((is_combat()) && (which_combat_type == 0)) ||
 			((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
 			((overall_mode == 21) && (store_pre_shop_mode == 0)))
@@ -1699,7 +1699,7 @@ void draw_map (HWND the_dialog, short the_item)
 
 						draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
 						draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);
-						//if ((!is_out()) && (town_type == 2)) {
+						//if ((is_not_out()) && (town_type == 2)) {
 						//	draw_rect.left += 48;
 						//	draw_rect.top += 48;
 						//	}
@@ -1725,7 +1725,7 @@ void draw_map (HWND the_dialog, short the_item)
 
 			draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
 			draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);
-			//if ((!is_out()) && (town_type == 2)) {
+			//if ((is_not_out()) && (town_type == 2)) {
 			//	draw_rect.left += 48;
 			//	draw_rect.top += 48;
 			//	}

@@ -815,7 +815,7 @@ void create_clip_region()
 	for (i = 0; i < 6; i++) {
 		store_rect = win_to_rects[i];
 		OffsetRect(&store_rect,ulx,uly);
-		if ((is_out()) || (is_town()) || (is_combat()) ||
+		if (is_out() || (is_town()) || (is_combat()) ||
 			(i == 2) || (i == 3) || (i == 5)) {
 				temp_rgn = CreateRectRgn(store_rect.left,store_rect.top,store_rect.right,store_rect.bottom);
 				CombineRgn(clip_region,clip_region,temp_rgn,RGN_DIFF);
@@ -1073,7 +1073,7 @@ void draw_text_bar(short mode)
 	short i,num_rect[3] = {12,10,4};
 	location loc;
 
-	loc = (is_out()) ? global_to_local(party.p_loc) : c_town.p_loc;
+	loc = is_out() ? global_to_local(party.p_loc) : c_town.p_loc;
 
 	if (mode == 1)
 		remember_tiny_text = 500;
@@ -1730,12 +1730,12 @@ void draw_terrain(short	mode)
 	
 	for (i = 0; i < 13; i++)
 		for (j = 0; j < 13; j++) {
-			where_draw =  (is_out()) ? party.p_loc : center;
+			where_draw =  is_out() ? party.p_loc : center;
 			where_draw.x += i - 6;
 			where_draw.y += j - 6;
-			if (is_out() == FALSE)
+			if (is_not_out())
 				light_area[i][j] = (is_town()) ? pt_in_light(view_loc,where_draw) : combat_pt_in_light(where_draw);
-			if ((is_out() == FALSE) && ((where_draw.x < 0) || (where_draw.x > town_size[town_type] - 1)
+			if ((is_not_out()) && ((where_draw.x < 0) || (where_draw.x > town_size[town_type] - 1)
 				|| (where_draw.y < 0) || (where_draw.y > town_size[town_type] - 1)))
 					unexplored_area[i][j] = 0;
 				else unexplored_area[i][j] = 1 - (is_explored(where_draw.x,where_draw.y) ? TRUE : FALSE);
@@ -1745,13 +1745,13 @@ void draw_terrain(short	mode)
 	for (q = 0; q < 9; q++) {
 		for (r = 0; r < 9; r++)
 			{
-				where_draw = (is_out()) ? party.p_loc : center;
+				where_draw = is_out() ? party.p_loc : center;
 				where_draw.x += q - 4;
 				where_draw.y += r - 4;
 				off_terrain = FALSE;
 				
 				draw_trim = TRUE;
-				if ((is_out() == FALSE) && ((where_draw.x < 0) || (where_draw.x > town_size[town_type] - 1)
+				if ((is_not_out()) && ((where_draw.x < 0) || (where_draw.x > town_size[town_type] - 1)
 						|| (where_draw.y < 0) || (where_draw.y > town_size[town_type] - 1))) {
 							draw_trim = FALSE;
 							// Warning - this section changes where_draw
@@ -1903,7 +1903,7 @@ void draw_terrain(short	mode)
 			}
 		}
 
-	if ((overall_mode != 50) && (!is_out()))
+	if ((overall_mode != 50) && (is_not_out()))
 		draw_sfx();
 
 	// Now place items
@@ -1911,7 +1911,7 @@ void draw_terrain(short	mode)
 		draw_items();
 
 	// Now place fields
-	if ((overall_mode != 50) && (!is_out())) {
+	if ((overall_mode != 50) && (is_not_out())) {
 		draw_fields();
 		draw_spec_items();
 		}
@@ -2013,7 +2013,7 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 		if (town_trim[where.x][where.y] & 128)
 				draw_trim(q,r,2,4);			
 		}
-	if ((is_out()) && (out_trim[where.x][where.y] != 0)) {
+	if (is_out() && (out_trim[where.x][where.y] != 0)) {
 		if (out_trim[where.x][where.y] & 1)
 				draw_trim(q,r,1,0);	
 		if (out_trim[where.x][where.y] & 2)
@@ -2167,18 +2167,18 @@ void place_road(short q,short r,location where)
 		rect_draw_some_item_bmp(fields_gworld, road_rects[1], terrain_screen_gworld, to_rect, 0, 0);
 		}
 
-	if (((is_out()) && (where.x < 96)) || (!(is_out()) && (where.x < town_size[town_type] - 1)))
+	if ((is_out() && (where.x < 96)) || (is_not_out() && (where.x < town_size[town_type] - 1)))
 		ter = coord_to_ter(where.x + 1,where.y);
-	if (((is_out()) && (where.x == 96)) || (!(is_out()) && (where.x == town_size[town_type] - 1))
+	if ((is_out() && (where.x == 96)) || (is_not_out() && (where.x == town_size[town_type] - 1))
 	 || (extend_road_terrain(ter) == TRUE)) {
 		to_rect = road_dest_rects[1];
 		OffsetRect(&to_rect,13 + q * 28,13 + r * 36);
 		rect_draw_some_item_bmp(fields_gworld, road_rects[0], terrain_screen_gworld, to_rect, 0, 0);
 		}
 
-	if (((is_out()) && (where.y < 96)) || (!(is_out()) && (where.y < town_size[town_type] - 1)))
+	if ((is_out() && (where.y < 96)) || (is_not_out() && (where.y < town_size[town_type] - 1)))
 		ter = coord_to_ter(where.x,where.y + 1);
-	if (((is_out()) && (where.y == 96)) || (!(is_out()) && (where.y == town_size[town_type] - 1))
+	if ((is_out() && (where.y == 96)) || (is_not_out() && (where.y == town_size[town_type] - 1))
 	 || (extend_road_terrain(ter) == TRUE)) {
 		to_rect = road_dest_rects[2];
 		OffsetRect(&to_rect,13 + q * 28,13 + r * 36);
