@@ -2942,48 +2942,68 @@ void handle_message(short which_mode,short cur_type,short mess1,short mess2,shor
 	display_strings(str1, str2,label1,label2, label1b,label2b, 
 		"",57,1600 + scenario_intro_pic(),0);
 }
- 
+
+const short c_num_strs[3]{ 260,108,135 };
+
 void get_strs(char *str1,char *str2,short cur_type,short which_str1,short which_str2) 
 {
-	short num_strs[3] = {260,108,135};
-		
-	if (((which_str1 >= 0) && (which_str1 != boe_clamp(which_str1,0,num_strs[cur_type]))) ||
-		((which_str2 >= 0) && (which_str2 != boe_clamp(which_str2,0,num_strs[cur_type])))) {
+	if (((which_str1 >= 0) && (which_str1 != boe_clamp(which_str1, 0, c_num_strs[cur_type]))) ||
+		((which_str2 >= 0) && (which_str2 != boe_clamp(which_str2, 0, c_num_strs[cur_type]))))
+	{
 		give_error("The scenario attempted to access a message out of range.","",0);
 		return;
+	}
+	switch (cur_type)
+	{
+	case 0:
+		if (which_str1 >= 0)
+		{
+			if (which_str1 < 160)
+			{
+				strcpy(str1, data_store5.scen_strs[which_str1]);
+			}
+			else
+			{
+				strcpy(str1, scen_strs2[which_str1 - 160]);
+			}
 		}
-	switch (cur_type) {
-		case 0:
-			if (which_str1 >= 0) {
-				if (which_str1 < 160)
-					strcpy(str1,data_store5.scen_strs[which_str1]);
-					else strcpy(str1,scen_strs2[which_str1 - 160]);
-				
-				}
-			if (which_str2 >= 0){
-				if (which_str2 < 160)
-					strcpy(str2,data_store5.scen_strs[which_str2]);
-					else strcpy(str2,scen_strs2[which_str2 - 160]);				
-				}
-			break;
-		case 1:
-			if (which_str1 >= 0)
-				load_outdoors(party.outdoor_corner.x + party.i_w_c.x, 
-					party.outdoor_corner.y + party.i_w_c.y, party.i_w_c.x, party.i_w_c.y,
-					1,which_str1,str1);
-			if (which_str2 >= 0)
-				load_outdoors(party.outdoor_corner.x + party.i_w_c.x, 
-					party.outdoor_corner.y + party.i_w_c.y, party.i_w_c.x, party.i_w_c.y,
-					1,which_str2,str2);
-			break;
-		case 2:
-			if (which_str1 >= 0)
-				strcpy(str1,data_store.town_strs[which_str1]);
-			if (which_str2 >= 0)
-				strcpy(str2,data_store.town_strs[which_str2]);
-			break;
+		if (which_str2 >= 0)
+		{
+			if (which_str2 < 160)
+			{
+				strcpy(str2, data_store5.scen_strs[which_str2]);
+			}
+			else
+			{
+				strcpy(str2, scen_strs2[which_str2 - 160]);
+			}
 		}
-
+		break;
+	case 1:
+		if (which_str1 >= 0)
+		{
+			load_outdoors(party.outdoor_corner.x + party.i_w_c.x,
+				party.outdoor_corner.y + party.i_w_c.y, party.i_w_c.x, party.i_w_c.y,
+				1, which_str1, str1);
+		}
+		if (which_str2 >= 0)
+		{
+			load_outdoors(party.outdoor_corner.x + party.i_w_c.x,
+				party.outdoor_corner.y + party.i_w_c.y, party.i_w_c.x, party.i_w_c.y,
+				1, which_str2, str2);
+		}
+		break;
+	case 2:
+		if (which_str1 >= 0)
+		{
+			strcpy(str1, data_store.town_strs[which_str1]);
+		}
+		if (which_str2 >= 0)
+		{
+			strcpy(str2, data_store.town_strs[which_str2]);
+		}
+		break;
+	}
 }
 
 

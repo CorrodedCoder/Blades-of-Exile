@@ -942,22 +942,20 @@ void fix_boats()
 }
 
 
-void load_outdoors(short to_create_x, short to_create_y, short targ_x, short targ_y,
-	short mode, short extra, char* str)
-	//short	to_create_x, to_create_y; // actual sector being loaded
+//short	to_create_x, to_create_y; // actual sector being loaded
 //short 	targ_x, targ_y; // 0 or 1
+void load_outdoors(
+	short to_create_x, short to_create_y, short targ_x, short targ_y, short mode, short extra, char* str
+	)
 {
-	std::ifstream file_id;
-	bool success = false;
-	short i, j, out_sec_num;
-	long len_to_jump = 0, store = 0;
-
 	if ((to_create_x != boe_clamp(to_create_x, 0, scenario_out_width() - 1)) ||
-		(to_create_y != boe_clamp(to_create_y, 0, scenario_out_height() - 1))) { // not exist
-		for (i = 0; i < 48; i++)
-			for (j = 0; j < 48; j++)
+		(to_create_y != boe_clamp(to_create_y, 0, scenario_out_height() - 1))) // not exist
+	{
+		for (short i = 0; i < 48; i++)
+			for (short j = 0; j < 48; j++)
 				outdoors[targ_x][targ_y].terrain[i][j] = 5;
-		for (i = 0; i < 18; i++) {
+		for (short i = 0; i < 18; i++)
+		{
 			outdoors[targ_x][targ_y].special_id[i] = -1;
 			outdoors[targ_x][targ_y].special_locs[i].x = 100;
 		}
@@ -965,27 +963,34 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 	}
 
 	// Was: OpenFile(build_scen_file_name(), &store_str, OF_READ /* | OF_SEARCH */);
+	std::ifstream file_id;
 	file_id.open(build_scen_file_name(), std::ios_base::binary);
-	if (file_id.fail()) {
+	if (file_id.fail())
+	{
 		outdoor_alert();
 		PostQuitMessage(0);
 	}
 
-	out_sec_num = scenario_out_width() * to_create_y + to_create_x;
-
-	len_to_jump = sizeof(scenario_data_type);
+	const short out_sec_num = scenario_out_width() * to_create_y + to_create_x;
+	long len_to_jump = sizeof(scenario_data_type);
 	len_to_jump += sizeof(scen_item_data_type);
-	for (i = 0; i < 300; i++)
+	for (short i = 0; i < 300; i++)
 		len_to_jump += (long)scenario.scen_str_len[i];
-	store = 0;
-	for (i = 0; i < out_sec_num; i++)
-		for (j = 0; j < 2; j++)
+
+	long store = 0;
+	for (short i = 0; i < out_sec_num; i++)
+		for (short j = 0; j < 2; j++)
 			store += (long)(scenario.out_data_size[i][j]);
 	len_to_jump += store;
 
-	if (!SetFPos(file_id, len_to_jump, std::ios_base::beg)) { FSClose(file_id); oops_error(32); }
+	if (!SetFPos(file_id, len_to_jump, std::ios_base::beg))
+	{
+		FSClose(file_id); oops_error(32);
+	}
 
-	if (mode == 0) {
+	bool success = false;
+	if (mode == 0)
+	{
 		success = file_read_type(file_id, outdoors[targ_x][targ_y]);
 		if (cur_scen_is_win != TRUE)
 		{
@@ -993,25 +998,39 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 		}
 		if (!success) { FSClose(file_id); oops_error(33); }
 	}
-	else success = file_read_type(file_id, dummy_out);
+	else
+	{
+		success = file_read_type(file_id, dummy_out);
+	}
 
-	if (mode == 0) {
-		for (i = 0; i < 9; i++) {
+	if (mode == 0)
+	{
+		for (short i = 0; i < 9; i++)
+		{
 			file_read_string(file_id, (long)outdoors[targ_x][targ_y].strlens[i], data_store4.outdoor_text[targ_x][targ_y].out_strs[i]);
 		}
 	}
-	if (mode == 1) {
-		for (i = 0; i < 120; i++) {
+
+	if (mode == 1)
+	{
+		for (short i = 0; i < 120; i++)
+		{
 			const long len = (long)(dummy_out.strlens[i]);
-			if (i == extra) {
+			if (i == extra)
+			{
 				file_read_string(file_id, len, str);
 			}
-			else SetFPos(file_id, len, std::ios_base::cur);
+			else
+			{
+				SetFPos(file_id, len, std::ios_base::cur);
+			}
 		}
-
 	}
 
-	if (!FSClose(file_id)) { oops_error(33); }
+	if (!FSClose(file_id))
+	{
+		oops_error(33);
+	}
 }
 
 
