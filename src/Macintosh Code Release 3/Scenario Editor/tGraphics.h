@@ -60,5 +60,5 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect, std::string_view str,sh
 void c2p(Str255 str) ;
 void p2c(Str255 str);
 void get_str(Str255 str,short i, short j);
-short string_length(char *str);
+short string_length(const char *str);
 Rect get_custom_rect (short which_rect);

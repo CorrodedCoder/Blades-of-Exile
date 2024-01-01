@@ -1584,7 +1584,7 @@ void get_str(Str255 str,short i, short j)
 	p2c(str);
 }
 
-short string_length(char *str)
+short string_length(const char *str)
 {
 	short text_len[257];
 	short total_width = 0,i,len;

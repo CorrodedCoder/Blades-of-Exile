@@ -19,5 +19,5 @@ void display_strings(short str1a,short str1b,short str2a,short str2b,
 void c2p(Str255 str) ;
 void p2c(Str255 str);
 void get_str(Str255 str,short i, short j);
-short string_length(char *str);
+short string_length(const char *str);
 void make_cursor_sword();

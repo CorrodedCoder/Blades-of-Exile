@@ -1341,7 +1341,7 @@ void get_str(char *str,short i, short j)
 	GetIndString(str, i, j);
 }
 
-short string_length(char *str,HDC hdc)
+short string_length(const char *str,HDC hdc)
 {
 	short text_len[257];
 	short total_width = 0,i,len;

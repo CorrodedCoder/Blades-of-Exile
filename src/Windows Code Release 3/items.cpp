@@ -891,18 +891,20 @@ static short display_item(location from_loc,short pc_num,short mode, bool check_
 	
 	total_items_gettable = 0;
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
-		if (t_i.items[i].variety != item_variety::None) {
+		if (t_i.items[i].variety != item_variety::None)
+		{
 			if (((adjacent(from_loc,t_i.items[i].item_loc) == TRUE) || 
 				 ((mode == 1) && !check_container &&
 				 ((dist(from_loc,t_i.items[i].item_loc) <= 4) || ((is_combat()) && (which_combat_type == 0)))
 				  && (can_see(from_loc,t_i.items[i].item_loc,0) < 5))) &&
 				  (is_contained(t_i.items[i]) == check_container) &&
-				  (!check_container || (same_point(t_i.items[i].item_loc,from_loc) == TRUE))) {
-				  	item_array[array_position] = i;
-			  		array_position++;
-			  		total_items_gettable++;
-			  		}
+				  (!check_container || (same_point(t_i.items[i].item_loc,from_loc) == TRUE))) 
+			{
+			 	item_array[array_position] = i;
+				array_position++;
+				total_items_gettable++;
 			}
+		}
 	if (pcs_gworld == NULL)
 		pcs_gworld = load_pict(902,main_dc);
 	cd_create_dialog(987,mainPtr);
@@ -919,32 +921,27 @@ static short display_item(location from_loc,short pc_num,short mode, bool check_
 		cd_attach_key(987,19 + 4 * i,(char) (97 + i));
 	put_item_graphics();
 
-	if (party.help_received[36] == 0) {
+	if (party.help_received[36] == 0)
+	{
 		cd_initial_draw(987);
 		give_help(36,37,987);
-		}
+	}
 
 	while (dialog_not_toast)
 		ModalDialog();	
 		
 	cd_kill_dialog(987,0);
-
 	DisposeGWorld(pcs_gworld);
 	pcs_gworld = NULL;
-	
 	put_item_screen(stat_window,0);
 	put_pc_screen();
-	
-	return dialog_answer;
-			
 
+	return dialog_answer;
 }
 
-short custom_choice_dialog(char *strs,short pic_num,short buttons[3]) ////
+short custom_choice_dialog(const std::array<std::array<char, 256>, 6>& strs,short pic_num,short buttons[3]) ////
 {
-
-	short i,store_dialog_answer;
-
+	short store_dialog_answer;
 	store_dialog_answer = dialog_answer;
 	make_cursor_sword();
 
@@ -955,15 +952,15 @@ short custom_choice_dialog(char *strs,short pic_num,short buttons[3]) ////
 
 	cd_kill_dialog(900,0);
 
-		if (in_startup_mode == FALSE)
-			refresh_screen(0);
-			else draw_startup(0);
-	i = dialog_answer;
+	if (in_startup_mode == FALSE)
+		refresh_screen(0);
+	else
+		draw_startup(0);
+
+	const short i = dialog_answer;
 	dialog_answer = store_dialog_answer;
-
 	return i;
-
-	}
+}
 
 void fancy_choice_dialog_event_filter (short item_hit)
 {

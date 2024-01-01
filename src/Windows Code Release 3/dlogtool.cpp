@@ -226,27 +226,16 @@ short cd_create_dialog_parent_num(short dlog_num,short parent)
 }
 
 short cd_create_custom_dialog(HWND parent,
-	char *str_block,short pic_num,short buttons[3])
+	const std::array<std::array<char, 256>, 6>& strs,short pic_num,short buttons[3])
 {
 
 	short i,j,free_slot = -1,free_item = -1,str_width,cur_but_right = 0;
 	short total_len = 0;
 
-	char strs[6][256];
-
 	short cur_item = 1;
 	short but_items[3] = {-1,-1,-1};
 	RECT measure_rect,pic_rect = {8,8,44,44},cur_text_rect = {50,2,0,0};
 	short win_width = 100, win_height = 100;
-
-	for (i = 0; i < 256; i++) {
-		strs[0][i] = str_block[i];
-		strs[1][i] = str_block[i + 256];
-		strs[2][i] = str_block[i + 512];
-		strs[3][i] = str_block[i + 768];
-		strs[4][i] = str_block[i + 1024];
-		strs[5][i] = str_block[i + 1280];
-		}
 
 	if (parent != NULL) {
 		if (IsWindowEnabled(parent) == 0)
@@ -358,7 +347,7 @@ short cd_create_custom_dialog(HWND parent,
 
 	// finally, 0-6 text, first do preprocessing to find out how much room we need
 	for (i = 0; i < 6; i++)
-		total_len += string_length(strs[i],main_dc);
+		total_len += string_length(strs[i].data(), main_dc);
 	total_len = total_len * 12;
 	str_width = 100 + 20;
 	//print_nums(0,total_len,str_width);
@@ -367,7 +356,7 @@ short cd_create_custom_dialog(HWND parent,
 	cur_text_rect.right = cur_text_rect.left + str_width;
 	// finally, 0-6 text, then create the items
 	for (i = 0; i < 6; i++)
-		if (strlen(strs[i]) > 0) {// text
+		if (strlen(strs[i].data()) > 0) {// text
 			for (j = 0; j < 10; j++)
 				if (item_dlg[j] < 0) {
 					free_item = j;
@@ -379,7 +368,7 @@ short cd_create_custom_dialog(HWND parent,
 			item_rect[free_item] = cur_text_rect;
 			measure_rect.top = 0; measure_rect.bottom = 0;
 			measure_rect.left = 0; measure_rect.right = 340;
-			DrawText(main_dc, strs[i],strlen(strs[i]),
+			DrawText(main_dc, strs[i].data(),strlen(strs[i].data()),
 				&measure_rect,DT_CALCRECT | DT_WORDBREAK);
 			item_rect[free_item].bottom = item_rect[free_item].top +
 				(measure_rect.bottom - measure_rect.top) + 16;
@@ -393,7 +382,7 @@ short cd_create_custom_dialog(HWND parent,
 			item_label[free_item] = 0;
            	item_label_loc[free_item] = -1;
             item_key[free_item] = 0;
- 			format_to_buf(text_long_str[free_item],"{}", strs[i]);
+ 			format_to_buf(text_long_str[free_item],"{}", strs[i].data());
       		cur_item++;
        		}
 	
