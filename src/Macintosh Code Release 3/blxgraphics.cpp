@@ -2377,7 +2377,7 @@ void draw_targets(location center)
 	short i = 0;
 	short dir_array[8] = {0,3,3,3,2,1,1,1};
 
-	if (party_toast() == TRUE)
+	if (party_toast())
 		return;
 
 	for (i = 0; i < 8; i++)
@@ -2527,14 +2527,12 @@ void draw_targeting_line(Point where_curs)
 }
 
 
-Boolean party_toast()
+bool party_toast(void)
 {
-	short i;
-	
-	for (i = 0; i < 6; i++)
+	for (short i = 0; i < 6; i++)
 		if (adven[i].main_status == status::Normal)
-			return FALSE;
-	return TRUE;
+			return false;
+	return true;
 }
 
 void redraw_partial_terrain(Rect redraw_rect)

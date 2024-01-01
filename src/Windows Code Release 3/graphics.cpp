@@ -106,7 +106,7 @@ const RECT startup_from[4] = {{0,0,602,274},{0,274,301,322},{301,0,579,67},{301,
 extern std::array<RECT, 6> startup_button;
 	
 static RECT trim_rects[8] = {{0,0,28,5},{0,31,28,36},{0,0,5,36},{24,0,28,36},
-						{0,0,5,5},{24,0,28,5},{24,31,28,36},{0,31,5,36}};  /**/
+						{0,0,5,5},{24,0,28,5},{24,31,28,36},{0,31,5,36}};  
 
 static short which_graphic_index[6] = {50,50,50,50,50,50};
 
@@ -156,7 +156,7 @@ RECT tiny_world_1_source_rect = {0,0,145,190},
 RECT share_mess_source_rect = {0,0,120,59},
 	share_mess_rect = {384,120,504,179};
 RECT start_buttons_source_rect = {0,0,190,186},
-	start_buttons_rect = {30,214,220,400}; /**/
+	start_buttons_rect = {30,214,220,400}; 
 
 // Variables to store trim. Makes game faster, but wastes 15K. We'll see how it works...
 char out_trim[96][96];
@@ -623,7 +623,7 @@ void Set_up_win ()
 	RECT pc_rect = {0,0,113,216};
 	HBITMAP temp_gworld;
 	short i,j;
-	RECT r = {0,0,280,180}; /**/
+	RECT r = {0,0,280,180}; 
 	RECT bg_from[9] = {{0,168,8,176},{23,206,31,214},{32,168,40,176},{102,174,110,182},	
 		{173,191,181,199},{203,190,211,198},{273,183,281,191},{373,0,381,8},
 		{380,17,388,25}};
@@ -1023,7 +1023,7 @@ void flood_bg()
 void draw_buttons(short mode)
 //mode; // 0 - regular   1 - button action
 {
-	RECT	source_rect = {0,0,258,37}, dest_rec; /**/
+	RECT	source_rect = {0,0,258,37}, dest_rec; 
 	HBITMAP	buttons_to_draw;
 	Boolean spec_draw = FALSE;
 
@@ -1483,7 +1483,7 @@ void update_pc_graphics()
 {
 	short i;
 	HBITMAP temp_gworld;
-	RECT template_rect = {0,0,28,36}; /**/
+	RECT template_rect = {0,0,28,36}; 
 	RECT	source_rect;
 
 	if (party_in_memory == FALSE)
@@ -2131,29 +2131,31 @@ void draw_trim(short q,short r,short which_trim,short which_mode)
 	rect_draw_some_item_bmp(mixed_gworld,from_rect,terrain_screen_gworld,to_rect,1,0);
 }
 
+const short c_extend_pics[39]{ 61,62,63,64,65, 66,401,402,406,202,
+						203,204,215,216,90, 91,92,93,102,103,
+						104,105,112,113,114, 115,187,188,189,190,
+						192,193,194,195,196, 197,191,200,201 };
 
 Boolean extend_road_terrain(unsigned char ter)
 {
-	short i;
-	short extend_pics[39] = {61,62,63,64,65, 66,401,402,406,202,
-							203,204,215,216,90, 91,92,93,102,103,
-							104,105,112,113,114, 115,187,188,189,190,
-							192,193,194,195,196, 197,191,200,201};
-	
-	for (i = 0; i < 39; i++)
-		if (scenario_ter_type(ter).picture == extend_pics[i])
+	for (short i = 0; i < 39; i++)
+	{
+		if (scenario_ter_type(ter).picture == c_extend_pics[i])
+		{
 			return TRUE;
+		}
+	}
 	return FALSE;
 }
+
+const RECT c_road_rects[2] = { {112,76,125,80},{144,72,148,90} }; // 0 - rl partial  1 - ud partial
+const RECT c_road_dest_rects[4] = { {12,0,16,18},{15,16,28,20},{12,18,16,36},{0,16,13,20} }; // top right bottom left
 
 void place_road(short q,short r,location where)
 {
 	location draw_loc;
 	unsigned char ter;
 	RECT to_rect;
-	RECT road_rects[2] = {{112,76,125,80},{144,72,148,90}}; // 0 - rl partial  1 - ud partial
-	RECT road_dest_rects[4] = {{12,0,16,18},{15,16,28,20},{12,18,16,36},{0,16,13,20}}; // top right bottom left
-	/**/
 
 	draw_loc.x = q; draw_loc.y = r;
 
@@ -2162,37 +2164,36 @@ void place_road(short q,short r,location where)
 	if (where.y > 0)
 		ter = coord_to_ter(where.x,where.y - 1);
 	if ((where.y == 0) || (extend_road_terrain(ter) == TRUE)) {
-		to_rect = road_dest_rects[0];
+		to_rect = c_road_dest_rects[0];
 		OffsetRect(&to_rect,13 + q * 28,13 + r * 36);
-		rect_draw_some_item_bmp(fields_gworld, road_rects[1], terrain_screen_gworld, to_rect, 0, 0);
+		rect_draw_some_item_bmp(fields_gworld, c_road_rects[1], terrain_screen_gworld, to_rect, 0, 0);
 		}
 
 	if ((is_out() && (where.x < 96)) || (is_not_out() && (where.x < town_size[town_type] - 1)))
 		ter = coord_to_ter(where.x + 1,where.y);
 	if ((is_out() && (where.x == 96)) || (is_not_out() && (where.x == town_size[town_type] - 1))
 	 || (extend_road_terrain(ter) == TRUE)) {
-		to_rect = road_dest_rects[1];
+		to_rect = c_road_dest_rects[1];
 		OffsetRect(&to_rect,13 + q * 28,13 + r * 36);
-		rect_draw_some_item_bmp(fields_gworld, road_rects[0], terrain_screen_gworld, to_rect, 0, 0);
+		rect_draw_some_item_bmp(fields_gworld, c_road_rects[0], terrain_screen_gworld, to_rect, 0, 0);
 		}
 
 	if ((is_out() && (where.y < 96)) || (is_not_out() && (where.y < town_size[town_type] - 1)))
 		ter = coord_to_ter(where.x,where.y + 1);
 	if ((is_out() && (where.y == 96)) || (is_not_out() && (where.y == town_size[town_type] - 1))
 	 || (extend_road_terrain(ter) == TRUE)) {
-		to_rect = road_dest_rects[2];
+		to_rect = c_road_dest_rects[2];
 		OffsetRect(&to_rect,13 + q * 28,13 + r * 36);
-		rect_draw_some_item_bmp(fields_gworld, road_rects[1], terrain_screen_gworld, to_rect, 0, 0);
+		rect_draw_some_item_bmp(fields_gworld, c_road_rects[1], terrain_screen_gworld, to_rect, 0, 0);
 		}
 
 	if (where.x > 0)
 		ter = coord_to_ter(where.x - 1,where.y);
 	if ((where.x == 0) || (extend_road_terrain(ter) == TRUE)) {
-		to_rect = road_dest_rects[3];
+		to_rect = c_road_dest_rects[3];
 		OffsetRect(&to_rect,13 + q * 28,13 + r * 36);
-		rect_draw_some_item_bmp(fields_gworld, road_rects[0], terrain_screen_gworld, to_rect, 0, 0);
+		rect_draw_some_item_bmp(fields_gworld, c_road_rects[0], terrain_screen_gworld, to_rect, 0, 0);
 		}
-
 }
 
 void draw_rest_screen()
@@ -2205,6 +2206,9 @@ void draw_rest_screen()
 	overall_mode = store_mode ;
 }
 
+const short c_sound_to_play[20] = { 97,69,70,71,72, 73,55,75,42,86,
+		87,88,89,98,0, 0,0,0,0,0 };
+
 void pre_boom_space(location where,short mode,short type,short damage,short sound)
 // if mode is 100, force
 //short type; // 0 - flame 1 - magic 2 - poison 3 - blood 4 - cold
@@ -2213,9 +2217,6 @@ void pre_boom_space(location where,short mode,short type,short damage,short soun
 	// 8 - acid  9 - claw  10 - bite  11 - slime  12 - zap  13 - missile hit
 {
 	short sound_key;
-	short sound_to_play[20] = {97,69,70,71,72, 73,55,75,42,86,
-			87,88,89,98,0, 0,0,0,0,0};
-
 	sound_key = type / 10;
 	type = type % 10;
 
@@ -2235,7 +2236,7 @@ void pre_boom_space(location where,short mode,short type,short damage,short soun
 	// Redraw terrain in proper position
 	if ((((point_onscreen(center,where) == FALSE) && (overall_mode >= 10)) || (overall_mode == 0))
 		) {
-		play_sound(sound_to_play[sound]);
+		play_sound(c_sound_to_play[sound]);
 
 		return;
 		}
@@ -2253,6 +2254,9 @@ void pre_boom_space(location where,short mode,short type,short damage,short soun
 	boom_space(where,mode,type,damage,sound);
  }
 
+const RECT c_big_to = { 13,13,265,337 };
+const RECT c_mixed_square = { 353,169,381,205 };
+
  void boom_space(location where,short mode,short type,short damage,short sound)
 // if mode is 100, force
 //short type; // 0 - flame 1 - magic 2 - poison 3 - blood 4 - cold
@@ -2261,15 +2265,15 @@ void pre_boom_space(location where,short mode,short type,short damage,short soun
 	// 8 - acid  9 - claw  10 - bite  11 - slime  12 - zap  13 - missile hit
 {
 	location where_draw = {4,4};
-	RECT source_rect = {0,0,28,36},text_rect,dest_rect = {13,13,41,49},big_to = {13,13,265,337},store_rect;
-	/**/
+	RECT source_rect = { 0,0,28,36 };
+	RECT dest_rect = { 13,13,41,49 };
+	RECT text_rect;
+	RECT store_rect;
+	
 	RECT terrain_from;
 	long dummy;
 	short del_len,sound_key;
 	short x_adj = 0,y_adj = 0,which_m;
-	RECT mixed_square = {353,169,381,205};
-	short sound_to_play[20] = {97,69,70,71,72, 73,55,75,42,86,
-			87,88,89,98,0, 0,0,0,0,0};
 
  	sound_key = type / 10;
 	type = type % 10;
@@ -2289,7 +2293,7 @@ void pre_boom_space(location where,short mode,short type,short damage,short soun
 	terrain_from = dest_rect;
 	source_rect = store_rect = dest_rect;
 	OffsetRect(&dest_rect,x_adj,y_adj);
-	IntersectRect(&dest_rect, &dest_rect, &big_to);
+	IntersectRect(&dest_rect, &dest_rect, &c_big_to);
 
 	if (cartoon_happening == FALSE)
 		OffsetRect(&dest_rect,win_to_rects[0].left,win_to_rects[0].top);
@@ -2303,9 +2307,9 @@ void pre_boom_space(location where,short mode,short type,short damage,short soun
 //   print_nums(1,dest_rect.left,dest_rect.top);
 
 	OffsetRect(&terrain_from,x_adj,y_adj);
-	rect_draw_some_item_bmp(terrain_screen_gworld,terrain_from,mixed_gworld,mixed_square,0,0);
-	rect_draw_some_item_bmp(fields_gworld,source_rect,mixed_gworld,mixed_square,1,0);
-	rect_draw_some_item_bmp(mixed_gworld,mixed_square,mixed_gworld,dest_rect,0,1);
+	rect_draw_some_item_bmp(terrain_screen_gworld,terrain_from,mixed_gworld, c_mixed_square,0,0);
+	rect_draw_some_item_bmp(fields_gworld,source_rect,mixed_gworld, c_mixed_square,1,0);
+	rect_draw_some_item_bmp(mixed_gworld, c_mixed_square,mixed_gworld,dest_rect,0,1);
 	if ((cartoon_happening == FALSE) && (dest_rect.right - dest_rect.left >= 28)
 		&& (dest_rect.bottom - dest_rect.top >= 36))
 	{
@@ -2320,7 +2324,7 @@ void pre_boom_space(location where,short mode,short type,short damage,short soun
 		else
 			WinDrawString(std::format("{:d}", damage),text_rect.left + 12,text_rect.top + 6);
 	}
-		play_sound(sound_to_play[sound]);
+		play_sound(c_sound_to_play[sound]);
 		if ((sound == 6) && (fast_bang == 0))
 			Delay(12, &dummy);
 
@@ -2336,59 +2340,70 @@ void pre_boom_space(location where,short mode,short type,short damage,short soun
 }
 	
 
+const RECT c_sources[4]{
+	BOE_INIT_RECT(46,65,73,54),BOE_INIT_RECT(56,46,64,54),BOE_INIT_RECT(56,37,64,45),BOE_INIT_RECT(65,37,73,45)
+};
+
+const RECT c_dests[8]{
+	BOE_INIT_RECT(7,100,15,108),BOE_INIT_RECT(7,170,15,178),BOE_INIT_RECT(140,7,148,15),BOE_INIT_RECT(212,7,220,15),
+	BOE_INIT_RECT(346,100,354,108),BOE_INIT_RECT(346,170,354,178),BOE_INIT_RECT(140,274,148,282),BOE_INIT_RECT(212,274,220,282)
+};
+
+
 void draw_pointing_arrows() 
 {
-	const RECT sources[4] = { BOE_INIT_RECT(46,65,73,54),BOE_INIT_RECT(56,46,64,54),BOE_INIT_RECT(56,37,64,45),BOE_INIT_RECT(65,37,73,45) };
-	const RECT dests[8] = { BOE_INIT_RECT(7,100,15,108),BOE_INIT_RECT(7,170,15,178),BOE_INIT_RECT(140,7,148,15),BOE_INIT_RECT(212,7,220,15),
-		BOE_INIT_RECT(346,100,354,108),BOE_INIT_RECT(346,170,354,178),BOE_INIT_RECT(140,274,148,282),BOE_INIT_RECT(212,274,220,282) };
-	
-	if ((monsters_going == TRUE) || (overall_mode <= 1) || (overall_mode <= 10)
-		|| (overall_mode == 35)) 
-			return;
-	for (short i = 0; i < 4; i++) {
-		rect_draw_some_item_bmp(mixed_gworld,sources[i],mixed_gworld,dests[i * 2],1,1);
-		rect_draw_some_item_bmp(mixed_gworld,sources[i],mixed_gworld,dests[i * 2 + 1],1,1);
-		}
+	if ((monsters_going == TRUE) || (overall_mode <= 1) || (overall_mode <= 10) || (overall_mode == 35))
+	{
+		return;
+	}
+	for (short i = 0; i < 4; i++)
+	{
+		rect_draw_some_item_bmp(mixed_gworld,c_sources[i],mixed_gworld,c_dests[i * 2],1,1);
+		rect_draw_some_item_bmp(mixed_gworld, c_sources[i],mixed_gworld, c_dests[i * 2 + 1],1,1);
+	}
 }
+
+const RECT c_ter_scrn_rect{ 0,0,279,351 };
 
 void redraw_terrain()
 {
 	RECT to_rect;
-	RECT ter_scrn_rect = {0,0,279,351};
 
 	if (cartoon_happening == FALSE)
+	{
 		to_rect = win_to_rects[0];
-		else {
-			to_rect = ter_scrn_rect;
-			if (store_anim_type == 0)
-				OffsetRect(&to_rect,306,5);
-				else OffsetRect(&to_rect,store_anim_ul.x,store_anim_ul.y);
-			}
+	}
+	else
+	{
+		to_rect = c_ter_scrn_rect;
+		if (store_anim_type == 0)
+			OffsetRect(&to_rect,306,5);
+		else
+			OffsetRect(&to_rect,store_anim_ul.x,store_anim_ul.y);
+	}
 	rect_draw_some_item_bmp(terrain_screen_gworld, win_from_rects[0], terrain_screen_gworld, to_rect, 0, 1);
-
 
 	// Now place arrows
 	draw_pointing_arrows();
-	
-
 }
 
 
 void draw_targets(location center)
 {
-	RECT source_rect = {36,74,47,85},dest_rect; /**/
+	RECT source_rect = {36,74,47,85},dest_rect; 
 	short i = 0;
 
-	if (party_toast() == TRUE)
+	if (party_toast())
 		return;
 
 	for (i = 0; i < 8; i++)
-		if ((spell_targets[i].x != 120) && (point_onscreen(center,spell_targets[i]) == TRUE)) {
+		if ((spell_targets[i].x != 120) && (point_onscreen(center,spell_targets[i]) == TRUE))
+		{
 			dest_rect = coord_to_rect(spell_targets[i].x - center.x + 4,spell_targets[i].y - center.y + 4);
 			OffsetRect(&dest_rect,5,5);
 			InflateRect(&dest_rect,-8,-12);
 			rect_draw_some_item_bmp(mixed_gworld,source_rect,mixed_gworld,dest_rect,1,1);
-			}
+		}
 }
 
 
@@ -2509,39 +2524,26 @@ void draw_targeting_line(POINT where_curs)
 	}
 }
 
-
-Boolean party_toast()
+bool party_toast(void)
 {
-	short i;
-	
-	for (i = 0; i < 6; i++)
+	for (short i = 0; i < 6; i++)
 		if (adven[i].main_status == status::Normal)
-			return FALSE;
-	return TRUE;
+			return false;
+	return true;
 }
 
 void redraw_partial_terrain(RECT redraw_rect)
 {
-	RECT from_rect;
-
-	from_rect = redraw_rect;
-	//OffsetRect(&from_rect,-1 * ulx,-1 * uly);
-
-	OffsetRect(&redraw_rect,5, 5);
-	
-	rect_draw_some_item_bmp(terrain_screen_gworld,from_rect,terrain_screen_gworld,redraw_rect,0,1);
-
+	rect_draw_some_item_bmp(terrain_screen_gworld, redraw_rect, terrain_screen_gworld, offset_rect(redraw_rect, 5, 5), 0, 1);
 }
-
 
 // This tells the dialog engine to kill the dialog, and refreshes the screen
 // will probably need to be modified for windows
 void final_process_dialog(short which_dlog)
 {
-
 	cd_kill_dialog(which_dlog,0);
-
 	if (in_startup_mode == FALSE)
 		refresh_screen(0);
-		else draw_startup(0);
+	else
+		draw_startup(0);
 }
