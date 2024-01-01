@@ -3227,8 +3227,7 @@ unsigned char pick_trapped_monst()
 			cd_activate_item(988, 2 + 3 * i, 0);
 			}
 			else {
-				get_m_name((char *) sp,(unsigned char)(party.imprisoned_monst[i]));
-				csit(988,3 + 3 * i,(char *) sp);
+				csit(988,3 + 3 * i, get_m_name((unsigned char)party.imprisoned_monst[i]));
 				get_monst = return_monster_template((unsigned char)(party.imprisoned_monst[i]));
 				cdsin(988,4 + 3 * i,get_monst.level);
 				}

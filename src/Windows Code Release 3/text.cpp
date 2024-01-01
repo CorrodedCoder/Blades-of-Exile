@@ -1058,13 +1058,13 @@ const char * get_m_name(unsigned char num)
 	return scenario_monster_name(num);
 }
 
-static void get_ter_name(char *str,unsigned char num)
+static const char * get_ter_name(unsigned char num)
 {
 	if ((num == 90) && ((is_out()) || (is_town()) || ((is_combat()) && (which_combat_type == 1))))
-		strcpy(str,"Pit");
+		return "Pit";
 	else
 	{
-		strcpy(str, scenario_terrain_name(num));
+		return scenario_terrain_name(num);
 	}
 }
 
@@ -1173,20 +1173,19 @@ void print_nums(short a,short b,short c)
 static short print_terrain(location space)
 {
 	unsigned char which_terrain;
-
-	if (is_out()) {
+	if (is_out())
+	{
 		which_terrain = out[space.x][space.y];
-		}
-	if (is_town()) {
+	}
+	if (is_town())
+	{
 		which_terrain = t_d.terrain[space.x][space.y];
-		}
-	if (is_combat()) {
+	}
+	if (is_combat())
+	{
 		which_terrain = combat_terrain[space.x][space.y];
-		}
-	char store_string2[256];
-	get_ter_name(store_string2,which_terrain);
-	add_string_to_buf("    {}", store_string2);
-
+	}
+	add_string_to_buf("    {}", get_ter_name(which_terrain));
 	return (short) which_terrain;
 }
 
