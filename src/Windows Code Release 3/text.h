@@ -53,7 +53,7 @@ void StringToNum(char *the_string,long *number_given);
 void force_reprint();
 void MeasureText(short str_len,char *str, short *len_array,HDC hdc);
 void MoveTo(short x, short y);
-void MoveToDrawString(char *string,HDC hdc);
+void MoveToDrawString(const char *string,HDC hdc);
 RECT get_custom_rect (short which_rect);
 
 template <class... Types>

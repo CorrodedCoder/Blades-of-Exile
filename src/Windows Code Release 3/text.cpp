@@ -1616,19 +1616,23 @@ void MeasureText(short str_len,char *str, short *len_array,HDC hdc)
 	store_array = (char *) len_array;
 	//text_len = len_array;
 	for (i = 0; i < 256; i++)
+	{
 		text_len[i] = 0;
-	for (i = 1; i < str_len; i++) {
+	}
+	for (i = 1; i < str_len; i++)
+	{
 		strncpy(p_str,str,i);
 		p_str[i] = 0;
 		val_returned = GetTextExtent16(hdc,p_str,i);
 		text_len[i] = LOWORD(val_returned);
-		}
-	for (i = 0; i < 256; i++) {
+	}
+	for (i = 0; i < 256; i++)
+	{
 		store2 = (short *) store_array;
 		*store2 = text_len[i];
 		store_array += 2;
-		}
 	}
+}
 
 // kludgy annoyance
 void MoveTo(short x, short y)
@@ -1636,7 +1640,8 @@ void MoveTo(short x, short y)
 	store_text_x = x;
 	store_text_y = y - 16;
 }
-void MoveToDrawString(char *string,HDC hdc)
+
+void MoveToDrawString(const char *string,HDC hdc)
 {
 	DrawString(string,store_text_x,store_text_y, hdc);
 }
