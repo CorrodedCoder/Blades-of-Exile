@@ -50,7 +50,7 @@ void take_fire_barrier(short i,short j);
 Boolean is_force_barrier(short i,short j);
 void make_force_barrier(short i,short j);
 void take_force_barrier(short i,short j);
-Boolean is_sfx(short i,short j,short type);
+bool is_sfx(short i,short j,short type);
 void make_sfx(short i,short j,short type);
 void take_sfx(short i,short j,short type);
 Boolean is_quickfire(short i,short j);

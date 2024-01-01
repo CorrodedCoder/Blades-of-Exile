@@ -1474,38 +1474,35 @@ Boolean where_lit[64][64];
 
 }
 
-	
 
-
-Boolean is_wall(short i,short j)
+static bool is_wall(short i,short j)
 {
-
-	unsigned char ter,walls[3] = {77,77,224};
-	Boolean answer = FALSE;
-	short k,pic;
-	
-	ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
-	pic = scenario_ter_type(ter).picture;
-	
+	const unsigned char ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
+	const short pic = scenario_ter_type(ter).picture;
 	if ((editing_town == TRUE) && ((i < 0) || (i > max_dim[town_type] - 1) || (j < 0) || (j > max_dim[town_type] - 1)))
-		return TRUE;
+		return true;
 	if ((editing_town == FALSE) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
-		return TRUE;
+		return true;
 	if ((ter < 22) && (ter > 4))
-		return TRUE;
+		return true;
 	if ((pic >= 5) && (pic <= 17))
-		return TRUE;
+		return true;
 	if ((pic >= 88) && (pic <= 120))
-		return TRUE;
+		return true;
 	if ((pic >= 240) && (pic <= 243))
-		return TRUE;
+		return true;
 	if (pic == 405)
-		return TRUE;
-//	for (k = 0; k < 3 ; k++)
-//		if (t_d.terrain[i][j] == walls[k]) 
-//			answer = TRUE;	
-	return answer;		
+		return true;
+	//	unsigned char walls[3] = { 77,77,224 };
+	//	for (short k = 0; k < 3 ; k++)
+	//		if (t_d.terrain[i][j] == walls[k]) 
+	//			return true;
+	return false;
+}
 
+static bool is_not_wall(short i, short j)
+{
+	return !is_wall(i, j);
 }
 
 Boolean is_correctable_wall(short i,short j)
@@ -1920,7 +1917,8 @@ Boolean fix_cave(location l)
 	i = l.x; j = l.y;
 	store_ter = t_d.terrain[l.x][l.y];
 	
-	if (is_correctable_wall(i,j) == TRUE) {
+	if (is_correctable_wall(i,j) == TRUE)
+	{
 /*	if (((l.x == 0) || (l.x == max_dim[town_type] - 1)) && ((l.y == 0) || (l.y == max_dim[town_type] - 1))) 
 		ter_to_fix = 2;
 	else if ((l.x == 0) || (l.x == max_dim[town_type] - 1)) {
@@ -1944,67 +1942,58 @@ Boolean fix_cave(location l)
 		}
 	else { // not edge
 */
-if (is_wall(i-1,j) == FALSE)
-{
-	if (is_wall(i,j-1) == FALSE)
-	{
-		ter_to_fix = 11;
-	}
-	else
-	{
-		if (is_wall(i,j+1) == FALSE)
-			ter_to_fix = 14;
-			else ter_to_fix = 12;
-	}
-
-
-
-}					
-
-else // wall(i-1,j) == TRUE
-
-{
-	if (is_wall(i+1,j) == FALSE)
-	{
-		if (is_wall(i, j-1) == FALSE)
-			ter_to_fix = 8;
-			else if (is_wall(i,j+1) == FALSE)
-				ter_to_fix = 5;
-				else ter_to_fix = 6;
-	
-	}
-	
-	else //wall(i+1,j) == TRUE
-	
-	{
-	if (is_wall(i, j-1) == FALSE)
-		ter_to_fix = 9;
-		else if (is_wall(i,j+1) == FALSE)
-			ter_to_fix = 3;
-			else if (is_wall(i-1,j-1) == FALSE)
-				ter_to_fix = 16;
-				else if(is_wall(i-1,j+1) == FALSE)
-					ter_to_fix = 15;
-					else if (is_wall(i+1,j-1) == FALSE)
-						ter_to_fix = 17;
-						else if (is_wall(i+1,j+1) == FALSE)
-						ter_to_fix = 18;
-						else ter_to_fix = 2; 
-	
-	
-	
-	}
-
-}
-//}
-			ter_to_fix += 3;
-			t_d.terrain[i][j] = ter_to_fix; 				
+		if (is_not_wall(i-1,j))
+		{
+			if (is_not_wall(i,j-1))
+			{
+				ter_to_fix = 11;
 			}
+			else
+			{
+				if (is_not_wall(i,j+1))
+					ter_to_fix = 14;
+					else ter_to_fix = 12;
+			}
+		}					
+		else // wall(i-1,j) == TRUE
+		{
+			if (is_not_wall(i+1,j))
+			{
+				if (is_not_wall(i, j-1))
+					ter_to_fix = 8;
+					else if (is_not_wall(i,j+1))
+						ter_to_fix = 5;
+						else ter_to_fix = 6;
+	
+			}
+	
+			else //wall(i+1,j) == TRUE
+			{
+				if (is_not_wall(i, j-1))
+					ter_to_fix = 9;
+				else if (is_not_wall(i,j+1))
+					ter_to_fix = 3;
+				else if (is_not_wall(i-1,j-1))
+					ter_to_fix = 16;
+				else if(is_not_wall(i-1,j+1))
+					ter_to_fix = 15;
+				else if (is_not_wall(i+1,j-1))
+					ter_to_fix = 17;
+				else if (is_not_wall(i+1,j+1))
+					ter_to_fix = 18;
+				else
+					ter_to_fix = 2; 
+			}
+		}
+
+		ter_to_fix += 3;
+		t_d.terrain[i][j] = ter_to_fix; 				
+	}
 
 	if (store_ter == t_d.terrain[l.x][l.y])
 		return FALSE;
-		else return TRUE;
-
+	else
+		return TRUE;
 }
 
 
@@ -2346,91 +2335,93 @@ Boolean out_fix_cave(location l)
 	i = l.x; j = l.y;
 	store_ter = current_terrain.terrain[l.x][l.y];
 	
-	if (is_correctable_wall(i,j) == TRUE) {
-	if (((l.x == 0) || (l.x == 47)) && ((l.y == 0) || (l.y == 47))) 
-		ter_to_fix = 2;
-	else if ((l.x == 0) || (l.x == 47)) {
-		if (is_wall(i,j-1)) {
-			if (is_wall(i,j+1)) {
-				ter_to_fix = 2;
+	if (is_correctable_wall(i,j) == TRUE)
+	{
+		if (((l.x == 0) || (l.x == 47)) && ((l.y == 0) || (l.y == 47))) 
+			ter_to_fix = 2;
+		else if ((l.x == 0) || (l.x == 47))
+		{
+			if (is_wall(i,j-1))
+			{
+				if (is_wall(i,j+1))
+				{
+					ter_to_fix = 2;
 				}
-				else ter_to_fix = 3;
+				else
+					ter_to_fix = 3;
 			}
-			else ter_to_fix = 9;
+			else
+				ter_to_fix = 9;
 		}
-	else if ((l.y == 0) || (l.y == 47)) {
-		if (is_wall(i - 1,j)) {
-			if (is_wall(i + 1,j)) {
-				ter_to_fix = 2;
+		else if ((l.y == 0) || (l.y == 47))
+		{
+			if (is_wall(i - 1,j))
+			{
+				if (is_wall(i + 1,j))
+				{
+					ter_to_fix = 2;
 				}
-				else ter_to_fix = 6;
+				else
+					ter_to_fix = 6;
 			}
-			else ter_to_fix = 12;
-	
+			else
+				ter_to_fix = 12;
 		}
-	else { // not edge
+		else
+		{ // not edge
 
-if (is_wall(i-1,j) == FALSE)
-{
-	if (is_wall(i,j-1) == FALSE)
-	{
-		ter_to_fix = 11;
-	}
-	else
-	{
-		if (is_wall(i,j+1) == FALSE)
-			ter_to_fix = 14;
-			else ter_to_fix = 12;
-	}
-
-
-
-}					
-
-else // wall(i-1,j) == TRUE
-
-{
-	if (is_wall(i+1,j) == FALSE)
-	{
-		if (is_wall(i, j-1) == FALSE)
-			ter_to_fix = 8;
-			else if (is_wall(i,j+1) == FALSE)
-				ter_to_fix = 5;
-				else ter_to_fix = 6;
+			if (is_not_wall(i-1,j))
+			{
+				if (is_not_wall(i,j-1))
+				{
+					ter_to_fix = 11;
+				}
+				else
+				{
+					if (is_not_wall(i,j+1))
+						ter_to_fix = 14;
+					else
+						ter_to_fix = 12;
+				}
+			}					
+			else // wall(i-1,j) == TRUE
+			{
+				if (is_not_wall(i+1,j))
+				{
+					if (is_not_wall(i, j-1))
+						ter_to_fix = 8;
+						else if (is_not_wall(i,j+1))
+							ter_to_fix = 5;
+							else ter_to_fix = 6;
 	
-	}
-	
-	else //wall(i+1,j) == TRUE
-	
-	{
-	if (is_wall(i, j-1) == FALSE)
-		ter_to_fix = 9;
-		else if (is_wall(i,j+1) == FALSE)
-			ter_to_fix = 3;
-			else if (is_wall(i-1,j-1) == FALSE)
-				ter_to_fix = 16;
-				else if(is_wall(i-1,j+1) == FALSE)
-					ter_to_fix = 15;
-					else if (is_wall(i+1,j-1) == FALSE)
+				}
+				else //wall(i+1,j) == TRUE
+				{
+					if (is_not_wall(i, j-1))
+						ter_to_fix = 9;
+					else if (is_not_wall(i,j+1))
+						ter_to_fix = 3;
+					else if (is_not_wall(i-1,j-1))
+						ter_to_fix = 16;
+					else if(is_not_wall(i-1,j+1))
+						ter_to_fix = 15;
+					else if (is_not_wall(i+1,j-1))
 						ter_to_fix = 17;
-						else if (is_wall(i+1,j+1) == FALSE)
+					else if (is_not_wall(i+1,j+1))
 						ter_to_fix = 18;
-						else ter_to_fix = 2; 
-	
-	
-	
-	}
-
-}
-}
-			ter_to_fix += 3;
-			current_terrain.terrain[i][j] = ter_to_fix; 				
+					else
+						ter_to_fix = 2; 
+				}
 			}
+		}
+		ter_to_fix += 3;
+		current_terrain.terrain[i][j] = ter_to_fix; 				
+	}
 
 	if (store_ter == current_terrain.terrain[l.x][l.y])
 		return FALSE;
-		else return TRUE;
-
+	else
+		return TRUE;
 }
 
 

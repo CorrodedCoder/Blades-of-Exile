@@ -58,7 +58,6 @@ Boolean party_toast();
 void redraw_partial_terrain(Rect redraw_rect);
 void dump_gworld();
 void final_process_dialog(short which_dlog);
-Boolean is_nature(char i, char j);
 void put_dialog_graphic(short graphic_num,short spec_g,Rect draw_rect);
 void draw_startup_stats();
 void HideMenuBar( void );

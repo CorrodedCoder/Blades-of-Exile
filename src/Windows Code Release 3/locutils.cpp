@@ -348,13 +348,11 @@ unsigned char coord_to_ter(short x,short y)
 }
 
 
-Boolean is_container(location loc)
+bool is_container(location loc)
 {
 	if ((is_barrel(loc.x,loc.y)) || is_crate(loc.x,loc.y))
-		return TRUE;
-	if (scenario_ter_type(coord_to_ter(loc.x, loc.y)).special == terrain_special::IsAContainer)
-			return TRUE;
-	return FALSE;
+		return true;
+	return scenario_ter_type(coord_to_ter(loc.x, loc.y)).special == terrain_special::IsAContainer;
 }
 
 void update_explored(location dest)

@@ -23,7 +23,7 @@ void erase_out_specials();
 short get_town_spec_id(location where);
 void clear_map();
 void draw_map (HWND the_dialog, short the_item);
-Boolean is_door(location destination);
+bool is_door(location destination);
 void display_map();
 void check_done();
 Boolean quadrant_legal(short i, short j) ;

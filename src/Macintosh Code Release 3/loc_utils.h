@@ -14,7 +14,7 @@ bool is_lava(short x,short y);
 short can_see(location p1,location p2,short mode);
 short get_obscurity(short x,short y);
 unsigned char coord_to_ter(short x,short y);
-Boolean is_container(location loc);
+bool is_container(location loc);
 void update_explored(location dest);
 bool is_blocked(location to_check);
 bool is_not_blocked(location to_check);

@@ -324,7 +324,7 @@ void draw_monsters()
 							((c_town.monst.dudes[i].m_d.m_type < 7) 
 							&& (c_town.monst.dudes[i].m_d.m_type != 1) && (c_town.monst.dudes[i].m_d.m_type != 2))
 							&& ((c_town.monst.dudes[i].active == 1) || (monst_target[i] == 6)) &&
-							(width == 1) && (height == 1)) ////
+							(width == 1) && (height == 1)) 
 							draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10230,0);
 							else Draw_Some_Item(storage_gworld, source_rect, terrain_screen_gworld, store_loc, 1, 0); 
 							}
@@ -362,7 +362,7 @@ void draw_monsters()
 										&& (c_town.monst.dudes[i].m_d.m_type != 1) && (c_town.monst.dudes[i].m_d.m_type != 2))
 									&& ((c_town.monst.dudes[i].active == 1) || (monst_target[i] == 6)) &&
 									(width == 1) && (height == 1))
-										draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10230,0); ////
+										draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10230,0);
 										else Draw_Some_Item(storage_gworld, source_rect, terrain_screen_gworld, store_loc, 1, 0); 
 								}
 							}
@@ -818,39 +818,36 @@ unsigned char get_t_t(char x,char y)  // returns terrain type at where
 }
 
 // Is this is subterranean fluid that gets shore plopped down on it?
-Boolean is_fluid(unsigned char ter_type)////
+static bool is_fluid(unsigned char ter_type)
 {
-	if (((ter_type >= 71) && (ter_type <= 76)) || (ter_type == 90))
-		return TRUE;
-	return FALSE;
+	return ((ter_type >= 71) && (ter_type <= 76)) || (ter_type == 90);
 }
 
 // Is this is subterranean beach that gets shore plopped down next to it?
-Boolean is_shore(unsigned char ter_type)////
+static bool is_shore(unsigned char ter_type)
 {
-	if (is_fluid(ter_type) == TRUE)
-		return FALSE;
+	if (is_fluid(ter_type))
+		return false;
 	if (ter_type == 77)
-		return FALSE;
+		return false;
 	if (ter_type == 90)
-		return FALSE;
+		return false;
 /*	if (ter_type == 240)
-		return FALSE;
+		return false;
 	if ((ter_type >= 117) && (ter_type <= 131))
-		return FALSE;
+		return false;
 	if ((ter_type >= 193) && (ter_type <= 207))
-		return FALSE; */
-	return TRUE;
+		return false; */
+	return true;
 }
 
 // These two functions used to determine wall round-cornering
-Boolean is_wall(unsigned char ter_type)////
+bool is_wall(unsigned char ter_type)
 {
 	const auto pic = scenario_ter_type(ter_type).picture;
-	if ((pic >= 88) && (pic <= 120))
-		return TRUE;
-	return FALSE;
+	return (pic >= 88) && (pic <= 120);
 }
+
 Boolean is_ground(unsigned char ter_type)
 {
 	const auto pic = scenario_ter_type(ter_type).picture;
@@ -944,45 +941,46 @@ char add_trim_to_array(location where,unsigned char ter_type)
 		}
 		
 	// Set up trim for fluids
-	if (is_fluid(ter_type) == TRUE) {
+	if (is_fluid(ter_type))
+	{
 		if (at_left == FALSE) {
 			store = get_t_t(where.x - 1,where.y);
-			if (is_shore(store) == TRUE)
+			if (is_shore(store))
 				to_return |= 64;
 			}
 		if (at_right == FALSE) {
 			store = get_t_t(where.x + 1,where.y);
-			if (is_shore(store) == TRUE)
+			if (is_shore(store))
 				to_return |= 4;
 			}
 		if (at_top == FALSE) {
 			store = get_t_t(where.x,where.y - 1);
-			if (is_shore(store) == TRUE)
+			if (is_shore(store))
 				to_return |= 1;
 			}	
 		if (at_bot == FALSE) {
 			store = get_t_t(where.x,where.y + 1);
-			if (is_shore(store) == TRUE)
+			if (is_shore(store))
 				to_return |= 16;
 			}
 		if ((at_left == FALSE) && (at_top == FALSE)) {
 			store = get_t_t(where.x - 1,where.y - 1);
-			if (is_shore(store) == TRUE)
+			if (is_shore(store))
 				to_return |= 128;
 			}
 		if ((at_right == FALSE) && (at_top == FALSE)) {
 			store = get_t_t(where.x + 1,where.y + 1);
-			if (is_shore(store) == TRUE)
+			if (is_shore(store))
 				to_return |= 8;
 			}
 		if ((at_right == FALSE) && (at_bot == FALSE)) {
 			store = get_t_t(where.x + 1,where.y - 1);
-			if (is_shore(store) == TRUE)
+			if (is_shore(store))
 				to_return |= 2;
 			}
 		if ((at_left == FALSE) && (at_bot == FALSE)) {
 			store = get_t_t(where.x - 1,where.y + 1);
-			if (is_shore(store) == TRUE)
+			if (is_shore(store))
 				to_return |= 32;
 			}
 		}

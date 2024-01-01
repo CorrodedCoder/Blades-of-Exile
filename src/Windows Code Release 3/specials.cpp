@@ -991,7 +991,7 @@ Boolean adj_town_look(location where)
 				put_item_screen(stat_window,0);	
 				}
 		}
-	if ((is_container(where)) && (item_there == TRUE) && (can_open == TRUE)) {
+	if (is_container(where) && (item_there == TRUE) && (can_open == TRUE)) {
 		get_item(where,6,true);
 		}
 	else switch (terrain) {

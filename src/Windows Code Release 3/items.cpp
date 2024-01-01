@@ -463,7 +463,7 @@ void drop_item(short pc_num,short item_num,location where_drop)
 					take_given_item = FALSE;
 				item_store.charges = how_many;
 				}
-			if (is_container(loc) == TRUE)
+			if (is_container(loc))
 				item_store.item_properties = item_store.item_properties | 8;
 			if (place_item(item_store,loc,FALSE) == FALSE) {
 				add_string_to_buf("Drop: Too many items on ground");

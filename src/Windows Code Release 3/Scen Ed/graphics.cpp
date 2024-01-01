@@ -1319,23 +1319,21 @@ void make_special(short i,short j)
 void sort_specials()
 {}
 
-Boolean is_field_type(short i,short j,short field_type)
+static bool is_field_type(short i,short j,short field_type)
 {
-	short k;
-	
-	for (k = 0; k < 50; k++)
+	for (short k = 0; k < 50; k++)
 		if ((town.preset_fields[k].field_type == field_type) &&
 			(town.preset_fields[k].field_loc.x == i) &&
 			(town.preset_fields[k].field_loc.y == j))
-				return TRUE;
-	return FALSE;
+				return true;
+	return false;
 }
 
 void make_field_type(short i,short j,short field_type)
 {
 	short k;
 
-	if (is_field_type(i,j,field_type) == TRUE)
+	if (is_field_type(i,j,field_type))
 		return;
 	for (k = 0; k < 50; k++)
 		if (town.preset_fields[k].field_type == 0) {
@@ -1433,10 +1431,11 @@ void take_force_barrier(short i,short j)
 
 }
 
-Boolean is_sfx(short i,short j,short type)
+bool is_sfx(short i,short j,short type)
 {
 	return is_field_type(i,j,type + 14);
 }
+
 void make_sfx(short i,short j,short type)
 {
 	make_field_type(i,j,type + 14);
@@ -1461,17 +1460,17 @@ void take_quickfire(short i,short j)
 	take_field_type(i,j,8);
 }
 
-Boolean container_there(location l)
+bool container_there(location l)
 {
 	if (editing_town == FALSE)
-		return FALSE;
+		return false;
 	if (scenario_ter_type(t_d.terrain[l.x][l.y]).special == terrain_special::IsAContainer)
-		return TRUE;
+		return true;
 	if (is_barrel(l.x,l.y))
-		return TRUE;
+		return true;
 	if (is_crate(l.x,l.y))
-		return TRUE;
-	return 0;		
+		return true;
+	return false;
 }
 
 

@@ -13,7 +13,6 @@ void set_info_strings();
 preset_item_type edit_item(preset_item_type item);
 void modify_lists();
 void set_up_lights();
-Boolean is_wall(short i,short j);
 Boolean is_correctable_wall(short i,short j);
 Boolean is_mountain(short i,short j);
 Boolean is_hill(short i,short j);

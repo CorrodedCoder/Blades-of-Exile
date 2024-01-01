@@ -1664,29 +1664,25 @@ GWorldPtr load_pict(short picture_to_get)
 
 // this is used for determinign whether to round off walkway corners
 // right now, trying a restrictive rule (just cave floor and grass, mainly)
-Boolean is_nature(char x, char y)
+bool is_nature(char x, char y)
 {
-	short pic;
-	unsigned char ter_type;
-	
-	ter_type = coord_to_ter((short) x,(short) y);
-	pic = scenario_ter_type(ter_type).picture;
+	const short pic = scenario_ter_type(coord_to_ter((short)x, (short)y)).picture;
 	if ((pic >= 0) && (pic <= 45))
-		return TRUE;
+		return true;
 	if ((pic >= 67) && (pic <= 73))
-		return TRUE;
+		return true;
 	if ((pic >= 75) && (pic <= 87))
-		return TRUE;
+		return true;
 	if ((pic >= 121) && (pic <= 122))
-		return TRUE;
+		return true;
 	if ((pic >= 179) && (pic <= 208))
-		return TRUE;
+		return true;
 	if ((pic >= 211) && (pic <= 212))
-		return TRUE;
+		return true;
 	if ((pic >= 217) && (pic <= 246))
-		return TRUE;
+		return true;
 
-	return FALSE;
+	return false;
 }
 
 
@@ -2051,26 +2047,26 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 		store1 = get_t_t(where.x,where.y - 1);
 		store2 = get_t_t(where.x + 1,where.y);
 		store3 = get_t_t(where.x,where.y + 1);
-		if ((is_wall(store) == TRUE) 
-			&& (is_wall(store1) == TRUE) &&
+		if (is_wall(store)
+			&& is_wall(store1) &&
 			(is_ground(store2) == TRUE) 
 			&& (is_ground(store3) == TRUE))
 				draw_trim(q,r,3,6);		
 
-		if ((is_wall(store) == TRUE) 
-			&& (is_wall(store3) == TRUE) &&
+		if (is_wall(store)
+			&& is_wall(store3) &&
 			(is_ground(store2) == TRUE) 
 			&& (is_ground(store1) == TRUE))
 				draw_trim(q,r,3,5);		
 
-		if ((is_wall(store2) == TRUE) 
-			&& (is_wall(store1) == TRUE) &&
+		if (is_wall(store2)
+			&& is_wall(store1) &&
 			(is_ground(store) == TRUE) 
 			&& (is_ground(store3) == TRUE))
 				draw_trim(q,r,3,7);		
 
-		if ((is_wall(store2) == TRUE) 
-			&& (is_wall(store3) == TRUE) &&
+		if (is_wall(store2)
+			&& is_wall(store3) &&
 			(is_ground(store) == TRUE) 
 			&& (is_ground(store1) == TRUE))
 				draw_trim(q,r,3,4);		
@@ -2079,12 +2075,12 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 		if ((is_ground(store) == TRUE) 
 			&& (is_ground(store1) == TRUE) &&
 			(is_ground(store2) == TRUE) 
-			&& (is_wall(store3) == TRUE)) {
+			&& is_wall(store3)) {
 				draw_trim(q,r,3,4);		
 				draw_trim(q,r,3,5);						
 				}
 
-		if ((is_wall(store) == TRUE) 
+		if (is_wall(store)
 			&& (is_ground(store3) == TRUE) &&
 			(is_ground(store2) == TRUE) 
 			&& (is_ground(store1) == TRUE)) {
@@ -2093,14 +2089,14 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 				}
 
 		if ((is_ground(store2) == TRUE) 
-			&& (is_wall(store1) == TRUE) &&
+			&& is_wall(store1) &&
 			(is_ground(store) == TRUE) 
 			&& (is_ground(store3) == TRUE)) {
 				draw_trim(q,r,3,6);		
 				draw_trim(q,r,3,7);		
 				}
 
-		if ((is_wall(store2) == TRUE) 
+		if (is_wall(store2)
 			&& (is_ground(store3) == TRUE) &&
 			(is_ground(store) == TRUE) 
 			&& (is_ground(store1) == TRUE)) {

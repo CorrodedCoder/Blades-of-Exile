@@ -440,7 +440,7 @@ void start_town_mode(short which_town, short entry_dir)
 			for (j = 0; j < town_size[town_type]; j++)
 				for (k = 0; k < town_size[town_type]; k++) {
 					loc.x = j; loc.y = k;
-					if (is_door(loc) == TRUE) 
+					if (is_door(loc)) 
 						misc_i[j][k] = misc_i[j][k] & 3;
 
 					// Set up field booleans
@@ -1832,15 +1832,15 @@ void display_map()
 }
 
 
-Boolean is_door(location destination)
+bool is_door(location destination)
 {
 	if ((scenario_ter_type(t_d.terrain[destination.x][destination.y]).special == terrain_special::UnlockableTerrain) ||
 		(scenario_ter_type(t_d.terrain[destination.x][destination.y]).special == terrain_special::ChangeWhenStepOn) ||
 		(scenario_ter_type(t_d.terrain[destination.x][destination.y]).special == terrain_special::UnlockableOrBashable))
 	{
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 

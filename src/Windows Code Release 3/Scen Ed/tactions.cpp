@@ -537,7 +537,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 						//town.preset_items[x].charges = 0;
 						town.preset_items[x].always_there = 0;
 						town.preset_items[x].property = 0;
-						town.preset_items[x].contained = container_there(town.preset_items[x].item_loc);
+						town.preset_items[x].contained = container_there(town.preset_items[x].item_loc) ? BOE_TRUE : BOE_FALSE;
 						store_place_item = town.preset_items[x];
 						x = 70;
 						}
@@ -674,7 +674,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 						town.preset_items[x].item_loc.x = spot_hit.x;
 						town.preset_items[x].item_loc.y = spot_hit.y;
 
-						town.preset_items[x].contained = container_there(town.preset_items[x].item_loc);
+						town.preset_items[x].contained = container_there(town.preset_items[x].item_loc) ? BOE_TRUE : BOE_FALSE;
 						x = 64;
 						}
 				set_cursor(0);
@@ -1455,38 +1455,35 @@ Boolean where_lit[64][64];
 
 }
 
-	
 
-
-Boolean is_wall(short i,short j)
+static bool is_wall(short i,short j)
 {
-
-	unsigned char ter;
-	Boolean answer = FALSE;
-	short pic;
-	
-	ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
-	pic = scenario_ter_type(ter).picture;
+	const unsigned char ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
+	const short pic = scenario_ter_type(ter).picture;
 	
 	if ((editing_town == TRUE) && ((i < 0) || (i > max_dim[town_type] - 1) || (j < 0) || (j > max_dim[town_type] - 1)))
-		return TRUE;
+		return true;
 	if ((editing_town == FALSE) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
-		return TRUE;
+		return true;
 	if ((ter < 22) && (ter > 4))
-		return TRUE;
+		return true;
 	if ((pic >= 5) && (pic <= 17))
-		return TRUE;
+		return true;
 	if ((pic >= 88) && (pic <= 120))
-		return TRUE;
+		return true;
 	if ((pic >= 240) && (pic <= 243))
-		return TRUE;
+		return true;
 	if (pic == 405)
-		return TRUE;
-//	for (k = 0; k < 3 ; k++)
-//		if (t_d.terrain[i][j] == walls[k]) 
-//			answer = TRUE;	
-	return answer;		
+		return true;
+	//	for (k = 0; k < 3 ; k++)
+	//		if (t_d.terrain[i][j] == walls[k]) 
+	//			return true;
+	return false;
+}
 
+static bool is_not_wall(short i, short j)
+{
+	return !is_wall(i, j);
 }
 
 Boolean is_correctable_wall(short i,short j)
@@ -1924,15 +1921,15 @@ Boolean fix_cave(location l)
 		}
 	else { // not edge
 */
-if (is_wall(i-1,j) == FALSE)
+if (is_not_wall(i-1,j))
 {
-	if (is_wall(i,j-1) == FALSE)
+	if (is_not_wall(i,j-1))
 	{
 		ter_to_fix = 11;
 	}
 	else
 	{
-		if (is_wall(i,j+1) == FALSE)
+		if (is_not_wall(i,j+1))
 			ter_to_fix = 14;
 			else ter_to_fix = 12;
 	}
@@ -1944,11 +1941,11 @@ if (is_wall(i-1,j) == FALSE)
 else // wall(i-1,j) == TRUE
 
 {
-	if (is_wall(i+1,j) == FALSE)
+	if (is_not_wall(i+1,j))
 	{
-		if (is_wall(i, j-1) == FALSE)
+		if (is_not_wall(i, j-1))
 			ter_to_fix = 8;
-			else if (is_wall(i,j+1) == FALSE)
+			else if (is_not_wall(i,j+1))
 				ter_to_fix = 5;
 				else ter_to_fix = 6;
 	
@@ -1957,17 +1954,17 @@ else // wall(i-1,j) == TRUE
 	else //wall(i+1,j) == TRUE
 	
 	{
-	if (is_wall(i, j-1) == FALSE)
+	if (is_not_wall(i, j-1))
 		ter_to_fix = 9;
-		else if (is_wall(i,j+1) == FALSE)
+		else if (is_not_wall(i,j+1))
 			ter_to_fix = 3;
-			else if (is_wall(i-1,j-1) == FALSE)
+			else if (is_not_wall(i-1,j-1))
 				ter_to_fix = 16;
-				else if(is_wall(i-1,j+1) == FALSE)
+				else if(is_not_wall(i-1,j+1))
 					ter_to_fix = 15;
-					else if (is_wall(i+1,j-1) == FALSE)
+					else if (is_not_wall(i+1,j-1))
 						ter_to_fix = 17;
-						else if (is_wall(i+1,j+1) == FALSE)
+						else if (is_not_wall(i+1,j+1))
 						ter_to_fix = 18;
 						else ter_to_fix = 2; 
 	
@@ -2350,15 +2347,15 @@ Boolean out_fix_cave(location l)
 		}
 	else { // not edge
 
-if (is_wall(i-1,j) == FALSE)
+if (is_not_wall(i-1,j))
 {
-	if (is_wall(i,j-1) == FALSE)
+	if (is_not_wall(i,j-1))
 	{
 		ter_to_fix = 11;
 	}
 	else
 	{
-		if (is_wall(i,j+1) == FALSE)
+		if (is_not_wall(i,j+1))
 			ter_to_fix = 14;
 			else ter_to_fix = 12;
 	}
@@ -2370,11 +2367,11 @@ if (is_wall(i-1,j) == FALSE)
 else // wall(i-1,j) == TRUE
 
 {
-	if (is_wall(i+1,j) == FALSE)
+	if (is_not_wall(i+1,j))
 	{
-		if (is_wall(i, j-1) == FALSE)
+		if (is_not_wall(i, j-1))
 			ter_to_fix = 8;
-			else if (is_wall(i,j+1) == FALSE)
+			else if (is_not_wall(i,j+1))
 				ter_to_fix = 5;
 				else ter_to_fix = 6;
 	
@@ -2383,17 +2380,17 @@ else // wall(i-1,j) == TRUE
 	else //wall(i+1,j) == TRUE
 	
 	{
-	if (is_wall(i, j-1) == FALSE)
+	if (is_not_wall(i, j-1))
 		ter_to_fix = 9;
-		else if (is_wall(i,j+1) == FALSE)
+		else if (is_not_wall(i,j+1))
 			ter_to_fix = 3;
-			else if (is_wall(i-1,j-1) == FALSE)
+			else if (is_not_wall(i-1,j-1))
 				ter_to_fix = 16;
-				else if(is_wall(i-1,j+1) == FALSE)
+				else if(is_not_wall(i-1,j+1))
 					ter_to_fix = 15;
-					else if (is_wall(i+1,j-1) == FALSE)
+					else if (is_not_wall(i+1,j-1))
 						ter_to_fix = 17;
-						else if (is_wall(i+1,j+1) == FALSE)
+						else if (is_not_wall(i+1,j+1))
 						ter_to_fix = 18;
 						else ter_to_fix = 2; 
 	
@@ -2916,7 +2913,7 @@ Boolean place_item(location spot_hit,short which_item,short property,short alway
 			//town.preset_items[x].charges = 0;
 			town.preset_items[x].always_there = always;
 			town.preset_items[x].property = property;
-			town.preset_items[x].contained = container_there(town.preset_items[x].item_loc);
+			town.preset_items[x].contained = container_there(town.preset_items[x].item_loc) ? BOE_TRUE : BOE_FALSE;
 			return TRUE;
 			}
 	return FALSE;

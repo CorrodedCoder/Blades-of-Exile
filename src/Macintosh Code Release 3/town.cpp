@@ -397,7 +397,7 @@ void start_town_mode(short which_town, short entry_dir)
 			for (j = 0; j < town_size[town_type]; j++)
 				for (k = 0; k < town_size[town_type]; k++) {
 					loc.x = j; loc.y = k;
-					if (is_door(loc) == TRUE) 
+					if (is_door(loc)) 
 						misc_i[j][k] = misc_i[j][k] & 3;
 
 					// Set up field booleans
@@ -1671,15 +1671,13 @@ void draw_map (DialogPtr the_dialog, short the_item)
 }
 
 
-Boolean is_door(location destination)
+bool is_door(location destination)
 {
-	short i;
-
 	if ((scenario.ter_types[t_d.terrain[destination.x][destination.y]].special == 9) ||
 		(scenario.ter_types[t_d.terrain[destination.x][destination.y]].special == 1) ||
 		(scenario.ter_types[t_d.terrain[destination.x][destination.y]].special == 10))
-			return TRUE;
-	return FALSE;
+			return true;
+	return false;
 }
 
 

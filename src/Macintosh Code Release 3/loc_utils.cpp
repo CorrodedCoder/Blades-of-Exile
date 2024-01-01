@@ -313,17 +313,13 @@ unsigned char coord_to_ter(short x,short y)
 }
 
 ////
-Boolean is_container(location loc)
+bool is_container(location loc)
 {
-	unsigned char ter;
-	short i;
-	
-	if ((is_barrel(loc.x,loc.y)) || (is_crate(loc.x,loc.y)))
-		return TRUE;
-	ter = coord_to_ter(loc.x,loc.y);
-	if (scenario_ter_type(ter).special == 14)
-			return TRUE;
-	return FALSE;
+	if ((is_barrel(loc.x, loc.y)) || (is_crate(loc.x, loc.y)))
+	{
+		return true;
+	}
+	return scenario_ter_type(coord_to_ter(loc.x, loc.y)).special == 14;
 }
 
 void update_explored(location dest)

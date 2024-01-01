@@ -2978,7 +2978,7 @@ Boolean town_move_party(location destination,short forced)
 			return TRUE;
 			}
 		else {
-			if (is_door(destination) == TRUE)
+			if (is_door(destination))
 				add_string_to_buf("Door locked: {}               ",dir_string[set_direction(c_town.p_loc, destination)]);
 				else add_string_to_buf("Blocked: {}               ",dir_string[set_direction(c_town.p_loc, destination)]);
 			return FALSE;

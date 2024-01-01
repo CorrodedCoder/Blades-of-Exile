@@ -1381,10 +1381,11 @@ void take_force_barrier(short i,short j)
 
 }
 
-Boolean is_sfx(short i,short j,short type)
+bool is_sfx(short i,short j,short type)
 {
 	return is_field_type(i,j,type + 14);
 }
+
 void make_sfx(short i,short j,short type)
 {
 	make_field_type(i,j,type + 14);
