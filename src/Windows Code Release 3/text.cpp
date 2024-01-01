@@ -34,54 +34,36 @@ static const std::array m_priest_sp{"Minor Bless","Light Heal","Wrack","Stumble"
 						"Divine Thud"};
 
 static std::array < std::array<char, 50>, TEXT_BUF_LEN> text_buffer;
-short buf_pointer = 30, num_added_since_stop = 0;
-char store_string2[256];
-short start_print_point= 0;
+static short buf_pointer = 30;
 short mark_where_printing_long;
 Boolean printing_long = FALSE;
-char c_str[256] = "";
-Boolean save_mess_given = FALSE;
 
 static const RECT item_buttons_from[7] = {{0,12,14,24},{14,12,28,24},{28,12,42,24},{42,12,56,24},
 						{0,24,30,36},{30,24,60,36},{0,36,30,48}}; /**/
 
 Boolean string_added = FALSE;
 short store_text_x = 0, store_text_y = 0;
-extern short had_text_freeze,stat_screen_mode;
+extern short stat_screen_mode;
 
 void InsetRect (RECT *rect, short x, short y);
 
 // graphics globals
-extern RECT status_panel_rect,status_panel_title_rect;
-extern RECT	text_panel_rect;
-extern short overall_mode,which_combat_type,stat_window;
+extern short which_combat_type,stat_window;
 extern HWND mainPtr;
-extern RECT more_info_button;
-extern short which_item_page[6],current_cursor;
-extern HCURSOR sword_curs;
 extern HWND text_sbar,item_sbar;
-extern POINT store_anim_ul;
-extern HBRUSH bg[14];
-extern short dest_personalities[40];
-extern location source_locs[6];
-extern location dest_locs[40] ;
 
 extern HBITMAP mixed_gworld, pc_stats_gworld, item_stats_gworld, text_area_gworld,tiny_obj_gworld,party_template_gworld;
 extern short terrain_there[9][9];
-extern HBITMAP dialog_pattern_gworld,pattern_gworld,status_pattern_gworld,spec_scen_g;
+extern HBITMAP status_pattern_gworld,spec_scen_g;
 
 // game globals
 extern party_record_type party;
-extern talking_record_type talking;
-
 extern current_town_type c_town;
-extern outdoor_record_type outdoors[2][2];
 extern town_item_list 	t_i;
 extern unsigned char out[96][96];
 extern Adventurers adven;
 extern big_tr_type  t_d;
 extern short ulx,uly;
-extern Boolean play_sounds,suppress_stat_screen,cartoon_happening;
 extern std::array< std::array<RECT, 6>, 8> item_buttons;
  // name, use, give, drip, info, sell/id
 extern std::array< std::array<RECT, 5>, 6> pc_buttons;
@@ -90,7 +72,7 @@ extern std::array< std::array<Boolean, 6>, 8> item_area_button_active;
 extern std::array< std::array<Boolean, 5>, 6> pc_area_button_active;
 extern const std::array<RECT, 9> item_screen_button_rects;
 extern short spec_item_array[60];
-extern const short abil_chart[200],store_anim_type;
+extern const short abil_chart[200];
 // combat globals
 extern std::array<short, 9> item_bottom_button_active;
 
@@ -99,11 +81,10 @@ extern unsigned char combat_terrain[64][64];
 extern short current_pc;
 extern short shop_identify_cost;
 extern std::array<short, 8> store_selling_values;
-extern short combat_posing_monster, current_working_monster; // 0-5 PC 100 + x - monster x
 extern Boolean supressing_some_spaces;
 extern location ok_space[4];
 
-extern HFONT font,italic_font,underline_font,bold_font,small_bold_font;
+extern HFONT italic_font,bold_font,small_bold_font;
 extern HPALETTE hpal;
 extern HDC main_dc;
 extern HINSTANCE store_hInstance;
@@ -889,22 +870,20 @@ short do_look(location space)
 				&& (monst_on_space(space,i) == TRUE) &&
 				((is_town()) || (can_see(pc_pos[current_pc],space,0) < 5))
 				&& (c_town.monst.dudes[i].m_d.picture_num != 0)) {
-
-
-				get_m_name(store_string2,c_town.monst.dudes[i].number);
+				const char * monster_name = get_m_name(c_town.monst.dudes[i].number);
 				if (c_town.monst.dudes[i].m_d.health < c_town.monst.dudes[i].m_d.m_health)
 				{
 					if (c_town.monst.dudes[i].attitude % 2 == 1)
-						add_string_to_buf("    Wounded {} (H)", store_string2);
+						add_string_to_buf("    Wounded {} (H)", monster_name);
 					else
-						add_string_to_buf("    Wounded {} (F)", store_string2);
+						add_string_to_buf("    Wounded {} (F)", monster_name);
 				}
 				else
 				{
 					if (c_town.monst.dudes[i].attitude % 2 == 1)
-						add_string_to_buf("    {} (H)", store_string2);
+						add_string_to_buf("    {} (H)", monster_name);
 					else
-						add_string_to_buf("    {} (F)", store_string2);
+						add_string_to_buf("    {} (F)", monster_name);
 				}
 			}
 		}
@@ -914,8 +893,7 @@ short do_look(location space)
 				&& (same_point(space,party.out_c[i].m_loc) == TRUE)) {
 					for (j = 0; j < 7; j++)
 						if (party.out_c[i].what_monst.monst[j] != 0) {
-							get_m_name(store_string2,party.out_c[i].what_monst.monst[j]);
-							add_string_to_buf("    {}", store_string2);
+							add_string_to_buf("    {}", get_m_name(party.out_c[i].what_monst.monst[j]));
 							j = 7;
 
 							}
@@ -1062,24 +1040,22 @@ void notify_out_combat_began(out_wandering_type encounter,short *nums)
 
 	for (i = 0; i < 6; i++)
 		if (encounter.monst[i] != 0) {
-			switch (encounter.monst[i]) {
-				////
-				
-				default:
-				get_m_name(store_string2,encounter.monst[i]);
-				add_string_to_buf("  {:d} x {}        ",nums[i],store_string2);
+			switch (encounter.monst[i])
+			{
+			default:
+				add_string_to_buf("  {:d} x {}        ",nums[i], get_m_name(encounter.monst[i]));
 				break;		
 			}				
 		}
-	if (encounter.monst[6] != 0) {
-			get_m_name(store_string2,encounter.monst[6]);
-			add_string_to_buf("  {}        ",store_string2);
-		}
+	if (encounter.monst[6] != 0)
+	{
+		add_string_to_buf("  {}        ", get_m_name(encounter.monst[6]));
+	}
 }
 
-void get_m_name(char *str,unsigned char num)
+const char * get_m_name(unsigned char num)
 {
-	strcpy(str, scenario_monster_name(num));
+	return scenario_monster_name(num);
 }
 
 static void get_ter_name(char *str,unsigned char num)
@@ -1094,24 +1070,20 @@ static void get_ter_name(char *str,unsigned char num)
 
 void print_monst_name(unsigned char m_type)
 {
-	get_m_name(store_string2,m_type);
-	add_string_to_buf("{}:",store_string2);
+	add_string_to_buf("{}:", get_m_name(m_type));
 }
 
 void print_monst_attacks(unsigned char m_type,short target)
 //short target; // < 100 - pc  >= 100  monst
 {
-	char store_string3[60];
-	
-	get_m_name(store_string2,m_type);
 	if (target < 100)
-		add_string_to_buf("{} attacks {}",
-			store_string2, adven[target].name);
-		else {
-			get_m_name(store_string3,c_town.monst.dudes[target - 100].number);
-			add_string_to_buf("{} attacks {}",
-			store_string2,store_string3);
-			}
+	{
+		add_string_to_buf("{} attacks {}", get_m_name(m_type), adven[target].name);
+	}
+	else
+	{
+		add_string_to_buf("{} attacks {}", get_m_name(m_type), get_m_name(c_town.monst.dudes[target - 100].number));
+	}
 }
 
 void damaged_message(short damage,short type)
@@ -1124,79 +1096,73 @@ void damaged_message(short damage,short type)
 // This prepares the monster's string for the text bar
 void print_monster_going(char *combat_str,unsigned char m_num,short ap)
 {
-	get_m_name(store_string2,m_num);
-	format_to_buf(combat_str, "{} (ap: {:d})",
-		store_string2,ap);
+	format_to_buf(combat_str, "{} (ap: {:d})", get_m_name(m_num),ap);
 }
 
 void monst_spell_note(unsigned char number,short which_mess)
 {
-	get_m_name(store_string2,number);
+	const char * const monster_name = get_m_name(number);
 
 	switch (which_mess)
 	{
-	case 1:		add_string_to_buf("  {} scared. ",store_string2);break;
-	case 2:		add_string_to_buf("  {} slowed. ",store_string2);break;
-	case 3:		add_string_to_buf("  {} weakened.",store_string2);break;
-	case 4:		add_string_to_buf("  {} poisoned.",store_string2);break;
-	case 5:		add_string_to_buf("  {} cursed.",store_string2);break;
-	case 6:		add_string_to_buf("  {} ravaged.",store_string2);break;
-	case 7:		add_string_to_buf("  {} undamaged.",store_string2);break;
-	case 8:		add_string_to_buf("  {} is stoned.",store_string2);break;
-	case 9:		add_string_to_buf("  Gazes at {}.",store_string2);break;
-	case 10:	add_string_to_buf("  {} resists.",store_string2);break;
-	case 11:	add_string_to_buf("  Drains {}.",store_string2);break;
-	case 12:	add_string_to_buf("  Shoots at {}.",store_string2);break;
-	case 13:	add_string_to_buf("  Throws spear at {}.", store_string2); break;	
-	case 14:	add_string_to_buf("  Throws rock at {}.", store_string2); break;	
-	case 15:	add_string_to_buf("  Throws razordisk at {}.", store_string2); break;
-	case 16:	add_string_to_buf("  Hits {}.", store_string2); break;
-	case 17:	add_string_to_buf("{} disappears.", store_string2); break;
-	case 18:	add_string_to_buf("  Misses {}.", store_string2); break;
-	case 19:	add_string_to_buf("  {} is webbed.",store_string2);break;
-	case 20:	add_string_to_buf("  {} chokes.",store_string2);break;
-	case 21:	add_string_to_buf("  {} summoned.",store_string2);break;
-	case 22:	add_string_to_buf("  {} is dumbfounded.",store_string2);break;
-	case 23:	add_string_to_buf("  {} is charmed.",store_string2);break;
-	case 24:	add_string_to_buf("  {} is recorded.",store_string2);break;
-	case 25:	add_string_to_buf("  {} is diseased.",store_string2);break;
-	case 26:	add_string_to_buf("  {} is an avatar!",store_string2);break;
-	case 27:	add_string_to_buf("  {} splits!",store_string2);break;
-	case 28:	add_string_to_buf("  {} falls asleep.",store_string2);break;
-	case 29:	add_string_to_buf("  {} wakes up.",store_string2);break;
-	case 30:	add_string_to_buf("  {} paralyzed.",store_string2);break;
-	case 31:	add_string_to_buf("  {} covered with acid.",store_string2);break;
-	case 32:	add_string_to_buf("  Fires spines at {}.",store_string2);break;
+	case 1:		add_string_to_buf("  {} scared. ", monster_name);break;
+	case 2:		add_string_to_buf("  {} slowed. ", monster_name);break;
+	case 3:		add_string_to_buf("  {} weakened.", monster_name);break;
+	case 4:		add_string_to_buf("  {} poisoned.", monster_name);break;
+	case 5:		add_string_to_buf("  {} cursed.", monster_name);break;
+	case 6:		add_string_to_buf("  {} ravaged.", monster_name);break;
+	case 7:		add_string_to_buf("  {} undamaged.", monster_name);break;
+	case 8:		add_string_to_buf("  {} is stoned.", monster_name);break;
+	case 9:		add_string_to_buf("  Gazes at {}.", monster_name);break;
+	case 10:	add_string_to_buf("  {} resists.", monster_name);break;
+	case 11:	add_string_to_buf("  Drains {}.", monster_name);break;
+	case 12:	add_string_to_buf("  Shoots at {}.", monster_name);break;
+	case 13:	add_string_to_buf("  Throws spear at {}.", monster_name); break;
+	case 14:	add_string_to_buf("  Throws rock at {}.", monster_name); break;
+	case 15:	add_string_to_buf("  Throws razordisk at {}.", monster_name); break;
+	case 16:	add_string_to_buf("  Hits {}.", monster_name); break;
+	case 17:	add_string_to_buf("{} disappears.", monster_name); break;
+	case 18:	add_string_to_buf("  Misses {}.", monster_name); break;
+	case 19:	add_string_to_buf("  {} is webbed.", monster_name);break;
+	case 20:	add_string_to_buf("  {} chokes.", monster_name);break;
+	case 21:	add_string_to_buf("  {} summoned.", monster_name);break;
+	case 22:	add_string_to_buf("  {} is dumbfounded.", monster_name);break;
+	case 23:	add_string_to_buf("  {} is charmed.", monster_name);break;
+	case 24:	add_string_to_buf("  {} is recorded.", monster_name);break;
+	case 25:	add_string_to_buf("  {} is diseased.", monster_name);break;
+	case 26:	add_string_to_buf("  {} is an avatar!", monster_name);break;
+	case 27:	add_string_to_buf("  {} splits!", monster_name);break;
+	case 28:	add_string_to_buf("  {} falls asleep.", monster_name);break;
+	case 29:	add_string_to_buf("  {} wakes up.", monster_name);break;
+	case 30:	add_string_to_buf("  {} paralyzed.", monster_name);break;
+	case 31:	add_string_to_buf("  {} covered with acid.", monster_name);break;
+	case 32:	add_string_to_buf("  Fires spines at {}.", monster_name);break;
 	}
 }
 
 void monst_cast_spell_note(unsigned char number,short spell,short type)
 //short type; // 0 - mage 1- priest
 {
-	get_m_name(store_string2,number);
-	add_string_to_buf("{} casts:", store_string2);
+	add_string_to_buf("{} casts:", get_m_name(number));
 	add_string_to_buf("  {}", (type == 1) ? m_priest_sp[spell - 1] : m_mage_sp[spell - 1]);
 }
 
 void monst_breathe_note(unsigned char number)
 {
-	get_m_name(store_string2,number);
-	add_string_to_buf("{} breathes.", store_string2);
+	add_string_to_buf("{} breathes.", get_m_name(number));
 }
 
 void monst_damaged_mes(short which_m,short how_much,short how_much_spec)
 {
-	get_m_name(store_string2,c_town.monst.dudes[which_m].number);
 	if (how_much_spec > 0)
-		add_string_to_buf("  {} takes {:d}+{:d}", store_string2, how_much,how_much_spec);
+		add_string_to_buf("  {} takes {:d}+{:d}", get_m_name(c_town.monst.dudes[which_m].number), how_much,how_much_spec);
 	else
-		add_string_to_buf("  {} takes {:d}", store_string2, how_much);
+		add_string_to_buf("  {} takes {:d}", get_m_name(c_town.monst.dudes[which_m].number), how_much);
 }
 
 void monst_killed_mes(short which_m)
 {
-	get_m_name(store_string2,c_town.monst.dudes[which_m].number);
-	add_string_to_buf("  {} dies.", store_string2);
+	add_string_to_buf("  {} dies.", get_m_name(c_town.monst.dudes[which_m].number));
 }
 
 void print_nums(short a,short b,short c)
@@ -1217,6 +1183,7 @@ static short print_terrain(location space)
 	if (is_combat()) {
 		which_terrain = combat_terrain[space.x][space.y];
 		}
+	char store_string2[256];
 	get_ter_name(store_string2,which_terrain);
 	add_string_to_buf("    {}", store_string2);
 
