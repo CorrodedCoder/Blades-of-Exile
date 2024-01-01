@@ -645,7 +645,7 @@ location end_town_mode(short switching_level,location destination)  // returns n
 		// Now store map
 			for (i = 0; i < town_size[town_type]; i++)
 				for (j = 0; j < town_size[town_type]; j++)
-					if (is_explored(i,j) > 0) {
+					if (is_explored(i,j)) {
 						if (c_town.town_num < 100)
 							town_maps.town_maps[c_town.town_num][i / 8][j] = town_maps.town_maps[c_town.town_num][i / 8][j] |
 								(char) (s_pow(2,i % 8));
@@ -1572,7 +1572,7 @@ void draw_map (HWND the_dialog, short the_item)
 					if (out_mode == TRUE)
 						expl = out_e[where.x + 48 * party.i_w_c.x][where.y + 48 * party.i_w_c.y];
 					else
-						expl = is_explored(where.x, where.y);
+						expl = is_explored(where.x, where.y) ? TRUE : FALSE;
 
 					if (expl != 0)
 					{
@@ -1622,7 +1622,7 @@ void draw_map (HWND the_dialog, short the_item)
 										if (out_mode == TRUE)
 											expl2 = out_e[(where.x + 1) + 48 * party.i_w_c.x][where.y + 48 * party.i_w_c.y];
 										else
-											expl2 = is_explored(where.x + 1, where.y);
+											expl2 = is_explored(where.x + 1, where.y) ? TRUE : FALSE;
 										const short pic2 = scenario_ter_type(what_ter2).picture;
 										if ((map_pats[pic] == map_pats[pic2]) && (expl2 != 0))
 										{
@@ -1693,7 +1693,7 @@ void draw_map (HWND the_dialog, short the_item)
 				if (c_town.monst.dudes[i].active > 0)
 				{
 					location where = c_town.monst.dudes[i].m_loc;
-					if ((is_explored(where.x, where.y)) &&
+					if (is_explored(where.x, where.y) &&
 						((where.x >= view_rect.left) && (where.x <= view_rect.right)
 							&& (where.y >= view_rect.top) && (where.x <= view_rect.bottom))) {
 

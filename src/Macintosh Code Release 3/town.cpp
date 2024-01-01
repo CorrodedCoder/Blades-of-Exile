@@ -604,7 +604,7 @@ location end_town_mode(short switching_level,location destination)  // returns n
 		//if (c_town.town_num < 120) {
 			for (i = 0; i < town_size[town_type]; i++)
 				for (j = 0; j < town_size[town_type]; j++)
-					if (is_explored(i,j) > 0) {
+					if (is_explored(i,j)) {
 						data_store->town_maps.town_maps[c_town.town_num][i / 8][j] = data_store->town_maps.town_maps[c_town.town_num][i / 8][j] |
 							(char) (s_pow(2,i % 8));
 					}
@@ -1527,7 +1527,7 @@ void draw_map (DialogPtr the_dialog, short the_item)
 					
 					if (out_mode == TRUE)
 						expl = out_e[where.x + 48 * party.i_w_c.x][where.y + 48 * party.i_w_c.y];
-						else expl = is_explored(where.x,where.y);
+						else expl = is_explored(where.x,where.y) ? TRUE : FALSE;
 						
 					if (expl != 0) {
 						map_graphic_placed[where.x / 8][where.y] = 
@@ -1562,7 +1562,7 @@ void draw_map (DialogPtr the_dialog, short the_item)
 											else what_ter2 = t_d.terrain[where.x + 1][where.y];	
 										if (out_mode == TRUE)
 											expl2 = out_e[(where.x + 1) + 48 * party.i_w_c.x][where.y + 48 * party.i_w_c.y];
-											else expl2 = is_explored(where.x + 1,where.y);									
+											else expl2 = is_explored(where.x + 1,where.y) ? TRUE : FALSE;									
 										pic2 = scenario.ter_types[what_ter2].picture;
 										if ((map_pats[pic2] == map_pats[pic]) && (expl2 != 0)) {
 											draw_rect.right += 6;

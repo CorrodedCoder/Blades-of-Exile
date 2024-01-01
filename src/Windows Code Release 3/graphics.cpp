@@ -1738,7 +1738,7 @@ void draw_terrain(short	mode)
 			if ((is_out() == FALSE) && ((where_draw.x < 0) || (where_draw.x > town_size[town_type] - 1)
 				|| (where_draw.y < 0) || (where_draw.y > town_size[town_type] - 1)))
 					unexplored_area[i][j] = 0;
-				else unexplored_area[i][j] = 1 - is_explored(where_draw.x,where_draw.y);
+				else unexplored_area[i][j] = 1 - (is_explored(where_draw.x,where_draw.y) ? TRUE : FALSE);
 			}
 
 
@@ -1782,14 +1782,14 @@ void draw_terrain(short	mode)
 								spec_terrain = combat_terrain[where_draw.x][where_draw.y];
 								if (cartoon_happening == TRUE)
 									can_draw = TRUE;
-									else can_draw = (((is_explored(where_draw.x,where_draw.y)) ||
+									else can_draw = ((is_explored(where_draw.x,where_draw.y) ||
 									(which_combat_type == 0) || (monsters_going == TRUE) || (overall_mode != 10))
 									  && (party_can_see(where_draw) < 6)) ? 1 : 0;
 
 						}
 					else {
 						spec_terrain = t_d.terrain[where_draw.x][where_draw.y];
-						can_draw = is_explored(where_draw.x,where_draw.y);
+						can_draw = is_explored(where_draw.x,where_draw.y) ? TRUE : FALSE;
 
 						if (can_draw > 0) {
 							if (pt_in_light(c_town.p_loc,where_draw) == FALSE)

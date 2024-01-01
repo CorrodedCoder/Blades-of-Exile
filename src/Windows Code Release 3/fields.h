@@ -1,4 +1,5 @@
-    Boolean is_explored(short i,short j);
+bool is_explored(short i,short j);
+bool is_not_explored(short i, short j);
 void make_explored(short i,short j);
 void take_explored(short i,short j);
 Boolean is_out();

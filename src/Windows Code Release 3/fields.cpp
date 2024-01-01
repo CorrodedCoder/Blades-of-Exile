@@ -20,18 +20,27 @@ extern unsigned char sfx[64][64];
 extern char terrain_blocked[256];
 extern short town_size[3];
 
-Boolean is_explored(short i,short j)
+bool is_explored(short i,short j)
 {
-	if (is_out())  {
+	if (is_out())
+	{
 		if ((i != boe_clamp(i,0,95)) || (j != boe_clamp(j,0,95)))
-      	return FALSE;
-		return (out_e[i][j] != 0) ? TRUE : FALSE;
-		}
-	if (c_town.explored[i][j] & 1) {
-		return TRUE;
-		}
-		else return FALSE;
+      		return false;
+		return (out_e[i][j] != 0) ? true : false;
+	}
+	if (c_town.explored[i][j] & 1)
+	{
+		return true;
+	}
+	else
+		return false;
 }
+
+bool is_not_explored(short i, short j)
+{
+	return !is_explored(i, j);
+}
+
 void make_explored(short i,short j)
 {
 	if (is_out())

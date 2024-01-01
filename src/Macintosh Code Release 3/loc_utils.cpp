@@ -357,7 +357,7 @@ void update_explored(location dest)
 		make_explored(dest.x,dest.y);
 		for (look2.x = max(0,dest.x - 4); look2.x < min(town_size[town_type],dest.x + 5); look2.x++)
 			for (look2.y = max(0,dest.y - 4); look2.y < min(town_size[town_type],dest.y + 5); look2.y++)
-				if (is_explored(look2.x,look2.y) == FALSE)
+				if (is_not_explored(look2.x,look2.y))
 					if ((can_see(dest, look2,0) < 5) && (pt_in_light(dest,look2) == TRUE))
 						make_explored(look2.x,look2.y);
 		}

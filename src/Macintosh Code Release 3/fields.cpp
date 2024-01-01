@@ -15,15 +15,23 @@ extern char terrain_blocked[256];
 extern short town_size[3];
 extern scenario_data_type scenario;
 
-Boolean is_explored(short i,short j)
+bool is_explored(short i,short j)
 {
 	if (is_out())
-		return (out_e[i][j] != 0) ? TRUE : FALSE;
-	if (c_town.explored[i][j] & 1) {
-		return TRUE;
-		}
-		else return FALSE;
+		return (out_e[i][j] != 0) ? true : false;
+	if (c_town.explored[i][j] & 1)
+	{
+		return true;
+	}
+	else
+		return false;
 }
+
+bool is_not_explored(short i, short j)
+{
+	return !is_explored(i, j);
+}
+
 void make_explored(short i,short j)
 {
 	if (is_out())

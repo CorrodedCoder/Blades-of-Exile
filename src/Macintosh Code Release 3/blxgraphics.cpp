@@ -1755,7 +1755,7 @@ void draw_terrain(short	mode)
 			if (!(is_out()) && ((where_draw.x < 0) || (where_draw.x > town_size[town_type] - 1) 
 				|| (where_draw.y < 0) || (where_draw.y > town_size[town_type] - 1))) 
 					unexplored_area[i][j] = 0;
-				else unexplored_area[i][j] = 1 - is_explored(where_draw.x,where_draw.y);
+				else unexplored_area[i][j] = 1 - (is_explored(where_draw.x,where_draw.y) ? TRUE : FALSE);
 			}
 
 	for (q = 0; q < 9; q++) {
@@ -1803,7 +1803,7 @@ void draw_terrain(short	mode)
 						}
 					else {
 						spec_terrain = t_d.terrain[where_draw.x][where_draw.y];
-						can_draw = is_explored(where_draw.x,where_draw.y);
+						can_draw = is_explored(where_draw.x,where_draw.y) ? TRUE : FALSE;
 
 						if (can_draw > 0) {
 							if (pt_in_light(c_town.p_loc,where_draw) == FALSE)

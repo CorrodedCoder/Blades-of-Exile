@@ -3041,9 +3041,7 @@ short count_walls(location loc)
 	return answer;		
 }
 
-Boolean is_sign(unsigned char ter)
+bool is_sign(unsigned char ter)
 {
-	if (scenario_ter_type(ter).special == terrain_special::IsASign)
-		return TRUE;
-	return FALSE;
+	return scenario_ter_type(ter).special == terrain_special::IsASign;
 }

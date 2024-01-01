@@ -2933,12 +2933,7 @@ short count_walls(location loc)
 	return answer;		
 }
 
-Boolean is_sign(unsigned char ter)
+bool is_sign(unsigned char ter)
 {
-	unsigned char signs[6] = {110,127,142,213,214,252};
-	short i;
-	
-	if (scenario_ter_type(ter).special == 11)
-		return TRUE;
-	return FALSE;
+	return scenario_ter_type(ter).special == 11;
 }
