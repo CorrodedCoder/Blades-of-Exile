@@ -2580,36 +2580,39 @@ void start_new_game()
 	if( !adventurers_anyone_normal(adven) )
 		return;
 	
-	// everyone gets a weapon
+	// PCs get adjustments
 	for (i = 0; i < 6; i++)
+	{
 		if (adven[i].main_status == status::Normal)
 		{
+			// everyone gets a weapon
 			adven[i].items[0] = start_items[adven[i].race * 2];
 			adven[i].equip[0] = TRUE;
 			adven[i].items[1] = start_items[adven[i].race * 2 + 1];
 			adven[i].equip[1] = TRUE;
-		}
-	// PCs get adjustments
-	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == status::Normal) {
 			// Do stat adjs for selected race.
-			if (adven[i].race == 1) {
+			switch (adven[i].race)
+			{
+			case 1:
 				if (adven[i].skills[skill::Dexterity] < 18)
 					adven[i].skills[skill::Dexterity] += 2;
-				}
-			if (adven[i].race == 2) {
+				break;
+			case 2:
 				if (adven[i].skills[skill::Strength] < 18)
 					adven[i].skills[skill::Strength] += 2;
 				if (adven[i].skills[skill::Intelligence] < 19)
 					adven[i].skills[skill::Intelligence] += 1;
-				}
+				break;
+			default:
+				break;
+			}
 			adven[i].max_sp += adven[i].skills[skill::MageSpells] * 3 + adven[i].skills[skill::PriestSpells] * 3;
 			adven[i].cur_sp = adven[i].max_sp;
-			}
+		}
+	}
 	save_file(1);
 	party_in_memory = TRUE;
-
-	}
+}
 
 location get_cur_direction(POINT the_point)
 {
@@ -2619,19 +2622,26 @@ location get_cur_direction(POINT the_point)
 	the_point.y += 5;
 	the_point.x += 5;
 
-				if ((the_point.x < 135) & (the_point.y >= ((the_point.x * 34) / 10) - 293)
-					& (the_point.y <= (-1 * ((the_point.x * 34) / 10) + 663)))
-					store_dir.x--;
-				if ((the_point.x > 163) & (the_point.y <= ((the_point.x * 34) / 10) - 350)
-					& (the_point.y >= (-1 * ((the_point.x * 34) / 10) + 721)))
-					store_dir.x++;
-					
-				if ((the_point.y < 167) & (the_point.y <= (the_point.x / 2) + 102)
-					& (the_point.y <= (-1 * (the_point.x / 2) + 249)))
-					store_dir.y--;
-				if ((the_point.y > 203) & (the_point.y >= (the_point.x / 2) + 123)
-					& (the_point.y >= (-1 * (the_point.x / 2) + 268)))
-					store_dir.y++;
+	if ((the_point.x < 135) & (the_point.y >= ((the_point.x * 34) / 10) - 293)
+		& (the_point.y <= (-1 * ((the_point.x * 34) / 10) + 663)))
+	{
+		--store_dir.x;
+	}
+	if ((the_point.x > 163) & (the_point.y <= ((the_point.x * 34) / 10) - 350)
+		& (the_point.y >= (-1 * ((the_point.x * 34) / 10) + 721)))
+	{
+		++store_dir.x;
+	}
+	if ((the_point.y < 167) & (the_point.y <= (the_point.x / 2) + 102)
+		& (the_point.y <= (-1 * (the_point.x / 2) + 249)))
+	{
+		--store_dir.y;
+	}
+	if ((the_point.y > 203) & (the_point.y >= (the_point.x / 2) + 123)
+		& (the_point.y >= (-1 * (the_point.x / 2) + 268)))
+	{
+		++store_dir.y;
+	}
 					
 	return store_dir;
 }
