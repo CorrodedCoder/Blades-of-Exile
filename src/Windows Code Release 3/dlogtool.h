@@ -2,15 +2,15 @@
 
 #include <variant>
 #include <string_view>
+#include <span>
 
 using DialogDrawDestination = std::variant<HWND, HBITMAP>;
 
 void cd_set_flag(short dlog_num,short item_num,short flag);
 void cd_erase_rect(short dlog_num,RECT to_fry);
 short cd_get_led(short dlog_num,short item_num);
-short cd_create_custom_dialog(HWND parent,
-	char *strs,short pic_num,short buttons[3]);
-	void frame_di(HWND hDlg, short item_num, short val);
+short cd_create_custom_dialog(HWND parent, const std::span<const std::string_view, 6>& strs, short pic_num, short buttons[3]);
+void frame_di(HWND hDlg, short item_num, short val);
 void cd_kill_dc(short which_slot,HDC hdc);
 HDC cd_get_dlog_dc(short which_slot);
 short cd_get_active(short dlog_num, short item_num);
@@ -26,7 +26,6 @@ void cd_init_button(short dlog_num,short item_num, short button_num, short statu
 void cd_attach_key(short dlog_num,short item_num,char key);
 void cd_set_pict(short dlog_num, short item_num, short pict_num);
 void cd_activate_item(short dlog_num, short item_num, short status);
-void cd_get_item_text(short dlog_num, short item_num, char *str);
 void cd_set_item_text(short dlog_num, short item_num, std::string_view str);
 void cd_set_item_num(short dlog_num, short item_num, short num);
 void cd_set_led(short dlog_num,short item_num,short state);

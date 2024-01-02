@@ -812,7 +812,7 @@ void create_clip_region()
 	for (i = 0; i < 6; i++) {
 		store_rect = win_to_rects[i];
 		OffsetRect(&store_rect,ul.h,ul.v);
-		if ((is_out()) || (is_town()) || (is_combat()) ||
+		if (is_out() || is_town() || is_combat() ||
 			(i == 2) || (i == 3) || (i == 5))
 				FrameRect(&store_rect);
 		}
@@ -1053,10 +1053,7 @@ void draw_text_bar(short mode)
 //short mode; // 0 - no redraw  1 - forced
 {
 	short i,num_rect[3] = {12,10,4};
-	location loc;
-	char combat_string[100];
-	
-	loc = (is_out()) ? global_to_local(party.p_loc) : c_town.p_loc;
+	location loc = is_out() ? global_to_local(party.p_loc) : c_town.p_loc;
 
 	if (mode == 1)
 		remember_tiny_text = 500;	   
@@ -1093,18 +1090,15 @@ void draw_text_bar(short mode)
 			}
 	
 		}
-	if ((is_combat()) && (current_pc < 6) && (monsters_going == FALSE)) {
-		format_to_buf(combat_string,"{} (ap: {:d})",
-			adven[current_pc].name,pc_moves[current_pc]);
-		put_text_bar(combat_string);
+	if (is_combat() && (current_pc < 6) && (monsters_going == FALSE)) {
+		put_text_bar(std::format("{} (ap: {:d})", adven[current_pc].name, pc_moves[current_pc]));
 		remember_tiny_text = 500;
 		}
-	if ((is_combat()) && (monsters_going == TRUE))	// Print bar for 1st monster with >0 ap -
+	if (is_combat() && (monsters_going == TRUE))	// Print bar for 1st monster with >0 ap -
 	   // that is monster that is going
 	   for (i = 0; i < T_M; i++)
 	   	if ((c_town.monst.dudes[i].active > 0) && (c_town.monst.dudes[i].m_d.ap > 0)) {
-	   		print_monster_going(combat_string,c_town.monst.dudes[i].number,c_town.monst.dudes[i].m_d.ap);
-			put_text_bar(combat_string);
+			put_text_bar(format_monster_going(c_town.monst.dudes[i].number, c_town.monst.dudes[i].m_d.ap));
 			remember_tiny_text = 500;
 			i = 400;	   
 	   }
@@ -1174,7 +1168,7 @@ void load_area_graphics()
 	// Build wish list
 	if (is_out())
 		load_outdoor_graphics();
-	if ((is_town()) || (is_combat()))
+	if (is_town() || is_combat())
 		load_town_graphics();
 	
 	// Reserve all in wish list not taken
@@ -1670,29 +1664,25 @@ GWorldPtr load_pict(short picture_to_get)
 
 // this is used for determinign whether to round off walkway corners
 // right now, trying a restrictive rule (just cave floor and grass, mainly)
-Boolean is_nature(char x, char y)
+bool is_nature(char x, char y)
 {
-	short pic;
-	unsigned char ter_type;
-	
-	ter_type = coord_to_ter((short) x,(short) y);
-	pic = scenario_ter_type(ter_type).picture;
+	const short pic = scenario_ter_type(coord_to_ter((short)x, (short)y)).picture;
 	if ((pic >= 0) && (pic <= 45))
-		return TRUE;
+		return true;
 	if ((pic >= 67) && (pic <= 73))
-		return TRUE;
+		return true;
 	if ((pic >= 75) && (pic <= 87))
-		return TRUE;
+		return true;
 	if ((pic >= 121) && (pic <= 122))
-		return TRUE;
+		return true;
 	if ((pic >= 179) && (pic <= 208))
-		return TRUE;
+		return true;
 	if ((pic >= 211) && (pic <= 212))
-		return TRUE;
+		return true;
 	if ((pic >= 217) && (pic <= 246))
-		return TRUE;
+		return true;
 
-	return FALSE;
+	return false;
 }
 
 
@@ -1753,27 +1743,27 @@ void draw_terrain(short	mode)
 	
 	for (i = 0; i < 13; i++)
 		for (j = 0; j < 13; j++) {
-			where_draw =  (is_out()) ? party.p_loc : center;
+			where_draw =  is_out() ? party.p_loc : center;
 			where_draw.x += i - 6;
 			where_draw.y += j - 6;
-			if (!(is_out())) 
-				light_area[i][j] = (is_town()) ? pt_in_light(view_loc,where_draw) : combat_pt_in_light(where_draw);
-			if (!(is_out()) && ((where_draw.x < 0) || (where_draw.x > town_size[town_type] - 1) 
+			if (is_not_out()) 
+				light_area[i][j] = is_town() ? pt_in_light(view_loc,where_draw) : combat_pt_in_light(where_draw);
+			if (is_not_out() && ((where_draw.x < 0) || (where_draw.x > town_size[town_type] - 1) 
 				|| (where_draw.y < 0) || (where_draw.y > town_size[town_type] - 1))) 
 					unexplored_area[i][j] = 0;
-				else unexplored_area[i][j] = 1 - is_explored(where_draw.x,where_draw.y);
+				else unexplored_area[i][j] = 1 - (is_explored(where_draw.x,where_draw.y) ? TRUE : FALSE);
 			}
 
 	for (q = 0; q < 9; q++) {
 		for (r = 0; r < 9; r++)
 			{
-				where_draw = (is_out()) ? party.p_loc : center;
+				where_draw = is_out() ? party.p_loc : center;
 				where_draw.x += q - 4;
 				where_draw.y += r - 4;
 				off_terrain = FALSE;				
 				
 				draw_trim = TRUE;
-				if (!(is_out()) && ((where_draw.x < 0) || (where_draw.x > town_size[town_type] - 1) 
+				if (is_not_out() && ((where_draw.x < 0) || (where_draw.x > town_size[town_type] - 1) 
 						|| (where_draw.y < 0) || (where_draw.y > town_size[town_type] - 1))) {
 							draw_trim = FALSE;
 							// Warning - this section changes where_draw
@@ -1809,7 +1799,7 @@ void draw_terrain(short	mode)
 						}
 					else {
 						spec_terrain = t_d.terrain[where_draw.x][where_draw.y];
-						can_draw = is_explored(where_draw.x,where_draw.y);
+						can_draw = is_explored(where_draw.x,where_draw.y) ? TRUE : FALSE;
 
 						if (can_draw > 0) {
 							if (pt_in_light(c_town.p_loc,where_draw) == FALSE)
@@ -1822,7 +1812,7 @@ void draw_terrain(short	mode)
 
 						
 				if ((can_draw != 0) && (overall_mode != 50)) { // if can see, not a pit, and not resting
-					if ((is_combat()) && (cartoon_happening == FALSE)) {
+					if (is_combat() && (cartoon_happening == FALSE)) {
 						anim_ticks = 0;
 						}
 						
@@ -1921,7 +1911,7 @@ void draw_terrain(short	mode)
 			}
 		}
 		
-	if ((overall_mode != 50) && (!is_out())) 
+	if ((overall_mode != 50) && (is_not_out())) 
 		draw_sfx();
 		
 	// Now place items
@@ -1929,7 +1919,7 @@ void draw_terrain(short	mode)
 		draw_items();		
 		
 	// Now place fields
-	if ((overall_mode != 50) && (!is_out())) {
+	if ((overall_mode != 50) && (is_not_out())) {
 		draw_fields();
 		draw_spec_items();
 		}
@@ -1938,7 +1928,7 @@ void draw_terrain(short	mode)
 	if (overall_mode != 50) {
 		if (is_out())
 			draw_outd_boats(party.p_loc);
-			else if ((is_town()) || (which_combat_type == 1))
+			else if (is_town() || (which_combat_type == 1))
 				draw_town_boat(center);		
 		draw_monsters();
 		}
@@ -1979,7 +1969,7 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 	location targ;
 	
 	// FIrst quick check ... if a pit or barrier in outdoor combat, no trim
-	if ((is_combat()) && (which_combat_type == 0) && (ter_type == 86))
+	if (is_combat() && (which_combat_type == 0) && (ter_type == 86))
 		return;
 	if (PSD[296][0] > 0)
 		return;
@@ -2012,7 +2002,7 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 		}
 		
 	// First, trim for fluids
-	if (((is_town()) || (is_combat())) && (town_trim[where.x][where.y] != 0)) {
+	if ((is_town() || is_combat()) && (town_trim[where.x][where.y] != 0)) {
 
 		if (town_trim[where.x][where.y] & 1)
 				draw_trim(q,r,1,0);	
@@ -2031,7 +2021,7 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 		if (town_trim[where.x][where.y] & 128)
 				draw_trim(q,r,2,4);			
 		}
-	if ((is_out()) && (out_trim[where.x][where.y] != 0)) {
+	if (is_out() && (out_trim[where.x][where.y] != 0)) {
 		if (out_trim[where.x][where.y] & 1)
 				draw_trim(q,r,1,0);	
 		if (out_trim[where.x][where.y] & 2)
@@ -2057,26 +2047,26 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 		store1 = get_t_t(where.x,where.y - 1);
 		store2 = get_t_t(where.x + 1,where.y);
 		store3 = get_t_t(where.x,where.y + 1);
-		if ((is_wall(store) == TRUE) 
-			&& (is_wall(store1) == TRUE) &&
+		if (is_wall(store)
+			&& is_wall(store1) &&
 			(is_ground(store2) == TRUE) 
 			&& (is_ground(store3) == TRUE))
 				draw_trim(q,r,3,6);		
 
-		if ((is_wall(store) == TRUE) 
-			&& (is_wall(store3) == TRUE) &&
+		if (is_wall(store)
+			&& is_wall(store3) &&
 			(is_ground(store2) == TRUE) 
 			&& (is_ground(store1) == TRUE))
 				draw_trim(q,r,3,5);		
 
-		if ((is_wall(store2) == TRUE) 
-			&& (is_wall(store1) == TRUE) &&
+		if (is_wall(store2)
+			&& is_wall(store1) &&
 			(is_ground(store) == TRUE) 
 			&& (is_ground(store3) == TRUE))
 				draw_trim(q,r,3,7);		
 
-		if ((is_wall(store2) == TRUE) 
-			&& (is_wall(store3) == TRUE) &&
+		if (is_wall(store2)
+			&& is_wall(store3) &&
 			(is_ground(store) == TRUE) 
 			&& (is_ground(store1) == TRUE))
 				draw_trim(q,r,3,4);		
@@ -2085,12 +2075,12 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 		if ((is_ground(store) == TRUE) 
 			&& (is_ground(store1) == TRUE) &&
 			(is_ground(store2) == TRUE) 
-			&& (is_wall(store3) == TRUE)) {
+			&& is_wall(store3)) {
 				draw_trim(q,r,3,4);		
 				draw_trim(q,r,3,5);						
 				}
 
-		if ((is_wall(store) == TRUE) 
+		if (is_wall(store)
 			&& (is_ground(store3) == TRUE) &&
 			(is_ground(store2) == TRUE) 
 			&& (is_ground(store1) == TRUE)) {
@@ -2099,14 +2089,14 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 				}
 
 		if ((is_ground(store2) == TRUE) 
-			&& (is_wall(store1) == TRUE) &&
+			&& is_wall(store1) &&
 			(is_ground(store) == TRUE) 
 			&& (is_ground(store3) == TRUE)) {
 				draw_trim(q,r,3,6);		
 				draw_trim(q,r,3,7);		
 				}
 
-		if ((is_wall(store2) == TRUE) 
+		if (is_wall(store2)
 			&& (is_ground(store3) == TRUE) &&
 			(is_ground(store) == TRUE) 
 			&& (is_ground(store1) == TRUE)) {
@@ -2197,18 +2187,18 @@ void place_road(short q,short r,location where)
 		rect_draw_some_item (fields_gworld, road_rects[1], terrain_screen_gworld, to_rect, 0, 0);
 		}
 
-	if (((is_out()) && (where.x < 96)) || (!(is_out()) && (where.x < town_size[town_type] - 1)))
+	if ((is_out() && (where.x < 96)) || (is_not_out() && (where.x < town_size[town_type] - 1)))
 		ter = coord_to_ter(where.x + 1,where.y);
-	if (((is_out()) && (where.x == 96)) || (!(is_out()) && (where.x == town_size[town_type] - 1)) 
+	if ((is_out() && (where.x == 96)) || (is_not_out() && (where.x == town_size[town_type] - 1)) 
 	 || (extend_road_terrain(ter) == TRUE)) {
 		to_rect = road_dest_rects[1];
 		OffsetRect(&to_rect,13 + q * 28,13 + r * 36);
 		rect_draw_some_item (fields_gworld, road_rects[0], terrain_screen_gworld, to_rect, 0, 0);
 		}
 
-	if (((is_out()) && (where.y < 96)) || (!(is_out()) && (where.y < town_size[town_type] - 1)))
+	if ((is_out() && (where.y < 96)) || (is_not_out() && (where.y < town_size[town_type] - 1)))
 		ter = coord_to_ter(where.x,where.y + 1);
-	if (((is_out()) && (where.y == 96)) || (!(is_out()) && (where.y == town_size[town_type] - 1)) 
+	if ((is_out() && (where.y == 96)) || (is_not_out() && (where.y == town_size[town_type] - 1)) 
 	 || (extend_road_terrain(ter) == TRUE)) {
 		to_rect = road_dest_rects[2];
 		OffsetRect(&to_rect,13 + q * 28,13 + r * 36);
@@ -2387,7 +2377,7 @@ void draw_targets(location center)
 	short i = 0;
 	short dir_array[8] = {0,3,3,3,2,1,1,1};
 
-	if (party_toast() == TRUE)
+	if (party_toast())
 		return;
 
 	for (i = 0; i < 8; i++)
@@ -2537,14 +2527,12 @@ void draw_targeting_line(Point where_curs)
 }
 
 
-Boolean party_toast()
+bool party_toast(void)
 {
-	short i;
-	
-	for (i = 0; i < 6; i++)
+	for (short i = 0; i < 6; i++)
 		if (adven[i].main_status == status::Normal)
-			return FALSE;
-	return TRUE;
+			return false;
+	return true;
 }
 
 void redraw_partial_terrain(Rect redraw_rect)

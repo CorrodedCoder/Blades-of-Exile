@@ -423,7 +423,7 @@ short monst_pick_target(short which_m)
 		if (adven[monst_target[which_m]].main_status != status::Normal)
 			monst_target[which_m] = 6;		
 	
-	if ((is_combat()) && (cur_monst->attitude % 2 == 1)) {
+	if (is_combat() && (cur_monst->attitude % 2 == 1)) {
 		if (spell_caster < 6)
 			if ((rand_short(1,5) < 5) && (monst_can_see(which_m,pc_pos[spell_caster]) == TRUE)
 					&& (adven[spell_caster].main_status == status::Normal)) 
@@ -592,13 +592,13 @@ short switch_target_to_adjacent(short which_m,short orig_target)
 		}
 
 	// If we get here while in town, just need to check if switch to pc
-	if ((is_town()) && (monst_adjacent(c_town.p_loc,which_m) == TRUE))
+	if (is_town() && (monst_adjacent(c_town.p_loc,which_m) == TRUE))
 		return 0;
 	if (is_town())
 		return orig_target;
 		
 	// If target is already adjacent, we're done here.
-	if ((is_combat()) && (orig_target < 6))
+	if (is_combat() && (orig_target < 6))
 		if ((adven[orig_target].main_status == status::Normal) && (monst_adjacent(pc_pos[orig_target],which_m) == TRUE))
 			return orig_target;
 	if (orig_target >= 100)
@@ -818,8 +818,8 @@ location find_clear_spot(location from_where,short mode)
 		loc.y = loc.y + r1;
 		if ((loc_off_act_area(loc) == FALSE) && is_not_blocked(loc)
 			&& (can_see(from_where,loc,1) == 0)
-			&& (!(is_combat()) || (pc_there(loc) == 6))
-			&& (!(is_town()) || (same_point(loc,c_town.p_loc) == FALSE))
+			&& (is_not_combat() || (pc_there(loc) == 6))
+			&& (is_not_town() || (same_point(loc,c_town.p_loc) == FALSE))
 			 && (!(misc_i[loc.x][loc.y] & 248)) &&
 			(!(c_town.explored[loc.x][loc.y] & 254))) {
 				if ((mode == 0) || ((mode == 1) && (adjacent(from_where,loc) == TRUE)))
@@ -935,7 +935,7 @@ void monst_inflict_fields(short which_monst)
 				curse_monst(which_m,r1);
 				break;
 				}
-			if ((is_web(where_check.x,where_check.y)) && (which_m->m_d.m_type != 12)) {
+			if (is_web(where_check.x,where_check.y) && (which_m->m_d.m_type != 12)) {
 				monst_spell_note(which_m->number,19);
 				r1 = rand_short(2,3);
 				web_monst(which_m,r1);
@@ -954,8 +954,8 @@ void monst_inflict_fields(short which_monst)
 		for (j = 0; j < c_town.monst.dudes[which_monst].m_d.y_width; j++) {
 			where_check.x = c_town.monst.dudes[which_monst].m_loc.x + i; 
 			where_check.y = c_town.monst.dudes[which_monst].m_loc.y + j;
-			if ((is_crate(where_check.x,where_check.y)) ||
-				(is_barrel(where_check.x,where_check.y)) )
+			if (is_crate(where_check.x,where_check.y) ||
+				is_barrel(where_check.x,where_check.y) )
 				for (k = 0; k < NUM_TOWN_ITEMS; k++)
 					if ((t_i.items[k].variety > item_variety::None) && is_contained(t_i.items[k])
 					&& (same_point(t_i.items[k].item_loc,where_check) == TRUE))
@@ -1016,7 +1016,7 @@ Boolean monst_check_special_terrain(location where_check,short mode,short which_
 	if (which_m->attitude == 0)
 		guts = guts / 2;
 		
-	if ((is_antimagic(where_check.x,where_check.y)) && (mage == TRUE))
+	if (is_antimagic(where_check.x,where_check.y) && (mage == TRUE))
 		return FALSE;
 	if ((is_fire_wall(where_check.x,where_check.y)) && (which_m->m_d.spec_skill != 22)) {
 			if (guts < 3) return FALSE;
@@ -1039,7 +1039,7 @@ Boolean monst_check_special_terrain(location where_check,short mode,short which_
 	if (is_scloud(where_check.x,where_check.y)) {
 		if (guts < 4) return FALSE;
 		}
-	if ((is_web(where_check.x,where_check.y)) && (which_m->m_d.m_type != 12)) {
+	if (is_web(where_check.x,where_check.y) && (which_m->m_d.m_type != 12)) {
 		if (guts < 3) return FALSE;
 		}
 	if (is_fire_barrier(where_check.x,where_check.y)) {
@@ -1099,7 +1099,7 @@ Boolean monst_check_special_terrain(location where_check,short mode,short which_
 	if ((scenario_ter_type(ter).picture <= 212) && (scenario_ter_type(ter).picture >= 207))
 		can_enter = FALSE;
 	if (ter == 90) {
-			if ((is_combat()) && (which_combat_type == 0)) {
+			if (is_combat() && (which_combat_type == 0)) {
 				c_town.monst.dudes[which_monst].active = 0;
 				add_string_to_buf("Monster escaped! ");
 				}
@@ -1384,7 +1384,7 @@ Boolean summon_monster(unsigned char which,location where,short duration,short g
 	location loc;
 	short which_m,spot;
 
-	if ((is_town()) || (monsters_going)) {
+	if (is_town() || (monsters_going)) {
 		// Ooooh ... mondo kludge. Need to find caster's attitude to give it to monst.
 		which_m = monst_there(where);
 //		if (pc_there(where) < 6) 
@@ -1403,7 +1403,7 @@ Boolean summon_monster(unsigned char which,location where,short duration,short g
 				if (where.x == 0)
 					return FALSE;
 				}
-			if ((is_barrel(where.x,where.y)) || (is_crate(where.x,where.y)))
+			if ( is_barrel(where.x,where.y) || is_crate(where.x,where.y))
 				return FALSE;
 			loc = where;
 			}

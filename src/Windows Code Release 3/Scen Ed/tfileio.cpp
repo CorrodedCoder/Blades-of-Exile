@@ -536,7 +536,6 @@ void load_spec_graphics()
 		spec_scen_g = NULL;
 		}
 
-	//build_scen_file_name(file_name);
 	format_to_buf(file_name,"{}",szFileName);
 	for (i = 0; i < 256; i++) {
 		if (file_name[i] == '.') {

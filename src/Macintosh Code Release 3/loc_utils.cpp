@@ -161,7 +161,7 @@ static short short_can_see(shortloc p1,shortloc p2)
 	return (can_see(s1,s2,0));
 }
 
-bool is_lava(short x,short y)
+static bool is_lava(short x,short y)
 {
 	return scenario_ter_type(coord_to_ter(x, y)).picture == 404;
 }
@@ -286,7 +286,7 @@ short get_obscurity(short x,short y)
 			store++;
 		}
 
-	if ((is_town()) || (is_combat())) {
+	if (is_town() || is_combat()) {
 		if (is_web(x,y))
 			store += 2;
 		if ((is_fire_barrier(x,y)) || (is_force_barrier(x,y)))
@@ -313,17 +313,13 @@ unsigned char coord_to_ter(short x,short y)
 }
 
 ////
-Boolean is_container(location loc)
+bool is_container(location loc)
 {
-	unsigned char ter;
-	short i;
-	
-	if ((is_barrel(loc.x,loc.y)) || (is_crate(loc.x,loc.y)))
-		return TRUE;
-	ter = coord_to_ter(loc.x,loc.y);
-	if (scenario_ter_type(ter).special == 14)
-			return TRUE;
-	return FALSE;
+	if ((is_barrel(loc.x, loc.y)) || (is_crate(loc.x, loc.y)))
+	{
+		return true;
+	}
+	return scenario_ter_type(coord_to_ter(loc.x, loc.y)).special == 14;
 }
 
 void update_explored(location dest)
@@ -357,7 +353,7 @@ void update_explored(location dest)
 		make_explored(dest.x,dest.y);
 		for (look2.x = max(0,dest.x - 4); look2.x < min(town_size[town_type],dest.x + 5); look2.x++)
 			for (look2.y = max(0,dest.y - 4); look2.y < min(town_size[town_type],dest.y + 5); look2.y++)
-				if (is_explored(look2.x,look2.y) == FALSE)
+				if (is_not_explored(look2.x,look2.y))
 					if ((can_see(dest, look2,0) < 5) && (pt_in_light(dest,look2) == TRUE))
 						make_explored(look2.x,look2.y);
 		}
@@ -384,8 +380,8 @@ bool is_blocked(location to_check)
 		return false;
 		}
 		
-	if ((is_town()) || (is_combat())) {
-		ter = (is_town()) ? t_d.terrain[to_check.x][to_check.y] : combat_terrain[to_check.x][to_check.y];
+	if (is_town() || is_combat()) {
+		ter = is_town() ? t_d.terrain[to_check.x][to_check.y] : combat_terrain[to_check.x][to_check.y];
 		gr = scenario_ter_type(ter).picture;
 	
 		////
@@ -395,9 +391,9 @@ bool is_blocked(location to_check)
 			}
 			
 		// Keep away from marked specials during combat
-		if ((is_combat()) && (gr <= 212) && (gr >= 207))
+		if (is_combat() && (gr <= 212) && (gr >= 207))
 			return true;
-		if ((is_combat()) && (gr == 406))
+		if (is_combat() && (gr == 406))
 			return true;
 			
 		// Party there?
@@ -556,40 +552,36 @@ Boolean special_which_blocks_monst(location to_check)
 }
 
 // Checks if space is a special that prevents movement into or placement of a PC on
-Boolean is_special(location to_check)
+bool is_special(location to_check)
 {
-	unsigned char which_ter;
-
 	if (special_which_blocks_monst(to_check) == FALSE)
-		return FALSE;
-	which_ter = coord_to_ter(to_check.x,to_check.y);
-	if (terrain_blocked[which_ter] == 2)
-			return TRUE;
-			else return FALSE;
+		return false;
+	return terrain_blocked[coord_to_ter(to_check.x, to_check.y)] == 2;
 }
 
-Boolean outd_is_special(location to_check)
+bool is_not_special(location to_check)
 {
-	if (overall_mode == 0) {
-		if (terrain_blocked[out[to_check.x][to_check.y]] == 2) {
-			return TRUE;
-			}
-			else return FALSE;
-		}
-	return FALSE;
+	return !is_special(to_check);
+}
+
+bool outd_is_special(location to_check)
+{
+	if (overall_mode == 0)
+	{
+		return terrain_blocked[out[to_check.x][to_check.y]] == 2;
+	}
+	return false;
 }
 
 bool impassable(unsigned char terrain_to_check)
 {
-	if (terrain_blocked[terrain_to_check] > 2)
-		return true;
-		else return false;
+	return terrain_blocked[terrain_to_check] > 2;
 }
 
 short get_blockage(unsigned char terrain_type)
 {
 	// little kludgy in here for pits
-	if ((terrain_type == 90) && (is_combat()) && (which_combat_type == 0))
+	if ((terrain_type == 90) && is_combat() && (which_combat_type == 0))
 		return 5;
 	if ((terrain_blocked[terrain_type] == 5) || (terrain_blocked[terrain_type] == 1))
 		return 5;
@@ -607,8 +599,8 @@ short light_radius()
 	short store = 1,i;
 	short extra_levels[6] = {10,20,50,75,110,140};
 	
-	if (((which_combat_type == 0) && (is_combat()))
-		|| (is_out()) || (c_town.town.lighting == 0))
+	if (((which_combat_type == 0) && is_combat())
+		|| is_out() || (c_town.town.lighting == 0))
 				return 200;
 	for (i = 0; i < 6; i++)
 		if (party.light_level > extra_levels[i])

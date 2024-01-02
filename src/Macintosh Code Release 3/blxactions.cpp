@@ -687,7 +687,7 @@ Boolean handle_action(EventRecord event)
 			} */
 			
 // Begin : click in terrain
-	if ((PtInRect (the_point, &world_screen)) && ((is_out()) || (is_town()) || (is_combat())) ){		
+	if ((PtInRect (the_point, &world_screen)) && (is_out() || is_town() || is_combat()) ){		
 		i = (the_point.h - 23) / 28;
 		j = (the_point.v - 23) / 36;
 
@@ -808,7 +808,7 @@ Boolean handle_action(EventRecord event)
 								which_t = outdoors[party.i_w_c.x][party.i_w_c.y].exit_dests[i];
 								if (which_t >= 0)
 									start_town_mode(outdoors[party.i_w_c.x][party.i_w_c.y].exit_dests[i], find_direction_from);
-								if (is_town() == TRUE) {
+								if (is_town()) {
 									need_redraw = FALSE;
 									i = 8;
 									if (party.in_boat >= 0)
@@ -1120,7 +1120,7 @@ Boolean handle_action(EventRecord event)
 						if ((prime_time() == FALSE) && (overall_mode != 20) && (overall_mode != 21))
 							add_string_to_buf("Set active: Finish what you're doing first.");
 							else {
-								if (!(is_combat())) {
+								if (is_not_combat()) {
 									if ((adven[i].main_status != status::Normal) &&
 									((overall_mode != 21) || (store_shop_type != 12)))
 										add_string_to_buf("Set active: PC must be here & active.");
@@ -1194,7 +1194,7 @@ Boolean handle_action(EventRecord event)
 									else {
 										add_string_to_buf("Drop item: Click where to drop item.");
 										store_drop_item = item_hit;
-										overall_mode = (is_town()) ? 5 : 15;
+										overall_mode = is_town() ? 5 : 15;
 										}
 								break;
 							case 4: // info
@@ -1354,12 +1354,12 @@ Boolean handle_action(EventRecord event)
 			}
 		else {
 			increase_age();
-			if (!(is_out()) || ((is_out()) && (party.age % 10 == 0))) // no monst move is party outdoors and on horse
+			if (is_not_out() || (is_out() && (party.age % 10 == 0))) // no monst move is party outdoors and on horse
 				do_monsters();
 			if (overall_mode != 0)
 				do_monster_turn();
 			// Wand monsts				
-			if ((overall_mode == 0) && (party_toast() == FALSE) && (party.age % 10 == 0)) {
+			if ((overall_mode == 0) && !party_toast() && (party.age % 10 == 0)) {
 
 				i = rand_short(1,70 + PSD[306][8] * 200);
 				if (i == 10)
@@ -1410,7 +1410,7 @@ Boolean handle_action(EventRecord event)
 		if (FCD(901,0) == 2)
 			save_file(1);
 		}
-	else if (party_toast() == TRUE) {
+	else if (party_toast()) {
 		for (i = 0; i < 6; i++)
 			if (adven[i].main_status == status::Fled) {
 				adven[i].main_status = status::Normal;
@@ -1435,7 +1435,7 @@ Boolean handle_action(EventRecord event)
 		initiate_redraw();
 		put_pc_screen();
 		put_item_screen(stat_window,0);
-		if (party_toast() == TRUE) {
+		if (party_toast()) {
 				play_sound(13);
 			handle_death();
 			if (All_Done == TRUE)
@@ -1518,7 +1518,7 @@ void handle_menu_spell(short spell_picked,short spell_type)
 				if ((store_spell_target = char_select_pc(2 - priest_need_select[spell_picked],0,"Cast spell on who?")) == 6)
 					return;
 			}
-/*	if ((is_combat()) && (((spell_type == 0) && (refer_mage[spell_picked] > 0)) || 
+/*	if (is_combat() && (((spell_type == 0) && (refer_mage[spell_picked] > 0)) || 
 	((spell_type == 1) && (refer_priest[spell_picked] > 0)))){
 		if ((spell_type == 0) && (mage_need_select[spell_picked] > 0))
 			store_spell_target = char_select_pc(2 - mage_need_select[spell_picked],0,"Cast spell on who?");
@@ -1806,7 +1806,7 @@ Boolean handle_keystroke(char chr,char chr2,EventRecord event)
 		case 'K':
 			if (debug_on) {
 				for (i = 0; i < T_M; i++) {
-				if ((is_combat()) && (c_town.monst.dudes[i].active > 0) && (c_town.monst.dudes[i].attitude % 2 == 1))
+				if (is_combat() && (c_town.monst.dudes[i].active > 0) && (c_town.monst.dudes[i].attitude % 2 == 1))
 					c_town.monst.dudes[i].active = 0;
 					
 				if ((c_town.monst.dudes[i].active > 0) && (c_town.monst.dudes[i].attitude % 2 == 1)
@@ -2336,7 +2336,7 @@ void handle_cave_lore()////
 	short i,pic;
 	unsigned char ter;
 	
-	if (!is_out())
+	if (is_not_out())
 		return;
 	
 	ter = out[party.p_loc.x][party.p_loc.y];
@@ -2424,7 +2424,7 @@ void handle_death()
 		if (choice == 1) {
 			in_startup_mode = FALSE;
 			load_file();
-			if (party_toast() == FALSE) {
+			if (!party_toast()) {
 				if (in_startup_mode == FALSE)
 					post_load();
             	else return;
@@ -2595,7 +2595,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 
 		ter = out[real_dest.x][real_dest.y];
 	if (party.in_boat >= 0) {
-		if ((outd_is_blocked(real_dest) == FALSE) //&& (outd_is_special(real_dest) == FALSE)
+		if (!outd_is_blocked(real_dest) //&& (outd_is_special(real_dest) == FALSE)
 		// not in towns
 		&& ((scenario_ter_type(ter).boat_over == FALSE)
 			|| ((real_dest.x != party.p_loc.x) && (real_dest.y != party.p_loc.y)))
@@ -2773,7 +2773,7 @@ Boolean town_move_party(location destination,short forced)////
 	
 	if (keep_going == TRUE) {
 		if (party.in_boat >= 0) {
-				if (is_not_blocked(destination) && (is_special(destination) == FALSE)
+				if (is_not_blocked(destination) && is_not_special(destination)
 				// If to bridge, exit if heading diagonal, keep going is head horiz or vert
 		&& ( (scenario_ter_type(ter).boat_over == FALSE)
 		|| ((destination.x != c_town.p_loc.x) && (destination.y != c_town.p_loc.y)))) {
@@ -2868,7 +2868,7 @@ Boolean town_move_party(location destination,short forced)////
 			return TRUE;
 			}
 		else {
-			if (is_door(destination) == TRUE)
+			if (is_door(destination))
 				format_to_buf(create_line, "Door locked: {}               ",dir_string[set_direction(c_town.p_loc, destination)]);		
 				else format_to_buf(create_line, "Blocked: {}               ",dir_string[set_direction(c_town.p_loc, destination)]);		
 			add_string_to_buf( create_line);
@@ -2933,12 +2933,7 @@ short count_walls(location loc)
 	return answer;		
 }
 
-Boolean is_sign(unsigned char ter)
+bool is_sign(unsigned char ter)
 {
-	unsigned char signs[6] = {110,127,142,213,214,252};
-	short i;
-	
-	if (scenario_ter_type(ter).special == 11)
-		return TRUE;
-	return FALSE;
+	return scenario_ter_type(ter).special == 11;
 }

@@ -1564,7 +1564,7 @@ Boolean combat_next_step()
 		set_pc_moves();	
 		to_return = TRUE;
 		// Safety valve
-		if (party_toast() == TRUE)
+		if (party_toast())
 			return TRUE;
 		}
 	pick_next_pc();
@@ -1820,7 +1820,7 @@ void do_monster_turn()
 		
 	for (i = 0; i < num_monst; i++) {  // Begin main monster loop, do monster actions
 		// If party dead, no point
-		if (party_toast() == TRUE)
+		if (party_toast())
 			return;
 			
 		futzing = 0; // assume monster is fresh
@@ -1863,14 +1863,14 @@ void do_monster_turn()
 
 				// Now if in town and monster about to attack, do a redraw, so we see monster
 				// in right place
-				if ((target != 6) && (is_town() == TRUE) && (redraw_not_yet_done == TRUE)
+				if ((target != 6) && is_town() && (redraw_not_yet_done == TRUE)
 					&& (party_can_see_monst(i) == TRUE)) {
 					draw_terrain(0);					
 					redraw_not_yet_done = FALSE;
 					}
 					
 				// Draw w. monster in center, if can see	
-				if ((cur_monst->m_d.ap > 0) && (is_combat() == TRUE)
+				if ((cur_monst->m_d.ap > 0) && is_combat()
 					// First make sure it has a target and is close, if not, don't bother
 					&& (cur_monst->attitude > 0) && (cur_monst->m_d.picture_num > 0) 
 					&& ((target != 6) || (cur_monst->attitude % 2 == 1)) 
@@ -2107,7 +2107,7 @@ void do_monster_turn()
 				combat_posing_monster = current_working_monster = -1;
 				// Redraw monster after it goes
 				if ((cur_monst->attitude > 0) && (cur_monst->active > 0) && (cur_monst->m_d.ap == 0)
-				 && (is_combat()) && (cur_monst->m_d.picture_num > 0) && (party_can_see_monst(i)  == TRUE)) {
+				 && is_combat() && (cur_monst->m_d.picture_num > 0) && (party_can_see_monst(i)  == TRUE)) {
 					center = cur_monst->m_loc;
 					draw_terrain(0);
 
@@ -2128,7 +2128,7 @@ void do_monster_turn()
 
 	for (i = 0; i < num_monst; i++) {  // Begin monster time stuff loop
 		// If party dead, no point
-		if (party_toast() == TRUE)
+		if (party_toast())
 			return;
 
 		cur_monst = &c_town.monst.dudes[i];
@@ -2215,7 +2215,7 @@ void monster_attack_pc(short who_att,short target)
 		return;
 
 	// Draw attacker frames
-	if ((is_combat()) 
+	if (is_combat() 
 		&& ((center_on_monst == TRUE) || (monsters_going == FALSE))) {
 		if (attacker->m_d.spec_skill != 11)
 		frame_space(attacker->m_loc,0,attacker->m_d.x_width,attacker->m_d.y_width);
@@ -2391,7 +2391,7 @@ void monster_attack_monster(short who_att,short attackee)
 	target = &c_town.monst.dudes[attackee];
 
 	// Draw attacker frames
-	if ((is_combat()) 
+	if (is_combat() 
 		&& ((center_on_monst == TRUE) || (monsters_going == FALSE))) {
 		if (attacker->m_d.spec_skill != 11)
 		frame_space(attacker->m_loc,0,attacker->m_d.x_width,attacker->m_d.y_width);
@@ -2524,7 +2524,7 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 			return;
 		}
 		else {
-			targ_space = (is_combat()) ? pc_pos[target] : c_town.p_loc;
+			targ_space = is_combat() ? pc_pos[target] : c_town.p_loc;
 			if (adven[target].main_status != status::Normal)
 				return;
 			}
@@ -2777,7 +2777,7 @@ Boolean monst_breathe(creature_data_type *caster,location targ_space,short dam_t
 	location l;
 	
 	draw_terrain(2);
-	if ((is_combat()) && (center_on_monst == TRUE)) {
+	if (is_combat() && (center_on_monst == TRUE)) {
 		frame_space(caster->m_loc,0,caster->m_d.x_width,caster->m_d.y_width);
 		}
 	//if (dam_type < 2)
@@ -2875,7 +2875,7 @@ Boolean monst_cast_mage(creature_data_type *caster,short targ)////
 		}
 		
 	if (targ < 6) {
-		vict_loc = (is_combat()) ? pc_pos[targ] : c_town.p_loc;
+		vict_loc = is_combat() ? pc_pos[targ] : c_town.p_loc;
 		if (is_town()) 
 			vict_loc = target = c_town.p_loc;
 		}
@@ -3185,7 +3185,7 @@ Boolean monst_cast_priest(creature_data_type *caster,short targ)
 	if (monst_priest_area_effect[spell - 1] > 0)
 		targ = 6;
 	if (targ < 6)
-		vict_loc = (is_town()) ? c_town.p_loc : pc_pos[targ];
+		vict_loc = is_town() ? c_town.p_loc : pc_pos[targ];
 	if (targ >= 100)
 		vict_loc = c_town.monst.dudes[targ - 100].m_loc;
 	if ((targ == 6) && (is_antimagic(target.x,target.y)))
@@ -3594,8 +3594,8 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,Boolean 
 				spot_hit.x = i;
 				spot_hit.y = j;
 				if ((get_obscurity(i,j) < 5) && (adven[k].main_status == status::Normal)
-					&& (((is_combat()) &&(same_point(pc_pos[k],spot_hit) == TRUE)) ||
-					((is_town()) && (same_point(c_town.p_loc,spot_hit) == TRUE)))) {
+					&& ((is_combat() &&(same_point(pc_pos[k],spot_hit) == TRUE)) ||
+					(is_town() && (same_point(c_town.p_loc,spot_hit) == TRUE)))) {
 					effect = pat.pattern[i - center.x + 4][j - center.y + 4];
 					switch (effect) {
 						case 4: 
@@ -4489,7 +4489,7 @@ void process_fields()
 		for (i = 0; i < town_size[town_type]; i++)
 			for (j = 0; j < town_size[town_type]; j++) 
 				qf[i][j] = (is_quickfire(i,j)) ? 2 : 0;
-		for (k = 0; k < ((is_combat()) ? 4 : 1); k++) {
+		for (k = 0; k < (is_combat() ? 4 : 1); k++) {
 			for (i = r.left + 1; i < r.right ; i++)
 				for (j = r.top + 1; j < r.bottom ; j++) 			
 					if (is_quickfire(i,j) > 0) {

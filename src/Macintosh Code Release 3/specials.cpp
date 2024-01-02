@@ -198,7 +198,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 					}
 				}
 
-	if ((is_combat()) && (((ter_pic <= 207) && (ter_pic >= 212)) || (ter_pic == 406))) {
+	if (is_combat() && (((ter_pic <= 207) && (ter_pic >= 212)) || (ter_pic == 406))) {
 		ASB("Move: Can't trigger this special in combat.");
 		return FALSE;
 		}
@@ -231,7 +231,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 	if (can_enter == FALSE)
 		return FALSE;
 	
-	if ((!is_out()) && (overall_mode < 20)) {
+	if ((is_not_out()) && (overall_mode < 20)) {
 	check_fields(where_check,mode,which_pc);
 
 	if (is_web(where_check.x,where_check.y)) {
@@ -1012,7 +1012,7 @@ Boolean adj_town_look(location where)
 				put_item_screen(stat_window,0);	
 				}
 		}
-	if ((is_container(where)) && (item_there == TRUE) && (can_open == TRUE)) {
+	if (is_container(where) && (item_there == TRUE) && (can_open == TRUE)) {
 		get_item(where,6,true);
 		}
 	else switch (terrain) {
@@ -1396,7 +1396,7 @@ void kill_monst(creature_data_type *which_m,short who_killed)
 	
 
 
-	if (((is_town()) || (which_combat_type == 1)) && (which_m->summoned == 0)) {
+	if ((is_town() || (which_combat_type == 1)) && (which_m->summoned == 0)) {
 		party.m_killed[c_town.town_num]++;
 		}
 
@@ -1538,7 +1538,7 @@ void special_increase_age()
 	
 	for (i = 0; i < 8; i++)
 		if ((c_town.town.timer_spec_times[i] > 0) && (party.age % c_town.town.timer_spec_times[i] == 0)
-			&& ((is_town() == TRUE) || ((is_combat() == TRUE) && (which_combat_type == 1)))) {
+			&& (is_town() || (is_combat() && (which_combat_type == 1)))) {
 			run_special(9,2,c_town.town.timer_specs[i],null_loc,&s1,&s2,&s3);
 			stat_area = TRUE;
 			if (s3 > 0)
@@ -1732,21 +1732,21 @@ void general_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 			check_mess = TRUE;break;	
 		case 7:
 			if (is_out()) *next_spec = -1;
-			if ((is_out()) && (spec.ex1a != 0) && (which_mode == 0)) {
+			if (is_out() && (spec.ex1a != 0) && (which_mode == 0)) {
 				ASB("Can't go here while outdoors.");
 				*a = 1;
 				}
 			break;	
 		case 8:
 			if (is_town()) *next_spec = -1;
-			if ((is_town()) && (spec.ex1a != 0) && (which_mode == 1)) {
+			if (is_town() && (spec.ex1a != 0) && (which_mode == 1)) {
 				ASB("Can't go here while in town mode.");
 				*a = 1;
 				}
 			break;	
 		case 9:
 			if (is_combat()) *next_spec = -1;
-			if ((is_combat()) && (spec.ex1a != 0) && (which_mode == 2)) {
+			if (is_combat() && (spec.ex1a != 0) && (which_mode == 2)) {
 				ASB("Can't go here during combat.");
 				*a = 1;
 				}
@@ -2029,7 +2029,7 @@ void oneshot_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 				else i = FCD(872,0); 
 			if (i == 1) {set_sd = FALSE; *next_spec = -1; *a = 1;}
 				else {
-					if (is_combat() == TRUE)
+					if (is_combat())
 						j = run_trap(current_pc,spec.ex1a,spec.ex1b,spec.ex2a);
 						else j = run_trap(7,spec.ex1a,spec.ex1b,spec.ex2a);
 					if (j == 0) {
@@ -2289,7 +2289,7 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 				}
 			break;
 		case 131:
-			if (((is_town()) || (is_combat())) && (c_town.town_num == spec.ex1a))
+			if ((is_town() || is_combat()) && (c_town.town_num == spec.ex1a))
 				*next_spec = spec.ex1b;
 			break;
 		case 132:
@@ -2311,13 +2311,13 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 				else give_error("A Stuff Done flag is out of range.","",0);	
 			break;
 		case 135:
-			if (((is_town()) || (is_combat())) && (t_d.terrain[spec.ex1a][spec.ex1b] == spec.ex2a))
+			if ((is_town() || is_combat()) && (t_d.terrain[spec.ex1a][spec.ex1b] == spec.ex2a))
 				*next_spec = spec.ex2b;
 			break;
 		case 136:
 			l.x = spec.ex1a; l.y = spec.ex1b;
 			l = local_to_global(l);
-			if ((is_out()) && (out[l.x][l.y] == spec.ex2a))
+			if (is_out() && (out[l.x][l.y] == spec.ex2a))
 				*next_spec = spec.ex2b;
 			break;
 		case 137:
@@ -2864,7 +2864,7 @@ void outdoor_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 	spec = cur_node;
 	*next_spec = cur_node.jumpto;
 	
-	if (is_out() == FALSE) return;
+	if (is_not_out()) return;
 	
 	switch (cur_node.type) {
 		case 225: create_wand_monst();
@@ -2946,12 +2946,12 @@ void handle_message(short which_mode,short cur_type,short mess1,short mess2,shor
 		mess2 + ((mess2 >= 0) ? mess_adj[cur_type] : 0)) ;
 	if (mess1 >= 0) {
 		label1 = 1000 * cur_type + mess1 + mess_adj[cur_type];
-		label1b = (is_out()) ? (party.outdoor_corner.x + party.i_w_c.x) +
+		label1b = is_out() ? (party.outdoor_corner.x + party.i_w_c.x) +
 			scenario_out_width() * (party.outdoor_corner.y + party.i_w_c.y) : c_town.town_num;
 		}
 	if (mess2 >= 0) {
 		label2 = 1000 * cur_type + mess2 + mess_adj[cur_type];
-		label2b = (is_out()) ? (party.outdoor_corner.x + party.i_w_c.x) +
+		label2b = is_out() ? (party.outdoor_corner.x + party.i_w_c.x) +
 			scenario_out_width() * (party.outdoor_corner.y + party.i_w_c.y) : c_town.town_num;
 		}
 	display_strings((char *) str1, (char *) str2,label1,label2, label1b,label2b, 

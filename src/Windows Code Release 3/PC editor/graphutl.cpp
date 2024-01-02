@@ -323,36 +323,37 @@ BYTE * GetDibBitsAddr(BYTE * lpDib)
 
 
 	return lpDib + GetDibInfoHeaderSize(lpDib) + dwColorTableSize;
-	}
+}
 
-HBITMAP ReadDib(const char * name,HDC hdc) {
-BITMAPFILEHEADER bmfh;
-BYTE * lpDib;
-DWORD dwDibSize, dwOffset, dwHeaderSize;
-int hFile;
-WORD wDibRead;
-BYTE * lpDibBits;
-HBITMAP bmap;
-OFSTRUCT store;
-char real_name[256] = "",*name_ptr;
-short i,next_to_last_slash = -1,last_slash = -1;
+HBITMAP ReadDib(const char * name,HDC hdc)
+{
+	BITMAPFILEHEADER bmfh;
+	BYTE * lpDib;
+	DWORD dwDibSize, dwOffset, dwHeaderSize;
+	int hFile;
+	WORD wDibRead;
+	BYTE * lpDibBits;
+	HBITMAP bmap;
+	OFSTRUCT store;
+	char real_name[256] = "";
+	short next_to_last_slash = -1,last_slash = -1;
 
-	for (i = 0; i < 256; i++)
-		if ((file_path_name[i] == 92) || (file_path_name[i] == '/')) {
+	for (short i = 0; i < 256; i++)
+		if ((file_path_name[i] == 92) || (file_path_name[i] == '/'))
+		{
 			next_to_last_slash = last_slash;
 			last_slash = i;
-			}
-	if (next_to_last_slash < 0) {
-		strcpy(real_name,name);
 		}
-		else {
-			strcpy(real_name,file_path_name);
-			name_ptr = (char *) real_name;
-			name_ptr += last_slash + 1;
-			format_to_buf(name_ptr,"{}",name);
-			//real_name -= last_slash + 1;
-			//ASB(real_name);
-			}
+
+	if (next_to_last_slash < 0)
+	{
+		strcpy(real_name,name);
+	}
+	else
+	{
+		strcpy(real_name, file_path_name);
+		strcpy(real_name + last_slash + 1, name);
+	}
 	hFile = OpenFile(real_name,&store,OF_READ | OF_SHARE_DENY_WRITE /* | OF_SEARCH */ );
 	if (hFile == HFILE_ERROR)
 		return NULL;

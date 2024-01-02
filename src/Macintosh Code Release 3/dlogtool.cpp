@@ -794,6 +794,8 @@ short cd_get_active(short dlog_num, short item_num)
 }
 
 
+#if 0
+// Unreferenced
 void cd_get_item_text(short dlog_num, short item_num, char *str)
 {
 	short dlg_index,item_index;
@@ -807,6 +809,7 @@ void cd_get_item_text(short dlog_num, short item_num, char *str)
 		format_to_buf(str,"{}",text_long_str[item_index]);
 		else format_to_buf(str,"{}",text_short_str[item_index - 10]);
 }
+#endif
 
 void csit(short dlog_num, short item_num, std::string_view str)
 {
@@ -981,6 +984,8 @@ void cd_text_frame(short dlog_num,short item_num,short frame)
 	cd_draw_item(dlog_num,item_num);
 }
 
+#if 0
+// Unreferenced
 void cd_add_label(short dlog_num, short item_num, std::string_view label, short label_flag)
 {
 	short dlg_index,item_index,label_loc = -1;
@@ -1009,6 +1014,7 @@ void cd_add_label(short dlog_num, short item_num, std::string_view label, short 
 	if (item_active[item_index] > 0)
 		cd_draw_item(dlog_num,item_num);
 }
+#endif
 
 void cd_take_label(short dlog_num, short item_num)
 {

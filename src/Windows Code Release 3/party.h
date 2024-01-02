@@ -35,7 +35,7 @@ void do_mindduel(short pc_num,creature_data_type *monst);
 void dispel_fields(short i,short j,short mode);
 void pick_spell_event_filter (short item_hit);
 short pick_spell(short pc_num,short type,short situation) ;
-short stat_adj(pc_record_type& pc, skill which);
+short stat_adj(const pc_record_type& pc, skill which);
 void set_town_spell(short s_num,short who_c);
 void alch_choice_event_filter (short item_hit);
 void do_alchemy();

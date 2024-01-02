@@ -701,7 +701,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 			} */
 
 // Begin : click in terrain
-	if ((PtInRect ( &world_screen,the_point)) && ((is_out()) || (is_town()) || (is_combat())) ){
+	if ((PtInRect ( &world_screen,the_point)) && (is_out() || is_town() || is_combat()) ){
 		i = (the_point.x - 23) / 28;
 		j = (the_point.y - 23) / 36;
 
@@ -817,7 +817,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 								which_t = outdoors[party.i_w_c.x][party.i_w_c.y].exit_dests[i];
 								if (which_t >= 0)
 									start_town_mode(outdoors[party.i_w_c.x][party.i_w_c.y].exit_dests[i], find_direction_from);
-								if (is_town() == TRUE) {
+								if (is_town()) {
 									need_redraw = FALSE;
 									i = 8;
 									if (party.in_boat >= 0)
@@ -840,14 +840,14 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 			need_reprint = TRUE;
 			
 //			if ((can_see(cur_loc,destination) >= 4) || ((overall_mode != 35) && (loc_off_world(destination) == TRUE)))
-				if ((is_combat() == FALSE) && (party_can_see(destination) == 6))
+				if ((is_not_combat()) && (party_can_see(destination) == 6))
 					add_string_to_buf("  Can't see space.         ");
-				else if ((is_combat() == TRUE) && (can_see(pc_pos[current_pc],destination,0) >= 4))
+				else if (is_combat() && (can_see(pc_pos[current_pc],destination,0) >= 4))
 					add_string_to_buf("  Can't see space.         ");
 				else {
 					add_string_to_buf("You see...               ");
 					ter_looked_at = do_look(destination);
-					if ((is_town()) || (is_combat()))
+					if (is_town() || is_combat())
 						if (adjacent(c_town.p_loc,destination) == TRUE)
 							if (adj_town_look(destination) == TRUE)
 								need_redraw = TRUE;
@@ -1132,7 +1132,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 						if ((prime_time() == FALSE) && (overall_mode != 20) && (overall_mode != 21))
 							add_string_to_buf("Set active: Finish what you're doing first.");
 							else {
-								if (!(is_combat())) {
+								if (is_not_combat()) {
 									if ((adven[i].main_status != status::Normal) &&
 									((overall_mode != 21) || (store_shop_type != 12)))
 										add_string_to_buf("Set active: PC must be here & active.");
@@ -1211,7 +1211,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 									else {
 										add_string_to_buf("Drop item: Click where to drop item.");
 										store_drop_item = item_hit;
-										overall_mode = (is_town()) ? 5 : 15;
+										overall_mode = is_town() ? 5 : 15;
 										}
 								break;
 							case 4: // info
@@ -1371,12 +1371,12 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 			}
 		else {
 			increase_age();
-			if (!(is_out()) || ((is_out()) && (party.age % 10 == 0))) // no monst move is party outdoors and on horse
+			if (is_not_out() || (is_out() && (party.age % 10 == 0))) // no monst move is party outdoors and on horse
 				do_monsters();
 			if (overall_mode != 0)
 				do_monster_turn();
 			// Wand monsts				
-			if ((overall_mode == 0) && (party_toast() == FALSE) && (party.age % 10 == 0)) {
+			if ((overall_mode == 0) && !party_toast() && (party.age % 10 == 0)) {
 
 				i = rand_short(1,70 + PSD[306][8] * 200);
 				if (i == 10)
@@ -1428,7 +1428,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 		if (FCD(901,0) == 2)
 			save_file(1);
 		}
-	if (party_toast() == TRUE) {
+	if (party_toast()) {
 		for (i = 0; i < 6; i++)
 			if (adven[i].main_status == status::Fled) {
 				adven[i].main_status = status::Normal;
@@ -1452,7 +1452,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 		initiate_redraw();
 		put_pc_screen();
 		put_item_screen(stat_window,0);
-		if (party_toast() == TRUE) {
+		if (party_toast()) {
 				play_sound(13);
 			handle_death();
 			if (All_Done == TRUE)
@@ -1922,7 +1922,7 @@ Boolean handle_keystroke(UINT wParam,LONG lParam)
 		case 'K':
 			if (debug_on) {
 				for (i = 0; i < T_M; i++) {
-				if ((is_combat()) && (c_town.monst.dudes[i].active > 0) && (c_town.monst.dudes[i].attitude % 2 == 1))
+				if (is_combat() && (c_town.monst.dudes[i].active > 0) && (c_town.monst.dudes[i].attitude % 2 == 1))
 					c_town.monst.dudes[i].active = 0;
 					
 				if ((c_town.monst.dudes[i].active > 0) && (c_town.monst.dudes[i].attitude % 2 == 1)
@@ -2452,7 +2452,7 @@ void handle_cave_lore()
 	short i,pic;
 	unsigned char ter;
 	
-	if (!is_out())
+	if (is_not_out())
 		return;
 	
 	ter = out[party.p_loc.x][party.p_loc.y];
@@ -2538,7 +2538,7 @@ void handle_death()
 		if (choice == 1) {
 			in_startup_mode = FALSE;
 			load_file();
-			if (party_toast() == FALSE) {
+			if (!party_toast()) {
 				if (in_startup_mode == FALSE)
 					post_load();
             	else return;
@@ -2709,7 +2709,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 
 	const auto& terrain{ scenario_ter_type(out[real_dest.x][real_dest.y]) };
 	if (party.in_boat >= 0) {
-		if ((outd_is_blocked(real_dest) == FALSE) //&& (outd_is_special(real_dest) == FALSE)
+		if (!outd_is_blocked(real_dest) //&& (outd_is_special(real_dest) == FALSE)
 		// not in towns
 		&& ((terrain.boat_over == FALSE)
 			|| ((real_dest.x != party.p_loc.x) && (real_dest.y != party.p_loc.y)))
@@ -2884,7 +2884,7 @@ Boolean town_move_party(location destination,short forced)
 	const auto& terrain{ scenario_ter_type(t_d.terrain[destination.x][destination.y]) };
 	if (keep_going == TRUE) {
 		if (party.in_boat >= 0) {
-				if (is_not_blocked(destination) && (is_special(destination) == FALSE)
+				if (is_not_blocked(destination) && is_not_special(destination)
 				// If to bridge, exit if heading diagonal, keep going is head horiz or vert
 		&& ( (terrain.boat_over == FALSE)
 		|| ((destination.x != c_town.p_loc.x) && (destination.y != c_town.p_loc.y)))) {
@@ -2978,7 +2978,7 @@ Boolean town_move_party(location destination,short forced)
 			return TRUE;
 			}
 		else {
-			if (is_door(destination) == TRUE)
+			if (is_door(destination))
 				add_string_to_buf("Door locked: {}               ",dir_string[set_direction(c_town.p_loc, destination)]);
 				else add_string_to_buf("Blocked: {}               ",dir_string[set_direction(c_town.p_loc, destination)]);
 			return FALSE;
@@ -3041,9 +3041,7 @@ short count_walls(location loc)
 	return answer;		
 }
 
-Boolean is_sign(unsigned char ter)
+bool is_sign(unsigned char ter)
 {
-	if (scenario_ter_type(ter).special == terrain_special::IsASign)
-		return TRUE;
-	return FALSE;
+	return scenario_ter_type(ter).special == terrain_special::IsASign;
 }

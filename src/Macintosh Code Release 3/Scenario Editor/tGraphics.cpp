@@ -552,7 +552,7 @@ void draw_terrain()
 				OffsetRect(&tiny_to,0,-7);
 				}
 				
-				if (is_special(cen_x + q - 4,cen_y + r - 4) == TRUE) {
+				if (is_special(cen_x + q - 4,cen_y + r - 4)) {
 					tiny_from = base_small_button_from;
 					OffsetRect(&tiny_from,7 * (7),7 * (0));
 					rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to,0,0);
@@ -630,7 +630,7 @@ void draw_terrain()
 						from_rect = calc_rect(0,2);
 						Draw_Some_Item(field_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
 						}	
-					if (is_quickfire(cen_x + q - 4,cen_y + r - 4) == TRUE) {
+					if (is_quickfire(cen_x + q - 4,cen_y + r - 4)) {
 						from_rect = calc_rect(7,1);
 						Draw_Some_Item(field_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
 						}	
@@ -1243,20 +1243,22 @@ void undo_clip()
 }
 
 
-Boolean is_special(short i,short j)
+bool is_special(short i,short j)
 {
-	short k;
-	
 	if (editing_town == TRUE)
-		for (k = 0; k < 50; k++)
+		for (short k = 0; k < 50; k++)
 			if ((town.special_locs[k].x == i) && (town.special_locs[k].y == j))
-				return TRUE;
+				return true;
 	if (editing_town == FALSE)
-		for (k = 0; k < 18; k++)
+		for (short k = 0; k < 18; k++)
 			if ((current_terrain.special_locs[k].x == i) && (current_terrain.special_locs[k].y == j))
-				return TRUE;
+				return true;
+	return false;
+}
 
-	return FALSE;
+bool is_not_special(short i, short j)
+{
+	return !is_special(i, j);
 }
 
 void take_special(short i,short j)
@@ -1373,34 +1375,39 @@ void make_force_barrier(short i,short j)
 {
 	make_field_type(i,j,7);
 }
+
 void take_force_barrier(short i,short j)
 {
 	take_field_type(i,j,7);
 
 }
 
-Boolean is_sfx(short i,short j,short type)
+bool is_sfx(short i,short j,short type)
 {
 	return is_field_type(i,j,type + 14);
 }
+
 void make_sfx(short i,short j,short type)
 {
 	make_field_type(i,j,type + 14);
 }
+
 void take_sfx(short i,short j,short type)
 {
 	take_field_type(i,j,type + 14);
 }
 
 
-Boolean is_quickfire(short i,short j)
+bool is_quickfire(short i,short j)
 {
 	return is_field_type(i,j,8);
 }
+
 void make_quickfire(short i,short j)
 {
 	make_field_type(i,j,8);
 }
+
 void take_quickfire(short i,short j)
 {
 	take_field_type(i,j,8);
@@ -1584,7 +1591,7 @@ void get_str(Str255 str,short i, short j)
 	p2c(str);
 }
 
-short string_length(char *str)
+short string_length(const char *str)
 {
 	short text_len[257];
 	short total_width = 0,i,len;

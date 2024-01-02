@@ -68,7 +68,7 @@ extern GWorldPtr spec_scen_g;
 Rect boat_rects[4] = {{0,0,36,28}, {0,28,36,56},{0,56,36,84},{0,84,36,112}};
 Boolean gave_no_g_error = FALSE;
 
-unsigned char m_pic_index[200] = {////
+unsigned char m_pic_index[200] = {
 1,2,3,4,5,6,7,8,9,10,
 11,12,13,14,15,16,17,18,19,20,
 
@@ -148,7 +148,7 @@ unsigned char m_pic_index_y[200] = {
 1,1,1,1,1,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1};
 
-void draw_one_terrain_spot (short i,short j,short terrain_to_draw,short dest) ////
+void draw_one_terrain_spot (short i,short j,short terrain_to_draw,short dest) 
 //short dest; // 0 - terrain gworld   1 - screen
 // if terrain_to_draw is -1, do black
 // if terrain_to_draw >= 1000, force to draw graphic which is terrain_to_draw - 1000
@@ -184,7 +184,7 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw,short dest) //
   		SetPort(old_port);
 		return;
  		}
- 	////
+ 	
 	if (terrain_to_draw >= 10000) { // force using a specific graphic
  		if (terrain_there[i][j] == terrain_to_draw - 10000)
  			return;
@@ -221,7 +221,7 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw,short dest) //
 	
 		if (anim_type >= 0) 
 		 {  
-			if ((is_town()) || (is_out()))
+			if (is_town() || is_out())
 				anim_onscreen = TRUE;
 			}
 	
@@ -230,7 +230,7 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw,short dest) //
 		else rect_draw_some_item(source_gworld, source_rect, terrain_screen_gworld, where_draw, (unsigned char) 0, 1);	  
 }
 
-void draw_monsters() ////
+void draw_monsters() 
 {
 	short i,j = 0,k,l;
 	short width,height;
@@ -318,7 +318,7 @@ void draw_monsters() ////
 							((c_town.monst.dudes[i].m_d.m_type < 7) 
 							&& (c_town.monst.dudes[i].m_d.m_type != 1) && (c_town.monst.dudes[i].m_d.m_type != 2))
 							&& ((c_town.monst.dudes[i].active == 1) || (monst_target[i] == 6)) &&
-							(width == 1) && (height == 1)) ////
+							(width == 1) && (height == 1)) 
 							draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10230,0);
 							else Draw_Some_Item(storage_gworld, source_rect, terrain_screen_gworld, store_loc, 1, 0); 
 							}
@@ -356,7 +356,7 @@ void draw_monsters() ////
 										&& (c_town.monst.dudes[i].m_d.m_type != 1) && (c_town.monst.dudes[i].m_d.m_type != 2))
 									&& ((c_town.monst.dudes[i].active == 1) || (monst_target[i] == 6)) &&
 									(width == 1) && (height == 1))
-										draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10230,0); ////
+										draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10230,0); 
 										else Draw_Some_Item(storage_gworld, source_rect, terrain_screen_gworld, store_loc, 1, 0); 
 								}
 							}
@@ -374,7 +374,7 @@ void draw_pcs(location center,short mode)
 	Rect source_rect,active_pc_rect;
 	location where_draw;
 	
-	if (party_toast() == TRUE)
+	if (party_toast())
 		return;
 	if (can_draw_pcs == FALSE)
 		return;
@@ -630,7 +630,7 @@ void draw_one_field(unsigned char flag,short source_x,short source_y)
 								OffsetRect(&source_rect,28 * source_x,36 * source_y);
 								Draw_Some_Item(fields_gworld,source_rect,terrain_screen_gworld,loc,
 								 1,0);
-								if ((is_town()) && ((flag == 32) || (flag == 64)))
+								if (is_town() && ((flag == 32) || (flag == 64)))
 									anim_onscreen = TRUE;		
 								}
 							}
@@ -676,22 +676,22 @@ void draw_party_symbol(short mode,location center)
 
 	if (can_draw_pcs == FALSE)
 		return;
-	if (party_toast() == TRUE)
+	if (party_toast())
 		return;
-	if ((is_town()) && (c_town.p_loc.x > 70))
+	if (is_town() && (c_town.p_loc.x > 70))
 		return;
 	if (overall_mode == 36) {
 		target.x += c_town.p_loc.x - center.x;
 		target.y += c_town.p_loc.y - center.y;
 		}
 
-	if ((party.in_boat < 0) && (party.in_horse < 0)) {////
+	if ((party.in_boat < 0) && (party.in_horse < 0)) {
 			i = first_active_pc();
 			source_rect = get_party_template_rect(i,(party.direction < 4) ? 0 : 1);			
 
 			// now wedge in bed graphic
-			if ((is_town()) && (scenario.ter_types[t_d.terrain[c_town.p_loc.x][c_town.p_loc.y]].picture == 143))
-				draw_one_terrain_spot((short) target.x,(short) target.y,10230,0); ////
+			if (is_town() && (scenario.ter_types[t_d.terrain[c_town.p_loc.x][c_town.p_loc.y]].picture == 143))
+				draw_one_terrain_spot((short) target.x,(short) target.y,10230,0); 
 				else Draw_Some_Item(party_template_gworld, source_rect, terrain_screen_gworld, target, 1, 0);
 		}
 		else if (party.in_boat >= 0) {
@@ -711,7 +711,7 @@ void draw_party_symbol(short mode,location center)
 
 /* Input terrain currently trying to draw. Get back Rect in terrain template containing 
 desired pixmap, or Rect to darkness if desired map not present */
-Rect get_terrain_template_rect (unsigned char type_wanted) ////
+Rect get_terrain_template_rect (unsigned char type_wanted) 
 {
 	Rect store_rect;
 	short i,j;
@@ -724,7 +724,7 @@ Rect get_terrain_template_rect (unsigned char type_wanted) ////
 	return return_item_rect(picture_wanted);
 }
 
-Rect return_item_rect(short wanted)////
+Rect return_item_rect(short wanted)
 {
 	Rect orig_rect = {0,0,36,28};
 	short i;
@@ -754,7 +754,7 @@ Rect return_item_rect(short wanted)////
 
 // Give the position of the monster graphic in the picture resource
 // Will store monsters the same in Exile's II and III
-Rect get_monster_rect (unsigned char type_wanted,short mode) ////
+Rect get_monster_rect (unsigned char type_wanted,short mode) 
 //short mode; // 0 - left  1 - right  2 - both
 {
 	Rect store_rect;
@@ -771,7 +771,7 @@ Rect get_monster_rect (unsigned char type_wanted,short mode) ////
 }
 
 // Give the position of the monster graphic in the template in memory
-Rect get_monster_template_rect (unsigned char type_wanted,short mode,short which_part) ////
+Rect get_monster_template_rect (unsigned char type_wanted,short mode,short which_part) 
 //mode; // 0 - left  1 - right  +10 - combat mode
 {
 	Rect store_rect = {0,0,36,28};
@@ -792,7 +792,7 @@ Rect get_monster_template_rect (unsigned char type_wanted,short mode,short which
 
 // Returns rect for drawing an item, if num < 25, rect is in big item template,
 // otherwise in small item template
-Rect get_item_template_rect (short type_wanted)////
+Rect get_item_template_rect (short type_wanted)
 {
 	Rect store_rect;
 	
@@ -823,62 +823,50 @@ unsigned char get_t_t(char x,char y)  // returns terrain type at where
 }
 
 // Is this is subterranean fluid that gets shore plopped down on it?
-Boolean is_fluid(unsigned char ter_type)////
+static bool is_fluid(unsigned char ter_type)
 {
-
-	if (((ter_type >= 71) && (ter_type <= 76)) || (ter_type == 90))
-		return TRUE;
-	
-	return FALSE;
+	return ((ter_type >= 71) && (ter_type <= 76)) || (ter_type == 90);
 }
 
 // Is this is subterranean beach that gets shore plopped down next to it?
-Boolean is_shore(unsigned char ter_type)////
+static bool is_shore(unsigned char ter_type)
 {
-	if (is_fluid(ter_type) == TRUE)
-		return FALSE;
+	if (is_fluid(ter_type))
+		return false;
 	if (ter_type == 77)
-		return FALSE;
+		return false;
 	if (ter_type == 90)
-		return FALSE;
+		return false;
 /*	if (ter_type == 240)
-		return FALSE;
+		return false;
 	if ((ter_type >= 117) && (ter_type <= 131))
-		return FALSE;
+		return false;
 	if ((ter_type >= 193) && (ter_type <= 207))
-		return FALSE; */
-	return TRUE;
+		return false; */
+	return true;
 }
 
 // These two functions used to determine wall round-cornering
-Boolean is_wall(unsigned char ter_type)////
+bool is_wall(unsigned char ter_type)
 {
-	short pic;
-
-	pic = scenario_ter_type(ter_type).picture;
-	
-	if ((pic >= 88) && (pic <= 120))
-		return TRUE;
-	
-	return FALSE;
+	const short pic = scenario_ter_type(ter_type).picture;
+	return (pic >= 88) && (pic <= 120);
 }
-Boolean is_ground(unsigned char ter_type)
+
+bool is_ground(unsigned char ter_type)
 {
-	short pic;
-
-	pic = scenario_ter_type(ter_type).picture;
+	const short pic = scenario_ter_type(ter_type).picture;
 	if ((pic >= 0) && (pic <= 87))
-		return TRUE;
+		return true;
 	if ((pic >= 121) && (pic <= 122))
-		return TRUE;
+		return true;
 	if ((pic >= 179) && (pic <= 208))
-		return TRUE;
+		return true;
 	if ((pic >= 211) && (pic <= 212))
-		return TRUE;
+		return true;
 	if ((pic >= 215) && (pic <= 246))
-		return TRUE;
-
-	return FALSE;
+		return true;
+	return false;
 }
 
 void make_town_trim(short mode)
@@ -957,45 +945,46 @@ char add_trim_to_array(location where,unsigned char ter_type)
 		}
 		
 	// Set up trim for fluids
-	if (is_fluid(ter_type) == TRUE) {
+	if (is_fluid(ter_type))
+	{
 		if (at_left == FALSE) {
 			store = get_t_t(where.x - 1,where.y);
-			if (is_shore(store) == TRUE)
+			if (is_shore(store))
 				to_return |= 64;
 			}
 		if (at_right == FALSE) {
 			store = get_t_t(where.x + 1,where.y);
-			if (is_shore(store) == TRUE)
+			if (is_shore(store))
 				to_return |= 4;
 			}
 		if (at_top == FALSE) {
 			store = get_t_t(where.x,where.y - 1);
-			if (is_shore(store) == TRUE)
+			if (is_shore(store))
 				to_return |= 1;
 			}	
 		if (at_bot == FALSE) {
 			store = get_t_t(where.x,where.y + 1);
-			if (is_shore(store) == TRUE)
+			if (is_shore(store))
 				to_return |= 16;
 			}
 		if ((at_left == FALSE) && (at_top == FALSE)) {
 			store = get_t_t(where.x - 1,where.y - 1);
-			if (is_shore(store) == TRUE)
+			if (is_shore(store))
 				to_return |= 128;
 			}
 		if ((at_right == FALSE) && (at_top == FALSE)) {
 			store = get_t_t(where.x + 1,where.y + 1);
-			if (is_shore(store) == TRUE)
+			if (is_shore(store))
 				to_return |= 8;
 			}
 		if ((at_right == FALSE) && (at_bot == FALSE)) {
 			store = get_t_t(where.x + 1,where.y - 1);
-			if (is_shore(store) == TRUE)
+			if (is_shore(store))
 				to_return |= 2;
 			}
 		if ((at_left == FALSE) && (at_bot == FALSE)) {
 			store = get_t_t(where.x - 1,where.y + 1);
-			if (is_shore(store) == TRUE)
+			if (is_shore(store))
 				to_return |= 32;
 			}
 		}

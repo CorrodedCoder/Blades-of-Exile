@@ -27,4 +27,4 @@ short nearest_monster();
 void setup_outdoors(location where);
 short get_outdoor_num();
 short count_walls(location loc);
-Boolean is_sign(unsigned char ter);
+bool is_sign(unsigned char ter);

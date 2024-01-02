@@ -192,7 +192,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 					}
 				}
 
-	if ((is_combat()) && (((ter_pic <= 207) && (ter_pic >= 212)) || (ter_pic == 406))) {
+	if (is_combat() && (((ter_pic <= 207) && (ter_pic >= 212)) || (ter_pic == 406))) {
 		ASB("Move: Can't trigger this special in combat.");
 		return FALSE;
 		}
@@ -225,7 +225,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 	if (can_enter == FALSE)
 		return FALSE;
 	
-	if ((!is_out()) && (overall_mode < 20)) {
+	if ((is_not_out()) && (overall_mode < 20)) {
 	check_fields(where_check,mode,which_pc);
 
 	if (is_web(where_check.x,where_check.y)) {
@@ -991,7 +991,7 @@ Boolean adj_town_look(location where)
 				put_item_screen(stat_window,0);	
 				}
 		}
-	if ((is_container(where)) && (item_there == TRUE) && (can_open == TRUE)) {
+	if (is_container(where) && (item_there == TRUE) && (can_open == TRUE)) {
 		get_item(where,6,true);
 		}
 	else switch (terrain) {
@@ -1380,7 +1380,7 @@ void kill_monst(creature_data_type *which_m,short who_killed)
 	
 
 
-	if (((is_town()) || (which_combat_type == 1)) && (which_m->summoned == 0)) {
+	if ((is_town() || (which_combat_type == 1)) && (which_m->summoned == 0)) {
 		party.m_killed[c_town.town_num]++;
 		}
 
@@ -1526,7 +1526,7 @@ void special_increase_age()
 	
 	for (i = 0; i < 8; i++)
 		if ((c_town.town.timer_spec_times[i] > 0) && (party.age % c_town.town.timer_spec_times[i] == 0)
-			&& ((is_town() == TRUE) || ((is_combat() == TRUE) && (which_combat_type == 1)))) {
+			&& (is_town() || (is_combat() && (which_combat_type == 1)))) {
 			run_special(9,2,c_town.town.timer_specs[i],null_loc,&s1,&s2,&s3);
 			stat_area = TRUE;
 			if (s3 > 0)
@@ -1707,12 +1707,12 @@ void general_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 		case 3:
 			check_mess = TRUE;break;	
 		case 5:
-			get_strs((char *) str1,(char *) str2, cur_spec_type,cur_node.m1 + mess_adj[cur_spec_type],
+			get_strs(str1,str2, cur_spec_type,cur_node.m1 + mess_adj[cur_spec_type],
 				cur_node.m2 + mess_adj[cur_spec_type]);
 			if (cur_node.m1 >= 0)
-				ASB((char *) str1);
+				ASB(str1);
 			if (cur_node.m2 >= 0)
-				ASB((char *) str2);
+				ASB(str2);
 			break;	
 		case 6:
 			setsd(cur_node.sd1,cur_node.sd2,
@@ -1720,21 +1720,21 @@ void general_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 			check_mess = TRUE;break;	
 		case 7:
 			if (is_out()) *next_spec = -1;
-			if ((is_out()) && (spec.ex1a != 0) && (which_mode == 0)) {
+			if (is_out() && (spec.ex1a != 0) && (which_mode == 0)) {
 				ASB("Can't go here while outdoors.");
 				*a = 1;
 				}
 			break;	
 		case 8:
 			if (is_town()) *next_spec = -1;
-			if ((is_town()) && (spec.ex1a != 0) && (which_mode == 1)) {
+			if (is_town() && (spec.ex1a != 0) && (which_mode == 1)) {
 				ASB("Can't go here while in town mode.");
 				*a = 1;
 				}
 			break;	
 		case 9:
 			if (is_combat()) *next_spec = -1;
-			if ((is_combat()) && (spec.ex1a != 0) && (which_mode == 2)) {
+			if (is_combat() && (spec.ex1a != 0) && (which_mode == 2)) {
 				ASB("Can't go here during combat.");
 				*a = 1;
 				}
@@ -1872,7 +1872,7 @@ void oneshot_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 	short *next_spec,short *next_spec_type,short *a,short *b,short *redraw)
 {
 	Boolean check_mess = TRUE,set_sd = TRUE;
-	char strs[6][256] = {"","","","","",""};
+	std::array<std::array<char, 256>, 6> strs{};
 	short i,j,buttons[3] = {-1,-1,-1};
 	special_node_type spec;
 	item_record_type store_i;
@@ -1920,7 +1920,7 @@ void oneshot_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 			if (spec.m1 < 0)
 				break;
 			for (i = 0; i < 3; i++)
-				get_strs((char *) strs[i * 2],(char *) strs[i * 2 + 1],cur_spec_type,
+				get_strs(strs[i * 2].data(), strs[i * 2 + 1].data(), cur_spec_type,
 					spec.m1 + i * 2 + spec_str_offset[cur_spec_type],spec.m1 + i * 2 + 1 + spec_str_offset[cur_spec_type]);
 			if (spec.m2 > 0) 
 				{buttons[0] = 1; buttons[1] = spec.ex1a; buttons[2] = spec.ex2a;
@@ -1931,12 +1931,12 @@ void oneshot_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 				break;
 				}
 			switch (cur_node.type) {
-				case 55: if (spec.pic >= 1000) i = custom_choice_dialog((char *) strs,(spec.pic % 1000) + 2400,buttons) ;
-					else i = custom_choice_dialog((char *) strs,spec.pic ,buttons) ; break;
-				case 56: if (spec.pic >= 1000) i = custom_choice_dialog((char *) strs,(spec.pic % 1000) + 2000,buttons) ;
-					else i = custom_choice_dialog((char *) strs,spec.pic,buttons) ; break;
-				case 57: if (spec.pic >= 1000) i = custom_choice_dialog((char *) strs,(spec.pic % 1000) + 2000,buttons) ;
-					else i = custom_choice_dialog((char *) strs,spec.pic ,buttons) ; break;
+				case 55: if (spec.pic >= 1000) i = custom_choice_dialog(strs,(spec.pic % 1000) + 2400,buttons) ;
+					else i = custom_choice_dialog(strs,spec.pic ,buttons) ; break;
+				case 56: if (spec.pic >= 1000) i = custom_choice_dialog(strs,(spec.pic % 1000) + 2000,buttons) ;
+					else i = custom_choice_dialog(strs,spec.pic,buttons) ; break;
+				case 57: if (spec.pic >= 1000) i = custom_choice_dialog(strs,(spec.pic % 1000) + 2000,buttons) ;
+					else i = custom_choice_dialog(strs,spec.pic ,buttons) ; break;
 				}
 			if (spec.m2 > 0) {
 				if (i == 1) {
@@ -1957,17 +1957,17 @@ void oneshot_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 			if (spec.m1 < 0)
 				break;
 			for (i = 0; i < 3; i++)
-				get_strs((char *) strs[i * 2],(char *) strs[i * 2 + 1],cur_spec_type,
+				get_strs(strs[i * 2].data(), strs[i * 2 + 1].data(), cur_spec_type,
 					spec.m1 + i * 2 + spec_str_offset[cur_spec_type],spec.m1 + i * 2 + 1  + spec_str_offset[cur_spec_type]);
 			buttons[0] = 20; buttons[1] = 19;
 			//i = custom_choice_dialog(strs,spec.pic,buttons) ;
 			switch (cur_node.type) {
-				case 58: if (spec.pic >= 1000) i = custom_choice_dialog((char *) strs,(spec.pic % 1000) + 2400,buttons) ;
-					else i = custom_choice_dialog((char *) strs,spec.pic,buttons) ; break;
-				case 59: if (spec.pic >= 1000) i = custom_choice_dialog((char *) strs,(spec.pic % 1000) + 2000,buttons) ;
-					else i = custom_choice_dialog((char *) strs,spec.pic,buttons) ; break;
-				case 60: if (spec.pic >= 1000) i = custom_choice_dialog((char *) strs,(spec.pic % 1000) + 2000,buttons) ;
-					else i = custom_choice_dialog((char *) strs,spec.pic,buttons) ; break;
+				case 58: if (spec.pic >= 1000) i = custom_choice_dialog(strs,(spec.pic % 1000) + 2400,buttons) ;
+					else i = custom_choice_dialog(strs,spec.pic,buttons) ; break;
+				case 59: if (spec.pic >= 1000) i = custom_choice_dialog(strs,(spec.pic % 1000) + 2000,buttons) ;
+					else i = custom_choice_dialog(strs,spec.pic,buttons) ; break;
+				case 60: if (spec.pic >= 1000) i = custom_choice_dialog(strs,(spec.pic % 1000) + 2000,buttons) ;
+					else i = custom_choice_dialog(strs,spec.pic,buttons) ; break;
 				}
 			if (i == 1) {set_sd = FALSE; *next_spec = -1;}
 				else {
@@ -2007,17 +2007,17 @@ void oneshot_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 		case 63:
 			check_mess = FALSE;
 			if ((spec.m1 >= 0) || (spec.m2 >= 0)) {
-				get_strs((char *) strs[0],(char *) strs[1],
+				get_strs(strs[0].data(),strs[1].data(),
 					cur_spec_type,
 					spec.m1 + ((spec.m1 >= 0) ? spec_str_offset[cur_spec_type] : 0),
 					spec.m2 + ((spec.m2 >= 0) ? spec_str_offset[cur_spec_type] : 0));
 				buttons[0] = 3; buttons[1] = 2;
-				i = custom_choice_dialog((char *) strs,727,buttons);
+				i = custom_choice_dialog(strs,727,buttons);
 				}
 				else i = FCD(872,0); 
 			if (i == 1) {set_sd = FALSE; *next_spec = -1; *a = 1;}
 				else {
-					if (is_combat() == TRUE)
+					if (is_combat())
 						j = run_trap(current_pc,spec.ex1a,spec.ex1b,spec.ex2a);
 						else j = run_trap(7,spec.ex1a,spec.ex1b,spec.ex2a);
 					if (j == 0) {
@@ -2276,7 +2276,7 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 				}
 			break;
 		case 131:
-			if (((is_town()) || (is_combat())) && (c_town.town_num == spec.ex1a))
+			if ((is_town() || is_combat()) && (c_town.town_num == spec.ex1a))
 				*next_spec = spec.ex1b;
 			break;
 		case 132:
@@ -2298,13 +2298,13 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 				else give_error("A Stuff Done flag is out of range.","",0);	
 			break;
 		case 135:
-			if (((is_town()) || (is_combat())) && (t_d.terrain[spec.ex1a][spec.ex1b] == spec.ex2a))
+			if ((is_town() || is_combat()) && (t_d.terrain[spec.ex1a][spec.ex1b] == spec.ex2a))
 				*next_spec = spec.ex2b;
 			break;
 		case 136:
 			l.x = spec.ex1a; l.y = spec.ex1b;
 			l = local_to_global(l);
-			if ((is_out()) && (out[l.x][l.y] == spec.ex2a))
+			if (is_out() && (out[l.x][l.y] == spec.ex2a))
 				*next_spec = spec.ex2b;
  			break;
 		case 137:
@@ -2414,7 +2414,7 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 			get_text_response(873,str3,0);
 			j = 1; k = 1;
 			spec.pic = boe_clamp(spec.pic,0,8);
-			get_strs((char *) str1,(char *) str2,0,spec.ex1a,spec.ex2a);
+			get_strs(str1,str2,0,spec.ex1a,spec.ex2a);
 			for (i = 0; i < spec.pic;i++) {
 				if ((spec.ex1a < 0) || (str3[i] != str1[i]))
 					j = 0;
@@ -2442,7 +2442,7 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 	short *next_spec,short *next_spec_type,short *a,short *b,short *redraw)
 {
 	Boolean check_mess = TRUE;
-	char strs[6][256] = {"","","","","",""};
+	std::array < std::array<char, 256>, 6> strs{};
 	short i,buttons[3] = {-1,-1,-1},r1;
 	special_node_type spec;
 	location l;
@@ -2618,10 +2618,10 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 				}
 				else {
 					for (i = 0; i < 3; i++)
-						get_strs((char *) strs[i * 2],(char *) strs[i * 2 + 1],cur_spec_type,
+						get_strs(strs[i * 2].data(), strs[i * 2 + 1].data(), cur_spec_type,
 						spec.m1 + i * 2 + spec_str_offset[cur_spec_type],spec.m1 + i * 2 + 1 + spec_str_offset[cur_spec_type]);
 					buttons[0] = 9; buttons[1] = 35;
-					i = custom_choice_dialog((char *) strs,spec.pic,buttons);
+					i = custom_choice_dialog(strs,spec.pic,buttons);
 					if (i == 1) {*next_spec = -1;}
 						else {
 							ter = coord_to_ter(store_special_loc.x,store_special_loc.y);
@@ -2650,10 +2650,10 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 					}
 				else {
 					for (i = 0; i < 3; i++)
-						get_strs((char *) strs[i * 2],(char *) strs[i * 2 + 1]
+						get_strs(strs[i * 2].data(),strs[i * 2 + 1].data()
 						,cur_spec_type,spec.m1 + i * 2 + spec_str_offset[cur_spec_type],spec.m1 + i * 2 + 1 + spec_str_offset[cur_spec_type]);
 					buttons[0] = 9; buttons[1] = 8;
-					i = custom_choice_dialog((char *) strs,722,buttons);
+					i = custom_choice_dialog(strs,722,buttons);
 					if (i == 1) { *next_spec = -1; if (which_mode < 3) *a = 1;}
 						else {
 							*a = 1;
@@ -2684,13 +2684,13 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 				else {
 					if (spec.m1 >= 0) {
 						for (i = 0; i < 3; i++)
-							get_strs((char *) strs[i * 2],(char *) strs[i * 2 + 1],cur_spec_type,
+							get_strs(strs[i * 2].data(),strs[i * 2 + 1].data(),cur_spec_type,
 							spec.m1 + i * 2 + spec_str_offset[cur_spec_type],spec.m1 + i * 2 + 1 + spec_str_offset[cur_spec_type]);
 						buttons[0] = 20; buttons[1] = 24;
 						}
 					if (spec.ex2b == 1)
 						i = 2;
-						else i = custom_choice_dialog((char *) strs,719,buttons) ;
+						else i = custom_choice_dialog(strs,719,buttons) ;
 					*a = 1;
 					if (i == 1) { *next_spec = -1;}
 						else {
@@ -2849,7 +2849,7 @@ void outdoor_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 	spec = cur_node;
 	*next_spec = cur_node.jumpto;
 	
-	if (is_out() == FALSE) return;
+	if (is_not_out()) return;
 	
 	switch (cur_node.type) {
 		case 225: create_wand_monst();
@@ -2883,18 +2883,18 @@ void outdoor_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 			*a = 1;
 			break;
 		case 229:
-			get_strs((char *) str1,(char *) str2,1,spec.m1 + 10,-1);
+			get_strs(str1,str2,1,spec.m1 + 10,-1);
 			if (spec.ex2a >= 40)
 				spec.ex2a = 39;
 			if (spec.ex2a < 1)
 				spec.ex2a = 1;
 			spec.ex2b = boe_clamp(spec.ex2b,0,6);
 			switch (spec.ex1b) {
-				case 0: start_shop_mode(0,spec.ex1a,spec.ex1a + spec.ex2a - 1,spec.ex2b,(char *) str1); break;
-				case 1: start_shop_mode(10,spec.ex1a,spec.ex1a + spec.ex2a - 1,spec.ex2b,(char *) str1); break;
-				case 2: start_shop_mode(11,spec.ex1a,spec.ex1a + spec.ex2a - 1 ,spec.ex2b,(char *) str1); break;
-				case 3: start_shop_mode(12,spec.ex1a,spec.ex1a + spec.ex2a - 1,spec.ex2b,(char *) str1); break;
-				case 4: start_shop_mode(3,spec.ex1a,spec.ex1a + spec.ex2a - 1,spec.ex2b,(char *) str1); break;
+				case 0: start_shop_mode(0,spec.ex1a,spec.ex1a + spec.ex2a - 1,spec.ex2b,str1); break;
+				case 1: start_shop_mode(10,spec.ex1a,spec.ex1a + spec.ex2a - 1,spec.ex2b,str1); break;
+				case 2: start_shop_mode(11,spec.ex1a,spec.ex1a + spec.ex2a - 1 ,spec.ex2b,str1); break;
+				case 3: start_shop_mode(12,spec.ex1a,spec.ex1a + spec.ex2a - 1,spec.ex2b,str1); break;
+				case 4: start_shop_mode(3,spec.ex1a,spec.ex1a + spec.ex2a - 1,spec.ex2b,str1); break;
 				}
 			*next_spec = -1;
 			break;		
@@ -2927,63 +2927,83 @@ void handle_message(short which_mode,short cur_type,short mess1,short mess2,shor
 		*b = mess2 + ((mess2 >= 0) ? mess_adj[cur_type] : 0);
 		return;
 		}
-	get_strs((char *) str1,(char *) str2, cur_type, mess1 + ((mess1 >= 0) ? mess_adj[cur_type] : 0), 
+	get_strs(str1,str2, cur_type, mess1 + ((mess1 >= 0) ? mess_adj[cur_type] : 0), 
 		mess2 + ((mess2 >= 0) ? mess_adj[cur_type] : 0)) ;
 	if (mess1 >= 0) {
 		label1 = 1000 * cur_type + mess1 + mess_adj[cur_type];
-		label1b = (is_out()) ? (party.outdoor_corner.x + party.i_w_c.x) +
+		label1b = is_out() ? (party.outdoor_corner.x + party.i_w_c.x) +
 			scenario_out_width() * (party.outdoor_corner.y + party.i_w_c.y) : c_town.town_num;
 		}
 	if (mess2 >= 0) {
 		label2 = 1000 * cur_type + mess2 + mess_adj[cur_type];
-		label2b = (is_out()) ? (party.outdoor_corner.x + party.i_w_c.x) +
+		label2b = is_out() ? (party.outdoor_corner.x + party.i_w_c.x) +
 			scenario_out_width() * (party.outdoor_corner.y + party.i_w_c.y) : c_town.town_num;
 		}
-	display_strings((char *) str1, (char *) str2,label1,label2, label1b,label2b, 
+	display_strings(str1, str2,label1,label2, label1b,label2b, 
 		"",57,1600 + scenario_intro_pic(),0);
 }
- 
+
+const short c_num_strs[3]{ 260,108,135 };
+
 void get_strs(char *str1,char *str2,short cur_type,short which_str1,short which_str2) 
 {
-	short num_strs[3] = {260,108,135};
-		
-	if (((which_str1 >= 0) && (which_str1 != boe_clamp(which_str1,0,num_strs[cur_type]))) ||
-		((which_str2 >= 0) && (which_str2 != boe_clamp(which_str2,0,num_strs[cur_type])))) {
+	if (((which_str1 >= 0) && (which_str1 != boe_clamp(which_str1, 0, c_num_strs[cur_type]))) ||
+		((which_str2 >= 0) && (which_str2 != boe_clamp(which_str2, 0, c_num_strs[cur_type]))))
+	{
 		give_error("The scenario attempted to access a message out of range.","",0);
 		return;
+	}
+	switch (cur_type)
+	{
+	case 0:
+		if (which_str1 >= 0)
+		{
+			if (which_str1 < 160)
+			{
+				strcpy(str1, data_store5.scen_strs[which_str1]);
+			}
+			else
+			{
+				strcpy(str1, scen_strs2[which_str1 - 160]);
+			}
 		}
-	switch (cur_type) {
-		case 0:
-			if (which_str1 >= 0) {
-				if (which_str1 < 160)
-					strcpy(str1,data_store5.scen_strs[which_str1]);
-					else strcpy(str1,scen_strs2[which_str1 - 160]);
-				
-				}
-			if (which_str2 >= 0){
-				if (which_str2 < 160)
-					strcpy(str2,data_store5.scen_strs[which_str2]);
-					else strcpy(str2,scen_strs2[which_str2 - 160]);				
-				}
-			break;
-		case 1:
-			if (which_str1 >= 0)
-				load_outdoors(party.outdoor_corner.x + party.i_w_c.x, 
-					party.outdoor_corner.y + party.i_w_c.y, party.i_w_c.x, party.i_w_c.y,
-					1,which_str1,(char *) str1);
-			if (which_str2 >= 0)
-				load_outdoors(party.outdoor_corner.x + party.i_w_c.x, 
-					party.outdoor_corner.y + party.i_w_c.y, party.i_w_c.x, party.i_w_c.y,
-					1,which_str2,(char *) str2);
-			break;
-		case 2:
-			if (which_str1 >= 0)
-				strcpy(str1,data_store.town_strs[which_str1]);
-			if (which_str2 >= 0)
-				strcpy(str2,data_store.town_strs[which_str2]);
-			break;
+		if (which_str2 >= 0)
+		{
+			if (which_str2 < 160)
+			{
+				strcpy(str2, data_store5.scen_strs[which_str2]);
+			}
+			else
+			{
+				strcpy(str2, scen_strs2[which_str2 - 160]);
+			}
 		}
-
+		break;
+	case 1:
+		if (which_str1 >= 0)
+		{
+			load_outdoors(party.outdoor_corner.x + party.i_w_c.x,
+				party.outdoor_corner.y + party.i_w_c.y, party.i_w_c.x, party.i_w_c.y,
+				1, which_str1, str1);
+		}
+		if (which_str2 >= 0)
+		{
+			load_outdoors(party.outdoor_corner.x + party.i_w_c.x,
+				party.outdoor_corner.y + party.i_w_c.y, party.i_w_c.x, party.i_w_c.y,
+				1, which_str2, str2);
+		}
+		break;
+	case 2:
+		if (which_str1 >= 0)
+		{
+			strcpy(str1, data_store.town_strs[which_str1]);
+		}
+		if (which_str2 >= 0)
+		{
+			strcpy(str2, data_store.town_strs[which_str2]);
+		}
+		break;
+	}
 }
 
 

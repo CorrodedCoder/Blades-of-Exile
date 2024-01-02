@@ -397,7 +397,7 @@ void start_town_mode(short which_town, short entry_dir)
 			for (j = 0; j < town_size[town_type]; j++)
 				for (k = 0; k < town_size[town_type]; k++) {
 					loc.x = j; loc.y = k;
-					if (is_door(loc) == TRUE) 
+					if (is_door(loc)) 
 						misc_i[j][k] = misc_i[j][k] & 3;
 
 					// Set up field booleans
@@ -411,7 +411,7 @@ void start_town_mode(short which_town, short entry_dir)
 						fire_barrier = TRUE;
 					if (is_force_barrier(j,k) == TRUE)
 						force_barrier = TRUE;
-					if (is_quickfire(j,k) == TRUE)
+					if (is_quickfire(j,k))
 						quickfire = TRUE;
 					}
 		
@@ -604,7 +604,7 @@ location end_town_mode(short switching_level,location destination)  // returns n
 		//if (c_town.town_num < 120) {
 			for (i = 0; i < town_size[town_type]; i++)
 				for (j = 0; j < town_size[town_type]; j++)
-					if (is_explored(i,j) > 0) {
+					if (is_explored(i,j)) {
 						data_store->town_maps.town_maps[c_town.town_num][i / 8][j] = data_store->town_maps.town_maps[c_town.town_num][i / 8][j] |
 							(char) (s_pow(2,i % 8));
 					}
@@ -807,7 +807,7 @@ void place_party(short direction)
 		
 		check_loc.y -= y_adj;		
 		pos_locs[i] = check_loc;
-		if (is_not_blocked(check_loc) && (is_special(check_loc) == FALSE) && (get_obscurity(check_loc.x,check_loc.y) == 0)
+		if (is_not_blocked(check_loc) && is_not_special(check_loc) && (get_obscurity(check_loc.x,check_loc.y) == 0)
 			&& (can_see(c_town.p_loc,check_loc,1) < 1) && (loc_off_act_area(check_loc) == FALSE)) {
 			spot_ok[i] = TRUE;
 			how_many_ok += (i > 1) ? 1 : 0;
@@ -1167,9 +1167,9 @@ void erase_specials()////
 	unsigned char floors[6] = {0,150,186,193,2,36};
 	special_node_type sn;
 	
-	if ((is_combat()) && (which_combat_type == 0))
+	if (is_combat() && (which_combat_type == 0))
 		return;
-	if ((is_town() == FALSE) && (is_combat() == FALSE))
+	if (is_not_town() && is_not_combat())
 		return;
 	for (k = 0; k < 50; k++) {
 		if (c_town.town.spec_id[k] >= 0) {
@@ -1367,7 +1367,7 @@ void draw_map (DialogPtr the_dialog, short the_item)
 	// area_to_draw_from is final draw from rect
 	// area_to_draw_on is final draw to rect
 	// extern short store_pre_shop_mode,store_pre_talk_mode;
-	if ((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
+	if (is_out() || (is_combat() && (which_combat_type == 0)) ||
 		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
 		((overall_mode == 21) && (store_pre_shop_mode == 0))) {
 		view_rect.left = boe_clamp(party.loc_in_sec.x - 20,0,8);
@@ -1403,10 +1403,10 @@ void draw_map (DialogPtr the_dialog, short the_item)
 					break;
 				}
 			}
-	if ((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
+	if (is_out() || (is_combat() && (which_combat_type == 0)) ||
 		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
 		((overall_mode == 21) && (store_pre_shop_mode == 0)) ||
-		(((is_town()) || (is_combat())) && (town_type != 2))) {
+		((is_town() || is_combat()) && (town_type != 2))) {
 			area_to_draw_from = view_rect;	
 			area_to_draw_from.left *= 6;
 			area_to_draw_from.right *= 6;
@@ -1435,7 +1435,7 @@ void draw_map (DialogPtr the_dialog, short the_item)
 			PaintRect(&map_world_rect);
 			draw_pcs = FALSE;
 		}
-/*	else if ((is_combat()) && (which_combat_type == 0)) {
+/*	else if (is_combat() && (which_combat_type == 0)) {
 		if (modeless_exists[5] == TRUE) {
 			PaintRect(&map_world_rect);
 
@@ -1452,7 +1452,7 @@ void draw_map (DialogPtr the_dialog, short the_item)
 				return;
 				}
 		} */
-	else if ((is_town()) && ((c_town.town_num == -1) || (c_town.town_num == -1)))
+	else if (is_town() && ((c_town.town_num == -1) || (c_town.town_num == -1)))
 		 {
 			if (modeless_exists[5] == TRUE) {
 				SetPort(the_dialog);
@@ -1482,7 +1482,7 @@ void draw_map (DialogPtr the_dialog, short the_item)
 
 	// Now, if doing just partial restore, crop redraw_rect to save time.
 	if (the_item == 5) {
-		if ((is_out())  || ((is_combat()) && (which_combat_type == 0)) ||
+		if (is_out() || (is_combat() && (which_combat_type == 0)) ||
 		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
 		((overall_mode == 21) && (store_pre_shop_mode == 0)))
 			kludge = global_to_local(party.p_loc);
@@ -1499,8 +1499,8 @@ void draw_map (DialogPtr the_dialog, short the_item)
 	if ((overall_mode == 21) || (overall_mode == 20))
 		redraw_rect.right = -1;
 	
-	if ((is_out()) ||
-		((is_combat()) && (which_combat_type == 0)) ||
+	if (is_out() ||
+		(is_combat() && (which_combat_type == 0)) ||
 		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
 		((overall_mode == 21) && (store_pre_shop_mode == 0)))	
 		out_mode = TRUE;
@@ -1527,7 +1527,7 @@ void draw_map (DialogPtr the_dialog, short the_item)
 					
 					if (out_mode == TRUE)
 						expl = out_e[where.x + 48 * party.i_w_c.x][where.y + 48 * party.i_w_c.y];
-						else expl = is_explored(where.x,where.y);
+						else expl = is_explored(where.x,where.y) ? TRUE : FALSE;
 						
 					if (expl != 0) {
 						map_graphic_placed[where.x / 8][where.y] = 
@@ -1562,7 +1562,7 @@ void draw_map (DialogPtr the_dialog, short the_item)
 											else what_ter2 = t_d.terrain[where.x + 1][where.y];	
 										if (out_mode == TRUE)
 											expl2 = out_e[(where.x + 1) + 48 * party.i_w_c.x][where.y + 48 * party.i_w_c.y];
-											else expl2 = is_explored(where.x + 1,where.y);									
+											else expl2 = is_explored(where.x + 1,where.y) ? TRUE : FALSE;									
 										pic2 = scenario.ter_types[what_ter2].picture;
 										if ((map_pats[pic2] == map_pats[pic]) && (expl2 != 0)) {
 											draw_rect.right += 6;
@@ -1618,7 +1618,7 @@ void draw_map (DialogPtr the_dialog, short the_item)
 							
 	// Now place PCs and monsters
 	if ((draw_pcs == TRUE) && (modeless_exists[5] == TRUE)) {
-		if ((is_town()) && (party.stuff_done[305][2] > 0))
+		if (is_town() && (party.stuff_done[305][2] > 0))
 			for (i = 0; i < T_M; i++) 
 				if (c_town.monst.dudes[i].active > 0) {
 					where = c_town.monst.dudes[i].m_loc;
@@ -1628,7 +1628,7 @@ void draw_map (DialogPtr the_dialog, short the_item)
 
 						draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
 						draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);
-						//if ((!is_out()) && (town_type == 2)) {
+						//if ((is_not_out()) && (town_type == 2)) {
 						//	draw_rect.left += 48;
 						//	draw_rect.top += 48;
 						//	}
@@ -1644,11 +1644,11 @@ void draw_map (DialogPtr the_dialog, short the_item)
 						}
 				}
 		if ((overall_mode != 21) && (overall_mode != 20)) {
-			where = (is_town()) ? c_town.p_loc : global_to_local(party.p_loc);
+			where = is_town() ? c_town.p_loc : global_to_local(party.p_loc);
 
 					draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
 					draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);
-					//if ((!is_out()) && (town_type == 2)) {
+					//if ((is_not_out()) && (town_type == 2)) {
 					//	draw_rect.left += 48;
 					//	draw_rect.top += 48;
 					//	}
@@ -1671,15 +1671,13 @@ void draw_map (DialogPtr the_dialog, short the_item)
 }
 
 
-Boolean is_door(location destination)
+bool is_door(location destination)
 {
-	short i;
-
 	if ((scenario.ter_types[t_d.terrain[destination.x][destination.y]].special == 9) ||
 		(scenario.ter_types[t_d.terrain[destination.x][destination.y]].special == 1) ||
 		(scenario.ter_types[t_d.terrain[destination.x][destination.y]].special == 10))
-			return TRUE;
-	return FALSE;
+			return true;
+	return false;
 }
 
 

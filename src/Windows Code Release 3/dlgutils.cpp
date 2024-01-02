@@ -1088,7 +1088,7 @@ void do_sign(short town_num, short which_sign, short sign_type,location sign_loc
 	char sign_text[256];
 	location view_loc;
 
-	view_loc = (is_out()) ? party.p_loc : c_town.p_loc;
+	view_loc = is_out() ? party.p_loc : c_town.p_loc;
 	make_cursor_sword();
 	
 	cd_create_dialog(1014,mainPtr);

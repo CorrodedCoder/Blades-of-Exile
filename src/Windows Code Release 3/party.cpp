@@ -435,8 +435,6 @@ void init_party_scen_data()
 void put_party_in_scen()
 {
 	short i,j;
-	char strs[6][256] = {"","","","","",""};
-	short buttons[3] = {-1,-1,-1};
 	Boolean item_took = FALSE;
 
 	for (j = 0; j < 6; j++)
@@ -508,12 +506,12 @@ void put_party_in_scen()
 
 
 	// Throw up intro dialog
-	buttons[0] = 1;
 	for (j = 0; j < 6; j++)
-		if (strlen(data_store5.scen_strs[4 + j]) > 0) {
-			for (i = 0; i < 6; i++)
-				strcpy(strs[i],data_store5.scen_strs[4 + i]);
-			custom_choice_dialog((char *) strs,-1 * (1600 + scenario_intro_pic()),buttons) ;
+		if (strlen(data_store5.scen_strs[4 + j]) > 0)
+		{
+			short buttons[3] = { 1,-1,-1 };
+			const std::array< std::string_view, 6> strs_arr{ data_store5.scen_strs[4], data_store5.scen_strs[5], data_store5.scen_strs[6], data_store5.scen_strs[7], data_store5.scen_strs[8], data_store5.scen_strs[9] };
+			custom_choice_dialog(strs_arr,-1 * (1600 + scenario_intro_pic()),buttons);
 			j = 6;
 		}
 	give_help(1,2,0);
@@ -1217,27 +1215,32 @@ void cast_spell(short type,short situation)
 {
 	short spell;
 	
-	if ((is_town()) && (is_antimagic(c_town.p_loc.x,c_town.p_loc.y))) {
+	if (is_town() && is_antimagic(c_town.p_loc.x,c_town.p_loc.y))
+	{
 		add_string_to_buf("  Not in antimagic field.");
 		return;
-		}
+	}
 		
-		if (spell_forced == FALSE)
-			spell = pick_spell(6, type, situation);
-			else {
-				if (repeat_cast_ok(type) == FALSE)
-					return;
-				spell = (type == 0) ? store_mage : store_priest;
-				}
-		if (spell < 70) {
-			print_spell_cast(spell,type);
+	if (spell_forced == FALSE)
+	{
+		spell = pick_spell(6, type, situation);
+	}
+	else
+	{
+		if (repeat_cast_ok(type) == FALSE)
+			return;
+		spell = (type == 0) ? store_mage : store_priest;
+	}
 
-			if (type == 0)
-				do_mage_spell(pc_casting,spell);
-				else do_priest_spell(pc_casting,spell);
-			put_pc_screen();
-		
-			}
+	if (spell < 70)
+	{
+		print_spell_cast(spell,type);
+		if (type == 0)
+			do_mage_spell(pc_casting,spell);
+		else
+			do_priest_spell(pc_casting,spell);
+		put_pc_screen();
+	}
 }
 
 Boolean repeat_cast_ok(short type)
@@ -1985,7 +1988,7 @@ void cast_town_spell(location where)
 				break;
 				
 			case 41:
-				if ((is_fire_barrier(where.x,where.y)) || (is_force_barrier(where.x,where.y))) {
+				if (is_fire_barrier(where.x,where.y) || is_force_barrier(where.x,where.y)) {
 						r1 = rand_short(0,100) - 5 * stat_adj(adven[who_cast], skill::Intelligence) + 5 * (c_town.difficulty / 10);
 						if (is_fire_barrier(where.x,where.y))
 							r1 -= 8;
@@ -2688,11 +2691,9 @@ void print_spell_cast(short spell_num,short which)
 		(which == 0) ? mage_s_name[spell_num] : priest_s_name[spell_num]);
 }
 
-short stat_adj(pc_record_type& pc,skill which)
+short stat_adj(const pc_record_type& pc,skill which)
 {
-	short tr;
-	
-	tr = skill_bonus[pc.skills[which]];
+	short tr = skill_bonus[pc.skills[which]];
 	if (which == skill::Intelligence) {
 		if (pc.traits[trait::MagicallyApt] == TRUE)
 			tr++;
@@ -2946,7 +2947,6 @@ unsigned char pick_trapped_monst()
 // ignore parent in Mac version
 {
 	short i;
-	char sp[256];
 	monster_record_type get_monst;
 	
 	make_cursor_sword();
@@ -2958,8 +2958,7 @@ unsigned char pick_trapped_monst()
 			cd_activate_item(988, 2 + 3 * i, 0);
 			}
 			else {
-				get_m_name((char *) sp,(unsigned char)(party.imprisoned_monst[i]));
-				csit(988,3 + 3 * i,(char *) sp);
+				csit(988,3 + 3 * i, scenario_monster_name(party.imprisoned_monst[i]));
 				get_monst = return_monster_template((unsigned char)(party.imprisoned_monst[i]));
 				cdsin(988,4 + 3 * i,get_monst.level);
 				}

@@ -491,7 +491,6 @@ void display_pc_item(short pc_num,short item,item_record_type si,short parent)
 
 void put_monst_info()////
 {
-	char store_text[256];
 	Str255 str;
 	short abil,i;	
 	
@@ -500,9 +499,7 @@ void put_monst_info()////
 		else if (store_m->m_d.picture_num < 1000)
 			cd_set_pict(999,4,400 + store_m->m_d.picture_num);
 			else cd_set_pict(999,4,2000 + (store_m->m_d.picture_num % 1000));
-		
-	get_m_name((char *) store_text,store_m->number);
-	cd_set_item_text(999,5,store_text);
+	cd_set_item_text(999,5, scenario_monster_name(store_m->number));
 	// Clear fields
 	for (i = 6; i < 20; i++) {
 		cd_set_item_text(999,i,"");
@@ -516,10 +513,7 @@ void put_monst_info()////
 	
 	for (i = 0; i < 3; i++)
 		if (store_m->m_d.a[i] > 0) {
-			format_to_buf(store_text," {:d}d{:d}              ",
-				store_m->m_d.a[i] / 100 + 1, store_m->m_d.a[i] % 100);
-
-			cd_set_item_text(999,13 + i,store_text);
+			cd_set_item_text(999,13 + i, std::format(" {:d}d{:d}              ", store_m->m_d.a[i] / 100 + 1, store_m->m_d.a[i] % 100));
 			}				
 	cd_set_item_num(999,6,store_m->m_d.level);
 	cd_set_item_num(999,7,store_m->m_d.health);

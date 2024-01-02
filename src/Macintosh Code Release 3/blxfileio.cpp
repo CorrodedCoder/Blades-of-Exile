@@ -465,7 +465,7 @@ void load_file()
 						fire_barrier = TRUE;
 					if (is_force_barrier(j,k) == TRUE)
 						force_barrier = TRUE;
-					if (is_quickfire(j,k) == TRUE)
+					if (is_quickfire(j,k))
 						quickfire = TRUE;
 					}		
 force_wall = TRUE;fire_wall = TRUE;antimagic = TRUE;scloud = TRUE;ice_wall = TRUE;blade_wall = TRUE;
@@ -542,7 +542,7 @@ void save_file(short mode)
 	char *party_encryptor;	
 	char debug[60];
 
-	if ((in_startup_mode == FALSE) && (is_town()))
+	if ((in_startup_mode == FALSE) && is_town())
 		town_save = TRUE;
 
 	strcpy ((char *) store_name, (char *) last_load_file);
@@ -1411,7 +1411,7 @@ void start_data_dump()
 		party.p_loc.x,party.p_loc.y);
 	len = (long) (strlen(get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	if ((is_town()) || (is_combat())) {
+	if (is_town() || is_combat()) {
 		format_to_buf(get_text,"  Town num {:d}  Town loc  {:d} {:d} \r",c_town.town_num,
 			c_town.p_loc.x,c_town.p_loc.y);
 		len = (long) (strlen(get_text));
@@ -1586,7 +1586,7 @@ void build_scen_headers()
 
 // This is only called at startup, when bringing headers of active scenarios.
 // This wipes out the scenario record, so be sure not to call it while in an active scenario.
-Boolean load_scenario_header(Str255 filename,short header_entry)
+Boolean load_scenario_header(std::string_view filename,short header_entry)
 {
 
 	short i,j,k,l,file_id;

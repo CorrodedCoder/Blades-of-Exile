@@ -312,7 +312,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 					
 					place_item_button(3,i,4,0);
 					if ((scenario.special_items[spec_item_array[i_num]] % 10 == 1)
-					&& (!(is_combat())))
+					&& (is_not_combat()))
 						place_item_button(0,i,3,0);
 					}
 				}
@@ -371,7 +371,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 						// this is kludgy, awkwark, and has redundant code. Done this way to 
 						// make go faster, and I got lazy.
 						if ((stat_screen_mode == 0) && 
-						 ((is_town()) || (is_out()) || ((is_combat()) && (pc == current_pc)))) { // place give and drop and use
+						 (is_town() || is_out() || (is_combat() && (pc == current_pc)))) { // place give and drop and use
 							place_item_button(0,i,0,adven[pc].items[i_num].graphic_num); // item_graphic 
 							if (abil_chart[adven[pc].items[i_num].ability] != 4) // place use if can
 								place_item_button(10,i,1,0);
@@ -381,7 +381,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 								place_item_button(0,i,0,adven[pc].items[i_num].graphic_num); // item_graphic 
 								place_item_button(3,i,4,0); // info button
 								if ((stat_screen_mode == 0) && 
-								 ((is_town()) || (is_out()) || ((is_combat()) && (pc == current_pc)))) { // place give and drop and use
+								 (is_town() || is_out() || (is_combat() && (pc == current_pc)))) { // place give and drop and use
 									place_item_button(1,i,2,0);
 									place_item_button(2,i,3,0);
 									if (abil_chart[adven[pc].items[i_num].ability] != 4) // place use if can
@@ -809,7 +809,7 @@ void print_party_stats() {
 	add_string_to_buf("PARTY STATS:");
 	format_to_buf(store_string, "  Number of kills: {:d}                   ", party.total_m_killed);
 	add_string_to_buf( store_string);
-	if ((is_town()) || ((is_combat()) && (which_combat_type == 1))) {
+	if (is_town() || (is_combat() && (which_combat_type == 1))) {
 		format_to_buf(store_string, "  Kills in this town: {:d}                   ", party.m_killed[c_town.town_num]);
 		add_string_to_buf( store_string);
 		}
@@ -851,35 +851,33 @@ short do_look(location space)
 				&& (c_town.monst.dudes[i].m_d.picture_num != 0)) {
 				
 				
-				get_m_name(store_string2,c_town.monst.dudes[i].number);
-				if (c_town.monst.dudes[i].m_d.health < c_town.monst.dudes[i].m_d.m_health) {
+				const char * const monster_name = scenario_monster_name(c_town.monst.dudes[i].number);
+				if (c_town.monst.dudes[i].m_d.health < c_town.monst.dudes[i].m_d.m_health)
+				{
 					if (c_town.monst.dudes[i].attitude % 2 == 1)
-						format_to_buf(store_string, "    Wounded {} (H)", store_string2);
-						else format_to_buf(store_string, "    Wounded {} (F)", store_string2);
-					}
-				else {
-					if (c_town.monst.dudes[i].attitude % 2 == 1)
-						format_to_buf(store_string, "    {} (H)", (char *) store_string2);
-						else format_to_buf(store_string, "    {} (F)", (char *) store_string2);
-					}
-				
-				add_string_to_buf( store_string);					
-
+						add_string_to_buf("    Wounded {} (H)", monster_name);
+					else
+						add_string_to_buf("    Wounded {} (F)", monster_name);
 				}
+				else
+				{
+					if (c_town.monst.dudes[i].attitude % 2 == 1)
+						add_string_to_buf("    {} (H)", monster_name);
+					else
+						add_string_to_buf("    {} (F)", monster_name);
+				}
+			}
 		}
 	if (overall_mode == 35) {
 		for (i = 0; i < 10; i++) {
 			if ((party.out_c[i].exists == TRUE) 
 				&& (same_point(space,party.out_c[i].m_loc) == TRUE)) {
 					for (j = 0; j < 7; j++) 
-						if (party.out_c[i].what_monst.monst[j] != 0) {
-							get_m_name(store_string2,party.out_c[i].what_monst.monst[j]);
-							format_to_buf(store_string, "    {}", store_string2);
-							add_string_to_buf( store_string);		
-							j = 7;
-						
-							}
-				
+						if (party.out_c[i].what_monst.monst[j] != 0)
+						{
+							add_string_to_buf("    {}", scenario_monster_name(party.out_c[i].what_monst.monst[j]));
+							j = 7;						
+						}
 					}
 			}
 	
@@ -1023,66 +1021,51 @@ void notify_out_combat_began(out_wandering_type encounter,short *nums)
 	add_string_to_buf( store_string);	
 
 	for (i = 0; i < 6; i++)
-		if (encounter.monst[i] != 0) {
-			switch (encounter.monst[i]) {
-				////
-				
-				default:
-				get_m_name(store_string2,encounter.monst[i]);
-				format_to_buf(store_string, "  {:d} x {}        ",nums[i],store_string2);
+		if (encounter.monst[i] != 0)
+		{
+			switch (encounter.monst[i])
+			{
+			default:
+				add_string_to_buf("  {:d} x {}        ",nums[i], scenario_monster_name(encounter.monst[i]));
 				break;		
 			}				
-			add_string_to_buf( store_string);	
-			}
-	if (encounter.monst[6] != 0) {
-			get_m_name(store_string2,encounter.monst[6]);
-			format_to_buf(store_string, "  {}        ",store_string2);
-			add_string_to_buf( store_string);		
 		}
+	if (encounter.monst[6] != 0)
+	{
+		add_string_to_buf("  {}        ", scenario_monster_name(encounter.monst[6]));
+	}
 }
 
-void get_m_name(char *str,unsigned char num)
+const char * scenario_monster_name(unsigned char num)
 {
-	Str255 store_name;
-	
-	////
-	strcpy(str,(char *) data_store->scen_item_list.monst_names[num]);
+	return data_store->scen_item_list.monst_names[num];
 }
-void get_ter_name(char *str,unsigned char num)
+
+static const char * get_ter_name(unsigned char num)
 {
-	Str255 store_name;
-	
-	////
-	if ((num == 90) && ((is_out()) || (is_town()) || ((is_combat()) && (which_combat_type == 1))))
-		format_to_buf(store_name,"Pit");
-		else {
-			strcpy(store_name,(char *) data_store->scen_item_list.ter_names[num]);
-			}
-	strcpy(str,(char *) store_name);
+	if ((num == 90) && (is_out() || is_town() || (is_combat() && (which_combat_type == 1))))
+	{
+		return "Pit";
+	}
+	return data_store->scen_item_list.ter_names[num];
 }
 
 void print_monst_name(unsigned char m_type)
 {
-	get_m_name(store_string2,m_type);
-	format_to_buf(store_string, "{}:",store_string2);
-	add_string_to_buf( store_string);
+	add_string_to_buf("{}:", scenario_monster_name(m_type));
 }
 
 void print_monst_attacks(unsigned char m_type,short target)
 //short target; // < 100 - pc  >= 100  monst
 {
-	char store_string3[60];
-	
-	get_m_name(store_string2,m_type);
 	if (target < 100)
-		format_to_buf(store_string, "{} attacks {}",
-			store_string2,(char *) adven[target].name);
-		else {
-			get_m_name(store_string3,c_town.monst.dudes[target - 100].number);
-			format_to_buf(store_string, "{} attacks {}",
-			store_string2,store_string3);
-			}
-	add_string_to_buf( store_string);
+	{
+		add_string_to_buf("{} attacks {}", scenario_monster_name(m_type), (char*)adven[target].name);
+	}
+	else
+	{
+		add_string_to_buf("{} attacks {}", scenario_monster_name(m_type), scenario_monster_name(c_town.monst.dudes[target - 100].number));
+	}
 }
 
 ////
@@ -1097,102 +1080,100 @@ void damaged_message(short damage,short type)
 }
 
 // This prepares the monster's string for the text bar
-void print_monster_going(char *combat_str,unsigned char m_num,short ap)
+std::string format_monster_going(unsigned char m_num,short ap)
 {
-	get_m_name(store_string2,m_num);
-	format_to_buf(combat_str, "{} (ap: {:d})",
-		store_string2,ap);
+	return std::format("{} (ap: {:d})",scenario_monster_name(m_num),ap);
 }
 
 void monst_spell_note(unsigned char number,short which_mess)
 {
-	get_m_name(store_string2,number);
+	const char * const monster_name = scenario_monster_name(number);
 	switch (which_mess) {
 		case 1:
-	format_to_buf(store_string, "  {} scared. ",store_string2);break;
+	format_to_buf(store_string, "  {} scared. ", monster_name);break;
 	
 		case 2:
-	format_to_buf(store_string, "  {} slowed. ",store_string2);break;
+	format_to_buf(store_string, "  {} slowed. ", monster_name);break;
 	
 		case 3:
-	format_to_buf(store_string, "  {} weakened.",store_string2);break;
+	format_to_buf(store_string, "  {} weakened.", monster_name);break;
 	
 		case 4:
-	format_to_buf(store_string, "  {} poisoned.",store_string2);break;
+	format_to_buf(store_string, "  {} poisoned.", monster_name);break;
 	
 		case 5:
-	format_to_buf(store_string, "  {} cursed.",store_string2);break;
+	format_to_buf(store_string, "  {} cursed.", monster_name);break;
 
 		case 6:
-	format_to_buf(store_string, "  {} ravaged.",store_string2);break;
+	format_to_buf(store_string, "  {} ravaged.", monster_name);break;
 
 		case 7:
-	format_to_buf(store_string, "  {} undamaged.",store_string2);break;
+	format_to_buf(store_string, "  {} undamaged.", monster_name);break;
 
 		case 8:
-	format_to_buf(store_string, "  {} is stoned.",store_string2);break;
+	format_to_buf(store_string, "  {} is stoned.", monster_name);break;
 		case 9:
-	format_to_buf(store_string, "  Gazes at {}.",store_string2);break;
+	format_to_buf(store_string, "  Gazes at {}.", monster_name);break;
 		case 10:
-	format_to_buf(store_string, "  {} resists.",store_string2);break;		
+	format_to_buf(store_string, "  {} resists.", monster_name);break;
 		case 11:
-	format_to_buf(store_string, "  Drains {}.",store_string2);break;	
+	format_to_buf(store_string, "  Drains {}.", monster_name);break;
 		case 12:
-	format_to_buf(store_string, "  Shoots at {}.",store_string2);break;	
+	format_to_buf(store_string, "  Shoots at {}.", monster_name);break;
 		case 13:
 	format_to_buf(store_string, "  Throws spear at {}.",
-		store_string2);
+		monster_name);
 			break;	
 		case 14:
 	format_to_buf(store_string, "  Throws rock at {}.",
-		store_string2);
+		monster_name);
 			break;	
 		case 15:
 	format_to_buf(store_string, "  Throws razordisk at {}.",
-		store_string2);
+		monster_name);
 			break;
 		case 16:
 	format_to_buf(store_string, "  Hits {}.",
-		store_string2);
+		monster_name);
 			break;
 		case 17:
 	format_to_buf(store_string, "{} disappears.",
-		store_string2);
+		monster_name);
 			break;
 		case 18:
 	format_to_buf(store_string, "  Misses {}.",
-		store_string2);
+		monster_name);
 			break;
 		case 19:
-	format_to_buf(store_string, "  {} is webbed.",store_string2);break;
+	format_to_buf(store_string, "  {} is webbed.", monster_name);break;
 		case 20:
-	format_to_buf(store_string, "  {} chokes.",store_string2);break;
+	format_to_buf(store_string, "  {} chokes.", monster_name);break;
 		case 21:
-	format_to_buf(store_string, "  {} summoned.",store_string2);break;
+	format_to_buf(store_string, "  {} summoned.", monster_name);break;
 		case 22:
-	format_to_buf(store_string, "  {} is dumbfounded.",store_string2);break;
+	format_to_buf(store_string, "  {} is dumbfounded.", monster_name);break;
 		case 23:
-	format_to_buf(store_string, "  {} is charmed.",store_string2);break;
+	format_to_buf(store_string, "  {} is charmed.", monster_name);break;
 		case 24:
-	format_to_buf(store_string, "  {} is recorded.",store_string2);break;
+	format_to_buf(store_string, "  {} is recorded.", monster_name);break;
 		case 25:
-	format_to_buf(store_string, "  {} is diseased.",store_string2);break;
+	format_to_buf(store_string, "  {} is diseased.", monster_name);break;
 		case 26:
-	format_to_buf(store_string, "  {} is an avatar!",store_string2);break;
+	format_to_buf(store_string, "  {} is an avatar!", monster_name);break;
 		case 27:
-	format_to_buf(store_string, "  {} splits!",store_string2);break;
+	format_to_buf(store_string, "  {} splits!", monster_name);break;
 		case 28:
-	format_to_buf(store_string, "  {} falls asleep.",store_string2);break;
+	format_to_buf(store_string, "  {} falls asleep.", monster_name);break;
 		case 29:
-	format_to_buf(store_string, "  {} wakes up.",store_string2);break;
+	format_to_buf(store_string, "  {} wakes up.", monster_name);break;
 		case 30:
-	format_to_buf(store_string, "  {} paralyzed.",store_string2);break;
+	format_to_buf(store_string, "  {} paralyzed.", monster_name);break;
 		case 31:
-	format_to_buf(store_string, "  {} covered with acid.",store_string2);break;
+	format_to_buf(store_string, "  {} covered with acid.", monster_name);break;
 		case 32:
-	format_to_buf(store_string, "  Fires spines at {}.",store_string2);break;
+	format_to_buf(store_string, "  Fires spines at {}.", monster_name);break;
 		case 33:
-	format_to_buf(store_string, "  {} summons aid.",store_string2);break;
+	format_to_buf(store_string, "  {} summons aid.", monster_name);break;
 		}
 
 	if (which_mess > 0)
@@ -1202,42 +1183,26 @@ void monst_spell_note(unsigned char number,short which_mess)
 void monst_cast_spell_note(unsigned char number,short spell,short type)
 //short type; // 0 - mage 1- priest
 {
-	get_m_name(store_string2,number);
-	format_to_buf(store_string, "{} casts:",
-			(char *) store_string2);
-	add_string_to_buf( store_string);
-	format_to_buf(store_string, "  {}",
-			(type == 1) ? (char *) m_priest_sp[spell - 1] : (char *) m_mage_sp[spell - 1]);
-	add_string_to_buf( store_string);
+	add_string_to_buf("{} casts:", scenario_monster_name(number));
+	add_string_to_buf("  {}", (type == 1) ? (char *) m_priest_sp[spell - 1] : (char *) m_mage_sp[spell - 1]);
 }
 
 void monst_breathe_note(unsigned char number)
 {
-	get_m_name(store_string2,number);
-	format_to_buf(store_string, "{} breathes.",
-			(char *) store_string2);
-	add_string_to_buf( store_string);
-
+	add_string_to_buf("{} breathes.",scenario_monster_name(number));
 }
 
 void monst_damaged_mes(short which_m,short how_much,short how_much_spec)
 {
-	get_m_name(store_string2,c_town.monst.dudes[which_m].number);
 	if (how_much_spec > 0)
-		format_to_buf(store_string, "  {} takes {:d}+{:d}",
-			store_string2, how_much,how_much_spec);
-		else format_to_buf(store_string, "  {} takes {:d}",
-			store_string2, how_much);
- 
-	add_string_to_buf( store_string);
+		add_string_to_buf("  {} takes {:d}+{:d}", scenario_monster_name(c_town.monst.dudes[which_m].number), how_much,how_much_spec);
+	else
+		add_string_to_buf("  {} takes {:d}", scenario_monster_name(c_town.monst.dudes[which_m].number), how_much);
 }
 
 void monst_killed_mes(short which_m)
 {
-	get_m_name(store_string2,c_town.monst.dudes[which_m].number);
-	format_to_buf(store_string, "  {} dies.",
-		(char *) store_string2);
-	add_string_to_buf( store_string);
+	add_string_to_buf("  {} dies.", scenario_monster_name(c_town.monst.dudes[which_m].number));
 }
 
 void print_nums(short a,short b,short c)
@@ -1260,9 +1225,7 @@ short print_terrain(location space)
 	if (overall_mode == 37) {
 		which_terrain = combat_terrain[space.x][space.y];
 		}
-	get_ter_name(store_string2,which_terrain);
-	format_to_buf(store_string, "    {}", store_string2);
-	add_string_to_buf( store_string);
+	add_string_to_buf("    {}", get_ter_name(which_terrain));
 
 	return (short) which_terrain;
 }
@@ -1563,7 +1526,7 @@ void get_str(Str255 str,short i, short j)
 	p2c(str);
 }
 
-short string_length(char *str)
+short string_length(const char *str)
 {
 	short text_len[257];
 	short total_width = 0,i,len;

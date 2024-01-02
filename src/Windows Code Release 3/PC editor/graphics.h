@@ -17,7 +17,7 @@ void display_strings(short str1a,short str1b,short str2a,short str2b,
 void c2p(char *str) ;
 void p2c(char *str);
 void get_str(char *,short i, short j);
-short string_length(char *str,HDC hdc);
+short string_length(const char *str,HDC hdc);
 void make_cursor_sword();
 
 void MeasureText(short str_len,char *str, short *len_array,HDC hdc);

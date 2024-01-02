@@ -870,7 +870,7 @@ char masked,short main_win)
 		RGBBackColor(&store_color);
 }
 
-short string_length(char *str)
+short string_length(const char *str)
 {
 	short text_len[257];
 	short total_width = 0,i,len;

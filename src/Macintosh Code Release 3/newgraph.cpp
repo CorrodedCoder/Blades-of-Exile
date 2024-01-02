@@ -158,9 +158,9 @@ void apply_unseen_mask()
 	if (PSD[306][2] > 0)
 		return;
 
-	if ((is_combat()) && (which_combat_type == 0))
+	if (is_combat() && (which_combat_type == 0))
 		return;
-	if (!(is_out()) && (c_town.town.lighting > 0))
+	if (is_not_out() && (c_town.town.lighting > 0))
 		return;
 		
 	for (i = 0; i < 11; i++)

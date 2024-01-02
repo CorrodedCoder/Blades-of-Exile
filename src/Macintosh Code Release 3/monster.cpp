@@ -423,7 +423,7 @@ short monst_pick_target(short which_m)
 		if ((adven[monst_target[which_m]].main_status != status::Normal) || (rand_short(0,3) == 1))
 			monst_target[which_m] = 6;		
 	
-	if ((is_combat()) && (cur_monst->attitude % 2 == 1)) {
+	if (is_combat() && (cur_monst->attitude % 2 == 1)) {
 		if (spell_caster < 6)
 			if ((rand_short(1,5) < 5) && (monst_can_see(which_m,pc_pos[spell_caster]) == TRUE)
 					&& (adven[spell_caster].main_status == status::Normal)) 
@@ -592,13 +592,13 @@ short switch_target_to_adjacent(short which_m,short orig_target)
 		}
 
 	// If we get here while in town, just need to check if switch to pc
-	if ((is_town()) && (monst_adjacent(c_town.p_loc,which_m) == TRUE))
+	if (is_town() && (monst_adjacent(c_town.p_loc,which_m) == TRUE))
 		return 0;
 	if (is_town())
 		return orig_target;
 		
 	// If target is already adjacent, we're done here.
-	if ((is_combat()) && (orig_target < 6))
+	if (is_combat() && (orig_target < 6))
 		if ((adven[orig_target].main_status == status::Normal) && (monst_adjacent(pc_pos[orig_target],which_m) == TRUE))
 			return orig_target;
 	if (orig_target >= 100)
@@ -817,8 +817,8 @@ location find_clear_spot(location from_where,short mode)
 		loc.y = loc.y + r1;
 		if ((loc_off_act_area(loc) == FALSE) && is_not_blocked(loc)
 			&& (can_see(from_where,loc,1) == 0)
-			&& (!(is_combat()) || (pc_there(loc) == 6))
-			&& (!(is_town()) || (same_point(loc,c_town.p_loc) == FALSE))
+			&& (is_not_combat() || (pc_there(loc) == 6))
+			&& (is_not_town() || (same_point(loc,c_town.p_loc) == FALSE))
 			 && (!(misc_i[loc.x][loc.y] & 248)) &&
 			(!(c_town.explored[loc.x][loc.y] & 254))) {
 				if ((mode == 0) || ((mode == 1) && (adjacent(from_where,loc) == TRUE)))
@@ -853,7 +853,7 @@ location random_shift(location start)
 Boolean outdoor_move_monster(short num,location dest)
 {
 
-	if ((outd_is_blocked(dest) == FALSE) && (outd_is_special(dest) == FALSE) && 
+	if ((outd_is_blocked(dest) == FALSE) && outd_is_not_special(dest) && 
 		(same_point(dest, party.p_loc) != TRUE) && 
 		((out[dest.x][dest.y] > 21) || (out[dest.x][dest.y] < 5))) {
 		party.out_c[num].direction = 
@@ -1103,7 +1103,7 @@ Boolean monst_check_special_terrain(location where_check,short mode,short which_
 	if ((scenario_ter_type(ter).picture <= 212) && (scenario_ter_type(ter).picture >= 207))
 		can_enter = FALSE;
 	if (ter == 90) {
-			if ((is_combat()) && (which_combat_type == 0)) {
+			if (is_combat() && (which_combat_type == 0)) {
 				c_town.monst.dudes[which_monst].active = 0;
 				add_string_to_buf("Monster escaped! ");
 				}
@@ -1357,7 +1357,7 @@ Boolean summon_monster(unsigned char which,location where,short duration,short g
 	location loc;
 	short which_m,spot;
 
-	if ((is_town()) || (monsters_going)) {
+	if (is_town() || (monsters_going)) {
 		// Ooooh ... mondo kludge. Need to find caster's attitude to give it to monst.
 		which_m = monst_there(where);
 //		if (pc_there(where) < 6) 

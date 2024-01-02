@@ -331,24 +331,22 @@ HBITMAP ReadDib(const char * name,HDC hdc) {
 	BYTE * lpDibBits;
 	HBITMAP bmap;
 	OFSTRUCT store;
-	char real_name[256] = "",*name_ptr;
-	short i,last_slash = -1;
+	char real_name[256] = "";
+	short last_slash = -1;
 
-	for (i = 0; i < 256; i++)
+	for (short i = 0; i < 256; i++)
 		if ((file_path_name[i] == 92) || (file_path_name[i] == '/'))
 			last_slash = i;
-	if (last_slash < 0) {
-		strcpy(real_name,name);
-		}
-		else {
-			strcpy(real_name,file_path_name);
-			name_ptr = (char *) real_name;
-			name_ptr += last_slash + 1;
-			format_to_buf(name_ptr,"{}",name);
-			//real_name -= last_slash + 1;
-			//ASB(real_name);
-			}
-	hFile = OpenFile(real_name,&store,OF_READ | OF_SHARE_DENY_WRITE /* | OF_SEARCH */ );
+	if (last_slash < 0)
+	{
+		strcpy(real_name, name);
+	}
+	else
+	{
+		strcpy(real_name, file_path_name);
+		strcpy(real_name + last_slash + 1, name);
+	}
+	hFile = OpenFile(real_name, &store, OF_READ | OF_SHARE_DENY_WRITE /* | OF_SEARCH */ );
 
   //	hFile = _lopen(name,READ);
 	if (hFile == HFILE_ERROR)

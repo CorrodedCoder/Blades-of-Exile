@@ -290,17 +290,17 @@ void load_file()
 		for (short j = 0; j < town_size[town_type]; j++)
 			for (short k = 0; k < town_size[town_type]; k++) {
 				// Set up field booleans
-				if (is_web(j, k) == TRUE)
+				if (is_web(j, k))
 					web = TRUE;
-				if (is_crate(j, k) == TRUE)
+				if (is_crate(j, k))
 					crate = TRUE;
-				if (is_barrel(j, k) == TRUE)
+				if (is_barrel(j, k))
 					barrel = TRUE;
-				if (is_fire_barrier(j, k) == TRUE)
+				if (is_fire_barrier(j, k))
 					fire_barrier = TRUE;
-				if (is_force_barrier(j, k) == TRUE)
+				if (is_force_barrier(j, k))
 					force_barrier = TRUE;
-				if (is_quickfire(j, k) == TRUE)
+				if (is_quickfire(j, k))
 					quickfire = TRUE;
 			}
 		force_wall = TRUE; fire_wall = TRUE; antimagic = TRUE; scloud = TRUE; ice_wall = TRUE; blade_wall = TRUE;
@@ -339,7 +339,7 @@ void save_file(short mode)
 //mode;  // 0 - normal  1 - save as
 {
 	Boolean town_save = FALSE;
-	if ((in_startup_mode == FALSE) && (is_town()))
+	if ((in_startup_mode == FALSE) && is_town())
 		town_save = TRUE;
 
 	ofn.hwndOwner = mainPtr;
@@ -409,36 +409,20 @@ void change_rect_terrain(BoeRect r, unsigned char terrain_type, short probabilit
 		}
 }
 
-void build_scen_file_name(char* file_n)
+static std::string build_scen_file_name(void)
 {
-	short i, last_slash = -1;
-
-	for (i = 0; i < 256; i++)
+	short last_slash = -1;
+	for (short i = 0; i < 256; i++)
 		if ((file_path_name[i] == 92) || (file_path_name[i] == '/'))
 			last_slash = i;
-	if (last_slash < 0) {
-		format_to_buf(file_n, "BLADSCEN/{}", party.scen_name);
-		return;
+	if (last_slash < 0)
+	{
+		return std::format("BLADSCEN/{}", party.scen_name);
 	}
-	strcpy(file_n, file_path_name);
-	file_n += last_slash + 1;
-	format_to_buf(file_n, "BLADSCEN/{}", party.scen_name);
-}
-
-void build_scen_ed_name(char* file_n)
-{
-	short i, last_slash = -1;
-
-	for (i = 0; i < 256; i++)
-		if ((file_path_name[i] == 92) || (file_path_name[i] == '/'))
-			last_slash = i;
-	if (last_slash < 0) {
-		format_to_buf(file_n, "BLSCENED/bladdata.bld");
-		return;
-	}
-	strcpy(file_n, file_path_name);
-	file_n += last_slash + 1;
-	format_to_buf(file_n, "BLSCENED/bladdata.bld");
+	char file_name[256];
+	strcpy(file_name, file_path_name);
+	format_to_buf(file_name + last_slash + 1, "BLADSCEN/{}", party.scen_name);
+	return file_name;
 }
 
 // mode 0 want town and talking, 1 talking only, 2 want a string only, and extra is string num
@@ -453,7 +437,6 @@ void load_town(short town_num, short mode, short extra, char* str)
 	bool success = false;
 	long len_to_jump = 0;
 	short which_town;
-	char file_name[256];
 
 	if (town_num != boe_clamp(town_num, 0, scenario_num_towns() - 1)) {
 		give_error("The scenario tried to place you into a non-existant town.", "", 0);
@@ -463,9 +446,8 @@ void load_town(short town_num, short mode, short extra, char* str)
 	which_town = town_num;
 
 	//HGetVol((StringPtr) start_name,&start_volume,&start_dir);
-	build_scen_file_name(file_name);
-	// Was: OpenFile(file_name, &store_str, OF_READ /* | OF_SEARCH */);
-	file_id.open(file_name, std::ios_base::binary);
+	// Was: OpenFile(build_scen_file_name(), &store_str, OF_READ /* | OF_SEARCH */);
+	file_id.open(build_scen_file_name(), std::ios_base::binary);
 	if (file_id.fail()) {
 		FCD(949, 0);
 		return;
@@ -960,52 +942,55 @@ void fix_boats()
 }
 
 
-void load_outdoors(short to_create_x, short to_create_y, short targ_x, short targ_y,
-	short mode, short extra, char* str)
-	//short	to_create_x, to_create_y; // actual sector being loaded
+//short	to_create_x, to_create_y; // actual sector being loaded
 //short 	targ_x, targ_y; // 0 or 1
+void load_outdoors(
+	short to_create_x, short to_create_y, short targ_x, short targ_y, short mode, short extra, char* str
+	)
 {
-	std::ifstream file_id;
-	bool success = false;
-	short i, j, out_sec_num;
-	char file_name[256];
-	long len_to_jump = 0, store = 0;
-
 	if ((to_create_x != boe_clamp(to_create_x, 0, scenario_out_width() - 1)) ||
-		(to_create_y != boe_clamp(to_create_y, 0, scenario_out_height() - 1))) { // not exist
-		for (i = 0; i < 48; i++)
-			for (j = 0; j < 48; j++)
+		(to_create_y != boe_clamp(to_create_y, 0, scenario_out_height() - 1))) // not exist
+	{
+		for (short i = 0; i < 48; i++)
+			for (short j = 0; j < 48; j++)
 				outdoors[targ_x][targ_y].terrain[i][j] = 5;
-		for (i = 0; i < 18; i++) {
+		for (short i = 0; i < 18; i++)
+		{
 			outdoors[targ_x][targ_y].special_id[i] = -1;
 			outdoors[targ_x][targ_y].special_locs[i].x = 100;
 		}
 		return;
 	}
 
-	build_scen_file_name(file_name);
-	// Was: OpenFile(file_name, &store_str, OF_READ /* | OF_SEARCH */);
-	file_id.open(file_name, std::ios_base::binary);
-	if (file_id.fail()) {
+	// Was: OpenFile(build_scen_file_name(), &store_str, OF_READ /* | OF_SEARCH */);
+	std::ifstream file_id;
+	file_id.open(build_scen_file_name(), std::ios_base::binary);
+	if (file_id.fail())
+	{
 		outdoor_alert();
 		PostQuitMessage(0);
 	}
 
-	out_sec_num = scenario_out_width() * to_create_y + to_create_x;
-
-	len_to_jump = sizeof(scenario_data_type);
+	const short out_sec_num = scenario_out_width() * to_create_y + to_create_x;
+	long len_to_jump = sizeof(scenario_data_type);
 	len_to_jump += sizeof(scen_item_data_type);
-	for (i = 0; i < 300; i++)
+	for (short i = 0; i < 300; i++)
 		len_to_jump += (long)scenario.scen_str_len[i];
-	store = 0;
-	for (i = 0; i < out_sec_num; i++)
-		for (j = 0; j < 2; j++)
+
+	long store = 0;
+	for (short i = 0; i < out_sec_num; i++)
+		for (short j = 0; j < 2; j++)
 			store += (long)(scenario.out_data_size[i][j]);
 	len_to_jump += store;
 
-	if (!SetFPos(file_id, len_to_jump, std::ios_base::beg)) { FSClose(file_id); oops_error(32); }
+	if (!SetFPos(file_id, len_to_jump, std::ios_base::beg))
+	{
+		FSClose(file_id); oops_error(32);
+	}
 
-	if (mode == 0) {
+	bool success = false;
+	if (mode == 0)
+	{
 		success = file_read_type(file_id, outdoors[targ_x][targ_y]);
 		if (cur_scen_is_win != TRUE)
 		{
@@ -1013,25 +998,39 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 		}
 		if (!success) { FSClose(file_id); oops_error(33); }
 	}
-	else success = file_read_type(file_id, dummy_out);
+	else
+	{
+		success = file_read_type(file_id, dummy_out);
+	}
 
-	if (mode == 0) {
-		for (i = 0; i < 9; i++) {
+	if (mode == 0)
+	{
+		for (short i = 0; i < 9; i++)
+		{
 			file_read_string(file_id, (long)outdoors[targ_x][targ_y].strlens[i], data_store4.outdoor_text[targ_x][targ_y].out_strs[i]);
 		}
 	}
-	if (mode == 1) {
-		for (i = 0; i < 120; i++) {
+
+	if (mode == 1)
+	{
+		for (short i = 0; i < 120; i++)
+		{
 			const long len = (long)(dummy_out.strlens[i]);
-			if (i == extra) {
+			if (i == extra)
+			{
 				file_read_string(file_id, len, str);
 			}
-			else SetFPos(file_id, len, std::ios_base::cur);
+			else
+			{
+				SetFPos(file_id, len, std::ios_base::cur);
+			}
 		}
-
 	}
 
-	if (!FSClose(file_id)) { oops_error(33); }
+	if (!FSClose(file_id))
+	{
+		oops_error(33);
+	}
 }
 
 
@@ -1178,11 +1177,9 @@ Boolean load_scenario()
 	short i;
 	std::ifstream file_id;
 	Boolean file_ok = FALSE;
-	char file_name[256];
-	build_scen_file_name(file_name);
 
-	// Was: OpenFile(file_name, &store, OF_READ /* | OF_SEARCH */);
-	file_id.open(file_name, std::ios_base::binary);
+	// Was: OpenFile(build_scen_file_name(), &store, OF_READ /* | OF_SEARCH */);
+	file_id.open(build_scen_file_name(), std::ios_base::binary);
 	if (file_id.fail()) {
 		oops_error(10000);
 		SysBeep(2);	return FALSE;
@@ -1265,7 +1262,6 @@ void build_scen_headers()
 	short cur_entry = 0;
 	HWND listbox;
 	WORD count;
-	char filename[256], filename2[256];
 
 	for (i = 0; i < 25; i++)
 		scen_headers[i].flag1 = 0;
@@ -1277,11 +1273,13 @@ void build_scen_headers()
 
 	count = min(count, 20);
 
-	for (i = 0; i < count; i++) {
+	for (i = 0; i < count; i++)
+	{
+		char filename2[256];
 		SendMessage(listbox, LB_GETTEXT, i, reinterpret_cast<LPARAM>(filename2));
-		format_to_buf(filename, "BLADSCEN/{}", filename2);
 
-		if (load_scenario_header(filename, cur_entry) == TRUE) {
+		if (load_scenario_header(std::format("BLADSCEN/{}", filename2), cur_entry) == TRUE)
+		{
 			// now we need to store the file name, first stripping any path that occurs
 			// before it
 			strcpy(data_store2.scen_names[cur_entry], filename2);
@@ -1294,18 +1292,17 @@ void build_scen_headers()
 
 // This is only called at startup, when bringing headers of active scenarios.
 // This wipes out the scenario record, so be sure not to call it while in an active scenario.
-Boolean load_scenario_header(char* filename, short header_entry)
+Boolean load_scenario_header(std::string_view filename, short header_entry)
 {
-
 	short i;
-	std::ifstream file_id;
 	short store;
 	Boolean file_ok = FALSE;
 	char load_str[256];
 	Boolean mac_header = TRUE;
 
 	// Was: OpenFile(filename, &store_str, OF_READ /* | OF_SEARCH */);
-	file_id.open(filename, std::ios_base::binary);
+	std::ifstream file_id;
+	file_id.open(filename.data(), std::ios_base::binary);
 	if (file_id.fail()) {
 		ASB(filename);
 		return FALSE;
@@ -1365,7 +1362,7 @@ void load_spec_graphics()
 		DeleteObject(spec_scen_g);
 		spec_scen_g = NULL;
 	}
-	//build_scen_file_name(file_name);
+	//const std::string file_name{ build_scen_file_name() };
 	format_to_buf(file_name, "bladscen/{}", party.scen_name);
 	for (i = 0; i < 256; i++) {
 		if (file_name[i] == '.') {
@@ -1555,12 +1552,8 @@ void reg_alert()
 Boolean load_blades_data()
 {
 	std::ifstream file_id;
-	char file_name[256];
-
-	build_scen_ed_name(file_name);
-
-	// Was: OpenFile(file_name, &store, OF_READ /* | OF_SEARCH */);
-	file_id.open(file_name, std::ios_base::binary);
+	// Was: OpenFile(build_scen_file_name(), &store, OF_READ /* | OF_SEARCH */);
+	file_id.open(build_scen_file_name(), std::ios_base::binary);
 	if (file_id.fail()) {
 		return FALSE;
 	}

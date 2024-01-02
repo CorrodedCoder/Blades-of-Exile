@@ -20,18 +20,27 @@ extern unsigned char sfx[64][64];
 extern char terrain_blocked[256];
 extern short town_size[3];
 
-Boolean is_explored(short i,short j)
+bool is_explored(short i,short j)
 {
-	if (is_out())  {
+	if (is_out())
+	{
 		if ((i != boe_clamp(i,0,95)) || (j != boe_clamp(j,0,95)))
-      	return FALSE;
-		return (out_e[i][j] != 0) ? TRUE : FALSE;
-		}
-	if (c_town.explored[i][j] & 1) {
-		return TRUE;
-		}
-		else return FALSE;
+      		return false;
+		return (out_e[i][j] != 0) ? true : false;
+	}
+	if (c_town.explored[i][j] & 1)
+	{
+		return true;
+	}
+	else
+		return false;
 }
+
+bool is_not_explored(short i, short j)
+{
+	return !is_explored(i, j);
+}
+
 void make_explored(short i,short j)
 {
 	if (is_out())
@@ -46,52 +55,60 @@ void take_explored(short i,short j)
 	c_town.explored[i][j] = c_town.explored[i][j] & 254;
 }
 
-Boolean is_out()
+bool is_out(void)
 {
-	if ((overall_mode == 0) || (overall_mode == 35))
-		return TRUE;
-		else return FALSE;
-}
-Boolean is_town()
-{
-	if (((overall_mode > 0) && (overall_mode < 10)) || (overall_mode == 36))
-		return TRUE;
-		else return FALSE;
-}
-Boolean is_combat()
-{
-	if (((overall_mode >= 10) && (overall_mode < 20)) || (overall_mode == 37))
-		return TRUE;
-		else return FALSE;
+	return (overall_mode == 0) || (overall_mode == 35);
 }
 
-
-
-Boolean special(short i,short j)
-/**/{
-	if (((misc_i[i][j]) & 2) != 0)
-		return TRUE;
-		else return FALSE;
+bool is_not_out(void)
+{
+	return !is_out();
 }
+
+bool is_town(void)
+{
+	return ((overall_mode > 0) && (overall_mode < 10)) || (overall_mode == 36);
+}
+
+bool is_not_town(void)
+{
+	return !is_town();
+}
+
+bool is_combat(void)
+{
+	return ((overall_mode >= 10) && (overall_mode < 20)) || (overall_mode == 37);
+}
+
+bool is_not_combat(void)
+{
+	return !is_combat();
+}
+
+bool special(short i,short j)
+{
+	return ((misc_i[i][j]) & 2) != 0;
+}
+
 void flip_special(short i,short j)
-/**/{
+{
 	misc_i[i][j] = misc_i[i][j] ^ (char) (2);
 }
 void make_special(short i,short j)
-/**/{
+{
 	misc_i[i][j] =  misc_i[i][j] | (char) (2);
 }
 void take_special(short i,short j)
-/**/{
+{
 	misc_i[i][j] =  misc_i[i][j] & 253;
 }
 
-Boolean is_web(short i,short j)
-/**/{
-	return (misc_i[i][j] & 4) ? TRUE : FALSE;
+bool is_web(short i,short j)
+{
+	return misc_i[i][j] & 4;
 }
 void make_web(short i,short j)
-/**/{
+{
 	if (spot_impassable(i,j))
 		return;
 	if ((misc_i[i][j] & 224) || (c_town.explored[i][j] & 238))
@@ -100,49 +117,50 @@ void make_web(short i,short j)
 	web = TRUE;
 }
 void take_web(short i,short j)
-/**/{
+{
 	misc_i[i][j] = misc_i[i][j] & 251;
 }
 
-Boolean is_crate(short i,short j)
-/**/{
-	return (misc_i[i][j] & 8) ? TRUE : FALSE;
+bool is_crate(short i,short j)
+{
+	return misc_i[i][j] & 8;
 }
 void make_crate(short i,short j)
-/**/{
+{
 //	if (misc_i[i][j] & 240)
 //		return;
 	misc_i[i][j] = misc_i[i][j] | 8;
 	crate = TRUE;
 }
 void take_crate(short i,short j)
-/**/{
+{
 	misc_i[i][j] = misc_i[i][j] & 247;
 }
 
-Boolean is_barrel(short i,short j)
-/**/{
-	return (misc_i[i][j] & 16) ? TRUE : FALSE;
+bool is_barrel(short i,short j)
+{
+	return misc_i[i][j] & 16;
 }
 void make_barrel(short i,short j)
-/**/{
+{
 //	if (misc_i[i][j] & 234)
 //		return;
 	misc_i[i][j] = misc_i[i][j] | 16;
 	barrel = TRUE;
 }
 void take_barrel(short i,short j)
-/**/{
+{
 	misc_i[i][j] = misc_i[i][j] & 239;
 }
 
-Boolean is_fire_barrier(short i,short j)
-/**/{
-	return (misc_i[i][j] & 32) ? TRUE : FALSE;
+bool is_fire_barrier(short i,short j)
+{
+	return misc_i[i][j] & 32;
 }
+
 void make_fire_barrier(short i,short j)
-/**/{
-	if ((is_antimagic(i,j)) && (rand_short(0,3) < 3))
+{
+	if (is_antimagic(i,j) && (rand_short(0,3) < 3))
 		return;
 	if (misc_i[i][j] & 248)
 		return;
@@ -152,17 +170,18 @@ void make_fire_barrier(short i,short j)
 	fire_barrier = TRUE;
 }
 void take_fire_barrier(short i,short j)
-/**/{
+{
 	misc_i[i][j] = misc_i[i][j] & 223;
 }
 
-Boolean is_force_barrier(short i,short j)
-/**/{
-	return (misc_i[i][j] & 64) ? TRUE : FALSE;
+bool is_force_barrier(short i,short j)
+{
+	return misc_i[i][j] & 64;
 }
+
 void make_force_barrier(short i,short j)
-/**/{
-	if ((is_antimagic(i,j)) && (rand_short(0,2) < 2))
+{
+	if (is_antimagic(i,j) && (rand_short(0,2) < 2))
 		return;
 	if (misc_i[i][j] & 248)
 		return;
@@ -172,19 +191,20 @@ void make_force_barrier(short i,short j)
 	force_barrier = TRUE;
 }
 void take_force_barrier(short i,short j)
-/**/{
+{
 	misc_i[i][j] = misc_i[i][j] & 191;
 }
 
-Boolean is_quickfire(short i,short j)
-/**/{
-	return (misc_i[i][j] & 128) ? TRUE : FALSE;
+bool is_quickfire(short i,short j)
+{
+	return misc_i[i][j] & 128;
 }
+
 void make_quickfire(short i,short j)
 {
-	if ((is_antimagic(i,j)) && (rand_short(0,1) == 0))
+	if (is_antimagic(i,j) && (rand_short(0,1) == 0))
 		return;
-	if ((is_force_barrier(i,j)) || (is_fire_barrier(i,j)))
+	if (is_force_barrier(i,j) || is_fire_barrier(i,j))
 		return;
 	const auto& terrain{ scenario_ter_type(coord_to_ter(i, j)) };
 	if (terrain.blockage == 1)
@@ -197,16 +217,17 @@ void make_quickfire(short i,short j)
 	quickfire = TRUE;
 }
 void take_quickfire(short i,short j)
-/**/{
+{
 	misc_i[i][j] = misc_i[i][j] & 127;
 }
 
-Boolean is_force_wall(short i,short j)
-/**/{
-	return (c_town.explored[i][j] & 2) ? TRUE : FALSE;
+bool is_force_wall(short i,short j)
+{
+	return c_town.explored[i][j] & 2;
 }
+
 void make_force_wall(short i,short j)
-/**/{
+{
 	if (spot_impassable(i,j))
 		return;
 	if ((c_town.explored[i][j] & 74) || (misc_i[i][j] & 248))
@@ -217,17 +238,18 @@ void make_force_wall(short i,short j)
 	force_wall = TRUE;
 }
 void take_force_wall(short i,short j)
-/**/{
+{
 	c_town.explored[i][j] = c_town.explored[i][j] & 253;
 }
 
 
-Boolean is_fire_wall(short i,short j)
-/**/{
-	return (c_town.explored[i][j] & 4) ? TRUE : FALSE;
+bool is_fire_wall(short i,short j)
+{
+	return c_town.explored[i][j] & 4;
 }
+
 void make_fire_wall(short i,short j)
-/**/{
+{
 	if (spot_impassable(i,j))
 		return;
 	if ((c_town.explored[i][j] & 248) || (misc_i[i][j] & 254))
@@ -237,16 +259,17 @@ void make_fire_wall(short i,short j)
 	fire_wall = TRUE;
 }
 void take_fire_wall(short i,short j)
-/**/{
+{
 	c_town.explored[i][j] = c_town.explored[i][j] & 251;
 }
 
-Boolean is_antimagic(short i,short j)
-/**/{
-	return (c_town.explored[i][j] & 8) ? TRUE : FALSE;
+bool is_antimagic(short i,short j)
+{
+	return c_town.explored[i][j] & 8;
 }
+
 void make_antimagic(short i,short j)
-/**/{
+{
 	if (spot_impassable(i,j))
 		return;
 	if (misc_i[i][j] & 224)
@@ -256,17 +279,19 @@ void make_antimagic(short i,short j)
 	c_town.explored[i][j] = c_town.explored[i][j] | 8;
 	antimagic = TRUE;
 }
+
 void take_antimagic(short i,short j)
-/**/{
+{
 	c_town.explored[i][j] = c_town.explored[i][j] & 247;
 }
 
-Boolean is_scloud(short i,short j)
-/**/{
-	return (c_town.explored[i][j] & 16) ? TRUE : FALSE;
+bool is_scloud(short i,short j)
+{
+	return c_town.explored[i][j] & 16;
 }
+
 void make_scloud(short i,short j)
-/**/{
+{
 	if (spot_impassable(i,j))
 		return;
 		
@@ -275,17 +300,19 @@ void make_scloud(short i,short j)
 	c_town.explored[i][j] = c_town.explored[i][j] | 16;
 	scloud = TRUE;
 }
+
 void take_scloud(short i,short j)
-/**/{
+{
 	c_town.explored[i][j] = c_town.explored[i][j] & 239;
 }
 
-Boolean is_ice_wall(short i,short j)
-/**/{
-	return (c_town.explored[i][j] & 32) ? TRUE : FALSE;
+bool is_ice_wall(short i,short j)
+{
+	return c_town.explored[i][j] & 32;
 }
+
 void make_ice_wall(short i,short j)
-/**/{
+{
 	if (spot_impassable(i,j))
 		return;
 	if ((c_town.explored[i][j] & 74) || (misc_i[i][j] & 252))
@@ -295,18 +322,20 @@ void make_ice_wall(short i,short j)
 	c_town.explored[i][j] = c_town.explored[i][j] | 32;
 	ice_wall = TRUE;
 }
+
 void take_ice_wall(short i,short j)
-/**/{
+{
 	c_town.explored[i][j] = c_town.explored[i][j] & 223;
 }
 
 
-Boolean is_blade_wall(short i,short j)
-/**/{
-	return (c_town.explored[i][j] & 64) ? TRUE : FALSE;
+bool is_blade_wall(short i,short j)
+{
+	return c_town.explored[i][j] & 64;
 }
+
 void make_blade_wall(short i,short j)
-/**/{
+{
 	if (spot_impassable(i,j))
 		return;
 	if ((c_town.explored[i][j] & 8) || (misc_i[i][j] & 224))
@@ -315,16 +344,19 @@ void make_blade_wall(short i,short j)
 	c_town.explored[i][j] = c_town.explored[i][j] | 64;
 	blade_wall = TRUE;
 }
+
 void take_blade_wall(short i,short j)
-/**/{
+{
 	c_town.explored[i][j] = c_town.explored[i][j] & 191;
 }
-Boolean is_sleep_cloud(short i,short j)
-/**/{
-	return (c_town.explored[i][j] & 128) ? TRUE : FALSE;
+
+bool is_sleep_cloud(short i,short j)
+{
+	return c_town.explored[i][j] & 128;
 }
+
 void make_sleep_cloud(short i,short j)
-/**/{
+{
 	if (spot_impassable(i,j))
 		return;
 	if ((c_town.explored[i][j] & 8) || (misc_i[i][j] & 224))
@@ -333,44 +365,53 @@ void make_sleep_cloud(short i,short j)
 	c_town.explored[i][j] = c_town.explored[i][j] | 128;
 	sleep_field = TRUE;
 }
+
 void take_sleep_cloud(short i,short j)
-/**/{
+{
 	c_town.explored[i][j] = c_town.explored[i][j] & 127;
 }
 
 // START SFX
-Boolean is_small_blood(short i,short j)
+bool is_small_blood(short i,short j)
 {
-	return (sfx[i][j] & 1) ? TRUE : FALSE;
+	return sfx[i][j] & 1;
 }
-Boolean is_medium_blood(short i,short j)
+
+bool is_medium_blood(short i,short j)
 {
-	return (sfx[i][j] & 2) ? TRUE : FALSE;
+	return sfx[i][j] & 2;
 }
-Boolean is_large_blood(short i,short j)
+
+bool is_large_blood(short i,short j)
 {
-	return (sfx[i][j] & 4) ? TRUE : FALSE;
+	return sfx[i][j] & 4;
 }
-Boolean is_small_slime(short i,short j)
+
+bool is_small_slime(short i,short j)
 {
-	return (sfx[i][j] & 8) ? TRUE : FALSE;
+	return sfx[i][j] & 8;
 }
-Boolean is_big_slime(short i,short j)
+
+bool is_big_slime(short i,short j)
 {
-	return (sfx[i][j] & 16) ? TRUE : FALSE;
+	return sfx[i][j] & 16;
 }
-Boolean is_ash(short i,short j)
+
+bool is_ash(short i,short j)
 {
-	return (sfx[i][j] & 32) ? TRUE : FALSE;
+	return sfx[i][j] & 32;
 }
-Boolean is_bones(short i,short j)
+
+bool is_bones(short i,short j)
 {
-	return (sfx[i][j] & 64) ? TRUE : FALSE;
+	return sfx[i][j] & 64;
 }
-Boolean is_rubble(short i,short j)
+
+bool is_rubble(short i,short j)
 {
-	return (sfx[i][j] & 128) ? TRUE : FALSE;
+	return sfx[i][j] & 128;
 }
+
 void make_sfx(short i,short j, short type)
 {
 	unsigned char ter;
