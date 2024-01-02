@@ -27,7 +27,7 @@
 #include "itemdata.h"
 #include "dlogtool.h"
 #include "graphutl.h"
-#include "scenario.hpp"
+#include "scenario_ext.hpp"
 
 static std::array<RECT, 7> bottom_buttons;
 static std::array<RECT, 10> town_buttons;
@@ -502,7 +502,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 								add_string_to_buf("Rest: Not enough food.            ");
 								else if (nearest_monster() <= 3)
 								add_string_to_buf("Rest: Monster too close.            ");
-								else if ((scenario_ter_type(ter).special >= terrain_special::DoesFireDamage) && (scenario_ter_type(ter).special <= terrain_special::DiseasedLand))
+								else if ((scenario.ter_type(ter).special >= terrain_special::DoesFireDamage) && (scenario.ter_type(ter).special <= terrain_special::DiseasedLand))
 									add_string_to_buf("Rest: It's dangerous here.");////
 								else if (flying())
 									add_string_to_buf("Rest: Not while flying.           ");
@@ -805,7 +805,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 						else need_redraw = TRUE;					
 					
 					storage = out[party.p_loc.x][party.p_loc.y];
-					if (scenario_ter_type(storage).special == terrain_special::TownEntrance) {//// town entry
+					if (scenario.ter_type(storage).special == terrain_special::TownEntrance) {//// town entry
 
 						if (party.direction == 0) find_direction_from = 2;
 						else if (party.direction == 4) find_direction_from = 0;
@@ -2250,7 +2250,7 @@ void increase_age()
 	if (party.stuff_done[305][1] == 2) 
 		add_string_to_buf("You are starting to descend.");
 	if (party.stuff_done[305][1] == 1) {
-		if (scenario_ter_type(out[party.p_loc.x][party.p_loc.y]).blockage > 2) {
+		if (scenario.ter_type(out[party.p_loc.x][party.p_loc.y]).blockage > 2) {
 				add_string_to_buf("  You plummet to your deaths.                  ");
 				slay_party(status::Dead);
 				print_buf();
@@ -2458,7 +2458,7 @@ void handle_cave_lore()
 		return;
 	
 	ter = out[party.p_loc.x][party.p_loc.y];
-	pic = scenario_ter_type(ter).picture;
+	pic = scenario.ter_type(ter).picture;
 	for (i = 0; i < 6; i++)
 		if ( pc_has_cave_lore(adven[i]) && (rand_short(0,12) == 5)
 			&& (((pic >= 0) && (pic <= 1)) || ((pic >= 70) && (pic <= 76))) ) {
@@ -2676,12 +2676,12 @@ Boolean outd_move_party(location destination,Boolean forced)
 	// Check if party moves into new sector
 	if ((destination.x < 6) && (party.outdoor_corner.x > 0)) 
 			shift_universe_left();
-	if ((destination.x > 90) && (party.outdoor_corner.x < scenario_out_width() - 1))
+	if ((destination.x > 90) && (party.outdoor_corner.x < scenario.out_width() - 1))
 			shift_universe_right();
 	if ((destination.y < 6)  && (party.outdoor_corner.y > 0)) {
 			shift_universe_up();
 			}
-	else if ((destination.y > 90)  && (party.outdoor_corner.y < scenario_out_height() - 1))
+	else if ((destination.y > 90)  && (party.outdoor_corner.y < scenario.out_height() - 1))
 			shift_universe_down();      
 	// Now stop from going off the world's edge
 	real_dest.x = party.p_loc.x + real_dest.x; 
@@ -2690,8 +2690,8 @@ Boolean outd_move_party(location destination,Boolean forced)
 			ASB("You've reached the world's edge.");
 			return FALSE;
 			}
-	if (((real_dest.x > 92) && (party.outdoor_corner.x >= scenario_out_width() - 2)) ||
-		((real_dest.x > 44) && (party.outdoor_corner.x >= scenario_out_width() - 1))) {
+	if (((real_dest.x > 92) && (party.outdoor_corner.x >= scenario.out_width() - 2)) ||
+		((real_dest.x > 44) && (party.outdoor_corner.x >= scenario.out_width() - 1))) {
 			ASB("You've reached the world's edge.");
 			return FALSE;
 			}
@@ -2699,8 +2699,8 @@ Boolean outd_move_party(location destination,Boolean forced)
 			ASB("You've reached the world's edge.");
 			return FALSE;
 			}
-	else if (((real_dest.y > 92)  && (party.outdoor_corner.y >= scenario_out_height() - 2)) ||
-			((real_dest.y > 44)  && (party.outdoor_corner.y >= scenario_out_height() - 1))) {
+	else if (((real_dest.y > 92)  && (party.outdoor_corner.y >= scenario.out_height() - 2)) ||
+			((real_dest.y > 44)  && (party.outdoor_corner.y >= scenario.out_height() - 1))) {
 			ASB("You've reached the world's edge.");
 			return FALSE;
 			}
@@ -2716,7 +2716,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 	//		if (same_point(destination,party.out_c[i].m_loc) == TRUE)
 	//				party.out_c[i].exists = FALSE;
 
-	const auto& terrain{ scenario_ter_type(out[real_dest.x][real_dest.y]) };
+	const auto& terrain{ scenario.ter_type(out[real_dest.x][real_dest.y]) };
 	if (party.in_boat >= 0) {
 		if (!outd_is_blocked(real_dest) //&& (outd_is_special(real_dest) == FALSE)
 		// not in towns
@@ -2813,7 +2813,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 		
 		if (party.in_boat >= 0) {
 				// Waterfall!!!
-				while (scenario_ter_type(out[party.p_loc.x][party.p_loc.y + 1]).special == terrain_special::Waterfall) {
+				while (scenario.ter_type(out[party.p_loc.x][party.p_loc.y + 1]).special == terrain_special::Waterfall) {
 					add_string_to_buf("  Waterfall!                     ");
 					party.p_loc.y += 2;
 					party.loc_in_sec.y += 2;
@@ -2872,8 +2872,8 @@ Boolean town_move_party(location destination,short forced)
 	
 	// remove if not registered
 	/*
-	if ((scenario_out_width() != 3) || (scenario_out_height() != 3) ||
-		(scenario_num_towns() != 21) || (scenario_town_size(3) != 1) || (scenario_town_size(9) != 0)) {
+	if ((scenario.out_width() != 3) || (scenario.out_height() != 3) ||
+		(scenario.num_towns() != 21) || (scenario.town_size(3) != 1) || (scenario.town_size(9) != 0)) {
 			ASB("Blades of Exile must be registered");
 			ASB("before you can play scenarios besides");
 			ASB("the unmodified Valley of Dying things.");
@@ -2890,7 +2890,7 @@ Boolean town_move_party(location destination,short forced)
 	if (spec_num == 50)
 		forced = TRUE;
 
-	const auto& terrain{ scenario_ter_type(t_d.terrain[destination.x][destination.y]) };
+	const auto& terrain{ scenario.ter_type(t_d.terrain[destination.x][destination.y]) };
 	if (keep_going == TRUE) {
 		if (party.in_boat >= 0) {
 				if (is_not_blocked(destination) && is_not_special(destination)
@@ -3027,7 +3027,7 @@ void setup_outdoors(location where)
 
 short get_outdoor_num()
 {
-	return (scenario_out_width() * (party.outdoor_corner.y + party.i_w_c.y) + party.outdoor_corner.x + party.i_w_c.x);
+	return (scenario.out_width() * (party.outdoor_corner.y + party.i_w_c.y) + party.outdoor_corner.x + party.i_w_c.x);
 }
 
 short count_walls(location loc)
@@ -3052,5 +3052,5 @@ short count_walls(location loc)
 
 bool is_sign(unsigned char ter)
 {
-	return scenario_ter_type(ter).special == terrain_special::IsASign;
+	return scenario.ter_type(ter).special == terrain_special::IsASign;
 }

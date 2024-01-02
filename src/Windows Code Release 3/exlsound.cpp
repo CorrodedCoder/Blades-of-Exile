@@ -8,7 +8,7 @@
 #include "exlsound.h"
 #include "text.h"
 #include "fields.h"
-#include "scenario.hpp"
+#include "scenario_ext.hpp"
 
 #define	NUM_SOUNDS	100
 
@@ -337,7 +337,7 @@ void sound_pause(long len) {
 }
 void move_sound(unsigned char ter,short step)
 {
-	const auto& terrain = scenario_ter_type(ter);
+	const auto& terrain = scenario.ter_type(ter);
 
 	if ((monsters_going == FALSE) && (overall_mode < 10) && (party.in_boat >= 0)) {
 		if (terrain.special == terrain_special::TownEntrance)

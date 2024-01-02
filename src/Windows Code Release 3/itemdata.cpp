@@ -1,5 +1,5 @@
 #include "itemdata.h"
-#include "scenario.hpp"
+#include "scenario_ext.hpp"
 #include "boe/utility.hpp"
 
 static const short loot_min[5] = {0,0,5,50,400};

@@ -1017,8 +1017,8 @@ void adventure_notes_event_filter (short item_hit)
 			switch (party.special_notes_str[i][0] / 1000) {
 				case 0: strcpy(place_str,data_store->scen_strs[party.special_notes_str[i][0] % 1000]); break;
 				case 1:
-					 load_outdoors(party.special_notes_str[i][1] % scenario_out_width(),
-					 	party.special_notes_str[i][1] / scenario_out_width(), 
+					 load_outdoors(party.special_notes_str[i][1] % scenario.out_width(),
+					 	party.special_notes_str[i][1] / scenario.out_width(), 
 					 0,0,1,party.special_notes_str[i][0] % 1000,(char *)place_str);
 					break;
 				case 2: load_town(party.special_notes_str[i][1],2,party.special_notes_str[i][0],(char *)place_str); break;
@@ -1035,8 +1035,8 @@ void adventure_notes_event_filter (short item_hit)
 			switch (party.special_notes_str[i][0] / 1000) {
 				case 0: strcpy(place_str,data_store->scen_strs[party.special_notes_str[i][0] % 1000]); break;
 				case 1:
-					 load_outdoors(party.special_notes_str[i][1] % scenario_out_width(),
-					 	party.special_notes_str[i][1] / scenario_out_width(), 
+					 load_outdoors(party.special_notes_str[i][1] % scenario.out_width(),
+					 	party.special_notes_str[i][1] / scenario.out_width(), 
 					 0,0,1,party.special_notes_str[i][0] % 1000,(char *)place_str);
 					break;
 				case 2: load_town(party.special_notes_str[i][1],2,party.special_notes_str[i][0] % 1000,(char *)place_str); break;
@@ -1080,8 +1080,8 @@ void adventure_notes()
 			switch (party.special_notes_str[i][0] / 1000) {
 				case 0: strcpy(place_str,data_store->scen_strs[party.special_notes_str[i][0] % 1000]); break;
 				case 1:
-					 load_outdoors(party.special_notes_str[i][1] % scenario_out_width(),
-					 	party.special_notes_str[i][1] / scenario_out_width(), 
+					 load_outdoors(party.special_notes_str[i][1] % scenario.out_width(),
+					 	party.special_notes_str[i][1] / scenario.out_width(), 
 					 0,0,1,party.special_notes_str[i][0] % 1000,(char *)place_str);
 					break;
 				case 2: load_town(party.special_notes_str[i][1],2,party.special_notes_str[i][0] % 1000,(char *)place_str); break;
@@ -1354,7 +1354,7 @@ void put_spec_item_info (short which_i)
 	
 	display_strings(data_store->scen_strs[60 + 1 + which_i * 2],"",
 	-1,-1,-1,-1,
-	data_store->scen_strs[60 + which_i * 2],57,1600 + scenario_intro_pic(),0);
+	data_store->scen_strs[60 + which_i * 2],57,1600 + scenario.intro_pic(),0);
 	//get_str(item_name,6,1 + which_i * 2);
 	//display_strings(6,2 + which_i * 2,0,0,
 	//(char *)item_name,-1,702,0);

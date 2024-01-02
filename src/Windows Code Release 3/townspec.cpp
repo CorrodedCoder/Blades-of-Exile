@@ -11,7 +11,7 @@
 #include "townspec.h"
 #include "exlsound.h"
 #include "boe/hacks.hpp"
-#include "scenario.hpp"
+#include "scenario_ext.hpp"
 
 extern party_record_type party;
 extern current_town_type c_town;
@@ -338,5 +338,5 @@ short handle_lever(location w)
 
 void switch_lever(location w)
 {
-	alter_space(w.x,w.y, scenario_ter_type(t_d.terrain[w.x][w.y]).trans_to_what);
+	alter_space(w.x,w.y, scenario.ter_type(t_d.terrain[w.x][w.y]).trans_to_what);
 }

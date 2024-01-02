@@ -18,7 +18,7 @@
 #include "graphutl_helpers.hpp"
 #include "boe/hacks.hpp"
 #include "boe/item.hpp"
-#include "scenario.hpp"
+#include "scenario_ext.hpp"
 
 static const std::array m_mage_sp{"Spark","Minor Haste","Strength","Flame Cloud","Flame",
 						"Minor Poison","Slow","Dumbfound","Stinking Cloud","Summon Beast",
@@ -398,7 +398,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 				win_draw_string(hdc,item_buttons[i][0], data_store5.scen_strs[60 + spec_item_array[i_num] * 2],0,10);
 				SelectObject(hdc,store_bmp);
 				place_item_button(3,i,4,0);
-				if ((scenario_special_item(spec_item_array[i_num]) % 10 == 1) && (is_not_combat()))
+				if ((scenario.special_item(spec_item_array[i_num]) % 10 == 1) && (is_not_combat()))
 				{
 					place_item_button(0, i, 3, 0);
 				}

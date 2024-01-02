@@ -11,7 +11,7 @@
 #include "tfileio.h"
 #include "tactions.h"
 #include "edsound.h"
-#include "../scenario.hpp"
+#include "../scenario_ext.hpp"
 #include "boe/compatibility.hpp"
 
 extern short cen_x, cen_y, overall_mode,cur_town;
@@ -23,7 +23,7 @@ extern short town_type;  // 0 - big 1 - ave 2 - small
 extern short max_dim[3],mode_count;
 extern unsigned char template_terrain[64][64];
 
-extern scenario_data_type scenario;
+extern scenario_data_type scenariodata;
 extern special_node_type null_spec_node;
 extern talking_node_type null_talk_node;
 extern char scen_strs[160][256];
@@ -847,56 +847,56 @@ void init_scenario()
 	item_storage_shortcut_type null_item_s ={-1,{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1},{0,0,0,0,0,0,0,0,0,0},0};
 	short j,item_to_hide[13] = {214,233,270,271,280,281,286,290,291,297,304,311,348};
 	
-	scenario.ver[0] = 1;
-	scenario.ver[1] = 0;
-	scenario.ver[2] = 0;
-	scenario.min_run_ver = 1;
-	scenario.prog_make_ver[0] = 1;
-	scenario.prog_make_ver[1] = 0;
-	scenario.prog_make_ver[2] = 0;
-	scenario.num_towns = 1;
-	scenario.out_width = 1;
-	scenario.out_height = 1;
-	scenario.difficulty = 0;
-	scenario.intro_pic = 0;
-	scenario.default_ground = 1;
+	scenariodata.ver[0] = 1;
+	scenariodata.ver[1] = 0;
+	scenariodata.ver[2] = 0;
+	scenariodata.min_run_ver = 1;
+	scenariodata.prog_make_ver[0] = 1;
+	scenariodata.prog_make_ver[1] = 0;
+	scenariodata.prog_make_ver[2] = 0;
+	scenariodata.num_towns = 1;
+	scenariodata.out_width = 1;
+	scenariodata.out_height = 1;
+	scenariodata.difficulty = 0;
+	scenariodata.intro_pic = 0;
+	scenariodata.default_ground = 1;
 	for (i = 0; i < 200; i++) {
-		scenario.town_size[i] = 1;
-		scenario.town_hidden[i] = 0;
-		scenario.town_data_size[i][0] = 0;
-		scenario.town_data_size[i][1] = 0;
-		scenario.town_data_size[i][2] = 0;
-		scenario.town_data_size[i][3] = 0;
-		scenario.town_data_size[i][4] = 0;
+		scenariodata.town_size[i] = 1;
+		scenariodata.town_hidden[i] = 0;
+		scenariodata.town_data_size[i][0] = 0;
+		scenariodata.town_data_size[i][1] = 0;
+		scenariodata.town_data_size[i][2] = 0;
+		scenariodata.town_data_size[i][3] = 0;
+		scenariodata.town_data_size[i][4] = 0;
 		}
-	scenario.intro_mess_len = 0;
-	scenario.where_start.x = 24;
-	scenario.where_start.y = 24;
-	scenario.out_sec_start.x = 0;
-	scenario.out_sec_start.y = 0;
-	scenario.out_start = scenario.where_start;
-	scenario.which_town_start = 0;
+	scenariodata.intro_mess_len = 0;
+	scenariodata.where_start.x = 24;
+	scenariodata.where_start.y = 24;
+	scenariodata.out_sec_start.x = 0;
+	scenariodata.out_sec_start.y = 0;
+	scenariodata.out_start = scenariodata.where_start;
+	scenariodata.which_town_start = 0;
 	for (i = 0; i < 10; i++) {
-		scenario.town_to_add_to[i] = -1;
-		scenario.flag_to_add_to_town[i][0] = 0;
-		scenario.flag_to_add_to_town[i][1] = 0;
+		scenariodata.town_to_add_to[i] = -1;
+		scenariodata.flag_to_add_to_town[i][0] = 0;
+		scenariodata.flag_to_add_to_town[i][1] = 0;
 		}
 	for (i = 0; i < 100; i++) {
-		scenario.out_data_size[i][0] = 0;
-		scenario.out_data_size[i][1] = 0;
+		scenariodata.out_data_size[i][0] = 0;
+		scenariodata.out_data_size[i][1] = 0;
 		}
 	for (i = 0; i < 3; i++) {
-		scenario.store_item_rects[i] = dummy_rect;
-		scenario.store_item_towns[i] = -1;
+		scenariodata.store_item_rects[i] = dummy_rect;
+		scenariodata.store_item_towns[i] = -1;
 		}
 	for (i = 0; i < 50; i++) {
-		scenario.special_items[i] = 0;
-		scenario.special_item_special[i] = -1;
+		scenariodata.special_items[i] = 0;
+		scenariodata.special_item_special[i] = -1;
 		}
-	scenario.rating = 0;
-	scenario.uses_custom_graphics = 0;
+	scenariodata.rating = 0;
+	scenariodata.uses_custom_graphics = 0;
 	for (i = 0; i < 256; i++) {
-		scenario.scen_monsters[i] = return_monster_template(i);
+		scenariodata.scen_monsters[i] = return_monster_template(i);
 		get_str(temp_str,2,i);
 		if ((i > 187) || (i == 0))
 			format_to_buf(scen_item_list.monst_names[i], "Unused");
@@ -906,28 +906,28 @@ void init_scenario()
 			format_to_buf(scen_item_list.monst_names[i], "Empty");
 		}
 	for (i = 0; i < 30; i++) {
-		scenario.scen_boats[i] = null_boat;
-		scenario.scen_horses[i] = null_horse;		
+		scenariodata.scen_boats[i] = null_boat;
+		scenariodata.scen_horses[i] = null_horse;		
 		}
 	for (i = 0; i < 256; i++) {
-		scenario.ter_types[i].picture = ter_pics[i];
-		scenario.ter_types[i].blockage = ter_block[i];
-		scenario.ter_types[i].special = ter_traits[i];
+		scenariodata.ter_types[i].picture = ter_pics[i];
+		scenariodata.ter_types[i].blockage = ter_block[i];
+		scenariodata.ter_types[i].special = ter_traits[i];
 		get_str(temp_str,1,i + 1);
 		format_to_buf(scen_item_list.ter_names[i], "{}", temp_str);
 		
-		scenario.scen_specials[i] = null_spec_node;
+		scenariodata.scen_specials[i] = null_spec_node;
 		}
 	for (i = 0; i < 20; i++) {
-		scenario.scenario_timer_times[i] = 0;
-		scenario.scenario_timer_specs[i] = -1;
+		scenariodata.scenario_timer_times[i] = 0;
+		scenariodata.scenario_timer_specs[i] = -1;
 		}
 	for (i = 0; i < 10; i++) {
-		scenario.storage_shortcuts[i] = null_item_s;
+		scenariodata.storage_shortcuts[i] = null_item_s;
 		}
-	scenario.last_out_edited.x = 0;
-	scenario.last_out_edited.y = 0;
-	scenario.last_town_edited = 0;
+	scenariodata.last_out_edited.x = 0;
+	scenariodata.last_out_edited.y = 0;
+	scenariodata.last_town_edited = 0;
 	for (i = 0; i < 400; i++) {
 		scen_item_list.scen_items[i].variety = item_variety::None;
 		// =
@@ -941,11 +941,11 @@ void init_scenario()
 		get_str(temp_str,35,i + 1);
 		if (i < 160) {
 			format_to_buf(scen_strs[i], "{}", temp_str);
-			scenario.scen_str_len[i] = strlen(scen_strs[i]);
+			scenariodata.scen_str_len[i] = strlen(scen_strs[i]);
 			}
 			else {
 				format_to_buf(scen_strs2[i - 160], "{}", temp_str);
-				scenario.scen_str_len[i] = strlen(scen_strs[i - 160]);
+				scenariodata.scen_str_len[i] = strlen(scen_strs[i - 160]);
 				}
 		}
 }
@@ -1036,7 +1036,7 @@ Boolean save_ter_info()
 	str[29] = 0;
 	format_to_buf(scen_item_list.ter_names[store_which_ter],"{}",str);
 
-	scenario.ter_types[store_which_ter] = store_ter;
+	scenariodata.ter_types[store_which_ter] = store_ter;
 	return TRUE;
 }
 
@@ -1055,14 +1055,14 @@ void edit_ter_type_event_filter (short item_hit)
 			if (save_ter_info() == FALSE) break;
 			store_which_ter--;
 			if (store_which_ter < 0) store_which_ter = 255;
-			store_ter = scenario_ter_type(store_which_ter);
+			store_ter = scenario.ter_type(store_which_ter);
 			put_ter_info_in_dlog();
 			break;
 		case 11:
 			if (save_ter_info() == FALSE) break;
 			store_which_ter++;
 			if (store_which_ter > 255) store_which_ter = 0;
-			store_ter = scenario_ter_type(store_which_ter);
+			store_ter = scenario.ter_type(store_which_ter);
 			put_ter_info_in_dlog();
 			break;
 		
@@ -1111,7 +1111,7 @@ short edit_ter_type(short which_ter)
 	char temp_str[256];
 	
 	store_which_ter = which_ter;
-	store_ter = scenario_ter_type(which_ter);
+	store_ter = scenario.ter_type(which_ter);
 	//make_cursor_sword();
 	
 	cd_create_dialog_parent_num(813,0);
@@ -1250,7 +1250,7 @@ void edit_monst_type_event_filter (short item_hit)
 			dialog_not_toast = FALSE; break;	
 		case 19:
 			if (save_monst_info() == TRUE) {
-				scenario.scen_monsters[store_which_monst] = store_monst;
+				scenariodata.scen_monsters[store_which_monst] = store_monst;
 				dialog_not_toast = FALSE; 
 				}
 			break;
@@ -1263,18 +1263,18 @@ void edit_monst_type_event_filter (short item_hit)
 			break;
 		case 21:
 			if (save_monst_info() == FALSE) break;
-			scenario.scen_monsters[store_which_monst] = store_monst;
+			scenariodata.scen_monsters[store_which_monst] = store_monst;
 			store_which_monst--;
 			if (store_which_monst < 1) store_which_monst = 255;
-			store_monst = scenario.scen_monsters[store_which_monst];
+			store_monst = scenariodata.scen_monsters[store_which_monst];
 			put_monst_info_in_dlog();
 			break;
 		case 22:
 			if (save_monst_info() == FALSE) break;
-			scenario.scen_monsters[store_which_monst] = store_monst;
+			scenariodata.scen_monsters[store_which_monst] = store_monst;
 			store_which_monst++;
 			if (store_which_monst > 255) store_which_monst = 1;
-			store_monst = scenario.scen_monsters[store_which_monst];
+			store_monst = scenariodata.scen_monsters[store_which_monst];
 			put_monst_info_in_dlog();
 			break;
 		case 24: // picture
@@ -1336,7 +1336,7 @@ short edit_monst_type(short which_monst)
 	short i;
 	
 	store_which_monst = which_monst;
-	store_monst = scenario.scen_monsters[which_monst];
+	store_monst = scenariodata.scen_monsters[which_monst];
 	//make_cursor_sword();
 	
 	cd_create_dialog_parent_num(814,0);
@@ -1830,10 +1830,10 @@ void put_spec_item_in_dlog()
 	cdsin(806,19,store_which_spec_item);
 	CDST(806,2,scen_strs[60 + store_which_spec_item * 2]);
 	CDST(806,3,scen_strs[60 + store_which_spec_item * 2 + 1]);
-	CDSN(806,4, scenario.special_item_special[store_which_spec_item]);
-	if (scenario.special_items[store_which_spec_item] >= 10)
+	CDSN(806,4, scenariodata.special_item_special[store_which_spec_item]);
+	if (scenariodata.special_items[store_which_spec_item] >= 10)
 		cd_set_led(806,15,1); else cd_set_led(806,15,0);
-	if (scenario.special_items[store_which_spec_item] % 10 > 0)
+	if (scenariodata.special_items[store_which_spec_item] % 10 > 0)
 		cd_set_led(806,17,1); else cd_set_led(806,17,0);
 }
 
@@ -1846,14 +1846,14 @@ Boolean save_spec_item()
 	format_to_buf(scen_strs[60 + store_which_spec_item * 2 + 0],"{}",str);
 	CDGT(806,3,scen_strs[60 + store_which_spec_item * 2 + 1]);
 	spec_item_spec = CDGN(806,4);
-	if (cre(scenario.special_item_special[store_which_spec_item],
+	if (cre(scenariodata.special_item_special[store_which_spec_item],
 		-1,255,"Scenario special node called must be from 0 to 255 (or -1 for no special).","",806) > 0) return FALSE;
-	scenario.special_item_special[store_which_spec_item] = spec_item_spec;
-	scenario.special_items[store_which_spec_item] = 0;
+	scenariodata.special_item_special[store_which_spec_item] = spec_item_spec;
+	scenariodata.special_items[store_which_spec_item] = 0;
 	if (cd_get_led(806,15) == 1)
-		scenario.special_items[store_which_spec_item] += 10;
+		scenariodata.special_items[store_which_spec_item] += 10;
 	if (cd_get_led(806,17) == 1)
-		scenario.special_items[store_which_spec_item] += 1;
+		scenariodata.special_items[store_which_spec_item] += 1;
 	return TRUE;
 }
 
@@ -1873,14 +1873,14 @@ void edit_spec_item_event_filter (short spec_item_hit)
 			if (save_spec_item() == FALSE) break;
 			store_which_spec_item--;
 			if (store_which_spec_item < 0) store_which_spec_item = 49;
-			spec_item_spec = scenario.special_item_special[store_which_spec_item];
+			spec_item_spec = scenariodata.special_item_special[store_which_spec_item];
 			put_spec_item_in_dlog();
 			break;
 		case 21:
 			if (save_spec_item() == FALSE) break;
 			store_which_spec_item++;
 			if (store_which_spec_item > 49) store_which_spec_item = 0;
-			spec_item_spec = scenario.special_item_special[store_which_spec_item];
+			spec_item_spec = scenariodata.special_item_special[store_which_spec_item];
 			put_spec_item_in_dlog();
 			break;
 		case 13: //choose edit
@@ -1897,7 +1897,7 @@ void edit_spec_item_event_filter (short spec_item_hit)
 				CDSN(806,4,spec);
 				}	
 			edit_spec_enc(spec,0,806);
-			if ((spec >= 0) && (spec < 256) && (scenario.scen_specials[spec].pic < 0))
+			if ((spec >= 0) && (spec < 256) && (scenariodata.scen_specials[spec].pic < 0))
 				CDSN(806,4,-1);
 			if (save_spec_item() == FALSE)
 				 break; 
@@ -1915,7 +1915,7 @@ void edit_spec_item(short which_item)
 {
 	//store_which_spec_item = which_spec_item;
 	store_which_spec_item = which_item;
-	spec_item_spec = scenario.special_item_special[store_which_spec_item];
+	spec_item_spec = scenariodata.special_item_special[store_which_spec_item];
 	
 	cd_create_dialog_parent_num(806,0);
 	
@@ -1935,11 +1935,11 @@ void put_save_rects_in_dlog()
 	short i;
 	
 	for (i = 0; i < 3; i++) {
-		 CDSN(807,3 + 5 * i, scenario.store_item_rects[i].top);
-		 CDSN(807,4 + 5 * i, scenario.store_item_rects[i].left);
-		 CDSN(807,5 + 5 * i, scenario.store_item_rects[i].bottom);
-		 CDSN(807,6 + 5 * i, scenario.store_item_rects[i].right);
-		 CDSN(807,2 + 5 * i, scenario.store_item_towns[i]);
+		 CDSN(807,3 + 5 * i, scenariodata.store_item_rects[i].top);
+		 CDSN(807,4 + 5 * i, scenariodata.store_item_rects[i].left);
+		 CDSN(807,5 + 5 * i, scenariodata.store_item_rects[i].bottom);
+		 CDSN(807,6 + 5 * i, scenariodata.store_item_rects[i].right);
+		 CDSN(807,2 + 5 * i, scenariodata.store_item_towns[i]);
 
 		}
 
@@ -1950,24 +1950,24 @@ Boolean save_save_rects()
 	short i;
 	
 	for (i = 0; i < 3; i++) {
-		scenario.store_item_rects[i].top = CDGN(807,3 + 5 * i);
-		scenario.store_item_rects[i].left = CDGN(807,4 + 5 * i);
-		scenario.store_item_rects[i].bottom = CDGN(807,5 + 5 * i);
-		scenario.store_item_rects[i].right = CDGN(807,6 + 5 * i);
-		scenario.store_item_towns[i] = CDGN(807,2 + 5 * i);
-		if ((scenario.store_item_towns[i] < -1) || (scenario.store_item_towns[i] >= 200)) {
+		scenariodata.store_item_rects[i].top = CDGN(807,3 + 5 * i);
+		scenariodata.store_item_rects[i].left = CDGN(807,4 + 5 * i);
+		scenariodata.store_item_rects[i].bottom = CDGN(807,5 + 5 * i);
+		scenariodata.store_item_rects[i].right = CDGN(807,6 + 5 * i);
+		scenariodata.store_item_towns[i] = CDGN(807,2 + 5 * i);
+		if ((scenariodata.store_item_towns[i] < -1) || (scenariodata.store_item_towns[i] >= 200)) {
 			give_error("Towns must be in 0 to 200 range (or -1 for no save items rectangle).","",807);
 			return FALSE;
 			}
 		}
-	if (((scenario.store_item_towns[0] == scenario.store_item_towns[1]) &&
-		(scenario.store_item_towns[0] >= 0) && (scenario.store_item_towns[1] >= 0))
+	if (((scenariodata.store_item_towns[0] == scenariodata.store_item_towns[1]) &&
+		(scenariodata.store_item_towns[0] >= 0) && (scenariodata.store_item_towns[1] >= 0))
 		||
-		((scenario.store_item_towns[2] == scenario.store_item_towns[1]) &&
-		(scenario.store_item_towns[2] >= 0) && (scenario.store_item_towns[1] >= 0))
+		((scenariodata.store_item_towns[2] == scenariodata.store_item_towns[1]) &&
+		(scenariodata.store_item_towns[2] >= 0) && (scenariodata.store_item_towns[1] >= 0))
 		||
-		((scenario.store_item_towns[2] == scenario.store_item_towns[0]) &&
-		(scenario.store_item_towns[2] >= 0) && (scenario.store_item_towns[0] >= 0))
+		((scenariodata.store_item_towns[2] == scenariodata.store_item_towns[0]) &&
+		(scenariodata.store_item_towns[2] >= 0) && (scenariodata.store_item_towns[0] >= 0))
 		) {
 			give_error("The three towns towns with saved item rectangles must be different.","",807);
 			return FALSE;		
@@ -2006,16 +2006,16 @@ Boolean save_horses()
 	short i;
 	
 	for (i = 0; i < 6; i++) {
-		scenario.scen_horses[6 * store_horse_page + i].which_town = CDGN(808,2 + i);
-		if (cre(scenario.scen_horses[6 * store_horse_page + i].which_town,
+		scenariodata.scen_horses[6 * store_horse_page + i].which_town = CDGN(808,2 + i);
+		if (cre(scenariodata.scen_horses[6 * store_horse_page + i].which_town,
 			-1,199,"Town number must be from 0 to 199 (or -1 for horse to not exist).","",808) == TRUE) return FALSE;
-		scenario.scen_horses[6 * store_horse_page + i].horse_loc.x = CDGN(808,8 + i);
-		if (cre(scenario.scen_horses[6 * store_horse_page + i].horse_loc.x,
+		scenariodata.scen_horses[6 * store_horse_page + i].horse_loc.x = CDGN(808,8 + i);
+		if (cre(scenariodata.scen_horses[6 * store_horse_page + i].horse_loc.x,
 			0,63,"Horse location coordinates must be from 0 to 63.","",808) == TRUE) return FALSE;
-		scenario.scen_horses[6 * store_horse_page + i].horse_loc.y = CDGN(808,14 + i);
-		if (cre(scenario.scen_horses[6 * store_horse_page + i].horse_loc.y,
+		scenariodata.scen_horses[6 * store_horse_page + i].horse_loc.y = CDGN(808,14 + i);
+		if (cre(scenariodata.scen_horses[6 * store_horse_page + i].horse_loc.y,
 			0,63,"Horse location coordinates must be from 0 to 63.","",808) == TRUE) return FALSE;
-		scenario.scen_horses[6 * store_horse_page + i].property = cd_get_led(808,43 + i);
+		scenariodata.scen_horses[6 * store_horse_page + i].property = cd_get_led(808,43 + i);
 		}
 	return TRUE;
 }
@@ -2026,10 +2026,10 @@ void put_horses_in_dlog()
 	
 	for (i = 0; i < 6; i++) {
 		cdsin(808,23 + i,6 * store_horse_page + i);
-		CDSN(808,2 + i, scenario.scen_horses[6 * store_horse_page + i].which_town);
-		CDSN(808,8 + i, scenario.scen_horses[6 * store_horse_page + i].horse_loc.x);
-		CDSN(808,14 + i, scenario.scen_horses[6 * store_horse_page + i].horse_loc.y);
-		cd_set_led(808,43 + i, scenario.scen_horses[6 * store_horse_page + i].property);
+		CDSN(808,2 + i, scenariodata.scen_horses[6 * store_horse_page + i].which_town);
+		CDSN(808,8 + i, scenariodata.scen_horses[6 * store_horse_page + i].horse_loc.x);
+		CDSN(808,14 + i, scenariodata.scen_horses[6 * store_horse_page + i].horse_loc.y);
+		cd_set_led(808,43 + i, scenariodata.scen_horses[6 * store_horse_page + i].property);
 		}
 
 }
@@ -2082,16 +2082,16 @@ static Boolean save_boats()
 	short i;
 	
 	for (i = 0; i < 6; i++) {
-		scenario.scen_boats[6 * store_boat_page + i].which_town = CDGN(809,2 + i);
-		if (cre(scenario.scen_boats[6 * store_boat_page + i].which_town,
+		scenariodata.scen_boats[6 * store_boat_page + i].which_town = CDGN(809,2 + i);
+		if (cre(scenariodata.scen_boats[6 * store_boat_page + i].which_town,
 			-1,199,"Town number must be from 0 to 199 (or -1 for boat to not exist).","",809) == TRUE) return FALSE;
-		scenario.scen_boats[6 * store_boat_page + i].boat_loc.x = CDGN(809,8 + i);
-		if (cre(scenario.scen_boats[6 * store_boat_page + i].boat_loc.x,
+		scenariodata.scen_boats[6 * store_boat_page + i].boat_loc.x = CDGN(809,8 + i);
+		if (cre(scenariodata.scen_boats[6 * store_boat_page + i].boat_loc.x,
 			0,63,"boat location coordinates must be from 0 to 63.","",809) == TRUE) return FALSE;
-		scenario.scen_boats[6 * store_boat_page + i].boat_loc.y = CDGN(809,14 + i);
-		if (cre(scenario.scen_boats[6 * store_boat_page + i].boat_loc.y,
+		scenariodata.scen_boats[6 * store_boat_page + i].boat_loc.y = CDGN(809,14 + i);
+		if (cre(scenariodata.scen_boats[6 * store_boat_page + i].boat_loc.y,
 			0,63,"boat location coordinates must be from 0 to 63.","",809) == TRUE) return FALSE;
-		scenario.scen_boats[6 * store_boat_page + i].property = cd_get_led(809,43 + i);
+		scenariodata.scen_boats[6 * store_boat_page + i].property = cd_get_led(809,43 + i);
 		}
 	return TRUE;
 }
@@ -2102,10 +2102,10 @@ static void put_boats_in_dlog()
 	
 	for (i = 0; i < 6; i++) {
 		cdsin(809,24 + i,6 * store_boat_page + i);
-		CDSN(809,2 + i, scenario.scen_boats[6 * store_boat_page + i].which_town);
-		CDSN(809,8 + i, scenario.scen_boats[6 * store_boat_page + i].boat_loc.x);
-		CDSN(809,14 + i, scenario.scen_boats[6 * store_boat_page + i].boat_loc.y);
-		cd_set_led(809,43 + i, scenario.scen_boats[6 * store_boat_page + i].property);
+		CDSN(809,2 + i, scenariodata.scen_boats[6 * store_boat_page + i].which_town);
+		CDSN(809,8 + i, scenariodata.scen_boats[6 * store_boat_page + i].boat_loc.x);
+		CDSN(809,14 + i, scenariodata.scen_boats[6 * store_boat_page + i].boat_loc.y);
+		cd_set_led(809,43 + i, scenariodata.scen_boats[6 * store_boat_page + i].property);
 		}
 
 }
@@ -2158,14 +2158,14 @@ Boolean save_add_town()
 	short i;
 	
 	for (i = 0; i < 10; i++) {
-		scenario.town_to_add_to[i] = CDGN(810,2 + i);
-		if (cre(scenario.town_to_add_to[i],
+		scenariodata.town_to_add_to[i] = CDGN(810,2 + i);
+		if (cre(scenariodata.town_to_add_to[i],
 			-1,199,"Town number must be from 0 to 199 (or -1 for no effect).","",810) == TRUE) return FALSE;
-		scenario.flag_to_add_to_town[i][0] = CDGN(810,12 + i);
-		if (cre(scenario.flag_to_add_to_town[i][0],
+		scenariodata.flag_to_add_to_town[i][0] = CDGN(810,12 + i);
+		if (cre(scenariodata.flag_to_add_to_town[i][0],
 			0,299,"First part of flag must be from 0 to 299.","",810) == TRUE) return FALSE;
-		scenario.flag_to_add_to_town[i][1] = CDGN(810,22 + i);
-		if (cre(scenario.flag_to_add_to_town[i][1],
+		scenariodata.flag_to_add_to_town[i][1] = CDGN(810,22 + i);
+		if (cre(scenariodata.flag_to_add_to_town[i][1],
 			0,9,"Second part of flag must be from 0 to 9.","",810) == TRUE) return FALSE;
 		}
 	return TRUE;
@@ -2176,9 +2176,9 @@ void put_add_town_in_dlog()
 	short i;
 	
 	for (i = 0; i < 10; i++) {
-		CDSN(810,2 + i, scenario.town_to_add_to[i]);
-		CDSN(810,12 + i, scenario.flag_to_add_to_town[i][0]);
-		CDSN(810,22 + i, scenario.flag_to_add_to_town[i][1]);
+		CDSN(810,2 + i, scenariodata.town_to_add_to[i]);
+		CDSN(810,12 + i, scenariodata.flag_to_add_to_town[i][0]);
+		CDSN(810,22 + i, scenariodata.flag_to_add_to_town[i][1]);
 		}
 
 }
@@ -2223,7 +2223,7 @@ Boolean save_item_placement()
 		if (cre(store_storage.item_odds[i],
 			0,100,"All item chances must bve from 0 to 100.","",812) == TRUE) return FALSE;
 		}
-	scenario.storage_shortcuts[cur_shortcut] = store_storage;
+	scenariodata.storage_shortcuts[cur_shortcut] = store_storage;
 	
 	return TRUE;
 }
@@ -2258,14 +2258,14 @@ void edit_item_placement_event_filter (short item_hit)
 			if (save_item_placement() == FALSE) break;
 			cur_shortcut--;
 			if (cur_shortcut < 0) cur_shortcut = 9;
-			store_storage = scenario.storage_shortcuts[cur_shortcut];
+			store_storage = scenariodata.storage_shortcuts[cur_shortcut];
 			put_item_placement_in_dlog();
 			break;
 		case 25:
 			if (save_item_placement() == FALSE) break;
 			cur_shortcut++;
 			if (cur_shortcut > 9) cur_shortcut = 0;
-			store_storage = scenario.storage_shortcuts[cur_shortcut];
+			store_storage = scenariodata.storage_shortcuts[cur_shortcut];
 			put_item_placement_in_dlog();
 			break;
 		case 41:
@@ -2290,7 +2290,7 @@ void edit_item_placement_event_filter (short item_hit)
 void edit_item_placement()
 // ignore parent in Mac version
 {
-	store_storage = scenario.storage_shortcuts[0];
+	store_storage = scenariodata.storage_shortcuts[0];
 	cur_shortcut = 0;
 	
 	cd_create_dialog_parent_num(812,0);
@@ -2308,13 +2308,13 @@ static Boolean save_scen_details()
 	char str[256];
 	short i;
 	
-	scenario.difficulty = cd_get_led_range(803,30,33);
-	scenario.rating = cd_get_led_range(803,21,24);
-	scenario.ver[0] = CDGN(803,2);
-	scenario.ver[1] = CDGN(803,3);
-	scenario.ver[2] = CDGN(803,4);
+	scenariodata.difficulty = cd_get_led_range(803,30,33);
+	scenariodata.rating = cd_get_led_range(803,21,24);
+	scenariodata.ver[0] = CDGN(803,2);
+	scenariodata.ver[1] = CDGN(803,3);
+	scenariodata.ver[2] = CDGN(803,4);
 	for (i = 0; i < 3; i++)
-		if (cre(scenario.ver[i],
+		if (cre(scenariodata.ver[i],
 			0,9,"The digits in the version number must be in the 0 to 9 range.","",803) == TRUE) return FALSE;
 	CDGT(803,5,(char *) str);
 	str[59] = 0;
@@ -2329,11 +2329,11 @@ static Boolean save_scen_details()
 
 static void put_scen_details_in_dlog()
 {
-	cd_set_led_range(803,30,33, scenario.difficulty);
-	cd_set_led_range(803,21,24, scenario.rating);
-	CDSN(803,2, scenario.ver[0]);
-	CDSN(803,3, scenario.ver[1]);
-	CDSN(803,4, scenario.ver[2]);
+	cd_set_led_range(803,30,33, scenariodata.difficulty);
+	cd_set_led_range(803,21,24, scenariodata.rating);
+	CDSN(803,2, scenariodata.ver[0]);
+	CDSN(803,3, scenariodata.ver[1]);
+	CDSN(803,4, scenariodata.ver[2]);
 	CDST(803,5,scen_strs[1]);
 	CDST(803,6,scen_strs[2]);
 	CDST(803,7,scen_strs[3]);
@@ -2538,10 +2538,10 @@ void build_scenario()
 	load_outdoors(cur_out,0);
 
 	for (i = 0; i < two_flags[2]; i++) {
-		which_town = scenario.num_towns;
-		scenario.num_towns++;
-		scenario.town_size[which_town] = 0;
-		scenario.town_hidden[which_town] = 0;
+		which_town = scenariodata.num_towns;
+		scenariodata.num_towns++;
+		scenariodata.town_size[which_town] = 0;
+		scenariodata.town_hidden[which_town] = 0;
 		cur_town = which_town;
 		init_town(0);
 		strcpy(town_strs[0],"Large town");
@@ -2550,10 +2550,10 @@ void build_scenario()
 		save_scenario();	
 		}
 	for (i = 0; i < two_flags[3]; i++) {
-		which_town = scenario.num_towns;
-		scenario.num_towns++;
-		scenario.town_size[which_town] = 1;
-		scenario.town_hidden[which_town] = 0;
+		which_town = scenariodata.num_towns;
+		scenariodata.num_towns++;
+		scenariodata.town_size[which_town] = 1;
+		scenariodata.town_hidden[which_town] = 0;
 		cur_town = which_town;
 		init_town(1);
 		strcpy(town_strs[0],"Medium town");
@@ -2562,10 +2562,10 @@ void build_scenario()
 		save_scenario();	
 		}
 	for (i = 0; i < two_flags[4]; i++) {
-		which_town = scenario.num_towns;
-		scenario.num_towns++;
-		scenario.town_size[which_town] = 2;
-		scenario.town_hidden[which_town] = 0;
+		which_town = scenariodata.num_towns;
+		scenariodata.num_towns++;
+		scenariodata.town_size[which_town] = 2;
+		scenariodata.town_hidden[which_town] = 0;
 		cur_town = which_town;
 		init_town(2);
 		strcpy(town_strs[0],"Small town");
@@ -2626,18 +2626,18 @@ void set_starting_loc_filter (short item_hit)
 			i = CDGN(805,2);
 			j = CDGN(805,3);
 			k = CDGN(805,4);
-			if ((i < 0) || (i >= scenario_num_towns())) {
-				give_error(std::format("The starting town must be from 0 to {:d}.", scenario_num_towns() - 1), "", 805);
+			if ((i < 0) || (i >= scenario.num_towns())) {
+				give_error(std::format("The starting town must be from 0 to {:d}.", scenario.num_towns() - 1), "", 805);
 				break;
 				}
-			if ((j < 0) || (j >= max_dim[scenario_town_size(i)] - 1) ||
-				(k < 0) || (k >= max_dim[scenario_town_size(i)] - 1)) {
+			if ((j < 0) || (j >= max_dim[scenario.town_size(i)] - 1) ||
+				(k < 0) || (k >= max_dim[scenario.town_size(i)] - 1)) {
 				give_error("This coordinate is not inside the bounds of the town.","",805);
 				break;
 				}
-			scenario.which_town_start = i;
-			scenario.where_start.x = j;
-			scenario.where_start.y = k;
+			scenariodata.which_town_start = i;
+			scenariodata.where_start.x = j;
+			scenariodata.where_start.y = k;
 			dialog_not_toast = FALSE; 
 			break;
 		case 12:
@@ -2651,9 +2651,9 @@ void set_starting_loc()
 {
 	cd_create_dialog_parent_num(805,0);
 	
-	CDSN(805,2,scenario_which_town_start());
-	CDSN(805,3,scenario.where_start.x);
-	CDSN(805,4,scenario.where_start.y);
+	CDSN(805,2,scenario.which_town_start());
+	CDSN(805,3,scenariodata.where_start.x);
+	CDSN(805,4,scenariodata.where_start.y);
 	
 	while (dialog_not_toast)
 		ModalDialog();
@@ -2668,14 +2668,14 @@ Boolean save_scenario_events()
 	short i;
 	
 	for (i = 0; i < 10; i++) {
-		scenario.scenario_timer_times[i] = CDGN(811,2 + i);
-		if ((scenario.scenario_timer_times[i] > 0) &&
-			(scenario.scenario_timer_times[i] % 10 != 0)) {
+		scenariodata.scenario_timer_times[i] = CDGN(811,2 + i);
+		if ((scenariodata.scenario_timer_times[i] > 0) &&
+			(scenariodata.scenario_timer_times[i] % 10 != 0)) {
 				give_error("All scenario event times must be multiples of 10 (e.g. 100, 150, 1000, etc.).","",811);
 				return FALSE;
 				}
-		scenario.scenario_timer_specs[i] = CDGN(811,12 + i);
-		if (cre(scenario.scenario_timer_specs[i],-1,255,"The scenario special nodes must be between 0 at 255 (or -1 for no special)."
+		scenariodata.scenario_timer_specs[i] = CDGN(811,12 + i);
+		if (cre(scenariodata.scenario_timer_specs[i],-1,255,"The scenario special nodes must be between 0 at 255 (or -1 for no special)."
 			,"",811) == TRUE) return FALSE;
 		}
 	return TRUE;
@@ -2686,8 +2686,8 @@ void put_scenario_events_in_dlog()
 	short i;
 	
 	for (i = 0; i < 10; i++) {
-		CDSN(811,2 + i,scenario.scenario_timer_times[i]);
-		CDSN(811,12 + i,scenario.scenario_timer_specs[i]);
+		CDSN(811,2 + i,scenariodata.scenario_timer_times[i]);
+		CDSN(811,12 + i,scenariodata.scenario_timer_specs[i]);
 		}
 
 }
@@ -2716,7 +2716,7 @@ void edit_scenario_events_event_filter (short item_hit)
 					CDSN(811,item_hit - 30 + 12,spec);
 					}	
 				edit_spec_enc(spec,0,811);
-				if ((spec >= 0) && (spec < 256) && (scenario.scen_specials[spec].pic < 0))
+				if ((spec >= 0) && (spec < 256) && (scenariodata.scen_specials[spec].pic < 0))
 					CDSN(811,item_hit - 30 + 12,-1);
 				}
 			break;

@@ -731,7 +731,7 @@ void pick_town_num_event_filter (short item_hit)
 	switch (item_hit) {
 		case 3:
 			dialog_answer = CDGN(store_whigh_dlog,2);
-			if ((dialog_answer < 0) || (dialog_answer >= scenario_num_towns())) {
+			if ((dialog_answer < 0) || (dialog_answer >= scenario.num_towns())) {
 				give_error("This number is out of the correct range. (0 to the number of towns minus 1)","",store_whigh_dlog);
 				break;
 				}
@@ -757,7 +757,7 @@ short pick_town_num(short which_dlog,short def)
 	
 	CDSN(store_whigh_dlog,2,def);
 	cd_get_item_text(which_dlog,7,(char *) temp_str);
-	format_to_buf(str2,"{} (0 - {:d})",(char *) temp_str,scenario_num_towns() - 1);
+	format_to_buf(str2,"{} (0 - {:d})",(char *) temp_str,scenario.num_towns() - 1);
 	csit(which_dlog,7,(char *) str2);
 	
 	while (dialog_not_toast)
@@ -1681,7 +1681,7 @@ void pick_out_event_filter (short item_hit)
 				else store_cur_loc.x--;
 			break;
 		case 13:
-			if (store_cur_loc.x >= scenario_out_width() - 1) SysBeep(20);
+			if (store_cur_loc.x >= scenario.out_width() - 1) SysBeep(20);
 				else store_cur_loc.x++;
 			break;
 		case 14:
@@ -1689,7 +1689,7 @@ void pick_out_event_filter (short item_hit)
 				else store_cur_loc.y--;
 			break;
 		case 15:
-			if (store_cur_loc.y >= scenario_out_height() - 1) SysBeep(20);
+			if (store_cur_loc.y >= scenario.out_height() - 1) SysBeep(20);
 				else store_cur_loc.y++;
 			break;
 		}
@@ -1709,8 +1709,8 @@ short pick_out(location default_loc)
 	
 	cd_create_dialog_parent_num(854,0);
 	
-	cdsin(854,7,scenario_out_width());	
-	cdsin(854,10,scenario_out_height());
+	cdsin(854,7,scenario.out_width());	
+	cdsin(854,10,scenario.out_height());
 	format_to_buf(temp_str,"X = {:d}",store_cur_loc.x);
 	csit(854,8,(char *) temp_str);
 	format_to_buf(temp_str,"Y = {:d}",store_cur_loc.y);

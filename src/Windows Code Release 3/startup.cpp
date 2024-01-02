@@ -11,7 +11,7 @@
 #include "party.h"
 #include "exlsound.h"
 #include "startup.h"
-#include "scenario.hpp"
+#include "scenario_ext.hpp"
 
 extern party_record_type party;
 extern scen_header_type scen_headers[25];

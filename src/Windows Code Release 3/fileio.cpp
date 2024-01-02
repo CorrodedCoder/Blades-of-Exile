@@ -26,7 +26,7 @@
 #include "boe/endian_adjust.hpp"
 #include "boe/savedata_serialization.hpp"
 #include "boe/utility.hpp"
-#include "scenario.hpp"
+#include "scenario_ext.hpp"
 
 HWND	the_dialog;
 extern party_record_type far	party;
@@ -65,7 +65,7 @@ extern Boolean give_intro_hint;
 extern char terrain_blocked[256];
 extern char scen_strs2[110][256];
 extern stored_town_maps_type town_maps, town_maps2;
-extern scenario_data_type scenario;
+extern scenario_data_type scenariodata;
 extern unsigned char combat_terrain[64][64];
 extern piles_of_stuff_dumping_type data_store;
 extern piles_of_stuff_dumping_type2 data_store2;
@@ -285,7 +285,7 @@ void load_file()
 			monster_targs[i].x = 0;  monster_targs[i].y = 0;
 		}
 
-		town_type = scenario_town_size(c_town.town_num);
+		town_type = scenario.town_size(c_town.town_num);
 		// Set up field booleans
 		for (short j = 0; j < town_size[town_type]; j++)
 			for (short k = 0; k < town_size[town_type]; k++) {
@@ -438,7 +438,7 @@ void load_town(short town_num, short mode, short extra, char* str)
 	long len_to_jump = 0;
 	short which_town;
 
-	if (town_num != boe_clamp(town_num, 0, scenario_num_towns() - 1)) {
+	if (town_num != boe_clamp(town_num, 0, scenario.num_towns() - 1)) {
 		give_error("The scenario tried to place you into a non-existant town.", "", 0);
 		return;
 	}
@@ -455,14 +455,14 @@ void load_town(short town_num, short mode, short extra, char* str)
 	len_to_jump = sizeof(scenario_data_type);
 	len_to_jump += sizeof(scen_item_data_type);
 	for (i = 0; i < 300; i++)
-		len_to_jump += (long)scenario.scen_str_len[i];
+		len_to_jump += (long)scenariodata.scen_str_len[i];
 	store = 0;
 	for (i = 0; i < 100; i++)
 		for (j = 0; j < 2; j++)
-			store += (long)(scenario.out_data_size[i][j]);
+			store += (long)(scenariodata.out_data_size[i][j]);
 	for (i = 0; i < which_town; i++)
 		for (j = 0; j < 5; j++)
-			store += (long)(scenario.town_data_size[i][j]);
+			store += (long)(scenariodata.town_data_size[i][j]);
 	len_to_jump += store;
 
 	if (!SetFPos(file_id, len_to_jump, std::ios_base::beg)) { FSClose(file_id); oops_error(35); }
@@ -477,7 +477,7 @@ void load_town(short town_num, short mode, short extra, char* str)
 	else success = file_read_type(file_id, dummy_town);
 	if (!success) { FSClose(file_id); oops_error(36); }
 
-	switch (scenario_town_size(which_town)) {
+	switch (scenario.town_size(which_town)) {
 	case 0:
 		if (mode == 0) {
 			file_read_type(file_id, t_d);
@@ -584,7 +584,7 @@ void load_town(short town_num, short mode, short extra, char* str)
 		cur_town_talk_loaded = town_num;
 	}
 	if (mode == 0)
-		town_type = scenario_town_size(which_town);
+		town_type = scenario.town_size(which_town);
 	if (!FSClose(file_id)) { oops_error(38); }
 
 	// Now more initialization is needed. First need to properly create the misc_i array.
@@ -836,7 +836,7 @@ short onm(char x_sector, char y_sector)
 {
 	short i;
 
-	i = y_sector * scenario_out_width() + x_sector;
+	i = y_sector * scenario.out_width() + x_sector;
 	return i;
 }
 
@@ -852,20 +852,20 @@ void save_outdoor_maps()
 				o_maps.outdoor_maps[onm(party.outdoor_corner.x, party.outdoor_corner.y)][i / 8][j] =
 				o_maps.outdoor_maps[onm(party.outdoor_corner.x, party.outdoor_corner.y)][i / 8][j] |
 				(char)(s_pow(2, i % 8));
-			if (party.outdoor_corner.x + 1 < scenario_out_width()) {
+			if (party.outdoor_corner.x + 1 < scenario.out_width()) {
 				if (out_e[i + 48][j] > 0)
 					o_maps.outdoor_maps[onm(party.outdoor_corner.x + 1, party.outdoor_corner.y)][i / 8][j] =
 					o_maps.outdoor_maps[onm(party.outdoor_corner.x + 1, party.outdoor_corner.y)][i / 8][j] |
 					(char)(s_pow(2, i % 8));
 			}
-			if (party.outdoor_corner.y + 1 < scenario_out_height()) {
+			if (party.outdoor_corner.y + 1 < scenario.out_height()) {
 				if (out_e[i][j + 48] > 0)
 					o_maps.outdoor_maps[onm(party.outdoor_corner.x, party.outdoor_corner.y + 1)][i / 8][j] =
 					o_maps.outdoor_maps[onm(party.outdoor_corner.x, party.outdoor_corner.y + 1)][i / 8][j] |
 					(char)(s_pow(2, i % 8));
 			}
-			if ((party.outdoor_corner.y + 1 < scenario_out_height()) &&
-				(party.outdoor_corner.x + 1 < scenario_out_width())) {
+			if ((party.outdoor_corner.y + 1 < scenario.out_height()) &&
+				(party.outdoor_corner.x + 1 < scenario.out_width())) {
 				if (out_e[i + 48][j + 48] > 0)
 					o_maps.outdoor_maps[onm(party.outdoor_corner.x + 1, party.outdoor_corner.y + 1)][i / 8][j] =
 					o_maps.outdoor_maps[onm(party.outdoor_corner.x + 1, party.outdoor_corner.y + 1)][i / 8][j] |
@@ -885,20 +885,20 @@ void add_outdoor_maps()  // This takes the existing outdoor map info and supplem
 				((o_maps.outdoor_maps[onm(party.outdoor_corner.x, party.outdoor_corner.y)][i / 8][j] &
 					(char)(s_pow(2, i % 8))) != 0))
 				out_e[i][j] = 1;
-			if (party.outdoor_corner.x + 1 < scenario_out_width()) {
+			if (party.outdoor_corner.x + 1 < scenario.out_width()) {
 				if ((out_e[i + 48][j] == 0) &&
 					((o_maps.outdoor_maps[onm(party.outdoor_corner.x + 1, party.outdoor_corner.y)][i / 8][j] &
 						(char)(s_pow(2, i % 8))) != 0))
 					out_e[i + 48][j] = 1;
 			}
-			if (party.outdoor_corner.y + 1 < scenario_out_height()) {
+			if (party.outdoor_corner.y + 1 < scenario.out_height()) {
 				if ((out_e[i][j + 48] == 0) &&
 					((o_maps.outdoor_maps[onm(party.outdoor_corner.x, party.outdoor_corner.y + 1)][i / 8][j] &
 						(char)(s_pow(2, i % 8))) != 0))
 					out_e[i][j + 48] = 1;
 			}
-			if ((party.outdoor_corner.y + 1 < scenario_out_height()) &&
-				(party.outdoor_corner.x + 1 < scenario_out_width())) {
+			if ((party.outdoor_corner.y + 1 < scenario.out_height()) &&
+				(party.outdoor_corner.x + 1 < scenario.out_width())) {
 				if ((out_e[i + 48][j + 48] == 0) &&
 					((o_maps.outdoor_maps[onm(party.outdoor_corner.x + 1, party.outdoor_corner.y + 1)][i / 8][j] &
 						(char)(s_pow(2, i % 8))) != 0))
@@ -948,8 +948,8 @@ void load_outdoors(
 	short to_create_x, short to_create_y, short targ_x, short targ_y, short mode, short extra, char* str
 	)
 {
-	if ((to_create_x != boe_clamp(to_create_x, 0, scenario_out_width() - 1)) ||
-		(to_create_y != boe_clamp(to_create_y, 0, scenario_out_height() - 1))) // not exist
+	if ((to_create_x != boe_clamp(to_create_x, 0, scenario.out_width() - 1)) ||
+		(to_create_y != boe_clamp(to_create_y, 0, scenario.out_height() - 1))) // not exist
 	{
 		for (short i = 0; i < 48; i++)
 			for (short j = 0; j < 48; j++)
@@ -971,16 +971,16 @@ void load_outdoors(
 		PostQuitMessage(0);
 	}
 
-	const short out_sec_num = scenario_out_width() * to_create_y + to_create_x;
+	const short out_sec_num = scenario.out_width() * to_create_y + to_create_x;
 	long len_to_jump = sizeof(scenario_data_type);
 	len_to_jump += sizeof(scen_item_data_type);
 	for (short i = 0; i < 300; i++)
-		len_to_jump += (long)scenario.scen_str_len[i];
+		len_to_jump += (long)scenariodata.scen_str_len[i];
 
 	long store = 0;
 	for (short i = 0; i < out_sec_num; i++)
 		for (short j = 0; j < 2; j++)
-			store += (long)(scenario.out_data_size[i][j]);
+			store += (long)(scenariodata.out_data_size[i][j]);
 	len_to_jump += store;
 
 	if (!SetFPos(file_id, len_to_jump, std::ios_base::beg))
@@ -1185,22 +1185,22 @@ Boolean load_scenario()
 		SysBeep(2);	return FALSE;
 	}
 
-	if (!file_read_type(file_id, scenario)) {
+	if (!file_read_type(file_id, scenariodata)) {
 		oops_error(29); return FALSE;
 	}
-	if ((scenario.flag1 == 10) && (scenario.flag2 == 20)
-		&& (scenario.flag3 == 30)
-		&& (scenario.flag4 == 40)) {
+	if ((scenariodata.flag1 == 10) && (scenariodata.flag2 == 20)
+		&& (scenariodata.flag3 == 30)
+		&& (scenariodata.flag4 == 40)) {
 		file_ok = TRUE;
 		cur_scen_is_win = FALSE;
 		if (cur_scen_is_win != TRUE)
 		{
-			endian_adjust(scenario);
+			endian_adjust(scenariodata);
 		}
 	}
-	if ((scenario.flag1 == 20) && (scenario.flag2 == 40)
-		&& (scenario.flag3 == 60)
-		&& (scenario.flag4 == 80)) {
+	if ((scenariodata.flag1 == 20) && (scenariodata.flag2 == 40)
+		&& (scenariodata.flag3 == 60)
+		&& (scenariodata.flag4 == 80)) {
 		file_ok = TRUE;
 		cur_scen_is_win = TRUE;
 	}
@@ -1216,7 +1216,7 @@ Boolean load_scenario()
 		endian_adjust(data_store2.scen_item_list);
 	}
 	for (i = 0; i < 270; i++) {
-		const long len = (long)(scenario.scen_str_len[i]);
+		const long len = (long)(scenariodata.scen_str_len[i]);
 		if (i < 160) {
 			file_read_string(file_id, len, data_store5.scen_strs[i]);
 		}
@@ -1236,7 +1236,7 @@ void set_up_ter_pics()
 
 	set_terrain_blocked();
 	for (i = 0; i < 256; i++)
-		terrain_pic[i] = scenario_ter_type(i).picture;
+		terrain_pic[i] = scenario.ter_type(i).picture;
 }
 void oops_error(short error)
 {
@@ -1330,10 +1330,10 @@ Boolean load_scenario_header(std::string_view filename, short header_entry)
 
 	// So file is OK, so load in string data and close it.
 	SetFPos(file_id, 0, std::ios_base::beg);
-	if (!file_read_type(file_id, scenario)) {
+	if (!file_read_type(file_id, scenariodata)) {
 		oops_error(29); return FALSE;
 	}
-	store = scenario.rating;
+	store = scenariodata.rating;
 	if (mac_header == TRUE)
 		endian_adjust(store);
 	scen_headers[header_entry].default_ground = store;
@@ -1342,7 +1342,7 @@ Boolean load_scenario_header(std::string_view filename, short header_entry)
 		return FALSE;
 
 	for (i = 0; i < 3; i++) {
-		file_read_string(file_id, (long)(short)scenario.scen_str_len[i], load_str);
+		file_read_string(file_id, (long)(short)scenariodata.scen_str_len[i], load_str);
 		if (i == 0)
 			load_str[29] = 0;
 		else load_str[59] = 0;
@@ -1406,7 +1406,7 @@ short town_s(short flag)
 	k = k + 51;
 	k = k % 3000;
 	jl = jl * 2 + 1234 + k;
-	k = k * scenario_num_towns();
+	k = k * scenario.num_towns();
 	k = k % 10000;
 	jl = jl * jl + 84 + k;
 	k = k + 10000;
@@ -1421,7 +1421,7 @@ short out_s(short flag)
 	k = (long)flag;
 	k = k * k * k;
 	jl = jl * jl + 84 + k;
-	k = k + scenario.out_data_size[0][1];
+	k = k + scenariodata.out_data_size[0][1];
 	k = k % 3000;
 	k = k * 4;
 	jl = jl * 2 + 1234 + k;
@@ -1441,7 +1441,7 @@ static short str_size_1(short flag)
 	k = k * k;
 	jl = jl * 2 + 1234 + k;
 	jl = jl * jl + 84 + k;
-	k = k + scenario.scen_str_len[0] + scenario.scen_str_len[1] + scenario.scen_str_len[2];
+	k = k + scenariodata.scen_str_len[0] + scenariodata.scen_str_len[1] + scenariodata.scen_str_len[2];
 	jl = jl * 2 + 1234 + k;
 	k = k % 3000;
 	jl = jl * 54;
@@ -1464,7 +1464,7 @@ static short str_size_2(short flag)
 	k = k + 80;
 	k = k % 3000;
 	jl = jl * 2 + 1234 + k;
-	k = k * scenario_out_width() * scenario_out_height();
+	k = k * scenario.out_width() * scenario.out_height();
 	jl = jl * jl + 84 + k;
 	k = k % 3124;
 	k = k - 5426;
@@ -1477,7 +1477,7 @@ static short str_size_3(short flag)
 	long k = 0;
 
 	k = (long)flag;
-	k = k * (scenario.town_data_size[0][0] + scenario.town_data_size[0][1] + scenario.town_data_size[0][2] + scenario.town_data_size[0][3]);
+	k = k * (scenariodata.town_data_size[0][0] + scenariodata.town_data_size[0][1] + scenariodata.town_data_size[0][2] + scenariodata.town_data_size[0][3]);
 	k = k + 80;
 	jl = jl * jl + 84 + k;
 	k = k % 3000;
@@ -1497,7 +1497,7 @@ short get_buf_ptr(short flag)
 
 	k = (long)flag;
 	jl = jl * jl + 84 + k;
-	k = k * (scenario_out_width() + scenario_out_width() + scenario_out_height() + scenario.town_data_size[0][3]);
+	k = k * (scenario.out_width() + scenario.out_width() + scenario.out_height() + scenariodata.town_data_size[0][3]);
 	k = k + 80;
 	jl = jl * jl + 84 + k;
 	k = k % 2443;
@@ -1513,17 +1513,17 @@ short get_buf_ptr(short flag)
 
 Boolean check_p(short pword)
 {
-	if (scenario.flag_b != town_s(pword))
+	if (scenariodata.flag_b != town_s(pword))
 		return FALSE;
-	if (scenario.flag_c != out_s(pword))
+	if (scenariodata.flag_c != out_s(pword))
 		return FALSE;
-	if (scenario.flag_e != str_size_1(pword))
+	if (scenariodata.flag_e != str_size_1(pword))
 		return FALSE;
-	if (scenario.flag_f != str_size_2(pword))
+	if (scenariodata.flag_f != str_size_2(pword))
 		return FALSE;
-	if (scenario.flag_h != str_size_3(pword))
+	if (scenariodata.flag_h != str_size_3(pword))
 		return FALSE;
-	if (scenario.flag_d != init_data(pword))
+	if (scenariodata.flag_d != init_data(pword))
 		return FALSE;
 
 	return TRUE;
