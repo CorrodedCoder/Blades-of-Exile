@@ -2208,7 +2208,7 @@ void do_save(short mode)
 			
 void increase_age()
 {
-	short i,j,item,how_many_short = 0,r1,store_day;
+	short i,j,item,r1,store_day;
 	Boolean update_stat = FALSE;
 
 			
@@ -2315,14 +2315,7 @@ void increase_age()
 	// Food
 	if ((party.age % 1000 == 0) && (overall_mode < 10))
 	{
-		for (i = 0; i < 6; i++)
-		{
-			if (adven[i].main_status == status::Normal)
-			{
-				how_many_short++;
-			}
-		}
-		how_many_short = take_food (how_many_short,FALSE);
+		const short how_many_short = take_food( adventurers_count_normal(adven), FALSE );
 		if (how_many_short > 0)
 		{
 			add_string_to_buf("Starving! ");
@@ -2576,7 +2569,7 @@ void start_new_game()
 	init_party(0);
 
 	//while (creation_done == FALSE) {
-		edit_party(1,0);
+	edit_party(1,0);
 	/*	if ((i > 0) || (in_startup_mode == FALSE))
 			creation_done = TRUE;
 		if ((i == 0) && (in_startup_mode == FALSE))
@@ -2584,21 +2577,18 @@ void start_new_game()
 		} */
 	
 	// if no PCs left, forget it
-	for (i = 0 ; i < 6; i++)
-		if (adven[i].main_status == status::Normal)
-			i = 100;
-	if (i == 6)
+	if( !adventurers_anyone_normal(adven) )
 		return;
-
 	
 	// everyone gets a weapon
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == status::Normal) {
+		if (adven[i].main_status == status::Normal)
+		{
 			adven[i].items[0] = start_items[adven[i].race * 2];
 			adven[i].equip[0] = TRUE;
 			adven[i].items[1] = start_items[adven[i].race * 2 + 1];
 			adven[i].equip[1] = TRUE;
-			}
+		}
 	// PCs get adjustments
 	for (i = 0; i < 6; i++)
 		if (adven[i].main_status == status::Normal) {

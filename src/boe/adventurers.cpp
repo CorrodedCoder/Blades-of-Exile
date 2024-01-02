@@ -6,23 +6,23 @@
 
 namespace
 {
-	auto is_active = [](const auto& adventurer) { return adventurer.main_status == status::Normal; };
+	auto is_normal = [](const auto& adventurer) { return adventurer.main_status == status::Normal; };
 }
 
-bool cave_lore_present(const Adventurers& adven)
+bool cave_lore_present(const Adventurers& adventurers)
 {
-	return std::ranges::any_of(adven, pc_has_cave_lore);
+	return std::ranges::any_of(adventurers, pc_has_cave_lore);
 }
 
-bool woodsman_present(const Adventurers& adven)
+bool woodsman_present(const Adventurers& adventurers)
 {
-	return std::ranges::any_of(adven, pc_has_woodsman);
+	return std::ranges::any_of(adventurers, pc_has_woodsman);
 }
 
-short mage_lore_total(const Adventurers& adven)
+short mage_lore_total(const Adventurers& adventurers)
 {
 	auto pc_mage_lore = [](const auto& adventurer) { return adventurer.skills[skill::MageLore]; };
-	auto v = adven | std::views::filter(is_active) | std::views::transform(pc_mage_lore);
+	auto v = adventurers | std::views::filter(is_normal) | std::views::transform(pc_mage_lore);
 #if defined(__cpp_lib_ranges_fold) && __cpp_lib_ranges_fold
 	return static_cast<short>(std::ranges::fold_left(v, 0, std::plus<int>()));
 #else
@@ -45,7 +45,7 @@ bool adventurers_cure(Adventurers& adventurers, short amt)
 
 void adventurers_restore_sp(Adventurers& adventurers, short amt)
 {
-	for (auto& pc : adventurers | std::views::filter(is_active))
+	for (auto& pc : adventurers | std::views::filter(is_normal))
 	{
 		pc_restore_sp(pc, amt);
 	}
@@ -103,5 +103,10 @@ bool adventurers_dead(const Adventurers& adventurers)
 
 short adventurers_count_normal(const Adventurers& adventurers)
 {
-	return static_cast<short>(std::ranges::count_if(adventurers, is_active));
+	return static_cast<short>(std::ranges::count_if(adventurers, is_normal));
+}
+
+bool adventurers_anyone_normal(const Adventurers& adventurers)
+{
+	return std::ranges::any_of(adventurers, is_normal);
 }

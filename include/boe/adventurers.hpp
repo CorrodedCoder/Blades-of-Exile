@@ -13,3 +13,4 @@ short adventurers_luck_total(const Adventurers& adventurers);
 short adventurers_level_total(const Adventurers& adventurers);
 bool adventurers_dead(const Adventurers& adventurers);
 short adventurers_count_normal(const Adventurers& adventurers);
+bool adventurers_anyone_normal(const Adventurers& adventurers);
