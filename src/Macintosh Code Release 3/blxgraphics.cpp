@@ -2526,15 +2526,6 @@ void draw_targeting_line(Point where_curs)
 	}
 }
 
-
-bool party_toast(const Adventurers& adventurers)
-{
-	for (short i = 0; i < 6; i++)
-		if (adventurers[i].main_status == status::Normal)
-			return false;
-	return true;
-}
-
 void redraw_partial_terrain(Rect redraw_rect)
 {
 	Rect from_rect;

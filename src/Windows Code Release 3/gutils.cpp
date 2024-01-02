@@ -15,6 +15,7 @@
 #include <cstdio>
 #include "graphutl_helpers.hpp"
 #include "boe/item.hpp"
+#include "boe/adventurers.hpp"
 #include "scenario.hpp"
 
 extern HWND	mainPtr;

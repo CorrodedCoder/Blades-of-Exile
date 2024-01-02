@@ -14,6 +14,7 @@
 #include "exlsound.h"
 #include "graphutl.h"
 #include "graphutl_helpers.hpp"
+#include "boe/adventurers.hpp"
 #include "scenario.hpp"
 
 
@@ -2522,14 +2523,6 @@ void draw_targeting_line(POINT where_curs)
 				}
 			}
 	}
-}
-
-bool party_toast(const Adventurers& adventurers)
-{
-	for (short i = 0; i < 6; i++)
-		if (adventurers[i].main_status == status::Normal)
-			return false;
-	return true;
 }
 
 void redraw_partial_terrain(RECT redraw_rect)

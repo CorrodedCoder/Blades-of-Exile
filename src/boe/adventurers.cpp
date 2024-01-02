@@ -88,3 +88,11 @@ short adventurers_level_total(const Adventurers& adventurers)
 	}
 	return total;
 }
+
+bool party_toast(const Adventurers& adventurers)
+{
+	for (short i = 0; i < 6; i++)
+		if (adventurers[i].main_status == status::Normal)
+			return false;
+	return true;
+}
