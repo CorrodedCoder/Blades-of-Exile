@@ -14,7 +14,7 @@
 #include "../scenario.hpp"
 
 
-extern scenario_data_type scenario;
+extern scenario_data_type scenariodata;
 extern HDC main_dc;
 
 ave_tr_type ave_t;
@@ -128,78 +128,78 @@ void save_scenario()
 		}
 
 	// Now we need to set up a buffer for moving the data over to the dummy
-	scenario.prog_make_ver[0] = 1;
-	scenario.prog_make_ver[1] = 0;
-	scenario.prog_make_ver[2] = 0;
+	scenariodata.prog_make_ver[0] = 1;
+	scenariodata.prog_make_ver[1] = 0;
+	scenariodata.prog_make_ver[2] = 0;
 
 	// Now, the pointer in scen_f needs to move along, so that the correct towns are sucked in.
 	// To do so, we'll remember the size of the saved town and out now.
 	out_num = cur_out.y * scenario_out_width() + cur_out.x;
-	save_out_size = (long) (scenario.out_data_size[out_num][0]) + (long) (scenario.out_data_size[out_num][1]);
-	save_town_size = (long) (scenario.town_data_size[cur_town][0]) + (long) (scenario.town_data_size[cur_town][1])
-					+ (long) (scenario.town_data_size[cur_town][2]) + (long) (scenario.town_data_size[cur_town][3])
-					+ (long) (scenario.town_data_size[cur_town][4]);
+	save_out_size = (long) (scenariodata.out_data_size[out_num][0]) + (long) (scenariodata.out_data_size[out_num][1]);
+	save_town_size = (long) (scenariodata.town_data_size[cur_town][0]) + (long) (scenariodata.town_data_size[cur_town][1])
+					+ (long) (scenariodata.town_data_size[cur_town][2]) + (long) (scenariodata.town_data_size[cur_town][3])
+					+ (long) (scenariodata.town_data_size[cur_town][4]);
 	scen_ptr_move = sizeof(scenario_data_type);
 	scen_ptr_move += sizeof(scen_item_data_type);
 	for (i = 0; i < 270; i++)  // scenario strings
-		scen_ptr_move += scenario.scen_str_len[i];
+		scen_ptr_move += scenariodata.scen_str_len[i];
 
 
 
 	// We're finally set up. Let's first set up the new scenario field
 	// We need the new info for the current town and outdoors, which may have been changed
-	scenario.town_data_size[cur_town][0] = sizeof(town_record_type);
+	scenariodata.town_data_size[cur_town][0] = sizeof(town_record_type);
 	if (scenario_town_size(cur_town) == 0) 
-		scenario.town_data_size[cur_town][0] += sizeof(big_tr_type);
+		scenariodata.town_data_size[cur_town][0] += sizeof(big_tr_type);
 		else if (scenario_town_size(cur_town) == 1) 
-			scenario.town_data_size[cur_town][0] += sizeof(ave_tr_type);
-			else scenario.town_data_size[cur_town][0] += sizeof(tiny_tr_type);
-	scenario.town_data_size[cur_town][1] = 0;
+			scenariodata.town_data_size[cur_town][0] += sizeof(ave_tr_type);
+			else scenariodata.town_data_size[cur_town][0] += sizeof(tiny_tr_type);
+	scenariodata.town_data_size[cur_town][1] = 0;
 	for (i = 0; i < 60; i++)
-		scenario.town_data_size[cur_town][1] += strlen(town_strs[i]);
-	scenario.town_data_size[cur_town][2] = 0;
+		scenariodata.town_data_size[cur_town][1] += strlen(town_strs[i]);
+	scenariodata.town_data_size[cur_town][2] = 0;
 	for (i = 60; i < 140; i++)
-		scenario.town_data_size[cur_town][2] += strlen(town_strs[i]);
-	scenario.town_data_size[cur_town][3] = sizeof(talking_record_type);
+		scenariodata.town_data_size[cur_town][2] += strlen(town_strs[i]);
+	scenariodata.town_data_size[cur_town][3] = sizeof(talking_record_type);
 	for (i = 0; i < 80; i++)
-		scenario.town_data_size[cur_town][3] += strlen(talk_strs[i]);
-	scenario.town_data_size[cur_town][4] = 0;
+		scenariodata.town_data_size[cur_town][3] += strlen(talk_strs[i]);
+	scenariodata.town_data_size[cur_town][4] = 0;
 	for (i = 80; i < 170; i++)
-		scenario.town_data_size[cur_town][4] += strlen(talk_strs[i]);
+		scenariodata.town_data_size[cur_town][4] += strlen(talk_strs[i]);
 
-	scenario.out_data_size[out_num][0] = sizeof(outdoor_record_type);
-	scenario.out_data_size[out_num][1] = 0;
+	scenariodata.out_data_size[out_num][0] = sizeof(outdoor_record_type);
+	scenariodata.out_data_size[out_num][1] = 0;
 	for (i = 0; i < 120; i++)
-		scenario.out_data_size[out_num][1] += strlen(data_store.out_strs[i]);
+		scenariodata.out_data_size[out_num][1] += strlen(data_store.out_strs[i]);
 		
 	for (i = 0; i < 300; i++) 
-		scenario.scen_str_len[i] = 0;
+		scenariodata.scen_str_len[i] = 0;
 	for (i = 0; i < 160; i++)
-		scenario.scen_str_len[i] = strlen(scen_strs[i]);
+		scenariodata.scen_str_len[i] = strlen(scen_strs[i]);
 	for (i = 160; i < 270; i++)
-		scenario.scen_str_len[i] = strlen(scen_strs2[i - 160]);
-	scenario.last_town_edited = cur_town;
-	scenario.last_out_edited = cur_out;
+		scenariodata.scen_str_len[i] = strlen(scen_strs2[i - 160]);
+	scenariodata.last_town_edited = cur_town;
+	scenariodata.last_out_edited = cur_out;
 	
 	// now write scenario data
-	scenario.flag1 = 20;
-	scenario.flag2 = 40;
-	scenario.flag3 = 60;
-	scenario.flag4 = 80; /// these mean made on PC
+	scenariodata.flag1 = 20;
+	scenariodata.flag2 = 40;
+	scenariodata.flag3 = 60;
+	scenariodata.flag4 = 80; /// these mean made on PC
 	
 	// now flags
-	scenario.flag_a = sizeof(scenario_data_type) + rand_short(-1000,1000);
-	scenario.flag_b = town_s(user_given_password);
-	scenario.flag_c = out_s(user_given_password);
-	scenario.flag_e = str_size_1(user_given_password);
-	scenario.flag_f = str_size_2(user_given_password);
-	scenario.flag_h = str_size_3(user_given_password);
-	scenario.flag_g = 10000 + rand_short(0,5000);
-	scenario.flag_d = init_data(user_given_password);
+	scenariodata.flag_a = sizeof(scenario_data_type) + rand_short(-1000,1000);
+	scenariodata.flag_b = town_s(user_given_password);
+	scenariodata.flag_c = out_s(user_given_password);
+	scenariodata.flag_e = str_size_1(user_given_password);
+	scenariodata.flag_f = str_size_2(user_given_password);
+	scenariodata.flag_h = str_size_3(user_given_password);
+	scenariodata.flag_g = 10000 + rand_short(0,5000);
+	scenariodata.flag_d = init_data(user_given_password);
 	
 
 	len = sizeof(scenario_data_type); // scenario data
-	if ((error = FSWrite(dummy_f, &len, (char *) &scenario)) != 0) {
+	if ((error = FSWrite(dummy_f, &len, (char *) &scenariodata)) != 0) {
 		SysBeep(2); _lclose(scen_f); _lclose(dummy_f);oops_error(15);
 		return;
 		}
@@ -210,7 +210,7 @@ void save_scenario()
 		return;
 		}	
 	for (i = 0; i < 270; i++) { // scenario strings
-		len = (long) scenario.scen_str_len[i];
+		len = (long) scenariodata.scen_str_len[i];
 		if ( i < 160) {
 			if ((error = FSWrite(dummy_f, &len, (char *) &(scen_strs[i]))) != 0) {
 				SysBeep(2); _lclose(scen_f); _lclose(dummy_f);oops_error(17);
@@ -248,7 +248,7 @@ void save_scenario()
 			SetFPos(scen_f,3,save_out_size);
 			}
 			else {
-				len = (long) (scenario.out_data_size[i][0]) + (long) (scenario.out_data_size[i][1]);
+				len = (long) (scenariodata.out_data_size[i][0]) + (long) (scenariodata.out_data_size[i][1]);
 				error = FSRead(scen_f, &len, buffer);
 				dummy_out_ptr = (outdoor_record_type *) buffer;
 				if (cur_scen_is_win != TRUE)
@@ -371,13 +371,13 @@ void save_scenario()
 
 				if ((error = FSWrite(dummy_f, &len, buffer)) != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(23);return;}						
 				
-				len = (long) (scenario.town_data_size[k][1])
-					+ (long) (scenario.town_data_size[k][2]);
+				len = (long) (scenariodata.town_data_size[k][1])
+					+ (long) (scenariodata.town_data_size[k][2]);
 				error = FSRead(scen_f, &len, buffer);
 				if (error != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(24);}
 				if ((error = FSWrite(dummy_f, &len, buffer)) != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(23);return;}						
 			
-				len = (long) (scenario.town_data_size[k][3]);
+				len = (long) (scenariodata.town_data_size[k][3]);
 				error = FSRead(scen_f, &len, buffer);
 				if (error != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(24);}
 				dummy_talk_ptr = (talking_record_type *) buffer;
@@ -386,7 +386,7 @@ void save_scenario()
 					endian_adjust(*dummy_talk_ptr);
 				}
 				if ((error = FSWrite(dummy_f, &len, buffer)) != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(23);return;}
-				len = (long) (scenario.town_data_size[k][4]);
+				len = (long) (scenariodata.town_data_size[k][4]);
 				error = FSRead(scen_f, &len, buffer);
 				if (error != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(24);}
 				if ((error = FSWrite(dummy_f, &len, buffer)) != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(23);return;}
@@ -450,22 +450,22 @@ void load_scenario()
 		}
 
 	len = (long) sizeof(scenario_data_type);
-	if ((error = FSRead(file_id, &len, (char *) &scenario)) != 0){
+	if ((error = FSRead(file_id, &len, (char *) &scenariodata)) != 0){
 		_lclose(file_id); oops_error(29); return;
 		}
-	if ((scenario.flag1 == 10) && (scenario.flag2 == 20)
-	 && (scenario.flag3 == 30)
-	  && (scenario.flag4 == 40)) {
+	if ((scenariodata.flag1 == 10) && (scenariodata.flag2 == 20)
+	 && (scenariodata.flag3 == 30)
+	  && (scenariodata.flag4 == 40)) {
 		cur_scen_is_win = FALSE;
 		file_ok = TRUE;
 		if (cur_scen_is_win != TRUE)
 		{
-			endian_adjust(scenario);
+			endian_adjust(scenariodata);
 		}
 	}
-	if ((scenario.flag1 == 20) && (scenario.flag2 == 40)
-	 && (scenario.flag3 == 60)
-	  && (scenario.flag4 == 80)) {
+	if ((scenariodata.flag1 == 20) && (scenariodata.flag2 == 40)
+	 && (scenariodata.flag3 == 60)
+	  && (scenariodata.flag4 == 80)) {
 
 		cur_scen_is_win = TRUE;
 		file_ok = TRUE;
@@ -484,7 +484,7 @@ void load_scenario()
 		endian_adjust(scen_item_list);
 	}
 	for (i = 0; i < 270; i++) {
-		len = (long) (scenario.scen_str_len[i]);
+		len = (long) (scenariodata.scen_str_len[i]);
 		if (i < 160) {
 			FSRead(file_id, &len, (char *) &(scen_strs[i]));
 			scen_strs[i][len] = 0;
@@ -518,11 +518,11 @@ void load_scenario()
 	//store_file_reply = file_to_load;
 	overall_mode = 60;
 	change_made = FALSE;
-	load_town(scenario.last_town_edited);
+	load_town(scenariodata.last_town_edited);
 	//load_town(0);
-	load_outdoors(scenario.last_out_edited,0);
+	load_outdoors(scenariodata.last_out_edited,0);
 	load_spec_graphics();
-	augment_terrain(scenario.last_out_edited);
+	augment_terrain(scenariodata.last_out_edited);
 }
 
 //extern GWorldPtr spec_scen_g;
@@ -608,11 +608,11 @@ void load_outdoors(location which_out,short mode)
 	len_to_jump = sizeof(scenario_data_type);
 	len_to_jump += sizeof(scen_item_data_type);
 	for (i = 0; i < 300; i++)
-		len_to_jump += (long) scenario.scen_str_len[i];
+		len_to_jump += (long) scenariodata.scen_str_len[i];
 	store = 0;
 	for (i = 0; i < out_sec_num; i++)
 		for (j = 0; j < 2; j++)
-			store += (long) (scenario.out_data_size[i][j]);
+			store += (long) (scenariodata.out_data_size[i][j]);
 	len_to_jump += store;
 	
 	error = SetFPos (file_id, 1, len_to_jump);	
@@ -684,14 +684,14 @@ void load_town(short which_town)
 	len_to_jump = sizeof(scenario_data_type);
 	len_to_jump += sizeof(scen_item_data_type);
 	for (i = 0; i < 300; i++)
-		len_to_jump += (long) scenario.scen_str_len[i];
+		len_to_jump += (long) scenariodata.scen_str_len[i];
 	store = 0;
 	for (i = 0; i < 100; i++)
 		for (j = 0; j < 2; j++)
-			store += (long) (scenario.out_data_size[i][j]);
+			store += (long) (scenariodata.out_data_size[i][j]);
 	for (i = 0; i < which_town; i++)
 		for (j = 0; j < 5; j++)
-			store += (long) (scenario.town_data_size[i][j]);
+			store += (long) (scenariodata.town_data_size[i][j]);
 	len_to_jump += store;
 	
 	error = SetFPos (file_id, 1, len_to_jump);
@@ -973,7 +973,7 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 	strcpy(szFileName,file_name);
 
 	len = (long) sizeof(scenario_data_type);
-	if ((error = FSRead(file_id, &len, (char *) &scenario)) != 0){
+	if ((error = FSRead(file_id, &len, (char *) &scenariodata)) != 0){
 		_lclose(file_id); oops_error(82); return;
 		}
 
@@ -982,7 +982,7 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 		_lclose(file_id); oops_error(83); return;
 		}
 	for (i = 0; i < 270; i++) {
-		len = (long) (scenario.scen_str_len[i]);
+		len = (long) (scenariodata.scen_str_len[i]);
 		if (i < 160) {
 			FSRead(file_id, &len, (char *) &(scen_strs[i]));
 			scen_strs[i][len] = 0;
@@ -993,8 +993,8 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 				}
 		}
 	strcpy(scen_strs[0], title);
-	scenario.scen_str_len[0] = strlen(title);
-	scen_strs[0][scenario.scen_str_len[0]] = 0;
+	scenariodata.scen_str_len[0] = strlen(title);
+	scen_strs[0][scenariodata.scen_str_len[0]] = 0;
 	_lclose(file_id);
 
 	//OK. FIrst find out what file name we're working with, and make the dummy file
@@ -1005,75 +1005,75 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 			}
 
 		
-	scenario.prog_make_ver[0] = 1;
-	scenario.prog_make_ver[1] = 0;
-	scenario.prog_make_ver[2] = 0;
+	scenariodata.prog_make_ver[0] = 1;
+	scenariodata.prog_make_ver[1] = 0;
+	scenariodata.prog_make_ver[2] = 0;
 	cur_town = 0;
 	town_type = 1;
-	scenario.num_towns = 1;
-	scenario.town_size[0] = 1;
-	scenario.out_width = out_width;
-	scenario.out_height = out_height;	
+	scenariodata.num_towns = 1;
+	scenariodata.town_size[0] = 1;
+	scenariodata.out_width = out_width;
+	scenariodata.out_height = out_height;	
 	cur_out.x = 0;
 	cur_out.y = 0;
-	scenario.last_out_edited = cur_out;
+	scenariodata.last_out_edited = cur_out;
 
 	// We're finally set up. Let's first set up the new scenario field
 	// We need the new info for the current town and outdoors, which may have been changed
-	scenario.town_data_size[cur_town][0] = sizeof(town_record_type);
+	scenariodata.town_data_size[cur_town][0] = sizeof(town_record_type);
 	if (scenario_town_size(cur_town) == 0) 
-		scenario.town_data_size[cur_town][0] += sizeof(big_tr_type);
+		scenariodata.town_data_size[cur_town][0] += sizeof(big_tr_type);
 		else if (scenario_town_size(cur_town) == 1) 
-			scenario.town_data_size[cur_town][0] += sizeof(ave_tr_type);
-			else scenario.town_data_size[cur_town][0] += sizeof(tiny_tr_type);
-	scenario.town_data_size[cur_town][1] = 0;
+			scenariodata.town_data_size[cur_town][0] += sizeof(ave_tr_type);
+			else scenariodata.town_data_size[cur_town][0] += sizeof(tiny_tr_type);
+	scenariodata.town_data_size[cur_town][1] = 0;
 	for (i = 0; i < 60; i++)
-		scenario.town_data_size[cur_town][1] += strlen(town_strs[i]);
-	scenario.town_data_size[cur_town][2] = 0;
+		scenariodata.town_data_size[cur_town][1] += strlen(town_strs[i]);
+	scenariodata.town_data_size[cur_town][2] = 0;
 	for (i = 60; i < 140; i++)
-		scenario.town_data_size[cur_town][2] += strlen(town_strs[i]);
-	scenario.town_data_size[cur_town][3] = sizeof(talking_record_type);
+		scenariodata.town_data_size[cur_town][2] += strlen(town_strs[i]);
+	scenariodata.town_data_size[cur_town][3] = sizeof(talking_record_type);
 	for (i = 0; i < 80; i++)
-		scenario.town_data_size[cur_town][3] += strlen(talk_strs[i]);
-	scenario.town_data_size[cur_town][4] = 0;
+		scenariodata.town_data_size[cur_town][3] += strlen(talk_strs[i]);
+	scenariodata.town_data_size[cur_town][4] = 0;
 	for (i = 80; i < 170; i++)
-		scenario.town_data_size[cur_town][4] += strlen(talk_strs[i]);
+		scenariodata.town_data_size[cur_town][4] += strlen(talk_strs[i]);
 
 	num_outdoors = scenario_out_width() * scenario_out_height();
 	for (i = 0; i < num_outdoors; i++) {
-		scenario.out_data_size[i][0] = sizeof(outdoor_record_type);
-		scenario.out_data_size[i][1] = 0;
+		scenariodata.out_data_size[i][0] = sizeof(outdoor_record_type);
+		scenariodata.out_data_size[i][1] = 0;
 		for (j = 0; j < 120; j++)
-			scenario.out_data_size[i][1] += strlen(data_store.out_strs[j]);
+			scenariodata.out_data_size[i][1] += strlen(data_store.out_strs[j]);
 		}
 		
 	for (i = 0; i < 300; i++) 
-		scenario.scen_str_len[i] = 0;
+		scenariodata.scen_str_len[i] = 0;
 	for (i = 0; i < 160; i++)
-		scenario.scen_str_len[i] = strlen(scen_strs[i]);
+		scenariodata.scen_str_len[i] = strlen(scen_strs[i]);
 	for (i = 160; i < 270; i++)
-		scenario.scen_str_len[i] = strlen(scen_strs2[i - 160]);
-	scenario.last_town_edited = cur_town;
-	scenario.last_out_edited = cur_out;
+		scenariodata.scen_str_len[i] = strlen(scen_strs2[i - 160]);
+	scenariodata.last_town_edited = cur_town;
+	scenariodata.last_out_edited = cur_out;
 	
 	// now write scenario data
-	scenario.flag1 = 20;
-	scenario.flag2 = 40;
-	scenario.flag3 = 60;
-	scenario.flag4 = 80; /// these mean made on mac
+	scenariodata.flag1 = 20;
+	scenariodata.flag2 = 40;
+	scenariodata.flag3 = 60;
+	scenariodata.flag4 = 80; /// these mean made on mac
 	// now flags
-	scenario.flag_a = sizeof(scenario_data_type) + rand_short(-1000,1000);
-	scenario.flag_b = town_s(user_given_password);
-	scenario.flag_c = out_s(user_given_password);
-	scenario.flag_e = str_size_1(user_given_password);
-	scenario.flag_f = str_size_2(user_given_password);
-	scenario.flag_h = str_size_3(user_given_password);
-	scenario.flag_g = 10000 + rand_short(0,5000);
-	scenario.flag_d = init_data(user_given_password);
+	scenariodata.flag_a = sizeof(scenario_data_type) + rand_short(-1000,1000);
+	scenariodata.flag_b = town_s(user_given_password);
+	scenariodata.flag_c = out_s(user_given_password);
+	scenariodata.flag_e = str_size_1(user_given_password);
+	scenariodata.flag_f = str_size_2(user_given_password);
+	scenariodata.flag_h = str_size_3(user_given_password);
+	scenariodata.flag_g = 10000 + rand_short(0,5000);
+	scenariodata.flag_d = init_data(user_given_password);
 	
 	len = sizeof(scenario_data_type); // scenario data
 	scen_ptr_move += len;
-	if ((error = FSWrite(dummy_f, &len, (char *) &scenario)) != 0) {
+	if ((error = FSWrite(dummy_f, &len, (char *) &scenariodata)) != 0) {
 		_lclose(dummy_f);
 				oops_error(3);
 		return;
@@ -1086,7 +1086,7 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 		return;
 		}	
 	for (i = 0; i < 270; i++) { // scenario strings
-		len = (long) scenario.scen_str_len[i];
+		len = (long) scenariodata.scen_str_len[i];
 		scen_ptr_move += len;
 		if (i < 160) {
 			if ((error = FSWrite(dummy_f, &len, (char *) &(scen_strs[i]))) != 0) {
@@ -1240,51 +1240,51 @@ void oops_error(short error)
 Boolean check_p (short pword)
 {
 
-	if (scenario.flag_b != town_s(pword))
+	if (scenariodata.flag_b != town_s(pword))
 		return FALSE;
 
-	if (scenario.flag_c != out_s(pword))
+	if (scenariodata.flag_c != out_s(pword))
 		return FALSE;
-	if (scenario.flag_e != str_size_1(pword))
+	if (scenariodata.flag_e != str_size_1(pword))
 		return FALSE;
-	if (scenario.flag_f != str_size_2(pword))
+	if (scenariodata.flag_f != str_size_2(pword))
 		return FALSE;
-	if (scenario.flag_h != str_size_3(pword))
+	if (scenariodata.flag_h != str_size_3(pword))
 		return FALSE;
-	if (scenario.flag_d != init_data(pword))
+	if (scenariodata.flag_d != init_data(pword))
 		return FALSE;
 
 	return TRUE;
 }
 Boolean check_p2 (short pword)
 {
-	if (scenario.flag_b != town_s(pword))
+	if (scenariodata.flag_b != town_s(pword))
 		return FALSE;
-	if (scenario.flag_c != out_s(pword))
+	if (scenariodata.flag_c != out_s(pword))
 		return FALSE;
-	if (scenario.flag_e != str_size_1(pword))
+	if (scenariodata.flag_e != str_size_1(pword))
 		return FALSE;
-	if (scenario.flag_f != str_size_2(pword))
+	if (scenariodata.flag_f != str_size_2(pword))
 		return FALSE;
-	if (scenario.flag_h != str_size_3(pword))
+	if (scenariodata.flag_h != str_size_3(pword))
 		return FALSE;
-	if (scenario.flag_d != init_data(pword))
+	if (scenariodata.flag_d != init_data(pword))
 		return FALSE;
 
 	return TRUE;
 }Boolean check_p3 (short pword)
 {
-	if (scenario.flag_b != town_s(pword))
+	if (scenariodata.flag_b != town_s(pword))
 		return FALSE;
-	if (scenario.flag_c != out_s(pword))
+	if (scenariodata.flag_c != out_s(pword))
 		return FALSE;
-	if (scenario.flag_e != str_size_1(pword))
+	if (scenariodata.flag_e != str_size_1(pword))
 		return FALSE;
-	if (scenario.flag_f != str_size_2(pword))
+	if (scenariodata.flag_f != str_size_2(pword))
 		return FALSE;
-	if (scenario.flag_h != str_size_3(pword))
+	if (scenariodata.flag_h != str_size_3(pword))
 		return FALSE;
-	if (scenario.flag_d != init_data(pword))
+	if (scenariodata.flag_d != init_data(pword))
 		return FALSE;
 
 	return TRUE;
@@ -1343,7 +1343,7 @@ short out_s(short flag)
 	k = (long) flag;
 	k = k * k * k;
 	jl = jl * jl + 84 + k;
-	k = k + scenario.out_data_size[0][1];
+	k = k + scenariodata.out_data_size[0][1];
 	k = k % 3000;
 	k = k * 4;
 	jl = jl * 2 + 1234 + k;
@@ -1363,7 +1363,7 @@ short str_size_1(short flag)
 	k = k * k;
 	jl = jl * 2 + 1234 + k;
 	jl = jl * jl + 84 + k;
-	k = k + scenario.scen_str_len[0] + scenario.scen_str_len[1] + scenario.scen_str_len[2];
+	k = k + scenariodata.scen_str_len[0] + scenariodata.scen_str_len[1] + scenariodata.scen_str_len[2];
 	jl = jl * 2 + 1234 + k;
 	k = k % 3000;
 	jl = jl * 54;
@@ -1399,7 +1399,7 @@ short str_size_3(short flag)
 	long k = 0;
 		
 	k = (long) flag;
-	k = k * (scenario.town_data_size[0][0] +  scenario.town_data_size[0][1] +  scenario.town_data_size[0][2] +  scenario.town_data_size[0][3]);
+	k = k * (scenariodata.town_data_size[0][0] +  scenariodata.town_data_size[0][1] +  scenariodata.town_data_size[0][2] +  scenariodata.town_data_size[0][3]);
 	k = k + 80;
 	jl = jl * jl + 84 + k;
 	k = k % 3000;
@@ -1419,7 +1419,7 @@ short get_buf_ptr(short flag)
 		
 	k = (long) flag;
 	jl = jl * jl + 84 + k;
-	k = k * (scenario_out_width() +  scenario_out_width() +  scenario_out_height() +  scenario.town_data_size[0][3]);
+	k = k * (scenario_out_width() +  scenario_out_width() +  scenario_out_height() +  scenariodata.town_data_size[0][3]);
 	k = k + 80;
 	jl = jl * jl + 84 + k;
 	k = k % 2443;
@@ -1436,14 +1436,14 @@ short get_buf_ptr(short flag)
 void reset_pwd()
 {
 	// now flags
-	scenario.flag_a = sizeof(scenario_data_type) + rand_short(-1000,1000);
-	scenario.flag_b = town_s(user_given_password);
-	scenario.flag_c = out_s(user_given_password);
-	scenario.flag_e = str_size_1(user_given_password);
-	scenario.flag_f = str_size_2(user_given_password);
-	scenario.flag_h = str_size_3(user_given_password);
-	scenario.flag_g = 10000 + rand_short(0,5000);
-	scenario.flag_d = init_data(user_given_password);
+	scenariodata.flag_a = sizeof(scenario_data_type) + rand_short(-1000,1000);
+	scenariodata.flag_b = town_s(user_given_password);
+	scenariodata.flag_c = out_s(user_given_password);
+	scenariodata.flag_e = str_size_1(user_given_password);
+	scenariodata.flag_f = str_size_2(user_given_password);
+	scenariodata.flag_h = str_size_3(user_given_password);
+	scenariodata.flag_g = 10000 + rand_short(0,5000);
+	scenariodata.flag_d = init_data(user_given_password);
 }
 
 void start_data_dump()

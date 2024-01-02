@@ -51,7 +51,7 @@ extern short town_type;  // 0 - big 1 - ave 2 - small
 extern short max_dim[3],mode_count;
 extern unsigned char template_terrain[64][64];
 extern short_item_record_type item_list[400];
-extern scenario_data_type scenario;
+extern scenario_data_type scenariodata;
 extern HWND right_sbar,mainPtr;
 extern outdoor_record_type current_terrain;
 extern location cur_out;
@@ -288,7 +288,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 						break;
 					case 4:
 						if (option_hit == TRUE) {
-							scenario.scen_specials[j] = null_spec_node;
+							scenariodata.scen_specials[j] = null_spec_node;
 							} 
 							else edit_spec_enc(j,0,0); 
 						//get_str(s2,22,scenario.scen_specials[j].type + 1);
@@ -813,9 +813,9 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 						give_error("You can't put the starting location this close to the edge of an outdoor section. It has to be at least 4 spaces away.","",0);
 						break;
 						}
-				scenario.out_sec_start.x = cur_out.x;
-				scenario.out_sec_start.y = cur_out.y;
-				scenario.out_start = spot_hit;
+				scenariodata.out_sec_start.x = cur_out.x;
+				scenariodata.out_sec_start.y = cur_out.y;
+				scenariodata.out_start = spot_hit;
 				set_cursor(0);
 				overall_mode = 0;
 				break;
@@ -2893,11 +2893,11 @@ void place_items_in_town()
 			l.x = i; l.y = j;
 			
 			for (k = 0; k < 10; k++)
-				if (t_d.terrain[i][j] == scenario.storage_shortcuts[k].ter_type) {
+				if (t_d.terrain[i][j] == scenariodata.storage_shortcuts[k].ter_type) {
 					for (x = 0; x < 10; x++)
-						if (place_item(l,scenario.storage_shortcuts[k].item_num[x],
-							scenario.storage_shortcuts[k].property,FALSE,
-							scenario.storage_shortcuts[k].item_odds[x]) == FALSE)
+						if (place_item(l,scenariodata.storage_shortcuts[k].item_num[x],
+							scenariodata.storage_shortcuts[k].property,FALSE,
+							scenariodata.storage_shortcuts[k].item_odds[x]) == FALSE)
 								place_failed = TRUE;
 					}
 		 	}
@@ -3420,7 +3420,7 @@ void start_special_editing(short mode,short just_redo_text)
 	for (i = 0; i < num_specs[mode]; i++) {
 		switch (mode) {
 			case 0:
-				get_str(s2,22,scenario.scen_specials[i].type + 1);
+				get_str(s2,22,scenariodata.scen_specials[i].type + 1);
 				set_rb(i,4000 + i, std::format("{:d} - {:<30.30s}", i, s2),0);
 				break;
 			case 1:
