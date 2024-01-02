@@ -11,7 +11,6 @@ add_executable (Scen-Ed WIN32
 	townout_stub.cpp
 	global.cpp
 	buttonmg.cpp
-	../scenario.cpp
 	../scenario_ext.cpp
 
 	BLSCENED.RC

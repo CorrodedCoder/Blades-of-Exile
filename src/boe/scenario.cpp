@@ -1,4 +1,4 @@
-#include "scenario.hpp"
+#include "boe/scenario.hpp"
 
 Scenario::Scenario(const scenario_data_type& scene)
 	: scenariodata_(scene)

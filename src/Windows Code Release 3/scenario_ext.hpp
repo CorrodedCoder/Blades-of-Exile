@@ -1,6 +1,6 @@
 #pragma once
 
-#include "scenario.hpp"
+#include "boe/scenario.hpp"
 
 const char* scenario_header_string(short a, short b);
 const char* scenario_name_string(short index);

@@ -14,5 +14,6 @@ add_library(boe STATIC
 	item.cpp
 	pc.cpp
 	savedata_serialization.cpp
+	scenario.cpp
 	utility.cpp
 )
