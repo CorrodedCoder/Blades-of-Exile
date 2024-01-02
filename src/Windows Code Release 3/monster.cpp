@@ -49,7 +49,7 @@ monster_record_type return_monster_template(unsigned char store)
 	short m_num,i;
 	
 	m_num = store;
-	monst = scenario_monster(store);
+	monst = scenario.monster(store);
 	if (monst.spec_skill == 11)
 		monst.picture_num = 0;
 		
@@ -89,11 +89,11 @@ short difficulty_adjust()
 		if (adven[i].main_status == status::Normal)
 			j += adven[i].level;
 	
-	if ((scenario_difficulty() <= 0) && (j >= 60))
+	if ((scenario.difficulty() <= 0) && (j >= 60))
 		to_return++;
-	if ((scenario_difficulty() <= 1) && (j >= 130))
+	if ((scenario.difficulty() <= 1) && (j >= 130))
 		to_return++;
-	if ((scenario_difficulty() <= 2) && (j >= 210))
+	if ((scenario.difficulty() <= 2) && (j >= 210))
 		to_return++;
 	return to_return;
 }	
@@ -246,12 +246,12 @@ location get_monst_head(short m_num)
 
 short get_monst_picnum(unsigned char monst)
 {
-	return scenario_monster(monst).picture_num;
+	return scenario.monster(monst).picture_num;
 }
 
 void get_monst_dims(unsigned char monst,short *width, short *height)
 {
-	const auto& monster{ scenario_monster(monst) };
+	const auto& monster{ scenario.monster(monst) };
 	*width = monster.x_width;
 	*height = monster.y_width;
 }
@@ -990,7 +990,7 @@ Boolean monst_check_special_terrain(location where_check,short mode,short which_
 			break;	
 		}
 	which_m = &c_town.monst.dudes[which_monst];
-	const auto ter_abil = scenario_ter_type(ter).special;
+	const auto ter_abil = scenario.ter_type(ter).special;
 	
 		if ((mode > 0) && (ter_abil >= terrain_special::ConveyorNorth) &&
 			(ter_abil <= terrain_special::ConveyorWest)) {
@@ -1094,9 +1094,9 @@ Boolean monst_check_special_terrain(location where_check,short mode,short which_
 				}
 		}
 	if (monster_placid(which_monst) && // monstyers don't hop into bed when things are calm
-		(scenario_ter_type(ter).picture == 143))
+		(scenario.ter_type(ter).picture == 143))
 				can_enter = FALSE;
-	if ((scenario_ter_type(ter).picture <= 212) && (scenario_ter_type(ter).picture >= 207))
+	if ((scenario.ter_type(ter).picture <= 212) && (scenario.ter_type(ter).picture >= 207))
 		can_enter = FALSE;
 	if (ter == 90) {
 			if (is_combat() && (which_combat_type == 0)) {
@@ -1110,11 +1110,11 @@ Boolean monst_check_special_terrain(location where_check,short mode,short which_
 		case terrain_special::ChangeWhenStepOn:
 			can_enter = FALSE;
 			if (!(monster_placid(which_monst))) {
-				t_d.terrain[where_check.x][where_check.y] = scenario_ter_type(ter).flag1;
-				combat_terrain[where_check.x][where_check.y] = scenario_ter_type(ter).flag1;
+				t_d.terrain[where_check.x][where_check.y] = scenario.ter_type(ter).flag1;
+				combat_terrain[where_check.x][where_check.y] = scenario.ter_type(ter).flag1;
 				do_look = TRUE;
 				if (point_onscreen(center,where_check))
-					play_sound(scenario_ter_type(ter).flag2);
+					play_sound(scenario.ter_type(ter).flag2);
 				}
 			break;
 
@@ -1353,7 +1353,7 @@ short place_monster(unsigned char which,location where)
 	
 	if (i < T_M) {
 		c_town.monst.dudes[i].m_d = return_monster_template((unsigned char) which);
-		c_town.monst.dudes[i].attitude = scenario_monster(which).default_attitude;
+		c_town.monst.dudes[i].attitude = scenario.monster(which).default_attitude;
 		if (c_town.monst.dudes[i].attitude % 2 == 0)
 			c_town.monst.dudes[i].attitude = 1;
 		c_town.monst.dudes[i].mobile = TRUE;
@@ -1478,7 +1478,7 @@ short get_summon_monster(short summon_class)
 	
 	for (i = 0; i < 200; i++) {
 		j = rand_short(0,255);
-		if (scenario_monster(j).summon_type == summon_class) {
+		if (scenario.monster(j).summon_type == summon_class) {
 			return j;
 			}
 		}

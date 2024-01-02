@@ -812,7 +812,7 @@ Boolean handle_menu (short item, HMENU menu)
 				ASB("Add PC: You already have 6 PCs.");
 				print_buf();
 				}
-			if (c_town.town_num == scenario_which_town_start()) {
+			if (c_town.town_num == scenario.which_town_start()) {
 				give_help(56,0,0);
 				create_pc(6,0);
 				}

@@ -314,7 +314,7 @@ void draw_monsters()
 						ter = t_d.terrain[c_town.monst.dudes[i].m_loc.x][c_town.monst.dudes[i].m_loc.y];
 						// in bed?
 						if ((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
-							(scenario_ter_type(ter).picture == 143) && 
+							(scenario.ter_type(ter).picture == 143) && 
 							((c_town.monst.dudes[i].m_d.m_type < 7) 
 							&& (c_town.monst.dudes[i].m_d.m_type != 1) && (c_town.monst.dudes[i].m_d.m_type != 2))
 							&& ((c_town.monst.dudes[i].active == 1) || (monst_target[i] == 6)) &&
@@ -351,7 +351,7 @@ void draw_monsters()
 								 ,k);
 								ter = t_d.terrain[c_town.monst.dudes[i].m_loc.x][c_town.monst.dudes[i].m_loc.y];
 								if ((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
-									(scenario_ter_type(ter).picture == 143) && 
+									(scenario.ter_type(ter).picture == 143) && 
 									((c_town.monst.dudes[i].m_d.m_type < 7) 
 										&& (c_town.monst.dudes[i].m_d.m_type != 1) && (c_town.monst.dudes[i].m_d.m_type != 2))
 									&& ((c_town.monst.dudes[i].active == 1) || (monst_target[i] == 6)) &&
@@ -849,13 +849,13 @@ static bool is_shore(unsigned char ter_type)
 // These two functions used to determine wall round-cornering
 bool is_wall(unsigned char ter_type)
 {
-	const short pic = scenario_ter_type(ter_type).picture;
+	const short pic = scenario.ter_type(ter_type).picture;
 	return (pic >= 88) && (pic <= 120);
 }
 
 bool is_ground(unsigned char ter_type)
 {
-	const short pic = scenario_ter_type(ter_type).picture;
+	const short pic = scenario.ter_type(ter_type).picture;
 	if ((pic >= 0) && (pic <= 87))
 		return true;
 	if ((pic >= 121) && (pic <= 122))

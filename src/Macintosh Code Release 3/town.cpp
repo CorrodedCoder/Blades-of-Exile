@@ -147,7 +147,7 @@ void start_town_mode(short which_town, short entry_dir)
 	
 	former_town = town_number = which_town;
 	
-	if ((town_number < 0) || (town_number >= scenario_num_towns())) {
+	if ((town_number < 0) || (town_number >= scenario.num_towns())) {
 		SetPort(mainPtr);
 		give_error("The scenario tried to put you into a town that doesn't exist.","",0);
 		return;
@@ -171,7 +171,7 @@ void start_town_mode(short which_town, short entry_dir)
 
 		
 		
-	if ((town_number < 0) || (town_number >= scenario_num_towns())) {
+	if ((town_number < 0) || (town_number >= scenario.num_towns())) {
 		SetPort(mainPtr);
 		give_error("The scenario tried to put you into a town that doesn't exist.","",0);
 		return;
@@ -1238,7 +1238,7 @@ void erase_out_specials()
 			if (quadrant_legal(i,j) == TRUE) {
 			for (k = 0; k < 18; k++) 
 				if (outdoors[i][j].special_id[k] >= 0) {
-				out_num = scenario_out_width() * (party.outdoor_corner.y + j) + party.outdoor_corner.x + i;
+				out_num = scenario.out_width() * (party.outdoor_corner.y + j) + party.outdoor_corner.x + i;
 
 				sn = outdoors[i][j].specials[outdoors[i][j].special_id[k]];
 				sd1 = sn.sd1; sd2 = sn.sd2;
@@ -1730,9 +1730,9 @@ void check_done() {
 
 Boolean quadrant_legal(short i, short j) 
 {
-	if (party.outdoor_corner.x + i >= scenario_out_width())
+	if (party.outdoor_corner.x + i >= scenario.out_width())
 		return FALSE;
-	if (party.outdoor_corner.y + j >= scenario_out_height())
+	if (party.outdoor_corner.y + j >= scenario.out_height())
 		return FALSE;
 	if (party.outdoor_corner.x + i < 0)
 		return FALSE;

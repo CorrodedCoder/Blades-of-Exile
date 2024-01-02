@@ -1666,7 +1666,7 @@ GWorldPtr load_pict(short picture_to_get)
 // right now, trying a restrictive rule (just cave floor and grass, mainly)
 bool is_nature(char x, char y)
 {
-	const short pic = scenario_ter_type(coord_to_ter((short)x, (short)y)).picture;
+	const short pic = scenario.ter_type(coord_to_ter((short)x, (short)y)).picture;
 	if ((pic >= 0) && (pic <= 45))
 		return true;
 	if ((pic >= 67) && (pic <= 73))
@@ -2163,7 +2163,7 @@ Boolean extend_road_terrain(unsigned char ter)
 							192,193,194,195,196, 197,191,200,201};
 	
 	for (i = 0; i < 39; i++)
-		if (scenario_ter_type(ter).picture == extend_pics[i])
+		if (scenario.ter_type(ter).picture == extend_pics[i])
 			return TRUE;
 	return FALSE;
 }

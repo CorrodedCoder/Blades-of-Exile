@@ -1055,14 +1055,14 @@ void edit_ter_type_event_filter (short item_hit)
 			if (save_ter_info() == FALSE) break;
 			store_which_ter--;
 			if (store_which_ter < 0) store_which_ter = 255;
-			store_ter = scenario_ter_type(store_which_ter);
+			store_ter = scenario.ter_type(store_which_ter);
 			put_ter_info_in_dlog();
 			break;
 		case 11:
 			if (save_ter_info() == FALSE) break;
 			store_which_ter++;
 			if (store_which_ter > 255) store_which_ter = 0;
-			store_ter = scenario_ter_type(store_which_ter);
+			store_ter = scenario.ter_type(store_which_ter);
 			put_ter_info_in_dlog();
 			break;
 		
@@ -1111,7 +1111,7 @@ short edit_ter_type(short which_ter)
 	char temp_str[256];
 	
 	store_which_ter = which_ter;
-	store_ter = scenario_ter_type(which_ter);
+	store_ter = scenario.ter_type(which_ter);
 	//make_cursor_sword();
 	
 	cd_create_dialog_parent_num(813,0);
@@ -2626,12 +2626,12 @@ void set_starting_loc_filter (short item_hit)
 			i = CDGN(805,2);
 			j = CDGN(805,3);
 			k = CDGN(805,4);
-			if ((i < 0) || (i >= scenario_num_towns())) {
-				give_error(std::format("The starting town must be from 0 to {:d}.", scenario_num_towns() - 1), "", 805);
+			if ((i < 0) || (i >= scenario.num_towns())) {
+				give_error(std::format("The starting town must be from 0 to {:d}.", scenario.num_towns() - 1), "", 805);
 				break;
 				}
-			if ((j < 0) || (j >= max_dim[scenario_town_size(i)] - 1) ||
-				(k < 0) || (k >= max_dim[scenario_town_size(i)] - 1)) {
+			if ((j < 0) || (j >= max_dim[scenario.town_size(i)] - 1) ||
+				(k < 0) || (k >= max_dim[scenario.town_size(i)] - 1)) {
 				give_error("This coordinate is not inside the bounds of the town.","",805);
 				break;
 				}
@@ -2651,7 +2651,7 @@ void set_starting_loc()
 {
 	cd_create_dialog_parent_num(805,0);
 	
-	CDSN(805,2,scenario_which_town_start());
+	CDSN(805,2,scenario.which_town_start());
 	CDSN(805,3,scenariodata.where_start.x);
 	CDSN(805,4,scenariodata.where_start.y);
 	

@@ -4,119 +4,127 @@
 scenario_data_type scenariodata;
 piles_of_stuff_dumping_type2 data_store2;
 
-unsigned char scenario_out_width(void)
+Scenario scenario(scenariodata);
+
+Scenario::Scenario(const scenario_data_type& scene)
+	: scenariodata_(scene)
 {
-	return scenariodata.out_width;
+
 }
 
-unsigned char scenario_out_height(void)
+unsigned char Scenario::out_width(void)
 {
-	return scenariodata.out_height;
+	return scenariodata_.out_width;
 }
 
-short scenario_which_town_start(void)
+unsigned char Scenario::out_height(void)
 {
-	return scenariodata.which_town_start;
+	return scenariodata_.out_height;
 }
 
-unsigned char scenario_num_towns(void)
+short Scenario::which_town_start(void)
 {
-	return scenariodata.num_towns;
+	return scenariodata_.which_town_start;
 }
 
-unsigned char scenario_town_size(short index)
+unsigned char Scenario::num_towns(void)
 {
-	return scenariodata.town_size[index];
+	return scenariodata_.num_towns;
 }
 
-const terrain_type_type& scenario_ter_type(short index)
+unsigned char Scenario::town_size(short index)
 {
-	return scenariodata.ter_types[index];
+	return scenariodata_.town_size[index];
 }
 
-unsigned char scenario_intro_pic(void)
+const terrain_type_type& Scenario::ter_type(short index)
 {
-	return scenariodata.intro_pic;
+	return scenariodata_.ter_types[index];
 }
 
-const monster_record_type& scenario_monster(short index)
+unsigned char Scenario::intro_pic(void)
 {
-	return scenariodata.scen_monsters[index];
+	return scenariodata_.intro_pic;
 }
 
-const special_node_type& scenario_specials(short index)
+const monster_record_type& Scenario::monster(short index)
 {
-	return scenariodata.scen_specials[index];
+	return scenariodata_.scen_monsters[index];
 }
 
-short scenario_special_item(short index)
+const special_node_type& Scenario::specials(short index)
 {
-	return scenariodata.special_item_special[index];
+	return scenariodata_.scen_specials[index];
 }
 
-short scenario_timer_times(short index)
+short Scenario::special_item(short index)
 {
-	return scenariodata.scenario_timer_times[index];
+	return scenariodata_.special_item_special[index];
 }
 
-short scenario_timer_specs(short index)
+short Scenario::timer_times(short index)
 {
-	return scenariodata.scenario_timer_specs[index];
+	return scenariodata_.scenario_timer_times[index];
 }
 
-unsigned char scenario_difficulty(void)
+short Scenario::timer_specs(short index)
 {
-	return scenariodata.difficulty;
+	return scenariodata_.scenario_timer_specs[index];
 }
 
-short scenario_town_to_add_to(short index)
+unsigned char Scenario::difficulty(void)
 {
-	return scenariodata.town_to_add_to[index];
+	return scenariodata_.difficulty;
 }
 
-short scenario_flag_to_add_to_town(short a, short b)
+short Scenario::town_to_add_to(short index)
 {
-	return scenariodata.flag_to_add_to_town[a][b];
+	return scenariodata_.town_to_add_to[index];
 }
 
-short scenario_store_item_town(short index)
+short Scenario::flag_to_add_to_town(short a, short b)
 {
-	return scenariodata.store_item_towns[index];
+	return scenariodata_.flag_to_add_to_town[a][b];
 }
 
-const BoeRect& scenario_store_item_rects(short index)
+short Scenario::store_item_town(short index)
 {
-	return scenariodata.store_item_rects[index];
+	return scenariodata_.store_item_towns[index];
 }
 
-const boat_record_type& scenario_boats(short index)
+const BoeRect& Scenario::store_item_rects(short index)
 {
-	return scenariodata.scen_boats[index];
+	return scenariodata_.store_item_rects[index];
 }
 
-const horse_record_type& scenario_horses(short index)
+const boat_record_type& Scenario::boats(short index)
 {
-	return scenariodata.scen_horses[index];
+	return scenariodata_.scen_boats[index];
 }
 
-const location& scenario_where_start(void)
+const horse_record_type& Scenario::horses(short index)
 {
-	return scenariodata.where_start;
+	return scenariodata_.scen_horses[index];
 }
 
-unsigned char scenario_town_hidden(short index)
+const location& Scenario::where_start(void)
 {
-	return scenariodata.town_hidden[index];
+	return scenariodata_.where_start;
 }
 
-const location& scenario_out_sec_start(void)
+unsigned char Scenario::town_hidden(short index)
 {
-	return scenariodata.out_sec_start;
+	return scenariodata_.town_hidden[index];
 }
 
-const location& scenario_out_start(void)
+const location& Scenario::out_sec_start(void)
 {
-	return scenariodata.out_start;
+	return scenariodata_.out_sec_start;
+}
+
+const location& Scenario::out_start(void)
+{
+	return scenariodata_.out_start;
 }
 
 const char* scenario_header_string(short a, short b)

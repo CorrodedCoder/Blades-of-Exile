@@ -134,7 +134,7 @@ void save_scenario()
 
 	// Now, the pointer in scen_f needs to move along, so that the correct towns are sucked in.
 	// To do so, we'll remember the size of the saved town and out now.
-	out_num = cur_out.y * scenario_out_width() + cur_out.x;
+	out_num = cur_out.y * scenario.out_width() + cur_out.x;
 	save_out_size = (long) (scenariodata.out_data_size[out_num][0]) + (long) (scenariodata.out_data_size[out_num][1]);
 	save_town_size = (long) (scenariodata.town_data_size[cur_town][0]) + (long) (scenariodata.town_data_size[cur_town][1])
 					+ (long) (scenariodata.town_data_size[cur_town][2]) + (long) (scenariodata.town_data_size[cur_town][3])
@@ -149,9 +149,9 @@ void save_scenario()
 	// We're finally set up. Let's first set up the new scenario field
 	// We need the new info for the current town and outdoors, which may have been changed
 	scenariodata.town_data_size[cur_town][0] = sizeof(town_record_type);
-	if (scenario_town_size(cur_town) == 0) 
+	if (scenario.town_size(cur_town) == 0) 
 		scenariodata.town_data_size[cur_town][0] += sizeof(big_tr_type);
-		else if (scenario_town_size(cur_town) == 1) 
+		else if (scenario.town_size(cur_town) == 1) 
 			scenariodata.town_data_size[cur_town][0] += sizeof(ave_tr_type);
 			else scenariodata.town_data_size[cur_town][0] += sizeof(tiny_tr_type);
 	scenariodata.town_data_size[cur_town][1] = 0;
@@ -228,7 +228,7 @@ void save_scenario()
 	SetFPos(scen_f,1,scen_ptr_move);
 	
 	// OK ... scenario written. Now outdoors.
-	num_outdoors = scenario_out_width() * scenario_out_height();
+	num_outdoors = scenario.out_width() * scenario.out_height();
 	for (i = 0; i < num_outdoors; i++)
 		if (i == out_num) {
 			// write outdoors
@@ -263,7 +263,7 @@ void save_scenario()
 				}
 				
 	// now, finally, write towns.
-	for (k = 0; k < scenario_num_towns(); k++)
+	for (k = 0; k < scenario.num_towns(); k++)
 		if (k == cur_town) {
 			for (i = 0; i < 180; i++)
 				town.strlens[i] = 0;
@@ -275,7 +275,7 @@ void save_scenario()
 			error = FSWrite(dummy_f, &len, (char *) &town); 
 			if (error != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(21);}
 
-			switch (scenario_town_size(cur_town)) {
+			switch (scenario.town_size(cur_town)) {
 				case 0:
 					len = sizeof(big_tr_type);
 					FSWrite(dummy_f, &len, (char *) &t_d);
@@ -345,9 +345,9 @@ void save_scenario()
 				}
 				if ((error = FSWrite(dummy_f, &len, buffer)) != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(23);return;}
 		
-				if (scenario_town_size(k) == 0) 
+				if (scenario.town_size(k) == 0) 
 					len = (long) ( sizeof(big_tr_type));
-				else if (scenario_town_size(k) == 1) 
+				else if (scenario.town_size(k) == 1) 
 					len = (long) ( sizeof(ave_tr_type));
 					else len = (long) ( sizeof(tiny_tr_type));
 				error = FSRead(scen_f, &len, buffer);
@@ -355,7 +355,7 @@ void save_scenario()
 
 				if (cur_scen_is_win != TRUE)
 				{
-					switch(scenario_town_size(k))
+					switch(scenario.town_size(k))
 					{
 					case 0:
 						endian_adjust(*(big_tr_type*)buffer);
@@ -567,13 +567,13 @@ void augment_terrain(location to_create)
 		load_outdoors(to_load, 1);
 		}
 	to_load = to_create;
-	if (to_create.y < scenario_out_height() - 1) {
+	if (to_create.y < scenario.out_height() - 1) {
 		to_load.y++;
 		load_outdoors(to_load, 3);
 		}
 
 	to_load = to_create;
-	if (to_create.x < scenario_out_width() - 1) {
+	if (to_create.x < scenario.out_width() - 1) {
 		to_load.x++;
 		load_outdoors(to_load, 2);
 		}
@@ -603,7 +603,7 @@ void load_outdoors(location which_out,short mode)
 		return;
 		}	
 	
-	out_sec_num = scenario_out_width() * which_out.y + which_out.x;
+	out_sec_num = scenario.out_width() * which_out.y + which_out.x;
 	
 	len_to_jump = sizeof(scenario_data_type);
 	len_to_jump += sizeof(scen_item_data_type);
@@ -706,7 +706,7 @@ void load_town(short which_town)
 	}
 	if (error != 0) {_lclose(file_id);oops_error(36);}
 
-	switch (scenario_town_size(which_town)) {
+	switch (scenario.town_size(which_town)) {
 		case 0:
 			len =  sizeof(big_tr_type);
 			FSRead(file_id, &len, (char *) &t_d);
@@ -784,7 +784,7 @@ void load_town(short which_town)
 		talk_strs[i][len] = 0;
 		}
 			
-	town_type = scenario_town_size(which_town);
+	town_type = scenario.town_size(which_town);
 	cur_town = which_town;
 	error = _lclose(file_id);
 	if (error != 0) {_lclose(file_id);oops_error(38);}
@@ -830,7 +830,7 @@ void import_town(short which_town)
 		}
 	temp_scenario = (scenario_data_type *) buffer;
 	
-	if (temp_scenario->town_size[which_town] != scenario_town_size(cur_town)) {
+	if (temp_scenario->town_size[which_town] != scenario.town_size(cur_town)) {
 		give_error("Oops ... the town in the selected scenario and the current town are different sizes. Import failed.","",0);
 		_lclose(file_id);
 		return;
@@ -1021,9 +1021,9 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 	// We're finally set up. Let's first set up the new scenario field
 	// We need the new info for the current town and outdoors, which may have been changed
 	scenariodata.town_data_size[cur_town][0] = sizeof(town_record_type);
-	if (scenario_town_size(cur_town) == 0) 
+	if (scenario.town_size(cur_town) == 0) 
 		scenariodata.town_data_size[cur_town][0] += sizeof(big_tr_type);
-		else if (scenario_town_size(cur_town) == 1) 
+		else if (scenario.town_size(cur_town) == 1) 
 			scenariodata.town_data_size[cur_town][0] += sizeof(ave_tr_type);
 			else scenariodata.town_data_size[cur_town][0] += sizeof(tiny_tr_type);
 	scenariodata.town_data_size[cur_town][1] = 0;
@@ -1039,7 +1039,7 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 	for (i = 80; i < 170; i++)
 		scenariodata.town_data_size[cur_town][4] += strlen(talk_strs[i]);
 
-	num_outdoors = scenario_out_width() * scenario_out_height();
+	num_outdoors = scenario.out_width() * scenario.out_height();
 	for (i = 0; i < num_outdoors; i++) {
 		scenariodata.out_data_size[i][0] = sizeof(outdoor_record_type);
 		scenariodata.out_data_size[i][1] = 0;
@@ -1104,11 +1104,11 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 	
 	
 	// OK ... scenario written. Now outdoors.
-	num_outdoors = scenario_out_width() * scenario_out_height();
+	num_outdoors = scenario.out_width() * scenario.out_height();
 	for (i = 0; i < num_outdoors; i++)
 		{
-			loc.x = i % scenario_out_width();
-			loc.y = i / scenario_out_width();
+			loc.x = i % scenario.out_width();
+			loc.y = i / scenario.out_width();
 			
 			for (x = 0; x < 48; x++)
 				for (y = 0; y < 48; y++) {
@@ -1118,9 +1118,9 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 						current_terrain.terrain[x][y] = (use_grass > 0) ? 22 : 5;
 					if ((y < 4) && (loc.y == 0))
 						current_terrain.terrain[x][y] = (use_grass > 0) ? 22 : 5;
-					if ((x > 43) && (loc.x == scenario_out_width() - 1))
+					if ((x > 43) && (loc.x == scenario.out_width() - 1))
 						current_terrain.terrain[x][y] = (use_grass > 0) ? 22 : 5;
-					if ((y > 43) && (loc.y == scenario_out_height() - 1))
+					if ((y > 43) && (loc.y == scenario.out_height() - 1))
 						current_terrain.terrain[x][y] = (use_grass > 0) ? 22 : 5;
 					if ((i == 0) && (making_warriors_grove > 0)) {
 						current_terrain.terrain[24][24] = (use_grass > 0) ? 234 : 232;
@@ -1150,7 +1150,7 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 
 
 	// now, finally, write towns.
-	for (k = 0; k < scenario_num_towns(); k++)
+	for (k = 0; k < scenario.num_towns(); k++)
 		{
 			for (i = 0; i < 180; i++)
 				town.strlens[i] = 0;
@@ -1162,7 +1162,7 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 			error = FSWrite(dummy_f, &len, (char *) &town); 
 			if (error != 0) {_lclose(dummy_f);oops_error(8);}
 
-			switch (scenario_town_size(cur_town)) {
+			switch (scenario.town_size(cur_town)) {
 				case 0:
 					len = sizeof(big_tr_type);
 					FSWrite(dummy_f, &len, (char *) &t_d);
@@ -1328,7 +1328,7 @@ short town_s(short flag)
 	k = k + 51;
 	k = k % 3000;
 	jl = jl * 2 + 1234 + k;
-	k = k * scenario_num_towns();
+	k = k * scenario.num_towns();
 	k = k % 10000;
 	jl = jl * jl + 84 + k;
 	k = k + 10000;
@@ -1386,7 +1386,7 @@ short str_size_2(short flag)
 	k = k + 80;
 	k = k % 3000;
 	jl = jl * 2 + 1234 + k;
-	k = k * scenario_out_width() * scenario_out_height();
+	k = k * scenario.out_width() * scenario.out_height();
 	jl = jl * jl + 84 + k;
 	k = k % 3124;
 	k = k - 5426;
@@ -1419,7 +1419,7 @@ short get_buf_ptr(short flag)
 		
 	k = (long) flag;
 	jl = jl * jl + 84 + k;
-	k = k * (scenario_out_width() +  scenario_out_width() +  scenario_out_height() +  scenariodata.town_data_size[0][3]);
+	k = k * (scenario.out_width() +  scenario.out_width() +  scenario.out_height() +  scenariodata.town_data_size[0][3]);
 	k = k + 80;
 	jl = jl * jl + 84 + k;
 	k = k % 2443;
@@ -1566,8 +1566,8 @@ void scen_text_dump()
 	len = (long)get_text.size();
 	FSWrite(data_dump_file_id, &len, get_text.c_str());
 
-	for (out_sec.x = 0; out_sec.x < scenario_out_width() ; out_sec.x++)
-		for (out_sec.y = 0; out_sec.y < scenario_out_height() ; out_sec.y++)
+	for (out_sec.x = 0; out_sec.x < scenario.out_width() ; out_sec.x++)
+		for (out_sec.y = 0; out_sec.y < scenario.out_height() ; out_sec.y++)
 		{
 			get_text = std::format("  Section X = {:d}, Y = {:d}:\n",(short) out_sec.x,(short) out_sec.y);
 			len = (long)get_text.size();
@@ -1602,7 +1602,7 @@ void scen_text_dump()
 	len = (long)get_text.size();
 	FSWrite(data_dump_file_id, &len, get_text.c_str());
 
-	for (j = 0; j < scenario_num_towns(); j++)
+	for (j = 0; j < scenario.num_towns(); j++)
 	{
 		load_town(j);
 

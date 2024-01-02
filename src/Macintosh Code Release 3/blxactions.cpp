@@ -492,7 +492,7 @@ Boolean handle_action(EventRecord event)
 								add_string_to_buf("Rest: Not enough food.            ");
 								else if (nearest_monster() <= 3)
 								add_string_to_buf("Rest: Monster too close.            ");
-								else if ((scenario_ter_type(ter).special >= 2) && (scenario_ter_type(ter).special <= 6))
+								else if ((scenario.ter_type(ter).special >= 2) && (scenario.ter_type(ter).special <= 6))
 									add_string_to_buf("Rest: It's dangerous here.");////
 								else if (flying())
 									add_string_to_buf("Rest: Not while flying.           ");
@@ -2340,7 +2340,7 @@ void handle_cave_lore()////
 		return;
 	
 	ter = out[party.p_loc.x][party.p_loc.y];
-	pic = scenario_ter_type(ter).picture;
+	pic = scenario.ter_type(ter).picture;
 	for (i = 0; i < 6; i++)
 		if ( pc_has_cave_lore(adven[i]) && (rand_short(0,12) == 5)
 			&& (((pic >= 0) && (pic <= 1)) || ((pic >= 70) && (pic <= 76))) ) {
@@ -2553,12 +2553,12 @@ Boolean outd_move_party(location destination,Boolean forced)
 	// Check if party moves into new sector
 	if ((destination.x < 6) && (party.outdoor_corner.x > 0)) 
 			shift_universe_left();
-	if ((destination.x > 90) && (party.outdoor_corner.x < scenario_out_width() - 1))
+	if ((destination.x > 90) && (party.outdoor_corner.x < scenario.out_width() - 1))
 			shift_universe_right();
 	if ((destination.y < 6)  && (party.outdoor_corner.y > 0)) {
 			shift_universe_up();
 			}
-	else if ((destination.y > 90)  && (party.outdoor_corner.y < scenario_out_height() - 1))
+	else if ((destination.y > 90)  && (party.outdoor_corner.y < scenario.out_height() - 1))
 			shift_universe_down();      
 	// Now stop from going off the world's edge
 	real_dest.x = party.p_loc.x + real_dest.x; 
@@ -2567,8 +2567,8 @@ Boolean outd_move_party(location destination,Boolean forced)
 			ASB("You've reached the world's edge.");
 			return FALSE;
 			}
-	if (((real_dest.x > 92) && (party.outdoor_corner.x >= scenario_out_width() - 2)) ||
-		((real_dest.x > 44) && (party.outdoor_corner.x >= scenario_out_width() - 1))) {
+	if (((real_dest.x > 92) && (party.outdoor_corner.x >= scenario.out_width() - 2)) ||
+		((real_dest.x > 44) && (party.outdoor_corner.x >= scenario.out_width() - 1))) {
 			ASB("You've reached the world's edge.");
 			return FALSE;
 			}
@@ -2576,8 +2576,8 @@ Boolean outd_move_party(location destination,Boolean forced)
 			ASB("You've reached the world's edge.");
 			return FALSE;
 			}
-	else if (((real_dest.y > 92)  && (party.outdoor_corner.y >= scenario_out_height() - 2)) ||
-			((real_dest.y > 44)  && (party.outdoor_corner.y >= scenario_out_height() - 1))) {
+	else if (((real_dest.y > 92)  && (party.outdoor_corner.y >= scenario.out_height() - 2)) ||
+			((real_dest.y > 44)  && (party.outdoor_corner.y >= scenario.out_height() - 1))) {
 			ASB("You've reached the world's edge.");
 			return FALSE;
 			}
@@ -2597,9 +2597,9 @@ Boolean outd_move_party(location destination,Boolean forced)
 	if (party.in_boat >= 0) {
 		if (!outd_is_blocked(real_dest) //&& (outd_is_special(real_dest) == FALSE)
 		// not in towns
-		&& ((scenario_ter_type(ter).boat_over == FALSE)
+		&& ((scenario.ter_type(ter).boat_over == FALSE)
 			|| ((real_dest.x != party.p_loc.x) && (real_dest.y != party.p_loc.y)))
-			&& (scenario_ter_type(ter).special != 21)) {
+			&& (scenario.ter_type(ter).special != 21)) {
 					add_string_to_buf("You leave the boat.");
 					party.in_boat = -1;
 					}
@@ -2607,8 +2607,8 @@ Boolean outd_move_party(location destination,Boolean forced)
 				|| ((forced == FALSE) && (out_boat_there(destination) < 30)))
 				return FALSE;
 			else if ((outd_is_blocked(real_dest) == FALSE) 
-				&& (scenario_ter_type(ter).boat_over == TRUE)
-				&& (scenario_ter_type(ter).special != 21)) {
+				&& (scenario.ter_type(ter).boat_over == TRUE)
+				&& (scenario.ter_type(ter).special != 21)) {
 				if ((fancy_choice_dialog(1086,0)) == 1)
 					forced = TRUE;
 					else {
@@ -2616,7 +2616,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 						party.in_boat = -1;					
 						}
 				}
-			else if (scenario_ter_type(ter).boat_over == TRUE)
+			else if (scenario.ter_type(ter).boat_over == TRUE)
 				forced = TRUE;
 		}
 
@@ -2646,7 +2646,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 			add_string_to_buf("Land before mounting horses.");
 			return FALSE;
 			}
-		if ((scenario_ter_type(ter).special >= 2) && (scenario_ter_type(ter).special <= 4)) {
+		if ((scenario.ter_type(ter).special >= 2) && (scenario.ter_type(ter).special <= 4)) {
 			ASB("Your horses quite sensibly refuse.");
 			return FALSE;
 			}
@@ -2671,10 +2671,10 @@ Boolean outd_move_party(location destination,Boolean forced)
 	else if ((outd_is_blocked(real_dest) == FALSE) || (forced == TRUE)
 		// Check if can fly over
 		|| (flying() && 
-			(scenario_ter_type(ter).fly_over == TRUE))   ) {
+			(scenario.ter_type(ter).fly_over == TRUE))   ) {
 		party.direction = set_direction(party.p_loc, destination); 
 
-		if (flying() && (scenario_ter_type(ter).special == 21)) {
+		if (flying() && (scenario.ter_type(ter).special == 21)) {
 			add_string_to_buf("Moved: You have to land first.               ");
 			return FALSE;
 			}
@@ -2752,8 +2752,8 @@ Boolean town_move_party(location destination,short forced)////
 	
 	// remove if not registered
 	/*
-	if ((scenario_out_width() != 3) || (scenario_out_height() != 3) ||
-		(scenario_num_towns() != 21) || (scenario_town_size(3) != 1) || (scenario_town_size(9) != 0)) {
+	if ((scenario.out_width() != 3) || (scenario.out_height() != 3) ||
+		(scenario.num_towns() != 21) || (scenario.town_size(3) != 1) || (scenario.town_size(9) != 0)) {
 			ASB("Blades of Exile must be registered");
 			ASB("before you can play scenarios besides");
 			ASB("the unmodified Valley of Dying things.");
@@ -2775,7 +2775,7 @@ Boolean town_move_party(location destination,short forced)////
 		if (party.in_boat >= 0) {
 				if (is_not_blocked(destination) && is_not_special(destination)
 				// If to bridge, exit if heading diagonal, keep going is head horiz or vert
-		&& ( (scenario_ter_type(ter).boat_over == FALSE)
+		&& ( (scenario.ter_type(ter).boat_over == FALSE)
 		|| ((destination.x != c_town.p_loc.x) && (destination.y != c_town.p_loc.y)))) {
 						add_string_to_buf("You leave the boat.             ");
 						party.in_boat = -1;
@@ -2783,7 +2783,7 @@ Boolean town_move_party(location destination,short forced)////
 				else if ((destination.x != c_town.p_loc.x) && (destination.y != c_town.p_loc.y))
 					return FALSE;	
 				// Crossing bridge: land or go through
-				else if ( is_not_blocked(destination) && (scenario_ter_type(ter).boat_over == TRUE)) {
+				else if ( is_not_blocked(destination) && (scenario.ter_type(ter).boat_over == TRUE)) {
 					if ((fancy_choice_dialog(1086,0)) == 1)
 						forced = TRUE;
 						else if (is_not_blocked(destination)) {
@@ -2797,7 +2797,7 @@ Boolean town_move_party(location destination,short forced)////
 					return FALSE;
 					}
 				// water or lava
-				else if (scenario_ter_type(ter).boat_over == TRUE)
+				else if (scenario.ter_type(ter).boat_over == TRUE)
 					forced = TRUE;
 			}
 
@@ -2834,11 +2834,11 @@ Boolean town_move_party(location destination,short forced)////
 		} 
 		else if (is_not_blocked(destination) || (forced == 1)) {
 			if (party.in_horse >= 0) {
-				if ((scenario_ter_type(ter).special >= 2) && (scenario_ter_type(ter).special <= 4)) {
+				if ((scenario.ter_type(ter).special >= 2) && (scenario.ter_type(ter).special <= 4)) {
 					ASB("Your horses quite sensibly refuse.");
 					return FALSE;
 					}
-				if (scenario_ter_type(ter).block_horse == TRUE) {
+				if (scenario.ter_type(ter).block_horse == TRUE) {
 					ASB("You can't take horses there!");
 					return FALSE;
 					}
@@ -2910,7 +2910,7 @@ void setup_outdoors(location where)
 
 short get_outdoor_num()////
 {
-	return (scenario_out_width() * (party.outdoor_corner.y + party.i_w_c.y) + party.outdoor_corner.x + party.i_w_c.x);
+	return (scenario.out_width() * (party.outdoor_corner.y + party.i_w_c.y) + party.outdoor_corner.x + party.i_w_c.x);
 }
 
 short count_walls(location loc)
@@ -2935,5 +2935,5 @@ short count_walls(location loc)
 
 bool is_sign(unsigned char ter)
 {
-	return scenario_ter_type(ter).special == 11;
+	return scenario.ter_type(ter).special == 11;
 }

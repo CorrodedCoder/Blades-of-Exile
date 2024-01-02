@@ -179,12 +179,12 @@ Boolean handle_action(Point the_point,EventRecord event)
 									"",0);
 								return are_done;
 								}
-							if (scenario_num_towns() >= 200) {
+							if (scenario.num_towns() >= 200) {
 								give_error("You have reached the limit of 200 towns you can have in one scenario.",
 									"",0);
 								return are_done;
 								}
-							if (new_town(scenario_num_towns()) == TRUE)
+							if (new_town(scenario.num_towns()) == TRUE)
 								set_up_main_screen();
 							break;
 						case 6:
@@ -564,11 +564,11 @@ Boolean handle_action(Point the_point,EventRecord event)
 					if (t_d.creatures[i].number == 0) {
 						t_d.creatures[i] = last_placed_monst;
 						t_d.creatures[i].start_loc = spot_hit;
-						if ((i >= 30) && (scenario_town_size(cur_town) == 2)) {
+						if ((i >= 30) && (scenario.town_size(cur_town) == 2)) {
 							give_error("Small towns can have at most 30 preset monsters.","",0); // error
 							t_d.creatures[i].number = 0;
 							}
-						else if ((i >= 40) && (scenario_town_size(cur_town) == 1)) {
+						else if ((i >= 40) && (scenario.town_size(cur_town) == 1)) {
 							give_error("Medium towns can have at most 40 preset monsters.","",0); // error
 							t_d.creatures[i].number = 0;
 							}
@@ -596,11 +596,11 @@ Boolean handle_action(Point the_point,EventRecord event)
 						t_d.creatures[i].personality = -1;
 						t_d.creatures[i].special_on_kill = -1;
 						t_d.creatures[i].facial_pic = scenario.scen_monsters[mode_count].default_facial_pic;
-						if ((i >= 30) && (scenario_town_size(cur_town) == 2)) {
+						if ((i >= 30) && (scenario.town_size(cur_town) == 2)) {
 							give_error("Small towns can have at most 30 preset monsters.","",0); // error
 							t_d.creatures[i].number = 0;
 							}
-						else if ((i >= 40) && (scenario_town_size(cur_town) == 1)) {
+						else if ((i >= 40) && (scenario.town_size(cur_town) == 1)) {
 							give_error("Medium towns can have at most 40 preset monsters.","",0); // error
 							t_d.creatures[i].number = 0;
 							}
@@ -608,7 +608,7 @@ Boolean handle_action(Point the_point,EventRecord event)
 							
 						i = 70;	
 						}
-				if ((i < 70) && (scenario_town_size(cur_town) == 0)) {
+				if ((i < 70) && (scenario.town_size(cur_town) == 0)) {
 					give_error("Large towns can have at most 60 preset monsters.","",0); // error
 					}
 				overall_mode = 0;
@@ -1480,7 +1480,7 @@ Boolean where_lit[64][64];
 static bool is_wall(short i,short j)
 {
 	const unsigned char ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
-	const short pic = scenario_ter_type(ter).picture;
+	const short pic = scenario.ter_type(ter).picture;
 	if ((editing_town == TRUE) && ((i < 0) || (i > max_dim[town_type] - 1) || (j < 0) || (j > max_dim[town_type] - 1)))
 		return true;
 	if ((editing_town == FALSE) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
@@ -1526,7 +1526,7 @@ static bool is_correctable_wall(short i,short j)
 static bool is_mountain(short i,short j)
 {
 	const unsigned char ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
-	const short pic = scenario_ter_type(ter).picture;
+	const short pic = scenario.ter_type(ter).picture;
 	if ((editing_town == TRUE) && ((i < 0) || (i > max_dim[town_type] - 1) || (j < 0) || (j > max_dim[town_type] - 1)))
 		return true;
 	if ((editing_town == FALSE) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
@@ -1555,7 +1555,7 @@ static bool is_hill(short i,short j)
 	unsigned char ter;
 	
 	ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
-	pic = scenario_ter_type(ter).picture;
+	pic = scenario.ter_type(ter).picture;
 	if ((editing_town == TRUE) && ((i < 0) || (i > max_dim[town_type] - 1) || (j < 0) || (j > max_dim[town_type] - 1)))
 		return TRUE;
 	if ((editing_town == FALSE) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
@@ -1602,7 +1602,7 @@ static bool is_water(short i,short j)
 	unsigned char ter;
 	
 	ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
-	pic = scenario_ter_type(ter).picture;
+	pic = scenario.ter_type(ter).picture;
 	if ((editing_town == TRUE) && ((i < 0) || (i > max_dim[town_type] - 1) || (j < 0) || (j > max_dim[town_type] - 1)))
 		return TRUE;
 	if ((editing_town == FALSE) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
@@ -1617,7 +1617,7 @@ static bool is_water(short i,short j)
 static bool is_correctable_water(short i,short j)
 {
 	const unsigned char ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
-	const short pic = scenario_ter_type(ter).picture;
+	const short pic = scenario.ter_type(ter).picture;
 	if ((editing_town == TRUE) && ((i < 0) || (i > max_dim[town_type] - 1) || (j < 0) || (j > max_dim[town_type] - 1)))
 		return false;
 	if ((editing_town == FALSE) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
@@ -1814,7 +1814,7 @@ void set_terrain(location l,unsigned char terrain_type)
 				which_sign = i;
 				else {
 					ter = t_d.terrain[town.sign_locs[i].x][town.sign_locs[i].y];
-					if (scenario_ter_type(ter).special != 11)
+					if (scenario.ter_type(ter).special != 11)
 						which_sign = i;
 					}
 			}
@@ -1849,7 +1849,7 @@ void set_terrain(location l,unsigned char terrain_type)
 				which_sign = i;
 				else {
 					ter = current_terrain.terrain[current_terrain.sign_locs[i].x][current_terrain.sign_locs[i].y];
-					if (scenario_ter_type(ter).special != 11)
+					if (scenario.ter_type(ter).special != 11)
 						which_sign = i;
 					}
 			}
@@ -3073,7 +3073,7 @@ void town_entry(location spot_hit)
 	unsigned char ter;
 	
 	ter = current_terrain.terrain[spot_hit.x][spot_hit.y];
-	if (scenario_ter_type(ter).special != 21) {
+	if (scenario.ter_type(ter).special != 21) {
 		give_error("This space isn't a town entrance. Town entrances are marked by a small brown castle icon.","",0);
 		return;
 		}
@@ -3081,7 +3081,7 @@ void town_entry(location spot_hit)
 	for (x = 0; x < 8; x++)
 		if (current_terrain.exit_locs[x].x < 100) {
 			ter = current_terrain.terrain[current_terrain.exit_locs[x].x][current_terrain.exit_locs[x].y];
-			if (scenario_ter_type(ter).special != 21) 
+			if (scenario.ter_type(ter).special != 21) 
 				current_terrain.exit_locs[x].x = 100;
 			}
 				y = -2;

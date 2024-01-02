@@ -438,7 +438,7 @@ void set_up_terrain_buttons()
  	// first make terrain buttons
 	for (i = 0; i < 256; i++) {
 		ter_from = ter_from_base;
-		pic = scenario_ter_type(i).picture;
+		pic = scenario.ter_type(i).picture;
 		}
 	SelectObject(hdc,store_bmp);
 	DeleteObject(hdc);
@@ -448,7 +448,7 @@ void set_up_terrain_buttons()
 	// first make terrain buttons
 	for (i = 0; i < 256; i++) {
 		ter_from = ter_from_base;
-		pic = scenario_ter_type(i).picture;
+		pic = scenario.ter_type(i).picture;
 		if (pic >= 1000) {
 			ter_from = get_custom_rect(pic % 1000);
 			rect_draw_some_item_bmp(spec_scen_g,
@@ -457,7 +457,7 @@ void set_up_terrain_buttons()
 		else if (pic < 400)	{
 				pic = pic % 50;
 				OffsetRect(&ter_from,28 * (pic % 10), 36 * (pic / 10));
-				rect_draw_some_item_bmp(terrain_gworld[scenario_ter_type(i).picture/50],
+				rect_draw_some_item_bmp(terrain_gworld[scenario.ter_type(i).picture/50],
 					ter_from,terrain_buttons_gworld,terrain_rects[i],0,0);
 				}
 				else if (pic < 1000) {
@@ -470,10 +470,10 @@ void set_up_terrain_buttons()
 					rect_draw_some_item_bmp(anim_gworld,
 						ter_from,terrain_buttons_gworld,terrain_rects[i],0,0);
 					}
-		small_i = small_icons[to_underlying(scenario_ter_type(i).special)];
-		if ((small_i == 30) && (scenario_ter_type(i).flag2 >= 5))
+		small_i = small_icons[to_underlying(scenario.ter_type(i).special)];
+		if ((small_i == 30) && (scenario.ter_type(i).flag2 >= 5))
 			small_i = 31;
-		if ((small_i == 31) && (scenario_ter_type(i).flag2 == 10))
+		if ((small_i == 31) && (scenario.ter_type(i).flag2 == 10))
 			small_i = 32;
 		if (i == 82)
 			small_i = 3;
@@ -576,8 +576,8 @@ void draw_terrain()
 
 			// draw start icon, if starting point
 			if ((editing_town == TRUE) &&
-				(cur_town == scenario_which_town_start()) && (scenario_where_start().x == cen_x + q - 4)
-				&& (scenario_where_start().y == cen_y + r - 4)) {
+				(cur_town == scenario.which_town_start()) && (scenario.where_start().x == cen_x + q - 4)
+				&& (scenario.where_start().y == cen_y + r - 4)) {
 				from_rect = start_button_from;
 				to_rect = tiny_to;
 				to_rect.left -= 14;
@@ -585,19 +585,19 @@ void draw_terrain()
 				OffsetRect(&tiny_to,0,-7);
 				}
 			if ((editing_town == FALSE)
-				&& (scenario_out_sec_start() == cur_out)
-				&& (scenario_out_start().x == cen_x + q - 4)
-				&& (scenario_out_start().y == cen_y + r - 4)) {
+				&& (scenario.out_sec_start() == cur_out)
+				&& (scenario.out_start().x == cen_x + q - 4)
+				&& (scenario.out_start().y == cen_y + r - 4)) {
 				from_rect = start_button_from;
 				to_rect = tiny_to;
 				to_rect.left -= 14;
 				rect_draw_some_item_bmp(editor_mixed,from_rect,ter_draw_gworld,to_rect,0,0);
 				OffsetRect(&tiny_to,0,-7);
 				}
-			small_i = small_icons[to_underlying(scenario_ter_type(t_to_draw).special)];
-			if ((small_i == 30) && (scenario_ter_type(t_to_draw).flag2 >= 5))
+			small_i = small_icons[to_underlying(scenario.ter_type(t_to_draw).special)];
+			if ((small_i == 30) && (scenario.ter_type(t_to_draw).flag2 >= 5))
 				small_i = 31;
-			if ((small_i == 31) && (scenario_ter_type(t_to_draw).flag2 == 10))
+			if ((small_i == 31) && (scenario.ter_type(t_to_draw).flag2 == 10))
 				small_i = 32;
 			tiny_from = base_small_button_from;
 			OffsetRect(&tiny_from,7 * (small_i % 10),7 * (small_i / 10));
@@ -787,21 +787,21 @@ void draw_monsts(HDC hdc)
 		if (t_d.creatures[i].number != 0) {
 				where_draw.x = t_d.creatures[i].start_loc.x - cen_x + 4;
 				where_draw.y = t_d.creatures[i].start_loc.y - cen_y + 4;
-				width = scenario_monster(t_d.creatures[i].number).x_width;
-				height = scenario_monster(t_d.creatures[i].number).y_width;
+				width = scenario.monster(t_d.creatures[i].number).x_width;
+				height = scenario.monster(t_d.creatures[i].number).y_width;
 				
 				for (k = 0; k < width * height; k++) {
 					store_loc = where_draw;
 					if ((where_draw.x == boe_clamp(where_draw.x,0,8)) && 
 					(where_draw.y == boe_clamp(where_draw.y,0,8)) && 
-						(scenario_monster(t_d.creatures[i].number).picture_num >= 1000)) {
-						source_rect = get_custom_rect((scenario_monster(t_d.creatures[i].number).picture_num + k) % 1000);
+						(scenario.monster(t_d.creatures[i].number).picture_num >= 1000)) {
+						source_rect = get_custom_rect((scenario.monster(t_d.creatures[i].number).picture_num + k) % 1000);
 						store_loc.x += k % width;
 						store_loc.y += k / width;
 						Draw_Some_Item(spec_scen_g, source_rect, ter_draw_gworld, store_loc, 1, 0);
 						}
-						else if (scenario_monster(t_d.creatures[i].number).picture_num < 1000) {
-							m_start_pic = m_pic_index[scenario_monster(t_d.creatures[i].number).picture_num] + k;
+						else if (scenario.monster(t_d.creatures[i].number).picture_num < 1000) {
+							m_start_pic = m_pic_index[scenario.monster(t_d.creatures[i].number).picture_num] + k;
 							from_gworld = monst_gworld[m_start_pic / 20];
 							m_start_pic = m_start_pic % 20;
 							source_rect = calc_rect(2 * (m_start_pic / 10), m_start_pic % 10);				
@@ -896,7 +896,7 @@ void draw_one_terrain_spot (short i,short j,unsigned char terrain_to_draw)
 	short picture_wanted;
 	GWorldPtr source_gworld;
 	
-	picture_wanted = scenario_ter_type(terrain_to_draw).picture;
+	picture_wanted = scenario.ter_type(terrain_to_draw).picture;
 
 	where_draw.x = (char) i;
 	where_draw.y = (char) j;
@@ -931,7 +931,7 @@ void draw_one_tiny_terrain_spot (short i,short j,unsigned char terrain_to_draw,H
 	HGDIOBJ store_bmp;
 	HGDIOBJ old_brush;
 
-	picture_wanted = scenario_ter_type(terrain_to_draw).picture;
+	picture_wanted = scenario.ter_type(terrain_to_draw).picture;
 	if (picture_wanted >= 1000)
 		picture_wanted = 74;
 
@@ -1097,7 +1097,7 @@ RECT get_template_rect (unsigned char type_wanted)
 	RECT store_rect;
 	short picture_wanted;
 	
-	picture_wanted = scenario_ter_type(type_wanted).picture;
+	picture_wanted = scenario.ter_type(type_wanted).picture;
 	if (picture_wanted >= 1000)
 		picture_wanted = 0;
 	picture_wanted = picture_wanted % 50;
@@ -1178,7 +1178,7 @@ void place_location()
 	draw_rect.left = palette_buttons[7][0].right + 17;
 	draw_rect.bottom = draw_rect.top + 36;
 	draw_rect.right = draw_rect.left + 28;
-	picture_wanted = scenario_ter_type(current_terrain_type).picture;
+	picture_wanted = scenario.ter_type(current_terrain_type).picture;
 
 	if (overall_mode < 60) {
 		if (picture_wanted >= 1000)	{
@@ -1464,7 +1464,7 @@ bool container_there(location l)
 {
 	if (editing_town == FALSE)
 		return false;
-	if (scenario_ter_type(t_d.terrain[l.x][l.y]).special == terrain_special::IsAContainer)
+	if (scenario.ter_type(t_d.terrain[l.x][l.y]).special == terrain_special::IsAContainer)
 		return true;
 	if (is_barrel(l.x,l.y))
 		return true;

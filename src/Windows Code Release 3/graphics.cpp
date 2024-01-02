@@ -1659,7 +1659,7 @@ void put_graphics_in_template()
 // right now, trying a restrictive rule (just cave floor and grass, mainly)
 static bool is_nature(char x, char y)
 {
-	const auto pic = scenario_ter_type(coord_to_ter(x, y)).picture;
+	const auto pic = scenario.ter_type(coord_to_ter(x, y)).picture;
 	if ((pic >= 0) && (pic <= 45))
 		return true;
 	if ((pic >= 67) && (pic <= 73))
@@ -2141,7 +2141,7 @@ Boolean extend_road_terrain(unsigned char ter)
 {
 	for (short i = 0; i < 39; i++)
 	{
-		if (scenario_ter_type(ter).picture == c_extend_pics[i])
+		if (scenario.ter_type(ter).picture == c_extend_pics[i])
 		{
 			return TRUE;
 		}

@@ -338,5 +338,5 @@ short handle_lever(location w)
 
 void switch_lever(location w)
 {
-	alter_space(w.x,w.y, scenario_ter_type(t_d.terrain[w.x][w.y]).trans_to_what);
+	alter_space(w.x,w.y, scenario.ter_type(t_d.terrain[w.x][w.y]).trans_to_what);
 }
