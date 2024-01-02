@@ -1564,7 +1564,7 @@ Boolean combat_next_step()
 		set_pc_moves();	
 		to_return = TRUE;
 		// Safety valve
-		if (party_toast())
+		if (adventurers_dead(adven))
 			return TRUE;
 		}
 	pick_next_pc();
@@ -1820,7 +1820,7 @@ void do_monster_turn()
 		
 	for (i = 0; i < num_monst; i++) {  // Begin main monster loop, do monster actions
 		// If party dead, no point
-		if (party_toast())
+		if (adventurers_dead(adven))
 			return;
 			
 		futzing = 0; // assume monster is fresh
@@ -2128,7 +2128,7 @@ void do_monster_turn()
 
 	for (i = 0; i < num_monst; i++) {  // Begin monster time stuff loop
 		// If party dead, no point
-		if (party_toast())
+		if (adventurers_dead(adven))
 			return;
 
 		cur_monst = &c_town.monst.dudes[i];

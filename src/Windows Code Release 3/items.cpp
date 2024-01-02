@@ -20,7 +20,7 @@
 #include "monster.h"
 #include "boe/utility.hpp"
 #include "boe/item.hpp"
-#include "scenario.hpp"
+#include "scenario_ext.hpp"
 
 extern short stat_window,overall_mode,current_cursor,which_combat_type,current_pc;
 extern party_record_type party;
@@ -696,7 +696,7 @@ void make_town_hostile()
 			c_town.monst.dudes[i].attitude = 1;
 			num = c_town.monst.dudes[i].number;
 			c_town.monst.dudes[i].mobile = TRUE;
-			if (scenario_monster(num).spec_skill == 37) {
+			if (scenario.monster(num).spec_skill == 37) {
 				c_town.monst.dudes[i].active = 2;
 				
 				// If a town, give pwoer boost

@@ -27,6 +27,9 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 	if(BOE_WARNINGS_MAX)
 	else()
 		add_compile_options(
+			# Until we remove the C++ globals this warning will be suppressed
+			-Wno-global-constructors
+
 			# Disable selective warnings from -Wall
 			-Wno-missing-variable-declarations
 			-Wno-unused-parameter
@@ -88,7 +91,7 @@ add_executable (Blades-of-Exile WIN32
 	itemdata.cpp
 	combat.cpp
 	townspec.cpp
-	scenario.cpp
+	scenario_ext.cpp
 	specials.cpp
 	
 	BLADES.RC

@@ -25,7 +25,7 @@
 #include "graphutl.h"
 #include "boe/utility.hpp"
 #include "boe/item.hpp"
-#include "scenario.hpp"
+#include "scenario_ext.hpp"
 
 #define	NUM_HINTS	30
 
@@ -1100,7 +1100,7 @@ void do_sign(short town_num, short which_sign, short sign_type,location sign_loc
 	
 	if (town_num >= 200) {
 		town_num -= 200;
-		load_outdoors(town_num % scenario_out_width(), town_num / scenario_out_width(),party.i_w_c.x,party.i_w_c.y,
+		load_outdoors(town_num % scenario.out_width(), town_num / scenario.out_width(),party.i_w_c.x,party.i_w_c.y,
 			1,which_sign + 100, sign_text);
 		}
 		else {

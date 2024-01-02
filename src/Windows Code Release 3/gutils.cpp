@@ -15,7 +15,8 @@
 #include <cstdio>
 #include "graphutl_helpers.hpp"
 #include "boe/item.hpp"
-#include "scenario.hpp"
+#include "boe/adventurers.hpp"
+#include "scenario_ext.hpp"
 
 extern HWND	mainPtr;
 extern short overall_mode;
@@ -320,7 +321,7 @@ void draw_monsters()
 						ter = t_d.terrain[c_town.monst.dudes[i].m_loc.x][c_town.monst.dudes[i].m_loc.y];
 						// in bed?
 						if ((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
-							(scenario_ter_type(ter).picture == 143) && 
+							(scenario.ter_type(ter).picture == 143) && 
 							((c_town.monst.dudes[i].m_d.m_type < 7) 
 							&& (c_town.monst.dudes[i].m_d.m_type != 1) && (c_town.monst.dudes[i].m_d.m_type != 2))
 							&& ((c_town.monst.dudes[i].active == 1) || (monst_target[i] == 6)) &&
@@ -357,7 +358,7 @@ void draw_monsters()
 								 ,k);
 								ter = t_d.terrain[c_town.monst.dudes[i].m_loc.x][c_town.monst.dudes[i].m_loc.y];
 								if ((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
-									(scenario_ter_type(ter).picture == 143) && 
+									(scenario.ter_type(ter).picture == 143) && 
 									((c_town.monst.dudes[i].m_d.m_type < 7) 
 										&& (c_town.monst.dudes[i].m_d.m_type != 1) && (c_town.monst.dudes[i].m_d.m_type != 2))
 									&& ((c_town.monst.dudes[i].active == 1) || (monst_target[i] == 6)) &&
@@ -378,7 +379,7 @@ void draw_pcs(location center,short mode)
 	RECT source_rect;
 	location where_draw;
 	
-	if (party_toast())
+	if (adventurers_dead(adven))
 		return;
 	if (can_draw_pcs == FALSE)
 		return;
@@ -675,7 +676,7 @@ void draw_party_symbol(short mode,location center)
 
 	if (can_draw_pcs == FALSE)
 		return;
-	if (party_toast())
+	if (adventurers_dead(adven))
 		return;
 	if (is_town() && (c_town.p_loc.x > 70))
 		return;
@@ -690,7 +691,7 @@ void draw_party_symbol(short mode,location center)
 			source_rect = get_party_template_rect(i,(party.direction < 4) ? 0 : 1);
 
 			// now wedge in bed graphic
-			if (is_town() && (scenario_ter_type(t_d.terrain[c_town.p_loc.x][c_town.p_loc.y]).picture == 143))
+			if (is_town() && (scenario.ter_type(t_d.terrain[c_town.p_loc.x][c_town.p_loc.y]).picture == 143))
 				draw_one_terrain_spot((short) target.x,(short) target.y,10230,0);
 				else Draw_Some_Item(party_template_gworld, source_rect, terrain_screen_gworld, target, 1, 0);
 		}
@@ -844,13 +845,13 @@ static bool is_shore(unsigned char ter_type)
 // These two functions used to determine wall round-cornering
 bool is_wall(unsigned char ter_type)
 {
-	const auto pic = scenario_ter_type(ter_type).picture;
+	const auto pic = scenario.ter_type(ter_type).picture;
 	return (pic >= 88) && (pic <= 120);
 }
 
 bool is_ground(unsigned char ter_type)
 {
-	const auto pic = scenario_ter_type(ter_type).picture;
+	const auto pic = scenario.ter_type(ter_type).picture;
 	if ((pic >= 0) && (pic <= 87))
 		return true;
 	if ((pic >= 121) && (pic <= 122))

@@ -1666,7 +1666,7 @@ GWorldPtr load_pict(short picture_to_get)
 // right now, trying a restrictive rule (just cave floor and grass, mainly)
 bool is_nature(char x, char y)
 {
-	const short pic = scenario_ter_type(coord_to_ter((short)x, (short)y)).picture;
+	const short pic = scenario.ter_type(coord_to_ter((short)x, (short)y)).picture;
 	if ((pic >= 0) && (pic <= 45))
 		return true;
 	if ((pic >= 67) && (pic <= 73))
@@ -2163,7 +2163,7 @@ Boolean extend_road_terrain(unsigned char ter)
 							192,193,194,195,196, 197,191,200,201};
 	
 	for (i = 0; i < 39; i++)
-		if (scenario_ter_type(ter).picture == extend_pics[i])
+		if (scenario.ter_type(ter).picture == extend_pics[i])
 			return TRUE;
 	return FALSE;
 }
@@ -2377,7 +2377,7 @@ void draw_targets(location center)
 	short i = 0;
 	short dir_array[8] = {0,3,3,3,2,1,1,1};
 
-	if (party_toast())
+	if (adventurers_dead(adven))
 		return;
 
 	for (i = 0; i < 8; i++)
@@ -2524,15 +2524,6 @@ void draw_targeting_line(Point where_curs)
 				}
 			}
 	}
-}
-
-
-bool party_toast(void)
-{
-	for (short i = 0; i < 6; i++)
-		if (adven[i].main_status == status::Normal)
-			return false;
-	return true;
 }
 
 void redraw_partial_terrain(Rect redraw_rect)

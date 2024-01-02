@@ -23,7 +23,7 @@
 #include "graphutl.h"
 #include "graphutl_helpers.hpp"
 #include "boe/utility.hpp"
-#include "scenario.hpp"
+#include "scenario_ext.hpp"
 
 extern HBITMAP mixed_gworld,spec_scen_g;
 extern current_town_type c_town;
@@ -197,7 +197,7 @@ void start_town_mode(short which_town, short entry_dir)
 
 	former_town = town_number = which_town;
 
-	if ((town_number < 0) || (town_number >= scenario_num_towns())) {
+	if ((town_number < 0) || (town_number >= scenario.num_towns())) {
 		give_error("The scenario tried to put you into a town that doesn't exist.","",0);
 		return;
 		}	
@@ -205,11 +205,11 @@ void start_town_mode(short which_town, short entry_dir)
 
 	// Now adjust town number as necessary.
 	for (i = 0; i < 10; i++)
-		if ((scenario_town_to_add_to(i) >= 0) && (scenario_town_to_add_to(i) < 200) &&
-			(town_number == scenario_town_to_add_to(i)) &&
-			(sd_legit(scenario_flag_to_add_to_town(i,0), scenario_flag_to_add_to_town(i,1)) == TRUE)) {
+		if ((scenario.town_to_add_to(i) >= 0) && (scenario.town_to_add_to(i) < 200) &&
+			(town_number == scenario.town_to_add_to(i)) &&
+			(sd_legit(scenario.flag_to_add_to_town(i,0), scenario.flag_to_add_to_town(i,1)) == TRUE)) {
 			former_town = town_number;
-			town_number += PSD[scenario_flag_to_add_to_town(i,0)][scenario_flag_to_add_to_town(i,1)];
+			town_number += PSD[scenario.flag_to_add_to_town(i,0)][scenario.flag_to_add_to_town(i,1)];
 			// Now update horses & boats
 			for (i = 0; i < 30; i++) 	
 				if ((party.horses[i].exists == TRUE) && (party.horses[i].which_town == former_town))
@@ -221,7 +221,7 @@ void start_town_mode(short which_town, short entry_dir)
 
 		
 		
-	if ((town_number < 0) || (town_number >= scenario_num_towns())) {
+	if ((town_number < 0) || (town_number >= scenario.num_towns())) {
 		give_error("The scenario tried to put you into a town that doesn't exist.","",0);
 		return;
 		}
@@ -257,8 +257,8 @@ void start_town_mode(short which_town, short entry_dir)
 				current_ground = 0;
 				else if (t_d.terrain[i][j] == 2)
 				current_ground = 2;
-			if ((scenario_ter_type(t_d.terrain[i][j]).special >= terrain_special::ConveyorNorth) &&
-				(scenario_ter_type(t_d.terrain[i][j]).special <= terrain_special::ConveyorWest))
+			if ((scenario.ter_type(t_d.terrain[i][j]).special >= terrain_special::ConveyorNorth) &&
+				(scenario.ter_type(t_d.terrain[i][j]).special <= terrain_special::ConveyorWest))
 					belt_present = TRUE;	
 		}
 	c_town.hostile = 0;
@@ -464,7 +464,7 @@ void start_town_mode(short which_town, short entry_dir)
 	
 							
 	for (j = 0; j < 3; j++)
-		if (scenario_store_item_town(j) == town_number) {
+		if (scenario.store_item_town(j) == town_number) {
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
 				t_i.items[i] = stored_items[j].items[i];		
 			}				
@@ -571,15 +571,15 @@ void start_town_mode(short which_town, short entry_dir)
 
 	//// check horses
 	for (i = 0; i < 30; i++) {
-		if ((scenario_boats(i).which_town >= 0) && (scenario_boats(i).boat_loc.x >= 0)) {
+		if ((scenario.boats(i).which_town >= 0) && (scenario.boats(i).boat_loc.x >= 0)) {
 			if (party.boats[i].exists == FALSE) {
-				party.boats[i] = scenario_boats(i);
+				party.boats[i] = scenario.boats(i);
 				party.boats[i].exists = TRUE;
 				}
 			}
-		if ((scenario_horses(i).which_town >= 0) && (scenario_horses(i).horse_loc.x >= 0)) {
+		if ((scenario.horses(i).which_town >= 0) && (scenario.horses(i).horse_loc.x >= 0)) {
 			if (party.horses[i].exists == FALSE) {
-				party.horses[i] = scenario_horses(i);
+				party.horses[i] = scenario.horses(i);
 				party.horses[i].exists = TRUE;
 				}
 			}
@@ -623,13 +623,13 @@ location end_town_mode(short switching_level,location destination)  // returns n
 
 	// Store items, if necessary 
 		for (j = 0; j < 3; j++)
-			if (scenario_store_item_town(j) == c_town.town_num) {
+			if (scenario.store_item_town(j) == c_town.town_num) {
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
 				if ((t_i.items[i].variety != item_variety::None) && (t_i.items[i].is_special == 0) &&
-				((t_i.items[i].item_loc.x >= scenario_store_item_rects(j).left) &&
-				 (t_i.items[i].item_loc.x <= scenario_store_item_rects(j).right) &&
-				 (t_i.items[i].item_loc.y >= scenario_store_item_rects(j).top) &&
-				 (t_i.items[i].item_loc.y <= scenario_store_item_rects(j).bottom)) ) {
+				((t_i.items[i].item_loc.x >= scenario.store_item_rects(j).left) &&
+				 (t_i.items[i].item_loc.x <= scenario.store_item_rects(j).right) &&
+				 (t_i.items[i].item_loc.y >= scenario.store_item_rects(j).top) &&
+				 (t_i.items[i].item_loc.y <= scenario.store_item_rects(j).bottom)) ) {
 				 	stored_items[j].items[i] = t_i.items[i];
 				 	}
 				 	else stored_items[j].items[i].variety = item_variety::None;
@@ -913,7 +913,7 @@ void create_town_combat_terrain()
 void create_out_combat_terrain(short type,short num_walls,short spec_code)
 // spec_code is encounter's spec_code
 {
-	short ter_type = scenario_ter_type(type).picture;
+	short ter_type = scenario.ter_type(type).picture;
 	if (ter_type > 260)
 		ter_type = 1;
 	else
@@ -1126,7 +1126,7 @@ void pick_lock(location where,short pc_num)
 		return;
 	}
 
-	const auto& terrain{ scenario_ter_type(t_d.terrain[where.x][where.y]) };
+	const auto& terrain{ scenario.ter_type(t_d.terrain[where.x][where.y]) };
 	if ((terrain.special < terrain_special::UnlockableTerrain) || (terrain.special > terrain_special::UnlockableOrBashable))
 	{
 		add_string_to_buf("  Wrong terrain type.           ");
@@ -1170,7 +1170,7 @@ void pick_lock(location where,short pc_num)
 
 void bash_door(location where,short pc_num)
 {
-	const auto& terrain{ scenario_ter_type(t_d.terrain[where.x][where.y]) };
+	const auto& terrain{ scenario.ter_type(t_d.terrain[where.x][where.y]) };
 	if ((terrain.special < terrain_special::UnlockableTerrain) || (terrain.special > terrain_special::UnlockableOrBashable))
 	{
 		add_string_to_buf("  Wrong terrain type.           ");
@@ -1222,7 +1222,7 @@ void erase_specials()
 				}				
 				if (where.x != 100)
 				{
-					switch (scenario_ter_type(t_d.terrain[where.x][where.y]).picture)
+					switch (scenario.ter_type(t_d.terrain[where.x][where.y]).picture)
 					{
 					case 207: t_d.terrain[where.x][where.y] = 0; break;
 					case 208: t_d.terrain[where.x][where.y] = 170; break;
@@ -1255,7 +1255,7 @@ void erase_out_specials()
 						if (party.can_find_town[outdoors[k][l].exit_dests[m]] == 0)
 						{
 							out[48 * k + outdoors[k][l].exit_locs[m].x][48 * l + outdoors[k][l].exit_locs[m].y] =
-								scenario_ter_type(outdoors[k][l].terrain[outdoors[k][l].exit_locs[m].x][outdoors[k][l].exit_locs[m].y]).flag1;
+								scenario.ter_type(outdoors[k][l].terrain[outdoors[k][l].exit_locs[m].x][outdoors[k][l].exit_locs[m].y]).flag1;
 							//exit_g_type[out[48 * k + outdoors[k][l].exit_locs[m].x][48 * l + outdoors[k][l].exit_locs[m].y] - 217];
 						}
 						else if (party.can_find_town[outdoors[k][l].exit_dests[m]] > 0)
@@ -1293,7 +1293,7 @@ void erase_out_specials()
 									outdoors[i][j].special_id[k] = -1;
 								}
 
-								switch (scenario_ter_type(outdoors[i][j].terrain[where.x][where.y]).picture)
+								switch (scenario.ter_type(outdoors[i][j].terrain[where.x][where.y]).picture)
 								{
 								case 207: out[48 * i + where.x][48 * j + where.y] = 0; break;
 								case 208: out[48 * i + where.x][48 * j + where.y] = 170; break;
@@ -1578,7 +1578,7 @@ void draw_map (HWND the_dialog, short the_item)
 					{
 						map_graphic_placed[where.x / 8][where.y] =
 							map_graphic_placed[where.x / 8][where.y] | (unsigned char)(s_pow(2, where.x % 8));
-						short pic = scenario_ter_type(what_ter).picture;
+						short pic = scenario.ter_type(what_ter).picture;
 						if (pic >= 1000)
 						{
 							if (spec_scen_g != NULL)
@@ -1623,7 +1623,7 @@ void draw_map (HWND the_dialog, short the_item)
 											expl2 = out_e[(where.x + 1) + 48 * party.i_w_c.x][where.y + 48 * party.i_w_c.y];
 										else
 											expl2 = is_explored(where.x + 1, where.y) ? TRUE : FALSE;
-										const short pic2 = scenario_ter_type(what_ter2).picture;
+										const short pic2 = scenario.ter_type(what_ter2).picture;
 										if ((map_pats[pic] == map_pats[pic2]) && (expl2 != 0))
 										{
 											draw_rect.right += 6;
@@ -1834,9 +1834,9 @@ void display_map()
 
 bool is_door(location destination)
 {
-	if ((scenario_ter_type(t_d.terrain[destination.x][destination.y]).special == terrain_special::UnlockableTerrain) ||
-		(scenario_ter_type(t_d.terrain[destination.x][destination.y]).special == terrain_special::ChangeWhenStepOn) ||
-		(scenario_ter_type(t_d.terrain[destination.x][destination.y]).special == terrain_special::UnlockableOrBashable))
+	if ((scenario.ter_type(t_d.terrain[destination.x][destination.y]).special == terrain_special::UnlockableTerrain) ||
+		(scenario.ter_type(t_d.terrain[destination.x][destination.y]).special == terrain_special::ChangeWhenStepOn) ||
+		(scenario.ter_type(t_d.terrain[destination.x][destination.y]).special == terrain_special::UnlockableOrBashable))
 	{
 		return true;
 	}
@@ -1846,9 +1846,9 @@ bool is_door(location destination)
 
 Boolean quadrant_legal(short i, short j) 
 {
-	if (party.outdoor_corner.x + i >= scenario_out_width())
+	if (party.outdoor_corner.x + i >= scenario.out_width())
 		return FALSE;
-	if (party.outdoor_corner.y + j >= scenario_out_height())
+	if (party.outdoor_corner.y + j >= scenario.out_height())
 		return FALSE;
 	if (party.outdoor_corner.x + i < 0)
 		return FALSE;

@@ -27,7 +27,7 @@
 #include "boe/hacks.hpp"
 #include "boe/utility.hpp"
 #include "boe/item.hpp"
-#include "scenario.hpp"
+#include "scenario_ext.hpp"
 
 extern const short skill_cost[20] = {3,3,3,2,2,2, 1,2,2,6,
 						5, 1,2,4,2,1, 4,2,5,0};
@@ -326,24 +326,24 @@ void init_party_scen_data()
 			party.stuff_done[i][j] = 0;
 	PSD[306][4] = store_help;
 		party.light_level = 0;
-	party.outdoor_corner = scenario_out_sec_start();
+	party.outdoor_corner = scenario.out_sec_start();
 	party.i_w_c.x = 0;
 	party.i_w_c.y = 0;
-	party.loc_in_sec = scenario_out_start();
-	party.p_loc = scenario_out_start();
+	party.loc_in_sec = scenario.out_start();
+	party.p_loc = scenario.out_start();
 	for (i = 0; i < 30; i++)
-		party.boats[i] = scenario_boats(i);
+		party.boats[i] = scenario.boats(i);
 	for (i = 0; i < 30; i++)
-		party.horses[i] = scenario_horses(i);
+		party.horses[i] = scenario.horses(i);
 	for (i = 0; i < 30; i++) {
-		const auto& boat{ scenario_boats(i) };
+		const auto& boat{ scenario.boats(i) };
 		if ((boat.which_town >= 0) && (boat.boat_loc.x >= 0)) {
 			if (party.boats[i].exists == FALSE) {
 				party.boats[i] = boat;
 				party.boats[i].exists = TRUE;
 				}
 			}
-		const auto& horse{ scenario_horses(i) };
+		const auto& horse{ scenario.horses(i) };
 		if ((horse.which_town >= 0) && (horse.horse_loc.x >= 0)) {
 			if (party.horses[i].exists == FALSE) {
 				party.horses[i] = horse;
@@ -375,13 +375,13 @@ void init_party_scen_data()
 	 party.direction = 0;
 	party.at_which_save_slot = 0;
 	for (i = 0; i < 200; i++)
-		party.can_find_town[i] = 1 - scenario_town_hidden(i);
+		party.can_find_town[i] = 1 - scenario.town_hidden(i);
 	for (i = 0; i < 20; i++)
 	 	party.key_times[i] = 30000;
 	for (i = 0; i < 30; i++)
 	 	party.party_event_timers[i] = 0;
 	for (i = 0; i < 50; i++)
-		party.spec_items[i] = (scenario_special_item(i) >= 10) ? 1 : 0;
+		party.spec_items[i] = (scenario.special_item(i) >= 10) ? 1 : 0;
 
 	for (i = 0; i < 200; i++)
 	 party.m_killed[i] = 0;
@@ -491,10 +491,10 @@ void put_party_in_scen()
 	update_pc_graphics();
 
 	current_pc = first_active_pc();
-	force_town_enter(scenario_which_town_start(),scenario_where_start());
-	start_town_mode(scenario_which_town_start(),9);
-	center = scenario_where_start();
-	update_explored(scenario_where_start());
+	force_town_enter(scenario.which_town_start(),scenario.where_start());
+	start_town_mode(scenario.which_town_start(),9);
+	center = scenario.where_start();
+	update_explored(scenario.where_start());
 	overall_mode = 1;
 	load_area_graphics();
 	create_clip_region();
@@ -511,13 +511,13 @@ void put_party_in_scen()
 		{
 			short buttons[3] = { 1,-1,-1 };
 			const std::array< std::string_view, 6> strs_arr{ data_store5.scen_strs[4], data_store5.scen_strs[5], data_store5.scen_strs[6], data_store5.scen_strs[7], data_store5.scen_strs[8], data_store5.scen_strs[9] };
-			custom_choice_dialog(strs_arr,-1 * (1600 + scenario_intro_pic()),buttons);
+			custom_choice_dialog(strs_arr,-1 * (1600 + scenario.intro_pic()),buttons);
 			j = 6;
 		}
 	give_help(1,2,0);
 	// this is kludgy, put here to prevent problems
 	for (i = 0; i < 50; i++)
-		party.spec_items[i] = (scenario_special_item(i) >= 10) ? 1 : 0;
+		party.spec_items[i] = (scenario.special_item(i) >= 10) ? 1 : 0;
 }
 
 
@@ -1634,10 +1634,10 @@ void do_priest_spell(short pc_num,short spell_num)
 				}
 			adven[pc_num].cur_sp -= spell_cost[1][spell_num];
 			add_string_to_buf("  You are moved... ");
-			force_town_enter(scenario_which_town_start(),scenario_where_start());
-			start_town_mode(scenario_which_town_start(),9);
-			position_party(scenario_out_sec_start(), scenario_out_start());
-			center = c_town.p_loc = scenario_where_start();
+			force_town_enter(scenario.which_town_start(),scenario.where_start());
+			start_town_mode(scenario.which_town_start(),9);
+			position_party(scenario.out_sec_start(), scenario.out_start());
+			center = c_town.p_loc = scenario.where_start();
 //			overall_mode = 0;
 //			center = party.p_loc;
 //			update_explored(party.p_loc);
@@ -1963,17 +1963,17 @@ void cast_town_spell(location where)
 				break;
 				
 			case 20:
-				switch (scenario_ter_type(ter).special) { ////
+				switch (scenario.ter_type(ter).special) { ////
 					case terrain_special::UnlockableTerrain:
 					case terrain_special::UnlockableOrBashable:
 						r1 = rand_short(0,100) - 5 * stat_adj(adven[who_cast], skill::Intelligence) + 5 * c_town.difficulty;
-						r1 += scenario_ter_type(ter).flag2 * 7;
-						if (scenario_ter_type(ter).flag2 == 10)
+						r1 += scenario.ter_type(ter).flag2 * 7;
+						if (scenario.ter_type(ter).flag2 == 10)
 							r1 = 10000;
 						if (r1 < (135 - combat_percent[min(19,adven[who_cast].level)])) {
 							add_string_to_buf("  Door unlocked.                 ");
 							play_sound(9);
-							t_d.terrain[where.x][where.y] = scenario_ter_type(ter).flag1;
+							t_d.terrain[where.x][where.y] = scenario.ter_type(ter).flag1;
 							}
 							else {
 								play_sound(41);
@@ -2034,9 +2034,9 @@ void crumble_wall(location where)
 	if (loc_off_act_area(where) == TRUE)
 		return;
 	ter = t_d.terrain[where.x][where.y];
-	if (scenario_ter_type(ter).special == terrain_special::CrumblingTerrain) {
+	if (scenario.ter_type(ter).special == terrain_special::CrumblingTerrain) {
 			play_sound(60);
-				t_d.terrain[where.x][where.y] = scenario_ter_type(ter).flag1;
+				t_d.terrain[where.x][where.y] = scenario.ter_type(ter).flag1;
 			add_string_to_buf("  Barrier crumbles.");	
 		}
 

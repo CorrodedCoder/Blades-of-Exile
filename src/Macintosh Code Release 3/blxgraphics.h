@@ -54,7 +54,6 @@ void frame_space(location where,short mode,short width,short height);
 void erase_spot(short i,short j);
 void undo_clip();
 void draw_targeting_line(Point where_curs);
-bool party_toast(void);
 void redraw_partial_terrain(Rect redraw_rect);
 void dump_gworld();
 void final_process_dialog(short which_dlog);

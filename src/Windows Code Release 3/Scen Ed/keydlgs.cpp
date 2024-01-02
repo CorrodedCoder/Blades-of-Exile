@@ -17,7 +17,7 @@ extern short town_type;  // 0 - big 1 - ave 2 - small
 extern short max_dim[3],mode_count;
 extern unsigned char template_terrain[64][64];
 extern short_item_record_type item_list[400];
-extern scenario_data_type scenario;
+extern scenario_data_type scenariodata;
 extern special_node_type null_spec_node;
 extern talking_node_type null_talk_node;
 extern piles_of_stuff_dumping_type data_store;
@@ -546,7 +546,7 @@ Boolean save_spec_enc()
 		}
 	
 	if (store_which_mode == 0)
-		scenario.scen_specials[store_which_node] = store_spec_node;
+		scenariodata.scen_specials[store_which_node] = store_spec_node;
 	if (store_which_mode == 1)
 		current_terrain.specials[store_which_node] = store_spec_node;
 	if (store_which_mode == 2)
@@ -850,7 +850,7 @@ void edit_spec_enc_event_filter (short item_hit)
 		store_which_mode = node_to_change_to / 1000;
 		store_which_node = node_to_change_to % 1000;
 		if (store_which_mode == 0)
-			store_spec_node = scenario.scen_specials[store_which_node];
+			store_spec_node = scenariodata.scen_specials[store_which_node];
 		if (store_which_mode == 1)
 			store_spec_node = current_terrain.specials[store_which_node];
 		if (store_which_mode == 2)
@@ -873,7 +873,7 @@ void edit_spec_enc(short which_node,short mode,short parent_num)
 		last_node[i] = -1;
 	//last_node[0] = store_which_mode * 1000 + store_which_node;
 	if (mode == 0)
-		store_spec_node = scenario.scen_specials[store_which_node];
+		store_spec_node = scenariodata.scen_specials[store_which_node];
 	if (mode == 1)
 		store_spec_node = current_terrain.specials[store_which_node];
 	if (mode == 2)
@@ -898,7 +898,7 @@ short get_fresh_spec(short which_mode)
 	
 	for (i = 0; i < num_specs[which_mode]; i++) {
 		if (which_mode == 0)
-			store_node = scenario.scen_specials[i];
+			store_node = scenariodata.scen_specials[i];
 		if (which_mode == 1)
 			store_node = current_terrain.specials[i];
 		if (which_mode == 2)
@@ -1223,8 +1223,8 @@ void edit_scen_intro_event_filter (short item_hit)
 	
 	switch (item_hit) {
 		case 9:
-			scenario.intro_pic = CDGN(804,8);
-			if ((scenario.intro_pic < 0) || (scenario.intro_pic > 29)) {
+			scenariodata.intro_pic = CDGN(804,8);
+			if ((scenariodata.intro_pic < 0) || (scenariodata.intro_pic > 29)) {
 				give_error("Intro picture number is out of range.","",804);
 				break;
 				}
@@ -1253,10 +1253,10 @@ void edit_scen_intro()
 		
 	cd_create_dialog_parent_num(804,0);
 	
-	CDSN(804,8,scenario.intro_pic);
+	CDSN(804,8,scenariodata.intro_pic);
 	for (i = 0; i < 6; i++)
 		CDST(804, 2 + i,scen_strs[4 + i]);
-	csp(804,11,scenario.intro_pic + 1600);
+	csp(804,11,scenariodata.intro_pic + 1600);
 	
 	while (dialog_not_toast)
 		ModalDialog();	

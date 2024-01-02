@@ -4,7 +4,7 @@
 #include "locutils.h"
 #include "fields.h"
 #include "boe/utility.hpp"
-#include "scenario.hpp"
+#include "scenario_ext.hpp"
 
 extern current_town_type c_town;
 extern short overall_mode,which_combat_type,current_pc,town_type;
@@ -206,7 +206,7 @@ void make_quickfire(short i,short j)
 		return;
 	if (is_force_barrier(i,j) || is_fire_barrier(i,j))
 		return;
-	const auto& terrain{ scenario_ter_type(coord_to_ter(i, j)) };
+	const auto& terrain{ scenario.ter_type(coord_to_ter(i, j)) };
 	if (terrain.blockage == 1)
 		return;
 	if (terrain.blockage == 5)

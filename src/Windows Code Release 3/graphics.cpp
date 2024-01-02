@@ -14,7 +14,8 @@
 #include "exlsound.h"
 #include "graphutl.h"
 #include "graphutl_helpers.hpp"
-#include "scenario.hpp"
+#include "boe/adventurers.hpp"
+#include "scenario_ext.hpp"
 
 
 extern HWND	mainPtr;
@@ -1658,7 +1659,7 @@ void put_graphics_in_template()
 // right now, trying a restrictive rule (just cave floor and grass, mainly)
 static bool is_nature(char x, char y)
 {
-	const auto pic = scenario_ter_type(coord_to_ter(x, y)).picture;
+	const auto pic = scenario.ter_type(coord_to_ter(x, y)).picture;
 	if ((pic >= 0) && (pic <= 45))
 		return true;
 	if ((pic >= 67) && (pic <= 73))
@@ -2140,7 +2141,7 @@ Boolean extend_road_terrain(unsigned char ter)
 {
 	for (short i = 0; i < 39; i++)
 	{
-		if (scenario_ter_type(ter).picture == c_extend_pics[i])
+		if (scenario.ter_type(ter).picture == c_extend_pics[i])
 		{
 			return TRUE;
 		}
@@ -2393,7 +2394,7 @@ void draw_targets(location center)
 	RECT source_rect = {36,74,47,85},dest_rect; 
 	short i = 0;
 
-	if (party_toast())
+	if (adventurers_dead(adven))
 		return;
 
 	for (i = 0; i < 8; i++)
@@ -2522,14 +2523,6 @@ void draw_targeting_line(POINT where_curs)
 				}
 			}
 	}
-}
-
-bool party_toast(void)
-{
-	for (short i = 0; i < 6; i++)
-		if (adven[i].main_status == status::Normal)
-			return false;
-	return true;
 }
 
 void redraw_partial_terrain(RECT redraw_rect)

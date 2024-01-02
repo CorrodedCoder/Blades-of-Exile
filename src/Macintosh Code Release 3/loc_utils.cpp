@@ -41,7 +41,7 @@ void set_terrain_blocked()
 	short i;
 	
 	for (i = 0; i < 256; i++)
-		terrain_blocked[i] = scenario_ter_type(i).blockage;
+		terrain_blocked[i] = scenario.ter_type(i).blockage;
 }
 
 short dist(location p1,location p2)
@@ -163,7 +163,7 @@ static short short_can_see(shortloc p1,shortloc p2)
 
 static bool is_lava(short x,short y)
 {
-	return scenario_ter_type(coord_to_ter(x, y)).picture == 404;
+	return scenario.ter_type(coord_to_ter(x, y)).picture == 404;
 }
 
 short can_see(location p1,location p2,short mode)
@@ -319,7 +319,7 @@ bool is_container(location loc)
 	{
 		return true;
 	}
-	return scenario_ter_type(coord_to_ter(loc.x, loc.y)).special == 14;
+	return scenario.ter_type(coord_to_ter(loc.x, loc.y)).special == 14;
 }
 
 void update_explored(location dest)
@@ -382,7 +382,7 @@ bool is_blocked(location to_check)
 		
 	if (is_town() || is_combat()) {
 		ter = is_town() ? t_d.terrain[to_check.x][to_check.y] : combat_terrain[to_check.x][to_check.y];
-		gr = scenario_ter_type(ter).picture;
+		gr = scenario.ter_type(ter).picture;
 	
 		////
 		// Terrain blocking?

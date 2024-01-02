@@ -162,10 +162,10 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 			from_loc = pc_pos[current_pc];
 			break;	
 		}
-	ter_special = scenario_ter_type(ter).special;
-	ter_flag1 = scenario_ter_type(ter).flag1;
-	ter_flag2 = scenario_ter_type(ter).flag2;
-	ter_pic = scenario_ter_type(ter).picture;
+	ter_special = scenario.ter_type(ter).special;
+	ter_flag1 = scenario.ter_type(ter).flag1;
+	ter_flag2 = scenario.ter_type(ter).flag2;
+	ter_pic = scenario.ter_type(ter).picture;
 
 		if ((mode > 0) && (ter_special >= 16) && 
 			(ter_special <= 19)) {
@@ -284,7 +284,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 				play_sound(-1 * ter_flag2);
 				}
 			give_help(47,65,0);
-			if (scenario_ter_type(ter).blockage > 2)
+			if (scenario.ter_type(ter).blockage > 2)
 				can_enter = FALSE;
 			break;
 		case 2: case 3:case 4:
@@ -954,19 +954,19 @@ Boolean use_space(location where)
 			 	t_i.items[i].item_loc = to_loc;
 		}
 		
-	switch (scenario_ter_type(ter).special) {
+	switch (scenario.ter_type(ter).special) {
 		case 22:
 			if (same_point(where,from_loc) == TRUE) {
 				add_string_to_buf("  Not while on space.");
 				return FALSE;
 				}
 			add_string_to_buf("  OK.");
-			alter_space(where.x,where.y,scenario_ter_type(ter).flag1);
-			play_sound(scenario_ter_type(ter).flag2);
+			alter_space(where.x,where.y,scenario.ter_type(ter).flag1);
+			play_sound(scenario.ter_type(ter).flag2);
 			return TRUE;
 			break;
 		case 23: // call special
-			run_special(17,0,scenario_ter_type(ter).flag1,where,&i,&i,&i);
+			run_special(17,0,scenario.ter_type(ter).flag1,where,&i,&i,&i);
 			break;	
 		}
 	add_string_to_buf("  Nothing to use.");
@@ -1144,7 +1144,7 @@ void change_level(short town_num,short x,short y)
 {
 	location l;
 	
-	if ((town_num < 0) || (town_num >= scenario_num_towns())) {
+	if ((town_num < 0) || (town_num >= scenario.num_towns())) {
 		give_error("The scenario special encounter tried to put you into a town that doesn't exist.","",0);
 		return;
 		}
@@ -1425,7 +1425,7 @@ void push_things()////
 		if (c_town.monst.dudes[i].active > 0) {
 			l = c_town.monst.dudes[i].m_loc;
 			ter = t_d.terrain[l.x][l.y];
-			switch (scenario_ter_type(ter).special) {
+			switch (scenario.ter_type(ter).special) {
 				case 16: l.y--; break;
 				case 17: l.x++; break;
 				case 18: l.y++; break;
@@ -1442,7 +1442,7 @@ void push_things()////
 		if (t_i.items[i].variety > 0) {
 			l = t_i.items[i].item_loc;
 			ter = t_d.terrain[l.x][l.y];
-			switch (scenario_ter_type(ter).special) {
+			switch (scenario.ter_type(ter).special) {
 				case 16: l.y--; break;
 				case 17: l.x++; break;
 				case 18: l.y++; break;
@@ -1459,7 +1459,7 @@ void push_things()////
 	if (is_town()) {
 		ter = t_d.terrain[c_town.p_loc.x][c_town.p_loc.y];
 		l = c_town.p_loc;
-		switch (scenario_ter_type(ter).special) {
+		switch (scenario.ter_type(ter).special) {
 			case 16: l.y--; break;
 			case 17: l.x++; break;
 			case 18: l.y++; break;
@@ -1467,7 +1467,7 @@ void push_things()////
 			}
 		if (same_point(l,c_town.p_loc) == FALSE) {
 			ASB("You get pushed.");
-			if (scenario_ter_type(ter).special >= 16)	
+			if (scenario.ter_type(ter).special >= 16)	
 				draw_terrain(0);
 			center = l;
 			c_town.p_loc = l;
@@ -1494,7 +1494,7 @@ void push_things()////
 			if (adven[i].main_status == status::Normal) {
 				ter = t_d.terrain[pc_pos[i].x][pc_pos[i].y];
 				l = pc_pos[i];
-				switch (scenario_ter_type(ter).special) {
+				switch (scenario.ter_type(ter).special) {
 					case 16: l.y--; break;
 					case 17: l.x++; break;
 					case 18: l.y++; break;
@@ -1503,7 +1503,7 @@ void push_things()////
 				if (same_point(l, pc_pos[i]) == FALSE) {
 					ASB("Someone gets pushed.");	
 					ter = t_d.terrain[l.x][l.y];
-					if (scenario_ter_type(ter).special >= 16)	
+					if (scenario.ter_type(ter).special >= 16)	
 						draw_terrain(0);
 					pc_pos[i] = l;
 					update_explored(l);
@@ -1792,7 +1792,7 @@ void general_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 			break;
 		case 17:
 			check_mess = TRUE;
-			if (spec.ex1a != boe_clamp(spec.ex1a,0,scenario_num_towns() - 1))
+			if (spec.ex1a != boe_clamp(spec.ex1a,0,scenario.num_towns() - 1))
 				give_error("Town out of range.","",0);
 				else party.can_find_town[spec.ex1a] = (spec.ex2a == 0) ? 0 : 1;
 			*redraw = TRUE;
@@ -2486,7 +2486,7 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 			break;
 		case 173:
 			ter = coord_to_ter(spec.ex1a,spec.ex1b);
-			set_terrain(l,scenario_ter_type(ter).trans_to_what);
+			set_terrain(l,scenario.ter_type(ter).trans_to_what);
 			*redraw = 1;
 			break;
 		case 174:
@@ -2519,14 +2519,14 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 			break;
 		case 177:
 			ter = coord_to_ter(spec.ex1a,spec.ex1b);
-			if (scenario_ter_type(ter).special == 8)
-				set_terrain(l,scenario_ter_type(ter).flag1);
+			if (scenario.ter_type(ter).special == 8)
+				set_terrain(l,scenario.ter_type(ter).flag1);
 			*redraw = 1;
 			break;
 		case 178:
 			ter = coord_to_ter(spec.ex1a,spec.ex1b);
-			if ((scenario_ter_type(ter).special == 9) || (scenario_ter_type(ter).special == 10))
-				set_terrain(l,scenario_ter_type(ter).flag1);
+			if ((scenario.ter_type(ter).special == 9) || (scenario.ter_type(ter).special == 10))
+				set_terrain(l,scenario.ter_type(ter).flag1);
 			*redraw = 1;
 			break;
 		case 179:
@@ -2638,7 +2638,7 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 					if (i == 1) {*next_spec = -1;}
 						else {
 							ter = coord_to_ter(store_special_loc.x,store_special_loc.y);
-							set_terrain(store_special_loc,scenario_ter_type(ter).trans_to_what);
+							set_terrain(store_special_loc,scenario.ter_type(ter).trans_to_what);
 							*next_spec = spec.ex1b;
 							}
 					}
@@ -2832,17 +2832,17 @@ void rect_spec(short which_mode,special_node_type cur_node,short cur_spec_type,
 			break;
 		case 216:
 			ter = coord_to_ter(i,j);
-			set_terrain(l,scenario_ter_type(ter).trans_to_what);
+			set_terrain(l,scenario.ter_type(ter).trans_to_what);
 			break;
 		case 217:
 			ter = coord_to_ter(i,j);
-			if (scenario_ter_type(ter).special == 8)
-				set_terrain(l,scenario_ter_type(ter).flag1);
+			if (scenario.ter_type(ter).special == 8)
+				set_terrain(l,scenario.ter_type(ter).flag1);
 			break;
 		case 218:
 			ter = coord_to_ter(i,j);
-			if ((scenario_ter_type(ter).special == 9) || (scenario_ter_type(ter).special == 10))
-				set_terrain(l,scenario_ter_type(ter).flag1);
+			if ((scenario.ter_type(ter).special == 9) || (scenario.ter_type(ter).special == 10))
+				set_terrain(l,scenario.ter_type(ter).flag1);
 			break;
 			
 		}
@@ -2947,15 +2947,15 @@ void handle_message(short which_mode,short cur_type,short mess1,short mess2,shor
 	if (mess1 >= 0) {
 		label1 = 1000 * cur_type + mess1 + mess_adj[cur_type];
 		label1b = is_out() ? (party.outdoor_corner.x + party.i_w_c.x) +
-			scenario_out_width() * (party.outdoor_corner.y + party.i_w_c.y) : c_town.town_num;
+			scenario.out_width() * (party.outdoor_corner.y + party.i_w_c.y) : c_town.town_num;
 		}
 	if (mess2 >= 0) {
 		label2 = 1000 * cur_type + mess2 + mess_adj[cur_type];
 		label2b = is_out() ? (party.outdoor_corner.x + party.i_w_c.x) +
-			scenario_out_width() * (party.outdoor_corner.y + party.i_w_c.y) : c_town.town_num;
+			scenario.out_width() * (party.outdoor_corner.y + party.i_w_c.y) : c_town.town_num;
 		}
 	display_strings((char *) str1, (char *) str2,label1,label2, label1b,label2b, 
-		"",57,1600 + scenario_intro_pic(),0);
+		"",57,1600 + scenario.intro_pic(),0);
 }
  
 void get_strs(char *str1,char *str2,short cur_type,short which_str1,short which_str2) 
