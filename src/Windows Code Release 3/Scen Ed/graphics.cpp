@@ -14,7 +14,7 @@
 #include "keydlgs.h"
 #include "boe/utility.hpp"
 #include "boe/compatibility.hpp"
-#include "../scenario.hpp"
+#include "../scenario_ext.hpp"
 
 extern char scen_strs[160][256];
 extern char scen_strs2[110][256];

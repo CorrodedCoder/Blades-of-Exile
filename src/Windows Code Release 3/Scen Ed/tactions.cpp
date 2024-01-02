@@ -14,7 +14,7 @@
 #include "../graphutl.h"
 #include "buttonmg.h"
 #include "boe/utility.hpp"
-#include "../scenario.hpp"
+#include "../scenario_ext.hpp"
 
 
 RECT world_screen;

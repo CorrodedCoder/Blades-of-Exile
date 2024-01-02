@@ -11,7 +11,7 @@
 #include "edsound.h"
 #include "../graphutl.h"
 #include "boe/endian_adjust.hpp"
-#include "../scenario.hpp"
+#include "../scenario_ext.hpp"
 
 
 extern scenario_data_type scenariodata;

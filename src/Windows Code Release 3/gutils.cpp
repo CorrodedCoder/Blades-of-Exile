@@ -16,7 +16,7 @@
 #include "graphutl_helpers.hpp"
 #include "boe/item.hpp"
 #include "boe/adventurers.hpp"
-#include "scenario.hpp"
+#include "scenario_ext.hpp"
 
 extern HWND	mainPtr;
 extern short overall_mode;

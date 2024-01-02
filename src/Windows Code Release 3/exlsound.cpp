@@ -8,7 +8,7 @@
 #include "exlsound.h"
 #include "text.h"
 #include "fields.h"
-#include "scenario.hpp"
+#include "scenario_ext.hpp"
 
 #define	NUM_SOUNDS	100
 

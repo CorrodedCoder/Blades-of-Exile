@@ -25,7 +25,7 @@
 #include "graphutl.h"
 #include "boe/utility.hpp"
 #include "boe/item.hpp"
-#include "scenario.hpp"
+#include "scenario_ext.hpp"
 
 #define	NUM_HINTS	30
 

@@ -11,7 +11,7 @@
 #include "townspec.h"
 #include "exlsound.h"
 #include "boe/hacks.hpp"
-#include "scenario.hpp"
+#include "scenario_ext.hpp"
 
 extern party_record_type party;
 extern current_town_type c_town;

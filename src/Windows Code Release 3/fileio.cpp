@@ -26,7 +26,7 @@
 #include "boe/endian_adjust.hpp"
 #include "boe/savedata_serialization.hpp"
 #include "boe/utility.hpp"
-#include "scenario.hpp"
+#include "scenario_ext.hpp"
 
 HWND	the_dialog;
 extern party_record_type far	party;

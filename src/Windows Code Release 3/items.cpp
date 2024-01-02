@@ -20,7 +20,7 @@
 #include "monster.h"
 #include "boe/utility.hpp"
 #include "boe/item.hpp"
-#include "scenario.hpp"
+#include "scenario_ext.hpp"
 
 extern short stat_window,overall_mode,current_cursor,which_combat_type,current_pc;
 extern party_record_type party;

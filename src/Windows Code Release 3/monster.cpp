@@ -13,7 +13,7 @@
 #include "newgraph.h"
 #include "boe/utility.hpp"
 #include "boe/item.hpp"
-#include "scenario.hpp"
+#include "scenario_ext.hpp"
 
 
 extern current_town_type c_town;

@@ -12,6 +12,7 @@ add_executable (Scen-Ed WIN32
 	global.cpp
 	buttonmg.cpp
 	../scenario.cpp
+	../scenario_ext.cpp
 
 	BLSCENED.RC
 	GAMEDLOG.RC

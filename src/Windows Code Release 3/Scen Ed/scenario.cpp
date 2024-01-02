@@ -11,7 +11,7 @@
 #include "tfileio.h"
 #include "tactions.h"
 #include "edsound.h"
-#include "../scenario.hpp"
+#include "../scenario_ext.hpp"
 #include "boe/compatibility.hpp"
 
 extern short cen_x, cen_y, overall_mode,cur_town;

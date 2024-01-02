@@ -7,7 +7,7 @@
 #include "monster.h"
 #include "fields.h"
 #include "boe/utility.hpp"
-#include "scenario.hpp"
+#include "scenario_ext.hpp"
 
 typedef struct {
 	short x, y;

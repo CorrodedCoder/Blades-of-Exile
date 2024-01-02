@@ -15,7 +15,7 @@
 #include "graphutl.h"
 #include "graphutl_helpers.hpp"
 #include "boe/adventurers.hpp"
-#include "scenario.hpp"
+#include "scenario_ext.hpp"
 
 
 extern HWND	mainPtr;
