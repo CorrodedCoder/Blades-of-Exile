@@ -630,7 +630,7 @@ void draw_terrain()
 						from_rect = calc_rect(0,2);
 						Draw_Some_Item(field_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
 						}	
-					if (is_quickfire(cen_x + q - 4,cen_y + r - 4) == TRUE) {
+					if (is_quickfire(cen_x + q - 4,cen_y + r - 4)) {
 						from_rect = calc_rect(7,1);
 						Draw_Some_Item(field_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
 						}	
@@ -1375,6 +1375,7 @@ void make_force_barrier(short i,short j)
 {
 	make_field_type(i,j,7);
 }
+
 void take_force_barrier(short i,short j)
 {
 	take_field_type(i,j,7);
@@ -1390,20 +1391,23 @@ void make_sfx(short i,short j,short type)
 {
 	make_field_type(i,j,type + 14);
 }
+
 void take_sfx(short i,short j,short type)
 {
 	take_field_type(i,j,type + 14);
 }
 
 
-Boolean is_quickfire(short i,short j)
+bool is_quickfire(short i,short j)
 {
 	return is_field_type(i,j,8);
 }
+
 void make_quickfire(short i,short j)
 {
 	make_field_type(i,j,8);
 }
+
 void take_quickfire(short i,short j)
 {
 	take_field_type(i,j,8);

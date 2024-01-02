@@ -10,7 +10,6 @@ location local_to_global(location local);
 Boolean loc_off_world(location p1);
 Boolean loc_off_act_area(location p1);
 location get_cur_loc();
-bool is_lava(short x,short y);
 short can_see(location p1,location p2,short mode);
 short get_obscurity(short x,short y);
 unsigned char coord_to_ter(short x,short y);

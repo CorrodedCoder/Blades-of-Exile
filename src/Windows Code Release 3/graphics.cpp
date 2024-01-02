@@ -2041,57 +2041,57 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 		store3 = get_t_t(where.x,where.y + 1);
 		if (is_wall(store)
 			&& is_wall(store1) &&
-			(is_ground(store2) == TRUE) 
-			&& (is_ground(store3) == TRUE))
+			is_ground(store2)
+			&& is_ground(store3))
 				draw_trim(q,r,3,6);		
 
 		if (is_wall(store)
 			&& is_wall(store3) &&
-			(is_ground(store2) == TRUE) 
-			&& (is_ground(store1) == TRUE))
+			is_ground(store2)
+			&& is_ground(store1))
 				draw_trim(q,r,3,5);		
 
 		if (is_wall(store2)
 			&& is_wall(store1) &&
-			(is_ground(store) == TRUE) 
-			&& (is_ground(store3) == TRUE))
+			is_ground(store)
+			&& is_ground(store3))
 				draw_trim(q,r,3,7);		
 
 		if (is_wall(store2)
 			&& is_wall(store3) &&
-			(is_ground(store) == TRUE) 
-			&& (is_ground(store1) == TRUE))
+			is_ground(store)
+			&& is_ground(store1))
 				draw_trim(q,r,3,4);		
 
 
-		if ((is_ground(store) == TRUE) 
-			&& (is_ground(store1) == TRUE) &&
-			(is_ground(store2) == TRUE) 
+		if (is_ground(store)
+			&& is_ground(store1) &&
+			is_ground(store2)
 			&& is_wall(store3)) {
 				draw_trim(q,r,3,4);		
 				draw_trim(q,r,3,5);						
 				}
 
 		if (is_wall(store)
-			&& (is_ground(store3) == TRUE) &&
-			(is_ground(store2) == TRUE) 
-			&& (is_ground(store1) == TRUE)) {
+			&& is_ground(store3) &&
+			is_ground(store2)
+			&& is_ground(store1)) {
 				draw_trim(q,r,3,5);		
 				draw_trim(q,r,3,6);						
 				}
 
-		if ((is_ground(store2) == TRUE) 
+		if (is_ground(store2)
 			&& is_wall(store1) &&
-			(is_ground(store) == TRUE) 
-			&& (is_ground(store3) == TRUE)) {
+			is_ground(store)
+			&& is_ground(store3)) {
 				draw_trim(q,r,3,6);		
 				draw_trim(q,r,3,7);		
 				}
 
 		if (is_wall(store2)
-			&& (is_ground(store3) == TRUE) &&
-			(is_ground(store) == TRUE) 
-			&& (is_ground(store1) == TRUE)) {
+			&& is_ground(store3) &&
+			is_ground(store)
+			&& is_ground(store1)) {
 				draw_trim(q,r,3,4);		
 				draw_trim(q,r,3,7);		
 				}

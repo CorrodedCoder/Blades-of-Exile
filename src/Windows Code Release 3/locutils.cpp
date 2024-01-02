@@ -70,7 +70,7 @@ location light_locs[40];
 short num_lights = 0;
 char d_s[60];
 
-////
+
 void set_terrain_blocked()
 {
 	short i;
@@ -195,7 +195,7 @@ static short short_can_see(shortloc p1,shortloc p2)
 	return (can_see(s1,s2,0));
 }
 
-bool is_lava(short x,short y)////
+static bool is_lava(short x,short y)
 {
 	return scenario_ter_type(coord_to_ter(x, y)).picture == 404;
 }

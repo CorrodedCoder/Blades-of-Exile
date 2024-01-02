@@ -19,7 +19,7 @@ RECT get_item_template_rect (short type_wanted);
 unsigned char get_t_t(char x,char y);  // returns terrain type at where
 bool is_wall(unsigned char ter_type);
 bool is_not_wall(unsigned char ter_type);
-Boolean is_ground(unsigned char ter_type);
+bool is_ground(unsigned char ter_type);
 void make_town_trim(short mode);
 void make_out_trim();
 char add_trim_to_array(location where,unsigned char ter_type);

@@ -465,7 +465,7 @@ void load_file()
 						fire_barrier = TRUE;
 					if (is_force_barrier(j,k) == TRUE)
 						force_barrier = TRUE;
-					if (is_quickfire(j,k) == TRUE)
+					if (is_quickfire(j,k))
 						quickfire = TRUE;
 					}		
 force_wall = TRUE;fire_wall = TRUE;antimagic = TRUE;scloud = TRUE;ice_wall = TRUE;blade_wall = TRUE;

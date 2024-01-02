@@ -411,7 +411,7 @@ void start_town_mode(short which_town, short entry_dir)
 						fire_barrier = TRUE;
 					if (is_force_barrier(j,k) == TRUE)
 						force_barrier = TRUE;
-					if (is_quickfire(j,k) == TRUE)
+					if (is_quickfire(j,k))
 						quickfire = TRUE;
 					}
 		

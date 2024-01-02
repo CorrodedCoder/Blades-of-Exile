@@ -53,7 +53,7 @@ void take_force_barrier(short i,short j);
 bool is_sfx(short i,short j,short type);
 void make_sfx(short i,short j,short type);
 void take_sfx(short i,short j,short type);
-Boolean is_quickfire(short i,short j);
+bool is_quickfire(short i,short j);
 void make_quickfire(short i,short j);
 void take_quickfire(short i,short j);
 Boolean container_there(location l);

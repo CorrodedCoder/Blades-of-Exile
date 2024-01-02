@@ -85,12 +85,11 @@ bool is_not_combat(void)
 	return !is_combat();
 }
 
-Boolean special(short i,short j)
+bool special(short i,short j)
 {
-	if (((misc_i[i][j]) & 2) != 0)
-		return TRUE;
-		else return FALSE;
+	return ((misc_i[i][j]) & 2) != 0;
 }
+
 void flip_special(short i,short j)
 {
 	misc_i[i][j] = misc_i[i][j] ^ (char) (2);
@@ -222,10 +221,11 @@ void take_quickfire(short i,short j)
 	misc_i[i][j] = misc_i[i][j] & 127;
 }
 
-Boolean is_force_wall(short i,short j)
+bool is_force_wall(short i,short j)
 {
-	return (c_town.explored[i][j] & 2) ? TRUE : FALSE;
+	return c_town.explored[i][j] & 2;
 }
+
 void make_force_wall(short i,short j)
 {
 	if (spot_impassable(i,j))
@@ -243,10 +243,11 @@ void take_force_wall(short i,short j)
 }
 
 
-Boolean is_fire_wall(short i,short j)
+bool is_fire_wall(short i,short j)
 {
-	return (c_town.explored[i][j] & 4) ? TRUE : FALSE;
+	return c_town.explored[i][j] & 4;
 }
+
 void make_fire_wall(short i,short j)
 {
 	if (spot_impassable(i,j))
@@ -278,15 +279,17 @@ void make_antimagic(short i,short j)
 	c_town.explored[i][j] = c_town.explored[i][j] | 8;
 	antimagic = TRUE;
 }
+
 void take_antimagic(short i,short j)
 {
 	c_town.explored[i][j] = c_town.explored[i][j] & 247;
 }
 
-Boolean is_scloud(short i,short j)
+bool is_scloud(short i,short j)
 {
-	return (c_town.explored[i][j] & 16) ? TRUE : FALSE;
+	return c_town.explored[i][j] & 16;
 }
+
 void make_scloud(short i,short j)
 {
 	if (spot_impassable(i,j))
@@ -297,15 +300,17 @@ void make_scloud(short i,short j)
 	c_town.explored[i][j] = c_town.explored[i][j] | 16;
 	scloud = TRUE;
 }
+
 void take_scloud(short i,short j)
 {
 	c_town.explored[i][j] = c_town.explored[i][j] & 239;
 }
 
-Boolean is_ice_wall(short i,short j)
+bool is_ice_wall(short i,short j)
 {
-	return (c_town.explored[i][j] & 32) ? TRUE : FALSE;
+	return c_town.explored[i][j] & 32;
 }
+
 void make_ice_wall(short i,short j)
 {
 	if (spot_impassable(i,j))
@@ -317,16 +322,18 @@ void make_ice_wall(short i,short j)
 	c_town.explored[i][j] = c_town.explored[i][j] | 32;
 	ice_wall = TRUE;
 }
+
 void take_ice_wall(short i,short j)
 {
 	c_town.explored[i][j] = c_town.explored[i][j] & 223;
 }
 
 
-Boolean is_blade_wall(short i,short j)
+bool is_blade_wall(short i,short j)
 {
-	return (c_town.explored[i][j] & 64) ? TRUE : FALSE;
+	return c_town.explored[i][j] & 64;
 }
+
 void make_blade_wall(short i,short j)
 {
 	if (spot_impassable(i,j))
@@ -337,14 +344,17 @@ void make_blade_wall(short i,short j)
 	c_town.explored[i][j] = c_town.explored[i][j] | 64;
 	blade_wall = TRUE;
 }
+
 void take_blade_wall(short i,short j)
 {
 	c_town.explored[i][j] = c_town.explored[i][j] & 191;
 }
-Boolean is_sleep_cloud(short i,short j)
+
+bool is_sleep_cloud(short i,short j)
 {
-	return (c_town.explored[i][j] & 128) ? TRUE : FALSE;
+	return c_town.explored[i][j] & 128;
 }
+
 void make_sleep_cloud(short i,short j)
 {
 	if (spot_impassable(i,j))
@@ -355,44 +365,53 @@ void make_sleep_cloud(short i,short j)
 	c_town.explored[i][j] = c_town.explored[i][j] | 128;
 	sleep_field = TRUE;
 }
+
 void take_sleep_cloud(short i,short j)
 {
 	c_town.explored[i][j] = c_town.explored[i][j] & 127;
 }
 
 // START SFX
-Boolean is_small_blood(short i,short j)
+bool is_small_blood(short i,short j)
 {
-	return (sfx[i][j] & 1) ? TRUE : FALSE;
+	return sfx[i][j] & 1;
 }
-Boolean is_medium_blood(short i,short j)
+
+bool is_medium_blood(short i,short j)
 {
-	return (sfx[i][j] & 2) ? TRUE : FALSE;
+	return sfx[i][j] & 2;
 }
-Boolean is_large_blood(short i,short j)
+
+bool is_large_blood(short i,short j)
 {
-	return (sfx[i][j] & 4) ? TRUE : FALSE;
+	return sfx[i][j] & 4;
 }
-Boolean is_small_slime(short i,short j)
+
+bool is_small_slime(short i,short j)
 {
-	return (sfx[i][j] & 8) ? TRUE : FALSE;
+	return sfx[i][j] & 8;
 }
-Boolean is_big_slime(short i,short j)
+
+bool is_big_slime(short i,short j)
 {
-	return (sfx[i][j] & 16) ? TRUE : FALSE;
+	return sfx[i][j] & 16;
 }
-Boolean is_ash(short i,short j)
+
+bool is_ash(short i,short j)
 {
-	return (sfx[i][j] & 32) ? TRUE : FALSE;
+	return sfx[i][j] & 32;
 }
-Boolean is_bones(short i,short j)
+
+bool is_bones(short i,short j)
 {
-	return (sfx[i][j] & 64) ? TRUE : FALSE;
+	return sfx[i][j] & 64;
 }
-Boolean is_rubble(short i,short j)
+
+bool is_rubble(short i,short j)
 {
-	return (sfx[i][j] & 128) ? TRUE : FALSE;
+	return sfx[i][j] & 128;
 }
+
 void make_sfx(short i,short j, short type)
 {
 	unsigned char ter;

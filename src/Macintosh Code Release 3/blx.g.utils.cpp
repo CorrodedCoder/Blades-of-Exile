@@ -853,23 +853,20 @@ bool is_wall(unsigned char ter_type)
 	return (pic >= 88) && (pic <= 120);
 }
 
-Boolean is_ground(unsigned char ter_type)
+bool is_ground(unsigned char ter_type)
 {
-	short pic;
-
-	pic = scenario_ter_type(ter_type).picture;
+	const short pic = scenario_ter_type(ter_type).picture;
 	if ((pic >= 0) && (pic <= 87))
-		return TRUE;
+		return true;
 	if ((pic >= 121) && (pic <= 122))
-		return TRUE;
+		return true;
 	if ((pic >= 179) && (pic <= 208))
-		return TRUE;
+		return true;
 	if ((pic >= 211) && (pic <= 212))
-		return TRUE;
+		return true;
 	if ((pic >= 215) && (pic <= 246))
-		return TRUE;
-
-	return FALSE;
+		return true;
+	return false;
 }
 
 void make_town_trim(short mode)

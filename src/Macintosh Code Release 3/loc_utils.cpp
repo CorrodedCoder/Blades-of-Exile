@@ -161,7 +161,7 @@ static short short_can_see(shortloc p1,shortloc p2)
 	return (can_see(s1,s2,0));
 }
 
-bool is_lava(short x,short y)
+static bool is_lava(short x,short y)
 {
 	return scenario_ter_type(coord_to_ter(x, y)).picture == 404;
 }
