@@ -2377,7 +2377,7 @@ void draw_targets(location center)
 	short i = 0;
 	short dir_array[8] = {0,3,3,3,2,1,1,1};
 
-	if (party_toast())
+	if (party_toast(adven))
 		return;
 
 	for (i = 0; i < 8; i++)
@@ -2527,10 +2527,10 @@ void draw_targeting_line(Point where_curs)
 }
 
 
-bool party_toast(void)
+bool party_toast(const Adventurers& adventurers)
 {
 	for (short i = 0; i < 6; i++)
-		if (adven[i].main_status == status::Normal)
+		if (adventurers[i].main_status == status::Normal)
 			return false;
 	return true;
 }

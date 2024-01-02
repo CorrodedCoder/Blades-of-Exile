@@ -1359,7 +1359,7 @@ Boolean handle_action(EventRecord event)
 			if (overall_mode != 0)
 				do_monster_turn();
 			// Wand monsts				
-			if ((overall_mode == 0) && !party_toast() && (party.age % 10 == 0)) {
+			if ((overall_mode == 0) && !party_toast(adven) && (party.age % 10 == 0)) {
 
 				i = rand_short(1,70 + PSD[306][8] * 200);
 				if (i == 10)
@@ -1410,7 +1410,7 @@ Boolean handle_action(EventRecord event)
 		if (FCD(901,0) == 2)
 			save_file(1);
 		}
-	else if (party_toast()) {
+	else if (party_toast(adven)) {
 		for (i = 0; i < 6; i++)
 			if (adven[i].main_status == status::Fled) {
 				adven[i].main_status = status::Normal;
@@ -1435,7 +1435,7 @@ Boolean handle_action(EventRecord event)
 		initiate_redraw();
 		put_pc_screen();
 		put_item_screen(stat_window,0);
-		if (party_toast()) {
+		if (party_toast(adven)) {
 				play_sound(13);
 			handle_death();
 			if (All_Done == TRUE)
@@ -2424,7 +2424,7 @@ void handle_death()
 		if (choice == 1) {
 			in_startup_mode = FALSE;
 			load_file();
-			if (!party_toast()) {
+			if (!party_toast(adven)) {
 				if (in_startup_mode == FALSE)
 					post_load();
             	else return;
