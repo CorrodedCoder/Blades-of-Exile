@@ -2394,7 +2394,7 @@ void draw_targets(location center)
 	RECT source_rect = {36,74,47,85},dest_rect; 
 	short i = 0;
 
-	if (party_toast(adven))
+	if (adventurers_dead(adven))
 		return;
 
 	for (i = 0; i < 8; i++)

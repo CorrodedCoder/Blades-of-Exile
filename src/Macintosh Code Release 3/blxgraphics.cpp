@@ -2377,7 +2377,7 @@ void draw_targets(location center)
 	short i = 0;
 	short dir_array[8] = {0,3,3,3,2,1,1,1};
 
-	if (party_toast(adven))
+	if (adventurers_dead(adven))
 		return;
 
 	for (i = 0; i < 8; i++)

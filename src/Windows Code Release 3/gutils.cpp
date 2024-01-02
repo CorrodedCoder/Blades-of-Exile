@@ -379,7 +379,7 @@ void draw_pcs(location center,short mode)
 	RECT source_rect;
 	location where_draw;
 	
-	if (party_toast(adven))
+	if (adventurers_dead(adven))
 		return;
 	if (can_draw_pcs == FALSE)
 		return;
@@ -676,7 +676,7 @@ void draw_party_symbol(short mode,location center)
 
 	if (can_draw_pcs == FALSE)
 		return;
-	if (party_toast(adven))
+	if (adventurers_dead(adven))
 		return;
 	if (is_town() && (c_town.p_loc.x > 70))
 		return;
