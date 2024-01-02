@@ -276,3 +276,31 @@ TEST_CASE("adventurers_restore_sp", "[adventurers]")
 		REQUIRE(expected == adventurers);
 	}
 }
+
+
+TEST_CASE("adventurers_count_normal", "[adventurers]")
+{
+	{
+		Adventurers adventurers{};
+		REQUIRE(0 == adventurers_count_normal(adventurers));
+	}
+	{
+		Adventurers adventurers{};
+		short count = 0;
+		for (auto& adventurer : adventurers)
+		{
+			++count;
+			adventurer.main_status = status::Normal;
+			REQUIRE(adventurers_count_normal(adventurers) == count);
+		}
+	}
+	{
+		Adventurers adventurers{};
+		for (auto& adventurer : adventurers)
+		{
+			adventurer.main_status = status::Normal;
+			REQUIRE(adventurers_count_normal(adventurers) == 1);
+			adventurer.main_status = status::Absent;
+		}
+	}
+}

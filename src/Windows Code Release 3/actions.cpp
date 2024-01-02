@@ -2313,26 +2313,35 @@ void increase_age()
 		}
 
 	// Food
-	if ((party.age % 1000 == 0) && (overall_mode < 10)) {
+	if ((party.age % 1000 == 0) && (overall_mode < 10))
+	{
 		for (i = 0; i < 6; i++)
+		{
 			if (adven[i].main_status == status::Normal)
+			{
 				how_many_short++;
-			how_many_short = take_food (how_many_short,FALSE);
-			if (how_many_short > 0) {
-				add_string_to_buf("Starving! ");
-				play_sound(66);
-				r1 = get_ran(3,1,6);
-				hit_party(r1,4);
-				update_stat = TRUE;
-				if (overall_mode < 10)
-					boom_space(party.p_loc,overall_mode,0,r1,0);
-				}
-				else {
-					play_sound(6);
-					add_string_to_buf("You eat.  ");
-					}
-			update_stat = TRUE;
+			}
 		}
+		how_many_short = take_food (how_many_short,FALSE);
+		if (how_many_short > 0)
+		{
+			add_string_to_buf("Starving! ");
+			play_sound(66);
+			r1 = get_ran(3,1,6);
+			hit_party(r1,4);
+			update_stat = TRUE;
+			if (overall_mode < 10)
+			{
+				boom_space(party.p_loc, overall_mode, 0, r1, 0);
+			}
+		}
+		else
+		{
+			play_sound(6);
+			add_string_to_buf("You eat.  ");
+		}
+		update_stat = TRUE;
+	}
 
 	// Poison, acid, disease damage
 	for (i = 0; i < 6; i++) // Poison

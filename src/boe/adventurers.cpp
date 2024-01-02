@@ -100,3 +100,8 @@ bool adventurers_dead(const Adventurers& adventurers)
 	}
 	return true;
 }
+
+short adventurers_count_normal(const Adventurers& adventurers)
+{
+	return static_cast<short>(std::ranges::count_if(adventurers, is_active));
+}
