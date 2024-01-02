@@ -8,4 +8,4 @@ const item_record_type& scenario_item(short index);
 const char* scenario_monster_name(short index);
 const char* scenario_terrain_name(short index);
 
-extern Scenario scenario;
+extern const Scenario scenario;
