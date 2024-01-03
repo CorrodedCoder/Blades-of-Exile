@@ -11,7 +11,7 @@
 #include "party.h"
 #include "exlsound.h"
 #include "startup.h"
-#include "scenario_ext.hpp"
+#include "game_globals.hpp"
 
 extern party_record_type party;
 extern scen_header_type scen_headers[25];
@@ -101,7 +101,7 @@ Boolean handle_startup_press(POINT the_point)
 					if (scen >= 0) {
 						if (registered == FALSE)
 							unreg_party_in_scen_not_check = TRUE;
-						format_to_buf(party.scen_name,"{}", scenario_name_string(scen));
+						format_to_buf(party.scen_name,"{}", scenario_ext.name_string(scen));
 						put_party_in_scen();
 						}
 

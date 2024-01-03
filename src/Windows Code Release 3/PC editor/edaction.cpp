@@ -16,53 +16,32 @@
 /* Adventure globals */
 extern party_record_type party;
 extern Adventurers adven;
-extern outdoor_record_type outdoors[2][2];
-extern current_town_type c_town;
-extern big_tr_type t_d;
-extern town_item_list far	t_i;
-extern unsigned char out[96][96];
-extern setup_save_type setup_save;
-extern stored_items_list_type stored_items[3];
-extern stored_town_maps_type maps;
-extern stored_outdoor_maps_type o_maps;
-extern Boolean cd_event_filter();
-
 extern Boolean dialog_not_toast,ed_reg;
-extern long ed_flag,ed_key;
-
+extern long ed_flag;
 extern HWND mainPtr;
 extern Boolean file_in_mem;
-extern short current_cursor,dialog_answer;
-extern long register_flag;
-
-extern HBITMAP pc_gworld;
-extern HCURSOR sword_curs;
+extern short dialog_answer;
 extern Boolean save_blocked;
 extern RECT edit_rect[5][2];
-
-
-short which_pc_displayed,store_pc_trait_mode,store_which_to_edit;
 extern short current_active_pc;
-char empty_string[256] = " ";
-extern RECT pc_area_buttons[6][4],name_rect; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
+extern RECT pc_area_buttons[6][4]; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
 extern RECT item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 - 
-
-short store_trait_mode,store_train_pc;
-
-extern short ulx,uly;
-// Variables for spending xp
-	Boolean talk_done = FALSE;
-	long val_for_text;
-	Boolean keep_change = FALSE;
-	static short store_skills[20],store_h,store_sp,which_skill,store_skp = 10000,store_g = 10000;
+extern short ulx, uly;
 
 
-short skill_cost[20] = {3,3,3,2,2,2, 1,2,2,6,
-						5, 1,2,4,2,1, 4,2,5,0};
-static const short skill_max[20] = {20,20,20,20,20,20,20,20,20,7,
-						7,20,20,10,20,20,20,20,20};
-static const short skill_g_cost[20] = {50,50,50,40,40,40,30,50,40,250,
-						250,25,100,200,30,20,100,80,0,0};
+static const short skill_cost[20] = { 3,3,3,2,2,2, 1,2,2,6,
+						5, 1,2,4,2,1, 4,2,5,0 };
+static const short skill_max[20] = { 20,20,20,20,20,20,20,20,20,7,
+						7,20,20,10,20,20,20,20,20 };
+static const short skill_g_cost[20] = { 50,50,50,40,40,40,30,50,40,250,
+						250,25,100,200,30,20,100,80,0,0 };
+
+static short which_pc_displayed,store_which_to_edit;
+static short store_train_pc;
+static short store_skills[20], store_h, store_sp, which_skill, store_skp = 10000, store_g = 10000;
+
+short store_trait_mode;
+Boolean talk_done = FALSE;
 pc_record_type *store_xp_pc;
 
 //extern Rect pc_area_buttons[6][6] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later

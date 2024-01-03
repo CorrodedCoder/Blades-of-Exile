@@ -18,7 +18,7 @@ item_record_type	return_dummy_item()
 
 
 
-item_record_type get_stored_item(short which)
+item_record_type item_source.stored_item(short which)
 {
 	short_item_record_type item;
 	item_record_type s_item;
@@ -62,7 +62,7 @@ item_record_type pull_item_of_type(short loot_max,short min_val,short max_val,sh
 		}
 	for (i = 0; i < 80; i++) {
 		j = rand_short(0,399);
-		temp_i = get_stored_item(j);
+		temp_i = item_source.stored_item(j);
 		if ((temp_i.variety == t1) || (temp_i.variety == t2) || (temp_i.variety == t3)) {
 			val = (temp_i.charges > 0) ? temp_i.charges * temp_i.value : temp_i.value;
 			if ((val >= min_val) && (val <= max_val) && (temp_i.treas_class != 0) &&

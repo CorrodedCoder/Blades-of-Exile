@@ -24,10 +24,9 @@
 #include "items.h"
 #include "exlsound.h"
 #include "infodlgs.h"
-#include "itemdata.h"
 #include "dlogtool.h"
 #include "graphutl.h"
-#include "scenario_ext.hpp"
+#include "game_globals.hpp"
 
 static std::array<RECT, 7> bottom_buttons;
 static std::array<RECT, 10> town_buttons;

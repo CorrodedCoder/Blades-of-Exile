@@ -9,7 +9,6 @@
 #include "text.h"
 #include "infodlgs.h"
 #include "items.h"
-#include "itemdata.h"
 #include "combat.h"
 #include "monster.h"
 #include "locutils.h"
@@ -24,7 +23,7 @@
 #include "boe/hacks.hpp"
 #include "boe/utility.hpp"
 #include "boe/item.hpp"
-#include "scenario_ext.hpp"
+#include "game_globals.hpp"
 
 extern short overall_mode;
 extern party_record_type party;
@@ -1971,7 +1970,7 @@ void oneshot_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 				}
 			if (i == 1) {set_sd = FALSE; *next_spec = -1;}
 				else {
-					store_i = get_stored_item(spec.ex1a);
+					store_i = item_source.stored_item(spec.ex1a);
 					if ((spec.ex1a >= 0) && (give_to_party(store_i,TRUE) == FALSE)) {
 						set_sd = FALSE; *next_spec = -1;
 						}
@@ -2703,7 +2702,7 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 			position_party(spec.ex1a,spec.ex1b,spec.ex2a,spec.ex2b);
 			break;
 		case 192:
-			store_i = get_stored_item(spec.ex2a);
+			store_i = item_source.stored_item(spec.ex2a);
 			place_item(store_i,l,TRUE);
 			break;
 		case 193:

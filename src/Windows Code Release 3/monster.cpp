@@ -13,8 +13,7 @@
 #include "newgraph.h"
 #include "boe/utility.hpp"
 #include "boe/item.hpp"
-#include "scenario_ext.hpp"
-
+#include "game_globals.hpp"
 
 extern current_town_type c_town;
 extern party_record_type party;

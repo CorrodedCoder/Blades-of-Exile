@@ -6,11 +6,6 @@ typedef struct {
 	char town_strs[180][256];
 	} piles_of_stuff_dumping_type;
 typedef struct {
-	char scen_header_strs[25][3][80];
-	char scen_names[25][256];
-	scen_item_data_type scen_item_list;
-	} piles_of_stuff_dumping_type2;
-typedef struct {
 	char talk_strs[170][256];
 	} piles_of_stuff_dumping_type3;
 typedef struct {

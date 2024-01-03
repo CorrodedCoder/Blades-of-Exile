@@ -11,7 +11,6 @@
 #include "fields.h"
 #include "locutils.h"
 #include "newgraph.h"
-#include "itemdata.h"
 #include "infodlgs.h"
 #include "exlsound.h"
 #include <cstdio>
@@ -20,7 +19,7 @@
 #include "monster.h"
 #include "boe/utility.hpp"
 #include "boe/item.hpp"
-#include "scenario_ext.hpp"
+#include "game_globals.hpp"
 
 extern short stat_window,overall_mode,current_cursor,which_combat_type,current_pc;
 extern party_record_type party;
@@ -137,7 +136,7 @@ Boolean forced_give(short item_num,short abil)
 
 	if ((item_num < 0) || (item_num > 399))
 		return TRUE;
-	item = get_stored_item(item_num);
+	item = item_source.stored_item(item_num);
 	if (abil > 0)
 		item.ability = abil;
 	for (i = 0; i < 6; i++)
@@ -159,14 +158,14 @@ Boolean GTP(short item_num)
 {
 	item_record_type item;
 
-	item = get_stored_item(item_num);
+	item = item_source.stored_item(item_num);
 	return give_to_party(item,TRUE);
 }
 Boolean silent_GTP(short item_num)
 {
 	item_record_type item;
 	
-	item = get_stored_item(item_num);
+	item = item_source.stored_item(item_num);
 	return give_to_party(item,FALSE);
 }
 void give_gold(short amount,Boolean print_result)
@@ -1208,7 +1207,7 @@ void place_glands(location where,unsigned char m_type)
 	monst = return_monster_template(m_type);
 	
 	if ((monst.corpse_item >= 0) && (monst.corpse_item < 400) && (rand_short(0,100) < monst.corpse_item_chance)) {
-		store_i = get_stored_item(monst.corpse_item);
+		store_i = item_source.stored_item(monst.corpse_item);
 		place_item(store_i,where,FALSE);
 		}
 }
@@ -1262,7 +1261,7 @@ void place_treasure(location where,short level,short loot,short mode)
 		amt += 2;
 		
 	if (amt > 3) {	
-			new_item = get_stored_item(0);
+			new_item = item_source.stored_item(0);
 			new_item.item_level = amt;
 			r1 = rand_short(1,9);
 			if (((loot > 1) && (r1 < 7)) || ((loot == 1) && (r1 < 5)) || (mode == 1)
@@ -1349,20 +1348,20 @@ item_record_type return_treasure(short loot,short level,short mode)
 	if (loot == 4)
 		r1 += 3;
 	switch (which_treas_chart[r1]) {
-		case 1: treas = get_food(); break;
-		case 2: treas = get_weapon(loot,level);	break;
-		case 3: treas = get_armor(loot,level); break;
-		case 4: treas = get_shield(loot); break;
-		case 5: treas = get_helm(loot); break;
-		case 6: treas = get_missile(loot); break;
-		case 7: treas = get_potion(loot); break;
-		case 8: treas = get_scroll(loot); break;
-		case 9: treas = get_wand(loot); break; 
-		case 10: treas = get_ring(loot); break;
-		case 11: treas = get_necklace(loot); break;
-		case 12: treas = get_poison(loot,level); break;
-		case 13: treas = get_gloves(loot); break;
-		case 14: treas = get_boots(loot); break;
+		case 1: treas = item_source.food(); break;
+		case 2: treas = item_source.weapon(loot,level);	break;
+		case 3: treas = item_source.armor(loot,level); break;
+		case 4: treas = item_source.shield(loot); break;
+		case 5: treas = item_source.helm(loot); break;
+		case 6: treas = item_source.missile(loot); break;
+		case 7: treas = item_source.potion(loot); break;
+		case 8: treas = item_source.scroll(loot); break;
+		case 9: treas = item_source.wand(loot); break;
+		case 10: treas = item_source.ring(loot); break;
+		case 11: treas = item_source.necklace(loot); break;
+		case 12: treas = item_source.poison(loot,level); break;
+		case 13: treas = item_source.gloves(loot); break;
+		case 14: treas = item_source.boots(loot); break;
 		} 
 	if (treas.variety == item_variety::None)
 		treas.value = 0;	

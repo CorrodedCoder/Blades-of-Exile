@@ -16,7 +16,7 @@
 #include "graphutl_helpers.hpp"
 #include "boe/item.hpp"
 #include "boe/adventurers.hpp"
-#include "scenario_ext.hpp"
+#include "game_globals.hpp"
 
 extern HWND	mainPtr;
 extern short overall_mode;
@@ -1042,9 +1042,9 @@ void adjust_monst_menu()
 		if (on_monst_menu[i] >= 0) {
 			//GetIndString(monst_name, 2,on_monst_menu[i]);
 			if ((total_added % 24 == 0) && (total_added > 0))
-				InsertMenu(menu,599,MF_MENUBREAK | MF_BYCOMMAND | MF_ENABLED | MF_STRING, 600 + i, scenario_monster_name(on_monst_menu[i]));
+				InsertMenu(menu,599,MF_MENUBREAK | MF_BYCOMMAND | MF_ENABLED | MF_STRING, 600 + i, scenario_ext.monster_name(on_monst_menu[i]));
 			else
-				InsertMenu(menu,599,MF_BYCOMMAND | MF_ENABLED | MF_STRING, 600 + i, scenario_monster_name(on_monst_menu[i]));
+				InsertMenu(menu,599,MF_BYCOMMAND | MF_ENABLED | MF_STRING, 600 + i, scenario_ext.monster_name(on_monst_menu[i]));
 			total_added++;
 			}
 }

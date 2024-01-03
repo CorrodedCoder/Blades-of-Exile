@@ -40,7 +40,9 @@ Blades of Exile Game/Scenario Editor/Character Editor
 #include "scenario.h"
 #include "keydlgs.h"
 #include "../graphutl.h"
-#include "../scenario_ext.hpp"
+#include "boe/scenario.hpp"
+#include "scened_globals.hpp"
+
 
 void check_game_done();
 

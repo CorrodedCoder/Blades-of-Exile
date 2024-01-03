@@ -8,7 +8,6 @@
 #include "newgraph.h"
 #include "fileio.h"
 #include "items.h"
-#include "itemdata.h"
 #include "monster.h"
 #include "town.h"
 #include "combat.h"
@@ -23,7 +22,7 @@
 #include "graphutl.h"
 #include "graphutl_helpers.hpp"
 #include "boe/utility.hpp"
-#include "scenario_ext.hpp"
+#include "game_globals.hpp"
 
 extern HBITMAP mixed_gworld,spec_scen_g;
 extern current_town_type c_town;
@@ -480,7 +479,7 @@ void start_town_mode(short which_town, short entry_dir)
 			
 				// place the preset item, if party hasn't gotten it already
 				if (t_i.items[j].variety == item_variety::None) {
-					t_i.items[j] = get_stored_item(c_town.town.preset_items[i].item_code);
+					t_i.items[j] = item_source.stored_item(c_town.town.preset_items[i].item_code);
 					t_i.items[j].item_loc = c_town.town.preset_items[i].item_loc;
 
 					// Not use the items data flags, starting with forcing an ability

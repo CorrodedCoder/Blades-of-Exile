@@ -26,10 +26,10 @@
 #include "boe/endian_adjust.hpp"
 #include "boe/savedata_serialization.hpp"
 #include "boe/utility.hpp"
-#include "scenario_ext.hpp"
+#include "game_globals.hpp"
 
 HWND	the_dialog;
-extern party_record_type far	party;
+extern party_record_type party;
 extern Adventurers adven;
 extern outdoor_record_type outdoors[2][2];
 extern unsigned char out[96][96];
@@ -68,7 +68,7 @@ extern stored_town_maps_type town_maps, town_maps2;
 extern scenario_data_type scenariodata;
 extern unsigned char combat_terrain[64][64];
 extern piles_of_stuff_dumping_type data_store;
-extern piles_of_stuff_dumping_type2 data_store2;
+extern scenario_extra_data_type data_store2;
 extern talking_record_type talking;
 
 extern short terrain_pic[256];

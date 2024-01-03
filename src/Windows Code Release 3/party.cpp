@@ -10,7 +10,6 @@
 #include "gutils.h"
 #include "newgraph.h"
 #include "specials.h"
-#include "itemdata.h"
 #include "infodlgs.h"
 #include "items.h"
 #include <cstring>
@@ -27,7 +26,7 @@
 #include "boe/hacks.hpp"
 #include "boe/utility.hpp"
 #include "boe/item.hpp"
-#include "scenario_ext.hpp"
+#include "game_globals.hpp"
 
 extern const short skill_cost[20] = {3,3,3,2,2,2, 1,2,2,6,
 						5, 1,2,4,2,1, 4,2,5,0};
@@ -102,7 +101,7 @@ Boolean spell_button_active[90];
 char empty_string[256] = "                                           ";
 
 extern Boolean fast_bang;
-extern party_record_type far	party;
+extern party_record_type party;
 extern Adventurers adven;
 extern short stat_window,overall_mode,current_pc,town_size[3],town_type;
 extern current_town_type	c_town;
@@ -2958,7 +2957,7 @@ unsigned char pick_trapped_monst()
 			cd_activate_item(988, 2 + 3 * i, 0);
 			}
 			else {
-				csit(988,3 + 3 * i, scenario_monster_name(party.imprisoned_monst[i]));
+				csit(988,3 + 3 * i, scenario_ext.monster_name(party.imprisoned_monst[i]));
 				get_monst = return_monster_template((unsigned char)(party.imprisoned_monst[i]));
 				cdsin(988,4 + 3 * i,get_monst.level);
 				}

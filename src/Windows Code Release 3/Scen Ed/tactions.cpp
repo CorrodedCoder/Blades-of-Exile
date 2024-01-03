@@ -14,8 +14,8 @@
 #include "../graphutl.h"
 #include "buttonmg.h"
 #include "boe/utility.hpp"
-#include "../scenario_ext.hpp"
-
+#include "boe/scenario.hpp"
+#include "scened_globals.hpp"
 
 RECT world_screen;
 	// border rects order: top, left, bottom, right //

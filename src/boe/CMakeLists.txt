@@ -12,8 +12,10 @@ add_library(boe STATIC
 	dump_game_structures.cpp
 	endian_adjust.cpp
 	item.cpp
+	item_source.cpp
 	pc.cpp
 	savedata_serialization.cpp
 	scenario.cpp
+	scenario_extra.cpp
 	utility.cpp
 )

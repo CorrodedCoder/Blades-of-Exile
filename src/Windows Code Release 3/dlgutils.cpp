@@ -8,7 +8,6 @@
 #include "dlgutils.h"
 #include "text.h"
 #include "town.h"
-#include "itemdata.h"
 #include "locutils.h"
 #include "fields.h"
 #include "party.h"
@@ -25,7 +24,7 @@
 #include "graphutl.h"
 #include "boe/utility.hpp"
 #include "boe/item.hpp"
-#include "scenario_ext.hpp"
+#include "game_globals.hpp"
 
 #define	NUM_HINTS	30
 
@@ -243,7 +242,7 @@ void handle_sale(short what_chosen,short cost)
 
 	switch (what_chosen / 100) {
 		case 0: case 1: case 2: case 3: case 4: 
-			base_item = get_stored_item(what_chosen);
+			base_item = item_source.stored_item(what_chosen);
 			base_item.item_properties = base_item.item_properties | 1;
 			//cost = (base_item.charges == 0) ? base_item.value : base_item.value * base_item.charges;
 			switch (pc_ok_to_buy(current_pc,cost,base_item)) {
@@ -363,7 +362,7 @@ void handle_info_request(short what_chosen)
 	
 	switch (what_chosen / 100) {
 		case 0: case 1: case 2: case 3: case 4: 
-			base_item = get_stored_item(what_chosen);
+			base_item = item_source.stored_item(what_chosen);
 			base_item.item_properties = base_item.item_properties | 1;
 			display_pc_item(6,0, base_item,0);
 			break;
@@ -401,7 +400,7 @@ void set_up_shop_array()
 		case 0: case 1: case 2:
 			for (i = store_shop_min; i < store_shop_max + 1; i++) {
 				store_shop_items[shop_pos] = i;
-				store_i = get_stored_item(store_shop_items[shop_pos]);
+				store_i = item_source.stored_item(store_shop_items[shop_pos]);
 				store_shop_costs[shop_pos] = (store_i.charges == 0) ? 
 				  store_i.value : store_i.value * store_i.charges;
 				shop_pos++;
@@ -1501,14 +1500,14 @@ void put_scen_info()
 			cd_set_pict(947, 6 + i * 3,1600 + scen_headers[store_scen_page_on * 3 + i].intro_pic);
 			format_to_buf(place_str,
 				"{} v{:d}.{:d}.{:d} - |  Difficulty: {}, Rating: {} |{} |{}",
-				scenario_header_string(store_scen_page_on * 3 + i,0),
+				scenario_ext.header_string(store_scen_page_on * 3 + i,0),
 				(short) scen_headers[store_scen_page_on * 3 + i].ver[0],
 				(short) scen_headers[store_scen_page_on * 3 + i].ver[1],
 				(short) scen_headers[store_scen_page_on * 3 + i].ver[2],
 				difficulty[scen_headers[store_scen_page_on * 3 + i].difficulty],
 				ratings[scen_headers[store_scen_page_on * 3 + i].default_ground],
-				scenario_header_string(store_scen_page_on * 3 + i,1),
-				scenario_header_string(store_scen_page_on * 3 + i,2));
+				scenario_ext.header_string(store_scen_page_on * 3 + i,1),
+				scenario_ext.header_string(store_scen_page_on * 3 + i,2));
 			csit(947,7 + i * 3, place_str);
 			cd_activate_item(947,8 + i * 3,1);			
 			}
