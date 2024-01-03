@@ -68,7 +68,7 @@ extern stored_town_maps_type town_maps, town_maps2;
 extern scenario_data_type scenariodata;
 extern unsigned char combat_terrain[64][64];
 extern piles_of_stuff_dumping_type data_store;
-extern piles_of_stuff_dumping_type2 data_store2;
+extern scenario_extra_data_type data_store2;
 extern talking_record_type talking;
 
 extern short terrain_pic[256];

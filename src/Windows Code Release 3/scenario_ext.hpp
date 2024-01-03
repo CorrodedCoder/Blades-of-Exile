@@ -2,7 +2,7 @@
 
 #include "boe/game_file_structures.hpp"
 
-struct piles_of_stuff_dumping_type2 {
+struct scenario_extra_data_type {
 	char scen_header_strs[25][3][80];
 	char scen_names[25][256];
 	scen_item_data_type scen_item_list;
@@ -10,9 +10,9 @@ struct piles_of_stuff_dumping_type2 {
 
 class ScenarioExtra
 {
-	const piles_of_stuff_dumping_type2& data_store2_;
+	const scenario_extra_data_type& store_;
 public:
-	ScenarioExtra(const piles_of_stuff_dumping_type2& store);
+	ScenarioExtra(const scenario_extra_data_type& store);
 
 	[[nodiscard]] const char* header_string(short a, short b) const;
 	[[nodiscard]] const char* name_string(short index) const;
