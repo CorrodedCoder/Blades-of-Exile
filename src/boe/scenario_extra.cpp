@@ -1,4 +1,4 @@
-#include "scenario_ext.hpp"
+#include "boe/scenario_extra.hpp"
 
 ScenarioExtra::ScenarioExtra(const scenario_extra_data_type& store)
 	: store_(store)

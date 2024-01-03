@@ -1,5 +1,4 @@
 #include "itemdata.h"
-#include "scenario_ext.hpp"
 #include "boe/utility.hpp"
 #include "game_globals.hpp"
 

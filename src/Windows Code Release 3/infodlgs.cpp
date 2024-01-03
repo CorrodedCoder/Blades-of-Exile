@@ -21,7 +21,6 @@
 #include "fileio.h"
 #include "boe/utility.hpp"
 #include "boe/item.hpp"
-#include "scenario_ext.hpp"
 #include "game_globals.hpp"
 
 short mage_spell_pos = 0,priest_spell_pos = 0,skill_pos = 0;

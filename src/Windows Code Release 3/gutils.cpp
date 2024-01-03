@@ -16,7 +16,6 @@
 #include "graphutl_helpers.hpp"
 #include "boe/item.hpp"
 #include "boe/adventurers.hpp"
-#include "scenario_ext.hpp"
 #include "game_globals.hpp"
 
 extern HWND	mainPtr;

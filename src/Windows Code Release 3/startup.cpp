@@ -11,7 +11,6 @@
 #include "party.h"
 #include "exlsound.h"
 #include "startup.h"
-#include "scenario_ext.hpp"
 #include "game_globals.hpp"
 
 extern party_record_type party;
