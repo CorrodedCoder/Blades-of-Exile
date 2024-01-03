@@ -70,7 +70,7 @@ void DSG(short item_num,unsigned char *flip_bit,short dialog_num,short what_spec
 	short choice;
 	Boolean did_give;
 
-	item_record_type item = get_stored_item(item_num);
+	item_record_type item = item_source.stored_item(item_num);
 	if (item_num == 0)
 		item.variety = 0;
 	if (*flip_bit == 0)

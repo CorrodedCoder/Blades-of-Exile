@@ -128,7 +128,7 @@ Boolean forced_give(short item_num,short abil) ////
 
 	if ((item_num < 0) || (item_num > 399))
 		return TRUE;
-	item = get_stored_item(item_num);
+	item = item_source.stored_item(item_num);
 	if (abil > 0)
 		item.ability = abil;
 	for (i = 0; i < 6; i++)
@@ -151,14 +151,14 @@ Boolean GTP(short item_num)
 {
 	item_record_type item;
 	
-	item = get_stored_item(item_num);
+	item = item_source.stored_item(item_num);
 	return give_to_party(item,TRUE);
 }
 Boolean silent_GTP(short item_num)
 {
 	item_record_type item;
 	
-	item = get_stored_item(item_num);
+	item = item_source.stored_item(item_num);
 	return give_to_party(item,FALSE);
 }
 void give_gold(short amount,Boolean print_result)////
@@ -1375,7 +1375,7 @@ void place_glands(location where,unsigned char m_type)
 	monst = return_monster_template(m_type);
 	
 	if ((monst.corpse_item >= 0) && (monst.corpse_item < 400) && (rand_short(0,100) < monst.corpse_item_chance)) {
-		store_i = get_stored_item(monst.corpse_item);
+		store_i = item_source.stored_item(monst.corpse_item);
 		place_item(store_i,where,FALSE);
 		}
 }
@@ -1430,7 +1430,7 @@ void place_treasure(location where,short level,short loot,short mode)
 		amt += 2;
 		
 	if (amt > 3) {	
-			new_item = get_stored_item(0);
+			new_item = item_source.stored_item(0);
 			new_item.item_level = amt;
 			r1 = rand_short(1,9);
 			if (((loot > 1) && (r1 < 7)) || ((loot == 1) && (r1 < 5)) || (mode == 1)

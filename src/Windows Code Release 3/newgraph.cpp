@@ -1123,7 +1123,7 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 		case 2:
 		case 3:
 		case 4:
-			base_item = get_stored_item(what_chosen);
+			base_item = item_source.stored_item(what_chosen);
 			base_item.item_properties = base_item.item_properties | 1;
 			draw_dialog_graphic_bmp(talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, FALSE);
 			cur_name = base_item.full_name;

@@ -243,7 +243,7 @@ void handle_sale(short what_chosen,short cost)
 
 	switch (what_chosen / 100) {
 		case 0: case 1: case 2: case 3: case 4: 
-			base_item = get_stored_item(what_chosen);
+			base_item = item_source.stored_item(what_chosen);
 			base_item.item_properties = base_item.item_properties | 1;
 			//cost = (base_item.charges == 0) ? base_item.value : base_item.value * base_item.charges;
 			switch (pc_ok_to_buy(current_pc,cost,base_item)) {
@@ -363,7 +363,7 @@ void handle_info_request(short what_chosen)
 	
 	switch (what_chosen / 100) {
 		case 0: case 1: case 2: case 3: case 4: 
-			base_item = get_stored_item(what_chosen);
+			base_item = item_source.stored_item(what_chosen);
 			base_item.item_properties = base_item.item_properties | 1;
 			display_pc_item(6,0, base_item,0);
 			break;
@@ -401,7 +401,7 @@ void set_up_shop_array()
 		case 0: case 1: case 2:
 			for (i = store_shop_min; i < store_shop_max + 1; i++) {
 				store_shop_items[shop_pos] = i;
-				store_i = get_stored_item(store_shop_items[shop_pos]);
+				store_i = item_source.stored_item(store_shop_items[shop_pos]);
 				store_shop_costs[shop_pos] = (store_i.charges == 0) ? 
 				  store_i.value : store_i.value * store_i.charges;
 				shop_pos++;

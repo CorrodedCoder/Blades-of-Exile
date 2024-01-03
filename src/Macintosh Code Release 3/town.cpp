@@ -433,7 +433,7 @@ void start_town_mode(short which_town, short entry_dir)
 			
 				// place the preset item, if party hasn't gotten it already
 				if (t_i.items[j].variety == 0) {
-					t_i.items[j] = get_stored_item(c_town.town.preset_items[i].item_code);
+					t_i.items[j] = item_source.stored_item(c_town.town.preset_items[i].item_code);
 					t_i.items[j].item_loc = c_town.town.preset_items[i].item_loc;
 
 					// Not use the items data flags, starting with forcing an ability

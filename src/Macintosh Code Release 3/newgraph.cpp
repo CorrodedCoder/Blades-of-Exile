@@ -875,7 +875,7 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 		what_chosen = store_shop_items[current_pos];
 		switch (what_chosen / 100) {
 			case 0: case 1: case 2: case 3: case 4: 
-				base_item = get_stored_item(what_chosen);
+				base_item = item_source.stored_item(what_chosen);
 				base_item.item_properties = base_item.item_properties | 1;
 				draw_dialog_graphic((GrafPtr) talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, FALSE,1);
 				strcpy(cur_name,base_item.full_name);
