@@ -2,7 +2,7 @@
 
 #include "boe/scenario.hpp"
 #include "boe/scenario_extra.hpp"
-#include "itemdata.h"
+#include "boe/item_source.hpp"
 
 extern const Scenario scenario;
 extern const ScenarioExtra scenario_ext;

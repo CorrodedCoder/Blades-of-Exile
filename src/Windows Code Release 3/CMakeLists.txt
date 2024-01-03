@@ -89,7 +89,6 @@ add_executable (Blades-of-Exile WIN32
 	gutils.cpp
 	monster.cpp
 	locutils.cpp
-	itemdata.cpp
 	combat.cpp
 	townspec.cpp
 	specials.cpp

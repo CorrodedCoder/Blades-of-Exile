@@ -11,7 +11,6 @@
 #include "fields.h"
 #include "locutils.h"
 #include "newgraph.h"
-#include "itemdata.h"
 #include "infodlgs.h"
 #include "exlsound.h"
 #include <cstdio>

@@ -10,7 +10,6 @@
 #include "gutils.h"
 #include "newgraph.h"
 #include "specials.h"
-#include "itemdata.h"
 #include "infodlgs.h"
 #include "items.h"
 #include <cstring>

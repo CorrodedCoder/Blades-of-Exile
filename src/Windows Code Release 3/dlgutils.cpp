@@ -8,7 +8,6 @@
 #include "dlgutils.h"
 #include "text.h"
 #include "town.h"
-#include "itemdata.h"
 #include "locutils.h"
 #include "fields.h"
 #include "party.h"

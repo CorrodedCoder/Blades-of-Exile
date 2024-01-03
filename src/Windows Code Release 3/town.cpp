@@ -8,7 +8,6 @@
 #include "newgraph.h"
 #include "fileio.h"
 #include "items.h"
-#include "itemdata.h"
 #include "monster.h"
 #include "town.h"
 #include "combat.h"

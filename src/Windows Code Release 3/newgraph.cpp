@@ -10,7 +10,6 @@
 #include "dlogtool_helpers.hpp"
 #include "newgraph.h"
 #include "fileio.h"
-#include "itemdata.h"
 #include "locutils.h"
 #include "fields.h"
 #include "text.h"

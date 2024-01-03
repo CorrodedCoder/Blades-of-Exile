@@ -9,7 +9,6 @@
 #include "text.h"
 #include "infodlgs.h"
 #include "items.h"
-#include "itemdata.h"
 #include "combat.h"
 #include "monster.h"
 #include "locutils.h"

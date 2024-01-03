@@ -24,7 +24,6 @@
 #include "items.h"
 #include "exlsound.h"
 #include "infodlgs.h"
-#include "itemdata.h"
 #include "dlogtool.h"
 #include "graphutl.h"
 #include "game_globals.hpp"
