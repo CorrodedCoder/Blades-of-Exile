@@ -1,29 +1,32 @@
 #include "scenario_ext.hpp"
-#include "global_structs.hpp"
 
-piles_of_stuff_dumping_type2 data_store2;
-
-const char* scenario_header_string(short a, short b)
+ScenarioExtra::ScenarioExtra(const piles_of_stuff_dumping_type2& store)
+	: data_store2_(store)
 {
-	return data_store2.scen_header_strs[a][b];
+
 }
 
-const char* scenario_name_string(short index)
+const char* ScenarioExtra::header_string(short a, short b) const
 {
-	return data_store2.scen_names[index];
+	return data_store2_.scen_header_strs[a][b];
 }
 
-const item_record_type& scenario_item(short index)
+const char* ScenarioExtra::name_string(short index) const
 {
-	return data_store2.scen_item_list.scen_items[index];
+	return data_store2_.scen_names[index];
 }
 
-const char* scenario_monster_name(short index)
+const item_record_type& ScenarioExtra::item(short index) const
 {
-	return data_store2.scen_item_list.monst_names[index];
+	return data_store2_.scen_item_list.scen_items[index];
 }
 
-const char* scenario_terrain_name(short index)
+const char* ScenarioExtra::monster_name(short index) const
 {
-	return data_store2.scen_item_list.ter_names[index];
+	return data_store2_.scen_item_list.monst_names[index];
+}
+
+const char* ScenarioExtra::terrain_name(short index) const
+{
+	return data_store2_.scen_item_list.ter_names[index];
 }

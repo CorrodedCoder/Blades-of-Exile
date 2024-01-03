@@ -1502,14 +1502,14 @@ void put_scen_info()
 			cd_set_pict(947, 6 + i * 3,1600 + scen_headers[store_scen_page_on * 3 + i].intro_pic);
 			format_to_buf(place_str,
 				"{} v{:d}.{:d}.{:d} - |  Difficulty: {}, Rating: {} |{} |{}",
-				scenario_header_string(store_scen_page_on * 3 + i,0),
+				scenario_ext.header_string(store_scen_page_on * 3 + i,0),
 				(short) scen_headers[store_scen_page_on * 3 + i].ver[0],
 				(short) scen_headers[store_scen_page_on * 3 + i].ver[1],
 				(short) scen_headers[store_scen_page_on * 3 + i].ver[2],
 				difficulty[scen_headers[store_scen_page_on * 3 + i].difficulty],
 				ratings[scen_headers[store_scen_page_on * 3 + i].default_ground],
-				scenario_header_string(store_scen_page_on * 3 + i,1),
-				scenario_header_string(store_scen_page_on * 3 + i,2));
+				scenario_ext.header_string(store_scen_page_on * 3 + i,1),
+				scenario_ext.header_string(store_scen_page_on * 3 + i,2));
 			csit(947,7 + i * 3, place_str);
 			cd_activate_item(947,8 + i * 3,1);			
 			}

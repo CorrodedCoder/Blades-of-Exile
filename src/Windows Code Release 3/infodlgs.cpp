@@ -484,7 +484,7 @@ void put_monst_info()
 			cd_set_pict(999,4,400 + store_m->m_d.picture_num);
 			else cd_set_pict(999,4,2000 + (store_m->m_d.picture_num % 1000));
 
-	cd_set_item_text(999,5, scenario_monster_name(store_m->number));
+	cd_set_item_text(999,5, scenario_ext.monster_name(store_m->number));
 	// Clear fields
 	for (i = 6; i < 20; i++) {
 		cd_set_item_text(999,i,"");

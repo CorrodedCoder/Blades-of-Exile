@@ -1,6 +1,7 @@
 #include "itemdata.h"
 #include "scenario_ext.hpp"
 #include "boe/utility.hpp"
+#include "game_globals.hpp"
 
 static const short loot_min[5] = {0,0,5,50,400};
 static const short loot_max[5] = {3,8,40,800,4000};
@@ -12,7 +13,7 @@ const item_record_type& get_stored_item(short which)
 	if ((which >= 400) || (which < 0)) {
 		return null_item;
 	}
-	return scenario_item(which);
+	return scenario_ext.item(which);
 }
 
 item_record_type get_food(void)
