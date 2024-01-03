@@ -1,7 +1,12 @@
 #pragma once
 
 #include "boe/game_file_structures.hpp"
-#include "global_structs.hpp"
+
+struct piles_of_stuff_dumping_type2 {
+	char scen_header_strs[25][3][80];
+	char scen_names[25][256];
+	scen_item_data_type scen_item_list;
+};
 
 class ScenarioExtra
 {
