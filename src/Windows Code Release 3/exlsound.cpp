@@ -20,7 +20,7 @@ extern HINSTANCE store_hInstance;
 extern Boolean play_sounds,in_startup_mode;
 extern HWND mainPtr;
 extern Boolean gInBackground;
-extern party_record_type far	party;
+extern party_record_type party;
 extern Boolean cat,cow,chicken,dog,sheep,monsters_going;
 extern short overall_mode;
 

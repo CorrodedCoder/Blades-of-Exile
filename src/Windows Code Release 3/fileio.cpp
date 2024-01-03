@@ -29,7 +29,7 @@
 #include "game_globals.hpp"
 
 HWND	the_dialog;
-extern party_record_type far	party;
+extern party_record_type party;
 extern Adventurers adven;
 extern outdoor_record_type outdoors[2][2];
 extern unsigned char out[96][96];

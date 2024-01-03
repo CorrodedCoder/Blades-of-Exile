@@ -102,7 +102,7 @@ Adventurers adven;
 outdoor_record_type outdoors[2][2];
 current_town_type c_town;
 big_tr_type t_d;
-town_item_list far	t_i;
+town_item_list t_i;
 unsigned char out[96][96];
  unsigned char out_e[96][96];
 setup_save_type setup_save;
