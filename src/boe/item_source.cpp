@@ -1,8 +1,10 @@
 #include "boe/item_source.hpp"
 #include "boe/utility.hpp"
+#include <array>
+#include <cassert>
 
-static const short c_loot_min[5] = {0,0,5,50,400};
-static const short c_loot_max[5] = {3,8,40,800,4000};
+static const std::array<short, 5> c_loot_min{0,0,5,50,400};
+static const std::array<short, 5> c_loot_max{3,8,40,800,4000};
 
 static const item_record_type c_null_item{};
 
@@ -61,12 +63,18 @@ const item_record_type& ItemSource::item_of_type(short loot_max,short min_val,sh
 	return c_null_item;
 }
 
+const item_record_type& ItemSource::item_of_type(short loot, item_variety t1, item_variety t2, item_variety t3) const
+{
+	assert(loot >= 0);
+	return item_of_type(loot, c_loot_min[static_cast<size_t>(loot)], c_loot_max[static_cast<size_t>(loot)], t1, t2, t3);
+}
+
 const item_record_type& ItemSource::weapon(short loot,short level) const
 {
 	(void)level; // Unreferenced parameter
 	if (loot == 0)
 		return c_null_item;
-	return item_of_type(loot,c_loot_min[loot], c_loot_max[loot], item_variety::OneHandedWeapon, item_variety::TwoHandedWeapon, item_variety::Invalid);
+	return item_of_type(loot, item_variety::OneHandedWeapon, item_variety::TwoHandedWeapon, item_variety::Invalid);
 }
 
 const item_record_type& ItemSource::armor(short loot,short level) const
@@ -74,65 +82,66 @@ const item_record_type& ItemSource::armor(short loot,short level) const
 	(void)level; // Unreferenced parameter
 	if (loot == 0)
 		return c_null_item;
-	return item_of_type(loot, c_loot_min[loot], c_loot_max[loot], item_variety::Armor, item_variety::Invalid, item_variety::Invalid);
+	return item_of_type(loot, item_variety::Armor, item_variety::Invalid, item_variety::Invalid);
 }
 
 const item_record_type& ItemSource::helm(short loot) const
 {
-	return item_of_type(loot, c_loot_min[loot], c_loot_max[loot], item_variety::Helm, item_variety::Invalid, item_variety::Invalid);
+	return item_of_type(loot, item_variety::Helm, item_variety::Invalid, item_variety::Invalid);
 }
 
 const item_record_type& ItemSource::gloves(short loot) const
 {
-	return item_of_type(loot, c_loot_min[loot], c_loot_max[loot], item_variety::Gloves, item_variety::Invalid, item_variety::Invalid);
+	return item_of_type(loot, item_variety::Gloves, item_variety::Invalid, item_variety::Invalid);
 }
 
 const item_record_type& ItemSource::boots(short loot) const
 {
-	return item_of_type(loot, c_loot_min[loot], c_loot_max[loot], item_variety::Boots, item_variety::Invalid, item_variety::Invalid);
+	return item_of_type(loot, item_variety::Boots, item_variety::Invalid, item_variety::Invalid);
 }
 
 const item_record_type& ItemSource::shield(short loot) const
 {
-	return item_of_type(loot, c_loot_min[loot], c_loot_max[loot], item_variety::Shield, item_variety::Invalid, item_variety::Invalid);
+	return item_of_type(loot, item_variety::Shield, item_variety::Invalid, item_variety::Invalid);
 }
 
 const item_record_type& ItemSource::potion(short loot) const
 {
+	assert(loot >= 0);
 	if (rand_short(0,80) < 20 * (4 - loot))
-		return item_of_type(loot, c_loot_min[loot], c_loot_max[loot] / 2, item_variety::PotionOrMagicItem, item_variety::Invalid, item_variety::Invalid);
-	return item_of_type(loot, c_loot_min[loot], c_loot_max[loot], item_variety::PotionOrMagicItem, item_variety::Invalid, item_variety::Invalid);
+		return item_of_type(loot, c_loot_min[static_cast<size_t>(loot)], c_loot_max[static_cast<size_t>(loot)] / 2, item_variety::PotionOrMagicItem, item_variety::Invalid, item_variety::Invalid);
+	return item_of_type(loot, item_variety::PotionOrMagicItem, item_variety::Invalid, item_variety::Invalid);
 }
 
 const item_record_type& ItemSource::scroll(short loot) const
 {
-	return item_of_type(loot, c_loot_min[loot], c_loot_max[loot], item_variety::ScrollOrMagicItem, item_variety::Invalid, item_variety::Invalid);
+	return item_of_type(loot, item_variety::ScrollOrMagicItem, item_variety::Invalid, item_variety::Invalid);
 }
 
 const item_record_type& ItemSource::missile(short loot) const
 {
 	if (rand_short(0,2) < 2)
-		return item_of_type(loot, c_loot_min[loot], c_loot_max[loot], item_variety::Arrows, item_variety::ThrownMissile, item_variety::Bow);
-	return item_of_type(loot, c_loot_min[loot], c_loot_max[loot], item_variety::Crossbow, item_variety::Bolts, item_variety::MissileWeapon);
+		return item_of_type(loot, item_variety::Arrows, item_variety::ThrownMissile, item_variety::Bow);
+	return item_of_type(loot, item_variety::Crossbow, item_variety::Bolts, item_variety::MissileWeapon);
 }
 
 const item_record_type& ItemSource::poison(short loot,short level) const
 {
 	(void)level; // Unreferenced parameter
-	return item_of_type(loot, c_loot_min[loot], c_loot_max[loot], item_variety::WeaponPoison, item_variety::Invalid, item_variety::Invalid);
+	return item_of_type(loot, item_variety::WeaponPoison, item_variety::Invalid, item_variety::Invalid);
 }
 
 const item_record_type& ItemSource::wand(short loot) const
 {
-	return item_of_type(loot, c_loot_min[loot], c_loot_max[loot], item_variety::Wand, item_variety::Invalid, item_variety::Invalid);
+	return item_of_type(loot, item_variety::Wand, item_variety::Invalid, item_variety::Invalid);
 }
 
 const item_record_type& ItemSource::ring(short loot) const
 {
-	return item_of_type(loot, c_loot_min[loot], c_loot_max[loot], item_variety::Ring, item_variety::Invalid, item_variety::Invalid);
+	return item_of_type(loot, item_variety::Ring, item_variety::Invalid, item_variety::Invalid);
 }
 
 const item_record_type& ItemSource::necklace(short loot) const
 {
-	return item_of_type(loot, c_loot_min[loot], c_loot_max[loot], item_variety::Necklace, item_variety::Invalid, item_variety::Invalid);
+	return item_of_type(loot, item_variety::Necklace, item_variety::Invalid, item_variety::Invalid);
 } 

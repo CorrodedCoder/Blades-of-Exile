@@ -6,6 +6,8 @@
 class ItemSource
 {
 	const ScenarioExtra& scenario_extra_;
+
+	const item_record_type& item_of_type(short loot, item_variety t1, item_variety t2, item_variety t3) const;
 public:
 	ItemSource(const ScenarioExtra& scenario_extra);
 	[[nodiscard]] const item_record_type& stored_item(short which) const;
