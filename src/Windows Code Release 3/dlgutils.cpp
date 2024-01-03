@@ -26,6 +26,7 @@
 #include "boe/utility.hpp"
 #include "boe/item.hpp"
 #include "scenario_ext.hpp"
+#include "game_globals.hpp"
 
 #define	NUM_HINTS	30
 

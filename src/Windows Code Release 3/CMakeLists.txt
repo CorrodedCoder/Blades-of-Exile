@@ -83,6 +83,7 @@ add_executable (Blades-of-Exile WIN32
 	dlogtool.cpp
 	dlgutils.cpp
 	infodlgs.cpp
+	game_globals.cpp
 	graphutl.cpp
 	global.cpp
 	gutils.cpp

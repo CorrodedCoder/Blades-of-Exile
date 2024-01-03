@@ -19,6 +19,7 @@
 #include "boe/hacks.hpp"
 #include "boe/item.hpp"
 #include "scenario_ext.hpp"
+#include "game_globals.hpp"
 
 static const std::array m_mage_sp{"Spark","Minor Haste","Strength","Flame Cloud","Flame",
 						"Minor Poison","Slow","Dumbfound","Stinking Cloud","Summon Beast",

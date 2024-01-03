@@ -11,8 +11,10 @@
 #include "tfileio.h"
 #include "tactions.h"
 #include "edsound.h"
-#include "../scenario_ext.hpp"
+#include "boe/scenario.hpp"
 #include "boe/compatibility.hpp"
+#include "scened_globals.hpp"
+
 
 extern short cen_x, cen_y, overall_mode,cur_town;
 extern Boolean mouse_button_held,dialog_not_toast;

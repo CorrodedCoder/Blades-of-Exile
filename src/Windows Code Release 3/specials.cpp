@@ -24,7 +24,7 @@
 #include "boe/hacks.hpp"
 #include "boe/utility.hpp"
 #include "boe/item.hpp"
-#include "scenario_ext.hpp"
+#include "game_globals.hpp"
 
 extern short overall_mode;
 extern party_record_type party;

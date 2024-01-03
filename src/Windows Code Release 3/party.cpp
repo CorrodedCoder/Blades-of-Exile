@@ -28,6 +28,7 @@
 #include "boe/utility.hpp"
 #include "boe/item.hpp"
 #include "scenario_ext.hpp"
+#include "game_globals.hpp"
 
 extern const short skill_cost[20] = {3,3,3,2,2,2, 1,2,2,6,
 						5, 1,2,4,2,1, 4,2,5,0};

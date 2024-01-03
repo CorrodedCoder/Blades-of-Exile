@@ -23,7 +23,7 @@
 #include "graphutl.h"
 #include "graphutl_helpers.hpp"
 #include "boe/utility.hpp"
-#include "scenario_ext.hpp"
+#include "game_globals.hpp"
 
 extern HBITMAP mixed_gworld,spec_scen_g;
 extern current_town_type c_town;

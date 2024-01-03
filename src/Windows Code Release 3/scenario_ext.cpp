@@ -1,10 +1,7 @@
 #include "scenario_ext.hpp"
 #include "global_structs.hpp"
 
-scenario_data_type scenariodata;
 piles_of_stuff_dumping_type2 data_store2;
-
-const Scenario scenario(scenariodata);
 
 const char* scenario_header_string(short a, short b)
 {
