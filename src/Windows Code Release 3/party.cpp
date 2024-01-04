@@ -168,16 +168,11 @@ static bool pc_can_cast_spell(short pc_num, short type, short spell_num);
 void init_party(short mode)
 {
 	short i,j,k,l;
-	const boat_record_type null_boat{};
-	const horse_record_type null_horse{};
+
+	party = {};
 	
-	party.age = 0;
 	party.gold = 200;
 	party.food = 100;
-	for (i = 0; i < 310; i++)
-		for (j = 0; j < 10; j++)
-			party.stuff_done[i][j] = 0;
-	party.light_level = 0;
 	party.outdoor_corner.x = 7;
 	party.outdoor_corner.y = 8;
 	party.i_w_c.x = 1;
@@ -186,77 +181,35 @@ void init_party(short mode)
 	party.loc_in_sec.y = 36;
 	party.p_loc.x = 84;
 	party.p_loc.y = 84;
-	for (i = 0; i < 30; i++)
-		party.boats[i] = null_boat;
-	for (i = 0; i < 30; i++)
-		party.horses[i] = null_horse;
-	 party.in_boat = -1;
-	 party.in_horse = -1;
+	party.in_boat = -1;
+	party.in_horse = -1;
 	for (i = 0; i < 4; i++)
 		party.creature_save[i].which_town = 200;
-	for (i = 0; i < 10; i++)
-		 party.out_c[i].exists = FALSE;
-	for (i = 0; i < 5; i++)
-		for (j = 0; j < 10; j++)
-			 party.magic_store_items[i][j].variety = item_variety::None;
-	for (i = 0; i < 4; i++)
-	 party.imprisoned_monst[i] = 0;
-	for (i = 0; i < 256; i++)
-	 party.m_seen[i] = 0;
 	for (i = 0; i < 50; i++) 
-	 party.journal_str[i] = -1;
-	for (i = 0; i < 140; i++)
-		for (j = 0; j < 2; j++)
-	 	party.special_notes_str[i][j] = 0;	 
+		party.journal_str[i] = -1;
 	for (i = 0; i < 120; i++)
 		 party.talk_save[i].personality = -1;
-		 	 
-	 party.total_m_killed = 0;
-	party.total_dam_done = 0;
-	party.total_xp_gained = 0;
-	party.total_dam_taken = 0;
-	 party.direction = 0;
-	party.at_which_save_slot = 0;
 	for (i = 0; i < 20; i++)
-		 party.alchemy[i] = 0;
-	for (i = 0; i < 200; i++)
-		party.can_find_town[i] = 0;
-	for (i = 0; i < 20; i++)
-	 party.key_times[i] = 30000;
-	for (i = 0; i < 30; i++)
-	 party.party_event_timers[i] = 0;
-	for (i = 0; i < 50; i++)
-		party.spec_items[i] = 0;
-	for (i = 0; i < 120; i++) {
-	 party.help_received[i] = 0;
-	 }
-	for (i = 0; i < 200; i++)
-	 party.m_killed[i] = 0;
-	party.scen_name[0] = '\0';
-
-	for (i = 0; i < 200; i++)
-		for (j = 0; j < 8; j++)
-			party.item_taken[i][j] = 0;
-
+		party.key_times[i] = 30000;
 
 	refresh_store_items();
 	
-		for (i = 0; i < 6; i++) {
+	for (i = 0; i < 6; i++)
+	{
+		// pc_setup_debug(adven[i], i);
+		pc_setup_blank(adven[i]);
+		if (mode != 1)
 			// pc_setup_debug(adven[i], i);
-			pc_setup_blank(adven[i]);
-			if (mode != 1)
-				// pc_setup_debug(adven[i], i);
-				pc_setup_prefab(adven[i], i);
-			}
-		
+			pc_setup_prefab(adven[i], i);
+	}
+
 	for (i = 0; i < 96; i++)
 		for (j = 0; j < 96; j++)
 			out_e[i][j] = 0;
 
-
 	for (i = 0; i < 3;i++)
 		for (j = 0; j < NUM_TOWN_ITEMS; j++) {
-			stored_items[i].items[j] = item_record_type{};
+			stored_items[i].items[j] = {};
 			}
 
 	for (i = 0; i < 100; i++)
@@ -270,17 +223,13 @@ void init_party(short mode)
 			for (k = 0; k < 6; k++)
 				for (l = 0; l < 48; l++)
 					o_maps.outdoor_maps[i][k][l] = 0;
-					
-	// Default is save maps
-	party.stuff_done[306][0] = 0;
-	save_maps = TRUE;	
-			
 
+	// Default is save maps
+	save_maps = TRUE;	
 
 	// NOT DEBUG
 	build_outdoors();
 	update_pc_graphics();
-
 }
 
 // This is only called after a scenario is loaded and the party is put into it.
