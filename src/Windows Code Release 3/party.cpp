@@ -28,21 +28,21 @@
 #include "boe/item.hpp"
 #include "game_globals.hpp"
 
-extern const short skill_cost[20] = {3,3,3,2,2,2, 1,2,2,6,
-						5, 1,2,4,2,1, 4,2,5,0};
+extern const short skill_cost[20] = { 3,3,3,2,2,2, 1,2,2,6,
+						5, 1,2,4,2,1, 4,2,5,0 };
 extern const short skill_max[20];
-extern const short skill_g_cost[20] = {50,50,50,40,40,40,30,50,40,250,
-						250,25,100,200,30,20,100,80,0,0};
-static constinit const auto skill_bonus(std::to_array<short>({-3,-3,-2,-1,0,0,1,1,1,2,
-							2,2,3,3,3,3,4,4,4,5,5}));
+extern const short skill_g_cost[20] = { 50,50,50,40,40,40,30,50,40,250,
+						250,25,100,200,30,20,100,80,0,0 };
+static constinit const auto skill_bonus(std::to_array<short>({ -3,-3,-2,-1,0,0,1,1,1,2,
+							2,2,3,3,3,3,4,4,4,5,5 }));
 
-extern const short spell_level[62] = {1,1,1,1,1,1,1,1,1,1, 2,2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3,3,3,3,
-						4,4,4,4,4,4,4,4, 5,5,5,5,5,5,5,5, 6,6,6,6,6,6,6,6, 7,7,7,7,7,7,7,7};
-extern const short spell_cost[2][62] = {{1,1,1,1,1,2,50,2,1,3, 2,3,2,2,2,2,4,4,2,6, 3,3,5,3,3,5,6,4,6,4,
+extern const short spell_level[62] = { 1,1,1,1,1,1,1,1,1,1, 2,2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3,3,3,3,
+						4,4,4,4,4,4,4,4, 5,5,5,5,5,5,5,5, 6,6,6,6,6,6,6,6, 7,7,7,7,7,7,7,7 };
+extern const short spell_cost[2][62] = { {1,1,1,1,1,2,50,2,1,3, 2,3,2,2,2,2,4,4,2,6, 3,3,5,3,3,5,6,4,6,4,
 							4,5,4,8,30,-1,8,6, 5,8,8,6,9,10,6,6, 7,6,8,7,12,10,12,20, 12,8,20,10,14,10,50,10},
 							{1,1,1,2,1,1,3,5,50,1, 2,2,2,2,3,5,8,6,4,2, 3,4,3,3,3,10,5,3,4,6,
-							 5,5,5,15,6,5,5,8, 6,7,25,8,10,12,12,6, 8,7,8,8,14,17,8,7, 10,10,35,10,12,12,30,10}};
-static const std::array mage_s_name{"Light","Spark","Minor Haste","Strength","Scare",
+							 5,5,5,15,6,5,5,8, 6,7,25,8,10,12,12,6, 8,7,8,8,14,17,8,7, 10,10,35,10,12,12,30,10} };
+static const std::array mage_s_name{ "Light","Spark","Minor Haste","Strength","Scare",
 							"Flame Cloud","Identify","Scry Monster","Goo","True Sight",
 						"Minor Poison","Flame","Slow","Dumbfound","Envenom",
 							"Stinking Cloud","Summon Beast","Conflagration","Dispel Field","Sleep Cloud",
@@ -55,8 +55,8 @@ static const std::array mage_s_name{"Light","Spark","Minor Haste","Strength","Sc
 						"Major Poison","Group Fear","Kill","Paralysis",
 							"Daemon","Antimagic Cloud","MindDuel","Flight",
 						"Shockwave","M. Blessing","Mass Paralysis","Protection",
-							"Major Summon","Force Barrier","Quickfire","Death Arrows"};
-static const std::array priest_s_name{"Minor Bless","Minor Heal","Weaken Poison","Turn Undead","Location",
+							"Major Summon","Force Barrier","Quickfire","Death Arrows" };
+static const std::array priest_s_name{ "Minor Bless","Minor Heal","Weaken Poison","Turn Undead","Location",
 							"Sanctuary","Symbiosis","Minor Manna","Ritual - Sanctify","Stumble",
 						"Bless","Cure Poison","Curse","Light","Wound",
 							"Summon Spirit","Move Mountains","Charm Foe","Disease","Awaken",
@@ -69,54 +69,53 @@ static const std::array priest_s_name{"Minor Bless","Minor Heal","Weaken Poison"
 						"Heal All","Revive","Hyperactivity","Destone",
 							"Guardian","Mass Charm","Protective Circle","Pestilence",
 						"Revive All","Ravage Spirit","Resurrect","Divine Thud",
-							"Avatar","Wall of Blades","Word of Recall","Major Cleansing"};
-static const std::array alch_names{"Weak Curing Potion (1)","Weak Healing Potion (1)","Weak Poison (1)",
+							"Avatar","Wall of Blades","Word of Recall","Major Cleansing" };
+static const std::array alch_names{ "Weak Curing Potion (1)","Weak Healing Potion (1)","Weak Poison (1)",
 	"Weak Speed Potion (3)","Medium Poison (3)",
 		"Medium Heal Potion (4)","Strong Curing (5)","Medium Speed Potion (5)",
 		"Graymold Salve (7)","Weak Energy Potion (9)",
 		"Potion of Clarity (9)","Strong Poison (10)","Strong Heal Potion (12)","Killer Poison (12)",
 		"Resurrection Balm (9)","Medium Energy Ptn. (14)","Knowledge Brew (19)"	,
 		"Strong Strength (10)","Bliss (16)","Strong Power (20)"
-		};
-static const std::array alch_names_short{"Weak Curing Potion","Weak Healing Potion","Weak Poison",
+};
+static const std::array alch_names_short{ "Weak Curing Potion","Weak Healing Potion","Weak Poison",
 	"Weak Speed Potion","Medium Poison",
 		"Medium Heal Potion","Strong Curing","Medium Speed Potion",
 		"Graymold Salve","Weak Energy Potion",
 		"Potion of Clarity","Strong Poison","Strong Heal Potion","Killer Poison",
 		"Resurrection Bal","Medium Energy Ptn.","Knowledge Brew"	,
 		"Strong Strength","Bliss","Strong Power"
-		};
-extern const short spell_w_cast[2][62] = {{0,1,1,1,1,1,3,4,1,2, 1,1,1,1,1,1,4,1,4,1, 2,1,1,0,1,1,4,1,1,0,
-							1,1,1,2,4,1,1,1, 2,1,1,2,4,4,1,1, 1,1,1,1,4,4,1,5, 1,4,1,4,4,4,4,1},
-							{1,0,0,1,3,1,1,3,2,1, 1,0,1,0,1,4,2,1,1,0, 0,0,1,2,0,3,1,0,0,1,
-							0,1,1,3,4,1,0,0, 1,0,3,1,1,4,2,4, 0,0,0,3,4,1,1,1, 0,1,3,1,4,1,5,0}};
+};
+extern const short spell_w_cast[2][62]{
+	{0,1,1,1,1,1,3,4,1,2, 1,1,1,1,1,1,4,1,4,1, 2,1,1,0,1,1,4,1,1,0,
+		1,1,1,2,4,1,1,1, 2,1,1,2,4,4,1,1, 1,1,1,1,4,4,1,5, 1,4,1,4,4,4,4,1},
+	{1,0,0,1,3,1,1,3,2,1, 1,0,1,0,1,4,2,1,1,0, 0,0,1,2,0,3,1,0,0,1,
+		0,1,1,3,4,1,0,0, 1,0,3,1,1,4,2,4, 0,0,0,3,4,1,1,1, 0,1,3,1,4,1,5,0}
+};
 // 0 - everywhere 1 - combat only 2 - town only 3 - town & outdoor only 4 - town & combat only  5 - outdoor only
-static constinit const std::array combat_percent(std::to_array<short>({150,120,100,90,80,80,80,70,70,70,
-								70,70,67,62,57,52,47,42,40,40}));
+static constinit const std::array combat_percent(std::to_array<short>({ 150,120,100,90,80,80,80,70,70,70,
+								70,70,67,62,57,52,47,42,40,40 }));
+
+// Says which buttons hit which spells on second spell page, 90 means no button
+static const short spell_index[38]{
+	38,39,40,41,42,43,44,45,90,90,46,47,48,49,50,51,52,53,90,90,
+	54,55,56,57,58,59,60,61,90,90, 90,90,90,90,90,90,90,90
+};
 
 
-short town_spell,who_cast,which_pc_displayed;
-Boolean spell_button_active[90];
-
-char empty_string[256] = "                                           ";
-
-extern Boolean fast_bang;
 extern party_record_type party;
 extern Adventurers adven;
-extern short stat_window,overall_mode,current_pc,town_size[3],town_type;
-extern current_town_type	c_town;
+extern short stat_window, overall_mode, current_pc, town_size[3], town_type;
+extern current_town_type c_town;
 extern big_tr_type  t_d;
-extern unsigned char out[96][96];
 extern unsigned char out_e[96][96];
-extern location pc_pos[6],center;
+extern location pc_pos[6], center;
 extern HWND mainPtr;
-extern Boolean in_startup_mode,spell_forced,save_maps,suppress_stat_screen,boom_anim_active;
+extern Boolean in_startup_mode, spell_forced, save_maps, boom_anim_active;
 extern stored_items_list_type stored_items[3];
-extern HCURSOR sword_curs;
-extern setup_save_type setup_save;
-extern short store_mage, store_priest,stat_screen_mode;
+extern short store_mage, store_priest, stat_screen_mode;
 extern short store_mage_lev, store_priest_lev;
-extern short store_spell_target,pc_casting;
+extern short store_spell_target, pc_casting;
 extern short pc_last_cast[2][6];
 extern const effect_pat_type single;
 extern const effect_pat_type square;
@@ -127,64 +126,40 @@ extern const short hit_chance[51];
 extern short pc_parry[6], combat_active_pc;
 extern std::array<short, 6> pc_moves;
 extern const short boom_gr[8];
-extern	unsigned char m1[20];
-extern	unsigned char m2[16];
-extern	unsigned char m3[16];
 extern stored_outdoor_maps_type o_maps;
-extern short current_ground,dialog_answer;
+extern short dialog_answer;
 extern short on_spell_menu[2][62];
-extern Boolean cd_event_filter();
 extern Boolean dialog_not_toast;
 extern const std::array<short, 62> mage_need_select;
 extern const std::array<short, 62> priest_need_select;
 extern short pc_marked_damage[6];
-extern short monst_marked_damage[T_M];
-extern town_item_list  t_i;
 extern HDC main_dc;
-extern char scen_strs2[110][256];
-extern stored_town_maps_type town_maps,town_maps2;
+extern stored_town_maps_type town_maps, town_maps2;
 extern const item_record_type start_items[6];
 extern piles_of_stuff_dumping_type5 data_store5;
-
-// Variables for spell selection
-	short store_situation,store_last_target_darkened,on_which_spell_page = 0;
-	short store_last_cast_mage = 6,store_last_cast_priest = 6;
-	short buttons_on[38] = {1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0};
-		// buttons_on determines which buttons can be hit when on the second spell page
-	short spell_index[38] = {38,39,40,41,42,43,44,45,90,90,46,47,48,49,50,51,52,53,90,90,
-							54,55,56,57,58,59,60,61,90,90, 90,90,90,90,90,90,90,90};
-		// Says which buttons hit which spells on second spell page, 90 means no button
-	Boolean can_choose_caster;
-
-// Variables for spending xp
-	Boolean talk_done = FALSE;
-	long val_for_text;
-	Boolean keep_change = FALSE;
-	static short store_skills[20],store_h,store_sp,store_skp,which_skill;
-	long store_g;
-	short store_train_mode,store_train_pc;
-	
 extern HBITMAP pcs_gworld;
 
+// Variables for spell selection
+static short store_situation, store_last_target_darkened, on_which_spell_page = 0;
+static short store_last_cast_mage = 6, store_last_cast_priest = 6;
+
+static Boolean can_choose_caster;
+
+// Variables for spending xp
+static short store_skills[20], store_h, store_sp, store_skp, which_skill;
+static long store_g;
+static short store_train_mode, store_train_pc;
+
 // Dialog vars
-short store_mage_store ;
-short store_priest_store ;
-short store_store_target;
-short store_graphic_pc_num ;
-short store_graphic_mode ;
-short store_pc_graphic;
+static short store_mage_store;
+static short store_priest_store;
+static short store_store_target;
+static short store_graphic_pc_num;
+static short store_graphic_mode;
+static short store_pc_graphic;
 
+static short town_spell, who_cast;
 
-void draw_caster_buttons();
-
-void draw_spell_info();
-void draw_spell_pc_info();
-
-void put_pc_caster_buttons();
-void put_pc_target_buttons();
-void put_spell_led_buttons();
-void put_spell_list();
-void put_pick_spell_graphics();
 
 static bool pc_can_cast_spell(short pc_num, short type, short spell_num);
 
