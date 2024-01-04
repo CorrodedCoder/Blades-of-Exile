@@ -651,11 +651,8 @@ void curse_pc(short which_pc,short how_much)
 	{
 		return;
 	}
-	if (adven[which_pc].main_status == status::Normal)
-	{
-		adven[which_pc].gaffect(affect::CursedBlessed) = max(adven[which_pc].gaffect(affect::CursedBlessed) - how_much,-8);
-		add_string_to_buf("  {} cursed.", adven[which_pc].name);
-	}
+	adven[which_pc].gaffect(affect::CursedBlessed) = max(adven[which_pc].gaffect(affect::CursedBlessed) - how_much,-8);
+	add_string_to_buf("  {} cursed.", adven[which_pc].name);
 	put_pc_screen();
 	give_help(59,0,0);
 }
@@ -682,11 +679,8 @@ void dumbfound_pc(short which_pc,short how_much)
 		add_string_to_buf("  {} saved.", adven[which_pc].name);
 		return;
 	}
-	if (adven[which_pc].main_status == status::Normal)
-	{
-		adven[which_pc].gaffect(affect::Dumbfounded) = min(adven[which_pc].gaffect(affect::Dumbfounded) + how_much,8);
-		add_string_to_buf("  {} dumbfounded.", adven[which_pc].name);
-	}
+	adven[which_pc].gaffect(affect::Dumbfounded) = min(adven[which_pc].gaffect(affect::Dumbfounded) + how_much,8);
+	add_string_to_buf("  {} dumbfounded.", adven[which_pc].name);
 	one_sound(67);
 	put_pc_screen();
 	adjust_spell_menus();
@@ -722,11 +716,8 @@ void disease_pc(short which_pc,short how_much)
 	{
 		how_much++;
 	}
-	if (adven[which_pc].main_status == status::Normal)
-	{
-		adven[which_pc].gaffect(affect::Diseased) = min(adven[which_pc].gaffect(affect::Diseased) + how_much,8);
-		add_string_to_buf("  {} diseased.", adven[which_pc].name);
-	}
+	adven[which_pc].gaffect(affect::Diseased) = min(adven[which_pc].gaffect(affect::Diseased) + how_much,8);
+	add_string_to_buf("  {} diseased.", adven[which_pc].name);
 	one_sound(66);
 	put_pc_screen();
 	give_help(29,0,0);
@@ -770,21 +761,18 @@ void sleep_pc(short which_pc,short how_much, affect what_type,short adjust)
 		add_string_to_buf("  {} resisted.", adven[which_pc].name);
 		return;
 	}
-	if (adven[which_pc].main_status == status::Normal)
+	adven[which_pc].gaffect(what_type) = how_much;
+	if (what_type == affect::Asleep)
 	{
-		adven[which_pc].gaffect(what_type) = how_much;
-		if (what_type == affect::Asleep)
-		{
-			add_string_to_buf("  {} falls asleep.", adven[which_pc].name);
-			play_sound(96);
-		}
-		else
-		{
-			add_string_to_buf("  {} paralyzed.", adven[which_pc].name);
-			play_sound(90);
-		}
-		pc_moves[which_pc] = 0;
+		add_string_to_buf("  {} falls asleep.", adven[which_pc].name);
+		play_sound(96);
 	}
+	else
+	{
+		add_string_to_buf("  {} paralyzed.", adven[which_pc].name);
+		play_sound(90);
+	}
+	pc_moves[which_pc] = 0;
 	put_pc_screen();
 	if (what_type == affect::Asleep)
 	{
@@ -802,17 +790,14 @@ void slow_pc(short which_pc,short how_much)
 	{
 		return;
 	}
-	if (adven[which_pc].main_status == status::Normal)
+	adven[which_pc].gaffect(affect::Speed) = boe_clamp(adven[which_pc].gaffect(affect::Speed) - how_much,-8,8);
+	if (how_much < 0)
 	{
-		adven[which_pc].gaffect(affect::Speed) = boe_clamp(adven[which_pc].gaffect(affect::Speed) - how_much,-8,8);
-		if (how_much < 0)
-		{
-			add_string_to_buf("  {} hasted.", adven[which_pc].name);
-		}
-		else
-		{
-			add_string_to_buf("  {} slowed.", adven[which_pc].name);
-		}
+		add_string_to_buf("  {} hasted.", adven[which_pc].name);
+	}
+	else
+	{
+		add_string_to_buf("  {} slowed.", adven[which_pc].name);
 	}
 	put_pc_screen();
 	if (how_much < 0)
@@ -827,12 +812,9 @@ void web_pc(short which_pc,short how_much)
 	{
 		return;
 	}
-	if (adven[which_pc].main_status == status::Normal)
-	{
-		adven[which_pc].gaffect(affect::Webbed) = min(adven[which_pc].gaffect(affect::Webbed) + how_much,8);
-		add_string_to_buf("  {} webbed.", adven[which_pc].name);
-		one_sound(17);
-	}
+	adven[which_pc].gaffect(affect::Webbed) = min(adven[which_pc].gaffect(affect::Webbed) + how_much,8);
+	add_string_to_buf("  {} webbed.", adven[which_pc].name);
+	one_sound(17);
 	put_pc_screen();
 	give_help(31,0,0);
 }
@@ -848,12 +830,9 @@ void acid_pc(short which_pc,short how_much)
 		add_string_to_buf("  {} resists acid.", adven[which_pc].name);
 		return;
 	}
-	if (adven[which_pc].main_status == status::Normal)
-	{
-		adven[which_pc].gaffect(affect::Acid) += how_much;
-		add_string_to_buf("  {} covered with acid!", adven[which_pc].name);
-		one_sound(42);
-	}
+	adven[which_pc].gaffect(affect::Acid) += how_much;
+	add_string_to_buf("  {} covered with acid!", adven[which_pc].name);
+	one_sound(42);
 	put_pc_screen();
 }
 
