@@ -645,12 +645,6 @@ void cure_party(Adventurers& adventurers, short amt)
 	}
 }
 
-static bool pc_curse(pc_record_type& pc, short how_much)
-{
-	pc.gaffect(affect::CursedBlessed) = max(pc.gaffect(affect::CursedBlessed) - how_much, -8);
-	return true;
-}
-
 void curse_pc(short which_pc,short how_much)
 {
 	if (adven[which_pc].main_status != status::Normal)
@@ -661,21 +655,6 @@ void curse_pc(short which_pc,short how_much)
 	add_string_to_buf("  {} cursed.", adven[which_pc].name);
 	put_pc_screen();
 	give_help(59,0,0);
-}
-
-static bool pc_dumbfound(pc_record_type& pc, short how_much, short modifier)
-{
-	const short r1 = rand_short(0, 90) + modifier;
-	if (r1 < pc.level)
-	{
-		how_much -= 2;
-	}
-	if (how_much <= 0)
-	{
-		return false;
-	}
-	pc.gaffect(affect::Dumbfounded) = min(pc.gaffect(affect::Dumbfounded) + how_much, 8);
-	return true;
 }
 
 void dumbfound_pc(short which_pc,short how_much)
@@ -705,34 +684,6 @@ void dumbfound_pc(short which_pc,short how_much)
 	give_help(28,0,0);
 }
 
-static bool pc_disease(pc_record_type& pc, short how_much)
-{
-	const short r1 = rand_short(0, 100);
-	if (r1 < pc.level * 2)
-	{
-		how_much -= 2;
-	}
-	if (how_much <= 0)
-	{
-		return false;
-	}
-	const short level = pc_prot_level(pc, 62);
-	if (level > 0)
-	{
-		how_much -= level / 2;
-	}
-	if ((pc.traits[trait::Frail] == TRUE) && (how_much > 1))
-	{
-		how_much++;
-	}
-	if ((pc.traits[trait::Frail] == TRUE) && (how_much == 1) && (rand_short(0, 1) == 0))
-	{
-		how_much++;
-	}
-	pc.gaffect(affect::Diseased) = min(pc.gaffect(affect::Diseased) + how_much, 8);
-	return true;
-}
-
 void disease_pc(short which_pc,short how_much)
 {
 	if (adven[which_pc].main_status != status::Normal)
@@ -748,59 +699,6 @@ void disease_pc(short which_pc,short how_much)
 	one_sound(66);
 	put_pc_screen();
 	give_help(29,0,0);
-}
-
-static bool pc_sleep(pc_record_type& pc, short how_much, short adjust)
-{
-	short level;
-	if ((level = pc_prot_level(pc, 53)) > 0)
-	{
-		how_much -= level / 2;
-	}
-	if ((level = pc_prot_level(pc, 54)) > 0)
-	{
-		how_much -= level;
-	}
-	const short r1 = rand_short(0, 100) + adjust;
-	if (r1 < 30 + pc.level * 2)
-	{
-		how_much = -1;
-	}
-	if ( (pc.traits[trait::HighlyAlert] > 0) || (pc.gaffect(affect::Asleep) < 0))
-	{
-		how_much = -1;
-	}
-	if (how_much <= 0)
-	{
-		return false;
-	}
-	pc.gaffect(affect::Asleep) = how_much;
-	return true;
-}
-
-static bool pc_paralyze(pc_record_type& pc, short how_much, short adjust)
-{
-	short level;
-	if ((level = pc_prot_level(pc, 53)) > 0)
-	{
-		how_much -= level / 2;
-	}
-	if ((level = pc_prot_level(pc, 54)) > 0)
-	{
-		how_much -= level * 300;
-	}
-
-	const short r1 = rand_short(0, 100) + adjust;
-	if (r1 < 30 + pc.level * 2)
-	{
-		how_much = -1;
-	}
-	if (how_much <= 0)
-	{
-		return false;
-	}
-	pc.gaffect(affect::Paralyzed) = how_much;
-	return true;
 }
 
 void sleep_pc(short which_pc,short how_much, affect what_type,short adjust)
@@ -847,14 +745,6 @@ void sleep_pc(short which_pc,short how_much, affect what_type,short adjust)
 	}
 }
 
-
-static bool pc_slow(pc_record_type& pc, short how_much)
-{
-	pc.gaffect(affect::Speed) = boe_clamp(pc.gaffect(affect::Speed) - how_much, -8, 8);
-	return true;
-}
-
-
 void slow_pc(short which_pc,short how_much)
 {
 	if (adven[which_pc].main_status != status::Normal)
@@ -877,12 +767,6 @@ void slow_pc(short which_pc,short how_much)
 	}
 }
 
-static bool pc_web(pc_record_type& pc, short how_much)
-{
-	pc.gaffect(affect::Webbed) = min(pc.gaffect(affect::Webbed) + how_much, 8);
-	return true;
-}
-
 void web_pc(short which_pc,short how_much)
 {
 	if (adven[which_pc].main_status != status::Normal)
@@ -894,17 +778,6 @@ void web_pc(short which_pc,short how_much)
 	one_sound(17);
 	put_pc_screen();
 	give_help(31,0,0);
-}
-
-
-static bool pc_acid(pc_record_type& pc, short how_much)
-{
-	if (pc_has_abil_equip(pc, 122) < 24)
-	{
-		return false;
-	}
-	pc.gaffect(affect::Acid) += how_much;
-	return true;
 }
 
 void acid_pc(short which_pc,short how_much)

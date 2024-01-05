@@ -24,3 +24,12 @@ bool pc_affect(pc_record_type& pc, affect type, short how_much);
 short pc_carry_weight(const pc_record_type& pc);
 short pc_luck(const pc_record_type& pc);
 short pc_level(const pc_record_type& pc);
+
+bool pc_acid(pc_record_type& pc, short how_much);
+bool pc_web(pc_record_type& pc, short how_much);
+bool pc_slow(pc_record_type& pc, short how_much);
+bool pc_paralyze(pc_record_type& pc, short how_much, short adjust);
+bool pc_sleep(pc_record_type& pc, short how_much, short adjust);
+bool pc_disease(pc_record_type& pc, short how_much);
+bool pc_dumbfound(pc_record_type& pc, short how_much, short modifier);
+bool pc_curse(pc_record_type& pc, short how_much);

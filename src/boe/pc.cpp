@@ -351,3 +351,127 @@ short pc_level(const pc_record_type& pc)
 {
 	return pc.level;
 }
+
+bool pc_curse(pc_record_type& pc, short how_much)
+{
+	pc.gaffect(affect::CursedBlessed) = static_cast<short>(std::max(pc.gaffect(affect::CursedBlessed) - how_much, -8));
+	return true;
+}
+
+bool pc_dumbfound(pc_record_type& pc, short how_much, short modifier)
+{
+	const short r1 = rand_short(0, 90) + modifier;
+	if (r1 < pc.level)
+	{
+		how_much -= 2;
+	}
+	if (how_much <= 0)
+	{
+		return false;
+	}
+	pc.gaffect(affect::Dumbfounded) = static_cast<short>(std::min(pc.gaffect(affect::Dumbfounded) + how_much, 8));
+	return true;
+}
+
+bool pc_disease(pc_record_type& pc, short how_much)
+{
+	const short r1 = rand_short(0, 100);
+	if (r1 < pc.level * 2)
+	{
+		how_much -= 2;
+	}
+	if (how_much <= 0)
+	{
+		return false;
+	}
+	const short level = pc_prot_level(pc, 62);
+	if (level > 0)
+	{
+		how_much -= level / 2;
+	}
+	if ((pc.traits[trait::Frail] == BOE_TRUE) && (how_much > 1))
+	{
+		how_much++;
+	}
+	if ((pc.traits[trait::Frail] == BOE_TRUE) && (how_much == 1) && (rand_short(0, 1) == 0))
+	{
+		how_much++;
+	}
+	pc.gaffect(affect::Diseased) = static_cast<short>(std::min(pc.gaffect(affect::Diseased) + how_much, 8));
+	return true;
+}
+
+bool pc_sleep(pc_record_type& pc, short how_much, short adjust)
+{
+	short level;
+	if ((level = pc_prot_level(pc, 53)) > 0)
+	{
+		how_much -= level / 2;
+	}
+	if ((level = pc_prot_level(pc, 54)) > 0)
+	{
+		how_much -= level;
+	}
+	const short r1 = rand_short(0, 100) + adjust;
+	if (r1 < 30 + pc.level * 2)
+	{
+		how_much = -1;
+	}
+	if ((pc.traits[trait::HighlyAlert] > 0) || (pc.gaffect(affect::Asleep) < 0))
+	{
+		how_much = -1;
+	}
+	if (how_much <= 0)
+	{
+		return false;
+	}
+	pc.gaffect(affect::Asleep) = how_much;
+	return true;
+}
+
+bool pc_paralyze(pc_record_type& pc, short how_much, short adjust)
+{
+	short level;
+	if ((level = pc_prot_level(pc, 53)) > 0)
+	{
+		how_much -= level / 2;
+	}
+	if ((level = pc_prot_level(pc, 54)) > 0)
+	{
+		how_much -= level * 300;
+	}
+
+	const short r1 = rand_short(0, 100) + adjust;
+	if (r1 < 30 + pc.level * 2)
+	{
+		how_much = -1;
+	}
+	if (how_much <= 0)
+	{
+		return false;
+	}
+	pc.gaffect(affect::Paralyzed) = how_much;
+	return true;
+}
+
+bool pc_slow(pc_record_type& pc, short how_much)
+{
+	pc.gaffect(affect::Speed) = boe_clamp(pc.gaffect(affect::Speed) - how_much, -8, 8);
+	return true;
+}
+
+bool pc_web(pc_record_type& pc, short how_much)
+{
+	pc.gaffect(affect::Webbed) = static_cast<short>(std::min(pc.gaffect(affect::Webbed) + how_much, 8));
+	return true;
+}
+
+bool pc_acid(pc_record_type& pc, short how_much)
+{
+	if (pc_has_abil_equip(pc, 122) < 24)
+	{
+		return false;
+	}
+	pc.gaffect(affect::Acid) += how_much;
+	return true;
+}
