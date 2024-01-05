@@ -3693,8 +3693,8 @@ void slay_party(status mode)
 	put_pc_screen();
 }
 
-static Boolean damage_pc_impl(short which_pc, short how_much, damage_type damage_type, short type_of_attacker, short sound_type, Boolean do_print)
-//short damage_type_in; // 0 - weapon   1 - fire   2 - poison   3 - general magic   4 - unblockable
+static Boolean damage_pc_impl(short which_pc, short how_much, damage_type type, short type_of_attacker, short sound_type, Boolean do_print)
+//type; // 0 - weapon   1 - fire   2 - poison   3 - general magic   4 - unblockable
 					// 5 - cold  6 - undead attack  7 - demon attack
 					// 10 - marked damage, from during anim mode ... no boom, and totally unblockable
 {
@@ -3707,18 +3707,18 @@ static Boolean damage_pc_impl(short which_pc, short how_much, damage_type damage
 
 	if (sound_type == 0)
 	{
-		if ((damage_type == damage_type::Fire) || (damage_type == damage_type::Unblockable) )
+		if ((type == damage_type::Fire) || (type == damage_type::Unblockable) )
 			sound_type = 5;
-		if 	(damage_type == damage_type::GeneralMagic)
+		if 	(type == damage_type::GeneralMagic)
 			sound_type = 12;
-		if 	(damage_type == damage_type::Cold)
+		if 	(type == damage_type::Cold)
 			sound_type = 7;
-		if 	(damage_type == damage_type::Poison)
+		if 	(type == damage_type::Poison)
 			sound_type = 11;
 	}
 		
 	// armor	
-	if ((damage_type == damage_type::Weapon) || (damage_type == damage_type::UndeadAttack) ||(damage_type == damage_type::DemonAttack))
+	if ((type == damage_type::Weapon) || (type == damage_type::UndeadAttack) ||(type == damage_type::DemonAttack))
 	{
 		how_much -= boe_clamp(adven[which_pc].gaffect(affect::CursedBlessed),-5,5);
 		for (i = 0; i < 24; i++)
@@ -3760,12 +3760,12 @@ static Boolean damage_pc_impl(short which_pc, short how_much, damage_type damage
 	}
 	
 	// parry
-	if ((damage_type < damage_type::Poison) && (pc_parry[which_pc] < 100))
+	if ((type < damage_type::Poison) && (pc_parry[which_pc] < 100))
 	{
 		how_much -= pc_parry[which_pc] / 4;
 	}
 
-	if (damage_type != damage_type::MarkedDamage)
+	if (type != damage_type::MarkedDamage)
 	{
 		if (PSD[306][7] > 0)
 		{
@@ -3783,11 +3783,11 @@ static Boolean damage_pc_impl(short which_pc, short how_much, damage_type damage
 		}
 	}
 
-	if ((damage_type == damage_type::Weapon) && ((level = pc_prot_level(adven[which_pc],30)) > 0))
+	if ((type == damage_type::Weapon) && ((level = pc_prot_level(adven[which_pc],30)) > 0))
 		how_much = how_much - level;
-	if ((damage_type == damage_type::UndeadAttack) && ((level = pc_prot_level(adven[which_pc],57)) > 0))
+	if ((type == damage_type::UndeadAttack) && ((level = pc_prot_level(adven[which_pc],57)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
-	if ((damage_type == damage_type::DemonAttack) && ((level = pc_prot_level(adven[which_pc],58)) > 0))
+	if ((type == damage_type::DemonAttack) && ((level = pc_prot_level(adven[which_pc],58)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	if ((type_of_attacker == 6) && ((level = pc_prot_level(adven[which_pc],59)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
@@ -3801,24 +3801,24 @@ static Boolean damage_pc_impl(short which_pc, short how_much, damage_type damage
 		how_much = 0;
 		
 	// magic resistance
-	if ((damage_type == damage_type::GeneralMagic) && ((level = pc_prot_level(adven[which_pc],35)) > 0))
+	if ((type == damage_type::GeneralMagic) && ((level = pc_prot_level(adven[which_pc],35)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	
 	// Mag. res helps w. fire and cold
-	if (((damage_type == damage_type::Fire) || (damage_type == damage_type::Cold)) &&
+	if (((type == damage_type::Fire) || (type == damage_type::Cold)) &&
 		(adven[which_pc].gaffect(affect::MagicResistant) > 0))
 			how_much = how_much / 2;
 			
 	// fire res.
-	if ((damage_type == damage_type::Fire) && ((level = pc_prot_level(adven[which_pc],32)) > 0))
+	if ((type == damage_type::Fire) && ((level = pc_prot_level(adven[which_pc],32)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 		
 	// cold res.
-	if ((damage_type == damage_type::Cold) && ((level = pc_prot_level(adven[which_pc],33)) > 0))
+	if ((type == damage_type::Cold) && ((level = pc_prot_level(adven[which_pc],33)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	
 	// major resistance
-	if (((damage_type == damage_type::Fire) || (damage_type == damage_type::Poison) || (damage_type == damage_type::GeneralMagic) || (damage_type == damage_type::Cold))
+	if (((type == damage_type::Fire) || (type == damage_type::Poison) || (type == damage_type::GeneralMagic) || (type == damage_type::Cold))
 	 && ((level = pc_prot_level(adven[which_pc],31)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	
@@ -3830,9 +3830,9 @@ static Boolean damage_pc_impl(short which_pc, short how_much, damage_type damage
 		}
 		pc_marked_damage[which_pc] += how_much;
 		if (is_town())
-			add_explosion(c_town.p_loc,how_much,0,(damage_type > damage_type::Poison) ? 2 : 0,0,0);
+			add_explosion(c_town.p_loc,how_much,0,(type > damage_type::Poison) ? 2 : 0,0,0);
 		else
-			add_explosion(pc_pos[which_pc],how_much,0,(damage_type > damage_type::Poison) ? 2 : 0,0,0);
+			add_explosion(pc_pos[which_pc],how_much,0,(type > damage_type::Poison) ? 2 : 0,0,0);
 		//	if (do_print == TRUE)
 	//		add_string_to_buf("  {} takes {:d}. ", adven[which_pc].name, how_much);
 		if (how_much == 0)
@@ -3843,7 +3843,7 @@ static Boolean damage_pc_impl(short which_pc, short how_much, damage_type damage
 	
 	if (how_much <= 0)
 	{
-		if ((damage_type == damage_type::Weapon) || (damage_type == damage_type::UndeadAttack) || (damage_type == damage_type::DemonAttack))
+		if ((type == damage_type::Weapon) || (type == damage_type::UndeadAttack) || (type == damage_type::DemonAttack))
 			play_sound(2);
 		add_string_to_buf ("  No damage.");
 		return FALSE;
@@ -3859,14 +3859,14 @@ static Boolean damage_pc_impl(short which_pc, short how_much, damage_type damage
 		{
 			add_string_to_buf("  {} takes {:d}. ", adven[which_pc].name, how_much);
 		}
-		if (damage_type != damage_type::MarkedDamage)
+		if (type != damage_type::MarkedDamage)
 		{
 			if (is_combat())
-				boom_space(pc_pos[which_pc],overall_mode,boom_gr[to_underlying(damage_type)],how_much,sound_type);
+				boom_space(pc_pos[which_pc],overall_mode,boom_gr[to_underlying(type)],how_much,sound_type);
 			else if (is_town()) 
-				boom_space(c_town.p_loc,overall_mode,boom_gr[to_underlying(damage_type)],how_much,sound_type);
+				boom_space(c_town.p_loc,overall_mode,boom_gr[to_underlying(type)],how_much,sound_type);
 			else
-				boom_space(c_town.p_loc,100,boom_gr[to_underlying(damage_type)],how_much,sound_type);
+				boom_space(c_town.p_loc,100,boom_gr[to_underlying(type)],how_much,sound_type);
 		}
 		if (overall_mode != 0)
 			FlushEvents(1);
@@ -3909,8 +3909,8 @@ Boolean damage_pc(short which_pc, short how_much, damage_type type, short type_o
 	return damage_pc_impl(which_pc, how_much, type, type_of_attacker, 0, TRUE);
 }
 
-Boolean damage_pc(short which_pc, short how_much, short damage_type_in, short type_of_attacker)
-//short damage_type_in; // 0 - weapon   1 - fire   2 - poison   3 - general magic   4 - unblockable
+Boolean damage_pc(short which_pc, short how_much, short type, short type_of_attacker)
+//type; // 0 - weapon   1 - fire   2 - poison   3 - general magic   4 - unblockable
 					// 5 - cold  6 - undead attack  7 - demon attack
 					// 10 - marked damage, from during anim mode ... no boom, and totally unblockable
 					// 30 + *   same as *, but no print
@@ -3918,17 +3918,17 @@ Boolean damage_pc(short which_pc, short how_much, short damage_type_in, short ty
 {
 	Boolean do_print = TRUE;
 
-	const short sound_type = damage_type_in / 100;
+	const short sound_type = type / 100;
 
-	damage_type_in = damage_type_in % 100;
+	type = type % 100;
 
-	if (damage_type_in >= 30)
+	if (type >= 30)
 	{
 		do_print = FALSE;
-		damage_type_in -= 30;
+		type -= 30;
 	}
 
-	return damage_pc_impl(which_pc, how_much, static_cast<damage_type>(damage_type_in), type_of_attacker, sound_type, do_print);
+	return damage_pc_impl(which_pc, how_much, static_cast<damage_type>(type), type_of_attacker, sound_type, do_print);
 }
 
 void kill_pc(short which_pc, status type)
