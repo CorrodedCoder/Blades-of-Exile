@@ -77,7 +77,6 @@ Boolean allowed_one_erase = FALSE;
 
 Boolean palette_suspect = FALSE,window_in_front = FALSE;
 
-short on_spell_menu[2][62];
 short on_monst_menu[256];
 Boolean belt_present = FALSE;
 

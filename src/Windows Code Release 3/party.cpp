@@ -128,7 +128,6 @@ extern std::array<short, 6> pc_moves;
 extern const short boom_gr[8];
 extern stored_outdoor_maps_type o_maps;
 extern short dialog_answer;
-extern short on_spell_menu[2][62];
 extern Boolean dialog_not_toast;
 extern const std::array<short, 62> mage_need_select;
 extern const std::array<short, 62> priest_need_select;
@@ -159,6 +158,8 @@ static short store_graphic_mode;
 static short store_pc_graphic;
 
 static short town_spell, who_cast;
+
+static std::array < std::array<short, 62>, 2> on_spell_menu;
 
 
 static bool pc_can_cast_spell(short pc_num, short type, short spell_num);
@@ -4084,7 +4085,7 @@ void adjust_spell_menus()
 {
 	short i, j, spell_pos = 0;
 	short total_added = 0;
-	short old_on_spell_menu[2][62];
+	std::array < std::array<short,62>, 2> old_on_spell_menu;
 	Boolean need_menu_change = FALSE;
 	HMENU menu, big_menu;
 
