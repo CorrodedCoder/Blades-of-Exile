@@ -1138,156 +1138,200 @@ void change_level(short town_num,short x,short y)
 Boolean damage_monst(short which_m, short who_hit, short how_much, short how_much_spec, short dam_type)
 //short which_m, who_hit, how_much, how_much_spec;  // 6 for who_hit means dist. xp evenly  7 for no xp
 //short dam_type;  // 0 - weapon   1 - fire   2 - poison   3 - general magic   4 - unblockable  5 - cold 
- 				 // 6 - demon 7 - undead  
- 				 // 9 - marked damage, from during anim mode
- 				 //+10 = no_print
- 				 // 100s digit - damage sound for boom space
+				 // 6 - demon 7 - undead  
+				 // 9 - marked damage, from during anim mode
+				 //+10 = no_print
+				 // 100s digit - damage sound for boom space
 {
-	creature_data_type *victim;
-	short r1,which_spot,sound_type;
+	creature_data_type* victim;
+	short r1, which_spot, sound_type;
 	location where_put;
-	
+
 	Boolean do_print = TRUE;
 	char resist;
 
 	//print_num(which_m,(short)c_town.monst.dudes[which_m].m_loc.x,(short)c_town.monst.dudes[which_m].m_loc.y);
 
-	if (c_town.monst.dudes[which_m].active == 0) return FALSE;
-	
+	if (c_town.monst.dudes[which_m].active == 0)
+	{
+		return FALSE;
+	}
+
 	sound_type = dam_type / 100;
 	dam_type = dam_type % 100;
 
-	if (dam_type >= 10) {
+	if (dam_type >= 10)
+	{
 		do_print = FALSE;
 		dam_type -= 10;
-		}
+	}
 
-	if (sound_type == 0) {
-		if ((dam_type == 1) || (dam_type == 4) )
-			sound_type = 5;		
-		if 	(dam_type == 5)
-			sound_type = 7;	
-		if 	(dam_type == 3)
-			sound_type = 12;	
-		if 	(dam_type == 2)
-			sound_type = 11;	
-		}
+	if (sound_type == 0)
+	{
+		if ((dam_type == 1) || (dam_type == 4))
+			sound_type = 5;
+		if (dam_type == 5)
+			sound_type = 7;
+		if (dam_type == 3)
+			sound_type = 12;
+		if (dam_type == 2)
+			sound_type = 11;
+	}
 
-		
-	victim = &c_town.monst.dudes[which_m];	
+	victim = &c_town.monst.dudes[which_m];
 	resist = victim->m_d.immunities;
 
-	if (dam_type == 3) {
+	if (dam_type == 3)
+	{
 		if (resist & 1)
 			how_much = how_much / 2;
 		if (resist & 2)
-			how_much = 0;		
-		}
-	if (dam_type == 1) {
+			how_much = 0;
+	}
+	if (dam_type == 1)
+	{
 		if (resist & 4)
 			how_much = how_much / 2;
 		if (resist & 8)
-			how_much = 0;		
-		}
-	if (dam_type == 5) {
+			how_much = 0;
+	}
+	if (dam_type == 5)
+	{
 		if (resist & 16)
 			how_much = how_much / 2;
 		if (resist & 32)
-			how_much = 0;		
-		}
-	if (dam_type == 2) {
+			how_much = 0;
+	}
+	if (dam_type == 2)
+	{
 		if (resist & 64)
 			how_much = how_much / 2;
 		if (resist & 128)
-			how_much = 0;		
-		}
-	
+			how_much = 0;
+	}
+
 	// Absorb damage?
-	if (((dam_type == 1) || (dam_type == 3) || (dam_type == 5))
-	 && (victim->m_d.spec_skill == 26)) {
+	if (((dam_type == 1) || (dam_type == 3) || (dam_type == 5)) && (victim->m_d.spec_skill == 26))
+	{
 		victim->m_d.health += how_much;
 		ASB("  Magic absorbed.");
 		return FALSE;
-		}
-		
+	}
+
 	// Saving throw
-	if (((dam_type == 1) || (dam_type == 5)) && (rand_short(0,20) <= victim->m_d.level))
+	if (((dam_type == 1) || (dam_type == 5)) && (rand_short(0, 20) <= victim->m_d.level))
+	{
 		how_much = how_much / 2;
-	if ((dam_type == 3) && (rand_short(0,24) <= victim->m_d.level))
+	}
+
+	if ((dam_type == 3) && (rand_short(0, 24) <= victim->m_d.level))
+	{
 		how_much = how_much / 2;
+	}
 
 	// Rentar-Ihrno?
 	if (victim->m_d.spec_skill == 36)
+	{
 		how_much = how_much / 10;
+	}
 
-		
-	r1 = rand_short(0,(victim->m_d.armor * 5) / 4);
+	r1 = rand_short(0, (victim->m_d.armor * 5) / 4);
 	r1 += victim->m_d.level / 4;
 	if (dam_type == 0)
+	{
 		how_much -= r1;
-		
-	if (boom_anim_active == TRUE) {
-		if (how_much < 0)
-			how_much = 0;
-		monst_marked_damage[which_m] += how_much;
-		add_explosion(victim->m_loc,how_much,0,(dam_type > 2) ? 2 : 0,14 * (victim->m_d.x_width - 1),18 * (victim->m_d.y_width - 1));
-		if (how_much == 0)
-			return FALSE;
-			else return TRUE;
-		}
+	}
 
-	if (how_much <= 0) {
+	if (boom_anim_active == TRUE)
+	{
+		if (how_much < 0)
+		{
+			how_much = 0;
+		}
+		monst_marked_damage[which_m] += how_much;
+		add_explosion(victim->m_loc, how_much, 0, (dam_type > 2) ? 2 : 0, 14 * (victim->m_d.x_width - 1), 18 * (victim->m_d.y_width - 1));
+		if (how_much == 0)
+		{
+			return FALSE;
+		}
+		else
+		{
+			return TRUE;
+		}
+	}
+
+	if (how_much <= 0)
+	{
 		if (is_combat())
-			monst_spell_note(victim->number,7);
-		if ((how_much <= 0) && ((dam_type == 0) || (dam_type == 6) || (dam_type == 7))) {
+		{
+			monst_spell_note(victim->number, 7);
+		}
+		if ((how_much <= 0) && ((dam_type == 0) || (dam_type == 6) || (dam_type == 7)))
+		{
 			draw_terrain(2);
 			play_sound(2);
-			}
-//		add_string_to_buf("  No damage.              ");
-		return FALSE;	
 		}
+		//		add_string_to_buf("  No damage.              ");
+		return FALSE;
+	}
 
 	if (do_print == TRUE)
-		monst_damaged_mes(which_m,how_much,how_much_spec);
+	{
+		monst_damaged_mes(which_m, how_much, how_much_spec);
+	}
+
 	victim->m_d.health = victim->m_d.health - how_much - how_much_spec;
 
 	if (in_scen_debug == TRUE)
-		victim->m_d.health = -1;	
+	{
+		victim->m_d.health = -1;
+	}
+
 	// splitting monsters
-	if ((victim->m_d.spec_skill == 12) && (victim->m_d.health > 0)){
-		where_put = find_clear_spot(victim->m_loc,1);
-		if (where_put.x > 0) 
-			if ((which_spot = place_monster(victim->number,where_put)) < 90) {
+	if ((victim->m_d.spec_skill == 12) && (victim->m_d.health > 0))
+	{
+		where_put = find_clear_spot(victim->m_loc, 1);
+		if (where_put.x > 0)
+			if ((which_spot = place_monster(victim->number, where_put)) < 90)
+			{
 				c_town.monst.dudes[which_spot].m_d.health = victim->m_d.health;
 				c_town.monst.dudes[which_spot].monst_start = victim->monst_start;
-				monst_spell_note(victim->number,27);
-				}
-		}
+				monst_spell_note(victim->number, 27);
+			}
+	}
+
 	if (who_hit < 7)
+	{
 		party.total_dam_done += how_much + how_much_spec;
-		
+	}
+
 	// Monster damages. Make it hostile.
 	victim->active = 2;
-	
 
-	if (dam_type != 9) { // note special damage only gamed in hand-to-hand, not during animation
-		if (party_can_see_monst(which_m) == TRUE) {
-			pre_boom_space(victim->m_loc,100,boom_gr[dam_type],how_much,sound_type);
+
+	if (dam_type != 9) // note special damage only gamed in hand-to-hand, not during animation
+	{
+		if (party_can_see_monst(which_m) == TRUE)
+		{
+			pre_boom_space(victim->m_loc, 100, boom_gr[dam_type], how_much, sound_type);
 			if (how_much_spec > 0)
-				boom_space(victim->m_loc,100,51,how_much_spec,5);
-			}
-			else {
-				pre_boom_space(victim->m_loc,overall_mode, boom_gr[dam_type],how_much,sound_type);
-				if (how_much_spec > 0)
-					boom_space(victim->m_loc,overall_mode,51,how_much_spec,5);			
-				}
+				boom_space(victim->m_loc, 100, 51, how_much_spec, 5);
 		}
-		
-	if (victim->m_d.health < 0) {
+		else
+		{
+			pre_boom_space(victim->m_loc, overall_mode, boom_gr[dam_type], how_much, sound_type);
+			if (how_much_spec > 0)
+				boom_space(victim->m_loc, overall_mode, 51, how_much_spec, 5);
+		}
+	}
+
+	if (victim->m_d.health < 0)
+	{
 		monst_killed_mes(which_m);
-		kill_monst(victim,who_hit);		
-		}
-		else {	
+		kill_monst(victim, who_hit);
+	}
+	else
+	{
 		if (how_much > 0)
 			victim->m_d.morale = victim->m_d.morale - 1;
 		if (how_much > 5)
@@ -1296,21 +1340,19 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 			victim->m_d.morale = victim->m_d.morale - 1;
 		if (how_much > 20)
 			victim->m_d.morale = victim->m_d.morale - 2;
-		}
-		
-	if ((victim->attitude % 2 != 1) && (who_hit < 7) && 
-	 (processing_fields == FALSE) && (monsters_going == FALSE)) {
+	}
+	if ((victim->attitude % 2 != 1) && (who_hit < 7) && (processing_fields == FALSE) && (monsters_going == FALSE))
+	{
 		add_string_to_buf("Damaged an innocent.           ");
 		victim->attitude = 1;
 		make_town_hostile();
-		}
-	if ((victim->attitude % 2 != 1) && (who_hit < 7) && 
-	 ((processing_fields == TRUE) && (party.stuff_done[305][9] == 0))) {
+	}
+	if ((victim->attitude % 2 != 1) && (who_hit < 7) && ((processing_fields == TRUE) && (party.stuff_done[305][9] == 0)))
+	{
 		add_string_to_buf("Damaged an innocent.");
 		victim->attitude = 1;
 		make_town_hostile();
-		}
-		 
+	}
 	return TRUE;
 }
 
