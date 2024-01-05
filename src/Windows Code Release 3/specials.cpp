@@ -1141,10 +1141,6 @@ static Boolean damage_monst_impl(short which_m, short who_hit, short how_much, s
 		// 6 - demon 7 - undead  
 		// 9 - marked damage, from during anim mode
 {
-	short r1, which_spot;
-	location where_put;
-	char resist;
-
 	//print_num(which_m,(short)c_town.monst.dudes[which_m].m_loc.x,(short)c_town.monst.dudes[which_m].m_loc.y);
 
 	if (c_town.monst.dudes[which_m].active == 0)
@@ -1165,7 +1161,7 @@ static Boolean damage_monst_impl(short which_m, short who_hit, short how_much, s
 	}
 
 	creature_data_type& victim = c_town.monst.dudes[which_m];
-	resist = victim.m_d.immunities;
+	const char resist = victim.m_d.immunities;
 
 	if (type == damage_type::GeneralMagic)
 	{
@@ -1221,7 +1217,7 @@ static Boolean damage_monst_impl(short which_m, short who_hit, short how_much, s
 		how_much = how_much / 10;
 	}
 
-	r1 = rand_short(0, (victim.m_d.armor * 5) / 4);
+	short r1 = rand_short(0, (victim.m_d.armor * 5) / 4);
 	r1 += victim.m_d.level / 4;
 	if (type == damage_type::Weapon)
 	{
@@ -1276,9 +1272,9 @@ static Boolean damage_monst_impl(short which_m, short who_hit, short how_much, s
 	// splitting monsters
 	if ((victim.m_d.spec_skill == 12) && (victim.m_d.health > 0))
 	{
-		where_put = find_clear_spot(victim.m_loc, 1);
+		const location where_put = find_clear_spot(victim.m_loc, 1);
 		if (where_put.x > 0)
-			if ((which_spot = place_monster(victim.number, where_put)) < 90)
+			if (const short which_spot = place_monster(victim.number, where_put); which_spot < 90)
 			{
 				c_town.monst.dudes[which_spot].m_d.health = victim.m_d.health;
 				c_town.monst.dudes[which_spot].monst_start = victim.monst_start;

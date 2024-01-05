@@ -3698,8 +3698,6 @@ static Boolean damage_pc_impl(short which_pc, short how_much, damage_type type, 
 					// 5 - cold  6 - undead attack  7 - demon attack
 					// 10 - marked damage, from during anim mode ... no boom, and totally unblockable
 {
-	short i, r1, level;
-
 	if (adven[which_pc].main_status != status::Normal)
 	{
 		return FALSE;
@@ -3721,39 +3719,34 @@ static Boolean damage_pc_impl(short which_pc, short how_much, damage_type type, 
 	if ((type == damage_type::Weapon) || (type == damage_type::UndeadAttack) ||(type == damage_type::DemonAttack))
 	{
 		how_much -= boe_clamp(adven[which_pc].gaffect(affect::CursedBlessed),-5,5);
-		for (i = 0; i < 24; i++)
+		for (short i = 0; i < 24; i++)
 		{
 			if ((adven[which_pc].items[i].variety != item_variety::None) && (adven[which_pc].equip[i] == TRUE))
 			{
 				if ((adven[which_pc].items[i].variety >= item_variety::Shield) && (adven[which_pc].items[i].variety <= item_variety::Boots))
 				{
-					r1 = rand_short(1, adven[which_pc].items[i].item_level);
-					how_much -= r1;
+					how_much -= rand_short(1, adven[which_pc].items[i].item_level);
 
 					// bonus for magical items
 					if (adven[which_pc].items[i].bonus > 0)
 					{
-						r1 = rand_short(1, adven[which_pc].items[i].bonus);
-						how_much -= r1;
+						how_much -= rand_short(1, adven[which_pc].items[i].bonus);
 						how_much -= adven[which_pc].items[i].bonus / 2;
 					}
 					if (adven[which_pc].items[i].bonus < 0)
 					{
 						how_much = how_much - adven[which_pc].items[i].bonus;
 					}
-					r1 = rand_short(0, 100);
-					if (r1 < hit_chance[adven[which_pc].skills[skill::Defense]] - 20)
+					if (rand_short(0, 100) < hit_chance[adven[which_pc].skills[skill::Defense]] - 20)
 						how_much -= 1;
 				}
 				if (adven[which_pc].items[i].protection > 0)
 				{
-					r1 = rand_short(1, adven[which_pc].items[i].protection);
-					how_much -= r1;
+					how_much -= rand_short(1, adven[which_pc].items[i].protection);
 				}
 				if (adven[which_pc].items[i].protection < 0)
 				{
-					r1 = rand_short(1, -1 * adven[which_pc].items[i].protection);
-					how_much += r1;
+					how_much += rand_short(1, -1 * adven[which_pc].items[i].protection);
 				}
 			}
 		}
@@ -3783,6 +3776,7 @@ static Boolean damage_pc_impl(short which_pc, short how_much, damage_type type, 
 		}
 	}
 
+	short level = 0;
 	if ((type == damage_type::Weapon) && ((level = pc_prot_level(adven[which_pc],30)) > 0))
 		how_much = how_much - level;
 	if ((type == damage_type::UndeadAttack) && ((level = pc_prot_level(adven[which_pc],57)) > 0))
