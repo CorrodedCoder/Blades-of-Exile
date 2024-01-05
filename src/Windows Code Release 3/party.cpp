@@ -3693,27 +3693,24 @@ void slay_party(status mode)
 	put_pc_screen();
 }
 
+static Boolean damage_pc_impl(short which_pc, short how_much, damage_type damage_type, short type_of_attacker, short sound_type, Boolean do_print);
+
 Boolean damage_pc(short which_pc, short how_much, damage_type type, short type_of_attacker)
 {
-	return damage_pc(which_pc, how_much, to_underlying(type), type_of_attacker);
+	return damage_pc_impl(which_pc, how_much, type, type_of_attacker, 0, TRUE);
 }
 
-Boolean damage_pc(short which_pc,short how_much,short damage_type_in,short type_of_attacker)
+Boolean damage_pc(short which_pc, short how_much, short damage_type_in, short type_of_attacker)
 //short damage_type_in; // 0 - weapon   1 - fire   2 - poison   3 - general magic   4 - unblockable
 					// 5 - cold  6 - undead attack  7 - demon attack
 					// 10 - marked damage, from during anim mode ... no boom, and totally unblockable
 					// 30 + *   same as *, but no print
 					// 100s digit - sound data
 {
-	short i, r1,sound_type,level;
 	Boolean do_print = TRUE;
-	
-	if (adven[which_pc].main_status != status::Normal)
-	{
-		return FALSE;
-	}
-	
-	sound_type = damage_type_in / 100;
+
+	const short sound_type = damage_type_in / 100;
+
 	damage_type_in = damage_type_in % 100;
 
 	if (damage_type_in >= 30)
@@ -3722,7 +3719,21 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type_in,short type_
 		damage_type_in -= 30;
 	}
 
-	const damage_type damage_type{ damage_type_in };
+	return damage_pc_impl(which_pc, how_much, static_cast<damage_type>(damage_type_in), type_of_attacker, sound_type, do_print);
+}
+
+static Boolean damage_pc_impl(short which_pc, short how_much, damage_type damage_type, short type_of_attacker, short sound_type, Boolean do_print)
+//short damage_type_in; // 0 - weapon   1 - fire   2 - poison   3 - general magic   4 - unblockable
+					// 5 - cold  6 - undead attack  7 - demon attack
+					// 10 - marked damage, from during anim mode ... no boom, and totally unblockable
+{
+	short i, r1, level;
+
+	if (adven[which_pc].main_status != status::Normal)
+	{
+		return FALSE;
+	}
+
 	if (sound_type == 0)
 	{
 		if ((damage_type == damage_type::Fire) || (damage_type == damage_type::Unblockable) )

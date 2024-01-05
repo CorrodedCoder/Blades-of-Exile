@@ -1134,9 +1134,11 @@ void change_level(short town_num,short x,short y)
 	start_town_mode(town_num,9);
 }
 
+static Boolean damage_monst_impl(short which_m, short who_hit, short how_much, short how_much_spec, damage_type dam_type, short sound_type, Boolean do_print);
+
 Boolean damage_monst(short which_m, short who_hit, short how_much, short how_much_spec, damage_type dam_type)
 {
-	return damage_monst(which_m, who_hit, how_much, how_much_spec, to_underlying(dam_type));
+	return damage_monst_impl(which_m, who_hit, how_much, how_much_spec, dam_type, 0, TRUE);
 }
 
 // Damaging and killing monsters needs to be here because several have specials attached to them.
@@ -1148,21 +1150,9 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 				 //+10 = no_print
 				 // 100s digit - damage sound for boom space
 {
-	creature_data_type* victim;
-	short r1, which_spot, sound_type;
-	location where_put;
-
 	Boolean do_print = TRUE;
-	char resist;
+	const short sound_type = dam_type_in / 100;
 
-	//print_num(which_m,(short)c_town.monst.dudes[which_m].m_loc.x,(short)c_town.monst.dudes[which_m].m_loc.y);
-
-	if (c_town.monst.dudes[which_m].active == 0)
-	{
-		return FALSE;
-	}
-
-	sound_type = dam_type_in / 100;
 	dam_type_in = dam_type_in % 100;
 
 	if (dam_type_in >= 10)
@@ -1171,7 +1161,27 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 		dam_type_in -= 10;
 	}
 
-	const damage_type dam_type{ dam_type_in };
+	return damage_monst_impl(which_m, who_hit, how_much, how_much_spec, static_cast<damage_type>(dam_type_in), sound_type, do_print);
+}
+
+// Damaging and killing monsters needs to be here because several have specials attached to them.
+static Boolean damage_monst_impl(short which_m, short who_hit, short how_much, short how_much_spec, damage_type dam_type, short sound_type, Boolean do_print)
+	//short which_m, who_hit, how_much, how_much_spec;  // 6 for who_hit means dist. xp evenly  7 for no xp
+	//short dam_type_in;  // 0 - weapon   1 - fire   2 - poison   3 - general magic   4 - unblockable  5 - cold 
+						// 6 - demon 7 - undead  
+						// 9 - marked damage, from during anim mode
+{
+	creature_data_type* victim;
+	short r1, which_spot;
+	location where_put;
+	char resist;
+
+	//print_num(which_m,(short)c_town.monst.dudes[which_m].m_loc.x,(short)c_town.monst.dudes[which_m].m_loc.y);
+
+	if (c_town.monst.dudes[which_m].active == 0)
+	{
+		return FALSE;
+	}
 
 	if (sound_type == 0)
 	{
