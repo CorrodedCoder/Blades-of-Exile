@@ -645,41 +645,59 @@ void cure_party(Adventurers& adventurers, short amt)
 	}
 }
 
+static bool pc_curse(pc_record_type& pc, short how_much)
+{
+	pc.gaffect(affect::CursedBlessed) = max(pc.gaffect(affect::CursedBlessed) - how_much, -8);
+	return true;
+}
+
 void curse_pc(short which_pc,short how_much)
 {
 	if (adven[which_pc].main_status != status::Normal)
 	{
 		return;
 	}
-	adven[which_pc].gaffect(affect::CursedBlessed) = max(adven[which_pc].gaffect(affect::CursedBlessed) - how_much,-8);
+	(void)pc_curse(adven[which_pc], how_much);
 	add_string_to_buf("  {} cursed.", adven[which_pc].name);
 	put_pc_screen();
 	give_help(59,0,0);
 }
 
-void dumbfound_pc(short which_pc,short how_much)
+static bool pc_dumbfound(pc_record_type& pc, short how_much, short modifier)
 {
-	short r1;
-	if (adven[which_pc].main_status != status::Normal)
-	{
-		return;
-	}
-	r1 = rand_short(0,90);
-	if (pc_has_abil_equip(adven[which_pc],53) < 24)
-	{
-		add_string_to_buf("  Ring of Will glows.");
-		r1 -= 10;
-	}
-	if (r1 < adven[which_pc].level)
+	const short r1 = rand_short(0, 90) + modifier;
+	if (r1 < pc.level)
 	{
 		how_much -= 2;
 	}
 	if (how_much <= 0)
 	{
+		return false;
+	}
+	pc.gaffect(affect::Dumbfounded) = min(pc.gaffect(affect::Dumbfounded) + how_much, 8);
+	return true;
+}
+
+void dumbfound_pc(short which_pc,short how_much)
+{
+	if (adven[which_pc].main_status != status::Normal)
+	{
+		return;
+	}
+
+	short modifier = 0;
+	if (pc_has_abil_equip(adven[which_pc],53) < 24)
+	{
+		add_string_to_buf("  Ring of Will glows.");
+		modifier -= 10;
+	}
+
+	if( !pc_dumbfound(adven[which_pc], how_much, modifier) )
+	{
 		add_string_to_buf("  {} saved.", adven[which_pc].name);
 		return;
 	}
-	adven[which_pc].gaffect(affect::Dumbfounded) = min(adven[which_pc].gaffect(affect::Dumbfounded) + how_much,8);
+
 	add_string_to_buf("  {} dumbfounded.", adven[which_pc].name);
 	one_sound(67);
 	put_pc_screen();
@@ -687,91 +705,136 @@ void dumbfound_pc(short which_pc,short how_much)
 	give_help(28,0,0);
 }
 
-void disease_pc(short which_pc,short how_much)
+static bool pc_disease(pc_record_type& pc, short how_much)
 {
-	short r1,level;
-	if (adven[which_pc].main_status != status::Normal)
-	{
-		return;
-	}
-	r1 = rand_short(0,100);
-	if (r1 < adven[which_pc].level * 2)
+	const short r1 = rand_short(0, 100);
+	if (r1 < pc.level * 2)
 	{
 		how_much -= 2;
 	}
 	if (how_much <= 0)
 	{
-		add_string_to_buf("  {} saved.", adven[which_pc].name);
-		return;
+		return false;
 	}
-	if ((level = pc_prot_level(adven[which_pc], 62)) > 0)
+	const short level = pc_prot_level(pc, 62);
+	if (level > 0)
 	{
 		how_much -= level / 2;
 	}
-	if ((adven[which_pc].traits[trait::Frail] == TRUE) && (how_much > 1))
+	if ((pc.traits[trait::Frail] == TRUE) && (how_much > 1))
 	{
 		how_much++;
 	}
-	if ((adven[which_pc].traits[trait::Frail] == TRUE) && (how_much == 1) && (rand_short(0, 1) == 0))
+	if ((pc.traits[trait::Frail] == TRUE) && (how_much == 1) && (rand_short(0, 1) == 0))
 	{
 		how_much++;
 	}
-	adven[which_pc].gaffect(affect::Diseased) = min(adven[which_pc].gaffect(affect::Diseased) + how_much,8);
+	pc.gaffect(affect::Diseased) = min(pc.gaffect(affect::Diseased) + how_much, 8);
+	return true;
+}
+
+void disease_pc(short which_pc,short how_much)
+{
+	if (adven[which_pc].main_status != status::Normal)
+	{
+		return;
+	}
+	if (!pc_disease(adven[which_pc], how_much))
+	{
+		add_string_to_buf("  {} saved.", adven[which_pc].name);
+		return;
+	}
 	add_string_to_buf("  {} diseased.", adven[which_pc].name);
 	one_sound(66);
 	put_pc_screen();
 	give_help(29,0,0);
 }
 
-void sleep_pc(short which_pc,short how_much, affect what_type,short adjust)
-// higher adjust, less chance of saving
+static bool pc_sleep(pc_record_type& pc, short how_much, short adjust)
 {
-	short r1,level;
-	if (adven[which_pc].main_status != status::Normal)
+	short level;
+	if ((level = pc_prot_level(pc, 53)) > 0)
 	{
-		return;
+		how_much -= level / 2;
 	}
-	if (how_much == 0)
+	if ((level = pc_prot_level(pc, 54)) > 0)
 	{
-		return;
+		how_much -= level;
 	}
-	if ((what_type == affect::Asleep) || (what_type == affect::Paralyzed))
-	{
-		if ((level = pc_prot_level(adven[which_pc], 53)) > 0)
-		{
-			how_much -= level / 2;
-		}
-		if ((level = pc_prot_level(adven[which_pc], 54)) > 0)
-		{
-			how_much -= (what_type == affect::Asleep) ? level : level * 300;
-		}
-	}
-	
-	r1 = rand_short(0,100) + adjust;
-	if (r1 < 30 + adven[which_pc].level * 2)
+	const short r1 = rand_short(0, 100) + adjust;
+	if (r1 < 30 + pc.level * 2)
 	{
 		how_much = -1;
 	}
-	if ((what_type == affect::Asleep) && ((adven[which_pc].traits[trait::HighlyAlert] > 0) || (adven[which_pc].gaffect(affect::Asleep) < 0)))
+	if ( (pc.traits[trait::HighlyAlert] > 0) || (pc.gaffect(affect::Asleep) < 0))
 	{
 		how_much = -1;
 	}
 	if (how_much <= 0)
 	{
-		add_string_to_buf("  {} resisted.", adven[which_pc].name);
+		return false;
+	}
+	pc.gaffect(affect::Asleep) = how_much;
+	return true;
+}
+
+static bool pc_paralyze(pc_record_type& pc, short how_much, short adjust)
+{
+	short level;
+	if ((level = pc_prot_level(pc, 53)) > 0)
+	{
+		how_much -= level / 2;
+	}
+	if ((level = pc_prot_level(pc, 54)) > 0)
+	{
+		how_much -= level * 300;
+	}
+
+	const short r1 = rand_short(0, 100) + adjust;
+	if (r1 < 30 + pc.level * 2)
+	{
+		how_much = -1;
+	}
+	if (how_much <= 0)
+	{
+		return false;
+	}
+	pc.gaffect(affect::Paralyzed) = how_much;
+	return true;
+}
+
+void sleep_pc(short which_pc,short how_much, affect what_type,short adjust)
+// higher adjust, less chance of saving
+{
+	if ( (adven[which_pc].main_status != status::Normal) || (how_much == 0) )
+	{
 		return;
 	}
-	adven[which_pc].gaffect(what_type) = how_much;
 	if (what_type == affect::Asleep)
 	{
+		if (!pc_sleep(adven[which_pc], how_much, adjust))
+		{
+			add_string_to_buf("  {} resisted.", adven[which_pc].name);
+			return;
+		}
 		add_string_to_buf("  {} falls asleep.", adven[which_pc].name);
 		play_sound(96);
 	}
-	else
+	else if (what_type == affect::Paralyzed)
 	{
+		if (!pc_paralyze(adven[which_pc], how_much, adjust))
+		{
+			add_string_to_buf("  {} resisted.", adven[which_pc].name);
+			return;
+		}
 		add_string_to_buf("  {} paralyzed.", adven[which_pc].name);
 		play_sound(90);
 	}
+	else
+	{
+		assert(false);
+	}
+
 	pc_moves[which_pc] = 0;
 	put_pc_screen();
 	if (what_type == affect::Asleep)
@@ -784,13 +847,21 @@ void sleep_pc(short which_pc,short how_much, affect what_type,short adjust)
 	}
 }
 
+
+static bool pc_slow(pc_record_type& pc, short how_much)
+{
+	pc.gaffect(affect::Speed) = boe_clamp(pc.gaffect(affect::Speed) - how_much, -8, 8);
+	return true;
+}
+
+
 void slow_pc(short which_pc,short how_much)
 {
 	if (adven[which_pc].main_status != status::Normal)
 	{
 		return;
 	}
-	adven[which_pc].gaffect(affect::Speed) = boe_clamp(adven[which_pc].gaffect(affect::Speed) - how_much,-8,8);
+	(void)pc_slow(adven[which_pc], how_much);
 	if (how_much < 0)
 	{
 		add_string_to_buf("  {} hasted.", adven[which_pc].name);
@@ -806,17 +877,34 @@ void slow_pc(short which_pc,short how_much)
 	}
 }
 
+static bool pc_web(pc_record_type& pc, short how_much)
+{
+	pc.gaffect(affect::Webbed) = min(pc.gaffect(affect::Webbed) + how_much, 8);
+	return true;
+}
+
 void web_pc(short which_pc,short how_much)
 {
 	if (adven[which_pc].main_status != status::Normal)
 	{
 		return;
 	}
-	adven[which_pc].gaffect(affect::Webbed) = min(adven[which_pc].gaffect(affect::Webbed) + how_much,8);
+	(void)pc_web(adven[which_pc], how_much);
 	add_string_to_buf("  {} webbed.", adven[which_pc].name);
 	one_sound(17);
 	put_pc_screen();
 	give_help(31,0,0);
+}
+
+
+static bool pc_acid(pc_record_type& pc, short how_much)
+{
+	if (pc_has_abil_equip(pc, 122) < 24)
+	{
+		return false;
+	}
+	pc.gaffect(affect::Acid) += how_much;
+	return true;
 }
 
 void acid_pc(short which_pc,short how_much)
@@ -825,12 +913,11 @@ void acid_pc(short which_pc,short how_much)
 	{
 		return;
 	}
-	if (pc_has_abil_equip(adven[which_pc],122) < 24)
+	if (!pc_acid(adven[which_pc], how_much))
 	{
 		add_string_to_buf("  {} resists acid.", adven[which_pc].name);
 		return;
 	}
-	adven[which_pc].gaffect(affect::Acid) += how_much;
 	add_string_to_buf("  {} covered with acid!", adven[which_pc].name);
 	one_sound(42);
 	put_pc_screen();
@@ -970,11 +1057,17 @@ void award_xp(short pc_num,short amt)
 	}
 }
 
+static bool pc_drain(pc_record_type& pc, short how_much)
+{
+	pc.experience = max(pc.experience - how_much, 0);
+	return true;
+}
+
 void drain_pc(short which_pc,short how_much)
 {
 	if (adven[which_pc].main_status == status::Normal)
 	{
-		adven[which_pc].experience = max(adven[which_pc].experience - how_much,0);
+		(void)pc_drain(adven[which_pc], how_much);
 		add_string_to_buf("  {} drained.", adven[which_pc].name);
 	}
 }
@@ -2637,7 +2730,7 @@ static bool pc_can_cast_spell(short pc_num,short type,short spell_num)
 }
 
 
-void draw_caster_buttons()
+static void draw_caster_buttons()
 {
 	short i;
 	if (can_choose_caster == FALSE)
@@ -2670,7 +2763,7 @@ void draw_caster_buttons()
 	}
 }
 
-void draw_spell_info()
+static void draw_spell_info()
 {
 	if (((store_situation == 0) && (store_mage == 70)) ||
 		((store_situation == 1) && (store_priest == 70))) // No spell selected
@@ -2716,7 +2809,7 @@ void draw_spell_info()
 	}
 }
 
-void draw_spell_pc_info()
+static void draw_spell_pc_info()
 {
 	short i;
 	for (i = 0; i < 6; i++)
@@ -2737,7 +2830,7 @@ void draw_spell_pc_info()
 	}
 }
 
-void put_pc_caster_buttons()
+static void put_pc_caster_buttons()
 {
 	short i;
 	for (i = 0; i < 6; i++)
@@ -2756,7 +2849,7 @@ void put_pc_caster_buttons()
 	}
 }
 
-void put_pc_target_buttons()
+static void put_pc_target_buttons()
 {
 	if (store_spell_target < 6)
 	{
@@ -2771,7 +2864,7 @@ void put_pc_target_buttons()
 	store_last_target_darkened = store_spell_target;
 }
 
-void put_spell_led_buttons()
+static void put_spell_led_buttons()
 {
 	short i,spell_for_this_button;
 
@@ -2798,7 +2891,7 @@ void put_spell_led_buttons()
 	}
 }
 
-void put_spell_list()
+static void put_spell_list()
 {
 	short i;
 	if (on_which_spell_page == 0)
@@ -2860,8 +2953,8 @@ void put_spell_list()
 	}
 }
 
-
-void put_pick_spell_graphics()
+#if 0
+static void put_pick_spell_graphics()
 {
 	short i;
 	put_spell_list();
@@ -2876,6 +2969,7 @@ void put_pick_spell_graphics()
 		}
 	}
 }
+#endif
 
 static const char choose_target[]	{" Now pick a target."};
 static const char no_target[]		{" No target needed."};
