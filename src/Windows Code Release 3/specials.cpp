@@ -1141,7 +1141,6 @@ static Boolean damage_monst_impl(short which_m, short who_hit, short how_much, s
 						// 6 - demon 7 - undead  
 						// 9 - marked damage, from during anim mode
 {
-	creature_data_type* victim;
 	short r1, which_spot;
 	location where_put;
 	char resist;
@@ -1165,8 +1164,8 @@ static Boolean damage_monst_impl(short which_m, short who_hit, short how_much, s
 			sound_type = 11;
 	}
 
-	victim = &c_town.monst.dudes[which_m];
-	resist = victim->m_d.immunities;
+	creature_data_type& victim = c_town.monst.dudes[which_m];
+	resist = victim.m_d.immunities;
 
 	if (dam_type == damage_type::GeneralMagic)
 	{
@@ -1198,32 +1197,32 @@ static Boolean damage_monst_impl(short which_m, short who_hit, short how_much, s
 	}
 
 	// Absorb damage?
-	if (((dam_type == damage_type::Fire) || (dam_type == damage_type::GeneralMagic) || (dam_type == damage_type::Cold)) && (victim->m_d.spec_skill == 26))
+	if (((dam_type == damage_type::Fire) || (dam_type == damage_type::GeneralMagic) || (dam_type == damage_type::Cold)) && (victim.m_d.spec_skill == 26))
 	{
-		victim->m_d.health += how_much;
+		victim.m_d.health += how_much;
 		ASB("  Magic absorbed.");
 		return FALSE;
 	}
 
 	// Saving throw
-	if (((dam_type == damage_type::Fire) || (dam_type == damage_type::Cold)) && (rand_short(0, 20) <= victim->m_d.level))
+	if (((dam_type == damage_type::Fire) || (dam_type == damage_type::Cold)) && (rand_short(0, 20) <= victim.m_d.level))
 	{
 		how_much = how_much / 2;
 	}
 
-	if ((dam_type == damage_type::GeneralMagic) && (rand_short(0, 24) <= victim->m_d.level))
+	if ((dam_type == damage_type::GeneralMagic) && (rand_short(0, 24) <= victim.m_d.level))
 	{
 		how_much = how_much / 2;
 	}
 
 	// Rentar-Ihrno?
-	if (victim->m_d.spec_skill == 36)
+	if (victim.m_d.spec_skill == 36)
 	{
 		how_much = how_much / 10;
 	}
 
-	r1 = rand_short(0, (victim->m_d.armor * 5) / 4);
-	r1 += victim->m_d.level / 4;
+	r1 = rand_short(0, (victim.m_d.armor * 5) / 4);
+	r1 += victim.m_d.level / 4;
 	if (dam_type == damage_type::Weapon)
 	{
 		how_much -= r1;
@@ -1236,7 +1235,7 @@ static Boolean damage_monst_impl(short which_m, short who_hit, short how_much, s
 			how_much = 0;
 		}
 		monst_marked_damage[which_m] += how_much;
-		add_explosion(victim->m_loc, how_much, 0, (dam_type > damage_type::Poison) ? 2 : 0, 14 * (victim->m_d.x_width - 1), 18 * (victim->m_d.y_width - 1));
+		add_explosion(victim.m_loc, how_much, 0, (dam_type > damage_type::Poison) ? 2 : 0, 14 * (victim.m_d.x_width - 1), 18 * (victim.m_d.y_width - 1));
 		if (how_much == 0)
 		{
 			return FALSE;
@@ -1251,7 +1250,7 @@ static Boolean damage_monst_impl(short which_m, short who_hit, short how_much, s
 	{
 		if (is_combat())
 		{
-			monst_spell_note(victim->number, 7);
+			monst_spell_note(victim.number, 7);
 		}
 		if ((how_much <= 0) && ((dam_type == damage_type::Weapon) || (dam_type == damage_type::UndeadAttack) || (dam_type == damage_type::DemonAttack)))
 		{
@@ -1267,23 +1266,23 @@ static Boolean damage_monst_impl(short which_m, short who_hit, short how_much, s
 		monst_damaged_mes(which_m, how_much, how_much_spec);
 	}
 
-	victim->m_d.health = victim->m_d.health - how_much - how_much_spec;
+	victim.m_d.health = victim.m_d.health - how_much - how_much_spec;
 
 	if (in_scen_debug == TRUE)
 	{
-		victim->m_d.health = -1;
+		victim.m_d.health = -1;
 	}
 
 	// splitting monsters
-	if ((victim->m_d.spec_skill == 12) && (victim->m_d.health > 0))
+	if ((victim.m_d.spec_skill == 12) && (victim.m_d.health > 0))
 	{
-		where_put = find_clear_spot(victim->m_loc, 1);
+		where_put = find_clear_spot(victim.m_loc, 1);
 		if (where_put.x > 0)
-			if ((which_spot = place_monster(victim->number, where_put)) < 90)
+			if ((which_spot = place_monster(victim.number, where_put)) < 90)
 			{
-				c_town.monst.dudes[which_spot].m_d.health = victim->m_d.health;
-				c_town.monst.dudes[which_spot].monst_start = victim->monst_start;
-				monst_spell_note(victim->number, 27);
+				c_town.monst.dudes[which_spot].m_d.health = victim.m_d.health;
+				c_town.monst.dudes[which_spot].monst_start = victim.monst_start;
+				monst_spell_note(victim.number, 27);
 			}
 	}
 
@@ -1293,51 +1292,51 @@ static Boolean damage_monst_impl(short which_m, short who_hit, short how_much, s
 	}
 
 	// Monster damages. Make it hostile.
-	victim->active = 2;
+	victim.active = 2;
 
 
 	if (dam_type != damage_type::Unknown9) // note special damage only gamed in hand-to-hand, not during animation
 	{
 		if (party_can_see_monst(which_m) == TRUE)
 		{
-			pre_boom_space(victim->m_loc, 100, boom_gr[to_underlying(dam_type)], how_much, sound_type);
+			pre_boom_space(victim.m_loc, 100, boom_gr[to_underlying(dam_type)], how_much, sound_type);
 			if (how_much_spec > 0)
-				boom_space(victim->m_loc, 100, 51, how_much_spec, 5);
+				boom_space(victim.m_loc, 100, 51, how_much_spec, 5);
 		}
 		else
 		{
-			pre_boom_space(victim->m_loc, overall_mode, boom_gr[to_underlying(dam_type)], how_much, sound_type);
+			pre_boom_space(victim.m_loc, overall_mode, boom_gr[to_underlying(dam_type)], how_much, sound_type);
 			if (how_much_spec > 0)
-				boom_space(victim->m_loc, overall_mode, 51, how_much_spec, 5);
+				boom_space(victim.m_loc, overall_mode, 51, how_much_spec, 5);
 		}
 	}
 
-	if (victim->m_d.health < 0)
+	if (victim.m_d.health < 0)
 	{
 		monst_killed_mes(which_m);
-		kill_monst(victim, who_hit);
+		kill_monst(&victim, who_hit);
 	}
 	else
 	{
 		if (how_much > 0)
-			victim->m_d.morale = victim->m_d.morale - 1;
+			victim.m_d.morale = victim.m_d.morale - 1;
 		if (how_much > 5)
-			victim->m_d.morale = victim->m_d.morale - 1;
+			victim.m_d.morale = victim.m_d.morale - 1;
 		if (how_much > 10)
-			victim->m_d.morale = victim->m_d.morale - 1;
+			victim.m_d.morale = victim.m_d.morale - 1;
 		if (how_much > 20)
-			victim->m_d.morale = victim->m_d.morale - 2;
+			victim.m_d.morale = victim.m_d.morale - 2;
 	}
-	if ((victim->attitude % 2 != 1) && (who_hit < 7) && (processing_fields == FALSE) && (monsters_going == FALSE))
+	if ((victim.attitude % 2 != 1) && (who_hit < 7) && (processing_fields == FALSE) && (monsters_going == FALSE))
 	{
 		add_string_to_buf("Damaged an innocent.           ");
-		victim->attitude = 1;
+		victim.attitude = 1;
 		make_town_hostile();
 	}
-	if ((victim->attitude % 2 != 1) && (who_hit < 7) && ((processing_fields == TRUE) && (party.stuff_done[305][9] == 0)))
+	if ((victim.attitude % 2 != 1) && (who_hit < 7) && ((processing_fields == TRUE) && (party.stuff_done[305][9] == 0)))
 	{
 		add_string_to_buf("Damaged an innocent.");
-		victim->attitude = 1;
+		victim.attitude = 1;
 		make_town_hostile();
 	}
 	return TRUE;
