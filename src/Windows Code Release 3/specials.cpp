@@ -132,7 +132,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 //short mode; // 0 - out 1 - town 2 - combat
 {
 	unsigned char ter;
-	short r1,i,choice,door_pc,ter_flag1,ter_flag2,dam_type = 0,pic_type = 0,ter_pic = 0;
+	short r1,i,choice,door_pc,ter_flag1,ter_flag2,dam_type = damage_type::Weapon,pic_type = 0,ter_pic = 0;
 	Boolean can_enter = TRUE;
 	location out_where,from_loc,to_loc;
 	short s1 = 0,s2 = 0,s3 = 0;
@@ -287,7 +287,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 				break;
 			if (ter_special == terrain_special::DoesFireDamage) {
 				add_string_to_buf("  It's hot!");
-				dam_type = 1; pic_type = 0;
+				dam_type = damage_type::Fire; pic_type = 0;
 				if (party.stuff_done[305][3] > 0) {
 					add_string_to_buf("  It doesn't affect you.");			
 					break;
@@ -295,18 +295,18 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 				}
 			if (ter_special == terrain_special::DoesColdDamage) {
 				add_string_to_buf("  You feel cold!");
-				dam_type = 5; pic_type = 4;
+				dam_type = damage_type::Cold; pic_type = 4;
 				}
 			if (ter_special == terrain_special::DoesMagicalDamage) {
 				add_string_to_buf("  Something shocks you!");
-				dam_type = 3; pic_type = 1;
+				dam_type = damage_type::GeneralMagic; pic_type = 1;
 				}
-			r1 = get_ran(ter_flag2,dam_type,ter_flag1);
+			r1 = get_ran(ter_flag2, dam_type,ter_flag1);
 			if (mode < 2)
-				hit_party(r1,1);
+				hit_party(r1, damage_type::Fire);
 			fast_bang = 1;
 			if (mode == 2)
-				damage_pc(which_pc,r1,dam_type,-1);
+				damage_pc(which_pc,r1, dam_type,-1);
 			if (overall_mode < 10)
 				boom_space(party.p_loc,overall_mode,pic_type,r1,12);
 			fast_bang = 0;
@@ -400,9 +400,9 @@ void check_fields(location where_check,short mode,short which_pc)
 			add_string_to_buf("  Fire wall!               ");
 			r1 = rand_short(1,6) + 1;
 //			if (mode < 2)
-//				hit_party(r1,1);
+//				hit_party(r1,damage_type::Fire);
 			if (mode == 2)
-				damage_pc(which_pc,r1,1,-1);
+				damage_pc(which_pc,r1, damage_type::Fire,-1);
 				if (overall_mode < 10)
 					boom_space(party.p_loc,overall_mode,0,r1,5);	
 		}
@@ -410,9 +410,9 @@ void check_fields(location where_check,short mode,short which_pc)
 			add_string_to_buf("  Force wall!               ");
 			r1 = get_ran(2,1,6);
 //			if (mode < 2)
-//				hit_party(r1,3);
+//				hit_party(r1,damage_type::GeneralMagic);
 			if (mode == 2)
-				damage_pc(which_pc,r1,3,-1);
+				damage_pc(which_pc,r1, damage_type::GeneralMagic,-1);
 				if (overall_mode < 10)
 					boom_space(party.p_loc,overall_mode,1,r1,12);	
 		}
@@ -420,9 +420,9 @@ void check_fields(location where_check,short mode,short which_pc)
 			add_string_to_buf("  Ice wall!               ");
 			r1 = get_ran(2,1,6);
 //			if (mode < 2)
-//				hit_party(r1,5);
+//				hit_party(r1,damage_type::Cold);
 			if (mode == 2)
-				damage_pc(which_pc,r1,5,-1);
+				damage_pc(which_pc,r1, damage_type::Cold,-1);
 				if (overall_mode < 10)
 					boom_space(party.p_loc,overall_mode,4,r1,7);	
 		}
@@ -430,9 +430,9 @@ void check_fields(location where_check,short mode,short which_pc)
 			add_string_to_buf("  Blade wall!               ");
 			r1 = get_ran(4,1,8);
 //			if (mode < 2)
-//				hit_party(r1,0);
+//				hit_party(r1,damage_type::Weapon);
 			if (mode == 2)
-				damage_pc(which_pc,r1,0,-1);
+				damage_pc(which_pc,r1, damage_type::Weapon,-1);
 				if (overall_mode < 10)
 					boom_space(party.p_loc,overall_mode,3,r1,2);	
 		}
@@ -440,9 +440,9 @@ void check_fields(location where_check,short mode,short which_pc)
 			add_string_to_buf("  Quickfire!               ");
 			r1 = get_ran(2,1,8);
 //			if (mode < 2)
-//				hit_party(r1,1);
+//				hit_party(r1,damage_type::Fire);
 			if (mode == 2)
-				damage_pc(which_pc,r1,1,-1);
+				damage_pc(which_pc,r1, damage_type::Fire,-1);
 				if (overall_mode < 10)
 					boom_space(party.p_loc,overall_mode,0,r1,5);	
 		}
@@ -475,9 +475,9 @@ void check_fields(location where_check,short mode,short which_pc)
 			add_string_to_buf("  Magic barrier!               ");
 			r1 = get_ran(2,1,10);
 			if (mode < 2)
-				hit_party(r1,3);
+				hit_party(r1, damage_type::GeneralMagic);
 			if (mode == 2)
-				damage_pc(which_pc,r1,3,-1);
+				damage_pc(which_pc,r1, damage_type::GeneralMagic,-1);
 				if (overall_mode < 10)
 					boom_space(party.p_loc,overall_mode,1,r1,12);		
 		}
@@ -683,9 +683,9 @@ void use_item(short pc,short item)
 			case 87:
 				switch (type) {
 					case 0: ASB("  You feel better."); pc_heal(adven[pc],str * 20); break;
-					case 1: ASB("  You feel sick."); damage_pc(pc,20 * str,4,0); break;
+					case 1: ASB("  You feel sick."); damage_pc(pc,20 * str, damage_type::Unblockable,0); break;
 					case 2: ASB("  You all feel better."); adventurers_heal(adven, str * 20); break;
-					case 3: ASB("  You all feel sick."); hit_party(20 * str,4); break;
+					case 3: ASB("  You all feel sick."); hit_party(20 * str, damage_type::Unblockable); break;
 					}
 				break;
 			case 88:
@@ -699,10 +699,10 @@ void use_item(short pc,short item)
 			case 89:
 				switch (type) {
 					case 0: 
-					case 1: ASB("  You feel terrible."); drain_pc(pc,str * 5); damage_pc(pc,20 * str,4,0); disease_pc(pc,2 * str); dumbfound_pc(pc,2 * str); break;
+					case 1: ASB("  You feel terrible."); drain_pc(pc,str * 5); damage_pc(pc,20 * str, damage_type::Unblockable,0); disease_pc(pc,2 * str); dumbfound_pc(pc,2 * str); break;
 					case 2: 
 					case 3: ASB("  You all feel terrible."); for (i = 0; i < 6; i++) {
-					drain_pc(i,str * 5); damage_pc(i,20 * str,4,0); disease_pc(i,2 * str); dumbfound_pc(i,2 * str);} break;
+					drain_pc(i,str * 5); damage_pc(i,20 * str, damage_type::Unblockable,0); disease_pc(i,2 * str); dumbfound_pc(i,2 * str);} break;
 					}
 				break;
 			case 90:
@@ -1132,12 +1132,16 @@ void change_level(short town_num,short x,short y)
 	end_town_mode(1,l);
 	start_town_mode(town_num,9);
 }
-
-
+#if 0
+Boolean damage_monst(short which_m, short who_hit, short how_much, short how_much_spec, damage_type dam_type)
+{
+	return damage_monst(which_m, who_hit, how_much, how_much_spec, to_underlying(dam_type));
+}
+#endif
 // Damaging and killing monsters needs to be here because several have specials attached to them.
 Boolean damage_monst(short which_m, short who_hit, short how_much, short how_much_spec, short dam_type)
 //short which_m, who_hit, how_much, how_much_spec;  // 6 for who_hit means dist. xp evenly  7 for no xp
-//short dam_type;  // 0 - weapon   1 - fire   2 - poison   3 - general magic   4 - unblockable  5 - cold 
+//short dam_type_in;  // 0 - weapon   1 - fire   2 - poison   3 - general magic   4 - unblockable  5 - cold 
 				 // 6 - demon 7 - undead  
 				 // 9 - marked damage, from during anim mode
 				 //+10 = no_print
@@ -1168,41 +1172,41 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 
 	if (sound_type == 0)
 	{
-		if ((dam_type == 1) || (dam_type == 4))
+		if ((dam_type == damage_type::Fire) || (dam_type == damage_type::Unblockable))
 			sound_type = 5;
-		if (dam_type == 5)
+		if (dam_type == damage_type::Cold)
 			sound_type = 7;
-		if (dam_type == 3)
+		if (dam_type == damage_type::GeneralMagic)
 			sound_type = 12;
-		if (dam_type == 2)
+		if (dam_type == damage_type::PoisonX)
 			sound_type = 11;
 	}
 
 	victim = &c_town.monst.dudes[which_m];
 	resist = victim->m_d.immunities;
 
-	if (dam_type == 3)
+	if (dam_type == damage_type::GeneralMagic)
 	{
 		if (resist & 1)
 			how_much = how_much / 2;
 		if (resist & 2)
 			how_much = 0;
 	}
-	if (dam_type == 1)
+	if (dam_type == damage_type::Fire)
 	{
 		if (resist & 4)
 			how_much = how_much / 2;
 		if (resist & 8)
 			how_much = 0;
 	}
-	if (dam_type == 5)
+	if (dam_type == damage_type::Cold)
 	{
 		if (resist & 16)
 			how_much = how_much / 2;
 		if (resist & 32)
 			how_much = 0;
 	}
-	if (dam_type == 2)
+	if (dam_type == damage_type::PoisonX)
 	{
 		if (resist & 64)
 			how_much = how_much / 2;
@@ -1211,7 +1215,7 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 	}
 
 	// Absorb damage?
-	if (((dam_type == 1) || (dam_type == 3) || (dam_type == 5)) && (victim->m_d.spec_skill == 26))
+	if (((dam_type == damage_type::Fire) || (dam_type == damage_type::GeneralMagic) || (dam_type == damage_type::Cold)) && (victim->m_d.spec_skill == 26))
 	{
 		victim->m_d.health += how_much;
 		ASB("  Magic absorbed.");
@@ -1219,12 +1223,12 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 	}
 
 	// Saving throw
-	if (((dam_type == 1) || (dam_type == 5)) && (rand_short(0, 20) <= victim->m_d.level))
+	if (((dam_type == damage_type::Fire) || (dam_type == damage_type::Cold)) && (rand_short(0, 20) <= victim->m_d.level))
 	{
 		how_much = how_much / 2;
 	}
 
-	if ((dam_type == 3) && (rand_short(0, 24) <= victim->m_d.level))
+	if ((dam_type == damage_type::GeneralMagic) && (rand_short(0, 24) <= victim->m_d.level))
 	{
 		how_much = how_much / 2;
 	}
@@ -1237,7 +1241,7 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 
 	r1 = rand_short(0, (victim->m_d.armor * 5) / 4);
 	r1 += victim->m_d.level / 4;
-	if (dam_type == 0)
+	if (dam_type == damage_type::Weapon)
 	{
 		how_much -= r1;
 	}
@@ -1249,7 +1253,7 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 			how_much = 0;
 		}
 		monst_marked_damage[which_m] += how_much;
-		add_explosion(victim->m_loc, how_much, 0, (dam_type > 2) ? 2 : 0, 14 * (victim->m_d.x_width - 1), 18 * (victim->m_d.y_width - 1));
+		add_explosion(victim->m_loc, how_much, 0, (dam_type > damage_type::PoisonX) ? 2 : 0, 14 * (victim->m_d.x_width - 1), 18 * (victim->m_d.y_width - 1));
 		if (how_much == 0)
 		{
 			return FALSE;
@@ -1266,7 +1270,7 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 		{
 			monst_spell_note(victim->number, 7);
 		}
-		if ((how_much <= 0) && ((dam_type == 0) || (dam_type == 6) || (dam_type == 7)))
+		if ((how_much <= 0) && ((dam_type == damage_type::Weapon) || (dam_type == damage_type::UndeadAttack) || (dam_type == damage_type::DemonAttack)))
 		{
 			draw_terrain(2);
 			play_sound(2);
@@ -1309,7 +1313,7 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 	victim->active = 2;
 
 
-	if (dam_type != 9) // note special damage only gamed in hand-to-hand, not during animation
+	if (dam_type != damage_type::Unknown9) // note special damage only gamed in hand-to-hand, not during animation
 	{
 		if (party_can_see_monst(which_m) == TRUE)
 		{

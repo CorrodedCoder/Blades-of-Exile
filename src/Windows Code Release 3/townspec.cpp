@@ -178,7 +178,7 @@ Boolean run_trap(short pc_num,short trap_type,short trap_level,short diff)
 		{
 			add_string_to_buf("  A knife flies out!              ");
 			r1 = get_ran(2 + c_town.difficulty / 14,1,10);
-			damage_pc(pc_num,r1,0,-1);
+			damage_pc(pc_num,r1, damage_type::Weapon,-1);
 		}
 		break;
 			
@@ -204,7 +204,7 @@ Boolean run_trap(short pc_num,short trap_type,short trap_level,short diff)
 		{
 			add_string_to_buf("  There is an explosion.        ");
 			r1 = get_ran(3 + c_town.difficulty / 13,1,8);
-			hit_party(r1,1);
+			hit_party(r1, damage_type::Fire);
 		}
 		break;
 			
@@ -230,7 +230,7 @@ Boolean run_trap(short pc_num,short trap_type,short trap_level,short diff)
 	case 9:
 		add_string_to_buf("  Flames shoot from the walls.        ");
 		r1 = get_ran(10 + trap_level * 5,1,8);
-		hit_party(r1,1);
+		hit_party(r1, damage_type::Fire);
 		break;
 
 	case 10:
