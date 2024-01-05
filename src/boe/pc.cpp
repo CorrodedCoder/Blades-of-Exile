@@ -360,8 +360,7 @@ bool pc_curse(pc_record_type& pc, short how_much)
 
 bool pc_dumbfound(pc_record_type& pc, short how_much, short modifier)
 {
-	const short r1 = rand_short(0, 90) + modifier;
-	if (r1 < pc.level)
+	if (const short r1 = rand_short(0, 90) + modifier; r1 < pc.level)
 	{
 		how_much -= 2;
 	}
@@ -375,8 +374,7 @@ bool pc_dumbfound(pc_record_type& pc, short how_much, short modifier)
 
 bool pc_disease(pc_record_type& pc, short how_much)
 {
-	const short r1 = rand_short(0, 100);
-	if (r1 < pc.level * 2)
+	if (const short r1 = rand_short(0, 100); r1 < pc.level * 2)
 	{
 		how_much -= 2;
 	}
@@ -384,8 +382,7 @@ bool pc_disease(pc_record_type& pc, short how_much)
 	{
 		return false;
 	}
-	const short level = pc_prot_level(pc, 62);
-	if (level > 0)
+	if (const short level = pc_prot_level(pc, 62); level > 0)
 	{
 		how_much -= level / 2;
 	}
@@ -403,17 +400,15 @@ bool pc_disease(pc_record_type& pc, short how_much)
 
 bool pc_sleep(pc_record_type& pc, short how_much, short adjust)
 {
-	short level;
-	if ((level = pc_prot_level(pc, 53)) > 0)
+	if (const short level = pc_prot_level(pc, 53); level > 0)
 	{
 		how_much -= level / 2;
 	}
-	if ((level = pc_prot_level(pc, 54)) > 0)
+	if (const short level = pc_prot_level(pc, 54); level > 0)
 	{
 		how_much -= level;
 	}
-	const short r1 = rand_short(0, 100) + adjust;
-	if (r1 < 30 + pc.level * 2)
+	if (const short r1 = rand_short(0, 100) + adjust; r1 < 30 + pc.level * 2)
 	{
 		how_much = -1;
 	}
@@ -431,18 +426,15 @@ bool pc_sleep(pc_record_type& pc, short how_much, short adjust)
 
 bool pc_paralyze(pc_record_type& pc, short how_much, short adjust)
 {
-	short level;
-	if ((level = pc_prot_level(pc, 53)) > 0)
+	if (const short level = pc_prot_level(pc, 53); level > 0)
 	{
 		how_much -= level / 2;
 	}
-	if ((level = pc_prot_level(pc, 54)) > 0)
+	if (const short level = pc_prot_level(pc, 54); level > 0)
 	{
 		how_much -= level * 300;
 	}
-
-	const short r1 = rand_short(0, 100) + adjust;
-	if (r1 < 30 + pc.level * 2)
+	if (const short r1 = rand_short(0, 100) + adjust; r1 < 30 + pc.level * 2)
 	{
 		how_much = -1;
 	}
