@@ -1134,36 +1134,6 @@ void change_level(short town_num,short x,short y)
 	start_town_mode(town_num,9);
 }
 
-static Boolean damage_monst_impl(short which_m, short who_hit, short how_much, short how_much_spec, damage_type dam_type, short sound_type, Boolean do_print);
-
-Boolean damage_monst(short which_m, short who_hit, short how_much, short how_much_spec, damage_type dam_type)
-{
-	return damage_monst_impl(which_m, who_hit, how_much, how_much_spec, dam_type, 0, TRUE);
-}
-
-// Damaging and killing monsters needs to be here because several have specials attached to them.
-Boolean damage_monst(short which_m, short who_hit, short how_much, short how_much_spec, short dam_type_in)
-//short which_m, who_hit, how_much, how_much_spec;  // 6 for who_hit means dist. xp evenly  7 for no xp
-//short dam_type_in;  // 0 - weapon   1 - fire   2 - poison   3 - general magic   4 - unblockable  5 - cold 
-				 // 6 - demon 7 - undead  
-				 // 9 - marked damage, from during anim mode
-				 //+10 = no_print
-				 // 100s digit - damage sound for boom space
-{
-	Boolean do_print = TRUE;
-	const short sound_type = dam_type_in / 100;
-
-	dam_type_in = dam_type_in % 100;
-
-	if (dam_type_in >= 10)
-	{
-		do_print = FALSE;
-		dam_type_in -= 10;
-	}
-
-	return damage_monst_impl(which_m, who_hit, how_much, how_much_spec, static_cast<damage_type>(dam_type_in), sound_type, do_print);
-}
-
 // Damaging and killing monsters needs to be here because several have specials attached to them.
 static Boolean damage_monst_impl(short which_m, short who_hit, short how_much, short how_much_spec, damage_type dam_type, short sound_type, Boolean do_print)
 	//short which_m, who_hit, how_much, how_much_spec;  // 6 for who_hit means dist. xp evenly  7 for no xp
@@ -1371,6 +1341,34 @@ static Boolean damage_monst_impl(short which_m, short who_hit, short how_much, s
 		make_town_hostile();
 	}
 	return TRUE;
+}
+
+Boolean damage_monst(short which_m, short who_hit, short how_much, short how_much_spec, damage_type dam_type)
+{
+	return damage_monst_impl(which_m, who_hit, how_much, how_much_spec, dam_type, 0, TRUE);
+}
+
+// Damaging and killing monsters needs to be here because several have specials attached to them.
+Boolean damage_monst(short which_m, short who_hit, short how_much, short how_much_spec, short dam_type_in)
+//short which_m, who_hit, how_much, how_much_spec;  // 6 for who_hit means dist. xp evenly  7 for no xp
+//short dam_type_in;  // 0 - weapon   1 - fire   2 - poison   3 - general magic   4 - unblockable  5 - cold 
+				 // 6 - demon 7 - undead  
+				 // 9 - marked damage, from during anim mode
+				 //+10 = no_print
+				 // 100s digit - damage sound for boom space
+{
+	Boolean do_print = TRUE;
+	const short sound_type = dam_type_in / 100;
+
+	dam_type_in = dam_type_in % 100;
+
+	if (dam_type_in >= 10)
+	{
+		do_print = FALSE;
+		dam_type_in -= 10;
+	}
+
+	return damage_monst_impl(which_m, who_hit, how_much, how_much_spec, static_cast<damage_type>(dam_type_in), sound_type, do_print);
 }
 
 void kill_monst(creature_data_type *which_m,short who_killed)
