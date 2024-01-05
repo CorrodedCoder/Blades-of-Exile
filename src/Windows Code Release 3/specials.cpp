@@ -132,7 +132,8 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 //short mode; // 0 - out 1 - town 2 - combat
 {
 	unsigned char ter;
-	short r1,i,choice,door_pc,ter_flag1,ter_flag2,dam_type = damage_type::Weapon,pic_type = 0,ter_pic = 0;
+	short r1,i,choice,door_pc,ter_flag1,ter_flag2,pic_type = 0,ter_pic = 0;
+	damage_type dam_type = damage_type::Weapon;
 	Boolean can_enter = TRUE;
 	location out_where,from_loc,to_loc;
 	short s1 = 0,s2 = 0,s3 = 0;
@@ -301,7 +302,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 				add_string_to_buf("  Something shocks you!");
 				dam_type = damage_type::GeneralMagic; pic_type = 1;
 				}
-			r1 = get_ran(ter_flag2, dam_type,ter_flag1);
+			r1 = get_ran(ter_flag2, to_underlying(dam_type),ter_flag1);
 			if (mode < 2)
 				hit_party(r1, damage_type::Fire);
 			fast_bang = 1;
@@ -1132,14 +1133,14 @@ void change_level(short town_num,short x,short y)
 	end_town_mode(1,l);
 	start_town_mode(town_num,9);
 }
-#if 0
+
 Boolean damage_monst(short which_m, short who_hit, short how_much, short how_much_spec, damage_type dam_type)
 {
 	return damage_monst(which_m, who_hit, how_much, how_much_spec, to_underlying(dam_type));
 }
-#endif
+
 // Damaging and killing monsters needs to be here because several have specials attached to them.
-Boolean damage_monst(short which_m, short who_hit, short how_much, short how_much_spec, short dam_type)
+Boolean damage_monst(short which_m, short who_hit, short how_much, short how_much_spec, short dam_type_in)
 //short which_m, who_hit, how_much, how_much_spec;  // 6 for who_hit means dist. xp evenly  7 for no xp
 //short dam_type_in;  // 0 - weapon   1 - fire   2 - poison   3 - general magic   4 - unblockable  5 - cold 
 				 // 6 - demon 7 - undead  
@@ -1161,14 +1162,16 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 		return FALSE;
 	}
 
-	sound_type = dam_type / 100;
-	dam_type = dam_type % 100;
+	sound_type = dam_type_in / 100;
+	dam_type_in = dam_type_in % 100;
 
-	if (dam_type >= 10)
+	if (dam_type_in >= 10)
 	{
 		do_print = FALSE;
-		dam_type -= 10;
+		dam_type_in -= 10;
 	}
+
+	const damage_type dam_type{ dam_type_in };
 
 	if (sound_type == 0)
 	{
@@ -1178,7 +1181,7 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 			sound_type = 7;
 		if (dam_type == damage_type::GeneralMagic)
 			sound_type = 12;
-		if (dam_type == damage_type::PoisonX)
+		if (dam_type == damage_type::Poison)
 			sound_type = 11;
 	}
 
@@ -1206,7 +1209,7 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 		if (resist & 32)
 			how_much = 0;
 	}
-	if (dam_type == damage_type::PoisonX)
+	if (dam_type == damage_type::Poison)
 	{
 		if (resist & 64)
 			how_much = how_much / 2;
@@ -1253,7 +1256,7 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 			how_much = 0;
 		}
 		monst_marked_damage[which_m] += how_much;
-		add_explosion(victim->m_loc, how_much, 0, (dam_type > damage_type::PoisonX) ? 2 : 0, 14 * (victim->m_d.x_width - 1), 18 * (victim->m_d.y_width - 1));
+		add_explosion(victim->m_loc, how_much, 0, (dam_type > damage_type::Poison) ? 2 : 0, 14 * (victim->m_d.x_width - 1), 18 * (victim->m_d.y_width - 1));
 		if (how_much == 0)
 		{
 			return FALSE;
@@ -1317,13 +1320,13 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 	{
 		if (party_can_see_monst(which_m) == TRUE)
 		{
-			pre_boom_space(victim->m_loc, 100, boom_gr[dam_type], how_much, sound_type);
+			pre_boom_space(victim->m_loc, 100, boom_gr[to_underlying(dam_type)], how_much, sound_type);
 			if (how_much_spec > 0)
 				boom_space(victim->m_loc, 100, 51, how_much_spec, 5);
 		}
 		else
 		{
-			pre_boom_space(victim->m_loc, overall_mode, boom_gr[dam_type], how_much, sound_type);
+			pre_boom_space(victim->m_loc, overall_mode, boom_gr[to_underlying(dam_type)], how_much, sound_type);
 			if (how_much_spec > 0)
 				boom_space(victim->m_loc, overall_mode, 51, how_much_spec, 5);
 		}

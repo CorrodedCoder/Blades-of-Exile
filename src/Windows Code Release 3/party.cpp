@@ -3658,12 +3658,12 @@ void void_sanctuary(short pc_num)
 		adven[pc_num].gaffect(affect::Sanctuary) = 0;
 	}
 }
-#if 0
+
 void hit_party(short how_much, damage_type type)
 {
 	hit_party(how_much, to_underlying(type));
 }
-#endif
+
 void hit_party(short how_much,short damage_type)
 {
 	short i;
@@ -3692,13 +3692,13 @@ void slay_party(status mode)
 	}
 	put_pc_screen();
 }
-#if 0
+
 Boolean damage_pc(short which_pc, short how_much, damage_type type, short type_of_attacker)
 {
 	return damage_pc(which_pc, how_much, to_underlying(type), type_of_attacker);
 }
-#endif
-Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_attacker)
+
+Boolean damage_pc(short which_pc,short how_much,short damage_type_in,short type_of_attacker)
 //short damage_type_in; // 0 - weapon   1 - fire   2 - poison   3 - general magic   4 - unblockable
 					// 5 - cold  6 - undead attack  7 - demon attack
 					// 10 - marked damage, from during anim mode ... no boom, and totally unblockable
@@ -3713,15 +3713,16 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 		return FALSE;
 	}
 	
-	sound_type = damage_type / 100;
-	damage_type = damage_type % 100;
+	sound_type = damage_type_in / 100;
+	damage_type_in = damage_type_in % 100;
 
-	if (damage_type >= 30)
+	if (damage_type_in >= 30)
 	{
 		do_print = FALSE;
-		damage_type -= 30;
+		damage_type_in -= 30;
 	}
 
+	const damage_type damage_type{ damage_type_in };
 	if (sound_type == 0)
 	{
 		if ((damage_type == damage_type::Fire) || (damage_type == damage_type::Unblockable) )
@@ -3730,7 +3731,7 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 			sound_type = 12;
 		if 	(damage_type == damage_type::Cold)
 			sound_type = 7;
-		if 	(damage_type == damage_type::PoisonX)
+		if 	(damage_type == damage_type::Poison)
 			sound_type = 11;
 	}
 		
@@ -3777,7 +3778,7 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 	}
 	
 	// parry
-	if ((damage_type < damage_type::PoisonX) && (pc_parry[which_pc] < 100))
+	if ((damage_type < damage_type::Poison) && (pc_parry[which_pc] < 100))
 	{
 		how_much -= pc_parry[which_pc] / 4;
 	}
@@ -3835,7 +3836,7 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	
 	// major resistance
-	if (((damage_type == damage_type::Fire) || (damage_type == damage_type::PoisonX) || (damage_type == damage_type::GeneralMagic) || (damage_type == damage_type::Cold))
+	if (((damage_type == damage_type::Fire) || (damage_type == damage_type::Poison) || (damage_type == damage_type::GeneralMagic) || (damage_type == damage_type::Cold))
 	 && ((level = pc_prot_level(adven[which_pc],31)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	
@@ -3847,9 +3848,9 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 		}
 		pc_marked_damage[which_pc] += how_much;
 		if (is_town())
-			add_explosion(c_town.p_loc,how_much,0,(damage_type > damage_type::PoisonX) ? 2 : 0,0,0);
+			add_explosion(c_town.p_loc,how_much,0,(damage_type > damage_type::Poison) ? 2 : 0,0,0);
 		else
-			add_explosion(pc_pos[which_pc],how_much,0,(damage_type > damage_type::PoisonX) ? 2 : 0,0,0);
+			add_explosion(pc_pos[which_pc],how_much,0,(damage_type > damage_type::Poison) ? 2 : 0,0,0);
 		//	if (do_print == TRUE)
 	//		add_string_to_buf("  {} takes {:d}. ", adven[which_pc].name, how_much);
 		if (how_much == 0)
@@ -3879,11 +3880,11 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 		if (damage_type != damage_type::MarkedDamage)
 		{
 			if (is_combat())
-				boom_space(pc_pos[which_pc],overall_mode,boom_gr[damage_type],how_much,sound_type);
+				boom_space(pc_pos[which_pc],overall_mode,boom_gr[to_underlying(damage_type)],how_much,sound_type);
 			else if (is_town()) 
-				boom_space(c_town.p_loc,overall_mode,boom_gr[damage_type],how_much,sound_type);
+				boom_space(c_town.p_loc,overall_mode,boom_gr[to_underlying(damage_type)],how_much,sound_type);
 			else
-				boom_space(c_town.p_loc,100,boom_gr[damage_type],how_much,sound_type);
+				boom_space(c_town.p_loc,100,boom_gr[to_underlying(damage_type)],how_much,sound_type);
 		}
 		if (overall_mode != 0)
 			FlushEvents(1);

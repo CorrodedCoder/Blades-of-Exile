@@ -852,7 +852,7 @@ void do_combat_cast(location target)
 
 	// to wedge in animations, have to kludge like crazy
 	short boom_dam[8] = {0,0,0,0,0,0,0,0};
-	short boom_type[8] = { 0,0,0,0,0,0,0,0 };
+	damage_type boom_type[8]{};
 	location boom_targ[8];
 	
 	if (spell_being_cast >= 1000) {
@@ -2131,7 +2131,7 @@ void do_monster_turn()
 									printed_poison = TRUE;
 									}
 								r1 = get_ran(cur_monst->gaffect(affect::Poisoned),1,6);
-								damage_monst(i, 6, r1, 0, damage_type::PoisonX);
+								damage_monst(i, 6, r1, 0, damage_type::Poison);
 								cur_monst->gaffect(affect::Poisoned)--;
 								}
 							if (cur_monst->gaffect(affect::Diseased) > 0) {  // Disease
@@ -2174,7 +2174,8 @@ void do_monster_turn()
 void monster_attack_pc(short who_att,short target)
 {
 	creature_data_type *attacker;
-	short r1,r2,i, dam_type = damage_type::Weapon, store_hp,sound_type = 0;
+	short r1,r2,i, store_hp,sound_type = 0;
+	damage_type dam_type = damage_type::Weapon;
 	
 
 	attacker = &c_town.monst.dudes[who_att];
@@ -2240,7 +2241,7 @@ void monster_attack_pc(short who_att,short target)
 					store_hp = adven[target].cur_health;
 					sound_type = get_monst_sound(attacker,i);
 
-					if ((damage_pc(target,r2,sound_type * 100 + 30 + dam_type,
+					if ((damage_pc(target,r2,sound_type * 100 + 30 + to_underlying(dam_type),
 						attacker->m_d.m_type) == TRUE) && 
 						(store_hp - adven[target].cur_health > 0)) {
 						damaged_message(store_hp - adven[target].cur_health,
@@ -2726,7 +2727,8 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 Boolean monst_breathe(creature_data_type *caster,location targ_space,short dam_type)
 //dam_type; // 0 - fire  1 - cold  2 - magic
 {
-	short level, type[4]{ damage_type::Fire, damage_type::Cold, damage_type::GeneralMagic, damage_type::Unblockable },missile_t[4] = {13,6,8,8};
+	short level,missile_t[4] = {13,6,8,8};
+	const damage_type type[4]{ damage_type::Fire, damage_type::Cold, damage_type::GeneralMagic, damage_type::Unblockable };
 	location l;
 	
 	draw_terrain(2);
@@ -3363,12 +3365,12 @@ Boolean monst_cast_priest(creature_data_type *caster,short targ)
 
 	return acted;
 }
-#if 0
+
 void damage_target(short target, short dam, damage_type type)
 {
 	return damage_target(target, dam, to_underlying(type));
 }
-#endif
+
 void damage_target(short target,short dam,short type)
 {
 
@@ -3755,7 +3757,7 @@ void radius_damage(location target,short radius, short dam, short type)////
 }
 
 // Slightly kludgy way to only damage PCs in space)
-void hit_pcs_in_space(location target,short dam, short type,short report,short hit_all)
+void hit_pcs_in_space(location target,short dam, damage_type type,short report,short hit_all)
 {
 	//short store_active[T_M],i;
 	
@@ -3767,12 +3769,12 @@ void hit_pcs_in_space(location target,short dam, short type,short report,short h
 	//for (i = 0; i < T_M; i++) 
 	//	c_town.monst.dudes[i].active = store_active[i];
 }
-#if 0
+
 void hit_space(location target, short dam, damage_type type, short report, short hit_all)
 {
 	return hit_space(target, dam, to_underlying(type), report, hit_all);
 }
-#endif
+
 void hit_space(location target,short dam,short type,short report,short hit_all)
 //type; // 0 - weapon   1 - fire   2 - poison   3 - general magic   4 - unblockable  5 - cold
 			//	6 - demon	7 - undead
@@ -3846,7 +3848,7 @@ void do_poison()
 			if (adven[i].main_status == status::Normal)
 				if (adven[i].gaffect(affect::Poisoned) > 0) {
 					r1 = get_ran(adven[i].gaffect(affect::Poisoned),1,6);
-					damage_pc(i,r1, damage_type::PoisonX,-1);
+					damage_pc(i,r1, damage_type::Poison,-1);
 					if (rand_short(0,8) < 6)
 						adven[i].reduce_affect(affect::Poisoned);
 					if (rand_short(0,8) < 6)

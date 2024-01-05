@@ -57,11 +57,11 @@ struct talking_record_type {
 static_assert(sizeof(talking_record_type) == 1400);
 
 
-enum damage_type : short
+enum class damage_type : short
 {
 	Weapon = 0,
 	Fire = 1,
-	PoisonX = 2,
+	Poison = 2,
 	GeneralMagic = 3,
 	Unblockable = 4,
 	Cold = 5,
