@@ -3694,7 +3694,7 @@ void slay_party(status mode)
 
 static Boolean damage_pc_impl(short which_pc, short how_much, damage_type type, short type_of_attacker, short sound_type, Boolean do_print)
 //type; // 0 - weapon   1 - fire   2 - poison   3 - general magic   4 - unblockable
-					// 5 - cold  6 - undead attack  7 - demon attack
+					// 5 - cold  6 - demon attack  7 - undead attack
 					// 10 - marked damage, from during anim mode ... no boom, and totally unblockable
 {
 	if (adven[which_pc].main_status != status::Normal)
@@ -3738,7 +3738,7 @@ static Boolean damage_pc_impl(short which_pc, short how_much, damage_type type, 
 	
 	if (how_much <= 0)
 	{
-		if ((type == damage_type::Weapon) || (type == damage_type::UndeadAttack) || (type == damage_type::DemonAttack))
+		if ((type == damage_type::Weapon) || (type == damage_type::DemonAttack) || (type == damage_type::UndeadAttack))
 			play_sound(2);
 		add_string_to_buf ("  No damage.");
 		return FALSE;
@@ -3806,7 +3806,7 @@ Boolean damage_pc(short which_pc, short how_much, damage_type type, short type_o
 
 Boolean damage_pc(short which_pc, short how_much, short type, short type_of_attacker)
 //type; // 0 - weapon   1 - fire   2 - poison   3 - general magic   4 - unblockable
-					// 5 - cold  6 - undead attack  7 - demon attack
+					// 5 - cold  6 - demon attack  7 - undead attack
 					// 10 - marked damage, from during anim mode ... no boom, and totally unblockable
 					// 30 + *   same as *, but no print
 					// 100s digit - sound data

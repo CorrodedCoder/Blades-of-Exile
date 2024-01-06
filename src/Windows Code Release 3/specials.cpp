@@ -1248,7 +1248,7 @@ static Boolean damage_monst_impl(short which_m, short who_hit, short how_much, s
 		{
 			monst_spell_note(victim.number, 7);
 		}
-		if ((how_much <= 0) && ((type == damage_type::Weapon) || (type == damage_type::UndeadAttack) || (type == damage_type::DemonAttack)))
+		if ((how_much <= 0) && ((type == damage_type::Weapon) || (type == damage_type::DemonAttack) || (type == damage_type::UndeadAttack)))
 		{
 			draw_terrain(2);
 			play_sound(2);

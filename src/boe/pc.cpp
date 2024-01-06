@@ -476,7 +476,7 @@ bool pc_acid(pc_record_type& pc, short how_much)
 short pc_damage_adjust(const pc_record_type& pc, short how_much, damage_type type, short type_of_attacker, short parry_modifier, short party_adjust)
 {
 	// armor	
-	if ((type == damage_type::Weapon) || (type == damage_type::UndeadAttack) || (type == damage_type::DemonAttack))
+	if ((type == damage_type::Weapon) || (type == damage_type::DemonAttack) || (type == damage_type::UndeadAttack))
 	{
 		how_much -= boe_clamp(pc.gaffect(affect::CursedBlessed), -5, 5);
 		for (short i = 0; i < 24; i++)
@@ -542,11 +542,11 @@ short pc_damage_adjust(const pc_record_type& pc, short how_much, damage_type typ
 	{
 		how_much -= level;
 	}
-	if ((type == damage_type::UndeadAttack) && ((level = pc_prot_level(pc, 57)) > 0))
+	if ((type == damage_type::DemonAttack) && ((level = pc_prot_level(pc, 57)) > 0))
 	{
 		how_much /= ((level >= 7) ? 4 : 2);
 	}
-	if ((type == damage_type::DemonAttack) && ((level = pc_prot_level(pc, 58)) > 0))
+	if ((type == damage_type::UndeadAttack) && ((level = pc_prot_level(pc, 58)) > 0))
 	{
 		how_much /= ((level >= 7) ? 4 : 2);
 	}

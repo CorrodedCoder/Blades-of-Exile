@@ -2228,9 +2228,9 @@ void monster_attack_pc(short who_att,short target)
 			// Check if hit, and do effects
 			if (r1 <= skill_hit_chance((attacker->m_d.skill + 4) / 2)) {
 					if (attacker->m_d.m_type == 7)
-						dam_type = damage_type::UndeadAttack;
-					if (attacker->m_d.m_type == 8)
 						dam_type = damage_type::DemonAttack;
+					if (attacker->m_d.m_type == 8)
+						dam_type = damage_type::UndeadAttack;
 		
 					store_hp = adven[target].cur_health;
 					sound_type = get_monst_sound(attacker,i);
@@ -2390,9 +2390,9 @@ void monster_attack_monster(short who_att,short attackee)
 			// Check if hit, and do effects
 			if (r1 <= skill_hit_chance((attacker->m_d.skill + 4) / 2)) {
 					if (attacker->m_d.m_type == 7)
-						dam_type = damage_type::UndeadAttack;
-					if (attacker->m_d.m_type == 8)
 						dam_type = damage_type::DemonAttack;
+					if (attacker->m_d.m_type == 8)
+						dam_type = damage_type::UndeadAttack;
 					store_hp = target->m_d.health;
 					
 					sound_type = get_monst_sound(attacker,i);
