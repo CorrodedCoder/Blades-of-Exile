@@ -56,55 +56,6 @@ void void_sanctuary(short pc_num);
 void hit_party(short how_much, damage_type type);
 void hit_party(short how_much,short type);
 void slay_party(status mode);
-
-consteval short to_sound_type(short type)
-{
-	Boolean do_print = TRUE;
-
-	const short sound_type = type / 100;
-
-	type = type % 100;
-
-	if (type >= 30)
-	{
-		do_print = FALSE;
-		type -= 30;
-	}
-	return sound_type;
-}
-
-consteval short to_do_print(short type)
-{
-	Boolean do_print = TRUE;
-
-	const short sound_type = type / 100;
-
-	type = type % 100;
-
-	if (type >= 30)
-	{
-		do_print = FALSE;
-		type -= 30;
-	}
-	return do_print;
-}
-
-consteval damage_type to_dam_type(short type)
-{
-	Boolean do_print = TRUE;
-
-	const short sound_type = type / 100;
-
-	type = type % 100;
-
-	if (type >= 30)
-	{
-		do_print = FALSE;
-		type -= 30;
-	}
-	return static_cast<damage_type>(type);
-}
-
 Boolean damage_pc(short which_pc,short how_much,short type,short type_of_attacker);
 Boolean damage_pc(short which_pc, short how_much, damage_type type, short type_of_attacker);
 Boolean damage_pc(short which_pc, short how_much, damage_type type, short type_of_attacker, short sound_type, Boolean do_print);

@@ -2670,7 +2670,7 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 			if (r1 <= skill_hit_chance(dam[level] * 2)) {
 //					add_string_to_buf("  Hits {}.", adven[target].name);
 
-					if (damage_pc(target,r2,to_dam_type(1300),-1, to_sound_type(1300), to_do_print(1300)) == TRUE) {
+					if (damage_pc(target,r2,damage_type::Weapon,-1, 13, TRUE) == TRUE) {
 						}	
 				}
 				else {
