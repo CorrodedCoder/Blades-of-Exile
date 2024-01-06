@@ -3735,7 +3735,7 @@ static Boolean damage_pc_impl(short which_pc, short how_much, damage_type type, 
 					}
 					if (pc.items[i].bonus < 0)
 					{
-						how_much = how_much - pc.items[i].bonus;
+						how_much -= pc.items[i].bonus;
 					}
 					if (rand_short(0, 100) < skill_hit_chance(pc.skills[skill::Defense]) - 20)
 						how_much -= 1;
@@ -3764,6 +3764,10 @@ static Boolean damage_pc_impl(short which_pc, short how_much, damage_type type, 
 		{
 			how_much -= 3;
 		}
+	}
+
+	if (type != damage_type::MarkedDamage)
+	{
 		// toughness
 		if (pc.traits[trait::Toughness] == TRUE)
 		{
