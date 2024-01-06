@@ -2235,8 +2235,7 @@ void monster_attack_pc(short who_att,short target)
 					store_hp = adven[target].cur_health;
 					sound_type = get_monst_sound(attacker,i);
 
-					if ((damage_pc(target,r2,sound_type * 100 + 30 + to_underlying(dam_type),
-						attacker->m_d.m_type) == TRUE) && 
+					if ((damage_pc(target,r2,dam_type,attacker->m_d.m_type, sound_type, FALSE) == TRUE) &&
 						(store_hp - adven[target].cur_health > 0)) {
 						damaged_message(store_hp - adven[target].cur_health,
 						 (i > 0) ? attacker->m_d.a23_type : attacker->m_d.a1_type);
@@ -2671,7 +2670,7 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 			if (r1 <= skill_hit_chance(dam[level] * 2)) {
 //					add_string_to_buf("  Hits {}.", adven[target].name);
 
-					if (damage_pc(target,r2,1300,-1) == TRUE) {
+					if (damage_pc(target,r2,to_dam_type(1300),-1, to_sound_type(1300), to_do_print(1300)) == TRUE) {
 						}	
 				}
 				else {

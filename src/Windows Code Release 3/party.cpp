@@ -3692,7 +3692,7 @@ void slay_party(status mode)
 	put_pc_screen();
 }
 
-static Boolean damage_pc_impl(short which_pc, short how_much, damage_type type, short type_of_attacker, short sound_type, Boolean do_print)
+Boolean damage_pc(short which_pc, short how_much, damage_type type, short type_of_attacker, short sound_type, Boolean do_print)
 //type; // 0 - weapon   1 - fire   2 - poison   3 - general magic   4 - unblockable
 					// 5 - cold  6 - demon attack  7 - undead attack
 					// 10 - marked damage, from during anim mode ... no boom, and totally unblockable
@@ -3801,7 +3801,7 @@ static Boolean damage_pc_impl(short which_pc, short how_much, damage_type type, 
 
 Boolean damage_pc(short which_pc, short how_much, damage_type type, short type_of_attacker)
 {
-	return damage_pc_impl(which_pc, how_much, type, type_of_attacker, 0, TRUE);
+	return damage_pc(which_pc, how_much, type, type_of_attacker, 0, TRUE);
 }
 
 Boolean damage_pc(short which_pc, short how_much, short type, short type_of_attacker)
@@ -3823,7 +3823,7 @@ Boolean damage_pc(short which_pc, short how_much, short type, short type_of_atta
 		type -= 30;
 	}
 
-	return damage_pc_impl(which_pc, how_much, static_cast<damage_type>(type), type_of_attacker, sound_type, do_print);
+	return damage_pc(which_pc, how_much, static_cast<damage_type>(type), type_of_attacker, sound_type, do_print);
 }
 
 void kill_pc(short which_pc, status type)
