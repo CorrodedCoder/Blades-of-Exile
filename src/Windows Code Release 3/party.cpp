@@ -122,7 +122,6 @@ extern const effect_pat_type square;
 extern const effect_pat_type rad_pat2;
 extern std::reference_wrapper<const effect_pat_type> current_pat;
 extern short current_spell_range;
-extern const short hit_chance[51];
 extern short pc_parry[6], combat_active_pc;
 extern std::array<short, 6> pc_moves;
 extern const short boom_gr[8];
@@ -3737,7 +3736,7 @@ static Boolean damage_pc_impl(short which_pc, short how_much, damage_type type, 
 					{
 						how_much = how_much - adven[which_pc].items[i].bonus;
 					}
-					if (rand_short(0, 100) < hit_chance[adven[which_pc].skills[skill::Defense]] - 20)
+					if (rand_short(0, 100) < skill_hit_chance(adven[which_pc].skills[skill::Defense]) - 20)
 						how_much -= 1;
 				}
 				if (adven[which_pc].items[i].protection > 0)
@@ -3770,7 +3769,7 @@ static Boolean damage_pc_impl(short which_pc, short how_much, damage_type type, 
 			how_much--;
 		}
 		// luck
-		if (rand_short(0, 100) < 2 * (hit_chance[adven[which_pc].skills[skill::Luck]] - 20))
+		if (rand_short(0, 100) < 2 * (skill_hit_chance(adven[which_pc].skills[skill::Luck]) - 20))
 		{
 			how_much -= 1;
 		}
@@ -3944,7 +3943,7 @@ void kill_pc(short which_pc, status type, bool no_save)
 	}
 
 	if ((no_save == false) && (type != status::Absent) && (adven[which_pc].skills[skill::Luck] > 0) &&
-		(rand_short(0, 100) < hit_chance[adven[which_pc].skills[skill::Luck]]))
+		(rand_short(0, 100) < skill_hit_chance(adven[which_pc].skills[skill::Luck])))
 	{
 		add_string_to_buf("  But you luck out!          ");
 		adven[which_pc].cur_health = 0;

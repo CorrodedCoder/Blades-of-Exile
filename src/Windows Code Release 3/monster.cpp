@@ -13,6 +13,7 @@
 #include "newgraph.h"
 #include "boe/utility.hpp"
 #include "boe/item.hpp"
+#include "boe/pc.hpp"
 #include "game_globals.hpp"
 
 extern current_town_type c_town;
@@ -28,7 +29,6 @@ extern Adventurers adven;
 extern big_tr_type  t_d;
 extern short monst_target[T_M]; // 0-5 target that pc   6 - no target  100 + x - target monster x
 extern short spell_caster, missile_firer,current_monst_tactic;
-extern const short hit_chance[51];
 extern unsigned char misc_i[64][64];
 extern location monster_targs[T_M];
 
@@ -1462,9 +1462,9 @@ short get_encumberance(const pc_record_type& pc)
 	for (i = 0; i < 16; i++)
 		if (pc.equip[i] == TRUE) {
 			what_val = pc.items[i].awkward;
-			if ((what_val == 1) && (rand_short(0,130) < hit_chance[pc.skills[skill::Defense]]))
+			if ((what_val == 1) && (rand_short(0,130) < skill_hit_chance(pc.skills[skill::Defense])))
 				what_val--;
-			if ((what_val > 1) && (rand_short(0,70) < hit_chance[pc.skills[skill::Defense]]))
+			if ((what_val > 1) && (rand_short(0,70) < skill_hit_chance(pc.skills[skill::Defense])))
 				what_val--;
 			store += what_val;
 			}

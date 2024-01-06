@@ -33,3 +33,5 @@ bool pc_sleep(pc_record_type& pc, short how_much, short adjust);
 bool pc_disease(pc_record_type& pc, short how_much);
 bool pc_dumbfound(pc_record_type& pc, short how_much, short modifier);
 bool pc_curse(pc_record_type& pc, short how_much);
+
+short skill_hit_chance(short type);

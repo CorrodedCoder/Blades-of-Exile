@@ -59,12 +59,6 @@ short store_sum_monst_cost;
 
 static const location out_start_loc = {20,23};
 
-extern const short hit_chance[51] = {20,30,40,45,50,55,60,65,69,73,
-							77,81,84,87,90,92,94,96,97,98,99
-							,99,99,99,99,99,99,99,99,99,99
-							,99,99,99,99,99,99,99,99,99,99,
-							99,99,99,99,99,99,99,99,99,99};
-
 static const short abil_range[40] = { 0,6,8,8,10, 10,10,8,6,8, 6,0,0,0,6, 0,0,0,0,4, 10,0,0,6,0,
 						0,0,0,0,0, 0,0,8,6,9, 0,0,0,0,0 };
 
@@ -557,7 +551,7 @@ void pc_attack(short who_att,short target)
 		r1 += 5 * (adven[current_pc].gaffect(affect::Webbed) / 3);
 		r2 = rand_short(1,4) + dam_adj;
 		
-		if (r1 <= hit_chance[adven[who_att].skills[what_skill1]]) {
+		if (r1 <= skill_hit_chance(adven[who_att].skills[what_skill1])) {
 			damage_monst(target, who_att, r2, 0,400);
 			}
 			else {
@@ -592,7 +586,7 @@ void pc_attack(short who_att,short target)
 		if (adven[who_att].items[weap1].ability == 12) 
 			r2 = (r2 * (10 - adven[who_att].items[weap1].ability_strength)) / 10;
 
-		if (r1 <= hit_chance[adven[who_att].skills[what_skill1]]) {
+		if (r1 <= skill_hit_chance(adven[who_att].skills[what_skill1])) {
 			spec_dam = calc_spec_dam(adven[who_att].items[weap1].ability,
 				adven[who_att].items[weap1].ability_strength,which_m);
 
@@ -601,7 +595,7 @@ void pc_attack(short who_att,short target)
 			if ((adven[who_att].level >= which_m->m_d.level - 1) 
 				&& (adven[who_att].skills[skill::Assassination] >= which_m->m_d.level / 2)
 				&& (which_m->m_d.spec_skill != 12)) // Can't assassinate splitters
-				if (r1 < hit_chance[max(adven[who_att].skills[skill::Assassination] - which_m->m_d.level,0)]) {
+				if (r1 < skill_hit_chance(max(adven[who_att].skills[skill::Assassination] - which_m->m_d.level,0))) {
 					add_string_to_buf("  You assassinate.           ");
 					spec_dam += r2;
 					}
@@ -671,7 +665,7 @@ void pc_attack(short who_att,short target)
 		if (adven[who_att].items[weap2].ability == 12) 
 			r2 = (r2 * (10 - adven[who_att].items[weap2].ability_strength)) / 10;
 			
-		if (r1 <= hit_chance[adven[who_att].skills[what_skill2]]) {
+		if (r1 <= skill_hit_chance(adven[who_att].skills[what_skill2])) {
 			spec_dam = calc_spec_dam(adven[who_att].items[weap2].ability,
 				adven[who_att].items[weap2].ability_strength,which_m);
 			switch (what_skill2) {
@@ -1261,7 +1255,7 @@ void do_combat_cast(location target)
 										}
 									store_m_type = 8;
 									r1 = rand_short(0,90);
-									if (r1 > hit_chance[boe_clamp(bonus * 2 + level * 4 - (cur_monst->m_d.level / 2) + 3,0,19)])
+									if (r1 > skill_hit_chance(boe_clamp(bonus * 2 + level * 4 - (cur_monst->m_d.level / 2) + 3,0,19)))
 										add_string_to_buf("  Monster resisted.                  ");
 										else {
 										r1 = get_ran((spell_being_cast == 103) ? 2 : 6, 1, 14);	
@@ -1277,7 +1271,7 @@ void do_combat_cast(location target)
 										break;
 										}
 									r1 = rand_short(0,100);
-									if (r1 > hit_chance[boe_clamp(level * 4 - cur_monst->m_d.level + 10,0,19)])
+									if (r1 > skill_hit_chance(boe_clamp(level * 4 - cur_monst->m_d.level + 10,0,19)))
 										add_string_to_buf("  Demon resisted.                  ");
 										else {
 										r1 = get_ran(8 + bonus * 2, 1, 11);	
@@ -1492,7 +1486,7 @@ void fire_missile(location target)
 				run_a_missile(pc_pos[current_pc],target,m_type,1,(overall_mode == 12) ? 12 : 14,
 					0,0,100);
 
-				if (r1 > hit_chance[skill])
+				if (r1 > skill_hit_chance(skill))
 					add_string_to_buf("  Missed.");
 					else if ((targ_monst = monst_there(target)) < T_M) {
 						cur_monst = &c_town.monst.dudes[targ_monst];
@@ -2200,7 +2194,7 @@ void monster_attack_pc(short who_att,short target)
 	// Check sanctuary
 	if (adven[target].gaffect(affect::Sanctuary) > 0) {
 		r1 = rand_short(0,100);
-		if (r1 > hit_chance[attacker->m_d.level / 2]) {
+		if (r1 > skill_hit_chance(attacker->m_d.level / 2)) {
 			add_string_to_buf("  Can't find target!                 ");		
 			}
 		return;
@@ -2232,7 +2226,7 @@ void monster_attack_pc(short who_att,short target)
 
 			draw_terrain(2);
 			// Check if hit, and do effects
-			if (r1 <= hit_chance[(attacker->m_d.skill + 4) / 2]) {
+			if (r1 <= skill_hit_chance((attacker->m_d.skill + 4) / 2)) {
 					if (attacker->m_d.m_type == 7)
 						dam_type = damage_type::UndeadAttack;
 					if (attacker->m_d.m_type == 8)
@@ -2394,7 +2388,7 @@ void monster_attack_monster(short who_att,short attackee)
 
 			draw_terrain(2);
 			// Check if hit, and do effects
-			if (r1 <= hit_chance[(attacker->m_d.skill + 4) / 2]) {
+			if (r1 <= skill_hit_chance((attacker->m_d.skill + 4) / 2)) {
 					if (attacker->m_d.m_type == 7)
 						dam_type = damage_type::UndeadAttack;
 					if (attacker->m_d.m_type == 8)
@@ -2662,7 +2656,7 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 			// Check sanctuary
 			if (adven[target].gaffect(affect::Sanctuary) > 0) {
 				r1 = rand_short(0,100);
-				if (r1 > hit_chance[level]) {
+				if (r1 > skill_hit_chance(level)) {
 					add_string_to_buf("  Can't find target!                 ");		
 					}
 				return;
@@ -2674,7 +2668,7 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 				r1 += 5 * pc_parry[target];
 			r2 = get_ran(dam[level],1,7) + min(10,bless);
 
-			if (r1 <= hit_chance[dam[level] * 2]) {
+			if (r1 <= skill_hit_chance(dam[level] * 2)) {
 //					add_string_to_buf("  Hits {}.", adven[target].name);
 
 					if (damage_pc(target,r2,1300,-1) == TRUE) {
@@ -2712,7 +2706,7 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 				- 5 * (can_see(source, m_target->m_loc,0));
 			r2 = get_ran(dam[level],1,7) + min(10,bless);
 
-			if (r1 <= hit_chance[dam[level] * 2]) {
+			if (r1 <= skill_hit_chance(dam[level] * 2)) {
 //					monst_spell_note(m_target->number,16);
 
 					damage_monst(target - 100,7,r2,0,1300);

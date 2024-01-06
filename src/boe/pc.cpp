@@ -12,6 +12,11 @@ namespace
 	const std::array<short, 3> c_rp{ 0,12,20 };
 	const std::array<short, 15> c_ap{ 10,20,8,10,4, 6,10,7,12,15, -10,-8,-8,-20,-8 };
 	const std::array<short, 26> c_item_priority{ 20,8,8,20,9, 9,3,2,1,0, 7,20,10,10,10, 10,10,10,5,6, 4,11,12,9,9, 9 };
+	const std::array<short, 51> c_hit_chance{ 20,30,40,45,50,55,60,65,69,73,
+								77,81,84,87,90,92,94,96,97,98,99
+								,99,99,99,99,99,99,99,99,99,99
+								,99,99,99,99,99,99,99,99,99,99,
+								99,99,99,99,99,99,99,99,99,99 };
 
 	const std::array c_debug_names{
 		"Gunther",
@@ -466,4 +471,9 @@ bool pc_acid(pc_record_type& pc, short how_much)
 	}
 	pc.gaffect(affect::Acid) += how_much;
 	return true;
+}
+
+short skill_hit_chance(short type)
+{
+	return c_hit_chance[static_cast<size_t>(type)];
 }
