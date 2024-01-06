@@ -3715,6 +3715,7 @@ static Boolean damage_pc_impl(short which_pc, short how_much, damage_type type, 
 	}
 
 	pc_record_type& pc = adven[which_pc];
+	const short parry_modifier = pc_parry[which_pc];
 	// armor	
 	if ((type == damage_type::Weapon) || (type == damage_type::UndeadAttack) ||(type == damage_type::DemonAttack))
 	{
@@ -3753,9 +3754,9 @@ static Boolean damage_pc_impl(short which_pc, short how_much, damage_type type, 
 	}
 	
 	// parry
-	if ((type < damage_type::Poison) && (pc_parry[which_pc] < 100))
+	if ((type < damage_type::Poison) && (parry_modifier < 100))
 	{
-		how_much -= pc_parry[which_pc] / 4;
+		how_much -= parry_modifier / 4;
 	}
 
 	if (type != damage_type::MarkedDamage)
