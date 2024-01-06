@@ -499,7 +499,9 @@ short pc_damage_adjust(const pc_record_type& pc, short how_much, damage_type typ
 						how_much -= item.bonus;
 					}
 					if (rand_short(0, 100) < skill_hit_chance(pc.skills[skill::Defense]) - 20)
-						how_much -= 1;
+					{
+						--how_much;
+					}
 				}
 				if (item.protection > 0)
 				{
@@ -526,39 +528,39 @@ short pc_damage_adjust(const pc_record_type& pc, short how_much, damage_type typ
 		// toughness
 		if (pc.traits[trait::Toughness] == BOE_TRUE)
 		{
-			how_much--;
+			--how_much;
 		}
 		// luck
 		if (rand_short(0, 100) < 2 * (skill_hit_chance(pc.skills[skill::Luck]) - 20))
 		{
-			how_much -= 1;
+			--how_much;
 		}
 	}
 
 	short level = 0;
 	if ((type == damage_type::Weapon) && ((level = pc_prot_level(pc, 30)) > 0))
 	{
-		how_much = how_much - level;
+		how_much -= level;
 	}
 	if ((type == damage_type::UndeadAttack) && ((level = pc_prot_level(pc, 57)) > 0))
 	{
-		how_much = how_much / ((level >= 7) ? 4 : 2);
+		how_much /= ((level >= 7) ? 4 : 2);
 	}
 	if ((type == damage_type::DemonAttack) && ((level = pc_prot_level(pc, 58)) > 0))
 	{
-		how_much = how_much / ((level >= 7) ? 4 : 2);
+		how_much /= ((level >= 7) ? 4 : 2);
 	}
 	if ((type_of_attacker == 6) && ((level = pc_prot_level(pc, 59)) > 0))
 	{
-		how_much = how_much / ((level >= 7) ? 4 : 2);
+		how_much /= ((level >= 7) ? 4 : 2);
 	}
 	if ((type_of_attacker == 1) && ((level = pc_prot_level(pc, 60)) > 0))
 	{
-		how_much = how_much / ((level >= 7) ? 4 : 2);
+		how_much /= ((level >= 7) ? 4 : 2);
 	}
 	if ((type_of_attacker == 9) && ((level = pc_prot_level(pc, 61)) > 0))
 	{
-		how_much = how_much / ((level >= 7) ? 4 : 2);
+		how_much /= ((level >= 7) ? 4 : 2);
 	}
 
 	// invuln
@@ -570,32 +572,32 @@ short pc_damage_adjust(const pc_record_type& pc, short how_much, damage_type typ
 	// magic resistance
 	if ((type == damage_type::GeneralMagic) && ((level = pc_prot_level(pc, 35)) > 0))
 	{
-		how_much = how_much / ((level >= 7) ? 4 : 2);
+		how_much /= ((level >= 7) ? 4 : 2);
 	}
 
 	// Mag. res helps w. fire and cold
 	if (((type == damage_type::Fire) || (type == damage_type::Cold)) &&	(pc.gaffect(affect::MagicResistant) > 0))
 	{
-		how_much = how_much / 2;
+		how_much /= 2;
 	}
 
 	// fire res.
 	if ((type == damage_type::Fire) && ((level = pc_prot_level(pc, 32)) > 0))
 	{
-		how_much = how_much / ((level >= 7) ? 4 : 2);
+		how_much /= ((level >= 7) ? 4 : 2);
 	}
 
 	// cold res.
 	if ((type == damage_type::Cold) && ((level = pc_prot_level(pc, 33)) > 0))
 	{
-		how_much = how_much / ((level >= 7) ? 4 : 2);
+		how_much /= ((level >= 7) ? 4 : 2);
 	}
 
 	// major resistance
 	if (((type == damage_type::Fire) || (type == damage_type::Poison) || (type == damage_type::GeneralMagic) || (type == damage_type::Cold))
 		&& ((level = pc_prot_level(pc, 31)) > 0))
 	{
-		how_much = how_much / ((level >= 7) ? 4 : 2);
+		how_much /= ((level >= 7) ? 4 : 2);
 	}
 
 	return how_much;
