@@ -33,5 +33,6 @@ bool pc_sleep(pc_record_type& pc, short how_much, short adjust);
 bool pc_disease(pc_record_type& pc, short how_much);
 bool pc_dumbfound(pc_record_type& pc, short how_much, short modifier);
 bool pc_curse(pc_record_type& pc, short how_much);
+short pc_damage_adjust(const pc_record_type& pc, short how_much, damage_type type, short type_of_attacker, short parry_modifier, short party_adjust);
 
 short skill_hit_chance(short type);
