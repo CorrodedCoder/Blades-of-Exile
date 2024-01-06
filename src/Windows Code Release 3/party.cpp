@@ -3716,6 +3716,15 @@ static Boolean damage_pc_impl(short which_pc, short how_much, damage_type type, 
 
 	pc_record_type& pc = adven[which_pc];
 	const short parry_modifier = pc_parry[which_pc];
+	short party_adjust = 0;
+	if (type != damage_type::MarkedDamage)
+	{
+		if (PSD[306][7] > 0)
+		{
+			party_adjust = 3;
+		}
+	}
+
 	// armor	
 	if ((type == damage_type::Weapon) || (type == damage_type::UndeadAttack) ||(type == damage_type::DemonAttack))
 	{
@@ -3759,13 +3768,7 @@ static Boolean damage_pc_impl(short which_pc, short how_much, damage_type type, 
 		how_much -= parry_modifier / 4;
 	}
 
-	if (type != damage_type::MarkedDamage)
-	{
-		if (PSD[306][7] > 0)
-		{
-			how_much -= 3;
-		}
-	}
+	how_much -= party_adjust;
 
 	if (type != damage_type::MarkedDamage)
 	{
