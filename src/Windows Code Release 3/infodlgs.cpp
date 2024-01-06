@@ -35,7 +35,6 @@ extern const short skill_cost[20];
 extern const short skill_max[20];
 extern const short skill_g_cost[20];
 extern Adventurers adven;
-extern short which_pc_displayed;
 extern party_record_type party;
 extern const short mage_range[80];
 extern const short priest_range[62];
@@ -52,6 +51,7 @@ extern piles_of_stuff_dumping_type3 data_store3;
 extern piles_of_stuff_dumping_type5 data_store5;
 
 Boolean full_roster = FALSE;
+static short which_pc_displayed;
 
 extern short dest_personalities[40];
 extern location dest_locs[40];

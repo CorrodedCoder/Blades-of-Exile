@@ -13,6 +13,7 @@
 #include "newgraph.h"
 #include "boe/utility.hpp"
 #include "boe/item.hpp"
+#include "boe/pc.hpp"
 #include "game_globals.hpp"
 
 extern current_town_type c_town;
@@ -28,7 +29,6 @@ extern Adventurers adven;
 extern big_tr_type  t_d;
 extern short monst_target[T_M]; // 0-5 target that pc   6 - no target  100 + x - target monster x
 extern short spell_caster, missile_firer,current_monst_tactic;
-extern const short hit_chance[51];
 extern unsigned char misc_i[64][64];
 extern location monster_targs[T_M];
 
@@ -906,17 +906,17 @@ void monst_inflict_fields(short which_monst)
 			where_check.y = c_town.monst.dudes[which_monst].m_loc.y + j;
 			if (is_quickfire(where_check.x,where_check.y)) {
 				r1 = get_ran(2,1,8);
-				damage_monst(which_monst,7,r1,0,1);
+				damage_monst(which_monst,7,r1,0, damage_type::Fire);
 				break;
 				}
 			if (is_blade_wall(where_check.x,where_check.y)) {
 				r1 = get_ran(6,1,8);
-				damage_monst(which_monst,7,r1,0,0);
+				damage_monst(which_monst,7,r1,0, damage_type::Weapon);
 				break;
 				}
 			if (is_force_wall(where_check.x,where_check.y)) {
 				r1 = get_ran(3,1,6);
-				damage_monst(which_monst,7,r1,0,3);
+				damage_monst(which_monst,7,r1,0, damage_type::GeneralMagic);
 				break;
 				}
 			if (is_sleep_cloud(where_check.x,where_check.y)) {
@@ -926,7 +926,7 @@ void monst_inflict_fields(short which_monst)
 			if (is_ice_wall(where_check.x,where_check.y)) {
 				r1 = get_ran(3,1,6);
 				if (c_town.monst.dudes[which_monst].m_d.spec_skill != 23)
-					damage_monst(which_monst,7,r1,0,5);
+					damage_monst(which_monst,7,r1,0, damage_type::Cold);
 				break;
 				}
 			if (is_scloud(where_check.x,where_check.y)) {
@@ -944,7 +944,7 @@ void monst_inflict_fields(short which_monst)
 			if (is_fire_wall(where_check.x,where_check.y)) {
 				r1 = get_ran(2,1,6);
 				if (c_town.monst.dudes[which_monst].m_d.spec_skill != 22)
-					damage_monst(which_monst,7,r1,0,1);	
+					damage_monst(which_monst,7,r1,0, damage_type::Fire);
 				break;
 				}
 			}
@@ -963,7 +963,7 @@ void monst_inflict_fields(short which_monst)
 			take_barrel(where_check.x,where_check.y);
 			if (is_fire_barrier(where_check.x,where_check.y)) {
 				r1 = get_ran(2,1,10);
-				damage_monst(which_monst,7,r1,0,1);
+				damage_monst(which_monst,7,r1,0, damage_type::Fire);
 				}
 			}
 
@@ -1462,9 +1462,9 @@ short get_encumberance(const pc_record_type& pc)
 	for (i = 0; i < 16; i++)
 		if (pc.equip[i] == TRUE) {
 			what_val = pc.items[i].awkward;
-			if ((what_val == 1) && (rand_short(0,130) < hit_chance[pc.skills[skill::Defense]]))
+			if ((what_val == 1) && (rand_short(0,130) < skill_hit_chance(pc.skills[skill::Defense])))
 				what_val--;
-			if ((what_val > 1) && (rand_short(0,70) < hit_chance[pc.skills[skill::Defense]]))
+			if ((what_val > 1) && (rand_short(0,70) < skill_hit_chance(pc.skills[skill::Defense])))
 				what_val--;
 			store += what_val;
 			}

@@ -1181,7 +1181,7 @@ void bash_door(location where,short pc_num)
 	if ((unlock_adjust >= 5) || (r1 > (unlock_adjust * 15 + 40)) || (terrain.special != terrain_special::UnlockableOrBashable))
 	{
 		add_string_to_buf("  Didn't work.                ");
-		damage_pc(pc_num,rand_short(1,4),4,-1);					
+		damage_pc(pc_num,rand_short(1,4), damage_type::Unblockable,-1);
 	}
 	else
 	{
