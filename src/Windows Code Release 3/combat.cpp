@@ -552,7 +552,7 @@ void pc_attack(short who_att,short target)
 		r2 = rand_short(1,4) + dam_adj;
 		
 		if (r1 <= skill_hit_chance(adven[who_att].skills[what_skill1])) {
-			damage_monst(target, who_att, r2, 0, to_dam_type(400), to_sound_type(400), to_do_print(400));
+			damage_monst(target, who_att, r2, 0, damage_type::Weapon, 4, TRUE);
 			}
 			else {
 				draw_terrain(2);
@@ -603,14 +603,14 @@ void pc_attack(short who_att,short target)
 			switch (what_skill1) {
 			 	case skill::EdgedWeapon:
 					if (adven[who_att].items[weap1].item_level < 8)
-						damage_monst(target, who_att, r2, spec_dam, to_dam_type(100), to_sound_type(100), to_do_print(100));
-						else damage_monst(target, who_att, r2, spec_dam, to_dam_type(200), to_sound_type(200), to_do_print(200));
+						damage_monst(target, who_att, r2, spec_dam, damage_type::Weapon, 1, TRUE);
+						else damage_monst(target, who_att, r2, spec_dam, damage_type::Weapon, 2, TRUE);
 					break;	
 			 	case skill::BashingWeapon:
-					damage_monst(target, who_att, r2, spec_dam, to_dam_type(400), to_sound_type(400), to_do_print(400));
+					damage_monst(target, who_att, r2, spec_dam, damage_type::Weapon, 4, TRUE);
 					break;	
 			 	case skill::PoleWeapon:
-					damage_monst(target, who_att, r2, spec_dam, to_dam_type(300), to_sound_type(300), to_do_print(300));
+					damage_monst(target, who_att, r2, spec_dam, damage_type::Weapon, 3, TRUE);
 					break;
 				default:
 					// CC: Not present in original source
@@ -671,14 +671,14 @@ void pc_attack(short who_att,short target)
 			switch (what_skill2) {
 			 	case skill::EdgedWeapon:
 					if (adven[who_att].items[weap1].item_level < 8)
-						damage_monst(target, who_att, r2, spec_dam, to_dam_type(100), to_sound_type(100), to_do_print(100));
-						else damage_monst(target, who_att, r2, spec_dam, to_dam_type(200), to_sound_type(200), to_do_print(200));
+						damage_monst(target, who_att, r2, spec_dam, damage_type::Weapon, 1, TRUE);
+						else damage_monst(target, who_att, r2, spec_dam, damage_type::Weapon, 2, TRUE);
 					break;	
 			 	case skill::BashingWeapon:
-					damage_monst(target, who_att, r2, spec_dam, to_dam_type(400), to_sound_type(400), to_do_print(400));
+					damage_monst(target, who_att, r2, spec_dam, damage_type::Weapon, 4, TRUE);
 					break;	
 			 	case skill::PoleWeapon:
-					damage_monst(target, who_att, r2, spec_dam, to_dam_type(300), to_sound_type(300), to_do_print(300));
+					damage_monst(target, who_att, r2, spec_dam, damage_type::Weapon, 3, TRUE);
 					break;
 				default:
 					// CC: Not present in original source
@@ -1496,7 +1496,7 @@ void fire_missile(location target)
 							ASB("  There is a flash of light.");
 							cur_monst->m_d.health += r2;
 							}
-							else damage_monst(targ_monst, current_pc, r2, spec_dam, to_dam_type(1300), to_sound_type(1300), to_do_print(1300));
+							else damage_monst(targ_monst, current_pc, r2, spec_dam, damage_type::Weapon, 13, TRUE);
 						
 						//if (adven[current_pc].items[ammo_inv_slot].ability == 33)
 						//	hit_space(cur_monst->m_loc,get_ran(3,1,6),damage_type::Fire,1,1);
@@ -2709,7 +2709,7 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 			if (r1 <= skill_hit_chance(dam[level] * 2)) {
 //					monst_spell_note(m_target->number,16);
 
-					damage_monst(target - 100,7,r2,0, to_dam_type(1300), to_sound_type(1300), to_do_print(1300));
+					damage_monst(target - 100,7,r2,0, damage_type::Weapon, 13, TRUE);
 				}
 				else {
 					monst_spell_note(m_target->number,18);
