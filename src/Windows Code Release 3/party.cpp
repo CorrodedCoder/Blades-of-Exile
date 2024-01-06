@@ -3820,18 +3820,8 @@ static Boolean damage_pc_impl(short which_pc, short how_much, damage_type type, 
 			sound_type = 11;
 	}
 
-	pc_record_type& pc = adven[which_pc];
-	const short parry_modifier = pc_parry[which_pc];
-	short party_adjust = 0;
-	if (type != damage_type::MarkedDamage)
-	{
-		if (PSD[306][7] > 0)
-		{
-			party_adjust = 3;
-		}
-	}
-
-	how_much = pc_damage_adjust(pc, how_much, type, type_of_attacker, parry_modifier, party_adjust);
+	const short party_adjust = ((type != damage_type::MarkedDamage) && (PSD[306][7] > 0)) ? 3 : 0;
+	how_much = pc_damage_adjust(adven[which_pc], how_much, type, type_of_attacker, pc_parry[which_pc], party_adjust);
 	
 	if (boom_anim_active == TRUE)
 	{
