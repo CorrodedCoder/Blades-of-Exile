@@ -3556,30 +3556,30 @@ bool flying(void)
 	return party.stuff_done[305][1] != 0;
 }
 
-static bool pc_poison(short which_pc, short how_much)
+static bool pc_poison(pc_record_type& pc, short how_much)
 {
 	short level = 0;
 
-	if ((level = pc_prot_level(adven[which_pc], 34)) > 0)
+	if ((level = pc_prot_level(pc, 34)) > 0)
 	{
 		how_much -= level / 2;
 	}
-	if ((level = pc_prot_level(adven[which_pc], 31)) > 0)
+	if ((level = pc_prot_level(pc, 31)) > 0)
 	{
 		how_much -= level / 3;
 	}
-	if ((adven[which_pc].traits[trait::Frail] == TRUE) && (how_much > 1))
+	if ((pc.traits[trait::Frail] == TRUE) && (how_much > 1))
 	{
 		how_much++;
 	}
-	if ((adven[which_pc].traits[trait::Frail] == TRUE) && (how_much == 1) && (rand_short(0, 1) == 0))
+	if ((pc.traits[trait::Frail] == TRUE) && (how_much == 1) && (rand_short(0, 1) == 0))
 	{
 		how_much++;
 	}
 
 	if (how_much > 0)
 	{
-		adven[which_pc].gaffect(affect::Poisoned) = min(adven[which_pc].gaffect(affect::Poisoned) + how_much, 8);
+		pc.gaffect(affect::Poisoned) = min(pc.gaffect(affect::Poisoned) + how_much, 8);
 		return true;
 	}
 
@@ -3590,7 +3590,7 @@ void poison_pc(short which_pc, short how_much)
 {
 	if (adven[which_pc].main_status == status::Normal)
 	{
-		if (pc_poison(which_pc, how_much))
+		if (pc_poison(adven[which_pc], how_much))
 		{
 			add_string_to_buf("  {} poisoned.", adven[which_pc].name);
 			one_sound(17);
