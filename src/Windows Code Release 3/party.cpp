@@ -3886,7 +3886,7 @@ void set_pc_moves()
 		}
 		else
 		{
-			pc_moves[i] = (adven[i].traits[trait::Sluggish] == TRUE) ? 3 : 4;
+			pc_moves[i] = adven[i].has_trait(trait::Sluggish) ? 3 : 4;
 			r = get_encumberance(adven[i]);
 			pc_moves[i] = boe_clamp(pc_moves[i] - (r / 3), 1, 8);
 

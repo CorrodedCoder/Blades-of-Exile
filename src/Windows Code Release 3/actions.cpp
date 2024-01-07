@@ -2396,11 +2396,11 @@ void increase_age()
 	// Recuperation and chronic disease disads
 	for (i = 0; i < 6; i++) 
 		if (adven[i].main_status == status::Normal) {
-			if ((adven[i].traits[trait::Recuperation] > 0) && (rand_short(0,10) == 1) && (adven[i].cur_health < adven[i].max_health)) {
+			if (adven[i].has_trait_b(trait::Recuperation) && (rand_short(0,10) == 1) && (adven[i].cur_health < adven[i].max_health)) {
 				pc_heal(adven[i],2);
 				update_stat = TRUE;
 				}
-			if ((adven[i].traits[trait::ChronicDisease] > 0) && (rand_short(0,110) == 1)) {
+			if (adven[i].has_trait_b(trait::ChronicDisease) && (rand_short(0,110) == 1)) {
 				disease_pc(i,4);
 				update_stat = TRUE;
 				}

@@ -511,7 +511,7 @@ void use_item(short pc,short item)
 		add_string_to_buf("Use: Can't use this item.       ");
 		take_charge = FALSE;
 		}
-	if ((adven[pc].traits[trait::MagicallyInept] == TRUE) && (inept_ok == FALSE)){
+	if (adven[pc].has_trait(trait::MagicallyInept) && (inept_ok == FALSE)){
 		add_string_to_buf("Use: Can't - magically inept.       ");
 		take_charge = FALSE;
 		}

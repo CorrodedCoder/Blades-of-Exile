@@ -3845,7 +3845,7 @@ void do_poison()
 					if (rand_short(0,8) < 6)
 						adven[i].reduce_affect(affect::Poisoned);
 					if (rand_short(0,8) < 6)
-						if (adven[i].traits[trait::GoodConstitution] == TRUE)
+						if (adven[i].has_trait(trait::GoodConstitution))
 							adven[i].reduce_affect(affect::Poisoned);
 				}
 		put_pc_screen();
@@ -3892,7 +3892,7 @@ void handle_disease()
 							break;
 						}
 					r1 = rand_short(0,7);
-					if (adven[i].traits[trait::GoodConstitution] == TRUE)
+					if (adven[i].has_trait(trait::GoodConstitution))
 						r1 -= 2;
 					if ((rand_short(0,7) <= 0) || (pc_has_abil_equip(adven[i],67) < 24))
 						adven[i].reduce_affect(affect::Diseased);
