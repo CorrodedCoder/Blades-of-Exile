@@ -1475,12 +1475,12 @@ void do_mage_spell(short pc_num, short spell_num)
 	switch (spell_num)
 	{
 	case 0:  // Light
-		adven[pc_num].cur_sp -= spell_cost(0, spell_num);
+		adven[pc_num].cur_sp -= mage_spell_cost(spell_num);
 		increase_light(50);
 		break;
 
 	case 6: // Identify
-		adven[pc_num].cur_sp -= spell_cost(0, spell_num);
+		adven[pc_num].cur_sp -= mage_spell_cost(spell_num);
 		ASB("All of your items are identified.");
 		for (i = 0; i < 6; i++)
 		{
@@ -1492,7 +1492,7 @@ void do_mage_spell(short pc_num, short spell_num)
 		break;
 
 	case 9: // true sight
-		adven[pc_num].cur_sp -= spell_cost(0, spell_num);
+		adven[pc_num].cur_sp -= mage_spell_cost(spell_num);
 		for (where.x = 0; where.x < 64; where.x++)
 		{
 			for (where.y = 0; where.y < 64; where.y++)
@@ -1509,7 +1509,7 @@ void do_mage_spell(short pc_num, short spell_num)
 	case 16: // summon beast
 		r1 = get_summon_monster(1);
 		if (r1 < 0) break;
-		adven[pc_num].cur_sp -= spell_cost(0, spell_num);
+		adven[pc_num].cur_sp -= mage_spell_cost(spell_num);
 		store = get_ran(3, 1, 4) + adj;
 		if (summon_monster(r1, where, store, 2) == FALSE)
 		{
@@ -1522,7 +1522,7 @@ void do_mage_spell(short pc_num, short spell_num)
 		j = boe_clamp(store, 1, 7);
 		r1 = get_summon_monster(1);
 		if (r1 < 0) break;
-		adven[pc_num].cur_sp -= spell_cost(0, spell_num);
+		adven[pc_num].cur_sp -= mage_spell_cost(spell_num);
 		store = get_ran(4, 1, 4) + adj;
 		for (i = 0; i < j; i++)
 		{
@@ -1538,7 +1538,7 @@ void do_mage_spell(short pc_num, short spell_num)
 		j = boe_clamp(store, 1, 6);
 		r1 = get_summon_monster(2);
 		if (r1 < 0) break;
-		adven[pc_num].cur_sp -= spell_cost(0, spell_num);
+		adven[pc_num].cur_sp -= mage_spell_cost(spell_num);
 		store = get_ran(5, 1, 4) + adj;
 		for (i = 0; i < j; i++)
 		{
@@ -1554,7 +1554,7 @@ void do_mage_spell(short pc_num, short spell_num)
 		j = boe_clamp(store, 1, 5);
 		r1 = get_summon_monster(3);
 		if (r1 < 0) break;
-		adven[pc_num].cur_sp -= spell_cost(0, spell_num);
+		adven[pc_num].cur_sp -= mage_spell_cost(spell_num);
 		store = get_ran(7, 1, 4) + pc_stat_adj(adven[who_cast], skill::Intelligence);
 		for (i = 0; i < j; i++)
 		{
@@ -1573,7 +1573,7 @@ void do_mage_spell(short pc_num, short spell_num)
 		}
 		else
 		{
-			adven[pc_num].cur_sp -= spell_cost(0, spell_num);
+			adven[pc_num].cur_sp -= mage_spell_cost(spell_num);
 		}
 		break;
 
@@ -1585,7 +1585,7 @@ void do_mage_spell(short pc_num, short spell_num)
 		break;
 
 	case 23:  // Long light
-		adven[pc_num].cur_sp -= spell_cost(0, spell_num);
+		adven[pc_num].cur_sp -= mage_spell_cost(spell_num);
 		increase_light(200);
 		break;
 
@@ -1602,7 +1602,7 @@ void do_mage_spell(short pc_num, short spell_num)
 		else
 		{
 			remove_charge(pc_num, item);
-			adven[pc_num].cur_sp -= spell_cost(0, spell_num);
+			adven[pc_num].cur_sp -= mage_spell_cost(spell_num);
 			add_string_to_buf("  As the sapphire dissolves,       ");
 			add_string_to_buf("  you have a vision.               ");
 			for (i = 0; i < 64; i++)
@@ -1617,7 +1617,7 @@ void do_mage_spell(short pc_num, short spell_num)
 		break;
 
 	case 38:  // Stealth
-		adven[pc_num].cur_sp -= spell_cost(0, spell_num);
+		adven[pc_num].cur_sp -= mage_spell_cost(spell_num);
 		party.stuff_done[305][0] += max(6, adven[pc_num].level * 2);
 		break;
 
@@ -1658,7 +1658,7 @@ void do_mage_spell(short pc_num, short spell_num)
 		}
 		else
 		{
-			adven[pc_num].cur_sp -= spell_cost(0, spell_num);
+			adven[pc_num].cur_sp -= mage_spell_cost(spell_num);
 			add_string_to_buf("  You start flying!               ");
 			party.stuff_done[305][1] = 3;
 		}
@@ -1668,7 +1668,7 @@ void do_mage_spell(short pc_num, short spell_num)
 		target = store_spell_target;
 		if (target < 6)
 		{
-			adven[pc_num].cur_sp -= spell_cost(0, spell_num);
+			adven[pc_num].cur_sp -= mage_spell_cost(spell_num);
 		}
 		if ((spell_num == 57) && (target < 6))
 		{
@@ -1709,7 +1709,7 @@ void do_priest_spell(short pc_num, short spell_num)
 	switch (spell_num)
 	{
 	case 4:
-		adven[pc_num].cur_sp -= spell_cost(1, spell_num);
+		adven[pc_num].cur_sp -= priest_spell_cost(spell_num);
 		if (is_town())
 		{
 			loc = (overall_mode == 0) ? party.p_loc : c_town.p_loc;
@@ -1726,7 +1726,7 @@ void do_priest_spell(short pc_num, short spell_num)
 		break;
 
 	case 7: case 25: // manna spells
-		adven[pc_num].cur_sp -= spell_cost(1, spell_num);
+		adven[pc_num].cur_sp -= priest_spell_cost(spell_num);
 		store = adven[pc_num].level / 3 + 2 * pc_stat_adj(adven[who_cast], skill::Intelligence) + get_ran(2, 1, 4);
 		r1 = max(0, store);
 		if (spell_num == 7)
@@ -1745,7 +1745,7 @@ void do_priest_spell(short pc_num, short spell_num)
 		break;
 
 	case 13:
-		adven[pc_num].cur_sp -= spell_cost(1, spell_num);
+		adven[pc_num].cur_sp -= priest_spell_cost(spell_num);
 		party.light_level += 210;
 		break;
 
@@ -1757,12 +1757,12 @@ void do_priest_spell(short pc_num, short spell_num)
 		}
 		else
 		{
-			adven[pc_num].cur_sp -= spell_cost(1, spell_num);
+			adven[pc_num].cur_sp -= priest_spell_cost(spell_num);
 		}
 		break;
 
 	case 34:
-		adven[pc_num].cur_sp -= spell_cost(1, spell_num);
+		adven[pc_num].cur_sp -= priest_spell_cost(spell_num);
 		r1 = adven[who_cast].level / 6 + pc_stat_adj(adven[who_cast], skill::Intelligence) / 3 + rand_short(0, 1);
 		for (i = 0; i < r1; i++)
 		{
@@ -1776,7 +1776,7 @@ void do_priest_spell(short pc_num, short spell_num)
 		break;
 
 	case 43:
-		adven[pc_num].cur_sp -= spell_cost(1, spell_num);
+		adven[pc_num].cur_sp -= priest_spell_cost(spell_num);
 		store = get_ran(2, 1, 4) + pc_stat_adj(adven[who_cast], skill::Intelligence);
 		if (summon_monster(126, where, store, 2) == FALSE)
 		{
@@ -1800,7 +1800,7 @@ void do_priest_spell(short pc_num, short spell_num)
 		}
 		else
 		{
-			adven[pc_num].cur_sp -= spell_cost(1, spell_num);
+			adven[pc_num].cur_sp -= priest_spell_cost(spell_num);
 		}
 		break;
 
@@ -1822,18 +1822,18 @@ void do_priest_spell(short pc_num, short spell_num)
 		add_string_to_buf("  Monsters now on map.                ");
 		party.stuff_done[305][2] += 6 + rand_short(0, 6);
 		clear_map();
-		adven[pc_num].cur_sp -= spell_cost(1, spell_num);
+		adven[pc_num].cur_sp -= priest_spell_cost(spell_num);
 		break;
 
 	case 37: // firewalk
 		add_string_to_buf("  You are now firewalking.                ");
 		party.stuff_done[305][3] += adven[pc_num].level / 12 + 2;
-		adven[pc_num].cur_sp -= spell_cost(1, spell_num);
+		adven[pc_num].cur_sp -= priest_spell_cost(spell_num);
 		break;
 
 	case 44: // shatter
 		add_string_to_buf("  You send out a burst of energy. ");
-		adven[pc_num].cur_sp -= spell_cost(1, spell_num);
+		adven[pc_num].cur_sp -= priest_spell_cost(spell_num);
 		for (loc.x = where.x - 1; loc.x < where.x + 2; loc.x++)
 		{
 			for (loc.y = where.y - 1; loc.y < where.y + 2; loc.y++)
@@ -1860,7 +1860,7 @@ void do_priest_spell(short pc_num, short spell_num)
 			add_string_to_buf("  Not while on horseback. ");
 			return;
 		}
-		adven[pc_num].cur_sp -= spell_cost(1, spell_num);
+		adven[pc_num].cur_sp -= priest_spell_cost(spell_num);
 		add_string_to_buf("  You are moved... ");
 		force_town_enter(scenario.which_town_start(), scenario.where_start());
 		start_town_mode(scenario.which_town_start(), 9);
@@ -1877,7 +1877,7 @@ void do_priest_spell(short pc_num, short spell_num)
 		target = store_spell_target;
 		if (target < 6)
 		{
-			adven[pc_num].cur_sp -= spell_cost(1, spell_num);
+			adven[pc_num].cur_sp -= priest_spell_cost(spell_num);
 			switch (spell_num)
 			{
 			case 1: case 20: case 39:
@@ -1945,7 +1945,7 @@ void do_priest_spell(short pc_num, short spell_num)
 				return;
 			}
 
-			adven[pc_num].cur_sp -= spell_cost(1, spell_num);
+			adven[pc_num].cur_sp -= priest_spell_cost(spell_num);
 			if (spell_num == 35) // martyr's shield
 			{
 				add_string_to_buf("  {} shielded.         ", adven[target].name);
@@ -2086,7 +2086,7 @@ void do_priest_spell(short pc_num, short spell_num)
 		break;
 
 	case 21: case 46: case 54:
-		adven[pc_num].cur_sp -= spell_cost(1, spell_num);
+		adven[pc_num].cur_sp -= priest_spell_cost(spell_num);
 		r1 = get_ran(spell_num / 7 + adj, 1, 4);
 		if (spell_num < 54)
 		{
@@ -2106,13 +2106,13 @@ void do_priest_spell(short pc_num, short spell_num)
 		break;
 
 	case 30:
-		adven[pc_num].cur_sp -= spell_cost(1, spell_num);
+		adven[pc_num].cur_sp -= priest_spell_cost(spell_num);
 		add_string_to_buf("  Party cured.  ");
 		cure_party(adven, 3 + pc_stat_adj(adven[pc_num], skill::Intelligence));
 		break;
 
 	case 42: case 61: case 48:
-		adven[pc_num].cur_sp -= spell_cost(1, spell_num);
+		adven[pc_num].cur_sp -= priest_spell_cost(spell_num);
 		switch (spell_num)
 		{
 		case 42: add_string_to_buf("  Party hidden."); break;
@@ -2723,11 +2723,11 @@ static void put_spell_list()
 				if (i == 35)
 					add_text = std::format("{} {:c} ?", mage_spell_name(i), (char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i));
 				else
-					add_text = std::format("{} {:c} {:d}", mage_spell_name(i), (char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i), spell_cost(0, i));
+					add_text = std::format("{} {:c} {:d}", mage_spell_name(i), (char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i), mage_spell_cost(i));
 			}
 			else
 			{
-				add_text = std::format("{} {:c} {:d}", priest_spell_name(i), (char)((97 + i > 122) ? 65 + (i - 26) : 97 + i), spell_cost(1, i));
+				add_text = std::format("{} {:c} {:d}", priest_spell_name(i), (char)((97 + i > 122) ? 65 + (i - 26) : 97 + i), priest_spell_cost(i));
 			}
 			//for (j = 0; j < 30; i++)
 			//	if (add_text[j] == '&')
@@ -2752,11 +2752,11 @@ static void put_spell_list()
 				std::string add_text;
 				if (store_situation == 0)
 				{
-					add_text = std::format("{} {:c} {:d}", mage_spell_name(spell_index[i]), (char)((97 + i > 122) ? 65 + (i - 26) : 97 + i), spell_cost(0, spell_index[i]));
+					add_text = std::format("{} {:c} {:d}", mage_spell_name(spell_index[i]), (char)((97 + i > 122) ? 65 + (i - 26) : 97 + i), mage_spell_cost(spell_index[i]));
 				}
 				else
 				{
-					add_text = std::format("{} {:c} {:d}", priest_spell_name(spell_index[i]), (char)((97 + i > 122) ? 65 + (i - 26) : 97 + i), spell_cost(1, spell_index[i]));
+					add_text = std::format("{} {:c} {:d}", priest_spell_name(spell_index[i]), (char)((97 + i > 122) ? 65 + (i - 26) : 97 + i), priest_spell_cost(spell_index[i]));
 				}
 				cd_add_label(1098, 37 + i, add_text, 53);
 			}
@@ -3956,9 +3956,9 @@ void adjust_spell_menus()
 			if (pc_can_cast_spell(current_pc, 0, i))
 			{
 				std::string spell_name;
-				if (spell_cost(0, i) > 0)
+				if (mage_spell_cost(i) > 0)
 				{
-					spell_name = std::format("L{:d} - {}, C {:d}", spell_level(i), mage_spell_name(i), spell_cost(0, i));
+					spell_name = std::format("L{:d} - {}, C {:d}", spell_level(i), mage_spell_name(i), mage_spell_cost(i));
 				}
 				else
 				{
@@ -4024,9 +4024,9 @@ void adjust_spell_menus()
 				//spell_name[0] = strlen(priest_spell_name(on_spell_menu[1][i]));
 				//strcpy((spell_name + 1),priest_spell_name(on_spell_menu[1][i]));
 				std::string spell_name;
-				if (spell_cost(1, i) > 0)
+				if (priest_spell_cost(i) > 0)
 				{
-					spell_name = std::format(" L{:d} - {}, C {:d}", spell_level(i), priest_spell_name(i), spell_cost(1, i));
+					spell_name = std::format(" L{:d} - {}, C {:d}", spell_level(i), priest_spell_name(i), priest_spell_cost(i));
 				}
 				else
 				{
