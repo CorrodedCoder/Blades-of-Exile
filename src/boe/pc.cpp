@@ -101,12 +101,12 @@ namespace
 
 bool pc_has_cave_lore(const pc_record_type& pc)
 {
-	return (pc.main_status == status::Normal) && (pc.traits[trait::CaveLore] > 0);
+	return (pc.main_status == status::Normal) && pc.has_trait_b(trait::CaveLore);
 }
 
 bool pc_has_woodsman(const pc_record_type& pc)
 {
-	return (pc.main_status == status::Normal) && (pc.traits[trait::Woodsman] > 0);
+	return (pc.main_status == status::Normal) && pc.has_trait_b(trait::Woodsman);
 }
 
 void pc_heal(pc_record_type& pc, short amt)
@@ -222,7 +222,7 @@ short pc_get_tnl(const pc_record_type& pc)
 		| std::views::transform([](const auto& pair) { return std::get<1>(pair); });
 #else
 	auto v = std::views::iota(0, static_cast<int>(std::size(pc.traits)))
-		| std::views::filter([pc](int i) { return pc.traits[i] == BOE_TRUE; })
+		| std::views::filter([pc](int i) { return pc.has_trait(i); })
 		| std::views::transform([](int i) { return c_ap[static_cast<size_t>(i)]; });
 #endif
 
@@ -279,8 +279,8 @@ short pc_has_abil(const pc_record_type& pc, short abil)
 
 short pc_amount_can_carry(const pc_record_type& pc)
 {
-	return 100 + (15 * std::min(pc.skills[skill::Strength], static_cast<short>(20))) + ((pc.traits[trait::ExceptionalStr] != 0) ? 30 : 0)
-		+ ((pc.traits[trait::BadBack] != 0) ? -50 : 0);
+	return 100 + (15 * std::min(pc.skills[skill::Strength], static_cast<short>(20))) + (pc.has_trait_c(trait::ExceptionalStr) ? 30 : 0)
+		+ (pc.has_trait_c(trait::BadBack) ? -50 : 0);
 }
 
 void pc_sort_items(pc_record_type& pc)
@@ -309,7 +309,7 @@ void pc_sort_items(pc_record_type& pc)
 				}
 			}
 		}
-	} while(items_swapped);
+	} while (items_swapped);
 }
 
 bool pc_affect(pc_record_type& pc, affect type, short how_much)
@@ -393,7 +393,7 @@ bool pc_disease(pc_record_type& pc, short how_much)
 	{
 		how_much -= level / 2;
 	}
-	if (pc.traits[trait::Frail] == BOE_TRUE)
+	if (pc.has_trait(trait::Frail))
 	{
 		if (how_much > 1)
 		{
@@ -422,7 +422,7 @@ bool pc_sleep(pc_record_type& pc, short how_much, short adjust)
 	{
 		how_much = -1;
 	}
-	if ((pc.traits[trait::HighlyAlert] > 0) || (pc.gaffect(affect::Asleep) < 0))
+	if (pc.has_trait_b(trait::HighlyAlert) || (pc.gaffect(affect::Asleep) < 0))
 	{
 		how_much = -1;
 	}
@@ -488,7 +488,7 @@ bool pc_poison(pc_record_type& pc, short how_much)
 	{
 		how_much -= level / 3;
 	}
-	if (pc.traits[trait::Frail] == BOE_TRUE)
+	if (pc.has_trait(trait::Frail))
 	{
 		if (how_much > 1)
 		{
@@ -560,7 +560,7 @@ short pc_damage_adjust(const pc_record_type& pc, short how_much, damage_type typ
 	if (type != damage_type::MarkedDamage)
 	{
 		// toughness
-		if (pc.traits[trait::Toughness] == BOE_TRUE)
+		if (pc.has_trait(trait::Toughness))
 		{
 			--how_much;
 		}
@@ -610,7 +610,7 @@ short pc_damage_adjust(const pc_record_type& pc, short how_much, damage_type typ
 	}
 
 	// Mag. res helps w. fire and cold
-	if (((type == damage_type::Fire) || (type == damage_type::Cold)) &&	(pc.gaffect(affect::MagicResistant) > 0))
+	if (((type == damage_type::Fire) || (type == damage_type::Cold)) && (pc.gaffect(affect::MagicResistant) > 0))
 	{
 		how_much /= 2;
 	}
@@ -642,7 +642,7 @@ short pc_stat_adj(const pc_record_type& pc, skill which)
 	short tr = skill_bonus(pc.skills[which]);
 	if (which == skill::Intelligence)
 	{
-		if (pc.traits[trait::MagicallyApt] == BOE_TRUE)
+		if (pc.has_trait(trait::MagicallyApt))
 		{
 			++tr;
 		}
@@ -651,7 +651,7 @@ short pc_stat_adj(const pc_record_type& pc, skill which)
 			++tr;
 		}
 	}
-	if ((which == skill::Strength) && (pc.traits[trait::ExceptionalStr] == BOE_TRUE))
+	if ((which == skill::Strength) && pc.has_trait(trait::ExceptionalStr))
 	{
 		++tr;
 	}

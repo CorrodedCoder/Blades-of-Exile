@@ -665,9 +665,22 @@ struct pc_record_type {
 	[[nodiscard]] auto operator<=>(const pc_record_type&) const = default;
 	[[nodiscard]] bool operator==(const pc_record_type&) const = default;
 
-	[[nodiscard]] bool has_trait(trait trait) const
+	// Three variants of the same check just in case the old code
+	// didn't really rely on Boolean being 0 or 1. Can eventually be removed
+	// when input validation/correction of data is complete.
+	[[nodiscard]] bool has_trait(trait index) const
 	{
-		return traits[to_underlying(trait)];
+		return traits[to_underlying(index)] == BOE_TRUE;
+	}
+
+	[[nodiscard]] bool has_trait_b(trait index) const
+	{
+		return traits[to_underlying(index)] > 0;
+	}
+
+	[[nodiscard]] bool has_trait_c(trait index) const
+	{
+		return traits[to_underlying(index)] != BOE_FALSE;
 	}
 
 	[[nodiscard]] short gaffect(affect type) const
