@@ -393,13 +393,16 @@ bool pc_disease(pc_record_type& pc, short how_much)
 	{
 		how_much -= level / 2;
 	}
-	if ((pc.traits[trait::Frail] == BOE_TRUE) && (how_much > 1))
+	if (pc.traits[trait::Frail] == BOE_TRUE)
 	{
-		how_much++;
-	}
-	if ((pc.traits[trait::Frail] == BOE_TRUE) && (how_much == 1) && (rand_short(0, 1) == 0))
-	{
-		how_much++;
+		if (how_much > 1)
+		{
+			++how_much;
+		}
+		if ((how_much == 1) && (rand_short(0, 1) == 0))
+		{
+			++how_much;
+		}
 	}
 	pc.gaffect(affect::Diseased) = static_cast<short>(std::min(pc.gaffect(affect::Diseased) + how_much, 8));
 	return true;
@@ -477,31 +480,30 @@ bool pc_acid(pc_record_type& pc, short how_much)
 
 bool pc_poison(pc_record_type& pc, short how_much)
 {
-	short level = 0;
-
-	if ((level = pc_prot_level(pc, 34)) > 0)
+	if (const short level = pc_prot_level(pc, 34); level > 0)
 	{
 		how_much -= level / 2;
 	}
-	if ((level = pc_prot_level(pc, 31)) > 0)
+	if (const short level = pc_prot_level(pc, 31); level > 0)
 	{
 		how_much -= level / 3;
 	}
-	if ((pc.traits[trait::Frail] == BOE_TRUE) && (how_much > 1))
+	if (pc.traits[trait::Frail] == BOE_TRUE)
 	{
-		how_much++;
+		if (how_much > 1)
+		{
+			++how_much;
+		}
+		if ((how_much == 1) && (rand_short(0, 1) == 0))
+		{
+			++how_much;
+		}
 	}
-	if ((pc.traits[trait::Frail] == BOE_TRUE) && (how_much == 1) && (rand_short(0, 1) == 0))
-	{
-		how_much++;
-	}
-
 	if (how_much > 0)
 	{
 		pc.gaffect(affect::Poisoned) = static_cast<short>(std::min(pc.gaffect(affect::Poisoned) + how_much, 8));
 		return true;
 	}
-
 	return false;
 }
 
@@ -642,19 +644,16 @@ short pc_stat_adj(const pc_record_type& pc, skill which)
 	{
 		if (pc.traits[trait::MagicallyApt] == BOE_TRUE)
 		{
-			tr++;
+			++tr;
 		}
 		if (pc_has_abil_equip(pc, 99) < 16)
 		{
-			tr++;
+			++tr;
 		}
 	}
-	if (which == skill::Strength)
+	if ((which == skill::Strength) && (pc.traits[trait::ExceptionalStr] == BOE_TRUE))
 	{
-		if (pc.traits[trait::ExceptionalStr] == BOE_TRUE)
-		{
-			tr++;
-		}
+		++tr;
 	}
 	return tr;
 }
