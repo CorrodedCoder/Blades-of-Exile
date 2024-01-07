@@ -1132,7 +1132,7 @@ void pick_lock(location where,short pc_num)
 		return;
 	}
 
-	short r1 = rand_short(0,100) - 5 * stat_adj(adven[pc_num], skill::Dexterity) + c_town.difficulty * 7
+	short r1 = rand_short(0,100) - 5 * pc_stat_adj(adven[pc_num], skill::Dexterity) + c_town.difficulty * 7
 	 - 5 * adven[pc_num].skills[skill::Lockpicking] - adven[pc_num].items[which_item].ability_strength * 7;
 
 	// Nimble?
@@ -1177,7 +1177,7 @@ void bash_door(location where,short pc_num)
 	}
 
 	const short unlock_adjust = terrain.flag2;
-	const short r1 = rand_short(0, 100) - 15 * stat_adj(adven[pc_num], skill::Strength) + c_town.difficulty * 4;
+	const short r1 = rand_short(0, 100) - 15 * pc_stat_adj(adven[pc_num], skill::Strength) + c_town.difficulty * 4;
 	if ((unlock_adjust >= 5) || (r1 > (unlock_adjust * 15 + 40)) || (terrain.special != terrain_special::UnlockableOrBashable))
 	{
 		add_string_to_buf("  Didn't work.                ");
