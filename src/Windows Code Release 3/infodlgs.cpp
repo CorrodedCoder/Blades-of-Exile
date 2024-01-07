@@ -21,6 +21,7 @@
 #include "fileio.h"
 #include "boe/utility.hpp"
 #include "boe/item.hpp"
+#include "boe/spell.hpp"
 #include "game_globals.hpp"
 
 short mage_spell_pos = 0,priest_spell_pos = 0,skill_pos = 0;
@@ -29,8 +30,6 @@ creature_data_type *store_m;
 short store_trait_mode,store_item_pc,store_pc_num;
 item_record_type store_i;
 
-extern const short spell_w_cast[2][62];
-extern const short spell_level[62];
 extern const short skill_cost[20];
 extern const short skill_max[20];
 extern const short skill_g_cost[20];
@@ -38,7 +37,6 @@ extern Adventurers adven;
 extern party_record_type party;
 extern const short mage_range[80];
 extern const short priest_range[62];
-extern const short spell_cost[2][62];
 extern Boolean in_startup_mode,give_intro_hint;
 extern Boolean cd_event_filter();
 extern Boolean dialog_not_toast;
@@ -85,10 +83,10 @@ void put_spell_info()
 	get_str (store_text, res, pos * 2 + 1);
 	cd_set_item_text(1096,4, store_text);
 
-	if (spell_cost[store_display_mode][pos] > 0)
-		cd_set_item_text(1096, 5, std::format("{:d}/{:d}",spell_level[pos],spell_cost[store_display_mode][pos]));
+	if (spell_cost(store_display_mode, pos) > 0)
+		cd_set_item_text(1096, 5, std::format("{:d}/{:d}",spell_level(pos),spell_cost(store_display_mode, pos)));
 	else
-		cd_set_item_text(1096, 5, std::format("{:d}/?",spell_level[pos]));
+		cd_set_item_text(1096, 5, std::format("{:d}/?",spell_level(pos)));
 
 	if (ran == 0)
 	{
@@ -101,7 +99,7 @@ void put_spell_info()
 
 	get_str(store_text, res, pos * 2 + 2);
 	cd_set_item_text(1096,7, store_text);
-	get_str(store_text, 11, 1 + spell_w_cast[store_display_mode][pos]);
+	get_str(store_text, 11, 1 + spell_w_cast(store_display_mode, pos));
 	cd_set_item_text(1096,11, store_text);
 }
 
@@ -674,15 +672,6 @@ Boolean display_alchemy_event_filter (short item_hit)
 					return FALSE;
 }
 
-static const std::array alch_names{ "Weak Curing Potion (1)","Weak Healing Potion (1)","Weak Poison (1)",
-"Weak Speed Potion (3)","Medium Poison (3)",
-	"Medium Heal Potion (4)","Strong Curing (5)","Medium Speed Potion (5)",
-	"Graymold Salve (7)","Weak Energy Potion (9)",
-	"Potion of Clarity (9)","Strong Poison (10)","Strong Heal Potion (12)","Killer Poison (12)",
-	"Resurrection Balm (9)","Medium Energy Ptn. (14)","Knowledge Brew (19)",
-	"Strong Strength (10)","Bliss (16)","Strong Power (20)"
-};
-
 void display_alchemy()
 {
 	short i;
@@ -693,7 +682,7 @@ void display_alchemy()
 
 
 	for (i = 0; i < 20; i++) {
-		cd_add_label(996,i + 4,alch_names[i],1083);
+		cd_add_label(996,i + 4, alchemy_name(i),1083);
 		if (party.alchemy[i] > 0)
 			cd_set_led(996,i + 4,1);
 			else cd_set_led(996,i + 4,0);

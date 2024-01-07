@@ -36,60 +36,6 @@ short skill_g_cost[20] = {50,50,50,40,40,40,30,50,40,250,
 short skill_bonus[21] = {-3,-3,-2,-1,0,0,1,1,1,2,
 							2,2,3,3,3,3,4,4,4,5,5};
 
-short spell_level[62] = {1,1,1,1,1,1,1,1,1,1, 2,2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3,3,3,3,
-						4,4,4,4,4,4,4,4, 5,5,5,5,5,5,5,5, 6,6,6,6,6,6,6,6, 7,7,7,7,7,7,7,7};
-short spell_cost[2][62] = {{1,1,1,1,1,2,50,2,1,3, 2,3,2,2,2,2,4,4,2,6, 3,3,5,3,3,5,6,4,6,4,
-							4,5,4,8,30,-1,8,6, 5,8,8,6,9,10,6,6, 7,6,8,7,12,10,12,20, 12,8,20,10,14,10,50,10},
-							{1,1,1,2,1,1,3,5,50,1, 2,2,2,2,3,5,8,6,4,2, 3,4,3,3,3,10,5,3,4,6,
-							 5,5,5,15,6,5,5,8, 6,7,25,8,10,12,12,6, 8,7,8,8,14,17,8,7, 10,10,35,10,12,12,30,10}};
-char *mage_s_name[] = {"Light","Spark","Minor Haste","Strength","Scare",
-							"Flame Cloud","Identify","Scry Monster","Goo","True Sight",
-						"Minor Poison","Flame","Slow","Dumbfound","Envenom",
-							"Stinking Cloud","Summon Beast","Conflagration","Dispel Field","Sleep Cloud",
-						"Unlock","Haste","Fireball","Long Light","Fear",
-							"Wall of Force","Weak Summoning","Flame Arrows","Web","Resist Magic",
-						"Poison","Ice Bolt","Slow Group","Magic Map",
-							"Capture Soul","Simulacrum","Venom Arrows","Wall of Ice",
-						"Stealth","Major Haste","Fire Storm","D. Barrier",
-							"Fire Barrier","Summoning","Shockstorm","Spray Fields",
-						"Major Poison","Group Fear","Kill","Paralysis",
-							"Daemon","Antimagic Cloud","MindDuel","Flight",
-						"Shockwave","M. Blessing","Mass Paralysis","Protection",
-							"Major Summon","Force Barrier","Quickfire","Death Arrows"};
-char *priest_s_name[] = {"Minor Bless","Minor Heal","Weaken Poison","Turn Undead","Location",
-							"Sanctuary","Symbiosis","Minor Manna","Ritual - Sanctify","Stumble",
-						"Bless","Cure Poison","Curse","Light","Wound",
-							"Summon Spirit","Move Mountains","Charm Foe","Disease","Awaken",
-						"Heal","Light Heal All","Holy Scourge","Detect Life","Cure Paralysis",
-							"Manna","Forcefield","Cure Disease","Restore Mind","Smite",
-						"Cure Party","Curse All","Dispel Undead","Remove Curse",
-							"Sticks to Snakes","Martyr's Shield","Cleanse","Firewalk",
-						"Bless Party","Major Heal","Raise Dead","Flamestrike",
-							"Mass Sanctuary","Summon Host","Shatter","Dispel Fields",
-						"Heal All","Revive","Hyperactivity","Destone",
-							"Guardian","Mass Charm","Protective Circle","Pestilence",
-						"Revive All","Ravage Spirit","Resurrect","Divine Thud",
-							"Avatar","Wall of Blades","Word of Recall","Major Cleansing"};
-	char *alch_names[] = {"Weak Curing Potion (1)","Weak Healing Potion (1)","Weak Poison (1)",
-	"Weak Speed Potion (3)","Medium Poison (3)",
-		"Medium Heal Potion (4)","Strong Curing (5)","Medium Speed Potion (5)",
-		"Graymold Salve (7)","Weak Energy Potion (9)",
-		"Potion of Clarity (9)","Strong Poison (10)","Strong Heal Potion (12)","Killer Poison (12)",
-		"Resurrection Balm (9)","Medium Energy Ptn. (14)","Knowledge Brew (19)"	,
-		"Strong Strength (10)","Bliss (16)","Strong Power (20)"
-		};
-	char *alch_names_short[] = {"Weak Curing Potion","Weak Healing Potion","Weak Poison",
-	"Weak Speed Potion","Medium Poison",
-		"Medium Heal Potion","Strong Curing","Medium Speed Potion",
-		"Graymold Salve","Weak Energy Potion",
-		"Potion of Clarity","Strong Poison","Strong Heal Potion","Killer Poison",
-		"Resurrection Bal","Medium Energy Ptn.","Knowledge Brew"	,
-		"Strong Strength","Bliss","Strong Power"
-		};
-	extern const short spell_w_cast[2][62] = {{0,1,1,1,1,1,3,4,1,2, 1,1,1,1,1,1,4,1,4,1, 2,1,1,0,1,1,4,1,1,0,
-							1,1,1,2,4,1,1,1, 2,1,1,2,4,4,1,1, 1,1,1,1,4,4,1,5, 1,4,1,4,4,4,4,1},
-							{1,0,0,1,3,1,1,3,2,1, 1,0,1,0,1,4,2,1,1,0, 0,0,1,2,0,3,1,0,0,1,
-							0,1,1,3,4,1,0,0, 1,0,3,1,1,4,2,4, 0,0,0,3,4,1,1,1, 0,1,3,1,4,1,5,0}};
 // 0 - everywhere 1 - combat only 2 - town only 3 - town & outdoor only 4 - town & combat only  5 - outdoor only
 Boolean get_mage[30] = {1,1,1,1,1,1,0,1,1,0, 1,1,1,1,1,1,0,0,1,1, 1,1,1,1,1,0,0,0,1,1};
 Boolean get_priest[30] = {1,1,1,1,1,1,0,0,0,1, 1,1,1,1,1,0,0,0,1,1, 1,0,1,1,0,0,0,1,0,0};
@@ -1551,12 +1497,12 @@ void do_mage_spell(short pc_num,short spell_num)
 	
 	switch (spell_num) {
 		case 0:  // Light
-			adven[pc_num].cur_sp -= spell_cost[0][spell_num];
+			adven[pc_num].cur_sp -= spell_cost(0, spell_num);
 			increase_light(50);
 			break;
 			
 		case 6: // Identify
-			adven[pc_num].cur_sp -= spell_cost[0][spell_num];
+			adven[pc_num].cur_sp -= spell_cost(0, spell_num);
 			ASB("All of your items are identified.");
 			for (i = 0; i < 6; i++)
 				for (j = 0; j < 24; j++)
@@ -1564,7 +1510,7 @@ void do_mage_spell(short pc_num,short spell_num)
 			break;
 		
 		case 9: // true sight
-			adven[pc_num].cur_sp -= spell_cost[0][spell_num];
+			adven[pc_num].cur_sp -= spell_cost(0, spell_num);
 			for (where.x = 0; where.x < 64; where.x++)
 				for (where.y = 0; where.y < 64; where.y++) 
 					if (dist(where,c_town.p_loc) <= 2)
@@ -1575,7 +1521,7 @@ void do_mage_spell(short pc_num,short spell_num)
 		case 16: // summon beast ////
 			r1 = get_summon_monster(1);
 			if (r1 < 0) break;
-			adven[pc_num].cur_sp -= spell_cost[0][spell_num];
+			adven[pc_num].cur_sp -= spell_cost(0, spell_num);
 			store = get_ran(3,1,4) + adj;
 			if (summon_monster(r1,where,store,2) == FALSE)
 				add_string_to_buf("  Summon failed.");
@@ -1585,7 +1531,7 @@ void do_mage_spell(short pc_num,short spell_num)
 			j = boe_clamp(store,1,7);
 			r1 = get_summon_monster(1); ////
 			if (r1 < 0) break;
-			adven[pc_num].cur_sp -= spell_cost[0][spell_num];
+			adven[pc_num].cur_sp -= spell_cost(0, spell_num);
 			store = get_ran(4,1,4) + adj;
 			for (i = 0; i < j; i++)
 				if (summon_monster(r1,where,store,2) == FALSE)
@@ -1596,7 +1542,7 @@ void do_mage_spell(short pc_num,short spell_num)
 			j = boe_clamp(store,1,6);
 			r1 = get_summon_monster(2); ////
 			if (r1 < 0) break;
-			adven[pc_num].cur_sp -= spell_cost[0][spell_num];
+			adven[pc_num].cur_sp -= spell_cost(0, spell_num);
 			store = get_ran(5,1,4) + adj;
 			for (i = 0; i < j; i++)
 				if (summon_monster(r1,where,store,2) == FALSE)
@@ -1607,7 +1553,7 @@ void do_mage_spell(short pc_num,short spell_num)
 			j = boe_clamp(store,1,5);
 			r1 = get_summon_monster(3); ////
 			if (r1 < 0) break;
-			adven[pc_num].cur_sp -= spell_cost[0][spell_num];
+			adven[pc_num].cur_sp -= spell_cost(0, spell_num);
 			store = get_ran(7,1,4) + stat_adj(who_cast, skill::Intelligence);
 			for (i = 0; i < j; i++)
 				if (summon_monster(r1,where,store,2) == FALSE)
@@ -1617,7 +1563,7 @@ void do_mage_spell(short pc_num,short spell_num)
 			store = get_ran(5,1,4) + 2 * stat_adj(who_cast, skill::Intelligence);
 			if (summon_monster(85,where,store,2) == FALSE)
 				add_string_to_buf("  Summon failed.");		
-				else adven[pc_num].cur_sp -= spell_cost[0][spell_num];
+				else adven[pc_num].cur_sp -= spell_cost(0, spell_num);
 			break;
 
 		case 18: // dispel field
@@ -1628,7 +1574,7 @@ void do_mage_spell(short pc_num,short spell_num)
 			break;
 			
 		case 23:  // Long light
-			adven[pc_num].cur_sp -= spell_cost[0][spell_num];		
+			adven[pc_num].cur_sp -= spell_cost(0, spell_num);		
 			increase_light(200);
 			break;
 
@@ -1640,7 +1586,7 @@ void do_mage_spell(short pc_num,short spell_num)
 					add_string_to_buf("  The spell fails.                ");
 				else {
 					remove_charge(pc_num,item);
-					adven[pc_num].cur_sp -= spell_cost[0][spell_num];
+					adven[pc_num].cur_sp -= spell_cost(0, spell_num);
 					add_string_to_buf("  As the sapphire dissolves,       ");
 					add_string_to_buf("  you have a vision.               ");
 					for (i = 0; i < 64; i++)
@@ -1652,7 +1598,7 @@ void do_mage_spell(short pc_num,short spell_num)
 	
 	
 		case 38:  // Stealth
-			adven[pc_num].cur_sp -= spell_cost[0][spell_num];
+			adven[pc_num].cur_sp -= spell_cost(0, spell_num);
 			party.stuff_done[305][0] += max(6,adven[pc_num].level * 2);
 			break;	
 
@@ -1688,7 +1634,7 @@ void do_mage_spell(short pc_num,short spell_num)
 			else if (party.in_horse >= 0) ////
 				add_string_to_buf("  Leave horse first.             "); 
 			else {
-				adven[pc_num].cur_sp -= spell_cost[0][spell_num];
+				adven[pc_num].cur_sp -= spell_cost(0, spell_num);
 				add_string_to_buf("  You start flying!               ");
 				party.stuff_done[305][1] = 3;
 				}
@@ -1697,7 +1643,7 @@ void do_mage_spell(short pc_num,short spell_num)
 		case 29: case 57: //  resist magic  protection
 				target = store_spell_target;
 				if (target < 6)
-					adven[pc_num].cur_sp -= spell_cost[0][spell_num];
+					adven[pc_num].cur_sp -= spell_cost(0, spell_num);
 				if ((spell_num == 57) && (target < 6)) {
 						adven[target].gaffect(affect::Invulnerable) += 2 + stat_adj(pc_num, skill::Intelligence) + get_ran(2,1,2);
 						for (i = 0; i < 6; i++)
@@ -1732,7 +1678,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 	
 	switch (spell_num) {
 		case 4: ////
-			adven[pc_num].cur_sp -= spell_cost[1][spell_num];
+			adven[pc_num].cur_sp -= spell_cost(1, spell_num);
 
 					if (is_town()) {
 					loc = (overall_mode == 0) ? party.p_loc : c_town.p_loc;
@@ -1750,7 +1696,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 			break;			
 	
 		case 7: case 25: // manna spells
-			adven[pc_num].cur_sp -= spell_cost[1][spell_num];
+			adven[pc_num].cur_sp -= spell_cost(1, spell_num);
 			store = adven[pc_num].level / 3 + 2 * stat_adj(who_cast, skill::Intelligence) + get_ran(2,1,4);
 			r1 = max(0,store);
 			if (spell_num == 7)
@@ -1768,7 +1714,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 			break;
 			
 		case 13:
-			adven[pc_num].cur_sp -= spell_cost[1][spell_num];
+			adven[pc_num].cur_sp -= spell_cost(1, spell_num);
 			party.light_level += 210;
 			break;
 			
@@ -1776,10 +1722,10 @@ void do_priest_spell(short pc_num,short spell_num) ////
 			store = stat_adj(who_cast, skill::Intelligence);
 			if (summon_monster(125,where,get_ran(2,1,4) + store,2) == FALSE)
 				add_string_to_buf("  Summon failed.");		
-				else adven[pc_num].cur_sp -= spell_cost[1][spell_num];
+				else adven[pc_num].cur_sp -= spell_cost(1, spell_num);
 			break;
 		case 34:
-			adven[pc_num].cur_sp -= spell_cost[1][spell_num];
+			adven[pc_num].cur_sp -= spell_cost(1, spell_num);
 			r1 = adven[who_cast].level / 6 + stat_adj(who_cast, skill::Intelligence) / 3 + rand_short(0,1);
 			for (i = 0; i < r1; i++) {
 				r2 = rand_short(0,7);
@@ -1789,7 +1735,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 				}	
 			break;
 		case 43:
-			adven[pc_num].cur_sp -= spell_cost[1][spell_num];
+			adven[pc_num].cur_sp -= spell_cost(1, spell_num);
 			store = get_ran(2,1,4) + stat_adj(who_cast, skill::Intelligence);
 			if (summon_monster(126,where,store,2) == FALSE)
 				add_string_to_buf("  Summon failed.");	
@@ -1803,7 +1749,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 			store = get_ran(6,1,4) + stat_adj(who_cast, skill::Intelligence);
 			if (summon_monster(122,where,store,2) == FALSE)
 				add_string_to_buf("  Summon failed.");		
-				else adven[pc_num].cur_sp -= spell_cost[1][spell_num];
+				else adven[pc_num].cur_sp -= spell_cost(1, spell_num);
 			break;
 
 		case 16:
@@ -1824,17 +1770,17 @@ void do_priest_spell(short pc_num,short spell_num) ////
 			add_string_to_buf("  Monsters now on map.                ");
 			party.stuff_done[305][2] += 6 + rand_short(0,6);
 			clear_map();
-			adven[pc_num].cur_sp -= spell_cost[1][spell_num];
+			adven[pc_num].cur_sp -= spell_cost(1, spell_num);
 			break;
 		case 37: // firewalk
 			add_string_to_buf("  You are now firewalking.                ");
 			party.stuff_done[305][3] += adven[pc_num].level / 12 + 2;
-			adven[pc_num].cur_sp -= spell_cost[1][spell_num];
+			adven[pc_num].cur_sp -= spell_cost(1, spell_num);
 			break;
 			
 		case 44: // shatter
 			add_string_to_buf("  You send out a burst of energy. ");
-			adven[pc_num].cur_sp -= spell_cost[1][spell_num];
+			adven[pc_num].cur_sp -= spell_cost(1, spell_num);
 			for (loc.x = where.x - 1;loc.x < where.x + 2; loc.x++)
 				for (loc.y = where.y - 1;loc.y < where.y + 2; loc.y++)
 					crumble_wall(loc);
@@ -1854,7 +1800,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 				add_string_to_buf("  Not while on horseback. ");
 				return;			
 				}
-			adven[pc_num].cur_sp -= spell_cost[1][spell_num];
+			adven[pc_num].cur_sp -= spell_cost(1, spell_num);
 			add_string_to_buf("  You are moved... ");
 			force_town_enter(scenario.which_town_start(),scenario.where_start);
 			start_town_mode(scenario.which_town_start(),9);
@@ -1871,7 +1817,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 //			target = select_pc(11,0);
 			target = store_spell_target;
 			if (target < 6) {
-				adven[pc_num].cur_sp -= spell_cost[1][spell_num];
+				adven[pc_num].cur_sp -= spell_cost(1, spell_num);
 				switch(spell_num) {
 					case 1: case 20: case 39:		
 						r1 = get_ran(2 + 2 * (spell_num / 6), 1, 4);
@@ -1944,7 +1890,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 					return;
 					}					
 			
-				adven[pc_num].cur_sp -= spell_cost[1][spell_num]; 
+				adven[pc_num].cur_sp -= spell_cost(1, spell_num); 
 				if (spell_num == 35) { // martyr's shield
 						format_to_buf(c_line, "  {} shielded.         ",
 							(char *) adven[target].name);
@@ -2052,7 +1998,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 			break;	
 
 		case 21: case 46: case 54:
-			adven[pc_num].cur_sp -= spell_cost[1][spell_num];			
+			adven[pc_num].cur_sp -= spell_cost(1, spell_num);			
 			r1 = get_ran(spell_num / 7 + adj, 1, 4);
 			if (spell_num < 54) {
 				format_to_buf(c_line, "  Party healed {:d}.       ", r1);
@@ -2072,14 +2018,14 @@ void do_priest_spell(short pc_num,short spell_num) ////
 			break;
 			
 		case 30:
-				adven[pc_num].cur_sp -= spell_cost[1][spell_num];			
+				adven[pc_num].cur_sp -= spell_cost(1, spell_num);			
 				format_to_buf(c_line, "  Party cured.  ");
 				add_string_to_buf( c_line);		
 				cure_party(3 + stat_adj(pc_num, skill::Intelligence));
 			break;
 			
 		case 42: case 61: case 48:
-			adven[pc_num].cur_sp -= spell_cost[1][spell_num];	
+			adven[pc_num].cur_sp -= spell_cost(1, spell_num);	
 			switch (spell_num) {
 				case 42: add_string_to_buf("  Party hidden.");break;
 				case 61: add_string_to_buf("  Party cleansed.");break;
@@ -2122,7 +2068,7 @@ void cast_town_spell(location where) ////
 			
 	adjust = can_see(c_town.p_loc,where,0);
 	if (town_spell < 1000) 
-		adven[who_cast].cur_sp -= spell_cost[town_spell / 100][town_spell % 100];
+		adven[who_cast].cur_sp -= spell_cost(town_spell / 100, town_spell % 100);
 		else town_spell -= 1000;
 	ter = t_d.terrain[where.x][where.y];
 	
@@ -2374,7 +2320,7 @@ Boolean pc_can_cast_spell(short pc_num,short type,short spell_num)
 {
 	short level,store_w_cast;
 	
-	level = spell_level[spell_num];
+	level = spell_level(spell_num);
 	
 	if ((spell_num < 0) || (spell_num > 61))
 		return FALSE;
@@ -2382,7 +2328,7 @@ Boolean pc_can_cast_spell(short pc_num,short type,short spell_num)
 		return FALSE;
 	if (adven[pc_num].main_status != status::Normal)
 		return FALSE;
-	if (adven[pc_num].cur_sp < spell_cost[type][spell_num])
+	if (adven[pc_num].cur_sp < spell_cost(type, spell_num))
 		return FALSE;
 	if ((type == 0) && (adven[pc_num].mage_spells[spell_num] == FALSE))
 		return FALSE;
@@ -2396,7 +2342,7 @@ Boolean pc_can_cast_spell(short pc_num,short type,short spell_num)
 		return FALSE;	
 	
 // 0 - everywhere 1 - combat only 2 - town only 3 - town & outdoor only 4 - town & combat only  5 - outdoor only
-	store_w_cast = spell_w_cast[type][spell_num];
+	store_w_cast = spell_w_cast(type, spell_num);
 		if (is_out()) {
 			if ((store_w_cast == 1) || (store_w_cast == 2) || (store_w_cast == 4)) {
 						return FALSE;
@@ -2573,13 +2519,13 @@ void put_spell_list()
 		for (i = 0; i < 38; i++) {
 			if (store_situation == 0) {
 				if (i == 35)
-					format_to_buf(add_text,"{} {:c} ?",mage_s_name[i],
+					format_to_buf(add_text,"{} {:c} ?",mage_s_name(i),
 					(char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i));
-					else format_to_buf(add_text,"{} {:c} {:d}",mage_s_name[i],
-					(char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i),spell_cost[0][i]);
+					else format_to_buf(add_text,"{} {:c} {:d}",mage_s_name(i),
+					(char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i),spell_cost(0, i));
 				}
-				else format_to_buf(add_text,"{} {:c} {:d}",priest_s_name[i],
-				(char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i),spell_cost[1][i]);
+				else format_to_buf(add_text,"{} {:c} {:d}",priest_s_name(i),
+				(char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i),spell_cost(1, i));
 			//for (j = 0; j < 30; i++)
 			//	if (add_text[j] == '&')
 			//		add_text[j] = (char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i);
@@ -2596,10 +2542,10 @@ void put_spell_list()
 			for (i = 0; i < 38; i++) 
 				if (spell_index[i] < 90) {
 					if (store_situation == 0)
-						format_to_buf(add_text,"{} {:c} {:d}",mage_s_name[spell_index[i]],
-						(char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i),spell_cost[0][spell_index[i]]);
-						else format_to_buf(add_text,"{} {:c} {:d}",priest_s_name[spell_index[i]],
-						(char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i),spell_cost[1][spell_index[i]]);
+						format_to_buf(add_text,"{} {:c} {:d}",mage_s_name(spell_index[i]),
+						(char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i),spell_cost(0, spell_index[i]));
+						else format_to_buf(add_text,"{} {:c} {:d}",priest_s_name(spell_index[i]),
+						(char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i),spell_cost(1, spell_index[i]));
 					cd_add_label(1098,37 + i,(char *) add_text,53);
 					}
 					else cd_activate_item(1098,37 + i,0);
@@ -2922,7 +2868,7 @@ void print_spell_cast(short spell_num,short which)
 //short which; // 0 - mage  1 - priest
 {
 	format_to_buf(c_line, "Spell: {}                  ",
-		(which == 0) ? (char *) mage_s_name[spell_num] : (char *) priest_s_name[spell_num]);
+		(which == 0) ? (char *) mage_s_name(spell_num) : (char *) priest_s_name(spell_num));
 	add_string_to_buf( c_line);		
 }
 
@@ -3010,7 +2956,7 @@ void do_alchemy() ////
 					store_i.ability = potion_abils[which_p];
 					if (which_p == 8)
 						store_i.magic_use_type = 2;
-					strcpy(store_i.full_name,alch_names_short[which_p]);
+					strcpy(store_i.full_name, alchemy_names_short(which_p));
 					if (adven[pc_num].skills[skill::Alchemy] - difficulty[which_p] >= 5)
 						store_i.charges++;
 					if (adven[pc_num].skills[skill::Alchemy] - difficulty[which_p] >= 11)
@@ -3058,7 +3004,7 @@ short alch_choice(short pc_num)
 
 	cd_create_dialog(1047,mainPtr);
 	for (i = 0; i < 20; i++) {
-		cd_set_item_text(1047,10 + i * 2,alch_names[i]);
+		cd_set_item_text(1047,10 + i * 2, alchemy_name(i));
 		if ((adven[pc_num].skills[skill::Alchemy] < difficulty[i]) || (party.alchemy[i] == 0))
 			cd_activate_item(1047,9 + i * 2,0);
 		}
@@ -3689,13 +3635,13 @@ void adjust_spell_menus()
 			}
 		for (i = 0; i < 62; i++) 
 			if (on_spell_menu[0][i] >= 0) {
-				if (spell_cost[0][on_spell_menu[0][i]] > 0)
-					format_to_buf(spell_name," L{:d} - {}, C {:d}",spell_level[on_spell_menu[0][i]],
-						(char *) mage_s_name[on_spell_menu[0][i]],spell_cost[0][on_spell_menu[0][i]]);
-					else format_to_buf(spell_name," L{:d} - {}, C ?",spell_level[on_spell_menu[0][i]],
-						(char *) mage_s_name[on_spell_menu[0][i]]);
+				if (spell_cost(0,on_spell_menu[0][i]) > 0)
+					format_to_buf(spell_name," L{:d} - {}, C {:d}",spell_level(on_spell_menu[0][i]),
+						(char *) mage_s_name(on_spell_menu[0][i]), spell_cost(0, on_spell_menu[0][i]));
+					else format_to_buf(spell_name," L{:d} - {}, C ?",spell_level(on_spell_menu[0][i]),
+						(char *) mage_s_name(on_spell_menu[0][i]));
 				spell_name[0] = strlen(spell_name);
-				//strcpy((spell_name + 1),mage_s_name[on_spell_menu[0][i]]);
+				//strcpy((spell_name + 1),mage_s_name(on_spell_menu[0][i]));
 				AppendMenu(spell_menu,spell_name);
 				}
 		}
@@ -3722,13 +3668,13 @@ void adjust_spell_menus()
 			}
 		for (i = 0; i < 62; i++) 
 			if (on_spell_menu[1][i] >= 0) {
-				//spell_name[0] = strlen(priest_s_name[on_spell_menu[1][i]]);
-				//strcpy((spell_name + 1),priest_s_name[on_spell_menu[1][i]]);
-				if (spell_cost[1][on_spell_menu[1][i]] > 0)
-					format_to_buf(spell_name," L{:d} - {}, C {:d}",spell_level[on_spell_menu[1][i]],
-						(char *) priest_s_name[on_spell_menu[1][i]],spell_cost[1][on_spell_menu[1][i]]);
-					else format_to_buf(spell_name," L{:d} - {}, C ?",spell_level[i],
-						(char *) mage_s_name[on_spell_menu[1][i]]);
+				//spell_name[0] = strlen(priest_s_name(on_spell_menu[1][i]));
+				//strcpy((spell_name + 1),priest_s_name(on_spell_menu[1][i]));
+				if (spell_cost(1, on_spell_menu[1][i]) > 0)
+					format_to_buf(spell_name," L{:d} - {}, C {:d}",spell_level(on_spell_menu[1][i]),
+						(char *) priest_s_name(on_spell_menu[1][i]),spell_cost(1, on_spell_menu[1][i]));
+					else format_to_buf(spell_name," L{:d} - {}, C ?",spell_level(i),
+						(char *) mage_s_name(on_spell_menu[1][i]));
 				spell_name[0] = strlen(spell_name);
 				AppendMenu(spell_menu,spell_name);
 				}
