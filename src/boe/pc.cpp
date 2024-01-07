@@ -1,5 +1,6 @@
 #include "boe/pc.hpp"
 #include "boe/item.hpp"
+#include "boe/spell.hpp"
 #include <algorithm>
 #include <ranges>
 #include <utility>
@@ -656,6 +657,49 @@ short pc_stat_adj(const pc_record_type& pc, skill which)
 		++tr;
 	}
 	return tr;
+}
+
+bool pc_can_cast_spell_ex(const pc_record_type& pc, short type, short spell_num)
+//short type;  // 0 - mage  1 - priest
+{
+	if ((spell_num < 0) || (spell_num > 61))
+	{
+		return false;
+	}
+	const short level = spell_level(spell_num);
+	if (pc.skills[skill::MageSpells + type] < level)
+	{
+		return false;
+	}
+	if (pc.main_status != status::Normal)
+	{
+		return false;
+	}
+	if (pc.cur_sp < spell_cost(type, spell_num))
+	{
+		return false;
+	}
+	if ((type == 0) && (pc.mage_spells[spell_num] == BOE_FALSE))
+	{
+		return false;
+	}
+	if ((type == 1) && (pc.priest_spells[spell_num] == BOE_FALSE))
+	{
+		return false;
+	}
+	if (pc.gaffect(affect::Dumbfounded) >= 8 - level)
+	{
+		return false;
+	}
+	if (pc.gaffect(affect::Paralyzed) != 0)
+	{
+		return false;
+	}
+	if (pc.gaffect(affect::Asleep) > 0)
+	{
+		return false;
+	}
+	return true;
 }
 
 short skill_hit_chance(short type)

@@ -37,6 +37,7 @@ bool pc_poison(pc_record_type& pc, short how_much);
 
 short pc_damage_adjust(const pc_record_type& pc, short how_much, damage_type type, short type_of_attacker, short parry_modifier, short party_adjust);
 short pc_stat_adj(const pc_record_type& pc, skill which);
+bool pc_can_cast_spell_ex(const pc_record_type& pc, short type, short spell_num);
 
 short skill_hit_chance(short type);
 short skill_bonus(short type);
