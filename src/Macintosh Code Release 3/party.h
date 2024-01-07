@@ -37,7 +37,7 @@ void sanctify_space(location where);
 void crumble_wall(location where);
 void do_mindduel(short pc_num,creature_data_type *monst);
 void dispel_fields(short i,short j,short mode);
-Boolean pc_can_cast_spell(short pc_num,short type,short spell_num);
+bool pc_can_cast_spell(short pc_num,short type,short spell_num);
 void pick_spell_event_filter (short item_hit);
 short pick_spell(short pc_num,short type,short situation) ;
 short stat_adj(short pc_num,skill which);

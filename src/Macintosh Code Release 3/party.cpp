@@ -1427,7 +1427,7 @@ Boolean repeat_cast_ok(short type)
 		what_spell = pc_last_cast[type][who_would_cast];
 		else what_spell = (type == 0) ? store_mage : store_priest;
 
-				if (pc_can_cast_spell(who_would_cast,type,what_spell) == FALSE) {
+				if (!pc_can_cast_spell(who_would_cast,type,what_spell)) {
 					add_string_to_buf("Repeat cast: Can't cast.");
 					return FALSE;
 					}
@@ -2315,52 +2315,45 @@ void dispel_fields(short i,short j,short mode)
 		take_blade_wall(i,j);
 }
 
-Boolean pc_can_cast_spell(short pc_num,short type,short spell_num)
+bool pc_can_cast_spell(short pc_num, short type, short spell_num)
 //short type;  // 0 - mage  1 - priest
 {
-	short level,store_w_cast;
-	
-	level = spell_level(spell_num);
-	
 	if ((spell_num < 0) || (spell_num > 61))
-		return FALSE;
+		return false;
+	const short level = spell_level(spell_num);
 	if (adven[pc_num].skills[9 + type] < level)
-		return FALSE;
+		return false;
 	if (adven[pc_num].main_status != status::Normal)
-		return FALSE;
+		return false;
 	if (adven[pc_num].cur_sp < spell_cost(type, spell_num))
-		return FALSE;
+		return false;
 	if ((type == 0) && (adven[pc_num].mage_spells[spell_num] == FALSE))
-		return FALSE;
+		return false;
 	if ((type == 1) && (adven[pc_num].priest_spells[spell_num] == FALSE))
-		return FALSE;
+		return false;
 	if (adven[pc_num].gaffect(affect::Dumbfounded) >= 8 - level)
-		return FALSE;	
+		return false;
 	if (adven[pc_num].gaffect(affect::Paralyzed) != 0)
-		return FALSE;	
+		return false;
 	if (adven[pc_num].gaffect(affect::Asleep) > 0)
-		return FALSE;	
-	
-// 0 - everywhere 1 - combat only 2 - town only 3 - town & outdoor only 4 - town & combat only  5 - outdoor only
-	store_w_cast = spell_w_cast(type, spell_num);
-		if (is_out()) {
-			if ((store_w_cast == 1) || (store_w_cast == 2) || (store_w_cast == 4)) {
-						return FALSE;
-						}
-				}		
-		if (is_town()) {
-			if ((store_w_cast == 1) || (store_w_cast == 5)) {
-						return FALSE;
-						}
-				}
-		if (is_combat()) {
-			if ((store_w_cast == 2) || (store_w_cast == 3) || (store_w_cast == 5)) {
-						return FALSE;
-						}
-				}
-	return TRUE;
-}
+		return false;
 
+	// 0 - everywhere 1 - combat only 2 - town only 3 - town & outdoor only 4 - town & combat only  5 - outdoor only
+	const short store_w_cast = spell_w_cast(type, spell_num);
+	if (is_out() && ((store_w_cast == 1) || (store_w_cast == 2) || (store_w_cast == 4)) )
+	{
+		return false;
+	}
+	if (is_town() && ((store_w_cast == 1) || (store_w_cast == 5)))
+	{
+		return false;
+	}
+	if (is_combat() && ((store_w_cast == 2) || (store_w_cast == 3) || (store_w_cast == 5)))
+	{
+		return false;
+	}
+	return true;
+}
 
 
 void draw_caster_buttons()
@@ -2379,7 +2372,7 @@ void draw_caster_buttons()
 		}
 		else {
 			for (i = 0; i < 6; i++) {
-				if (pc_can_cast_spell(i,store_situation,store_situation) == TRUE) {
+				if (pc_can_cast_spell(i,store_situation,store_situation)) {
 					cd_activate_item(1098,4 + i,1);
 					}
 					else {
@@ -2494,7 +2487,7 @@ void put_spell_led_buttons()
 			 ((store_situation == 1) && (store_priest == spell_for_this_button))) {
 				cd_set_led(1098,i + 37,2);
 			 }
-			else if (pc_can_cast_spell(pc_casting,store_situation,spell_for_this_button) == TRUE) {
+			else if (pc_can_cast_spell(pc_casting,store_situation,spell_for_this_button)) {
 				cd_set_led(1098,i + 37,1);
 				}
 				else {
@@ -2580,8 +2573,8 @@ void pick_spell_event_filter (short item_hit)
 			case 4: case 5: case 6: case 7: case 8: case 9: // pick caster
 			if (cd_get_active(1098,item_hit) == 1) {
 				pc_casting = item_hit - 4;
-				if (pc_can_cast_spell(pc_casting,store_situation,
-					((store_situation == 0) ? store_mage : store_priest)) == FALSE) {
+				if (!pc_can_cast_spell(pc_casting,store_situation,
+					((store_situation == 0) ? store_mage : store_priest))) {
 						if (store_situation == 0)
 							store_mage = 70;
 							else store_priest = 70;
@@ -2748,7 +2741,7 @@ short pick_spell(short pc_num,short type,short situation)  // 70 - no spell OW s
 	
 	if (pc_num == 6) { // See if can keep same caster
 		can_choose_caster = TRUE;
-		if (pc_can_cast_spell(pc_casting,type,type) == FALSE) {
+		if (!pc_can_cast_spell(pc_casting,type,type)) {
 			for (i = 0; i < 6; i++)
 				if (pc_can_cast_spell(i,type,type)) {
 					pc_casting = i;
@@ -2789,7 +2782,7 @@ short pick_spell(short pc_num,short type,short situation)  // 70 - no spell OW s
 		}
 
 	// Keep the stored spell, if it's still castable
-	if (pc_can_cast_spell(pc_casting,type,((type == 0) ? store_mage : store_priest)) == FALSE) {
+	if (!pc_can_cast_spell(pc_casting,type,((type == 0) ? store_mage : store_priest))) {
 		if (type == 0) {
 				store_mage = 0;
 				store_mage_lev = 1;
@@ -2823,8 +2816,8 @@ short pick_spell(short pc_num,short type,short situation)  // 70 - no spell OW s
 		if (i > 62)
 			cd_attach_key(1098,i,(char ) (65 + i - 63));
 			else cd_attach_key(1098,i,(char) (97 + i - 37));
-		cd_set_led(1098,i,( pc_can_cast_spell(pc_casting,type,
-		 (on_which_spell_page == 0) ? i - 37 : spell_index[i - 37]) == TRUE) ? 1 : 0);
+		cd_set_led(1098,i, pc_can_cast_spell(pc_casting,type,
+		 (on_which_spell_page == 0) ? i - 37 : spell_index[i - 37]) ? 1 : 0);
 		}
 	cd_attach_key(1098,10,'!');
 	cd_attach_key(1098,11,'@');
