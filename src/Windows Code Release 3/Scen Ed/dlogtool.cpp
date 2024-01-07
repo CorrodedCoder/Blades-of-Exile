@@ -836,7 +836,14 @@ std::string cd_get_item_text(short dlog_num, short item_num)
 		beep();
 		return {};
 	}
-	return text_short_str[(item_index < 10) ? item_index : item_index - 10];
+	if (item_index < 10)
+	{
+		return text_long_str[item_index];
+	}
+	else
+	{
+		return text_short_str[item_index - 10];
+	}
 }
 
 
@@ -922,8 +929,13 @@ void cd_set_item_text(short dlog_num, short item_num, std::string_view str)
 		return;
 		}
 	if (item_index < 10)
-		format_to_buf(text_long_str[item_index],"{}",str);
-		else format_to_buf(text_short_str[item_index - 10],"{:<34s}",str);
+	{
+		format_to_buf(text_long_str[item_index], "{}", str);
+	}
+	else
+	{
+		format_to_buf(text_short_str[item_index - 10], "{:<34s}", str);
+	}
 	cd_draw_item( dlog_num,item_num);
 }
 
@@ -936,7 +948,14 @@ void cd_set_item_num(short dlog_num, short item_num, short num)
 		beep();
 		return;
 		}
-	format_to_buf(text_long_str[(item_index < 10) ? item_index : (item_index - 10)], "{:d}", num);
+	if (item_index < 10)
+	{
+		format_to_buf(text_long_str[item_index], "{:d}", num);
+	}
+	else
+	{
+		format_to_buf(text_short_str[item_index - 10], "{:d}", num);
+	}
 	cd_draw_item( dlog_num,item_num);
 }
 
