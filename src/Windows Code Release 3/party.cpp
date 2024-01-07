@@ -2490,13 +2490,9 @@ void dispel_fields(short i,short j,short mode)
 	}
 }
 
-static bool pc_can_cast_spell(short pc_num,short type,short spell_num)
+static bool pc_can_cast_spell_ex(short pc_num, short type, short spell_num)
 //short type;  // 0 - mage  1 - priest
 {
-	if (overall_mode >= 20)
-	{
-		return false;
-	}
 	if ((spell_num < 0) || (spell_num > 61))
 	{
 		return false;
@@ -2531,6 +2527,21 @@ static bool pc_can_cast_spell(short pc_num,short type,short spell_num)
 		return false;
 	}
 	if (adven[pc_num].gaffect(affect::Asleep) > 0)
+	{
+		return false;
+	}
+	return true;
+}
+
+static bool pc_can_cast_spell(short pc_num,short type,short spell_num)
+//short type;  // 0 - mage  1 - priest
+{
+	if (overall_mode >= 20)
+	{
+		return false;
+	}
+
+	if (!pc_can_cast_spell_ex(pc_num, type, spell_num))
 	{
 		return false;
 	}
