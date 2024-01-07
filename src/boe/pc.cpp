@@ -662,10 +662,6 @@ short pc_stat_adj(const pc_record_type& pc, skill which)
 bool pc_can_cast_spell_ex(const pc_record_type& pc, short type, short spell_num)
 //short type;  // 0 - mage  1 - priest
 {
-	if ((spell_num < 0) || (spell_num > 61))
-	{
-		return false;
-	}
 	const short level = spell_level(spell_num);
 	if (pc.skills[skill::MageSpells + type] < level)
 	{

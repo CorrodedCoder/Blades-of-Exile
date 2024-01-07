@@ -87,12 +87,12 @@ namespace
 
 short spell_level(short id)
 {
-	return c_spell_level[static_cast<size_t>(id)];
+	return c_spell_level.at(static_cast<size_t>(id));
 }
 
 short spell_cost(short type, short id)
 {
-	return c_spell_cost[static_cast<size_t>(type)][static_cast<size_t>(id)];
+	return c_spell_cost.at(static_cast<size_t>(type)).at(static_cast<size_t>(id));
 }
 
 short mage_spell_cost(short id)
@@ -107,26 +107,26 @@ short priest_spell_cost(short id)
 
 short spell_w_cast(short type, short id)
 {
-	return c_spell_w_cast[static_cast<size_t>(type)][static_cast<size_t>(id)];
+	return c_spell_w_cast.at(static_cast<size_t>(type)).at(static_cast<size_t>(id));
 }
 
 
 const char* mage_spell_name(short id)
 {
-	return c_mage_s_name[static_cast<size_t>(id)];
+	return c_mage_s_name.at(static_cast<size_t>(id));
 }
 
 const char* priest_spell_name(short id)
 {
-	return c_priest_s_name[static_cast<size_t>(id)];
+	return c_priest_s_name.at(static_cast<size_t>(id));
 }
 
 const char* alchemy_name(short id)
 {
-	return c_alch_names[static_cast<size_t>(id)];
+	return c_alch_names.at(static_cast<size_t>(id));
 }
 
 const char* alchemy_name_short(short id)
 {
-	return c_alch_names_short[static_cast<size_t>(id)];
+	return c_alch_names_short.at(static_cast<size_t>(id));
 }
