@@ -17,6 +17,8 @@ namespace
 								,99,99,99,99,99,99,99,99,99,99
 								,99,99,99,99,99,99,99,99,99,99,
 								99,99,99,99,99,99,99,99,99,99 };
+	static constinit const auto c_skill_bonus(std::to_array<short>({ -3,-3,-2,-1,0,0,1,1,1,2,
+								2,2,3,3,3,3,4,4,4,5,5 }));
 
 	const std::array c_debug_names{
 		"Gunther",
@@ -606,4 +608,9 @@ short pc_damage_adjust(const pc_record_type& pc, short how_much, damage_type typ
 short skill_hit_chance(short type)
 {
 	return c_hit_chance[static_cast<size_t>(type)];
+}
+
+short skill_bonus(short index)
+{
+	return c_skill_bonus[index];
 }

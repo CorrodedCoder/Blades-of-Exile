@@ -33,8 +33,6 @@ extern const short skill_cost[20] = { 3,3,3,2,2,2, 1,2,2,6,
 extern const short skill_max[20];
 extern const short skill_g_cost[20] = { 50,50,50,40,40,40,30,50,40,250,
 						250,25,100,200,30,20,100,80,0,0 };
-static constinit const auto c_skill_bonus(std::to_array<short>({ -3,-3,-2,-1,0,0,1,1,1,2,
-							2,2,3,3,3,3,4,4,4,5,5 }));
 
 extern const short spell_level[62] = { 1,1,1,1,1,1,1,1,1,1, 2,2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3,3,3,3,
 						4,4,4,4,4,4,4,4, 5,5,5,5,5,5,5,5, 6,6,6,6,6,6,6,6, 7,7,7,7,7,7,7,7 };
@@ -162,11 +160,6 @@ static std::array < std::array<short, 62>, 2> on_spell_menu;
 
 
 static bool pc_can_cast_spell(short pc_num, short type, short spell_num);
-
-static short skill_bonus(short index)
-{
-	return c_skill_bonus[index];
-}
 
 //mode; // 0 - prefab 1 - regular
 void init_party(short mode)
