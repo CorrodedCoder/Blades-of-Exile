@@ -2490,7 +2490,7 @@ void dispel_fields(short i,short j,short mode)
 	}
 }
 
-static bool pc_can_cast_spell_ex(short pc_num, short type, short spell_num)
+static bool pc_can_cast_spell_ex(const pc_record_type& pc, short type, short spell_num)
 //short type;  // 0 - mage  1 - priest
 {
 	if ((spell_num < 0) || (spell_num > 61))
@@ -2498,35 +2498,35 @@ static bool pc_can_cast_spell_ex(short pc_num, short type, short spell_num)
 		return false;
 	}
 	const short level = spell_level(spell_num);
-	if (adven[pc_num].skills[skill::MageSpells + type] < level)
+	if (pc.skills[skill::MageSpells + type] < level)
 	{
 		return false;
 	}
-	if (adven[pc_num].main_status != status::Normal)
+	if (pc.main_status != status::Normal)
 	{
 		return false;
 	}
-	if (adven[pc_num].cur_sp < spell_cost(type, spell_num))
+	if (pc.cur_sp < spell_cost(type, spell_num))
 	{
 		return false;
 	}
-	if ((type == 0) && (adven[pc_num].mage_spells[spell_num] == FALSE))
+	if ((type == 0) && (pc.mage_spells[spell_num] == FALSE))
 	{
 		return false;
 	}
-	if ((type == 1) && (adven[pc_num].priest_spells[spell_num] == FALSE))
+	if ((type == 1) && (pc.priest_spells[spell_num] == FALSE))
 	{
 		return false;
 	}
-	if (adven[pc_num].gaffect(affect::Dumbfounded) >= 8 - level)
+	if (pc.gaffect(affect::Dumbfounded) >= 8 - level)
 	{
 		return false;
 	}
-	if (adven[pc_num].gaffect(affect::Paralyzed) != 0)
+	if (pc.gaffect(affect::Paralyzed) != 0)
 	{
 		return false;
 	}
-	if (adven[pc_num].gaffect(affect::Asleep) > 0)
+	if (pc.gaffect(affect::Asleep) > 0)
 	{
 		return false;
 	}
@@ -2541,7 +2541,7 @@ static bool pc_can_cast_spell(short pc_num,short type,short spell_num)
 		return false;
 	}
 
-	if (!pc_can_cast_spell_ex(pc_num, type, spell_num))
+	if (!pc_can_cast_spell_ex(adven[pc_num], type, spell_num))
 	{
 		return false;
 	}
