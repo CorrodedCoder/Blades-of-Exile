@@ -475,6 +475,36 @@ bool pc_acid(pc_record_type& pc, short how_much)
 	return true;
 }
 
+bool pc_poison(pc_record_type& pc, short how_much)
+{
+	short level = 0;
+
+	if ((level = pc_prot_level(pc, 34)) > 0)
+	{
+		how_much -= level / 2;
+	}
+	if ((level = pc_prot_level(pc, 31)) > 0)
+	{
+		how_much -= level / 3;
+	}
+	if ((pc.traits[trait::Frail] == BOE_TRUE) && (how_much > 1))
+	{
+		how_much++;
+	}
+	if ((pc.traits[trait::Frail] == BOE_TRUE) && (how_much == 1) && (rand_short(0, 1) == 0))
+	{
+		how_much++;
+	}
+
+	if (how_much > 0)
+	{
+		pc.gaffect(affect::Poisoned) = static_cast<short>(std::min(pc.gaffect(affect::Poisoned) + how_much, 8));
+		return true;
+	}
+
+	return false;
+}
+
 short pc_damage_adjust(const pc_record_type& pc, short how_much, damage_type type, short type_of_attacker, short parry_modifier, short party_adjust)
 {
 	// armor	
@@ -634,7 +664,7 @@ short skill_hit_chance(short type)
 	return c_hit_chance[static_cast<size_t>(type)];
 }
 
-short skill_bonus(short index)
+short skill_bonus(short type)
 {
-	return c_skill_bonus[index];
+	return c_skill_bonus[static_cast<size_t>(type)];
 }
