@@ -279,8 +279,8 @@ short pc_has_abil(const pc_record_type& pc, short abil)
 
 short pc_amount_can_carry(const pc_record_type& pc)
 {
-	return 100 + (15 * std::min(pc.skills[skill::Strength], static_cast<short>(20))) + ((pc.traits[trait::ExceptionalStr] == 0) ? 0 : 30)
-		+ ((pc.traits[trait::BadBack] == 0) ? 0 : -50);
+	return 100 + (15 * std::min(pc.skills[skill::Strength], static_cast<short>(20))) + ((pc.traits[trait::ExceptionalStr] != 0) ? 30 : 0)
+		+ ((pc.traits[trait::BadBack] != 0) ? -50 : 0);
 }
 
 void pc_sort_items(pc_record_type& pc)
