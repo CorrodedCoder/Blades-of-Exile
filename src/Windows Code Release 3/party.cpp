@@ -3220,30 +3220,6 @@ void print_spell_cast(short spell_num,short which)
 		(which == 0) ? mage_s_name[spell_num] : priest_s_name[spell_num]);
 }
 
-short pc_stat_adj(const pc_record_type& pc,skill which)
-{
-	short tr = skill_bonus(pc.skills[which]);
-	if (which == skill::Intelligence)
-	{
-		if (pc.traits[trait::MagicallyApt] == TRUE)
-		{
-			tr++;
-		}
-		if (pc_has_abil_equip(pc, 99) < 16)
-		{
-			tr++;
-		}
-	}
-	if (which == skill::Strength)
-	{
-		if (pc.traits[trait::ExceptionalStr] == TRUE)
-		{
-			tr++;
-		}
-	}
-	return tr;
-}
-
 void set_town_spell(short s_num,short who_c)
 {
 	town_spell = s_num;

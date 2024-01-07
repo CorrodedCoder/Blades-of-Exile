@@ -605,6 +605,30 @@ short pc_damage_adjust(const pc_record_type& pc, short how_much, damage_type typ
 	return how_much;
 }
 
+short pc_stat_adj(const pc_record_type& pc, skill which)
+{
+	short tr = skill_bonus(pc.skills[which]);
+	if (which == skill::Intelligence)
+	{
+		if (pc.traits[trait::MagicallyApt] == BOE_TRUE)
+		{
+			tr++;
+		}
+		if (pc_has_abil_equip(pc, 99) < 16)
+		{
+			tr++;
+		}
+	}
+	if (which == skill::Strength)
+	{
+		if (pc.traits[trait::ExceptionalStr] == BOE_TRUE)
+		{
+			tr++;
+		}
+	}
+	return tr;
+}
+
 short skill_hit_chance(short type)
 {
 	return c_hit_chance[static_cast<size_t>(type)];
