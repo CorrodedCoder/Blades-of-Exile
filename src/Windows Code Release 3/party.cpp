@@ -33,7 +33,7 @@ extern const short skill_cost[20] = { 3,3,3,2,2,2, 1,2,2,6,
 extern const short skill_max[20];
 extern const short skill_g_cost[20] = { 50,50,50,40,40,40,30,50,40,250,
 						250,25,100,200,30,20,100,80,0,0 };
-static constinit const auto skill_bonus(std::to_array<short>({ -3,-3,-2,-1,0,0,1,1,1,2,
+static constinit const auto c_skill_bonus(std::to_array<short>({ -3,-3,-2,-1,0,0,1,1,1,2,
 							2,2,3,3,3,3,4,4,4,5,5 }));
 
 extern const short spell_level[62] = { 1,1,1,1,1,1,1,1,1,1, 2,2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3,3,3,3,
@@ -163,6 +163,10 @@ static std::array < std::array<short, 62>, 2> on_spell_menu;
 
 static bool pc_can_cast_spell(short pc_num, short type, short spell_num);
 
+static short skill_bonus(short index)
+{
+	return c_skill_bonus[index];
+}
 
 //mode; // 0 - prefab 1 - regular
 void init_party(short mode)
@@ -910,8 +914,8 @@ void award_xp(short pc_num,short amt)
 		adven[pc_num].level++;
 		add_string_to_buf("  {} is level {:d}!  ", adven[pc_num].name, adven[pc_num].level);
 		adven[pc_num].skill_pts += (adven[pc_num].level < 20) ? 5 : 4;
-		add_hp = (adven[pc_num].level < 26) ? rand_short(2, 6) + skill_bonus[adven[pc_num].skills[skill::Strength]]
-			: max(skill_bonus[adven[pc_num].skills[skill::Strength]], 0);
+		add_hp = (adven[pc_num].level < 26) ? rand_short(2, 6) + skill_bonus(adven[pc_num].skills[skill::Strength])
+			: max(skill_bonus(adven[pc_num].skills[skill::Strength]), 0);
 		if (add_hp < 0)
 		{
 			add_hp = 0;
@@ -3225,7 +3229,7 @@ void print_spell_cast(short spell_num,short which)
 
 short pc_stat_adj(const pc_record_type& pc,skill which)
 {
-	short tr = skill_bonus[pc.skills[which]];
+	short tr = skill_bonus(pc.skills[which]);
 	if (which == skill::Intelligence)
 	{
 		if (pc.traits[trait::MagicallyApt] == TRUE)
