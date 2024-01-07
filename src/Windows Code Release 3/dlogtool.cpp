@@ -965,26 +965,31 @@ short cd_get_active(short dlog_num, short item_num)
 
 #if 0
 // Unreferenced
-void cd_get_item_text(short dlog_num, short item_num, char *str)
+void cd_get_item_text(short dlog_num, short item_num, char* str)
 {
-	short dlg_index,item_index;
-	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
-		return ;
+	short dlg_index, item_index;
+	if (cd_get_indices(dlog_num, item_num, &dlg_index, &item_index) < 0)
+		return;
 	if (item_type[item_index] == 6) {
 		//print_nums(0,0,GetWindowText(edit_box,str,255));
 		if (edit_box != NULL)
-			GetWindowText(edit_box,str,255);
-			else format_to_buf(str,"");
-		//add_string_to_buf(str);
-		return;
-		}
+			GetWindowText(edit_box, str, 255);
+		else format_to_buf(str, "");
+			//add_string_to_buf(str);
+			return;
+	}
 	if (item_index >= 150) {
 		beep();
 		return;
-		}
+	}
 	if (item_index < 10)
-		format_to_buf(str,"{}",text_long_str[item_index]);
-		else format_to_buf(str,"{}",text_short_str[item_index - 10]);
+	{
+		format_to_buf(str, "{}", text_long_str[item_index]);
+	}
+	else
+	{
+		format_to_buf(str, "{}", text_short_str[item_index - 10]);
+	}
 }
 #endif
 
@@ -1052,8 +1057,13 @@ void cd_set_item_num(short dlog_num, short item_num, short num)
 		return;
 		}
 	if (item_index < 10)
-		format_to_buf(text_long_str[item_index],"{:d}",num);
-		else format_to_buf(text_short_str[item_index - 10],"{:d}",num);
+	{
+		format_to_buf(text_long_str[item_index], "{:d}", num);
+	}
+	else
+	{
+		format_to_buf(text_short_str[item_index - 10], "{:d}", num);
+	}
 	cd_draw_item( dlog_num,item_num);
 }
 

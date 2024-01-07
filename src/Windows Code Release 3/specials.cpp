@@ -511,7 +511,7 @@ void use_item(short pc,short item)
 		add_string_to_buf("Use: Can't use this item.       ");
 		take_charge = FALSE;
 		}
-	if ((adven[pc].traits[trait::MagicallyInept] == TRUE) && (inept_ok == FALSE)){
+	if (adven[pc].has_trait(trait::MagicallyInept) && (inept_ok == FALSE)){
 		add_string_to_buf("Use: Can't - magically inept.       ");
 		take_charge = FALSE;
 		}
@@ -1135,7 +1135,7 @@ void change_level(short town_num,short x,short y)
 }
 
 // Damaging and killing monsters needs to be here because several have specials attached to them.
-static Boolean damage_monst_impl(short which_m, short who_hit, short how_much, short how_much_spec, damage_type type, short sound_type, Boolean do_print)
+Boolean damage_monst(short which_m, short who_hit, short how_much, short how_much_spec, damage_type type, short sound_type, Boolean do_print)
 //short which_m, who_hit, how_much, how_much_spec;  // 6 for who_hit means dist. xp evenly  7 for no xp
 //type; // 0 - weapon   1 - fire   2 - poison   3 - general magic   4 - unblockable  5 - cold 
 		// 6 - demon 7 - undead  
@@ -1248,7 +1248,7 @@ static Boolean damage_monst_impl(short which_m, short who_hit, short how_much, s
 		{
 			monst_spell_note(victim.number, 7);
 		}
-		if ((how_much <= 0) && ((type == damage_type::Weapon) || (type == damage_type::UndeadAttack) || (type == damage_type::DemonAttack)))
+		if ((how_much <= 0) && ((type == damage_type::Weapon) || (type == damage_type::DemonAttack) || (type == damage_type::UndeadAttack)))
 		{
 			draw_terrain(2);
 			play_sound(2);
@@ -1340,7 +1340,7 @@ static Boolean damage_monst_impl(short which_m, short who_hit, short how_much, s
 
 Boolean damage_monst(short which_m, short who_hit, short how_much, short how_much_spec, damage_type type)
 {
-	return damage_monst_impl(which_m, who_hit, how_much, how_much_spec, type, 0, TRUE);
+	return damage_monst(which_m, who_hit, how_much, how_much_spec, type, 0, TRUE);
 }
 
 // Damaging and killing monsters needs to be here because several have specials attached to them.
@@ -1363,7 +1363,7 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 		type -= 10;
 	}
 
-	return damage_monst_impl(which_m, who_hit, how_much, how_much_spec, static_cast<damage_type>(type), sound_type, do_print);
+	return damage_monst(which_m, who_hit, how_much, how_much_spec, static_cast<damage_type>(type), sound_type, do_print);
 }
 
 void kill_monst(creature_data_type *which_m,short who_killed)

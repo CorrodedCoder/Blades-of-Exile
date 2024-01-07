@@ -10,6 +10,7 @@ Boolean adj_town_look(location where);
 void PSOE(short str1a,short str1b,short str2a,short str2b,
 short which_special,unsigned char *stuff_done_val,short where_put);
 Boolean damage_monst(short which_m, short who_hit, short how_much, short how_much_spec, damage_type type);
+Boolean damage_monst(short which_m, short who_hit, short how_much, short how_much_spec, damage_type type, short sound_type, Boolean do_print);
 Boolean damage_monst(short which_m, short who_hit, short how_much, short how_much_spec, short type);
 void kill_monst(creature_data_type *which_m,short who_killed);
 void special_increase_age();

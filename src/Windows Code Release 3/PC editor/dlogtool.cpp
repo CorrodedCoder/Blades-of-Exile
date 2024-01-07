@@ -975,7 +975,10 @@ void cd_get_item_text(short dlog_num, short item_num, char *str)
 		play_sound(0);
 		return;
 		}
-	format_to_buf(str,"{}",text_long_str[(item_index < 10) ? item_index : (item_index - 10)]);
+	if (item_index < 10)
+		format_to_buf(str, "{}", text_long_str[item_index]);
+	else
+		format_to_buf(str, "{}", text_short_str[item_index - 10]);
 }
 #endif
 
@@ -1042,7 +1045,10 @@ void cd_set_item_num(short dlog_num, short item_num, short num)
 		play_sound(0);
 		return;
 		}
-	format_to_buf(text_long_str[(item_index < 10) ? item_index : (item_index - 10)], "{:d}", num);
+	if (item_index < 10)
+		format_to_buf(text_long_str[item_index], "{:d}", num);
+	else
+		format_to_buf(text_short_str[item_index - 10], "{:d}", num);
 	cd_draw_item( dlog_num,item_num);
 }
 

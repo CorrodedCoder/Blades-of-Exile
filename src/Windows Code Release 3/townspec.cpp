@@ -147,7 +147,7 @@ Boolean run_trap(short pc_num,short trap_type,short trap_level,short diff)
 		
 	if (pc_num < 6)
 	{
-		i = stat_adj(adven[pc_num], skill::Dexterity);
+		i = pc_stat_adj(adven[pc_num], skill::Dexterity);
 		if ((i_level = pc_prot_level(adven[pc_num], 42)) > 0)
 		{
 			i = i + i_level / 2;

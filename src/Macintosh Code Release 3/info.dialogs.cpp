@@ -29,8 +29,6 @@ creature_data_type *store_m;
 short store_trait_mode,store_item_pc,store_pc_num;
 item_record_type store_i;
 
-extern short spell_w_cast[2][62];
-extern short spell_level[62];
 extern short skill_cost[20];
 extern short skill_max[20];
 extern short skill_g_cost[20];
@@ -38,7 +36,7 @@ extern pc_record_type adven[6];
 extern short which_pc_displayed;
 extern party_record_type	party;
 extern short mage_range[66],priest_range[66];
-extern short spell_cost[2][62],cur_town_talk_loaded;
+extern short cur_town_talk_loaded;
 extern Boolean in_startup_mode,give_intro_hint;
 extern Boolean cd_event_filter();
 extern Boolean dialog_not_toast;
@@ -57,7 +55,6 @@ extern location dest_locs[40];
 extern short dest_personalities[40];
 location source_locs[6] = {{2,9},{0,6},{3,6},{3,4},{6,2},{0,0}};
 extern location dest_locs[40] ;
-extern char *alch_names[];
 extern scenario_data_type scenario;
 
 // Displaying string vars
@@ -86,9 +83,9 @@ void put_spell_info()
 	get_str (store_text, res, pos * 2 + 1);
 	cd_set_item_text(1096,4,(char *) store_text);
 
-	if (spell_cost[store_display_mode][pos] > 0)
-		format_to_buf(store_text, "{:d}/{:d}",spell_level[pos],spell_cost[store_display_mode][pos]);
-		else format_to_buf(store_text, "{:d}/?",spell_level[pos]);
+	if (spell_cost(store_display_mode, pos) > 0)
+		format_to_buf(store_text, "{:d}/{:d}",spell_level(pos),spell_cost(store_display_mode, pos));
+		else format_to_buf(store_text, "{:d}/?",spell_level(pos));
 	cd_set_item_text(1096,5,(char *) store_text);
 
 	if (ran == 0) {
@@ -98,7 +95,7 @@ void put_spell_info()
 	get_str (store_text, res, pos * 2 + 2);
 
 	cd_set_item_text(1096,7,(char *) store_text);
-	get_str (store_text, 11, 1 + spell_w_cast[store_display_mode][pos]);
+	get_str (store_text, 11, 1 + spell_w_cast(store_display_mode, pos));
 	cd_set_item_text(1096,11,(char *) store_text);
 }
 
@@ -719,7 +716,7 @@ void display_alchemy()
 
 
 	for (i = 0; i < 20; i++) {
-		cd_add_label(996,i + 4,alch_names[i],1083);
+		cd_add_label(996,i + 4, alchemy_name(i),1083);
 		if (party.alchemy[i] > 0)
 			cd_set_led(996,i + 4,1);
 			else cd_set_led(996,i + 4,0);

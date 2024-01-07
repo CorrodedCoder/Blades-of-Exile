@@ -17,6 +17,8 @@ namespace
 								,99,99,99,99,99,99,99,99,99,99
 								,99,99,99,99,99,99,99,99,99,99,
 								99,99,99,99,99,99,99,99,99,99 };
+	static constinit const auto c_skill_bonus(std::to_array<short>({ -3,-3,-2,-1,0,0,1,1,1,2,
+								2,2,3,3,3,3,4,4,4,5,5 }));
 
 	const std::array c_debug_names{
 		"Gunther",
@@ -99,12 +101,12 @@ namespace
 
 bool pc_has_cave_lore(const pc_record_type& pc)
 {
-	return (pc.main_status == status::Normal) && (pc.traits[trait::CaveLore] > 0);
+	return (pc.main_status == status::Normal) && pc.has_trait_b(trait::CaveLore);
 }
 
 bool pc_has_woodsman(const pc_record_type& pc)
 {
-	return (pc.main_status == status::Normal) && (pc.traits[trait::Woodsman] > 0);
+	return (pc.main_status == status::Normal) && pc.has_trait_b(trait::Woodsman);
 }
 
 void pc_heal(pc_record_type& pc, short amt)
@@ -220,7 +222,7 @@ short pc_get_tnl(const pc_record_type& pc)
 		| std::views::transform([](const auto& pair) { return std::get<1>(pair); });
 #else
 	auto v = std::views::iota(0, static_cast<int>(std::size(pc.traits)))
-		| std::views::filter([pc](int i) { return pc.traits[i] == BOE_TRUE; })
+		| std::views::filter([pc](int i) { return pc.has_trait(i); })
 		| std::views::transform([](int i) { return c_ap[static_cast<size_t>(i)]; });
 #endif
 
@@ -277,8 +279,8 @@ short pc_has_abil(const pc_record_type& pc, short abil)
 
 short pc_amount_can_carry(const pc_record_type& pc)
 {
-	return 100 + (15 * std::min(pc.skills[skill::Strength], static_cast<short>(20))) + ((pc.traits[trait::ExceptionalStr] == 0) ? 0 : 30)
-		+ ((pc.traits[trait::BadBack] == 0) ? 0 : -50);
+	return 100 + (15 * std::min(pc.skills[skill::Strength], static_cast<short>(20))) + (pc.has_trait_c(trait::ExceptionalStr) ? 30 : 0)
+		+ (pc.has_trait_c(trait::BadBack) ? -50 : 0);
 }
 
 void pc_sort_items(pc_record_type& pc)
@@ -307,7 +309,7 @@ void pc_sort_items(pc_record_type& pc)
 				}
 			}
 		}
-	} while(items_swapped);
+	} while (items_swapped);
 }
 
 bool pc_affect(pc_record_type& pc, affect type, short how_much)
@@ -391,13 +393,16 @@ bool pc_disease(pc_record_type& pc, short how_much)
 	{
 		how_much -= level / 2;
 	}
-	if ((pc.traits[trait::Frail] == BOE_TRUE) && (how_much > 1))
+	if (pc.has_trait(trait::Frail))
 	{
-		how_much++;
-	}
-	if ((pc.traits[trait::Frail] == BOE_TRUE) && (how_much == 1) && (rand_short(0, 1) == 0))
-	{
-		how_much++;
+		if (how_much > 1)
+		{
+			++how_much;
+		}
+		if ((how_much == 1) && (rand_short(0, 1) == 0))
+		{
+			++how_much;
+		}
 	}
 	pc.gaffect(affect::Diseased) = static_cast<short>(std::min(pc.gaffect(affect::Diseased) + how_much, 8));
 	return true;
@@ -417,7 +422,7 @@ bool pc_sleep(pc_record_type& pc, short how_much, short adjust)
 	{
 		how_much = -1;
 	}
-	if ((pc.traits[trait::HighlyAlert] > 0) || (pc.gaffect(affect::Asleep) < 0))
+	if (pc.has_trait_b(trait::HighlyAlert) || (pc.gaffect(affect::Asleep) < 0))
 	{
 		how_much = -1;
 	}
@@ -473,7 +478,192 @@ bool pc_acid(pc_record_type& pc, short how_much)
 	return true;
 }
 
+bool pc_poison(pc_record_type& pc, short how_much)
+{
+	if (const short level = pc_prot_level(pc, 34); level > 0)
+	{
+		how_much -= level / 2;
+	}
+	if (const short level = pc_prot_level(pc, 31); level > 0)
+	{
+		how_much -= level / 3;
+	}
+	if (pc.has_trait(trait::Frail))
+	{
+		if (how_much > 1)
+		{
+			++how_much;
+		}
+		if ((how_much == 1) && (rand_short(0, 1) == 0))
+		{
+			++how_much;
+		}
+	}
+	if (how_much > 0)
+	{
+		pc.gaffect(affect::Poisoned) = static_cast<short>(std::min(pc.gaffect(affect::Poisoned) + how_much, 8));
+		return true;
+	}
+	return false;
+}
+
+short pc_damage_adjust(const pc_record_type& pc, short how_much, damage_type type, short type_of_attacker, short parry_modifier, short party_adjust)
+{
+	// armor	
+	if ((type == damage_type::Weapon) || (type == damage_type::DemonAttack) || (type == damage_type::UndeadAttack))
+	{
+		how_much -= boe_clamp(pc.gaffect(affect::CursedBlessed), -5, 5);
+		for (short i = 0; i < 24; i++)
+		{
+			const auto& item{ pc.items[i] };
+			if ((item.variety != item_variety::None) && (pc.equip[i] == BOE_TRUE))
+			{
+				if ((item.variety >= item_variety::Shield) && (item.variety <= item_variety::Boots))
+				{
+					how_much -= rand_short(1, item.item_level);
+
+					// bonus for magical items
+					if (item.bonus > 0)
+					{
+						how_much -= rand_short(1, item.bonus);
+						how_much -= item.bonus / 2;
+					}
+					if (item.bonus < 0)
+					{
+						how_much -= item.bonus;
+					}
+					if (rand_short(0, 100) < skill_hit_chance(pc.skills[skill::Defense]) - 20)
+					{
+						--how_much;
+					}
+				}
+				if (item.protection > 0)
+				{
+					how_much -= rand_short(1, item.protection);
+				}
+				if (item.protection < 0)
+				{
+					how_much += rand_short(1, -1 * item.protection);
+				}
+			}
+		}
+	}
+
+	// parry
+	if ((type < damage_type::Poison) && (parry_modifier < 100))
+	{
+		how_much -= parry_modifier / 4;
+	}
+
+	how_much -= party_adjust;
+
+	if (type != damage_type::MarkedDamage)
+	{
+		// toughness
+		if (pc.has_trait(trait::Toughness))
+		{
+			--how_much;
+		}
+		// luck
+		if (rand_short(0, 100) < 2 * (skill_hit_chance(pc.skills[skill::Luck]) - 20))
+		{
+			--how_much;
+		}
+	}
+
+	short level = 0;
+	if ((type == damage_type::Weapon) && ((level = pc_prot_level(pc, 30)) > 0))
+	{
+		how_much -= level;
+	}
+	if ((type == damage_type::DemonAttack) && ((level = pc_prot_level(pc, 57)) > 0))
+	{
+		how_much /= ((level >= 7) ? 4 : 2);
+	}
+	if ((type == damage_type::UndeadAttack) && ((level = pc_prot_level(pc, 58)) > 0))
+	{
+		how_much /= ((level >= 7) ? 4 : 2);
+	}
+	if ((type_of_attacker == 6) && ((level = pc_prot_level(pc, 59)) > 0))
+	{
+		how_much /= ((level >= 7) ? 4 : 2);
+	}
+	if ((type_of_attacker == 1) && ((level = pc_prot_level(pc, 60)) > 0))
+	{
+		how_much /= ((level >= 7) ? 4 : 2);
+	}
+	if ((type_of_attacker == 9) && ((level = pc_prot_level(pc, 61)) > 0))
+	{
+		how_much /= ((level >= 7) ? 4 : 2);
+	}
+
+	// invuln
+	if (pc.gaffect(affect::Invulnerable) > 0)
+	{
+		how_much = 0;
+	}
+
+	// magic resistance
+	if ((type == damage_type::GeneralMagic) && ((level = pc_prot_level(pc, 35)) > 0))
+	{
+		how_much /= ((level >= 7) ? 4 : 2);
+	}
+
+	// Mag. res helps w. fire and cold
+	if (((type == damage_type::Fire) || (type == damage_type::Cold)) && (pc.gaffect(affect::MagicResistant) > 0))
+	{
+		how_much /= 2;
+	}
+
+	// fire res.
+	if ((type == damage_type::Fire) && ((level = pc_prot_level(pc, 32)) > 0))
+	{
+		how_much /= ((level >= 7) ? 4 : 2);
+	}
+
+	// cold res.
+	if ((type == damage_type::Cold) && ((level = pc_prot_level(pc, 33)) > 0))
+	{
+		how_much /= ((level >= 7) ? 4 : 2);
+	}
+
+	// major resistance
+	if (((type == damage_type::Fire) || (type == damage_type::Poison) || (type == damage_type::GeneralMagic) || (type == damage_type::Cold))
+		&& ((level = pc_prot_level(pc, 31)) > 0))
+	{
+		how_much /= ((level >= 7) ? 4 : 2);
+	}
+
+	return how_much;
+}
+
+short pc_stat_adj(const pc_record_type& pc, skill which)
+{
+	short tr = skill_bonus(pc.skills[which]);
+	if (which == skill::Intelligence)
+	{
+		if (pc.has_trait(trait::MagicallyApt))
+		{
+			++tr;
+		}
+		if (pc_has_abil_equip(pc, 99) < 16)
+		{
+			++tr;
+		}
+	}
+	if ((which == skill::Strength) && pc.has_trait(trait::ExceptionalStr))
+	{
+		++tr;
+	}
+	return tr;
+}
+
 short skill_hit_chance(short type)
 {
 	return c_hit_chance[static_cast<size_t>(type)];
+}
+
+short skill_bonus(short type)
+{
+	return c_skill_bonus[static_cast<size_t>(type)];
 }
