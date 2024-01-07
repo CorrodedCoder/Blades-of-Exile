@@ -95,6 +95,16 @@ short spell_cost(short type, short id)
 	return c_spell_cost[static_cast<size_t>(type)][static_cast<size_t>(id)];
 }
 
+short mage_spell_cost(short id)
+{
+	return spell_cost(0, id);
+}
+
+short priest_spell_cost(short id)
+{
+	return spell_cost(1, id);
+}
+
 short spell_w_cast(short type, short id)
 {
 	return c_spell_w_cast[static_cast<size_t>(type)][static_cast<size_t>(id)];
