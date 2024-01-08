@@ -3796,7 +3796,7 @@ void kill_pc(short which_pc, status type, bool no_save)
 	set_stat_window(current_pc);
 }
 
-static short pc_get_moves(pc_record_type& pc)
+static short pc_get_moves(const pc_record_type& pc)
 {
 	if (pc.main_status != status::Normal)
 	{
@@ -3826,9 +3826,8 @@ static short pc_get_moves(pc_record_type& pc)
 	moves = max(0, moves - pc.gaffect(affect::Webbed) / 2);
 	if (moves == 0)
 	{
-		add_string_to_buf("{} must clean webs.", pc.name);
-		pc.gaffect(affect::Webbed) = max(0, pc.gaffect(affect::Webbed) - 3);
-		return 0;
+		// CC: Ugly hack to report that webs should be cleaned
+		return -1;
 	}
 
 	if ((pc.gaffect(affect::Asleep) > 0) || (pc.gaffect(affect::Paralyzed) > 0))
@@ -3852,7 +3851,17 @@ void set_pc_moves()
 {
 	for (short i = 0; i < 6; i++)
 	{
-		pc_moves[i] = pc_get_moves(adven[i]);
+		const short moves = pc_get_moves(adven[i]);
+		if (moves == -1)
+		{
+			pc_moves[i] = 0;
+			adven[i].gaffect(affect::Webbed) = max(0, adven[i].gaffect(affect::Webbed) - 3);
+			add_string_to_buf("{} must clean webs.", adven[i].name);
+		}
+		else
+		{
+			pc_moves[i] = moves;
+		}
 	}
 }
 
