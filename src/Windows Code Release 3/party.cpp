@@ -3803,6 +3803,11 @@ static short pc_get_moves(short i)
 		return 0;
 	}
 
+	if ((adven[i].gaffect(affect::Speed) < 0) && (party.age % 2 == 1)) // slowed?
+	{
+		return 0;
+	}
+
 	short moves = adven[i].has_trait(trait::Sluggish) ? 3 : 4;
 	const auto r = pc_combat_encumberance(adven[i]);
 	moves = boe_clamp(moves - (r / 3), 1, 8);
@@ -3811,36 +3816,35 @@ static short pc_get_moves(short i)
 	{
 		moves += i_level / 7 + 1;
 	}
+
 	if (const auto i_level = pc_prot_level(adven[i], 56); i_level > 0)
 	{
 		moves -= i_level / 5;
 	}
 
-	if ((adven[i].gaffect(affect::Speed) < 0) && (party.age % 2 == 1)) // slowed?
+	// do webs
+	moves = max(0, moves - adven[i].gaffect(affect::Webbed) / 2);
+	if (moves == 0)
 	{
-		moves = 0;
+		add_string_to_buf("{} must clean webs.", adven[i].name);
+		adven[i].gaffect(affect::Webbed) = max(0, adven[i].gaffect(affect::Webbed) - 3);
+		return 0;
 	}
-	else // do webs
+
+	if ((adven[i].gaffect(affect::Asleep) > 0) || (adven[i].gaffect(affect::Paralyzed) > 0))
 	{
-		moves = max(0, moves - adven[i].gaffect(affect::Webbed) / 2);
-		if (moves == 0)
-		{
-			add_string_to_buf("{} must clean webs.", adven[i].name);
-			adven[i].gaffect(affect::Webbed) = max(0, adven[i].gaffect(affect::Webbed) - 3);
-		}
+		return 0;
 	}
+
 	if (adven[i].gaffect(affect::Speed) > 7)
 	{
-		moves = moves * 3;
+		moves *= 3;
 	}
 	else if (adven[i].gaffect(affect::Speed) > 0)
 	{
-		moves = moves * 2;
+		moves *= 2;
 	}
-	if ((adven[i].gaffect(affect::Asleep) > 0) || (adven[i].gaffect(affect::Paralyzed) > 0))
-	{
-		moves = 0;
-	}
+
 	return moves;
 }
 
