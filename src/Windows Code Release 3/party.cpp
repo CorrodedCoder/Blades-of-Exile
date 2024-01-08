@@ -3798,9 +3798,7 @@ void kill_pc(short which_pc, status type, bool no_save)
 
 void set_pc_moves()
 {
-	short i, r, i_level;
-
-	for (i = 0; i < 6; i++)
+	for (short i = 0; i < 6; i++)
 	{
 		if (adven[i].main_status != status::Normal)
 		{
@@ -3809,14 +3807,14 @@ void set_pc_moves()
 		else
 		{
 			pc_moves[i] = adven[i].has_trait(trait::Sluggish) ? 3 : 4;
-			r = pc_combat_encumberance(adven[i]);
+			const auto r = pc_combat_encumberance(adven[i]);
 			pc_moves[i] = boe_clamp(pc_moves[i] - (r / 3), 1, 8);
 
-			if ((i_level = pc_prot_level(adven[i], 55)) > 0)
+			if (const auto i_level = pc_prot_level(adven[i], 55); i_level > 0)
 			{
 				pc_moves[i] += i_level / 7 + 1;
 			}
-			if ((i_level = pc_prot_level(adven[i], 56)) > 0)
+			if (const auto i_level = pc_prot_level(adven[i], 56); i_level > 0)
 			{
 				pc_moves[i] -= i_level / 5;
 			}
