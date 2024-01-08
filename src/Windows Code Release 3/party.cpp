@@ -3796,51 +3796,51 @@ void kill_pc(short which_pc, status type, bool no_save)
 	set_stat_window(current_pc);
 }
 
-static short pc_get_moves(short i)
+static short pc_get_moves(pc_record_type& pc)
 {
-	if (adven[i].main_status != status::Normal)
+	if (pc.main_status != status::Normal)
 	{
 		return 0;
 	}
 
-	if ((adven[i].gaffect(affect::Speed) < 0) && (party.age % 2 == 1)) // slowed?
+	if ((pc.gaffect(affect::Speed) < 0) && (party.age % 2 == 1)) // slowed?
 	{
 		return 0;
 	}
 
-	short moves = adven[i].has_trait(trait::Sluggish) ? 3 : 4;
-	const auto r = pc_combat_encumberance(adven[i]);
+	short moves = pc.has_trait(trait::Sluggish) ? 3 : 4;
+	const auto r = pc_combat_encumberance(pc);
 	moves = boe_clamp(moves - (r / 3), 1, 8);
 
-	if (const auto i_level = pc_prot_level(adven[i], 55); i_level > 0)
+	if (const auto i_level = pc_prot_level(pc, 55); i_level > 0)
 	{
 		moves += i_level / 7 + 1;
 	}
 
-	if (const auto i_level = pc_prot_level(adven[i], 56); i_level > 0)
+	if (const auto i_level = pc_prot_level(pc, 56); i_level > 0)
 	{
 		moves -= i_level / 5;
 	}
 
 	// do webs
-	moves = max(0, moves - adven[i].gaffect(affect::Webbed) / 2);
+	moves = max(0, moves - pc.gaffect(affect::Webbed) / 2);
 	if (moves == 0)
 	{
-		add_string_to_buf("{} must clean webs.", adven[i].name);
-		adven[i].gaffect(affect::Webbed) = max(0, adven[i].gaffect(affect::Webbed) - 3);
+		add_string_to_buf("{} must clean webs.", pc.name);
+		pc.gaffect(affect::Webbed) = max(0, pc.gaffect(affect::Webbed) - 3);
 		return 0;
 	}
 
-	if ((adven[i].gaffect(affect::Asleep) > 0) || (adven[i].gaffect(affect::Paralyzed) > 0))
+	if ((pc.gaffect(affect::Asleep) > 0) || (pc.gaffect(affect::Paralyzed) > 0))
 	{
 		return 0;
 	}
 
-	if (adven[i].gaffect(affect::Speed) > 7)
+	if (pc.gaffect(affect::Speed) > 7)
 	{
 		moves *= 3;
 	}
-	else if (adven[i].gaffect(affect::Speed) > 0)
+	else if (pc.gaffect(affect::Speed) > 0)
 	{
 		moves *= 2;
 	}
@@ -3852,7 +3852,7 @@ void set_pc_moves()
 {
 	for (short i = 0; i < 6; i++)
 	{
-		pc_moves[i] = pc_get_moves(i);
+		pc_moves[i] = pc_get_moves(adven[i]);
 	}
 }
 
