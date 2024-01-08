@@ -25,6 +25,7 @@ short pc_carry_weight(const pc_record_type& pc);
 short pc_luck(const pc_record_type& pc);
 short pc_level(const pc_record_type& pc);
 short pc_combat_encumberance(const pc_record_type& pc);
+short pc_calculate_moves(const pc_record_type& pc, int party_age);
 
 bool pc_acid(pc_record_type& pc, short how_much);
 bool pc_web(pc_record_type& pc, short how_much);

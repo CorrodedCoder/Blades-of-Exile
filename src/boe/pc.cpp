@@ -726,6 +726,57 @@ short pc_combat_encumberance(const pc_record_type& pc)
 	return store;
 }
 
+short pc_calculate_moves(const pc_record_type& pc, int party_age)
+{
+	if (pc.main_status != status::Normal)
+	{
+		return 0;
+	}
+
+	if ((pc.gaffect(affect::Speed) < 0) && (party_age % 2 == 1)) // slowed?
+	{
+		return 0;
+	}
+
+	short moves = pc.has_trait(trait::Sluggish) ? 3 : 4;
+	const auto r = pc_combat_encumberance(pc);
+	moves = boe_clamp(moves - (r / 3), 1, 8);
+
+	if (const auto i_level = pc_prot_level(pc, 55); i_level > 0)
+	{
+		moves += i_level / 7 + 1;
+	}
+
+	if (const auto i_level = pc_prot_level(pc, 56); i_level > 0)
+	{
+		moves -= i_level / 5;
+	}
+
+	// do webs
+	moves = static_cast<short>(std::max(0, moves - pc.gaffect(affect::Webbed) / 2));
+	if (moves == 0)
+	{
+		// CC: Ugly hack to report that webs should be cleaned
+		return -1;
+	}
+
+	if ((pc.gaffect(affect::Asleep) > 0) || (pc.gaffect(affect::Paralyzed) > 0))
+	{
+		return 0;
+	}
+
+	if (pc.gaffect(affect::Speed) > 7)
+	{
+		moves *= 3;
+	}
+	else if (pc.gaffect(affect::Speed) > 0)
+	{
+		moves *= 2;
+	}
+
+	return moves;
+}
+
 short skill_hit_chance(short type)
 {
 	return c_hit_chance[static_cast<size_t>(type)];
