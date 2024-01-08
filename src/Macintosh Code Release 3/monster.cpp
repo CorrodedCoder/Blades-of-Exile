@@ -610,7 +610,7 @@ short switch_target_to_adjacent(short which_m,short orig_target)
 	if (is_combat())
 		for (i = 0; i < 6; i++)
 			if ((adven[i].main_status == status::Normal) && (monst_adjacent(pc_pos[i],which_m) == TRUE) && 
-			 (get_encumberance(i) < 2))
+			 (pc_combat_encumberance(adven[i]) < 2))
 		 		return i; 
 
 	// Check for a nice, adjacent, friendly monster and maybe attack
@@ -1427,22 +1427,6 @@ void activate_monsters(short code,short attitude)
 				take_crate(c_town.monst.dudes[i].m_loc.x,c_town.monst.dudes[i].m_loc.y);
 				take_barrel(c_town.monst.dudes[i].m_loc.x,c_town.monst.dudes[i].m_loc.y);
 			}
-}
-
-short get_encumberance(short pc_num)
-{
-	short store = 0,i,what_val;
-	
-	for (i = 0; i < 24; i++)
-		if (adven[pc_num].equip[i] == TRUE) {
-			what_val = adven[pc_num].items[i].awkward;
-			if ((what_val == 1) && (rand_short(0,130) < hit_chance[adven[pc_num].skills[skill::Defense]]))
-				what_val--;
-			if ((what_val > 1) && (rand_short(0,70) < hit_chance[adven[pc_num].skills[skill::Defense]]))
-				what_val--;
-			store += what_val;
-			}
-	return store;
 }
 
 short get_summon_monster(short summon_class)

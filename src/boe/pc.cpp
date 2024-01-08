@@ -698,6 +698,34 @@ bool pc_can_cast_spell_ex(const pc_record_type& pc, short type, short spell_num)
 	return true;
 }
 
+short pc_combat_encumberance(const pc_record_type& pc)
+{
+	short store = 0;
+
+	static_assert(std::size(pc_record_type{}.items) == std::size(pc_record_type{}.equip));
+
+	// CC: Windows original source had it at the first 16 items
+	// rather than the full 24 like the Mac, so I chose the latter.
+	for (size_t i = 0; i < std::size(pc.items); i++)
+	{
+		if (pc.equip[i] == BOE_TRUE)
+		{
+			short what_val = pc.items[i].awkward;
+			if ((what_val == 1) && (rand_short(0, 130) < skill_hit_chance(pc.skills[skill::Defense])))
+			{
+				--what_val;
+			}
+			if ((what_val > 1) && (rand_short(0, 70) < skill_hit_chance(pc.skills[skill::Defense])))
+			{
+				--what_val;
+			}
+			store += what_val;
+		}
+	}
+
+	return store;
+}
+
 short skill_hit_chance(short type)
 {
 	return c_hit_chance[static_cast<size_t>(type)];

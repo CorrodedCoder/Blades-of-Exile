@@ -3530,7 +3530,7 @@ void set_pc_moves()
 			pc_moves[i] = 0;
 			else {
 				pc_moves[i] = (adven[i].traits[trait::Sluggish] == TRUE) ? 3 : 4;
-				r = get_encumberance(i);
+				r = pc_combat_encumberance(adven[i]);
 				pc_moves[i] = boe_clamp(pc_moves[i] - (r / 3),1,8);
 				
 				if ((i_level = get_prot_level(i,55)) > 0)

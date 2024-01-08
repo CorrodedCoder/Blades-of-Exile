@@ -518,7 +518,7 @@ void pc_attack(short who_att,short target)
 					else weap2 = i;
 
 	hit_adj = (-5 * boe_clamp(adven[who_att].gaffect(affect::CursedBlessed),-8,8)) + 5 * boe_clamp(which_m->gaffect(affect::CursedBlessed),-8,8)
-			- pc_stat_adj(adven[who_att], skill::Dexterity) * 5 + (get_encumberance(adven[who_att])) * 5;
+			- pc_stat_adj(adven[who_att], skill::Dexterity) * 5 + (pc_combat_encumberance(adven[who_att])) * 5;
 
 	dam_adj = boe_clamp(adven[who_att].gaffect(affect::CursedBlessed),-8,8) - boe_clamp(which_m->gaffect(affect::CursedBlessed),-8,8)
 			+ pc_stat_adj(adven[who_att], skill::Strength);
@@ -4002,7 +4002,7 @@ Boolean combat_cast_mage_spell()
 		add_string_to_buf("Cast: No spell points.        ");		
 	else if (adven[current_pc].skills[skill::MageSpells] == 0)
 		add_string_to_buf("Cast: No mage skill.        ");		
-	else if (get_encumberance(adven[current_pc]) > 1) { 
+	else if (pc_combat_encumberance(adven[current_pc]) > 1) {
 		add_string_to_buf("Cast: Too encumbered.        ");
 		take_ap(6);
 		give_help(40,0,0);
