@@ -3796,60 +3796,59 @@ void kill_pc(short which_pc, status type, bool no_save)
 	set_stat_window(current_pc);
 }
 
-static void pc_set_moves(short i)
+static short pc_get_moves(short i)
 {
 	if (adven[i].main_status != status::Normal)
 	{
-		pc_moves[i] = 0;
+		return 0;
 	}
-	else
+
+	short moves = adven[i].has_trait(trait::Sluggish) ? 3 : 4;
+	const auto r = pc_combat_encumberance(adven[i]);
+	moves = boe_clamp(moves - (r / 3), 1, 8);
+
+	if (const auto i_level = pc_prot_level(adven[i], 55); i_level > 0)
 	{
-		pc_moves[i] = adven[i].has_trait(trait::Sluggish) ? 3 : 4;
-		const auto r = pc_combat_encumberance(adven[i]);
-		pc_moves[i] = boe_clamp(pc_moves[i] - (r / 3), 1, 8);
+		moves += i_level / 7 + 1;
+	}
+	if (const auto i_level = pc_prot_level(adven[i], 56); i_level > 0)
+	{
+		moves -= i_level / 5;
+	}
 
-		if (const auto i_level = pc_prot_level(adven[i], 55); i_level > 0)
+	if ((adven[i].gaffect(affect::Speed) < 0) && (party.age % 2 == 1)) // slowed?
+	{
+		moves = 0;
+	}
+	else // do webs
+	{
+		moves = max(0, moves - adven[i].gaffect(affect::Webbed) / 2);
+		if (moves == 0)
 		{
-			pc_moves[i] += i_level / 7 + 1;
-		}
-		if (const auto i_level = pc_prot_level(adven[i], 56); i_level > 0)
-		{
-			pc_moves[i] -= i_level / 5;
-		}
-
-		if ((adven[i].gaffect(affect::Speed) < 0) && (party.age % 2 == 1)) // slowed?
-		{
-			pc_moves[i] = 0;
-		}
-		else // do webs
-		{
-			pc_moves[i] = max(0, pc_moves[i] - adven[i].gaffect(affect::Webbed) / 2);
-			if (pc_moves[i] == 0)
-			{
-				add_string_to_buf("{} must clean webs.", adven[i].name);
-				adven[i].gaffect(affect::Webbed) = max(0, adven[i].gaffect(affect::Webbed) - 3);
-			}
-		}
-		if (adven[i].gaffect(affect::Speed) > 7)
-		{
-			pc_moves[i] = pc_moves[i] * 3;
-		}
-		else if (adven[i].gaffect(affect::Speed) > 0)
-		{
-			pc_moves[i] = pc_moves[i] * 2;
-		}
-		if ((adven[i].gaffect(affect::Asleep) > 0) || (adven[i].gaffect(affect::Paralyzed) > 0))
-		{
-			pc_moves[i] = 0;
+			add_string_to_buf("{} must clean webs.", adven[i].name);
+			adven[i].gaffect(affect::Webbed) = max(0, adven[i].gaffect(affect::Webbed) - 3);
 		}
 	}
+	if (adven[i].gaffect(affect::Speed) > 7)
+	{
+		moves = moves * 3;
+	}
+	else if (adven[i].gaffect(affect::Speed) > 0)
+	{
+		moves = moves * 2;
+	}
+	if ((adven[i].gaffect(affect::Asleep) > 0) || (adven[i].gaffect(affect::Paralyzed) > 0))
+	{
+		moves = 0;
+	}
+	return moves;
 }
 
 void set_pc_moves()
 {
 	for (short i = 0; i < 6; i++)
 	{
-		pc_set_moves(i);
+		pc_moves[i] = pc_get_moves(i);
 	}
 }
 
