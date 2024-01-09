@@ -90,7 +90,7 @@ Boolean give_to_pc(short pc_num,const item_record_type& item,short  print_result
 		return FALSE;
 	  	}
 	const auto free_space{ pc_has_space(adven[pc_num]) };
-	if ((free_space == 24) || (adven[pc_num].main_status != status::Normal))
+	if ((free_space == 24) || (adven[pc_num].main_status != status_type::Normal))
 		return FALSE;
 	else
 	{
@@ -141,7 +141,7 @@ Boolean forced_give(short item_num,short abil)
 		item.ability = abil;
 	for (i = 0; i < 6; i++)
 		for (j = 0; j < 24; j++)
-			if ((adven[i].main_status == status::Normal) && (adven[i].items[j].variety == item_variety::None)) {
+			if ((adven[i].main_status == status_type::Normal) && (adven[i].items[j].variety == item_variety::None)) {
 				adven[i].items[j] = item;
 				if (is_ident(item) == 0)
 					add_string_to_buf("  {} gets {}.",adven[i].name,item.name);
@@ -191,7 +191,7 @@ Boolean party_take_abil(short abil)
 	short i,item;
 	
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == status::Normal)
+		if (adven[i].main_status == status_type::Normal)
 			if ((item = pc_has_abil(adven[i],abil)) < 24) {
 				if (adven[i].items[item].charges > 1)
 					adven[i].items[item].charges--;
@@ -615,7 +615,7 @@ short dist_from_party(location where)
 	
 	if ((overall_mode >= 10) && (overall_mode < 20)) {
 		for (i = 0; i < 6; i++)
-			if (adven[i].main_status == status::Normal)
+			if (adven[i].main_status == status_type::Normal)
 				store = min(store,dist(pc_pos[i],where));
 		}
 		else store = dist(c_town.p_loc,where);
@@ -710,8 +710,8 @@ void make_town_hostile()
 
 	if (fry_party == TRUE) {
 		for (i = 0; i < 6; i++)
-			if (adven[i].main_status > status::Absent)
-				adven[i].main_status = status::Absent;
+			if (adven[i].main_status > status_type::Absent)
+				adven[i].main_status = status_type::Absent;
 		stat_window = 6;
 		boom_anim_active = FALSE;	
 		}
@@ -724,13 +724,13 @@ void put_item_graphics()
 	item_record_type item;
 
 	// First make sure all arrays for who can get stuff are in order.
-	if ((current_getting_pc < 6) && ((adven[current_getting_pc].main_status != status::Normal) 
+	if ((current_getting_pc < 6) && ((adven[current_getting_pc].main_status != status_type::Normal) 
 	 || (pc_has_space(adven[current_getting_pc]) == 24))) {
 	 	current_getting_pc = 6;
 	 	
 	 	}
 	for (i = 0; i < 6; i++)
-		if ((adven[i].main_status == status::Normal) && (pc_has_space(adven[i]) < 24)
+		if ((adven[i].main_status == status_type::Normal) && (pc_has_space(adven[i]) < 24)
 		 && ((is_not_combat()) || (current_pc == i))) {
 			if (current_getting_pc == 6)
 				current_getting_pc = i;
@@ -785,7 +785,7 @@ void put_item_graphics()
 	}
 		
 	for (i = 0; i < 6; i++) 
-		if (adven[i].main_status == status::Normal) {
+		if (adven[i].main_status == status_type::Normal) {
 			csp(987,11 + i,800 + adven[i].which_graphic);
 			}
 }
@@ -1027,12 +1027,12 @@ short char_select_pc(short active_only,short free_inv_only, const char * title)
 		else csit(	1018,15,title);
 	
 	for (i = 0; i < 6; i++) {
-		if ((adven[i].main_status == status::Absent) ||
-			((active_only == TRUE) && (adven[i].main_status > status::Normal)) ||
-			((free_inv_only == 1) && (pc_has_space(adven[i]) == 24)) || (adven[i].main_status == status::Fled)) {
+		if ((adven[i].main_status == status_type::Absent) ||
+			((active_only == TRUE) && (adven[i].main_status > status_type::Normal)) ||
+			((free_inv_only == 1) && (pc_has_space(adven[i]) == 24)) || (adven[i].main_status == status_type::Fled)) {
 				cd_activate_item(1018, 3 + i, 0);
 				}
-		if (adven[i].main_status != status::Absent) {
+		if (adven[i].main_status != status_type::Absent) {
 				csit(1018,9 + i,adven[i].name);		
 			}		
 			else cd_activate_item(1018, 9 + i, 0);
@@ -1320,7 +1320,7 @@ void place_treasure(location where,short level,short loot,short mode)
 							
 			if (new_item.variety != item_variety::None) {
 				for (i = 0; i < 6; i++)
-					if ((adven[i].main_status == status::Normal) 
+					if ((adven[i].main_status == status_type::Normal) 
 						&& (rand_short(0,100) < id_odds[adven[i].skills[skill::ItemLore]]))
 							new_item.item_properties = new_item.item_properties | 1;
 				place_item(new_item,where,FALSE);
@@ -1426,7 +1426,7 @@ Boolean party_check_class(short item_class,short mode) ////
 	if (item_class == 0)
 		return FALSE;
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == status::Normal)
+		if (adven[i].main_status == status_type::Normal)
 			for (j = 23; j >= 0; j--)
 				if ((adven[i].items[j].variety > item_variety::None) && (adven[i].items[j].special_class == item_class)) {
 					if (mode == 0) {

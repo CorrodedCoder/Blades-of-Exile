@@ -321,7 +321,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 			one_sound(17);
 			if (mode < 2) {
 				for (i = 0; i < 6; i++) 
-					if (adven[i].main_status == status::Normal) 
+					if (adven[i].main_status == status_type::Normal) 
 						{
 						if (rand_short(1,100) <= ter_flag2) {
 							if (ter_special == terrain_special::PoisonLand)
@@ -1529,7 +1529,7 @@ void push_things()
 		}
 	if (is_combat()) {
 		for (i = 0; i < 6; i++)
-			if (adven[i].main_status == status::Normal) {
+			if (adven[i].main_status == status_type::Normal) {
 				ter = t_d.terrain[pc_pos[i].x][pc_pos[i].y];
 				l = pc_pos[i];
 				switch (scenario.ter_type(ter).special) {
@@ -2154,10 +2154,10 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i)) {
 					if (spec.ex1b == 0) {
-						if ((adven[i].main_status > status::Absent) && hacks_adventure_has_split_status(adven[i]))
-							adven[i].main_status = status::Normal;
+						if ((adven[i].main_status > status_type::Absent) && hacks_adventure_has_split_status(adven[i]))
+							adven[i].main_status = status_type::Normal;
 						}
-					else kill_pc(i, static_cast<status>(spec.ex1a + 2), true);
+					else kill_pc(i, static_cast<status_type>(spec.ex1a + 2), true);
 					}
 			*redraw = 1;
 			break;
@@ -2381,7 +2381,7 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 			break;
 		case 141:
 			for (i = 0; i < 6; i++)
-				if (adven[i].main_status == status::Normal)
+				if (adven[i].main_status == status_type::Normal)
 					for (j = 0; j < 24; j++)
 						if ((adven[i].items[j].variety > item_variety::None) && (adven[i].items[j].special_class == spec.ex1a)
 							&& (adven[i].equip[j] == TRUE)) 
@@ -2417,7 +2417,7 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 			break;
 		case 146:
 			for (i = 0; i < 6; i++)
-				if (adven[i].main_status == status::Normal)
+				if (adven[i].main_status == status_type::Normal)
 					for (j = 0; j < 24; j++)
 						if ((adven[i].items[j].variety > item_variety::None) && (adven[i].items[j].special_class == spec.ex1a)
 							&& (adven[i].equip[j] == TRUE)) {

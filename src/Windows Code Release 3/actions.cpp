@@ -722,7 +722,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 				else {
 					add_string_to_buf("Pause.");
 					for (k = 0; k < 6; k++)
-						if ((adven[k].main_status == status::Normal) && (adven[k].gaffect(affect::Webbed) > 0)) {
+						if ((adven[k].main_status == status_type::Normal) && (adven[k].gaffect(affect::Webbed) > 0)) {
 							add_string_to_buf("{} cleans webs.", adven[k].name);
 							adven[k].reduce_affect(affect::Webbed);
 							adven[k].reduce_affect(affect::Webbed);
@@ -1069,7 +1069,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 								add_string_to_buf("Set active: Finish what you're doing first.");
 								else if (is_combat())
 								add_string_to_buf("Set active: Can't set this in combat.");
-								else if ((adven[i].main_status != status::Normal) &&
+								else if ((adven[i].main_status != status_type::Normal) &&
 									((overall_mode != 21) || (store_shop_type != 3)))
 								add_string_to_buf("Set active: PC must be here & active.");
 							else {
@@ -1132,7 +1132,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 							add_string_to_buf("Set active: Finish what you're doing first.");
 							else {
 								if (is_not_combat()) {
-									if ((adven[i].main_status != status::Normal) &&
+									if ((adven[i].main_status != status_type::Normal) &&
 									((overall_mode != 21) || (store_shop_type != 12)))
 										add_string_to_buf("Set active: PC must be here & active.");
 										else {
@@ -1429,8 +1429,8 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 		}
 	if (adventurers_dead(adven)) {
 		for (i = 0; i < 6; i++)
-			if (adven[i].main_status == status::Fled) {
-				adven[i].main_status = status::Normal;
+			if (adven[i].main_status == status_type::Fled) {
+				adven[i].main_status = status_type::Normal;
 				if (is_combat()) {
 					end_town_mode(0,c_town.p_loc);
 					add_string_to_buf("End combat.               ");
@@ -1469,7 +1469,7 @@ Boolean someone_awake()
 	short i;
 
 	for (i = 0; i < 6; i++)
-		if ((adven[i].main_status == status::Normal) && (adven[i].gaffect(affect::Asleep) <= 0) && (adven[i].gaffect(affect::Paralyzed) <= 0))
+		if ((adven[i].main_status == status_type::Normal) && (adven[i].gaffect(affect::Asleep) <= 0) && (adven[i].gaffect(affect::Paralyzed) <= 0))
 			return TRUE;
 	return FALSE;
 }
@@ -1644,11 +1644,11 @@ void button_flash_rect(RECT to_flash)
 	party.out_c[i].exists = FALSE;
 
 	for (m = 0; m < 6; m++)
-		if (adven[m].main_status == status::Normal)
+		if (adven[m].main_status == status_type::Normal)
 			to_place = pc_pos[m];
 	for (m = 0; m < 6; m++)
 		for (n = 0; n < 24; n++)
-			if ((adven[m].main_status != status::Normal) && (adven[m].items[n].variety != item_variety::None)) {
+			if ((adven[m].main_status != status_type::Normal) && (adven[m].items[n].variety != item_variety::None)) {
 				place_item(adven[m].items[n],to_place,TRUE);
 				adven[m].items[n].variety = item_variety::None;
 				}
@@ -1899,7 +1899,7 @@ Boolean handle_keystroke(UINT wParam,LONG lParam)
 			party.gold += 100;
 			party.food += 100;
 			for (i = 0; i < 6; i++) {
-				adven[i].main_status = status::Normal;
+				adven[i].main_status = status_type::Normal;
 				adven[i].cur_health = 100;
 				adven[i].cur_sp = 100;
 				}
@@ -2251,7 +2251,7 @@ void increase_age()
 	if (party.stuff_done[305][1] == 1) {
 		if (scenario.ter_type(out[party.p_loc.x][party.p_loc.y]).blockage > 2) {
 				add_string_to_buf("  You plummet to your deaths.                  ");
-				slay_party(status::Dead);
+				slay_party(status_type::Dead);
 				print_buf();
 				pause(150);
 				}
@@ -2363,7 +2363,7 @@ void increase_age()
 	if (is_out()) {
 			if (party.age % 100 == 0) {
 				for (i = 0; i < 6; i++)
-					if ((adven[i].main_status == status::Normal) && (adven[i].cur_health < adven[i].max_health))
+					if ((adven[i].main_status == status_type::Normal) && (adven[i].cur_health < adven[i].max_health))
 						update_stat = TRUE;
 				adventurers_heal(adven, 2);
 				}
@@ -2371,7 +2371,7 @@ void increase_age()
 		else {
 			if (party.age % 50 == 0) {
 				for (i = 0; i < 6; i++)
-					if ((adven[i].main_status == status::Normal) && (adven[i].cur_health < adven[i].max_health))
+					if ((adven[i].main_status == status_type::Normal) && (adven[i].cur_health < adven[i].max_health))
 						update_stat = TRUE;
 				adventurers_heal(adven, 1);
 				}
@@ -2379,7 +2379,7 @@ void increase_age()
 	if (is_out()) {
 			if (party.age % 80 == 0) {
 			for (i = 0; i < 6; i++)
-				if ((adven[i].main_status == status::Normal) && (adven[i].cur_sp < adven[i].max_sp))
+				if ((adven[i].main_status == status_type::Normal) && (adven[i].cur_sp < adven[i].max_sp))
 					update_stat = TRUE;
 				adventurers_restore_sp(adven, 2);
 				}
@@ -2387,7 +2387,7 @@ void increase_age()
 		else {	
 			if (party.age % 40 == 0) {
 			for (i = 0; i < 6; i++)
-				if ((adven[i].main_status == status::Normal) && (adven[i].cur_sp < adven[i].max_sp))
+				if ((adven[i].main_status == status_type::Normal) && (adven[i].cur_sp < adven[i].max_sp))
 					update_stat = TRUE;
 				adventurers_restore_sp(adven, 1);
 				}
@@ -2395,7 +2395,7 @@ void increase_age()
 
 	// Recuperation and chronic disease disads
 	for (i = 0; i < 6; i++) 
-		if (adven[i].main_status == status::Normal) {
+		if (adven[i].main_status == status_type::Normal) {
 			if (adven[i].has_trait_b(trait::Recuperation) && (rand_short(0,10) == 1) && (adven[i].cur_health < adven[i].max_health)) {
 				pc_heal(adven[i],2);
 				update_stat = TRUE;
@@ -2511,10 +2511,10 @@ void drop_pc(short which)
 		return;
 		}
 	add_string_to_buf("Delete PC: OK.                  ");
-	kill_pc(which, status::Absent);
+	kill_pc(which, status_type::Absent);
 	for (i = which; i < 5; i++)
 		adven[i] = adven[i + 1];
-	adven[5].main_status = status::Absent;
+	adven[5].main_status = status_type::Absent;
 	set_stat_window(0);
 	put_pc_screen();
 }
@@ -2582,7 +2582,7 @@ void start_new_game()
 	// PCs get adjustments
 	for (i = 0; i < 6; i++)
 	{
-		if (adven[i].main_status == status::Normal)
+		if (adven[i].main_status == status_type::Normal)
 		{
 			// everyone gets a weapon
 			adven[i].items[0] = start_items[adven[i].race * 2];
@@ -3002,7 +3002,7 @@ Boolean someone_poisoned()
 	short i;
 	
 	for (i = 0; i < 6; i++)
-		if ((adven[i].main_status == status::Normal) && (adven[i].gaffect(affect::Poisoned) > 0))
+		if ((adven[i].main_status == status_type::Normal) && (adven[i].gaffect(affect::Poisoned) > 0))
 			return TRUE;
 	return FALSE;
 }

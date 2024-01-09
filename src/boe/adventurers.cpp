@@ -6,7 +6,7 @@
 
 namespace
 {
-	auto is_normal = [](const auto& adventurer) { return adventurer.main_status == status::Normal; };
+	auto is_normal = [](const auto& adventurer) { return adventurer.main_status == status_type::Normal; };
 }
 
 bool cave_lore_present(const Adventurers& adventurers)
@@ -55,7 +55,7 @@ bool adventurers_has_ability(const Adventurers& adventurers, short abil)
 {
 	for (const auto& pc : adventurers)
 	{
-		if ( (pc.main_status == status::Normal) && (pc_has_abil(pc, abil) < 24) )
+		if ( (pc.main_status == status_type::Normal) && (pc_has_abil(pc, abil) < 24) )
 		{
 			return true;
 		}
@@ -68,7 +68,7 @@ short adventurers_luck_total(const Adventurers& adventurers)
 	short total = 0;
 	for (const auto& pc : adventurers)
 	{
-		if (pc.main_status == status::Normal)
+		if (pc.main_status == status_type::Normal)
 		{
 			total += pc_luck(pc);
 		}
@@ -81,7 +81,7 @@ short adventurers_level_total(const Adventurers& adventurers)
 	short total = 0;
 	for (const auto& pc : adventurers)
 	{
-		if (pc.main_status == status::Normal)
+		if (pc.main_status == status_type::Normal)
 		{
 			total += pc_level(pc);
 		}
@@ -93,7 +93,7 @@ bool adventurers_dead(const Adventurers& adventurers)
 {
 	for (const auto& pc: adventurers)
 	{
-		if (pc.main_status == status::Normal)
+		if (pc.main_status == status_type::Normal)
 		{
 			return false;
 		}

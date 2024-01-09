@@ -948,7 +948,7 @@ void handle_options_menu(int item_hit)
 				break;
 				}
 			for (i = 0; i < 6; i++)
-				if (adven[i].main_status == status::Absent)
+				if (adven[i].main_status == status_type::Absent)
 					i = 20;
 			if (i == 6) {
 				ASB("Add PC: You already have 6 PCs.");

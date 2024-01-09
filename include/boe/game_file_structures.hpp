@@ -484,7 +484,7 @@ enum trait {
 };
 
 // See put_pc_screen for details
-enum class status: short {
+enum class status_type: short {
 	Absent = 0,
 	Normal = 1,
 	Dead = 2,
@@ -494,7 +494,7 @@ enum class status: short {
 	Surface = 6,
 	Won = 7,
 };
-static_assert(sizeof(status) == 2);
+static_assert(sizeof(status_type) == 2);
 
 enum class affect: short {
 	PoisonedWeapon = 0,
@@ -650,7 +650,7 @@ struct stored_town_maps_type {
 static_assert(sizeof(stored_town_maps_type) == 51200);
 
 struct pc_record_type {
-	status main_status;
+	status_type main_status;
 	char name[20];
 	short skills[30];
 	short max_health, cur_health, max_sp, cur_sp, experience, skill_pts, level;

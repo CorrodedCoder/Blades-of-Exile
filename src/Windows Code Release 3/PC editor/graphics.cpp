@@ -413,7 +413,7 @@ void draw_items(short clear_first)
 		}
 	
 	// frame_dlog_rect(mainPtr,frame_rect,0);
-	if (adven[current_active_pc].main_status != status::Normal){
+	if (adven[current_active_pc].main_status != status_type::Normal){
 		frame_dlog_rect(mainPtr,pc_info_rect,0); // re draw entire frame 
 		frame_dlog_rect(mainPtr,info_area_rect,0); // draw the frame
 		frame_dlog_rect(mainPtr,pc_race_rect,0); // draw the frame
@@ -548,7 +548,7 @@ void display_party(short mode,short clear_first)
 				
 				// pc_record_type adven[6] is the records that contains chaarcters
 				// main_status determins 0 - not exist, 1 - alive, OK, 2 - dead, 3 - stoned, 4 - dust
-				if (adven[i].main_status != status::Absent) { // PC exists?
+				if (adven[i].main_status != status_type::Absent) { // PC exists?
 					from_rect = from_base;
 					// draw PC graphic
 					OffsetRect(&from_rect,56 * (adven[i].which_graphic / 8),36 * (adven[i].which_graphic % 8));
@@ -583,7 +583,7 @@ void display_party(short mode,short clear_first)
 					if ((current_pressed_button < 0) || (current_pressed_button == i))
 					switch (adven[i].main_status) {
 						// draw statistics
-						case status::Normal:
+						case status_type::Normal:
 							if (i == current_active_pc) {
 								//Draw in race
 								if (adven[i].race == 0)
@@ -671,31 +671,31 @@ void display_party(short mode,short clear_first)
 							win_draw_string(main_dc,pc_area_buttons[i][3],"Alive ",1,10);
 							SelectObject(main_dc,bold_font);
 							break;
-						case status::Dead:
+						case status_type::Dead:
 							SetTextColor(main_dc,PALETTEINDEX(c[0]));
 							SelectObject(main_dc,bold_font);
 							win_draw_string(main_dc,pc_area_buttons[i][3],"Dead ",1,10);
 							SelectObject(main_dc,bold_font);
 							break;
-						case status::Dust:
+						case status_type::Dust:
 							SetTextColor(main_dc,PALETTEINDEX(c[0]));
 							SelectObject(main_dc,bold_font);
 							win_draw_string(main_dc,pc_area_buttons[i][3],"Dust ",1,10);
 							SelectObject(main_dc,bold_font);
 							break;
-						case status::Stone:
+						case status_type::Stone:
 							SetTextColor(main_dc,PALETTEINDEX(c[0]));
 							SelectObject(main_dc,bold_font);
 							win_draw_string(main_dc,pc_area_buttons[i][3],"Stone ",1,10);
 							SelectObject(main_dc,bold_font);
 							break;
-						case status::Fled:
+						case status_type::Fled:
 							SetTextColor(main_dc,PALETTEINDEX(c[0]));
 							SelectObject(main_dc,bold_font);
 							win_draw_string(main_dc,pc_area_buttons[i][3],"Fled ",1,10);
 							SelectObject(main_dc,bold_font);
 							break;
-						case status::Surface:
+						case status_type::Surface:
 							SetTextColor(main_dc,PALETTEINDEX(c[0]));
 							SelectObject(main_dc,bold_font);
 							win_draw_string(main_dc,pc_area_buttons[i][3],"Surface ",1,10);

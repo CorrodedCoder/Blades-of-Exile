@@ -413,7 +413,7 @@ void draw_startup_stats()
 			pc_rect.bottom = pc_rect.top + 79;
 			OffsetRect(&pc_rect,60 + 232 * (i / 3) + 25,95 + 45 * (i % 3));
 
-			if (adven[i].main_status > status::Absent) {
+			if (adven[i].main_status > status_type::Absent) {
 				from_rect = party_from;
 				OffsetRect(&from_rect,56 * (i / 3),36 * (i % 3));
 				to_rect = party_from;
@@ -435,7 +435,7 @@ void draw_startup_stats()
 			OffsetRect(&pc_rect,12,16);
 				SelectObject(main_dc,small_bold_font);
 			switch (adven[i].main_status) {
-				case status::Normal:
+				case status_type::Normal:
 					switch (adven[i].race) {
 						case 0: str = std::format("Level {:d} Human",adven[i].level); break;
 						case 1: str = std::format("Level {:d} Nephilim",adven[i].level); break;
@@ -447,13 +447,13 @@ void draw_startup_stats()
 						adven[i].max_health,adven[i].max_sp);
 					win_draw_string(main_dc,pc_rect, str.c_str(), 0, 18);
 					break;
-				case status::Dead:
+				case status_type::Dead:
 					win_draw_string(main_dc,pc_rect,"Dead",0,18);
 					break;
-				case status::Dust:
+				case status_type::Dust:
 					win_draw_string(main_dc,pc_rect,"Dust",0,18);
 					break;
-				case status::Stone:
+				case status_type::Stone:
 					win_draw_string(main_dc,pc_rect,"Stone",0,18);
 					break;
 				default:
@@ -1493,7 +1493,7 @@ void update_pc_graphics()
 	temp_gworld = load_pict(902,main_dc);
 
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status > status::Absent)
+		if (adven[i].main_status > status_type::Absent)
 			if (adven[i].which_graphic != which_graphic_index[i]) {
 				template_rect.left = (i / 3) * 56;
 				template_rect.right = template_rect.left + 56;

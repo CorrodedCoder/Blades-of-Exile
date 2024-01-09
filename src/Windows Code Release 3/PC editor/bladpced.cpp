@@ -497,9 +497,9 @@ Boolean handle_menu (short item, HMENU menu)
 		case 53: // raise dead
 			display_strings(20,3,0,0,"Editing party",57,715,0);
 			for (i = 0; i < 6; i++)
-				if ((adven[i].main_status == status::Dead) || (adven[i].main_status == status::Dust) ||
-					(adven[i].main_status == status::Stone))
-						adven[i].main_status = status::Normal;
+				if ((adven[i].main_status == status_type::Dead) || (adven[i].main_status == status_type::Dust) ||
+					(adven[i].main_status == status_type::Stone))
+						adven[i].main_status = status_type::Normal;
 			redraw_screen();
 			break;
 		case 54: // conditions

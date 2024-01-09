@@ -81,7 +81,7 @@ Boolean give_to_pc(short pc_num,item_record_type  item,short  print_result)
 			}
 		return FALSE;
 	  	}
-	if (((free_space = pc_has_space(pc_num)) == 24) || (adven[pc_num].main_status != status::Normal))
+	if (((free_space = pc_has_space(pc_num)) == 24) || (adven[pc_num].main_status != status_type::Normal))
 		return FALSE;
 		else {
 			item.item_properties = item.item_properties & 253; // not property
@@ -133,7 +133,7 @@ Boolean forced_give(short item_num,short abil) ////
 		item.ability = abil;
 	for (i = 0; i < 6; i++)
 		for (j = 0; j < 24; j++)
-			if ((adven[i].main_status == status::Normal) && (adven[i].items[j].variety == 0)) {
+			if ((adven[i].main_status == status_type::Normal) && (adven[i].items[j].variety == 0)) {
 				adven[i].items[j] = item;
 			
 				if (!is_ident(item))
@@ -218,7 +218,7 @@ Boolean party_has_abil(short abil)
 	short i;
 	
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == status::Normal)
+		if (adven[i].main_status == status_type::Normal)
 			if (pc_has_abil(i,abil) < 24)
 				return TRUE;
 	return FALSE;
@@ -229,7 +229,7 @@ Boolean party_take_abil(short abil)
 	short i,item;
 	
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == status::Normal)
+		if (adven[i].main_status == status_type::Normal)
 			if ((item = pc_has_abil(i,abil)) < 24) {
 				if (adven[i].items[item].charges > 1)
 					adven[i].items[item].charges--;
@@ -248,7 +248,7 @@ Boolean party_check_class(short item_class,short mode) ////
 	if (item_class == 0)
 		return FALSE;
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == status::Normal)
+		if (adven[i].main_status == status_type::Normal)
 			for (j = 23; j >= 0; j--)
 				if ((adven[i].items[j].variety > 0) && (adven[i].items[j].special_class == item_class)) {
 					if (mode == 0) {
@@ -713,7 +713,7 @@ short dist_from_party(location where)
 	
 	if ((overall_mode >= 10) && (overall_mode < 20)) {
 		for (i = 0; i < 6; i++)
-			if (adven[i].main_status == status::Normal)
+			if (adven[i].main_status == status_type::Normal)
 				store = min(store,dist(pc_pos[i],where));
 		}
 		else store = dist(c_town.p_loc,where);
@@ -826,14 +826,14 @@ void put_item_graphics()
 	Str255 message;
 
 	// First make sure all arrays for who can get stuff are in order.
-	if ((current_getting_pc < 6) && ((adven[current_getting_pc].main_status != status::Normal) 
+	if ((current_getting_pc < 6) && ((adven[current_getting_pc].main_status != status_type::Normal) 
 	 || (pc_has_space(current_getting_pc) == 24))) {
 	 	current_getting_pc = 6;
 	 	
 	 	}
 	 	
 	for (i = 0; i < 6; i++)
-		if ((adven[i].main_status == status::Normal) && (pc_has_space(i) < 24)
+		if ((adven[i].main_status == status_type::Normal) && (pc_has_space(i) < 24)
 		 && ((is_not_combat()) || (current_pc == i))) {
 			if (current_getting_pc == 6)
 				current_getting_pc = i;
@@ -894,7 +894,7 @@ void put_item_graphics()
 		}
 		
 	for (i = 0; i < 6; i++) 
-		if (adven[i].main_status == status::Normal) {
+		if (adven[i].main_status == status_type::Normal) {
 			csp(987,11 + i,800 + adven[i].which_graphic);
 			}
 }
@@ -1160,9 +1160,9 @@ short char_select_pc(short active_only,short free_inv_only,char *title)
 		else csit(	1018,15,title);
 	
 	for (i = 0; i < 6; i++) {
-		if ((adven[i].main_status == status::Absent) ||
+		if ((adven[i].main_status == status_type::Absent) ||
 			((active_only == TRUE) && (adven[i].main_status > 1)) ||
-			((free_inv_only == 1) && (pc_has_space(i) == 24)) || (adven[i].main_status == status::Fled)) {
+			((free_inv_only == 1) && (pc_has_space(i) == 24)) || (adven[i].main_status == status_type::Fled)) {
 				cd_activate_item(1018, 3 + i, 0);
 				}
 		if (adven[i].main_status != 0) {
@@ -1489,7 +1489,7 @@ void place_treasure(location where,short level,short loot,short mode)
 							
 			if (new_item.variety != 0) {
 				for (i = 0; i < 6; i++)
-					if ((adven[i].main_status == status::Normal) 
+					if ((adven[i].main_status == status_type::Normal) 
 						&& (rand_short(0,100) < id_odds[adven[i].skills[skill::ItemLore]]))
 							new_item.item_properties = new_item.item_properties | 1;
 				place_item(new_item,where,FALSE);
