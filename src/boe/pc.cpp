@@ -102,17 +102,17 @@ namespace
 
 bool pc_has_cave_lore(const pc_record_type& pc)
 {
-	return (pc.main_status == status::Normal) && pc.has_trait_b(trait::CaveLore);
+	return (pc.main_status == status_type::Normal) && pc.has_trait_b(trait::CaveLore);
 }
 
 bool pc_has_woodsman(const pc_record_type& pc)
 {
-	return (pc.main_status == status::Normal) && pc.has_trait_b(trait::Woodsman);
+	return (pc.main_status == status_type::Normal) && pc.has_trait_b(trait::Woodsman);
 }
 
 void pc_heal(pc_record_type& pc, short amt)
 {
-	if ((pc.main_status == status::Normal) && (pc.cur_health < pc.max_health))
+	if ((pc.main_status == status_type::Normal) && (pc.cur_health < pc.max_health))
 	{
 		pc.cur_health = std::min(static_cast<short>(pc.cur_health + amt), pc.max_health);
 	}
@@ -120,7 +120,7 @@ void pc_heal(pc_record_type& pc, short amt)
 
 bool pc_cure(pc_record_type& pc, short amt)
 {
-	if (pc.main_status != status::Normal)
+	if (pc.main_status != status_type::Normal)
 	{
 		return false;
 	}
@@ -156,7 +156,7 @@ void pc_setup_blank(pc_record_type& pc)
 void pc_setup_debug(pc_record_type& pc, short num)
 {
 	pc = pc_record_type{};
-	pc.main_status = status::Normal;
+	pc.main_status = status_type::Normal;
 	std::ranges::copy(std::string_view(c_debug_names.at(static_cast<size_t>(num))), pc.name);
 	std::ranges::fill(pc.skills, static_cast<short>(8));
 	pc.skills[skill::Strength] = 20;
@@ -179,7 +179,7 @@ void pc_setup_debug(pc_record_type& pc, short num)
 void pc_setup_prefab(pc_record_type& pc, short num)
 {
 	pc = pc_record_type{};
-	pc.main_status = status::Normal;
+	pc.main_status = status_type::Normal;
 	pc.level = 1;
 	pc.exp_adj = 100;
 	std::ranges::fill(std::views::counted(pc.priest_spells, 30), BOE_TRUE);
@@ -316,7 +316,7 @@ void pc_sort_items(pc_record_type& pc)
 bool pc_affect(pc_record_type& pc, affect type, short how_much)
 //type; // which status to affect
 {
-	if (pc.main_status != status::Normal)
+	if (pc.main_status != status_type::Normal)
 	{
 		return false;
 	}
@@ -667,7 +667,7 @@ bool pc_can_cast_spell_ex(const pc_record_type& pc, short type, short spell_num)
 	{
 		return false;
 	}
-	if (pc.main_status != status::Normal)
+	if (pc.main_status != status_type::Normal)
 	{
 		return false;
 	}
@@ -728,7 +728,7 @@ short pc_combat_encumberance(const pc_record_type& pc)
 
 short pc_calculate_moves(const pc_record_type& pc, int party_age)
 {
-	if (pc.main_status != status::Normal)
+	if (pc.main_status != status_type::Normal)
 	{
 		return 0;
 	}

@@ -453,7 +453,7 @@ void draw_items(short clear_first)
 	//undo_clip();
 	//TextSize(10);
 
-	if (adven[current_active_pc].main_status != status::Normal){
+	if (adven[current_active_pc].main_status != status_type::Normal){
 		frame_dlog_rect((GrafPtr) mainPtr,pc_info_rect,0); // re draw entire frame 
 		frame_dlog_rect((GrafPtr) mainPtr,info_area_rect,0); // draw the frame
 		frame_dlog_rect((GrafPtr) mainPtr,pc_race_rect,0); // draw the frame	

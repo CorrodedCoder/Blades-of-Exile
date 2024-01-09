@@ -402,7 +402,7 @@ bool is_blocked(location to_check)
 				return true;
 		if (is_combat())
 			for (i = 0; i < 6; i++)
-				if ((adven[i].main_status == status::Normal) && (same_point (to_check,pc_pos[i]) == TRUE))
+				if ((adven[i].main_status == status_type::Normal) && (same_point (to_check,pc_pos[i]) == TRUE))
 					return true;
 		
 		// Monster there?
@@ -640,7 +640,7 @@ Boolean combat_pt_in_light(location to_where)
 
 	rad = light_radius();
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == status::Normal) {
+		if (adven[i].main_status == status_type::Normal) {
 			if (dist(pc_pos[i],to_where) <= rad)
 				return TRUE;
 			}
@@ -687,7 +687,7 @@ short party_can_see(location where)
 		return 6;
 
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == status::Normal) {
+		if (adven[i].main_status == status_type::Normal) {
 			if (can_see(pc_pos[i],where,0) < 5)
 					return i;
 			}

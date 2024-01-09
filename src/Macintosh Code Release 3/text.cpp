@@ -208,7 +208,7 @@ void put_pc_screen()
 					format_to_buf(to_draw, "Absent");
 					break;
 				}
-			if (adven[i].main_status != status::Normal)
+			if (adven[i].main_status != status_type::Normal)
 				win_draw_string((GrafPtr) pc_stats_gworld,to_draw_rect,
  			 	 to_draw,0,10);
 			
@@ -239,7 +239,7 @@ void put_pc_screen()
 
 	// Sometimes this gets called when character is slain. when that happens, if items for
 	// that PC are up, switch item page.
-	if ((current_pc < 6) && (adven[current_pc].main_status != status::Normal) && (stat_window == current_pc)) {
+	if ((current_pc < 6) && (adven[current_pc].main_status != status_type::Normal) && (stat_window == current_pc)) {
 		set_stat_window(current_pc);
 		}
 }
@@ -559,7 +559,7 @@ void place_item_bottom_buttons()
 	short i;
 	
 	for (i = 0; i < 6; i++) {
-		if (adven[i].main_status == status::Normal) {
+		if (adven[i].main_status == status_type::Normal) {
 		 	item_bottom_button_active[i] = TRUE;
 		 	to_rect = item_screen_button_rects[i];
 			rect_draw_some_item (mixed_gworld, but_from_rect, item_stats_gworld, to_rect, 0, 0);
@@ -589,7 +589,7 @@ void set_stat_window(short new_stat)
 	short i,array_pos = 0;
 	
 	stat_window = new_stat;
-	if ((stat_window < 6) && (adven[stat_window].main_status != status::Normal))
+	if ((stat_window < 6) && (adven[stat_window].main_status != status_type::Normal))
 		stat_window = first_active_pc();
 	switch (stat_window) {
 		case 6:
@@ -620,7 +620,7 @@ short first_active_pc()
 	short i = 0;
 	
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == status::Normal)
+		if (adven[i].main_status == status_type::Normal)
 			return i;
 	return 6;
 }
@@ -837,7 +837,7 @@ short do_look(location space)
 			add_string_to_buf("    Your party");
 	if (overall_mode == 37)
 		for (i = 0; i < 6; i++)
-			if ((same_point(space,pc_pos[i]) == TRUE) && (adven[i].main_status == status::Normal)
+			if ((same_point(space,pc_pos[i]) == TRUE) && (adven[i].main_status == status_type::Normal)
 				&& (is_lit == TRUE) && (can_see(pc_pos[current_pc],space,0) < 5)) {
 				format_to_buf(store_string, "    {}", (char *) adven[i].name);
 				add_string_to_buf( store_string);					

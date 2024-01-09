@@ -82,7 +82,7 @@ Boolean give_to_pc(short pc_num,item_record_type  item, short print_result)
 
 	if (item.variety == item_variety::None)
 		return TRUE;
-	if (((free_space = pc_has_space(adven[pc_num])) == 24 ) || (adven[pc_num].main_status != status::Normal))
+	if (((free_space = pc_has_space(adven[pc_num])) == 24 ) || (adven[pc_num].main_status != status_type::Normal))
 		return FALSE;
 		else {
 			adven[pc_num].items[free_space] = item;
@@ -190,12 +190,12 @@ short char_select_pc(short active_only,short free_inv_only, const char * title)
 		else csit(	1018,15,title);
 	
 	for (i = 0; i < 6; i++) {
-		if ((adven[i].main_status == status::Absent) ||
-			((active_only == TRUE) && (adven[i].main_status > status::Normal)) ||
-			((free_inv_only == 1) && (pc_has_space(adven[i]) == 24)) || (adven[i].main_status == status::Fled)) {
+		if ((adven[i].main_status == status_type::Absent) ||
+			((active_only == TRUE) && (adven[i].main_status > status_type::Normal)) ||
+			((free_inv_only == 1) && (pc_has_space(adven[i]) == 24)) || (adven[i].main_status == status_type::Fled)) {
 				cd_activate_item(1018, 3 + i, 0);
 				}
-		if (adven[i].main_status != status::Absent) {
+		if (adven[i].main_status != status_type::Absent) {
 				csit(1018,9 + i,adven[i].name);		
 			}		
 			else cd_activate_item(1018, 9 + i, 0);

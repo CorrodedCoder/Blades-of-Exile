@@ -17,7 +17,7 @@ void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::st
 void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const char* t, size_t size);
 void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const unsigned char* t, size_t size);
 void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const terrain_special& t);
-void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const status& t);
+void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const status_type& t);
 void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const location& t);
 void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const out_wandering_type& t);
 void dump_to(std::ostream_iterator<char>& strm, std::string_view parent, std::string_view item, const outdoor_record_type& t);

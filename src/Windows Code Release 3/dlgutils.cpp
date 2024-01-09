@@ -291,7 +291,7 @@ void handle_sale(short what_chosen,short cost)
 											adven[current_pc].items[i].item_properties & 239;
   							break;
 						case 5: case 6: case 7:
-							adven[current_pc].main_status = status::Normal; break;
+							adven[current_pc].main_status = status_type::Normal; break;
 						case 8:
 							adven[current_pc].gaffect(affect::Dumbfounded) = 0; break;
 						}
@@ -440,17 +440,17 @@ void set_up_shop_array()
 				store_shop_costs[shop_pos] = heal_costs[4];
 				shop_pos++;
 				}
-			if (adven[current_pc].main_status == status::Stone) {
+			if (adven[current_pc].main_status == status_type::Stone) {
 				store_shop_items[shop_pos] = 705;
 				store_shop_costs[shop_pos] = heal_costs[5];
 				shop_pos++;
 				}
-			if (adven[current_pc].main_status == status::Dead){
+			if (adven[current_pc].main_status == status_type::Dead){
 				store_shop_items[shop_pos] = 706;
 				store_shop_costs[shop_pos] = heal_costs[6];
 				shop_pos++;
 				}
-			if  (adven[current_pc].main_status == status::Dust){
+			if  (adven[current_pc].main_status == status_type::Dust){
 				store_shop_items[shop_pos] = 707;
 				store_shop_costs[shop_pos] = heal_costs[7];
 				shop_pos++;
@@ -1306,7 +1306,7 @@ void put_party_stats()
 	short i;
 
 	for (i = 0; i < 6; i++) {
-		if (adven[i].main_status > status::Absent) {
+		if (adven[i].main_status > status_type::Absent) {
 			cd_set_item_text(989,5 + 5 * i,adven[i].name);
 			cd_activate_item(989,7 + 5 * i,1);
 			cd_activate_item(989,8 + 5 * i,1);
@@ -1343,7 +1343,7 @@ void edit_party_event_filter (short item_hit)
 
 			case 5: case 10: case 15: case 20: case 25: case 30:
 				which_pc = (item_hit - 5) / 5;
-				if (adven[which_pc].main_status == status::Absent) {
+				if (adven[which_pc].main_status == status_type::Absent) {
 					//give_help(56,0,989);
 					//create_pc(which_pc,989);
 					//cd_initial_draw(989); // extra redraw, just in case
@@ -1364,17 +1364,17 @@ void edit_party_event_filter (short item_hit)
 			case 35: case 36: case 37: case 38: case 39: case 40:
 				which_pc = item_hit - 35;
 
-				if (adven[which_pc].main_status <= status::Absent)
+				if (adven[which_pc].main_status <= status_type::Absent)
 					break;
-				if (adven[which_pc].main_status != status::Absent)
+				if (adven[which_pc].main_status != status_type::Absent)
 					pick_pc_graphic(which_pc,1,989);
 				put_party_stats();
 				break;
 			case 6: case 11: case 16: case 21: case 26: case 31:
 				which_pc = (item_hit - 6) / 5;
-				if (adven[which_pc].main_status != status::Absent) {
+				if (adven[which_pc].main_status != status_type::Absent) {
 					if (FCD(1053,989) == 2)
-						adven[which_pc].main_status = status::Absent;
+						adven[which_pc].main_status = status_type::Absent;
 					put_party_stats();
 					}
 					else {
@@ -1417,7 +1417,7 @@ void edit_party(short can_create,short can_cancel)
 		pcs_gworld = NULL;
 		}
 
-	if (adven[current_pc].main_status != status::Normal)
+	if (adven[current_pc].main_status != status_type::Normal)
 		current_pc = first_active_pc();
 
 

@@ -1,5 +1,6 @@
 #include "boe/spell.hpp"
 #include <array>
+#include <cstddef>
 
 namespace
 {

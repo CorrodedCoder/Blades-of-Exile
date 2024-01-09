@@ -603,9 +603,9 @@ void handle_extra_menu(int item_hit)
 		case 10: // raise dead
 			display_strings(20,3,0,0,"Editing party",57,715,0);
 			for (i = 0; i < 6; i++)
-				if ((adven[i].main_status == status::Dead) || (adven[i].main_status == status::Dust) ||
-					(adven[i].main_status == status::Stone))
-						adven[i].main_status = status::Normal;
+				if ((adven[i].main_status == status_type::Dead) || (adven[i].main_status == status_type::Dust) ||
+					(adven[i].main_status == status_type::Stone))
+						adven[i].main_status = status_type::Normal;
 			break;
 		case 11: // conditions
 			display_strings(20,4,0,0,"Editing party",57,715,0);

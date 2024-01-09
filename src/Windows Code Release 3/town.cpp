@@ -559,7 +559,7 @@ void start_town_mode(short which_town, short entry_dir)
 	// If a PC dead, drop his items
 	for (m = 0; m < 6; m++)
 		for (n = 0; n < 24; n++)
-			if ((adven[m].main_status != status::Normal) && (adven[m].items[n].variety != item_variety::None)) {
+			if ((adven[m].main_status != status_type::Normal) && (adven[m].items[n].variety != item_variety::None)) {
 				place_item(adven[m].items[n],c_town.p_loc,TRUE);
 				adven[m].items[n].variety = item_variety::None;
 				}
@@ -765,7 +765,7 @@ void start_town_combat(short direction)
 	{
 		for (short i = 0; i < 6; i++)
 		{
-			if (adven[i].main_status == status::Normal)
+			if (adven[i].main_status == status_type::Normal)
 			{
 				current_pc = i;
 				i = 6;
@@ -786,7 +786,7 @@ void start_town_combat(short direction)
 		pc_parry[i] = 0;
 		pc_dir[i] = direction;
 		adven[current_pc].direction = direction;
-		if (adven[i].main_status == status::Normal)
+		if (adven[i].main_status == status_type::Normal)
 			update_explored(pc_pos[i]);
 		}
 
@@ -806,14 +806,14 @@ short end_town_combat()
 {
 	short num_tries = 0;
 	short r1 = rand_short(0,5);
-	while ((adven[r1].main_status != status::Normal) && (num_tries++ < 1000))
+	while ((adven[r1].main_status != status_type::Normal) && (num_tries++ < 1000))
 	{
 		r1 = rand_short(0, 5);
 	}
 	c_town.p_loc = pc_pos[r1];
 	overall_mode = 1;
 	current_pc = store_current_pc;
-	if (adven[current_pc].main_status != status::Normal)
+	if (adven[current_pc].main_status != status_type::Normal)
 	{
 		current_pc = first_active_pc();
 	}
@@ -873,7 +873,7 @@ void place_party(short direction)
 	}
 	for(short i = 0; i < 6; ++i)
 	{
-		if (adven[i].main_status == status::Normal)
+		if (adven[i].main_status == status_type::Normal)
 		{
 			if (how_many_ok == 1)
 			{

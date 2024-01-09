@@ -9,6 +9,10 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 		-Wno-old-style-cast
 		${BOE_WNO_UNSAFE_BUFFER_USAGE}
 	)
+elseif (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+	add_compile_options(
+		-Wextra -Wpedantic -Werror
+	)
 endif()
 
 add_subdirectory("Dump Scenario")

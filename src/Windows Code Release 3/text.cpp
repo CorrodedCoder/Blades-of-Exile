@@ -132,8 +132,8 @@ void put_pc_screen()
 
 	for (short i = 0; i < 6; i++)
 	{
-		if (((adven[i].main_status != status::Absent) && (pc_button_state[i] != 1)) ||
-			((adven[i].main_status == status::Absent) && (pc_button_state[i] != 0)))
+		if (((adven[i].main_status != status_type::Absent) && (pc_button_state[i] != 1)) ||
+			((adven[i].main_status == status_type::Absent) && (pc_button_state[i] != 0)))
 		{
 			right_buttons_same = FALSE;
 		}
@@ -189,7 +189,7 @@ void put_pc_screen()
 
 	for (short i = 0; i < 6; i++)
 	{
-		if (adven[i].main_status != status::Absent)
+		if (adven[i].main_status != status_type::Absent)
 		{
 			for (short j = 0; j < 5; j++)
 				pc_area_button_active[i][j] = 1;
@@ -210,7 +210,7 @@ void put_pc_screen()
 			to_draw_rect.right += 20;
 			switch (adven[i].main_status)
 			{
-			case status::Normal:
+			case status_type::Normal:
 				if (adven[i].cur_health == adven[i].max_health)
 				{
 					SetTextColor(hdc, PALETTEINDEX(c[3]));
@@ -234,22 +234,22 @@ void put_pc_screen()
 				draw_pc_effects_bmp(i, pc_stats_gworld);
 				SelectObject(hdc,pc_stats_gworld);
 				break;
-			case status::Dead:
+			case status_type::Dead:
 				win_draw_string(hdc, to_draw_rect, "Dead", 0, 10);
 				break;
-			case status::Dust:
+			case status_type::Dust:
 				win_draw_string(hdc, to_draw_rect, "Dust", 0, 10);
 				break;
-			case status::Stone:
+			case status_type::Stone:
 				win_draw_string(hdc, to_draw_rect, "Stone", 0, 10);
 				break;
-			case status::Fled:
+			case status_type::Fled:
 				win_draw_string(hdc, to_draw_rect, "Fled", 0, 10);
 				break;
-			case status::Surface:
+			case status_type::Surface:
 				win_draw_string(hdc, to_draw_rect, "Surface", 0, 10);
 				break;
-			case status::Won:
+			case status_type::Won:
 				win_draw_string(hdc, to_draw_rect, "Won", 0, 10);
 				break;
 			default:
@@ -289,7 +289,7 @@ void put_pc_screen()
 
 	// Sometimes this gets called when character is slain. when that happens, if items for
 	// that PC are up, switch item page.
-	if ((current_pc < 6) && (adven[current_pc].main_status != status::Normal) && (stat_window == current_pc))
+	if ((current_pc < 6) && (adven[current_pc].main_status != status_type::Normal) && (stat_window == current_pc))
 	{
 		set_stat_window(current_pc);
 	}
@@ -331,7 +331,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 	{
 		for (i = 0; i < 6; i++)
 		{
-			if ((adven[i].main_status != status::Normal) && (current_item_button[i] != -1))
+			if ((adven[i].main_status != status_type::Normal) && (current_item_button[i] != -1))
 			{
 				current_item_button[i] = -1;
 				//FillCRECT(&item_screen_button_rects[i],bg[7]);
@@ -691,7 +691,7 @@ static void place_item_bottom_buttons()
 
 	for (i = 0; i < 6; i++)
 	{
-		if (adven[i].main_status == status::Normal)
+		if (adven[i].main_status == status_type::Normal)
 		{
 			item_bottom_button_active[i] = TRUE;
 			to_rect = item_screen_button_rects[i];
@@ -727,7 +727,7 @@ void set_stat_window(short new_stat)
 {
 	short i,array_pos = 0;
 	stat_window = new_stat;
-	if ((stat_window < 6) && (adven[stat_window].main_status != status::Normal))
+	if ((stat_window < 6) && (adven[stat_window].main_status != status_type::Normal))
 	{
 		stat_window = first_active_pc();
 	}
@@ -768,7 +768,7 @@ short first_active_pc()
 	short i = 0;
 	for (i = 0; i < 6; i++)
 	{
-		if (adven[i].main_status == status::Normal)
+		if (adven[i].main_status == status_type::Normal)
 		{
 			return i;
 		}
@@ -812,7 +812,7 @@ static void draw_pc_effects_ex(RectDrawDestination dest_bmp, const pc_record_typ
 {
 	RECT dest_rect{ dest_rect_start };
 
-	if (hacks_adventurer_without_split_status(adventurer) != status::Normal)
+	if (hacks_adventurer_without_split_status(adventurer) != status_type::Normal)
 	{
 		return;
 	}
@@ -967,7 +967,7 @@ short do_look(location space)
 	{
 		for (i = 0; i < 6; i++)
 		{
-			if ((same_point(space, pc_pos[i]) == TRUE) && (adven[i].main_status == status::Normal)
+			if ((same_point(space, pc_pos[i]) == TRUE) && (adven[i].main_status == status_type::Normal)
 				&& (is_lit == TRUE) && (can_see(pc_pos[current_pc], space, 0) < 5))
 			{
 				add_string_to_buf("    {}", adven[i].name);

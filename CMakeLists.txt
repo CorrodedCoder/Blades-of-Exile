@@ -114,6 +114,17 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 		# Warnings as errors
 		add_compile_options(-Werror)
 	endif()
+elseif (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+	add_compile_options(
+		# Default warning level
+		-Wall
+	)
+	if(BOE_WARNINGS_MAX)
+		add_compile_options(-Wextra -Wpedantic)
+	else()
+		# Warnings as errors
+		add_compile_options(-Werror)
+	endif()
 endif()
 
 add_subdirectory(src)
