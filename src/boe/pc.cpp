@@ -223,7 +223,7 @@ short pc_get_tnl(const pc_record_type& pc)
 		| std::views::transform([](const auto& pair) { return std::get<1>(pair); });
 #else
 	auto v = std::views::iota(0, static_cast<int>(std::size(pc.traits)))
-		| std::views::filter([pc](int i) { return pc.has_trait(i); })
+		| std::views::filter([pc](int i) { return pc.has_trait(static_cast<trait>(i)); })
 		| std::views::transform([](int i) { return c_ap[static_cast<size_t>(i)]; });
 #endif
 
