@@ -47,5 +47,4 @@ void record_monst(creature_data_type *which_m);
 short place_monster(unsigned char which,location where);
 Boolean summon_monster(unsigned char which,location where,short duration,short given_attitude);
 void activate_monsters(short code,short attitude);
-short get_encumberance(const pc_record_type& pc);
 short get_summon_monster(short summon_class);

@@ -2493,54 +2493,31 @@ void dispel_fields(short i,short j,short mode)
 static bool pc_can_cast_spell(short pc_num,short type,short spell_num)
 //short type;  // 0 - mage  1 - priest
 {
-	short level,store_w_cast;
-	
-	level = spell_level(spell_num);
-
 	if (overall_mode >= 20)
+	{
 		return false;
-	if ((spell_num < 0) || (spell_num > 61))
+	}
+
+	if (!pc_can_cast_spell_ex(adven[pc_num], type, spell_num))
+	{
 		return false;
-	if (adven[pc_num].skills[skill::MageSpells + type] < level)
-		return false;
-	if (adven[pc_num].main_status != status::Normal)
-		return false;
-	if (adven[pc_num].cur_sp < spell_cost(type, spell_num))
-		return false;
-	if ((type == 0) && (adven[pc_num].mage_spells[spell_num] == FALSE))
-		return false;
-	if ((type == 1) && (adven[pc_num].priest_spells[spell_num] == FALSE))
-		return false;
-	if (adven[pc_num].gaffect(affect::Dumbfounded) >= 8 - level)
-		return false;
-	if (adven[pc_num].gaffect(affect::Paralyzed) != 0)
-		return false;
-	if (adven[pc_num].gaffect(affect::Asleep) > 0)
-		return false;
+	}
 
 	// 0 - everywhere 1 - combat only 2 - town only 3 - town & outdoor only 4 - town & combat only  5 - outdoor only
-	store_w_cast = spell_w_cast(type, spell_num);
-	if (is_out())
+	const short store_w_cast = spell_w_cast(type, spell_num);
+	if (is_out() && ((store_w_cast == 1) || (store_w_cast == 2) || (store_w_cast == 4)))
 	{
-		if ((store_w_cast == 1) || (store_w_cast == 2) || (store_w_cast == 4))
-		{
-			return false;
-		}
+		return false;
 	}
-	if (is_town())
+	if (is_town() && ((store_w_cast == 1) || (store_w_cast == 5)))
 	{
-		if ((store_w_cast == 1) || (store_w_cast == 5))
-		{
-			return false;
-		}
+		return false;
 	}
-	if (is_combat())
+	if (is_combat() && ((store_w_cast == 2) || (store_w_cast == 3) || (store_w_cast == 5)))
 	{
-		if ((store_w_cast == 2) || (store_w_cast == 3) || (store_w_cast == 5))
-		{
-			return false;
-		}
+		return false;
 	}
+
 	return true;
 }
 
@@ -3821,54 +3798,18 @@ void kill_pc(short which_pc, status type, bool no_save)
 
 void set_pc_moves()
 {
-	short i, r, i_level;
-
-	for (i = 0; i < 6; i++)
+	for (short i = 0; i < 6; i++)
 	{
-		if (adven[i].main_status != status::Normal)
+		const short moves = pc_calculate_moves(adven[i], party.age);
+		if (moves == -1)
 		{
 			pc_moves[i] = 0;
+			adven[i].gaffect(affect::Webbed) = max(0, adven[i].gaffect(affect::Webbed) - 3);
+			add_string_to_buf("{} must clean webs.", adven[i].name);
 		}
 		else
 		{
-			pc_moves[i] = adven[i].has_trait(trait::Sluggish) ? 3 : 4;
-			r = get_encumberance(adven[i]);
-			pc_moves[i] = boe_clamp(pc_moves[i] - (r / 3), 1, 8);
-
-			if ((i_level = pc_prot_level(adven[i], 55)) > 0)
-			{
-				pc_moves[i] += i_level / 7 + 1;
-			}
-			if ((i_level = pc_prot_level(adven[i], 56)) > 0)
-			{
-				pc_moves[i] -= i_level / 5;
-			}
-
-			if ((adven[i].gaffect(affect::Speed) < 0) && (party.age % 2 == 1)) // slowed?
-			{
-				pc_moves[i] = 0;
-			}
-			else // do webs
-			{
-				pc_moves[i] = max(0, pc_moves[i] - adven[i].gaffect(affect::Webbed) / 2);
-				if (pc_moves[i] == 0)
-				{
-					add_string_to_buf("{} must clean webs.", adven[i].name);
-					adven[i].gaffect(affect::Webbed) = max(0, adven[i].gaffect(affect::Webbed) - 3);
-				}
-			}
-			if (adven[i].gaffect(affect::Speed) > 7)
-			{
-				pc_moves[i] = pc_moves[i] * 3;
-			}
-			else if (adven[i].gaffect(affect::Speed) > 0)
-			{
-				pc_moves[i] = pc_moves[i] * 2;
-			}
-			if ((adven[i].gaffect(affect::Asleep) > 0) || (adven[i].gaffect(affect::Paralyzed) > 0))
-			{
-				pc_moves[i] = 0;
-			}
+			pc_moves[i] = moves;
 		}
 	}
 }

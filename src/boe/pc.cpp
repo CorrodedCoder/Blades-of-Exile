@@ -1,5 +1,6 @@
 #include "boe/pc.hpp"
 #include "boe/item.hpp"
+#include "boe/spell.hpp"
 #include <algorithm>
 #include <ranges>
 #include <utility>
@@ -222,7 +223,7 @@ short pc_get_tnl(const pc_record_type& pc)
 		| std::views::transform([](const auto& pair) { return std::get<1>(pair); });
 #else
 	auto v = std::views::iota(0, static_cast<int>(std::size(pc.traits)))
-		| std::views::filter([pc](int i) { return pc.has_trait(i); })
+		| std::views::filter([pc](int i) { return pc.has_trait(static_cast<trait>(i)); })
 		| std::views::transform([](int i) { return c_ap[static_cast<size_t>(i)]; });
 #endif
 
@@ -656,6 +657,124 @@ short pc_stat_adj(const pc_record_type& pc, skill which)
 		++tr;
 	}
 	return tr;
+}
+
+bool pc_can_cast_spell_ex(const pc_record_type& pc, short type, short spell_num)
+//short type;  // 0 - mage  1 - priest
+{
+	const short level = spell_level(spell_num);
+	if (pc.skills[skill::MageSpells + type] < level)
+	{
+		return false;
+	}
+	if (pc.main_status != status::Normal)
+	{
+		return false;
+	}
+	if (pc.cur_sp < spell_cost(type, spell_num))
+	{
+		return false;
+	}
+	if ((type == 0) && (pc.mage_spells[spell_num] == BOE_FALSE))
+	{
+		return false;
+	}
+	if ((type == 1) && (pc.priest_spells[spell_num] == BOE_FALSE))
+	{
+		return false;
+	}
+	if (pc.gaffect(affect::Dumbfounded) >= 8 - level)
+	{
+		return false;
+	}
+	if (pc.gaffect(affect::Paralyzed) != 0)
+	{
+		return false;
+	}
+	if (pc.gaffect(affect::Asleep) > 0)
+	{
+		return false;
+	}
+	return true;
+}
+
+short pc_combat_encumberance(const pc_record_type& pc)
+{
+	short store = 0;
+
+	static_assert(std::size(pc_record_type{}.items) == std::size(pc_record_type{}.equip));
+
+	// CC: Windows original source had it at the first 16 items
+	// rather than the full 24 like the Mac, so I chose the latter.
+	for (size_t i = 0; i < std::size(pc.items); i++)
+	{
+		if (pc.equip[i] == BOE_TRUE)
+		{
+			short what_val = pc.items[i].awkward;
+			if ((what_val == 1) && (rand_short(0, 130) < skill_hit_chance(pc.skills[skill::Defense])))
+			{
+				--what_val;
+			}
+			if ((what_val > 1) && (rand_short(0, 70) < skill_hit_chance(pc.skills[skill::Defense])))
+			{
+				--what_val;
+			}
+			store += what_val;
+		}
+	}
+
+	return store;
+}
+
+short pc_calculate_moves(const pc_record_type& pc, int party_age)
+{
+	if (pc.main_status != status::Normal)
+	{
+		return 0;
+	}
+
+	if ((pc.gaffect(affect::Speed) < 0) && (party_age % 2 == 1)) // slowed?
+	{
+		return 0;
+	}
+
+	short moves = pc.has_trait(trait::Sluggish) ? 3 : 4;
+	const auto r = pc_combat_encumberance(pc);
+	moves = boe_clamp(moves - (r / 3), 1, 8);
+
+	if (const auto i_level = pc_prot_level(pc, 55); i_level > 0)
+	{
+		moves += i_level / 7 + 1;
+	}
+
+	if (const auto i_level = pc_prot_level(pc, 56); i_level > 0)
+	{
+		moves -= i_level / 5;
+	}
+
+	// do webs
+	moves = static_cast<short>(std::max(0, moves - pc.gaffect(affect::Webbed) / 2));
+	if (moves == 0)
+	{
+		// CC: Ugly hack to report that webs should be cleaned
+		return -1;
+	}
+
+	if ((pc.gaffect(affect::Asleep) > 0) || (pc.gaffect(affect::Paralyzed) > 0))
+	{
+		return 0;
+	}
+
+	if (pc.gaffect(affect::Speed) > 7)
+	{
+		moves *= 3;
+	}
+	else if (pc.gaffect(affect::Speed) > 0)
+	{
+		moves *= 2;
+	}
+
+	return moves;
 }
 
 short skill_hit_chance(short type)
