@@ -124,156 +124,183 @@ static const short c_priest_emer_spells[7][4]{
 short pc_marked_damage[6];
 short monst_marked_damage[T_M];
 
-extern const location hor_vert_place[14] = {{0,0},{-1,1},{1,1},{-2,2},{0,2},
-								{2,2},{0,1},{-1,2},{1,2},{-1,3},
-								{1,3},{0,3},{0,4},{0,5}};
-extern const location diag_place[14] = {{0,0},{-1,0},{0,1},{-1,1},{-2,0},
-							{0,2},{-2,1},{-1,2},{-2,2},{-3,2},
-							{-2,3},{-3,3},{-4,3},{-3,4}};
+extern const location hor_vert_place[14]{{0,0},{-1,1},{1,1},{-2,2},{0,2},{2,2},{0,1},{-1,2},{1,2},{-1,3},{1,3},{0,3},{0,4},{0,5}};
+extern const location diag_place[14]{{0,0},{-1,0},{0,1},{-1,1},{-2,0},{0,2},{-2,1},{-1,2},{-2,2},{-3,2},{-2,3},{-3,3},{-4,3},{-3,4}};
 
-extern const effect_pat_type single = {{{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,1,0,0,0,0},
-						{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,0,0,0,0,0}}};
-static const effect_pat_type t = {{{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,1,0,0,0,0},
-						{0,0,0,1,1,1,0,0,0},
-						{0,0,0,0,1,0,0,0,0},
-						{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,0,0,0,0,0}}};
-static const effect_pat_type small_square = {{{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,1,1,0,0,0},
-						{0,0,0,0,1,1,0,0,0},
-						{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,0,0,0,0,0}}};
-extern const effect_pat_type square = {{{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,0,0,0,0,0},
-						{0,0,0,1,1,1,0,0,0},
-						{0,0,0,1,1,1,0,0,0},
-						{0,0,0,1,1,1,0,0,0},
-						{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,0,0,0,0,0}}};
-extern const effect_pat_type rad_pat2 = {{{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,0,0,0,0,0},
-						{0,0,0,1,1,1,0,0,0},
-						{0,0,1,1,1,1,1,0,0},
-						{0,0,1,1,1,1,1,0,0},
-						{0,0,1,1,1,1,1,0,0},
-						{0,0,0,1,1,1,0,0,0},
-						{0,0,0,0,0,0,0,0,0},
-						{0,0,0,0,0,0,0,0,0}}};
-static const effect_pat_type rad_pat3 = {{{0,0,0,0,0,0,0,0,0},
-						{0,0,0,1,1,1,0,0,0},
-						{0,0,1,1,1,1,1,0,0},
-						{0,1,1,1,1,1,1,1,0},
-						{0,1,1,1,1,1,1,1,0},
-						{0,1,1,1,1,1,1,1,0},
-						{0,0,1,1,1,1,1,0,0},
-						{0,0,0,1,1,1,0,0,0},
-						{0,0,0,0,0,0,0,0,0}}};
-static const effect_pat_type protect_pat = { {{0,4,4,4,4,4,4,4,0},
-						{4,8,8,8,8,8,8,8,4},
-						{4,8,9,9,9,9,9,8,4},
-						{4,8,9,6,6,6,9,8,4},
-						{4,8,9,6,6,6,9,8,4},
-						{4,8,9,6,6,6,9,8,4},
-						{4,8,9,9,9,9,9,8,4},
-						{4,8,8,8,8,8,8,8,4},
-						{0,4,4,4,4,4,4,4,0}} };
-
-static const effect_pat_type field[8] = {{{{0,0,0,0,1,1,0,0,0},
-							{0,0,0,0,1,1,0,0,0},
-							{0,0,0,0,1,1,0,0,0},
-							{0,0,0,0,1,1,0,0,0},
-							{0,0,0,0,1,1,0,0,0},
-							{0,0,0,0,1,1,0,0,0},
-							{0,0,0,0,1,1,0,0,0},
-							{0,0,0,0,1,1,0,0,0},
-							{0,0,0,0,1,1,0,0,0}}},
-
-							{{{0,0,0,0,0,0,0,0,1},
-							{0,0,0,0,0,0,0,1,1},
-							{0,0,0,0,0,0,1,1,0},
-							{0,0,0,0,0,1,1,0,0},
-							{0,0,0,0,1,1,0,0,0},
-							{0,0,0,1,1,0,0,0,0},
-							{0,0,1,1,0,0,0,0,0},
-							{0,1,1,0,0,0,0,0,0},
-							{1,1,0,0,0,0,0,0,0}}},
-
-							{{{0,0,0,0,0,0,0,0,0},
-							{0,0,0,0,0,0,0,0,0},
-							{0,0,0,0,0,0,0,0,0},
-							{0,0,0,0,0,0,0,0,0},
-							{1,1,1,1,1,1,1,1,1},
-							{1,1,1,1,1,1,1,1,1},
-							{0,0,0,0,0,0,0,0,0},
-							{0,0,0,0,0,0,0,0,0},
-							{0,0,0,0,0,0,0,0,0}}},
-
-							{{{1,0,0,0,0,0,0,0,0},
-							{1,1,0,0,0,0,0,0,0},
-							{0,1,1,0,0,0,0,0,0},
-							{0,0,1,1,0,0,0,0,0},
-							{0,0,0,1,1,0,0,0,0},
-							{0,0,0,0,1,1,0,0,0},
-							{0,0,0,0,0,1,1,0,0},
-							{0,0,0,0,0,0,1,1,0},
-							{0,0,0,0,0,0,0,1,1}}},
-
-							{{{0,0,0,1,1,0,0,0,0},
-							{0,0,0,1,1,0,0,0,0},
-							{0,0,0,1,1,0,0,0,0},
-							{0,0,0,1,1,0,0,0,0},
-							{0,0,0,1,1,0,0,0,0},
-							{0,0,0,1,1,0,0,0,0},
-							{0,0,0,1,1,0,0,0,0},
-							{0,0,0,1,1,0,0,0,0},
-							{0,0,0,1,1,0,0,0,0}}},
-
-							{{{0,0,0,0,0,0,0,1,1},
-							{0,0,0,0,0,0,1,1,0},
-							{0,0,0,0,0,1,1,0,0},
-							{0,0,0,0,1,1,0,0,0},
-							{0,0,0,1,1,0,0,0,0},
-							{0,0,1,1,0,0,0,0,0},
-							{0,1,1,0,0,0,0,0,0},
-							{1,1,0,0,0,0,0,0,0},
-							{1,0,0,0,0,0,0,0,0}}},
-
-							{{{0,0,0,0,0,0,0,0,0},
-							{0,0,0,0,0,0,0,0,0},
-							{0,0,0,0,0,0,0,0,0},
-							{1,1,1,1,1,1,1,1,1},
-							{1,1,1,1,1,1,1,1,1},
-							{0,0,0,0,0,0,0,0,0},
-							{0,0,0,0,0,0,0,0,0},
-							{0,0,0,0,0,0,0,0,0},
-							{0,0,0,0,0,0,0,0,0}}},
-
-							{{{1,1,0,0,0,0,0,0,0},
-							{0,1,1,0,0,0,0,0,0},
-							{0,0,1,1,0,0,0,0,0},
-							{0,0,0,1,1,0,0,0,0},
-							{0,0,0,0,1,1,0,0,0},
-							{0,0,0,0,0,1,1,0,0},
-							{0,0,0,0,0,0,1,1,0},
-							{0,0,0,0,0,0,0,1,1},
-							{0,0,0,0,0,0,0,0,1}}}};
+extern const effect_pat_type single{
+	{
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,1,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0}
+	}
+};
+static const effect_pat_type t{
+	{
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,1,0,0,0,0},
+		{0,0,0,1,1,1,0,0,0},
+		{0,0,0,0,1,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0}
+	}
+};
+static const effect_pat_type small_square{
+	{
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,1,1,0,0,0},
+		{0,0,0,0,1,1,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0}
+	}
+};
+extern const effect_pat_type square{
+	{
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,1,1,1,0,0,0},
+		{0,0,0,1,1,1,0,0,0},
+		{0,0,0,1,1,1,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0}
+	}
+};
+extern const effect_pat_type rad_pat2{
+	{
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,1,1,1,0,0,0},
+		{0,0,1,1,1,1,1,0,0},
+		{0,0,1,1,1,1,1,0,0},
+		{0,0,1,1,1,1,1,0,0},
+		{0,0,0,1,1,1,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0}
+	}
+};
+static const effect_pat_type rad_pat3{
+	{
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,1,1,1,0,0,0},
+		{0,0,1,1,1,1,1,0,0},
+		{0,1,1,1,1,1,1,1,0},
+		{0,1,1,1,1,1,1,1,0},
+		{0,1,1,1,1,1,1,1,0},
+		{0,0,1,1,1,1,1,0,0},
+		{0,0,0,1,1,1,0,0,0},
+		{0,0,0,0,0,0,0,0,0}
+	}
+};
+static const effect_pat_type protect_pat{
+	{
+		{0,4,4,4,4,4,4,4,0},
+		{4,8,8,8,8,8,8,8,4},
+		{4,8,9,9,9,9,9,8,4},
+		{4,8,9,6,6,6,9,8,4},
+		{4,8,9,6,6,6,9,8,4},
+		{4,8,9,6,6,6,9,8,4},
+		{4,8,9,9,9,9,9,8,4},
+		{4,8,8,8,8,8,8,8,4},
+		{0,4,4,4,4,4,4,4,0}
+	}
+};
+static const effect_pat_type field[8]{
+	{{
+		{0,0,0,0,1,1,0,0,0},
+		{0,0,0,0,1,1,0,0,0},
+		{0,0,0,0,1,1,0,0,0},
+		{0,0,0,0,1,1,0,0,0},
+		{0,0,0,0,1,1,0,0,0},
+		{0,0,0,0,1,1,0,0,0},
+		{0,0,0,0,1,1,0,0,0},
+		{0,0,0,0,1,1,0,0,0},
+		{0,0,0,0,1,1,0,0,0}
+	}},{{
+		{0,0,0,0,0,0,0,0,1},
+		{0,0,0,0,0,0,0,1,1},
+		{0,0,0,0,0,0,1,1,0},
+		{0,0,0,0,0,1,1,0,0},
+		{0,0,0,0,1,1,0,0,0},
+		{0,0,0,1,1,0,0,0,0},
+		{0,0,1,1,0,0,0,0,0},
+		{0,1,1,0,0,0,0,0,0},
+		{1,1,0,0,0,0,0,0,0}
+	}},{{
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{1,1,1,1,1,1,1,1,1},
+		{1,1,1,1,1,1,1,1,1},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0}
+	}},{{
+		{1,0,0,0,0,0,0,0,0},
+		{1,1,0,0,0,0,0,0,0},
+		{0,1,1,0,0,0,0,0,0},
+		{0,0,1,1,0,0,0,0,0},
+		{0,0,0,1,1,0,0,0,0},
+		{0,0,0,0,1,1,0,0,0},
+		{0,0,0,0,0,1,1,0,0},
+		{0,0,0,0,0,0,1,1,0},
+		{0,0,0,0,0,0,0,1,1}
+	}},{{
+		{0,0,0,1,1,0,0,0,0},
+		{0,0,0,1,1,0,0,0,0},
+		{0,0,0,1,1,0,0,0,0},
+		{0,0,0,1,1,0,0,0,0},
+		{0,0,0,1,1,0,0,0,0},
+		{0,0,0,1,1,0,0,0,0},
+		{0,0,0,1,1,0,0,0,0},
+		{0,0,0,1,1,0,0,0,0},
+		{0,0,0,1,1,0,0,0,0}
+	}},{{
+		{0,0,0,0,0,0,0,1,1},
+		{0,0,0,0,0,0,1,1,0},
+		{0,0,0,0,0,1,1,0,0},
+		{0,0,0,0,1,1,0,0,0},
+		{0,0,0,1,1,0,0,0,0},
+		{0,0,1,1,0,0,0,0,0},
+		{0,1,1,0,0,0,0,0,0},
+		{1,1,0,0,0,0,0,0,0},
+		{1,0,0,0,0,0,0,0,0}
+	}},{{
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{1,1,1,1,1,1,1,1,1},
+		{1,1,1,1,1,1,1,1,1},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0}
+	}},{{
+		{1,1,0,0,0,0,0,0,0},
+		{0,1,1,0,0,0,0,0,0},
+		{0,0,1,1,0,0,0,0,0},
+		{0,0,0,1,1,0,0,0,0},
+		{0,0,0,0,1,1,0,0,0},
+		{0,0,0,0,0,1,1,0,0},
+		{0,0,0,0,0,0,1,1,0},
+		{0,0,0,0,0,0,0,1,1},
+		{0,0,0,0,0,0,0,0,1}
+	}}
+};
 
 short last_attacked[6], pc_dir[6], pc_parry[6];
 std::array<short, 6> pc_moves;
@@ -2793,74 +2820,74 @@ Boolean monst_breathe(creature_data_type *caster,location targ_space,short dam_t
 	return TRUE;
 }
 
-Boolean monst_cast_mage(creature_data_type *caster,short targ)
+Boolean monst_cast_mage(creature_data_type* caster, short targ)
 {
-	short r1,j,spell,i,level,target_levels,friend_levels_near,x;
+	short r1, j, spell, i, level, target_levels, friend_levels_near, x;
 	Boolean acted = FALSE;
-	location target,vict_loc,ashes_loc = {0,0},l;
-	creature_data_type *affected;
+	location target, vict_loc, ashes_loc = { 0,0 }, l;
+	creature_data_type* affected;
 	long dummy;
-	
-	if (is_antimagic(caster->m_loc.x,caster->m_loc.y)) {
+
+	if (is_antimagic(caster->m_loc.x, caster->m_loc.y)) {
 		return FALSE;
-		}
+	}
 	// is target dead?
 	if ((targ < 6) && (adven[targ].main_status != status_type::Normal))
 		return FALSE;
 	if ((targ >= 100) && (c_town.monst.dudes[targ - 100].active == 0))
 		return FALSE;
-		
-	level = max(1,caster->m_d.mu - caster->gaffect(affect::Dumbfounded)) - 1;
-	
-	target = find_fireball_loc(caster->m_loc,1,(caster->attitude % 2 == 1) ? 0 : 1,&target_levels);
-	friend_levels_near = (caster->attitude % 2 != 1) ? count_levels(caster->m_loc,3) : -1 * count_levels(caster->m_loc,3);
 
-	if ((caster->m_d.health * 4 < caster->m_d.m_health) && (rand_short(0,10) < 9))
+	level = max(1, caster->m_d.mu - caster->gaffect(affect::Dumbfounded)) - 1;
+
+	target = find_fireball_loc(caster->m_loc, 1, (caster->attitude % 2 == 1) ? 0 : 1, &target_levels);
+	friend_levels_near = (caster->attitude % 2 != 1) ? count_levels(caster->m_loc, 3) : -1 * count_levels(caster->m_loc, 3);
+
+	if ((caster->m_d.health * 4 < caster->m_d.m_health) && (rand_short(0, 10) < 9))
 		spell = c_mage_emer_spells[level][3];
-		else if ((((caster->gaffect(affect::Speed) < 0) && (rand_short(0,10) < 7)) || 
-			((caster->gaffect(affect::Speed) == 0) && (rand_short(0,10) < 5))) && (c_mage_emer_spells[level][0] != 0))
-			spell = c_mage_emer_spells[level][0];
-			else if ((friend_levels_near <= -10) && (rand_short(0,10) < 7) && (c_mage_emer_spells[level][1] != 0))
-				spell = c_mage_emer_spells[level][1];
-				else if ((target_levels > 50) && (rand_short(0,10) < 7) && (c_mage_emer_spells[level][2] != 0))
-					spell = c_mage_emer_spells[level][2];
-					else {
-						r1 = rand_short(0,17);
-						spell = c_mage_caster_array[level][r1];
-						}
-	
+	else if ((((caster->gaffect(affect::Speed) < 0) && (rand_short(0, 10) < 7)) ||
+		((caster->gaffect(affect::Speed) == 0) && (rand_short(0, 10) < 5))) && (c_mage_emer_spells[level][0] != 0))
+		spell = c_mage_emer_spells[level][0];
+	else if ((friend_levels_near <= -10) && (rand_short(0, 10) < 7) && (c_mage_emer_spells[level][1] != 0))
+		spell = c_mage_emer_spells[level][1];
+	else if ((target_levels > 50) && (rand_short(0, 10) < 7) && (c_mage_emer_spells[level][2] != 0))
+		spell = c_mage_emer_spells[level][2];
+	else {
+		r1 = rand_short(0, 17);
+		spell = c_mage_caster_array[level][r1];
+	}
+
 	// Hastes happen often now, but don't cast them redundantly			
 	if ((caster->gaffect(affect::Speed) > 0) && ((spell == 2) || (spell == 18)))
 		spell = c_mage_emer_spells[level][3];
-		 
+
 
 	// Anything prventing spell?
 	if ((target.x > 64) && (monst_mage_area_effect[spell - 1] > 0)) {
-		r1 = rand_short(0,9);
+		r1 = rand_short(0, 9);
 		spell = c_mage_caster_array[level][r1];
-		if ((target.x > 64) && (monst_mage_area_effect[spell - 1] > 0)) 
+		if ((target.x > 64) && (monst_mage_area_effect[spell - 1] > 0))
 			return FALSE;
-		}
+	}
 	if (monst_mage_area_effect[spell - 1] > 0) {
 		targ = 6;
-		}
-		
+	}
+
 	if (targ < 6) {
 		vict_loc = is_combat() ? pc_pos[targ] : c_town.p_loc;
-		if (is_town()) 
+		if (is_town())
 			vict_loc = target = c_town.p_loc;
-		}
+	}
 	if (targ >= 100)
 		vict_loc = c_town.monst.dudes[targ - 100].m_loc;
-	if ((targ == 6) && is_antimagic(target.x,target.y))
+	if ((targ == 6) && is_antimagic(target.x, target.y))
 		return FALSE;
 
 	// check antimagic
 	if (is_combat())
-		if ((targ < 6) && is_antimagic(pc_pos[targ].x,pc_pos[targ].y))
+		if ((targ < 6) && is_antimagic(pc_pos[targ].x, pc_pos[targ].y))
 			return FALSE;
 	if (is_town())
-		if ((targ < 6) && is_antimagic(c_town.p_loc.x,c_town.p_loc.y))
+		if ((targ < 6) && is_antimagic(c_town.p_loc.x, c_town.p_loc.y))
 			return FALSE;
 	if ((targ >= 100) && is_antimagic(c_town.monst.dudes[targ - 100].m_loc.x, c_town.monst.dudes[targ - 100].m_loc.y))
 		return FALSE;
@@ -2868,225 +2895,226 @@ Boolean monst_cast_mage(creature_data_type *caster,short targ)
 	// How about shockwave? Good idea?
 	if ((spell == 27) && (caster->attitude % 2 != 1))
 		spell = 26;
-	if ((spell == 27) && (caster->attitude % 2 == 1) && (count_levels(caster->m_loc,10) < 45))
+	if ((spell == 27) && (caster->attitude % 2 == 1) && (count_levels(caster->m_loc, 10) < 45))
 		spell = 26;
 
-//	add_string_to_buf("m att {:d} trg {:d} trg2 x{:d}y{:d} spl {:d} mp {:d} tl:{:d} ",caster->attitude,targ,
-//		(short)target.x,(short)target.y,spell,caster->m_d.mp,target_levels);
-	
+	//	add_string_to_buf("m att {:d} trg {:d} trg2 x{:d}y{:d} spl {:d} mp {:d} tl:{:d} ",caster->attitude,targ,
+	//		(short)target.x,(short)target.y,spell,caster->m_d.mp,target_levels);
+
 	l = caster->m_loc;
 	if ((caster->m_d.direction < 4) && (caster->m_d.x_width > 1))
 		l.x++;
-	
+
 	if (caster->m_d.mp >= monst_mage_cost[spell - 1]) {
-		monst_cast_spell_note(caster->number,spell,0);
+		monst_cast_spell_note(caster->number, spell, 0);
 		acted = TRUE;
 		caster->m_d.mp -= monst_mage_cost[spell - 1];
-		
+
 		draw_terrain(2);
 		switch (spell) {
-			case 1: // spark
-				run_a_missile(l,vict_loc,6,1,11,0,0,80);
-				r1 = get_ran(2,1,4);
-				damage_target(targ,r1, damage_type::Fire);
+		case 1: // spark
+			run_a_missile(l, vict_loc, 6, 1, 11, 0, 0, 80);
+			r1 = get_ran(2, 1, 4);
+			damage_target(targ, r1, damage_type::Fire);
+			break;
+		case 2: // minor haste
+			play_sound(25);
+			caster->gaffect(affect::Speed) += 2;
+			break;
+		case 3: // strength
+			play_sound(25);
+			caster->gaffect(affect::CursedBlessed) += 3;
+			break;
+		case 4: // flame cloud 
+			run_a_missile(l, vict_loc, 2, 1, 11, 0, 0, 80);
+			place_spell_pattern(single, vict_loc, 5, FALSE, 7);
+			break;
+		case 5: // flame
+			run_a_missile(l, vict_loc, 2, 1, 11, 0, 0, 80);
+			start_missile_anim();
+			r1 = get_ran(caster->m_d.level, 1, 4);
+			damage_target(targ, r1, damage_type::Fire);
+			break;
+		case 6: // minor poison
+			run_a_missile(l, vict_loc, 11, 0, 25, 0, 0, 80);
+			if (targ < 6)
+				poison_pc(targ, 2 + rand_short(0, 1));
+			else poison_monst(&c_town.monst.dudes[targ - 100], 2 + rand_short(0, 1));
+			break;
+		case 7: // slow
+			run_a_missile(l, vict_loc, 15, 0, 25, 0, 0, 80);
+			if (targ < 6)
+				slow_pc(targ, 2 + caster->m_d.level / 2);
+			else slow_monst(&c_town.monst.dudes[targ - 100], 2 + caster->m_d.level / 2);
+			break;
+		case 8: // dumbfound
+			run_a_missile(l, vict_loc, 14, 0, 25, 0, 0, 80);
+			if (targ < 6)
+				dumbfound_pc(targ, 2);
+			else dumbfound_monst(&c_town.monst.dudes[targ - 100], 2);
+			break;
+		case 9: // scloud
+			run_a_missile(l, target, 0, 0, 25, 0, 0, 80);
+			place_spell_pattern(square, target, 7, FALSE, 7);
+			break;
+		case 10: // summon beast
+			r1 = get_summon_monster(1);
+			if (r1 < 0)
 				break;
-			case 2: // minor haste
-				play_sound(25);
-				caster->gaffect(affect::Speed) += 2;
-				break;
-			case 3: // strength
-				play_sound(25);
-				caster->gaffect(affect::CursedBlessed) += 3;
-				break;
-			case 4: // flame cloud 
-				run_a_missile(l,vict_loc,2,1,11,0,0,80);
-				place_spell_pattern(single,vict_loc,5,FALSE,7);
-				break;
-			case 5: // flame
-				run_a_missile(l,vict_loc,2,1,11,0,0,80);
-				start_missile_anim();
-				r1 = get_ran(caster->m_d.level,1,4);
-				damage_target(targ,r1, damage_type::Fire);
-				break;
-			case 6: // minor poison
-				run_a_missile(l,vict_loc,11,0,25,0,0,80);
-				if (targ < 6)
-					poison_pc(targ,2 + rand_short(0,1));
-					else poison_monst(&c_town.monst.dudes[targ - 100],2 + rand_short(0,1));
-				break;
-			case 7: // slow
-				run_a_missile(l,vict_loc,15,0,25,0,0,80);
-				if (targ < 6)
-					slow_pc(targ,2 + caster->m_d.level / 2);
-					else slow_monst(&c_town.monst.dudes[targ - 100],2 + caster->m_d.level / 2);
-				break;
-			case 8: // dumbfound
-				run_a_missile(l,vict_loc,14,0,25,0,0,80);
-				if (targ < 6)
-					dumbfound_pc(targ,2);
-					else dumbfound_monst(&c_town.monst.dudes[targ - 100],2);
-				break;
-			case 9: // scloud
-				run_a_missile(l,target,0,0,25,0,0,80);
-				place_spell_pattern(square,target,7,FALSE,7);
-				break;
-			case 10: // summon beast
+			x = get_ran(3, 1, 4);
+			//Delay(12,&dummy); // gives sound time to end
+			play_sound(25);
+			play_sound(-61);
+			summon_monster(r1, caster->m_loc,
+				((caster->attitude % 2 != 1) ? 0 : 100) + x, caster->attitude);
+			break;
+		case 11: // conflagration
+			run_a_missile(l, target, 13, 1, 25, 0, 0, 80);
+			place_spell_pattern(rad_pat2, target, 5, FALSE, 7);
+			break;
+		case 12: // fireball
+			r1 = 1 + (caster->m_d.level * 3) / 4;
+			if (r1 > 29) r1 = 29;
+			run_a_missile(l, target, 2, 1, 11, 0, 0, 80);
+			start_missile_anim();
+			place_spell_pattern(square, target, 50 + r1, TRUE, 7);
+			ashes_loc = target;
+			break;
+		case 13: case 20: case 26:// summon
+			play_sound(25);
+			if (spell == 13) {
 				r1 = get_summon_monster(1);
 				if (r1 < 0)
 					break;
-				x = get_ran(3,1,4);
-				//Delay(12,&dummy); // gives sound time to end
-				play_sound(25);
-				play_sound(-61);
-				summon_monster(r1,caster->m_loc,
-				 ((caster->attitude % 2 != 1) ? 0 : 100) + x,caster->attitude);
-				break;
-			case 11: // conflagration
-				run_a_missile(l,target,13,1,25,0,0,80);
-				place_spell_pattern(rad_pat2,target,5,FALSE,7);
-				break;
-			case 12: // fireball
-				r1 = 1 + (caster->m_d.level * 3) / 4;
-				if (r1 > 29) r1 = 29;
-				run_a_missile(l,target,2,1,11,0,0,80);
-				start_missile_anim();
-				place_spell_pattern(square,target,50 + r1,TRUE,7);
-				ashes_loc = target;
-				break;
-			case 13: case 20: case 26:// summon
-				play_sound(25);
-				if (spell == 13) {
-					r1 = get_summon_monster(1);
-					if (r1 < 0)
-						break;
-					j = get_ran(2,1,3) + 1;
-					}
-				if (spell == 20) {
-					r1 = get_summon_monster(2);
-					if (r1 < 0)
-						break;
-					j = get_ran(2,1,2) + 1;
-					}
-				if (spell == 26) {
-					r1 = get_summon_monster(3);
-					if (r1 < 0)
-						break;
-					j = rand_short(2,3);
-					}
-				Delay(12,&dummy); // gives sound time to end
-				x = get_ran(4,1,4);
-				for (i = 0; i < j; i++){
-					play_sound(-61);
-					if (summon_monster(r1,caster->m_loc,
-					 ((caster->attitude % 2 != 1) ? 0 : 100) + x,caster->attitude) == FALSE) {
-						add_string_to_buf("  Summon failed."); i = j;}
-					}
-				break;
-			case 14: // web
-				play_sound(25);
-				place_spell_pattern(rad_pat2,target,1,FALSE,7);
-				break;
-			case 15: // poison
-				run_a_missile(l,vict_loc,11,0,25,0,0,80);
-				x = rand_short(0,3);
-				if (targ < 6)
-					poison_pc(targ,4 + x);
-					else poison_monst(&c_town.monst.dudes[targ - 100],4 + x);
-				break;		
-			case 16: // ice bolt
-				run_a_missile(l,vict_loc,6,1,11,0,0,80);
-				r1 = get_ran(5 + (caster->m_d.level / 5),1,8);
-				start_missile_anim();
-				damage_target(targ,r1, damage_type::Cold);
-				break;
-			case 17: // slow gp
-				play_sound(25);
-				if (caster->attitude % 2 == 1)
-					for (i = 0; i < 6; i++)
-						if (pc_near(i,caster->m_loc,8))
-							slow_pc(i,2 + caster->m_d.level / 4);
-				for (i = 0; i < T_M; i++) {
-					if ((c_town.monst.dudes[i].active != 0) && 
-					(((c_town.monst.dudes[i].attitude % 2 == 1) && (caster->attitude % 2 != 1)) || 
-					((c_town.monst.dudes[i].attitude % 2 != 1) && (caster->attitude % 2 == 1)) ||
-					((c_town.monst.dudes[i].attitude % 2 == 1) && (caster->attitude != c_town.monst.dudes[i].attitude)))
-						 && (dist(caster->m_loc,c_town.monst.dudes[i].m_loc) <= 7)) 
-							slow_monst(&c_town.monst.dudes[i],2 + caster->m_d.level / 4);
-					}
-				break;
-			case 18: // major haste
-				play_sound(25);
-				for (i = 0; i < T_M; i++)
-					if ((monst_near(i,caster->m_loc,8,0)) && 
-						(caster->attitude == c_town.monst.dudes[i].attitude)) {
-						affected = &c_town.monst.dudes[i];	
-						affected->gaffect(affect::Speed) += 3;
-						}
-				play_sound(4);
-				break;		
-			case 19: // firestorm
-				run_a_missile(l,target,2,1,11,0,0,80);
-				r1 = 1 + (caster->m_d.level * 3) / 4 + 3;
-				if (r1 > 29) r1 = 29;
-				start_missile_anim();
-				place_spell_pattern(rad_pat2,target,50 + r1,TRUE,7);
-				ashes_loc = target;
-				break;
-
-
-
-
-			case 21: // shockstorm
-				run_a_missile(l,target,6,1,11,0,0,80);
-				place_spell_pattern(rad_pat2,target,4,FALSE,7);
-				break;
-			case 22: // m. poison
-				run_a_missile(l,vict_loc,11,1,11,0,0,80);
-				x = rand_short(1,2);
-				if (targ < 6)
-					poison_pc(targ,6 + x);
-					else poison_monst(&c_town.monst.dudes[targ - 100],6 + x);
-				break;
-			case 23: // kill!!!
-				run_a_missile(l,vict_loc,9,1,11,0,0,80);
-				r1 = 35 + get_ran(3,1,10);
-				start_missile_anim();
-				damage_target(targ,r1, damage_type::GeneralMagic);
-				break;
-			case 24: // daemon
-				x = get_ran(3,1,4);
-				play_sound(25);
-				play_sound(-61);
-				Delay(12,&dummy); // gives sound time to end
-				summon_monster(85,caster->m_loc,
-				 ((caster->attitude % 2 != 1) ? 0 : 100) + x,caster->attitude);
-				break;
-			case 25: // major bless
-				play_sound(25);
-				for (i = 0; i < T_M; i++)
-					if ((monst_near(i,caster->m_loc,8,0)) && 
-						(caster->attitude == c_town.monst.dudes[i].attitude)) {
-						affected = &c_town.monst.dudes[i];	
-						affected->m_d.health += get_ran(2,1,10);	
-						r1 = get_ran(3,1,4);						
-						affected->gaffect(affect::CursedBlessed) = min(8,affected->gaffect(affect::CursedBlessed) + r1);
-						affected->gaffect(affect::Webbed) = 0;
-						if (affected->gaffect(affect::Speed) < 0)
-							affected->gaffect(affect::Speed) = 0;
-						affected->m_d.morale += get_ran(3,1,10);	
-						}
-				play_sound(4);
-				break;
-			case 27: // shockwave
-				do_shockwave(caster->m_loc);
-				break;
+				j = get_ran(2, 1, 3) + 1;
 			}
+			if (spell == 20) {
+				r1 = get_summon_monster(2);
+				if (r1 < 0)
+					break;
+				j = get_ran(2, 1, 2) + 1;
+			}
+			if (spell == 26) {
+				r1 = get_summon_monster(3);
+				if (r1 < 0)
+					break;
+				j = rand_short(2, 3);
+			}
+			Delay(12, &dummy); // gives sound time to end
+			x = get_ran(4, 1, 4);
+			for (i = 0; i < j; i++) {
+				play_sound(-61);
+				if (summon_monster(r1, caster->m_loc,
+					((caster->attitude % 2 != 1) ? 0 : 100) + x, caster->attitude) == FALSE) {
+					add_string_to_buf("  Summon failed."); i = j;
+				}
+			}
+			break;
+		case 14: // web
+			play_sound(25);
+			place_spell_pattern(rad_pat2, target, 1, FALSE, 7);
+			break;
+		case 15: // poison
+			run_a_missile(l, vict_loc, 11, 0, 25, 0, 0, 80);
+			x = rand_short(0, 3);
+			if (targ < 6)
+				poison_pc(targ, 4 + x);
+			else poison_monst(&c_town.monst.dudes[targ - 100], 4 + x);
+			break;
+		case 16: // ice bolt
+			run_a_missile(l, vict_loc, 6, 1, 11, 0, 0, 80);
+			r1 = get_ran(5 + (caster->m_d.level / 5), 1, 8);
+			start_missile_anim();
+			damage_target(targ, r1, damage_type::Cold);
+			break;
+		case 17: // slow gp
+			play_sound(25);
+			if (caster->attitude % 2 == 1)
+				for (i = 0; i < 6; i++)
+					if (pc_near(i, caster->m_loc, 8))
+						slow_pc(i, 2 + caster->m_d.level / 4);
+			for (i = 0; i < T_M; i++) {
+				if ((c_town.monst.dudes[i].active != 0) &&
+					(((c_town.monst.dudes[i].attitude % 2 == 1) && (caster->attitude % 2 != 1)) ||
+						((c_town.monst.dudes[i].attitude % 2 != 1) && (caster->attitude % 2 == 1)) ||
+						((c_town.monst.dudes[i].attitude % 2 == 1) && (caster->attitude != c_town.monst.dudes[i].attitude)))
+					&& (dist(caster->m_loc, c_town.monst.dudes[i].m_loc) <= 7))
+					slow_monst(&c_town.monst.dudes[i], 2 + caster->m_d.level / 4);
+			}
+			break;
+		case 18: // major haste
+			play_sound(25);
+			for (i = 0; i < T_M; i++)
+				if ((monst_near(i, caster->m_loc, 8, 0)) &&
+					(caster->attitude == c_town.monst.dudes[i].attitude)) {
+					affected = &c_town.monst.dudes[i];
+					affected->gaffect(affect::Speed) += 3;
+				}
+			play_sound(4);
+			break;
+		case 19: // firestorm
+			run_a_missile(l, target, 2, 1, 11, 0, 0, 80);
+			r1 = 1 + (caster->m_d.level * 3) / 4 + 3;
+			if (r1 > 29) r1 = 29;
+			start_missile_anim();
+			place_spell_pattern(rad_pat2, target, 50 + r1, TRUE, 7);
+			ashes_loc = target;
+			break;
+
+
+
+
+		case 21: // shockstorm
+			run_a_missile(l, target, 6, 1, 11, 0, 0, 80);
+			place_spell_pattern(rad_pat2, target, 4, FALSE, 7);
+			break;
+		case 22: // m. poison
+			run_a_missile(l, vict_loc, 11, 1, 11, 0, 0, 80);
+			x = rand_short(1, 2);
+			if (targ < 6)
+				poison_pc(targ, 6 + x);
+			else poison_monst(&c_town.monst.dudes[targ - 100], 6 + x);
+			break;
+		case 23: // kill!!!
+			run_a_missile(l, vict_loc, 9, 1, 11, 0, 0, 80);
+			r1 = 35 + get_ran(3, 1, 10);
+			start_missile_anim();
+			damage_target(targ, r1, damage_type::GeneralMagic);
+			break;
+		case 24: // daemon
+			x = get_ran(3, 1, 4);
+			play_sound(25);
+			play_sound(-61);
+			Delay(12, &dummy); // gives sound time to end
+			summon_monster(85, caster->m_loc,
+				((caster->attitude % 2 != 1) ? 0 : 100) + x, caster->attitude);
+			break;
+		case 25: // major bless
+			play_sound(25);
+			for (i = 0; i < T_M; i++)
+				if ((monst_near(i, caster->m_loc, 8, 0)) &&
+					(caster->attitude == c_town.monst.dudes[i].attitude)) {
+					affected = &c_town.monst.dudes[i];
+					affected->m_d.health += get_ran(2, 1, 10);
+					r1 = get_ran(3, 1, 4);
+					affected->gaffect(affect::CursedBlessed) = min(8, affected->gaffect(affect::CursedBlessed) + r1);
+					affected->gaffect(affect::Webbed) = 0;
+					if (affected->gaffect(affect::Speed) < 0)
+						affected->gaffect(affect::Speed) = 0;
+					affected->m_d.morale += get_ran(3, 1, 10);
+				}
+			play_sound(4);
+			break;
+		case 27: // shockwave
+			do_shockwave(caster->m_loc);
+			break;
 		}
-		else caster->m_d.mp++;
-		
+	}
+	else caster->m_d.mp++;
+
 	if (ashes_loc.x > 0)
-		make_sfx(ashes_loc.x,ashes_loc.y,6);
-	do_explosion_anim(5,0);
+		make_sfx(ashes_loc.x, ashes_loc.y, 6);
+	do_explosion_anim(5, 0);
 	end_missile_anim();
 	handle_marked_damage();
 
