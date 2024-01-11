@@ -48,17 +48,8 @@ extern short store_current_pc;
 extern const std::array<short, 62> refer_mage,refer_priest;
 extern short combat_posing_monster, current_working_monster; // 0-5 PC 100 + x - monster x
 extern short spell_caster, missile_firer,current_monst_tactic;
-char create_line[60];
-short spell_being_cast;
-short missile_inv_slot, ammo_inv_slot;
-short force_wall_position = 10; //  10 -> no force wall
-Boolean processing_fields = TRUE;
-short futzing;
-unsigned char store_sum_monst;
-short store_sum_monst_cost;
 
 static const location out_start_loc = {20,23};
-
 static const short abil_range[40] = { 0,6,8,8,10, 10,10,8,6,8, 6,0,0,0,6, 0,0,0,0,4, 10,0,0,6,0,
 						0,0,0,0,0, 0,0,8,6,9, 0,0,0,0,0 };
 
@@ -120,9 +111,6 @@ static const short c_priest_emer_spells[7][4]{
 	{25,25,26,24}
 };
 
-
-short pc_marked_damage[6];
-short monst_marked_damage[T_M];
 
 extern const location hor_vert_place[14]{{0,0},{-1,1},{1,1},{-2,2},{0,2},{2,2},{0,1},{-1,2},{1,2},{-1,3},{1,3},{0,3},{0,4},{0,5}};
 extern const location diag_place[14]{{0,0},{-1,0},{0,1},{-1,1},{-2,0},{0,2},{-2,1},{-1,2},{-2,2},{-3,2},{-2,3},{-3,3},{-4,3},{-3,4}};
@@ -302,15 +290,27 @@ static const effect_pat_type field[8]{
 	}}
 };
 
-short last_attacked[6], pc_dir[6], pc_parry[6];
-std::array<short, 6> pc_moves;
-Boolean center_on_monst;
-
-
-
 static const short low[10]{ 15,7,3,3,1,1,1,7,2,1 };
 static const short high[10]{ 30,10,5,5,3,2,1,10,4,1 };
 static const BoeRect town_rect{ 0,0,47,47 };
+
+
+static short force_wall_position = 10; //  10 -> no force wall
+Boolean processing_fields = TRUE;
+
+
+static short spell_being_cast;
+static short missile_inv_slot, ammo_inv_slot;
+static unsigned char store_sum_monst;
+static short store_sum_monst_cost;
+static Boolean center_on_monst;
+
+short futzing;
+short pc_marked_damage[6];
+short monst_marked_damage[T_M];
+short last_attacked[6], pc_dir[6], pc_parry[6];
+std::array<short, 6> pc_moves;
+
 
 
 void start_outdoor_combat(outdoor_creature_type encounter,unsigned char in_which_terrain,short num_walls)

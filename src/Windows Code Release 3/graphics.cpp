@@ -19,28 +19,22 @@
 
 
 extern HWND	mainPtr;
-extern RECT	windRect;
-extern short stat_window,give_delays,overall_mode;
+extern short overall_mode;
 extern short current_spell_range,town_type,store_anim_type;
 extern Boolean in_startup_mode,anim_onscreen,play_sounds,frills_on,startup_loaded,party_in_memory;
 extern short town_size[3];
-extern short anim_step;
 extern party_record_type party;
 extern piles_of_stuff_dumping_type data_store;
-extern talking_record_type talking;
-
 extern Adventurers adven;
 extern big_tr_type  t_d;
 extern outdoor_record_type outdoors[2][2];
 extern current_town_type c_town;
-extern town_item_list  t_i;
 extern unsigned char out[96][96];
 extern unsigned char out_e[96][96];
 extern unsigned char combat_terrain[64][64];
 extern std::reference_wrapper<const effect_pat_type> current_pat;
-extern Boolean web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern short ulx,uly;
-extern location pc_pos[6],pc_dir[6],center;
+extern location pc_pos[6],center;
 extern short which_combat_type,current_pc;
 extern Boolean monsters_going,boom_anim_active,cartoon_happening;
 extern short current_ground;
@@ -48,42 +42,37 @@ extern short terrain_pic[256];
 extern std::array<short, 6> pc_moves;
 extern short num_targets_left;
 extern location spell_targets[8];
-extern short display_mode;
 extern HWND text_sbar,item_sbar,shop_sbar;
 extern RECT sbar_rect,item_sbar_rect,shop_sbar_rect;
-extern RECT talk_area_rect, word_place_rect,startup_top;
+extern const RECT talk_area_rect;
+extern RECT startup_top;
 extern HBRUSH map_brush[25];
 extern HBITMAP map_bitmap[25];
 extern POINT store_anim_ul;
-extern long register_flag,last_redraw_time;
-extern long ed_flag,ed_key;
-extern Boolean registered,ed_reg;
+extern long last_redraw_time;
+extern Boolean registered;
 extern Boolean fast_bang;
-
 extern HPALETTE hpal;
-extern PALETTEENTRY ape[256];
 extern HDC main_dc,main_dc2,main_dc3;
-
 extern HFONT fantasy_font,font,small_bold_font,italic_font,underline_font,bold_font;
 extern HCURSOR arrow_curs[3][3], sword_curs, key_curs, target_curs,talk_curs,look_curs;
-
 extern HINSTANCE store_hInstance;
-extern Boolean modeless_exists[18],diff_depth_ok;
-extern short modeless_key[18];
+extern Boolean modeless_exists[18];
 extern HWND modeless_dialogs[18];
 extern piles_of_stuff_dumping_type4 data_store4;
-
 extern const std::array<unsigned char, 200> m_pic_index;
-
 extern HBRUSH bg[14];
-HBITMAP bg_bitmap[14];
+extern long anim_ticks;
+extern std::array<RECT, 6> startup_button;
+
+
 HBRUSH checker_brush = NULL;
-HBITMAP checker_bitmap = NULL,bw_bitmap;
-HBITMAP startup_button_orig,startup_button_g,anim_mess ;
+HBITMAP bw_bitmap;
 
-Boolean done_fancy_startup_once = FALSE;
-
-extern Boolean fry_startup;
+static HBITMAP bg_bitmap[14];
+static HBITMAP checker_bitmap = NULL;
+static HBITMAP startup_button_orig,startup_button_g,anim_mess ;
+static Boolean done_fancy_startup_once = FALSE;
 
 //HRGN clip_region;
 
@@ -95,8 +84,6 @@ short terrain_there[9][9]; // this is an optimization variabel. Keeps track of w
 	// 300 - blackness
 	// -1 - nothign worth saving 
 
-extern long anim_ticks;
-
 // 0 - terrain   1 - buttons   2 - pc stats 
 // 3 - item stats   4 - text bar   5 - text area (not right)
 const RECT win_from_rects[6] = {{0,0,279,351},{0,0,258,37},{0,0,288,115},{0,0,288,143},{0,0,279,21},{0,0,288,0}};
@@ -104,7 +91,6 @@ static RECT win_to_rects[6] = {{5,5,284,356},{5,383,263,420},{0,0,271,116},{0,0,
 
 // 0 - title  1 - button  2 - credits  3 - base button
 const RECT startup_from[4] = {{0,0,602,274},{0,274,301,322},{301,0,579,67},{301,274,341,314}}; ////
-extern std::array<RECT, 6> startup_button;
 	
 static RECT trim_rects[8] = {{0,0,28,5},{0,31,28,36},{0,0,5,36},{24,0,28,36},
 						{0,0,5,5},{24,0,28,5},{24,31,28,36},{0,31,5,36}};  
