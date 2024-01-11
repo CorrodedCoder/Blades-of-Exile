@@ -90,7 +90,7 @@ HDC dlg_force_dc = NULL; // save HDCs when dealing with dlogs
 short store_free_slot,store_dlog_num;
 HWND store_parent;
 
-short available_dlog_buttons[NUM_DLOG_B] = {0,63,64,65,1,4,5,8, 
+static const short available_dlog_buttons[NUM_DLOG_B] = {0,63,64,65,1,4,5,8, 
 								128,
 								9,
 								10, // 10
@@ -100,7 +100,7 @@ short available_dlog_buttons[NUM_DLOG_B] = {0,63,64,65,1,4,5,8,
 								66,69,70, 71,72,73,74,79,
 								80,83,86,87,88, 91,92,93,99,100,
 								101,102,104, 129,130,131,132,133,134,135,136,137};
-short button_type[150] = {1,1,4,5,1,1,0,0,1,1,
+static const short button_type[150] = {1,1,4,5,1,1,0,0,1,1,
 						 1,1,1,1,1,1,1,1,8,8,
 						 9,9,9,1,1,2,1,6,7,1,
 						 1,12,1,1,2,0,0,0,0,0,
