@@ -77,7 +77,6 @@ Boolean allowed_one_erase = FALSE;
 
 Boolean palette_suspect = FALSE,window_in_front = FALSE;
 
-short on_monst_menu[256];
 Boolean belt_present = FALSE;
 
 // Cursors 
@@ -195,7 +194,7 @@ stored_town_maps_type town_maps,town_maps2;
 extern const char szWinName[] = "Blades of Exile Dialogs";
 static const char szAppName[] = "Blades of Exile";
 char file_path_name[256];
-
+short on_monst_menu[256];
 Boolean block_erase = FALSE;
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 

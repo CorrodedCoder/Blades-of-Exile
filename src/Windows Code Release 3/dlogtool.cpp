@@ -131,7 +131,7 @@ static const std::array button_strs{"Done ","Ask"," "," ","Keep", "Cancel","+","
 						"Insert","Remove","Accept","Refuse","Open","Close","Sit","Stand","","",
 						"18","19","20","Invisible!","","","","","",""};
 
-short button_left_adj[150] = {0,0,0,0,0, 0,0,0,0,0,
+static const short button_left_adj[150] = {0,0,0,0,0, 0,0,0,0,0,
 0,0,0,0,0, 0,0,0,0,0,
 0,0,0,0,0, 0,0,0,0,0,
 0,0,0,0,0, 0,0,0,0,0,
@@ -146,7 +146,7 @@ short button_left_adj[150] = {0,0,0,0,0, 0,0,0,0,0,
 0,0,0,0,0, 0,0,0,0,0,
 0,0,0,0,0, 0,0,0,0,0,
 0,0,0,0,0, 0,0,0,0,0};
-char button_def_key[150] = {0,0,20,21,'k', 24,0,0,0,0,
+static const char button_def_key[150] = {0,0,20,21,'k', 24,0,0,0,0,
 							'g','1','2','3','4', '5','6',0,0,0,
 							0,0,0,0,0,' ',0,22,23,0,
 							0,0,0,0,0,'1','2','3','4','5',
@@ -165,10 +165,10 @@ char button_def_key[150] = {0,0,20,21,'k', 24,0,0,0,0,
 							// specials ... 20 - <-  21 - ->  22 up  23 down  24 esc
 							// 25-30  ctrl 1-6  31 - return
 
-short button_ul_x[15] = {0,46,0,126,0, 0,126,126,126,138, 166,0,0,126,172};
-short button_ul_y[15] = {0,0,132,23,46, 69,46,69,36,36, 36,23,92,92,0};
-short button_width[15] = {23,63,102,16,63, 63,63,63,6,14, 14,63,63,63,30};
-short button_height[15] = {23,23,23,13,23, 23,23,23,6,10,10,23,40,40,30};
+static const short button_ul_x[15] = {0,46,0,126,0, 0,126,126,126,138, 166,0,0,126,172};
+static const short button_ul_y[15] = {0,0,132,23,46, 69,46,69,36,36, 36,23,92,92,0};
+static const short button_width[15] = {23,63,102,16,63, 63,63,63,6,14, 14,63,63,63,30};
+static const short button_height[15] = {23,23,23,13,23, 23,23,23,6,10,10,23,40,40,30};
 
 INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK fresh_edit_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);

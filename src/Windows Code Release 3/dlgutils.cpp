@@ -105,15 +105,14 @@ char store_store_name[256];
 // 0 - whole area, 1 - active area 2 - graphic 3 - item name
 // 4 - item cost 5 - item extra str  6 - item help button
 extern RECT shopping_rects[8][7];
-RECT bottom_help_rects[4] = {{6,356,250,368},{6,374,270,386},{6,386,250,398},{6,398,250,410}};
-RECT shop_name_str = {6,44,200,56};
-RECT shop_frame = {10,62,269,352};
-RECT shop_done_rect = {212,388,275,411}; /**/
+extern const RECT bottom_help_rects[4] = {{6,356,250,368},{6,374,270,386},{6,386,250,398},{6,398,250,410}};
+extern const RECT shop_frame = {10,62,269,352};
+extern const RECT shop_done_rect = {212,388,275,411}; /**/
 
 extern short store_shop_type;
 
-short heal_costs[9] = {50,30,80,100,250,500,1000,3000,100};
-long cost_mult[7] = {5,7,10,13,16,20,25};
+static const short heal_costs[9] = {50,30,80,100,250,500,1000,3000,100};
+static const long cost_mult[7] = {5,7,10,13,16,20,25};
 short cur_display_mode;
 
 short terrain_pic[256]; 
