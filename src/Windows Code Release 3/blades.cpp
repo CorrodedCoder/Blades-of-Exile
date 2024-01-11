@@ -107,37 +107,33 @@ location monster_targs[T_M];
 
 /* Display globals */
 extern short combat_posing_monster = -1, current_working_monster = -1; // 0-5 PC 100 + x - monster x
-Boolean fast_bang = FALSE;
+Boolean fast_bang;
 short spec_item_array[60];
 short overall_mode = 45,current_spell_range;
 Boolean first_update = TRUE,anim_onscreen = FALSE,frills_on = TRUE,sys_7_avail,suppress_stat_screen = FALSE;
 short stat_window = 0,store_modifier;
-Boolean monsters_going = FALSE,boom_anim_active = FALSE,cartoon_happening = FALSE;
+Boolean monsters_going,boom_anim_active,cartoon_happening;
 short give_delays = 0;
-Boolean modeless_exists[18] = {FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,
-								FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,
-								FALSE,FALSE,FALSE,FALSE,FALSE,FALSE};
-short modeless_key[18] = {1079,1080,1081,1082,1084, 1046,1088,1089,1090,1092, 1095,1072,0,0,0,0,0,0};
-HWND modeless_dialogs[18] = {NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	
-								NULL,	NULL,	NULL,	NULL,	NULL,	NULL,
-								NULL,	NULL,	NULL,	NULL,	NULL,	NULL};
+Boolean modeless_exists[18];
+short modeless_key[18]{1079,1080,1081,1082,1084, 1046,1088,1089,1090,1092, 1095,1072,0,0,0,0,0,0};
+HWND modeless_dialogs[18];
 
 short town_size[3] = {64,48,32};
-short which_item_page[6] = {0,0,0,0,0,0}; // Remembers which of the 2 item pages pc looked at
-short ulx = 0, uly = 0;
-short display_mode = 0; // 0 - center 1- ul 2 - ur 3 - dl 4 - dr 5 - small win
+short which_item_page[6]; // Remembers which of the 2 item pages pc looked at
+short ulx, uly;
+short display_mode; // 0 - center 1- ul 2 - ur 3 - dl 4 - dr 5 - small win
 long stored_key;
 short pixel_depth,old_depth = 8;
-short current_ground = 0,stat_screen_mode = 0;
+short current_ground, stat_screen_mode;
 short anim_step = -1;
-long anim_ticks = 0;
+long anim_ticks;
 
 // Spell casting globals
-short store_mage = 0, store_priest = 0;
-short store_mage_lev = 0, store_priest_lev = 0;
+short store_mage, store_priest;
+short store_mage_lev, store_priest_lev;
 short store_spell_target = 6,pc_casting;
 short pc_last_cast[2][6] = {{1,1,1,1,1,1},{1,1,1,1,1,1}};
-short num_targets_left = 0;
+short num_targets_left;
 location spell_targets[8];
 
  long store_mouse;
@@ -163,20 +159,16 @@ stored_outdoor_maps_type o_maps;
 Boolean web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 Boolean sleep_field;
 
-long last_anim_time = 0,last_redraw_time;
+long last_anim_time,last_redraw_time;
 
 /* Windoze stuff globals */
 Boolean cursor_shown = TRUE;
 short store_pc_being_created;
-
-
-HWND	mainPtr;
-HWND force_dlog = NULL;
+HWND mainPtr;
+HWND force_dlog;
 HFONT font,fantasy_font,small_bold_font,italic_font,underline_font,bold_font,tiny_font;
-DLGPROC modeless_dlogprocs[18] = {NULL,	NULL,	NULL,	NULL,	NULL,	NULL,
-								NULL,	NULL,	NULL,	NULL,	NULL,	NULL,
-								NULL,	NULL,	NULL,	NULL,	NULL,	NULL};
-HBITMAP bmap = NULL;
+DLGPROC modeless_dlogprocs[18];
+HBITMAP bmap;
 HPALETTE hpal;
 PALETTEENTRY ape[256];
 HDC main_dc,main_dc2,main_dc3;

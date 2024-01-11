@@ -79,14 +79,14 @@ std::array<short, 9> item_bottom_button_active{0,0,0,0,0, 0,1,1,1};
 
 static RECT pc_help_button,pc_area_rect,item_area_rect;
 
-static short num_out_moves = 0;
+static short num_out_moves;
 static short store_drop_item;
 static short current_switch = 6;
 out_wandering_type store_wandering_special;
 short store_shop_type;
 
-static short debug_ok = 0;
-std::array<short, 8> store_selling_values{ {0,0,0,0,0,0,0,0} };
+static short debug_ok;
+std::array<short, 8> store_selling_values;
 
 extern short overall_mode, stat_window;
 extern std::array<short, 6> pc_moves;
