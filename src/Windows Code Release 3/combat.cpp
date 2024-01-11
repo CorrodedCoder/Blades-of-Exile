@@ -83,6 +83,44 @@ static const short monst_priest_area_effect[26] = {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0
 
 static const std::array d_string{"North", "NorthEast", "East", "SouthEast", "South", "SouthWest", "West", "NorthWest"};
 
+static const short c_mage_caster_array[7][18]{
+	{1,1,1,2,2, 2,1,3,4,4, 1,1,1,2,2, 2,3,4},
+	{5,5,5,6,7, 8,9,10,11,11, 2,2,2,5,7, 10,10,5},
+	{5,5,2,9,11, 12,12,12,14,13, 13,12,12,2,2, 2,2,2},
+	{15,15,16,17,17, 5,12,12,13,13, 17,17,16,17,16, 2,2,2},
+	{15,18,19,19,20, 20,21,21,16,17, 18,18,18,18,19, 19,19,20},
+	{23,23,22,22,21, 21,20,24,19,18, 18,18,18,18,18, 23,23,19},
+	{23,23,24,25,26, 27,19,22,19,18, 18,18,18,18,26, 24,24,23}
+};
+static const short c_mage_emer_spells[7][4]{
+	{2,0,0,5},
+	{2,10,11,7},
+	{2,13,12,13},
+	{2,13,12,13},
+	{18,20,19,18},
+	{18,24,19,24},
+	{18,26,19,27}
+};
+static const short c_priest_caster_array[7][10]{
+	{1,1,1,1,3,3,3,4,4,4},
+	{5,5,6,6,7,7,8,8,8,9},
+	{9,6,6,8,11,12,12,5,5,12},
+	{12,12,13,13,14,9,9,14,14,15},
+	{19,18,13,19,15,18,18,19,16,18},
+	{22,18,16,19,18,18,21,22,23,23},
+	{26,26,25,24,26,22,24,22,26,25}
+};
+static const short c_priest_emer_spells[7][4]{
+	{0,1,0,2},
+	{0,8,0,2},
+	{0,8,0,10},
+	{0,14,0,10},
+	{0,19,18,17},
+	{0,19,18,20},
+	{25,25,26,24}
+};
+
+
 short pc_marked_damage[6];
 short monst_marked_damage[T_M];
 
@@ -2762,21 +2800,6 @@ Boolean monst_cast_mage(creature_data_type *caster,short targ)
 	location target,vict_loc,ashes_loc = {0,0},l;
 	creature_data_type *affected;
 	long dummy;
-	short caster_array[7][18] = {{1,1,1,2,2, 2,1,3,4,4, 1,1,1,2,2, 2,3,4},
-								{5,5,5,6,7, 8,9,10,11,11, 2,2,2,5,7, 10,10,5},
-								{5,5,2,9,11, 12,12,12,14,13, 13,12,12,2,2, 2,2,2},
-								{15,15,16,17,17, 5,12,12,13,13, 17,17,16,17,16, 2,2,2},
-								{15,18,19,19,20, 20,21,21,16,17, 18,18,18,18,19, 19,19,20},
-								{23,23,22,22,21, 21,20,24,19,18, 18,18,18,18,18, 23,23,19},
-								{23,23,24,25,26, 27,19,22,19,18, 18,18,18,18,26, 24,24,23}};
-	short emer_spells[7][4] = {{2,0,0,5},
-								{2,10,11,7},
-								{2,13,12,13},
-								{2,13,12,13},
-								{18,20,19,18},
-								{18,24,19,24},
-								{18,26,19,27}};
-
 	
 	if (is_antimagic(caster->m_loc.x,caster->m_loc.y)) {
 		return FALSE;
@@ -2793,28 +2816,28 @@ Boolean monst_cast_mage(creature_data_type *caster,short targ)
 	friend_levels_near = (caster->attitude % 2 != 1) ? count_levels(caster->m_loc,3) : -1 * count_levels(caster->m_loc,3);
 
 	if ((caster->m_d.health * 4 < caster->m_d.m_health) && (rand_short(0,10) < 9))
-		spell = emer_spells[level][3];
+		spell = c_mage_emer_spells[level][3];
 		else if ((((caster->gaffect(affect::Speed) < 0) && (rand_short(0,10) < 7)) || 
-			((caster->gaffect(affect::Speed) == 0) && (rand_short(0,10) < 5))) && (emer_spells[level][0] != 0))
-			spell = emer_spells[level][0];
-			else if ((friend_levels_near <= -10) && (rand_short(0,10) < 7) && (emer_spells[level][1] != 0))
-				spell = emer_spells[level][1];
-				else if ((target_levels > 50) && (rand_short(0,10) < 7) && (emer_spells[level][2] != 0))
-					spell = emer_spells[level][2];
+			((caster->gaffect(affect::Speed) == 0) && (rand_short(0,10) < 5))) && (c_mage_emer_spells[level][0] != 0))
+			spell = c_mage_emer_spells[level][0];
+			else if ((friend_levels_near <= -10) && (rand_short(0,10) < 7) && (c_mage_emer_spells[level][1] != 0))
+				spell = c_mage_emer_spells[level][1];
+				else if ((target_levels > 50) && (rand_short(0,10) < 7) && (c_mage_emer_spells[level][2] != 0))
+					spell = c_mage_emer_spells[level][2];
 					else {
 						r1 = rand_short(0,17);
-						spell = caster_array[level][r1];
+						spell = c_mage_caster_array[level][r1];
 						}
 	
 	// Hastes happen often now, but don't cast them redundantly			
 	if ((caster->gaffect(affect::Speed) > 0) && ((spell == 2) || (spell == 18)))
-		spell = emer_spells[level][3];
+		spell = c_mage_emer_spells[level][3];
 		 
 
 	// Anything prventing spell?
 	if ((target.x > 64) && (monst_mage_area_effect[spell - 1] > 0)) {
 		r1 = rand_short(0,9);
-		spell = caster_array[level][r1];
+		spell = c_mage_caster_array[level][r1];
 		if ((target.x > 64) && (monst_mage_area_effect[spell - 1] > 0)) 
 			return FALSE;
 		}
@@ -3076,20 +3099,6 @@ Boolean monst_cast_priest(creature_data_type *caster,short targ)
 	Boolean acted = FALSE;
 	location target,vict_loc,l;
 	creature_data_type *affected;
-	short caster_array[7][10] = {{1,1,1,1,3,3,3,4,4,4},
-									{5,5,6,6,7,7,8,8,8,9},
-									{9,6,6,8,11,12,12,5,5,12},
-									{12,12,13,13,14,9,9,14,14,15},
-									{19,18,13,19,15,18,18,19,16,18},
-									{22,18,16,19,18,18,21,22,23,23},
-									{26,26,25,24,26,22,24,22,26,25}};
-	short emer_spells[7][4] = {{0,1,0,2},
-								{0,8,0,2},
-								{0,8,0,10},
-								{0,14,0,10},
-								{0,19,18,17},
-								{0,19,18,20},
-								{25,25,26,24}};
 	location ashes_loc = {0,0};
 	
 	
@@ -3106,16 +3115,16 @@ Boolean monst_cast_priest(creature_data_type *caster,short targ)
 	friend_levels_near = (caster->attitude % 2 != 1) ? count_levels(caster->m_loc,3) : -1 * count_levels(caster->m_loc,3);
 
 	if ((caster->m_d.health * 4 < caster->m_d.m_health) && (rand_short(0,10) < 9))
-		spell = emer_spells[level][3];
-		else if ((caster->gaffect(affect::Speed) < 0) && (rand_short(0,10) < 7) && (emer_spells[level][0] != 0))
-			spell = emer_spells[level][0];
-			else if ((friend_levels_near <= -10) && (rand_short(0,10) < 7) && (emer_spells[level][1] != 0))
-				spell = emer_spells[level][1];
-				else if ((target_levels > 50 < 0) && (rand_short(0,10) < 7) && (emer_spells[level][2] != 0))
-					spell = emer_spells[level][2];
+		spell = c_priest_emer_spells[level][3];
+		else if ((caster->gaffect(affect::Speed) < 0) && (rand_short(0,10) < 7) && (c_priest_emer_spells[level][0] != 0))
+			spell = c_priest_emer_spells[level][0];
+			else if ((friend_levels_near <= -10) && (rand_short(0,10) < 7) && (c_priest_emer_spells[level][1] != 0))
+				spell = c_priest_emer_spells[level][1];
+				else if ((target_levels > 50 < 0) && (rand_short(0,10) < 7) && (c_priest_emer_spells[level][2] != 0))
+					spell = c_priest_emer_spells[level][2];
 					else {
 						r1 = rand_short(0,9);
-						spell = caster_array[level][r1];
+						spell = c_priest_caster_array[level][r1];
 						}
 
 
@@ -3123,7 +3132,7 @@ Boolean monst_cast_priest(creature_data_type *caster,short targ)
 	// Anything preventing spell?
 	if ((target.x > 64) && (monst_priest_area_effect[spell - 1] > 0))  {
 		r1 = rand_short(0,9);
-		spell = caster_array[level][r1];
+		spell = c_priest_caster_array[level][r1];
 		if ((target.x > 64) && (monst_priest_area_effect[spell - 1] > 0))  		
 			return FALSE;
 		}

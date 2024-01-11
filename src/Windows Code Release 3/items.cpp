@@ -21,6 +21,39 @@
 #include "boe/item.hpp"
 #include "game_globals.hpp"
 
+static const short c_treas_chart[5][6]{
+	{0,-1,-1,-1,-1,-1},
+	{1,-1,-1,-1,-1,-1},
+	{2,1,1,-1,-1,-1},
+	{3,2,1,1,-1,-1},
+	{4,3,2,2,1,1}
+};
+static const short c_treas_odds[5][6]{
+	{10,0,0,0,0,0},
+	{50,0,0,0,0,0},
+	{60,50,40,0,0,0},
+	{100,90,80,70,0,0},
+	{100,80,80,75,75,75}
+};
+static const short c_id_odds[21]{
+	0,10,15,20,25,30,35,39,43,47, 
+	51,55,59,63,67,71,73,75,77,79,81
+};
+static const short c_max_mult[5][10]{
+	{0,0,0,0,0,0,0,0,0,1},
+	{0,0,1,1,1,1,2,3,5,20},
+	{0,0,1,1,2,2,4,6,10,25},
+	{5,10,10,10,15,20,40,80,100,100},
+	{25,25,50,50,50,100,100,100,100,100}
+};
+static const short c_min_chart[5][10]{
+	{0,0,0,0,0,0,0,0,0,1},
+	{0,0,0,0,0,0,0,0,5,20},
+	{0,0,0,0,1,1,5,10,15,40},
+	{10,10,15,20,20,30,40,50,75,100},
+	{50,100,100,100,100,200,200,200,200,200}
+};
+
 extern short stat_window,overall_mode,current_cursor,which_combat_type,current_pc;
 extern party_record_type party;
 extern talking_record_type talking;
@@ -1227,28 +1260,6 @@ void place_treasure(location where,short level,short loot,short mode)
 
 	item_record_type new_item;
 	short amt,r1,i,j;
-	short treas_chart[5][6] = {{0,-1,-1,-1,-1,-1},
-								{1,-1,-1,-1,-1,-1},
-								{2,1,1,-1,-1,-1},
-								{3,2,1,1,-1,-1},
-								{4,3,2,2,1,1}};
-	short treas_odds[5][6] = {{10,0,0,0,0,0},
-								{50,0,0,0,0,0},
-								{60,50,40,0,0,0},
-								{100,90,80,70,0,0},
-								{100,80,80,75,75,75}};
-	short id_odds[21] = {0,10,15,20,25,30,35,39,43,47,
-							51,55,59,63,67,71,73,75,77,79,81};
-	short max_mult[5][10] = {{0,0,0,0,0,0,0,0,0,1},
-							{0,0,1,1,1,1,2,3,5,20},
-							{0,0,1,1,2,2,4,6,10,25},
-							{5,10,10,10,15,20,40,80,100,100},
-							{25,25,50,50,50,100,100,100,100,100}};
-	short min_chart[5][10] = {{0,0,0,0,0,0,0,0,0,1},
-						{0,0,0,0,0,0,0,0,5,20},
-						{0,0,0,0,1,1,5,10,15,40},
-						{10,10,15,20,20,30,40,50,75,100},
-						{50,100,100,100,100,200,200,200,200,200}};
 	short max,min;
 	
 	if (loot == 1)
@@ -1270,11 +1281,11 @@ void place_treasure(location where,short level,short loot,short mode)
 		}
 	for (j = 0; j < 5; j++) {
 		r1 = rand_short(0,100);
-		if ((treas_chart[loot][j] >= 0) && (r1 <= treas_odds[loot][j] + adventurers_luck_total(adven))) {
+		if ((c_treas_chart[loot][j] >= 0) && (r1 <= c_treas_odds[loot][j] + adventurers_luck_total(adven))) {
 			r1 = rand_short(0,9);
-			min = min_chart[treas_chart[loot][j]][r1];
+			min = c_min_chart[c_treas_chart[loot][j]][r1];
 			r1 = rand_short(0,9);
-			max = (min + level + (2 * (loot - 1)) + (adventurers_luck_total(adven) / 3)) * max_mult[treas_chart[loot][j]][r1];
+			max = (min + level + (2 * (loot - 1)) + (adventurers_luck_total(adven) / 3)) * c_max_mult[c_treas_chart[loot][j]][r1];
 			if (rand_short(0,1000) == 500) {
 				max = 10000;
 				min = 100;
@@ -1287,11 +1298,11 @@ void place_treasure(location where,short level,short loot,short mode)
 				max = 200;
 				
 				
-				new_item = return_treasure(treas_chart[loot][j],level,mode);
+				new_item = return_treasure(c_treas_chart[loot][j],level,mode);
 				if ((item_val(new_item) < min) || (item_val(new_item) > max)) {
-					new_item = return_treasure(treas_chart[loot][j],level,mode);
+					new_item = return_treasure(c_treas_chart[loot][j],level,mode);
 					if ((item_val(new_item) < min) || (item_val(new_item) > max)) {
-						new_item = return_treasure(treas_chart[loot][j],level,mode);
+						new_item = return_treasure(c_treas_chart[loot][j],level,mode);
 						if (item_val(new_item) > max)
 							new_item.variety = item_variety::None;
 						}
@@ -1310,7 +1321,7 @@ void place_treasure(location where,short level,short loot,short mode)
 			// if forced, keep dipping until a treasure comes uo
 			if ((mode == 1)	&& (max >= 20)) {
 				do
-					new_item = return_treasure(treas_chart[loot][j],level,mode);
+					new_item = return_treasure(c_treas_chart[loot][j],level,mode);
 					while ((new_item.variety == item_variety::None) || (item_val(new_item) > max));
 				}
 
@@ -1321,7 +1332,7 @@ void place_treasure(location where,short level,short loot,short mode)
 			if (new_item.variety != item_variety::None) {
 				for (i = 0; i < 6; i++)
 					if ((adven[i].main_status == status_type::Normal) 
-						&& (rand_short(0,100) < id_odds[adven[i].skills[skill::ItemLore]]))
+						&& (rand_short(0,100) < c_id_odds[adven[i].skills[skill::ItemLore]]))
 							new_item.item_properties = new_item.item_properties | 1;
 				place_item(new_item,where,FALSE);
 				}			

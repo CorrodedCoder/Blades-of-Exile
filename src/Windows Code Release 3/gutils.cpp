@@ -145,6 +145,13 @@ extern const std::array<unsigned char, 200> m_pic_index_y{
 1,1,1,1,1,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1};
 
+static const RECT c_monst_rects[4][4]{
+	{{0,0,28,36},{0,0,0,0},{0,0,0,0},{0,0,0,0}},
+	{{7,0,21,18},{7,18,21,36},{0,0,0,0},{0,0,0,0}},
+	{{0,9,14,27},{14,9,28,27},{0,0,0,0},{0,0,0,0}},
+	{{0,0,14,18},{14,0,28,18},{0,18,14,36},{14,18,28,36}}
+};
+
 
 void draw_one_terrain_spot (short i,short j,short terrain_to_draw,short dest)
 //short dest; // 0 - terrain gworld   1 - screen
@@ -238,10 +245,6 @@ void draw_monsters()
 	location where_draw,store_loc;
 	short picture_wanted;
 	unsigned char ter;
-	RECT monst_rects[4][4] = {{{0,0,28,36},{0,0,0,0},{0,0,0,0},{0,0,0,0}},
-		{{7,0,21,18},{7,18,21,36},{0,0,0,0},{0,0,0,0}},
-		{{0,9,14,27},{14,9,28,27},{0,0,0,0},{0,0,0,0}},
-		{{0,0,14,18},{14,0,28,18},{0,18,14,36},{14,18,28,36}}};
 
 	if (is_out())
 		for (i = 0; i < 10; i++) 
@@ -268,13 +271,13 @@ void draw_monsters()
 							for (k = 0; k < width * height; k++) {
 								source_rect = get_custom_rect(picture_wanted % 1000 +
 								  ((party.out_c[i].direction < 4) ? 0 : (width * height)) + k);
-								to_rect = monst_rects[(width - 1) * 2 + height - 1][k];
+								to_rect = c_monst_rects[(width - 1) * 2 + height - 1][k];
 								rect_draw_some_item_bmp(spec_scen_g, source_rect, small_temp_gworld,to_rect, 0, 0);
 								source_rect = to_rect;
 								OffsetRect(&to_rect,13 + 28 * where_draw.x,13 + 36 * where_draw.y);
 								rect_draw_some_item_bmp(small_temp_gworld, source_rect, terrain_screen_gworld,to_rect, 1, 0);
 								}
-							//source_rect = to_rect = monst_rects[0][0];
+							//source_rect = to_rect = c_monst_rects[0][0];
 							//OffsetRect(&to_rect,13 + 28 * where_draw.x,13 + 36 * where_draw.y);
 							//rect_draw_some_item_bmp(small_temp_gworld, source_rect, terrain_screen_gworld,to_rect, 1, 0);
 							}
@@ -282,13 +285,13 @@ void draw_monsters()
 							for (k = 0; k < width * height; k++) {
 								source_rect = get_monster_template_rect(party.out_c[i].what_monst.monst[j],
 								  (party.out_c[i].direction < 4) ? 0 : 1,k);
-								to_rect = monst_rects[(width - 1) * 2 + height - 1][k];
+								to_rect = c_monst_rects[(width - 1) * 2 + height - 1][k];
 								rect_draw_some_item_bmp(storage_gworld, source_rect, small_temp_gworld,to_rect, 0, 0);
 								source_rect = to_rect;
 								OffsetRect(&to_rect,13 + 28 * where_draw.x,13 + 36 * where_draw.y);
 								rect_draw_some_item_bmp(small_temp_gworld, source_rect, terrain_screen_gworld,to_rect, 1, 0);
 								}
-							//source_rect = to_rect = monst_rects[0][0];
+							//source_rect = to_rect = c_monst_rects[0][0];
 							//OffsetRect(&to_rect,13 + 28 * where_draw.x,13 + 36 * where_draw.y);
 							//rect_draw_some_item_bmp(small_temp_gworld, source_rect, terrain_screen_gworld,to_rect, 1, 0);
 							}
