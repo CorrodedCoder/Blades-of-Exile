@@ -350,6 +350,27 @@ short pc_carry_weight(const pc_record_type& pc)
 	return storage;
 }
 
+// returns 1 if OK, 2 if no room, 4 if too heavy, 5 if too many of item
+short pc_could_accept(const pc_record_type& pc, const item_record_type& item)
+{
+	if ((item.variety != item_variety::Gold) && (item.variety != item_variety::Food))
+	{
+		for (short i = 0; i < 24; i++)
+			if ((pc.items[i].variety > item_variety::None) && (pc.items[i].type_flag == item.type_flag)
+				&& (pc.items[i].charges > 123))
+				return 5;
+
+		if (pc_has_space(pc) == 24)
+			return 2;
+
+		if (item_weight(item) > pc_amount_can_carry(pc) - pc_carry_weight(pc))
+		{
+			return 4;
+		}
+	}
+	return 1;
+}
+
 short pc_luck(const pc_record_type& pc)
 {
 	return pc.skills[skill::Luck];
