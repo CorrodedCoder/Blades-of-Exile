@@ -272,31 +272,6 @@ short pc_ok_to_buy(const pc_record_type& pc, short cost, const item_record_type&
 	return could_accept;
 }
 
-// Returns true if the item removed was a poisoned weapon
-static bool pc_remove_item(pc_record_type& pc, short which_item)
-{
-	bool poison_removed = false;
-	if ((pc.weap_poisoned == which_item) && (pc.gaffect(affect::PoisonedWeapon) > 0))
-	{
-		pc.gaffect(affect::PoisonedWeapon) = 0;
-		poison_removed = true;
-	}
-	if ((pc.weap_poisoned > which_item) && (pc.gaffect(affect::PoisonedWeapon) > 0))
-	{
-		pc.weap_poisoned--;
-	}
-
-	for (short i = which_item; i < 23; i++)
-	{
-		pc.items[i] = pc.items[i + 1];
-		pc.equip[i] = pc.equip[i + 1];
-	}
-	pc.items[23] = item_record_type{};
-	pc.equip[23] = FALSE;
-
-	return poison_removed;
-}
-
 void take_item(short pc_num,short which_item)
 //short pc_num,which_item;  // if which_item > 30, don't update stat win, item is which_item - 30
 {
