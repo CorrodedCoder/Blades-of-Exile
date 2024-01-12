@@ -1242,7 +1242,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 											else {
 												play_sound(51);
 												ASB("Your item is now enchanted.");
-												enchant_weapon(stat_window,item_hit,shop_identify_cost,store_selling_values[i]);
+												enchant_weapon(adven[stat_window].items[item_hit], shop_identify_cost, store_selling_values[i]);
 												}
 										break;
 									}

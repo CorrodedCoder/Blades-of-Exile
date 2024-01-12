@@ -17,7 +17,7 @@ short take_food(short amount,Boolean print_result);
 short pc_ok_to_buy(short pc_num,short cost,const item_record_type& item);
 void take_item(short pc_num,short which_item);
 void remove_charge(short pc_num,short which_item);
-void enchant_weapon(short pc_num,short item_hit,short enchant_type,short new_val);
+void enchant_weapon(item_record_type& item,short enchant_type,short new_val);
 void equip_item(short pc_num,short item_num);
 void drop_item(short pc_num,short item_num,location where_drop);
 Boolean place_item(const item_record_type& item,location where,Boolean forced);
