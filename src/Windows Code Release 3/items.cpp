@@ -260,28 +260,37 @@ short take_food(short amount,Boolean print_result)
 	return 0;	
 }
 
-// returns 1 if OK, 2 if no room, 3 if not enough cash, 4 if too heavy, 5 if too many of item
-short pc_ok_to_buy(const pc_record_type& pc, short cost, const item_record_type& item)
+// returns 1 if OK, 2 if no room, 4 if too heavy, 5 if too many of item
+static short pc_could_accept(const pc_record_type& pc, const item_record_type& item)
 {
-	short i;
-
 	if ((item.variety != item_variety::Gold) && (item.variety != item_variety::Food))
 	{
-		for (i = 0; i < 24; i++)
+		for (short i = 0; i < 24; i++)
 			if ((pc.items[i].variety > item_variety::None) && (pc.items[i].type_flag == item.type_flag)
 				&& (pc.items[i].charges > 123))
 				return 5;
 
 		if (pc_has_space(pc) == 24)
 			return 2;
+
 		if (item_weight(item) > pc_amount_can_carry(pc) - pc_carry_weight(pc))
 		{
 			return 4;
 		}
 	}
-	if (take_gold(cost, FALSE) == FALSE)
-		return 3;
 	return 1;
+}
+
+// returns 1 if OK, 2 if no room, 3 if not enough cash, 4 if too heavy, 5 if too many of item
+short pc_ok_to_buy(const pc_record_type& pc, short cost, const item_record_type& item)
+{
+	const short could_buy = pc_could_accept(pc, item);
+	if (could_buy == 1)
+	{
+		if (take_gold(cost, FALSE) == FALSE)
+			return 3;
+	}
+	return could_buy;
 }
 
 void take_item(short pc_num,short which_item)
