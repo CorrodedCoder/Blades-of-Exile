@@ -330,23 +330,36 @@ bool pc_affect(pc_record_type& pc, affect type, short how_much)
 
 short pc_carry_weight(const pc_record_type& pc)
 {
-	short i, storage = 0;
+	short storage = 0;
 	Boolean airy = BOE_FALSE, heavy = BOE_FALSE;
 
-	for (i = 0; i < 24; i++)
-		if (pc.items[i].variety > item_variety::None) {
-			storage += item_weight(pc.items[i]);
-			if (pc.items[i].ability == 44)
+	for (const auto& item: pc.items)
+	{
+		if (item.variety > item_variety::None)
+		{
+			storage += item_weight(item);
+			if (item.ability == 44)
+			{
 				airy = BOE_TRUE;
-			if (pc.items[i].ability == 45)
+			}
+			if (item.ability == 45)
+			{
 				heavy = BOE_TRUE;
+			}
 		}
+	}
 	if (airy == BOE_TRUE)
+	{
 		storage -= 30;
+	}
 	if (heavy == BOE_TRUE)
+	{
 		storage += 30;
+	}
 	if (storage < 0)
+	{
 		storage = 0;
+	}
 	return storage;
 }
 
@@ -355,13 +368,18 @@ short pc_could_accept(const pc_record_type& pc, const item_record_type& item)
 {
 	if ((item.variety != item_variety::Gold) && (item.variety != item_variety::Food))
 	{
-		for (short i = 0; i < 24; i++)
-			if ((pc.items[i].variety > item_variety::None) && (pc.items[i].type_flag == item.type_flag)
-				&& (pc.items[i].charges > 123))
+		for (const auto& pc_item: pc.items)
+		{
+			if ((pc_item.variety > item_variety::None) && (pc_item.type_flag == item.type_flag) && (pc_item.charges > 123))
+			{
 				return 5;
+			}
+		}
 
-		if (pc_has_space(pc) == 24)
+		if (pc_has_space(pc) == static_cast<short>(std::size(pc.items)))
+		{
 			return 2;
+		}
 
 		if (item_weight(item) > pc_amount_can_carry(pc) - pc_carry_weight(pc))
 		{
