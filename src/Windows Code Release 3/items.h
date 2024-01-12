@@ -14,7 +14,7 @@ Boolean party_take_abil(short abil);
 short pc_carry_weight(const pc_record_type& pc);
 void give_food(short amount,Boolean print_result);
 short take_food(short amount,Boolean print_result);
-short pc_ok_to_buy(short pc_num,short cost,const item_record_type& item);
+short pc_ok_to_buy(const pc_record_type& pc,short cost,const item_record_type& item);
 void take_item(short pc_num,short which_item);
 void remove_charge(short pc_num,short which_item);
 void equip_item(short pc_num,short item_num);

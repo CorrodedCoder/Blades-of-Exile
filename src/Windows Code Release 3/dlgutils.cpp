@@ -231,7 +231,7 @@ void handle_sale(short what_chosen,short cost)
 			base_item = item_source.stored_item(what_chosen);
 			base_item.item_properties = base_item.item_properties | 1;
 			//cost = (base_item.charges == 0) ? base_item.value : base_item.value * base_item.charges;
-			switch (pc_ok_to_buy(current_pc,cost,base_item)) {
+			switch (pc_ok_to_buy(adven[current_pc],cost,base_item)) {
 				case 1: play_sound(-38); give_to_pc(current_pc,base_item,TRUE); break;
 				case 2: ASB("Can't carry any more items."); break;
 				case 3: ASB("Not enough cash."); break;
@@ -318,7 +318,7 @@ void handle_sale(short what_chosen,short cost)
 			what_magic_shop_item = what_chosen % 1000;
 			base_item = party.magic_store_items[what_magic_shop][what_magic_shop_item];
 			base_item.item_properties = base_item.item_properties | 1;
-			switch (pc_ok_to_buy(current_pc,cost,base_item)) {
+			switch (pc_ok_to_buy(adven[current_pc],cost,base_item)) {
 				case 1: play_sound(-38); give_to_pc(current_pc,base_item,TRUE); 
 					party.magic_store_items[what_magic_shop][what_magic_shop_item].variety = item_variety::None;
 					break;
