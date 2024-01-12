@@ -26,4 +26,6 @@ public:
 	[[nodiscard]] const item_record_type& ring(short loot) const;
 	[[nodiscard]] const item_record_type& necklace(short loot) const;
 	[[nodiscard]] const item_record_type& item_of_type(short loot_max, short min_val, short max_val, item_variety t1, item_variety t2, item_variety t3) const;
+
+	[[nodiscard]] item_record_type return_treasure(short loot, short level, short mode) const;
 };

@@ -43,7 +43,6 @@ void make_cursor_watch() ;
 void place_glands(location where,unsigned char m_type);
 void reset_item_max();
 void place_treasure(location where,short level,short loot,short mode);
-item_record_type return_treasure(short loot,short level,short mode);
 void frame_button(RECT button_rect);
 void refresh_store_items();
 void get_text_response_event_filter (short item_hit);

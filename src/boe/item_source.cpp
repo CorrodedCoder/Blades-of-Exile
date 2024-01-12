@@ -145,3 +145,42 @@ const item_record_type& ItemSource::necklace(short loot) const
 {
 	return item_of_type(loot, item_variety::Necklace, item_variety::Invalid, item_variety::Invalid);
 } 
+
+item_record_type ItemSource::return_treasure(short loot, short level, short mode) const
+//short mode; // 0 - normal  1 - force
+{
+	item_record_type treas;
+	short which_treas_chart[48] = { 1,1,1,1,1,2,2,2,2,2,
+								3,3,3,3,3,2,2,2,4,4,
+								4,4,5,5,5,6,6,6,7,7,
+								7,8,8,9,9,10,11,12,12,13,
+								13,14, 9,10,11,9,10,11 };
+	short r1;
+	(void)mode;
+	treas.variety = item_variety::None;
+	r1 = rand_short(0, 41);
+	if (loot >= 3)
+		r1 += 3;
+	if (loot == 4)
+		r1 += 3;
+	switch (which_treas_chart[r1]) {
+	case 1: treas = food(); break;
+	case 2: treas = weapon(loot, level);	break;
+	case 3: treas = armor(loot, level); break;
+	case 4: treas = shield(loot); break;
+	case 5: treas = helm(loot); break;
+	case 6: treas = missile(loot); break;
+	case 7: treas = potion(loot); break;
+	case 8: treas = scroll(loot); break;
+	case 9: treas = wand(loot); break;
+	case 10: treas = ring(loot); break;
+	case 11: treas = necklace(loot); break;
+	case 12: treas = poison(loot, level); break;
+	case 13: treas = gloves(loot); break;
+	case 14: treas = boots(loot); break;
+	}
+	if (treas.variety == item_variety::None)
+		treas.value = 0;
+	return treas;
+
+}

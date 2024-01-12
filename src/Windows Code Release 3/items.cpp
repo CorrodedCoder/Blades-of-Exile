@@ -1240,11 +1240,11 @@ void place_treasure(location where,short level,short loot,short mode)
 				max = 200;
 				
 				
-				new_item = return_treasure(c_treas_chart[loot][j],level,mode);
+				new_item = item_source.return_treasure(c_treas_chart[loot][j],level,mode);
 				if ((item_val(new_item) < min) || (item_val(new_item) > max)) {
-					new_item = return_treasure(c_treas_chart[loot][j],level,mode);
+					new_item = item_source.return_treasure(c_treas_chart[loot][j],level,mode);
 					if ((item_val(new_item) < min) || (item_val(new_item) > max)) {
-						new_item = return_treasure(c_treas_chart[loot][j],level,mode);
+						new_item = item_source.return_treasure(c_treas_chart[loot][j],level,mode);
 						if (item_val(new_item) > max)
 							new_item.variety = item_variety::None;
 						}
@@ -1263,7 +1263,7 @@ void place_treasure(location where,short level,short loot,short mode)
 			// if forced, keep dipping until a treasure comes uo
 			if ((mode == 1)	&& (max >= 20)) {
 				do
-					new_item = return_treasure(c_treas_chart[loot][j],level,mode);
+					new_item = item_source.return_treasure(c_treas_chart[loot][j],level,mode);
 					while ((new_item.variety == item_variety::None) || (item_val(new_item) > max));
 				}
 
@@ -1283,46 +1283,6 @@ void place_treasure(location where,short level,short loot,short mode)
 
 }
 
-item_record_type return_treasure(short loot,short level,short mode)
-//short mode; // 0 - normal  1 - force
-{
-	item_record_type treas;
-	short which_treas_chart[48] = {1,1,1,1,1,2,2,2,2,2,
-								3,3,3,3,3,2,2,2,4,4,
-								4,4,5,5,5,6,6,6,7,7,
-								7,8,8,9,9,10,11,12,12,13,
-								13,14, 9,10,11,9,10,11};
-	short r1;
-	
-	treas.variety = item_variety::None;
-	r1 = rand_short(0,41);
-	if (loot >= 3)
-		r1 += 3;
-	if (loot == 4)
-		r1 += 3;
-	switch (which_treas_chart[r1]) {
-		case 1: treas = item_source.food(); break;
-		case 2: treas = item_source.weapon(loot,level);	break;
-		case 3: treas = item_source.armor(loot,level); break;
-		case 4: treas = item_source.shield(loot); break;
-		case 5: treas = item_source.helm(loot); break;
-		case 6: treas = item_source.missile(loot); break;
-		case 7: treas = item_source.potion(loot); break;
-		case 8: treas = item_source.scroll(loot); break;
-		case 9: treas = item_source.wand(loot); break;
-		case 10: treas = item_source.ring(loot); break;
-		case 11: treas = item_source.necklace(loot); break;
-		case 12: treas = item_source.poison(loot,level); break;
-		case 13: treas = item_source.gloves(loot); break;
-		case 14: treas = item_source.boots(loot); break;
-		} 
-	if (treas.variety == item_variety::None)
-		treas.value = 0;	
-	return treas;
-
-}
-
-
 void refresh_store_items()
 {
 	short i,j;
@@ -1330,7 +1290,7 @@ void refresh_store_items()
 	
 	for (i = 0; i < 5; i++)
 		for (j = 0; j < 10; j++) {
-			party.magic_store_items[i][j] = return_treasure(loot_index[j],7,1);
+			party.magic_store_items[i][j] = item_source.return_treasure(loot_index[j],7,1);
 			if ((party.magic_store_items[i][j].variety == item_variety::Gold) ||
 				(party.magic_store_items[i][j].variety == item_variety::Food))
 				party.magic_store_items[i][j] = item_record_type{};
