@@ -1,6 +1,8 @@
 #include "boe/item.hpp"
+#include "boe/compatibility.hpp"
 #include <array>
 #include <format>
+#include <string>
 
 namespace {
 
@@ -87,49 +89,48 @@ short excluding_types(item_variety variety)
 
 void enchant_weapon(item_record_type& item, short enchant_type, short new_val)
 {
-	std::string store_name;
-
 	if (is_magic(item) || (item.ability != 0))
 	{
 		return;
 	}
+	const std::string full_name(item.full_name);
 	item.item_properties |= 4;
 	switch (enchant_type)
 	{
 	case 0:
-		store_name = std::format("{} (+1)", item.full_name);
+		format_to_buf(item.full_name, "{} (+1)", full_name);
 		item.bonus++;
 		item.value = new_val;
 		break;
 	case 1:
-		store_name = std::format("{} (+2)", item.full_name);
+		format_to_buf(item.full_name, "{} (+2)", full_name);
 		item.bonus += 2;
 		item.value = new_val;
 		break;
 	case 2:
-		store_name = std::format("{} (+3)", item.full_name);
+		format_to_buf(item.full_name, "{} (+3)", full_name);
 		item.bonus += 3;
 		item.value = new_val;
 		break;
 	case 3:
-		store_name = std::format("{} (F)", item.full_name);
+		format_to_buf(item.full_name, "{} (F)", full_name);
 		item.ability = 110;
 		item.ability_strength = 5;
 		item.charges = 8;
 		break;
 	case 4:
-		store_name = std::format("{} (F!)", item.full_name);
+		format_to_buf(item.full_name, "{} (F!)", full_name);
 		item.value = new_val;
 		item.ability = 1;
 		item.ability_strength = 5;
 		break;
 	case 5:
-		store_name = std::format("{} (+5)", item.full_name);
+		format_to_buf(item.full_name, "{} (+5)", full_name);
 		item.value = new_val;
 		item.bonus += 5;
 		break;
 	case 6:
-		store_name = std::format("{} (B)", item.full_name);
+		format_to_buf(item.full_name, "{} (B)", full_name);
 		item.bonus++;
 		item.ability = 71;
 		item.ability_strength = 5;
@@ -137,12 +138,10 @@ void enchant_weapon(item_record_type& item, short enchant_type, short new_val)
 		item.charges = 8;
 		break;
 	default:
-		store_name = item.full_name;
 		break;
 	}
 	if ((item.value > 15000) || (item.value < 0))
 	{
 		item.value = 15000;
 	}
-	strcpy(item.full_name, store_name.c_str());
 }

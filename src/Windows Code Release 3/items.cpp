@@ -1240,11 +1240,11 @@ void place_treasure(location where,short level,short loot,short mode)
 				max = 200;
 				
 				
-				new_item = item_source.return_treasure(c_treas_chart[loot][j],level,mode);
+				new_item = item_source.treasure(c_treas_chart[loot][j],level,mode);
 				if ((item_val(new_item) < min) || (item_val(new_item) > max)) {
-					new_item = item_source.return_treasure(c_treas_chart[loot][j],level,mode);
+					new_item = item_source.treasure(c_treas_chart[loot][j],level,mode);
 					if ((item_val(new_item) < min) || (item_val(new_item) > max)) {
-						new_item = item_source.return_treasure(c_treas_chart[loot][j],level,mode);
+						new_item = item_source.treasure(c_treas_chart[loot][j],level,mode);
 						if (item_val(new_item) > max)
 							new_item.variety = item_variety::None;
 						}
@@ -1263,7 +1263,7 @@ void place_treasure(location where,short level,short loot,short mode)
 			// if forced, keep dipping until a treasure comes uo
 			if ((mode == 1)	&& (max >= 20)) {
 				do
-					new_item = item_source.return_treasure(c_treas_chart[loot][j],level,mode);
+					new_item = item_source.treasure(c_treas_chart[loot][j],level,mode);
 					while ((new_item.variety == item_variety::None) || (item_val(new_item) > max));
 				}
 
@@ -1290,7 +1290,7 @@ void refresh_store_items()
 	
 	for (i = 0; i < 5; i++)
 		for (j = 0; j < 10; j++) {
-			party.magic_store_items[i][j] = item_source.return_treasure(loot_index[j],7,1);
+			party.magic_store_items[i][j] = item_source.treasure(loot_index[j],7,1);
 			if ((party.magic_store_items[i][j].variety == item_variety::Gold) ||
 				(party.magic_store_items[i][j].variety == item_variety::Food))
 				party.magic_store_items[i][j] = item_record_type{};
