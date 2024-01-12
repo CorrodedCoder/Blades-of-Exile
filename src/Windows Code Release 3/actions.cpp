@@ -27,6 +27,7 @@
 #include "dlogtool.h"
 #include "graphutl.h"
 #include "game_globals.hpp"
+#include "boe/item.hpp"
 
 static std::array<RECT, 7> bottom_buttons;
 static std::array<RECT, 10> town_buttons;
