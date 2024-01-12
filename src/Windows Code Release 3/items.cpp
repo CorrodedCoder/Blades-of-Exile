@@ -328,71 +328,96 @@ void remove_charge(short pc_num,short which_item)
 
 }
 
-void equip_item(short pc_num,short item_num)
+void equip_item(short pc_num, short item_num)
 {
 	short num_equipped_of_this_type = 0;
 	short num_hands_occupied = 0;
 	short i;
 	short equip_item_type = 0;
-	
-if ((overall_mode == 10) && (adven[pc_num].items[item_num].variety == item_variety::Food))
-		add_string_to_buf("Equip: Not in combat");
-	else {
 
+	if ((overall_mode == 10) && (adven[pc_num].items[item_num].variety == item_variety::Food))
+	{
+		add_string_to_buf("Equip: Not in combat");
+	}
+	else
+	{
 		// unequip
-	if (adven[pc_num].equip[item_num] == TRUE) {
-		if ((adven[pc_num].equip[item_num] == TRUE) &&
-			is_cursed(adven[pc_num].items[item_num]))
-			add_string_to_buf("Equip: Item is cursed.           ");
-  			else {
+		if (adven[pc_num].equip[item_num] == TRUE)
+		{
+			if ((adven[pc_num].equip[item_num] == TRUE) && is_cursed(adven[pc_num].items[item_num]))
+			{
+				add_string_to_buf("Equip: Item is cursed.           ");
+			}
+			else
+			{
 				adven[pc_num].equip[item_num] = FALSE;
 				add_string_to_buf("Equip: Unequipped");
-				if ((adven[pc_num].weap_poisoned == item_num) && (adven[pc_num].gaffect(affect::PoisonedWeapon) > 0)) {
-						add_string_to_buf("  Poison lost.           ");
-						adven[pc_num].gaffect(affect::PoisonedWeapon) = 0;
-					}
+				if ((adven[pc_num].weap_poisoned == item_num) && (adven[pc_num].gaffect(affect::PoisonedWeapon) > 0))
+				{
+					add_string_to_buf("  Poison lost.           ");
+					adven[pc_num].gaffect(affect::PoisonedWeapon) = 0;
+				}
 			}
 		}
-
-	else {  // equip
-		if (!equippable(adven[pc_num].items[item_num].variety))
-			add_string_to_buf("Equip: Can't equip this item.");
-				else {
-					for (i = 0; i < 24; i++) 
-						if (adven[pc_num].equip[i] == TRUE) {
-							if (adven[pc_num].items[i].variety == adven[pc_num].items[item_num].variety)
-								num_equipped_of_this_type++;
-							num_hands_occupied = num_hands_occupied + num_hands_to_use(adven[pc_num].items[i].variety);
+		else // equip
+		{
+			if (!equippable(adven[pc_num].items[item_num].variety))
+			{
+				add_string_to_buf("Equip: Can't equip this item.");
+			}
+			else
+			{
+				for (i = 0; i < 24; i++)
+				{
+					if (adven[pc_num].equip[i] == TRUE)
+					{
+						if (adven[pc_num].items[i].variety == adven[pc_num].items[item_num].variety)
+						{
+							num_equipped_of_this_type++;
 						}
-						
-						
-					equip_item_type = excluding_types(adven[pc_num].items[item_num].variety);
-					// Now if missile is already equipped, no more missiles
-					if (equip_item_type > 0) {
-						for (i = 0; i < 24; i++) 
-							if ((adven[pc_num].equip[i] == TRUE) && (excluding_types(adven[pc_num].items[i].variety) == equip_item_type)) {
-								add_string_to_buf("Equip: You have something of");
-								add_string_to_buf("  this type equipped.");
-								return;
-								}
-						}
-
-					if (is_combat() && (adven[pc_num].items[item_num].variety == item_variety::Armor))
-						add_string_to_buf("Equip: Not armor in combat");
-						else if ((2 - num_hands_occupied) < num_hands_to_use(adven[pc_num].items[item_num].variety))
-							add_string_to_buf("Equip: Not enough free hands");
-							else if (num_that_can_equip(adven[pc_num].items[item_num].variety) <= num_equipped_of_this_type)
-								add_string_to_buf("Equip: Can't equip another");
-								else {
-									adven[pc_num].equip[item_num] = TRUE;
-									add_string_to_buf("Equip: OK");
-									}
+						num_hands_occupied = num_hands_occupied + num_hands_to_use(adven[pc_num].items[i].variety);
 					}
-			
+				}
+
+				equip_item_type = excluding_types(adven[pc_num].items[item_num].variety);
+				// Now if missile is already equipped, no more missiles
+				if (equip_item_type > 0)
+				{
+					for (i = 0; i < 24; i++)
+					{
+						if ((adven[pc_num].equip[i] == TRUE) && (excluding_types(adven[pc_num].items[i].variety) == equip_item_type))
+						{
+							add_string_to_buf("Equip: You have something of");
+							add_string_to_buf("  this type equipped.");
+							return;
+						}
+					}
+				}
+
+				if (is_combat() && (adven[pc_num].items[item_num].variety == item_variety::Armor))
+				{
+					add_string_to_buf("Equip: Not armor in combat");
+				}
+				else if ((2 - num_hands_occupied) < num_hands_to_use(adven[pc_num].items[item_num].variety))
+				{
+					add_string_to_buf("Equip: Not enough free hands");
+				}
+				else if (num_that_can_equip(adven[pc_num].items[item_num].variety) <= num_equipped_of_this_type)
+				{
+					add_string_to_buf("Equip: Can't equip another");
+				}
+				else
+				{
+					adven[pc_num].equip[item_num] = TRUE;
+					add_string_to_buf("Equip: OK");
+				}
+			}
 		}
 	}
 	if (stat_window == pc_num)
-		put_item_screen(stat_window,1);
+	{
+		put_item_screen(stat_window, 1);
+	}
 }
 
 
