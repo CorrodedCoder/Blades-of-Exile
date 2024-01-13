@@ -1122,8 +1122,7 @@ void give_reg_info()
 
 void do_registration_event_filter (short item_hit)
 {
-	dialog_answer = 0;
-	sscanf(cd_get_text_edit_str(1075).c_str(), "%hd", &dialog_answer);
+	dialog_answer = std::stoi(cd_get_text_edit_str(1075));
 	dialog_not_toast = FALSE;
 }
 
@@ -1610,14 +1609,14 @@ Boolean enter_password()
 	while (dialog_not_toast)
 		ModalDialog();
 
-	const short i = wd_to_pwd(cd_get_text_edit_str(823).c_str());
+	const short i = wd_to_pwd(cd_get_text_edit_str(823));
 	
 	cd_kill_dialog(823,0);
 	
 	return check_p(i);
 }
 
-short wd_to_pwd(const char *str)
+short wd_to_pwd(std::string_view str)
 {
 	char pwd[8] = "aaaaaa";
 	short i;

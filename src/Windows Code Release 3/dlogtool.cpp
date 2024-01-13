@@ -81,7 +81,7 @@ char text_short_str[140][35];
 char labels[NL][25];
 Boolean label_taken[NL];
 
-HWND edit_box = NULL;
+static HWND edit_box = NULL;
 HWND store_edit_parent; // kludgy
 WNDPROC edit_proc,old_edit_proc;
 

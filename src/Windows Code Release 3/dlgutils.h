@@ -37,4 +37,4 @@ short pick_prefab_scen();
 void pick_prefab_scen_event_filter (short item_hit);
 void give_password_filter (short item_hit);
 Boolean enter_password();
-short wd_to_pwd(const char *str);
+short wd_to_pwd(std::string_view str);

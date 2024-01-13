@@ -1034,8 +1034,7 @@ short select_pc(short active_only,short free_inv_only)
 
 void get_num_of_items_event_filter (short item_hit)
 {
-	dialog_answer = 0;
-	sscanf(cd_get_text_edit_str(1012).c_str(), "%hd", &dialog_answer);
+	dialog_answer = std::stoi(cd_get_text_edit_str(1012));
 	dialog_not_toast = FALSE;
 }
 

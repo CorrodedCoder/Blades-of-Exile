@@ -1,6 +1,7 @@
 
 #include <Windows.h>
 #include <array>
+#include <string>
 #include <cassert>
 
 #define ND	15
@@ -861,21 +862,17 @@ void cd_retrieve_text_edit_str(short dlog_num, short item_num, char *str)
 	
 short cd_retrieve_text_edit_num(short dlog_num, short item_num)
 {
-	short i;
-	short num_given;
-	char str[256];
-	
-	for (i = 0; i < 80; i++)
-		if ((store_edit_parent_num[i] == dlog_num) && (store_edit_item[i] == item_num)
-			&& (edit_box[i] != NULL)) {
-				GetWindowText(edit_box[i],str,255);
-				sscanf(str,"%hd",&num_given);
-				return (short) num_given;
-				}
+	for (short i = 0; i < 80; i++)
+	{
+		if ((store_edit_parent_num[i] == dlog_num) && (store_edit_item[i] == item_num) && (edit_box[i] != NULL))
+		{
+			char str[256];
+			GetWindowText(edit_box[i], str, 255);
+			return std::stoi(str);
+		}
+	}
 	return -1;
-				
-
-}	
+}
 
 
 // NOTE!!! Expects a c string
