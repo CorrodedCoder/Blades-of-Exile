@@ -88,7 +88,7 @@ short item_array[130]; // NUM_TOWN_ITEMS + a bit
 
 short answer_given = 1;
 
-char *store_str;
+static char *store_str;
 short store_dnum;
 
 HWND test_dlog3;
@@ -1034,11 +1034,8 @@ short select_pc(short active_only,short free_inv_only)
 
 void get_num_of_items_event_filter (short item_hit)
 {
-	char get_text[256];
-	
-	cd_get_text_edit_str(1012, get_text);
 	dialog_answer = 0;
-	sscanf(get_text,"%hd",&dialog_answer);
+	sscanf(cd_get_text_edit_str(1012).c_str(), "%hd", &dialog_answer);
 	dialog_not_toast = FALSE;
 }
 
@@ -1302,7 +1299,7 @@ void refresh_store_items()
 
 void get_text_response_event_filter (short item_hit)
 {
-	cd_get_text_edit_str(store_dnum, store_str);
+	strcpy(store_str, cd_get_text_edit_str(store_dnum).c_str());
 	dialog_not_toast = FALSE;
 }
 

@@ -62,4 +62,4 @@ void edit_boats_event_filter (short item_hit);
 void edit_boats();
 
 void user_password_filter (short item_hit);
-short wd_to_pwd(char *str);
+short wd_to_pwd(const char *str);

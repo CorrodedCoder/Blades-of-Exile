@@ -1120,16 +1120,10 @@ void give_reg_info()
 
 }
 
-
-
-
 void do_registration_event_filter (short item_hit)
 {
-	char get_text[256];
-	
-	cd_get_text_edit_str(1075, get_text);
 	dialog_answer = 0;
-	sscanf(get_text,"%hd",&dialog_answer);
+	sscanf(cd_get_text_edit_str(1075).c_str(), "%hd", &dialog_answer);
 	dialog_not_toast = FALSE;
 }
 
@@ -1610,25 +1604,20 @@ void give_password_filter (short item_hit)
 Boolean enter_password()
 // ignore parent in Mac version
 {
-	short i;
-	char temp_str[256];
-		
 	cd_create_dialog_parent_num(823,0);
-	
 	cd_set_text_edit_str(823,"");
 	
 	while (dialog_not_toast)
 		ModalDialog();
 
-	cd_get_text_edit_str(823, temp_str);
-	i = wd_to_pwd(temp_str);
+	const short i = wd_to_pwd(cd_get_text_edit_str(823).c_str());
 	
 	cd_kill_dialog(823,0);
 	
 	return check_p(i);
 }
 
-short wd_to_pwd(char *str)
+short wd_to_pwd(const char *str)
 {
 	char pwd[8] = "aaaaaa";
 	short i;

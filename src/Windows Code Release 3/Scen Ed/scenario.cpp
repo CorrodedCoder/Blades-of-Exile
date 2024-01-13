@@ -2771,7 +2771,7 @@ short enter_password()
 	return i;
 }
 
-short wd_to_pwd(char *str)
+short wd_to_pwd(const char *str)
 {
 	char pwd[8] = "aaaaaa";
 	short i;

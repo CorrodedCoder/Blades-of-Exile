@@ -140,11 +140,8 @@ void flash_rect(RECT to_flash)
 
 void edit_gold_or_food_event_filter (short item_hit)
 {
-	char get_text[256];
-	
-	cd_get_text_edit_str((store_which_to_edit == 0) ? 1012 : 947,(char *) get_text);
 	dialog_answer = 0;
-	sscanf(get_text,"%hd",&dialog_answer);
+	sscanf(cd_get_text_edit_str((store_which_to_edit == 0) ? 1012 : 947).c_str(), "%hd", &dialog_answer);
 	dialog_not_toast = FALSE;
 }
 
@@ -183,10 +180,8 @@ void edit_gold_or_food(short which_to_edit)
 
 void edit_day_event_filter (short item_hit)
 {
-	char get_text[256];
-	cd_get_text_edit_str(917,(char *) get_text);
 	dialog_answer = 0;
-	sscanf(get_text,"%hd",&dialog_answer);
+	sscanf(cd_get_text_edit_str(917).c_str(), "%hd", &dialog_answer);
 	dialog_not_toast = FALSE;
 }
 
@@ -581,12 +576,8 @@ void give_reg_info()
 
 void do_registration_event_filter (short item_hit)
 {
-	char get_text[256];
-	
-	cd_get_text_edit_str(1075,(char *) get_text);
 	dialog_answer = 0;
-	sscanf(get_text,"%hd",&dialog_answer);
-		
+	sscanf(cd_get_text_edit_str(1075).c_str(), "%hd", &dialog_answer);
 	dialog_not_toast = FALSE;
 }
 
@@ -624,12 +615,8 @@ void do_registration()
 
 void edit_xp_event_filter (short item_hit)
 {
-	char get_text[256];
-	
-	cd_get_text_edit_str(1024,(char *) get_text);
 	dialog_answer = 0;
-	sscanf(get_text,"%hd",&dialog_answer);
-
+	sscanf(cd_get_text_edit_str(1024).c_str(), "%hd", &dialog_answer);
 	dialog_not_toast = FALSE;
 }
 

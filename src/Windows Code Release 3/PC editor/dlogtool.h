@@ -54,7 +54,7 @@ inline void draw_dialog_graphic_wnd(HWND hDlg, RECT rect, short which_g, Boolean
 
 void showcursor(Boolean a);
 
-void cd_get_text_edit_str(short dlog_num, char *str);
+std::string cd_get_text_edit_str(short dlog_num);
 void cd_set_text_edit_str(short dlog_num, std::string_view str);
 void cdsin(short dlog_num, short item_num, short num); 
 void csit(short dlog_num, short item_num, std::string_view str);

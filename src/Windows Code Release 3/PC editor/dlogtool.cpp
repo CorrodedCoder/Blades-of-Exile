@@ -982,11 +982,15 @@ void cd_get_item_text(short dlog_num, short item_num, char *str)
 }
 #endif
 
-void cd_get_text_edit_str(short dlog_num, char *str)
+std::string cd_get_text_edit_str(short dlog_num)
 {
-		if (edit_box != NULL)
-			GetWindowText(edit_box,str,255);
-			else str[0] = 0;
+	if (edit_box != NULL)
+	{
+		char str[256]{};
+		GetWindowText(edit_box, str, 255);
+		return str;
+	}
+	return {};
 }
 // NOTE!!! Expects a c string
 void cd_set_text_edit_str(short dlog_num, std::string_view str)

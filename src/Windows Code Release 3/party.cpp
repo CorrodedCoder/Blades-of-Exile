@@ -3391,9 +3391,7 @@ Boolean pick_pc_graphic(short pc_num,short mode,short parent_num)
 
 void pc_name_event_filter (short item_hit)
 {
-	char get_text[256];
-	
-	cd_get_text_edit_str(1051,(char *) get_text);
+	const std::string get_text{ cd_get_text_edit_str(1051) };
 	if ((get_text[0] < 33) || (get_text[0] > 126))
 	{
 		csit(1051,6,"Must begin with a letter.");
