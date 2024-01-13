@@ -48,7 +48,7 @@ extern location pc_pos[6],center;
 extern short pc_dir[6],current_pc;
 extern Boolean monsters_going,anim_onscreen;
 
-extern long anim_ticks;
+extern int anim_ticks;
 
 extern short terrain_pic[256];
 extern char spot_seen[9][9];

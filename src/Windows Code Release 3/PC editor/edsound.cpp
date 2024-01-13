@@ -79,9 +79,7 @@ static const short can_ignore[100] = {
 //     hangs on until sound is done, and then and only then plays later sound.
 
 
-short num_devs;
 Boolean sounds_fucked = FALSE;
-long intro_music_start_time = -1;
 
 void load_sounds ()
 {

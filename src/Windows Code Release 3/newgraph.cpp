@@ -25,7 +25,6 @@ static const std::array heal_types{"Heal Damage","Cure Poison","Cure Disease","C
 
 extern short ulx,uly;
 extern RECT	windRect;
-extern long anim_ticks;
 extern HBRUSH bg[14];
 extern short dungeon_font_num,geneva_font_num,overall_mode,town_type,which_combat_type;
 extern Boolean play_sounds,boom_anim_active,cartoon_happening,in_startup_mode;
@@ -523,10 +522,10 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 	POINT current_terrain_ul; 
 	HBITMAP temp_gworld;
 	RECT ter_scrn_rect = {0,0,279,351};
-	long t1,t2;
-	long pause_len = 0;
+	DWORD t1,t2;
+	DWORD pause_len = 0;
 
-	t2 = t1 = (long) GetCurrentTime();
+	t2 = t1 = GetCurrentTime();
 	if (sound_num == 11) { pause_len = 660; }
 	if (sound_num == 12) { pause_len = 410; }
 	if (sound_num == 14) { pause_len = 200; }
@@ -697,7 +696,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 
 	while (t2 - t1 < pause_len + 40)
 	{
-		t2 = (long)GetCurrentTime();
+		t2 = GetCurrentTime();
 	}
 	play_sound(99);
 }
@@ -764,10 +763,10 @@ void do_explosion_anim(short sound_num,short special_draw)
 	COLORREF colors[5] = {RGB(0,0,0),RGB(255,0,0),RGB(128,0,0),RGB(0,160,0),RGB(255,255,255)};
 	UINT c[5];
 	HGDIOBJ store_bmp;
-	long t1,t2;
-	long snd_len[3] = {1500,1410,1100};
+	DWORD t1,t2;
+	DWORD snd_len[3] = {1500,1410,1100};
 
-	t2 = t1 = (long) GetCurrentTime();
+	t2 = t1 = GetCurrentTime();
 
 	if ((have_boom == FALSE) || (boom_anim_active == FALSE))
 	{
@@ -938,7 +937,7 @@ void do_explosion_anim(short sound_num,short special_draw)
 	{
 		while (t2 - t1 < snd_len[cur_boom_type] + 100)
 		{
-			t2 = (long)GetCurrentTime();
+			t2 = GetCurrentTime();
 		}
 		play_sound(99);
 	}

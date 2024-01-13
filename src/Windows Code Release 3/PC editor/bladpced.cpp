@@ -70,7 +70,6 @@ HWND sbar;
 Boolean bgm_on = FALSE,bgm_init = FALSE;
 
 Boolean gInBackground = FALSE;
-long start_time;
 
 // Cursors 
 short current_cursor = 120;

@@ -71,7 +71,6 @@ HWND right_sbar;
 Boolean bgm_on = FALSE,bgm_init = FALSE;
 
 Boolean gInBackground = FALSE;
-long start_time;
 
 // Shareware globals
 Boolean registered = FALSE,ed_reg = FALSE;

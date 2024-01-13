@@ -49,7 +49,6 @@ extern RECT startup_top;
 extern HBRUSH map_brush[25];
 extern HBITMAP map_bitmap[25];
 extern POINT store_anim_ul;
-extern long last_redraw_time;
 extern Boolean registered;
 extern Boolean fast_bang;
 extern HPALETTE hpal;
@@ -62,7 +61,7 @@ extern HWND modeless_dialogs[18];
 extern piles_of_stuff_dumping_type4 data_store4;
 extern const std::array<unsigned char, 200> m_pic_index;
 extern HBRUSH bg[14];
-extern long anim_ticks;
+extern int anim_ticks;
 extern std::array<RECT, 6> startup_button;
 
 
@@ -197,7 +196,6 @@ void plop_fancy_startup()
 	RECT from_rect = {0,0,350,350},to_rect,whole_window;
 	POINT graphic_ul;
 	HGDIOBJ old_brush;
-	long cur_time;
 	RECT big_pic_from = {2,48,641,434};
 
 	GetClientRect(mainPtr,&whole_window);
@@ -244,7 +242,7 @@ void plop_fancy_startup()
 		}
 		else pict_to_draw = ReadDib("blscened/SPIDLOGO.BMP",main_dc);
 
-	cur_time = GetCurrentTime();
+	DWORD cur_time = GetCurrentTime();
 	//gray_out_window(0);
 	old_brush = SelectObject(main_dc,GetStockObject(BLACK_BRUSH));
 	Rectangle(main_dc, whole_window.left,whole_window.top,
@@ -1699,7 +1697,6 @@ void draw_terrain(short	mode)
 			light_area[i][j] = 0;unexplored_area[i][j] = 0;
 			}
 	
-	last_redraw_time = GetCurrentTime();
 	sector_p_in.x = party.outdoor_corner.x + party.i_w_c.x;
 	sector_p_in.y = party.outdoor_corner.y + party.i_w_c.y;
 

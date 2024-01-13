@@ -72,7 +72,6 @@ short dialog_answer;
 POINT store_anim_ul;
 
 Boolean gInBackground = FALSE;
-long start_time;
 Boolean allowed_one_erase = FALSE;
 
 Boolean palette_suspect = FALSE,window_in_front = FALSE;
@@ -125,7 +124,7 @@ short display_mode; // 0 - center 1- ul 2 - ur 3 - dl 4 - dr 5 - small win
 short pixel_depth,old_depth = 8;
 short current_ground, stat_screen_mode;
 short anim_step = -1;
-long anim_ticks;
+int anim_ticks;
 
 // Spell casting globals
 short store_mage, store_priest;
@@ -135,7 +134,7 @@ short pc_last_cast[2][6] = {{1,1,1,1,1,1},{1,1,1,1,1,1}};
 short num_targets_left;
 location spell_targets[8];
 
- long store_mouse;
+static LPARAM store_mouse;
 
 /* Combat globals */
 short which_combat_type,town_type;
@@ -157,8 +156,6 @@ stored_outdoor_maps_type o_maps;
 // Special stuff booleans
 Boolean web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 Boolean sleep_field;
-
-long last_anim_time,last_redraw_time;
 
 /* Windoze stuff globals */
 Boolean cursor_shown = TRUE;
@@ -248,7 +245,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpszCmdPar
 		accel = LoadAccelerators(hInstance, MAKEINTRESOURCE(1));
 		init_buf();
 		load_cursors();
-		last_redraw_time = seed = (short) GetCurrentTime();
+		seed = (short) GetCurrentTime();
 		srand(seed);
 
 		get_reg_data();
