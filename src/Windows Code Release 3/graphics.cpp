@@ -19,28 +19,22 @@
 
 
 extern HWND	mainPtr;
-extern RECT	windRect;
-extern short stat_window,give_delays,overall_mode;
+extern short overall_mode;
 extern short current_spell_range,town_type,store_anim_type;
 extern Boolean in_startup_mode,anim_onscreen,play_sounds,frills_on,startup_loaded,party_in_memory;
 extern short town_size[3];
-extern short anim_step;
 extern party_record_type party;
 extern piles_of_stuff_dumping_type data_store;
-extern talking_record_type talking;
-
 extern Adventurers adven;
 extern big_tr_type  t_d;
 extern outdoor_record_type outdoors[2][2];
 extern current_town_type c_town;
-extern town_item_list  t_i;
 extern unsigned char out[96][96];
 extern unsigned char out_e[96][96];
 extern unsigned char combat_terrain[64][64];
 extern std::reference_wrapper<const effect_pat_type> current_pat;
-extern Boolean web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern short ulx,uly;
-extern location pc_pos[6],pc_dir[6],center;
+extern location pc_pos[6],center;
 extern short which_combat_type,current_pc;
 extern Boolean monsters_going,boom_anim_active,cartoon_happening;
 extern short current_ground;
@@ -48,42 +42,36 @@ extern short terrain_pic[256];
 extern std::array<short, 6> pc_moves;
 extern short num_targets_left;
 extern location spell_targets[8];
-extern short display_mode;
 extern HWND text_sbar,item_sbar,shop_sbar;
 extern RECT sbar_rect,item_sbar_rect,shop_sbar_rect;
-extern RECT talk_area_rect, word_place_rect,startup_top;
+extern const RECT talk_area_rect;
+extern RECT startup_top;
 extern HBRUSH map_brush[25];
 extern HBITMAP map_bitmap[25];
 extern POINT store_anim_ul;
-extern long register_flag,last_redraw_time;
-extern long ed_flag,ed_key;
-extern Boolean registered,ed_reg;
+extern Boolean registered;
 extern Boolean fast_bang;
-
 extern HPALETTE hpal;
-extern PALETTEENTRY ape[256];
 extern HDC main_dc,main_dc2,main_dc3;
-
 extern HFONT fantasy_font,font,small_bold_font,italic_font,underline_font,bold_font;
 extern HCURSOR arrow_curs[3][3], sword_curs, key_curs, target_curs,talk_curs,look_curs;
-
 extern HINSTANCE store_hInstance;
-extern Boolean modeless_exists[18],diff_depth_ok;
-extern short modeless_key[18];
+extern Boolean modeless_exists[18];
 extern HWND modeless_dialogs[18];
 extern piles_of_stuff_dumping_type4 data_store4;
-
 extern const std::array<unsigned char, 200> m_pic_index;
-
 extern HBRUSH bg[14];
-HBITMAP bg_bitmap[14];
+extern int anim_ticks;
+extern std::array<RECT, 6> startup_button;
+
+
 HBRUSH checker_brush = NULL;
-HBITMAP checker_bitmap = NULL,bw_bitmap;
-HBITMAP startup_button_orig,startup_button_g,anim_mess ;
+HBITMAP bw_bitmap;
 
-Boolean done_fancy_startup_once = FALSE;
-
-extern Boolean fry_startup;
+static HBITMAP bg_bitmap[14];
+static HBITMAP checker_bitmap = NULL;
+static HBITMAP startup_button_orig,startup_button_g,anim_mess ;
+static Boolean done_fancy_startup_once = FALSE;
 
 //HRGN clip_region;
 
@@ -95,8 +83,6 @@ short terrain_there[9][9]; // this is an optimization variabel. Keeps track of w
 	// 300 - blackness
 	// -1 - nothign worth saving 
 
-extern long anim_ticks;
-
 // 0 - terrain   1 - buttons   2 - pc stats 
 // 3 - item stats   4 - text bar   5 - text area (not right)
 const RECT win_from_rects[6] = {{0,0,279,351},{0,0,258,37},{0,0,288,115},{0,0,288,143},{0,0,279,21},{0,0,288,0}};
@@ -104,7 +90,6 @@ static RECT win_to_rects[6] = {{5,5,284,356},{5,383,263,420},{0,0,271,116},{0,0,
 
 // 0 - title  1 - button  2 - credits  3 - base button
 const RECT startup_from[4] = {{0,0,602,274},{0,274,301,322},{301,0,579,67},{301,274,341,314}}; ////
-extern std::array<RECT, 6> startup_button;
 	
 static RECT trim_rects[8] = {{0,0,28,5},{0,31,28,36},{0,0,5,36},{24,0,28,36},
 						{0,0,5,5},{24,0,28,5},{24,31,28,36},{0,31,5,36}};  
@@ -211,7 +196,6 @@ void plop_fancy_startup()
 	RECT from_rect = {0,0,350,350},to_rect,whole_window;
 	POINT graphic_ul;
 	HGDIOBJ old_brush;
-	long cur_time;
 	RECT big_pic_from = {2,48,641,434};
 
 	GetClientRect(mainPtr,&whole_window);
@@ -258,7 +242,7 @@ void plop_fancy_startup()
 		}
 		else pict_to_draw = ReadDib("blscened/SPIDLOGO.BMP",main_dc);
 
-	cur_time = GetCurrentTime();
+	DWORD cur_time = GetCurrentTime();
 	//gray_out_window(0);
 	old_brush = SelectObject(main_dc,GetStockObject(BLACK_BRUSH));
 	Rectangle(main_dc, whole_window.left,whole_window.top,
@@ -556,29 +540,24 @@ void draw_start_button(short which_position,short which_button)
 
 void main_button_click(short mode,RECT button_rect)
 {
-	long dummy;
-
-
 	ClipRect(&button_rect);
-
 	draw_buttons(1);
 	if (play_sounds == TRUE)
 		play_sound(37);
-		else Delay(5,&dummy);
+	else
+		Delay(5);
 	draw_buttons(0);			
 	undo_clip();
 }
 
 void arrow_button_click(RECT button_rect)
 {
-	long dummy;
-
 	ClipRect(&button_rect);
-	
 	refresh_stat_areas(1);
 	if (play_sounds == TRUE)
 		play_sound(37);
-		else Delay(5,&dummy);
+	else
+		Delay(5);
 	refresh_stat_areas(0);
 	undo_clip();
 }
@@ -1718,7 +1697,6 @@ void draw_terrain(short	mode)
 			light_area[i][j] = 0;unexplored_area[i][j] = 0;
 			}
 	
-	last_redraw_time = GetCurrentTime();
 	sector_p_in.x = party.outdoor_corner.x + party.i_w_c.x;
 	sector_p_in.y = party.outdoor_corner.y + party.i_w_c.y;
 
@@ -1970,10 +1948,10 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 	targ.x = q;
 	targ.y = r;
 	if ((supressing_some_spaces == TRUE) && 
-		(same_point(targ,ok_space[0]) == FALSE) &&
-		(same_point(targ,ok_space[1]) == FALSE) &&
-		(same_point(targ,ok_space[2]) == FALSE) &&
-		(same_point(targ,ok_space[3]) == FALSE))
+		(not_same_point(targ,ok_space[0])) &&
+		(not_same_point(targ,ok_space[1])) &&
+		(not_same_point(targ,ok_space[2])) &&
+		(not_same_point(targ,ok_space[3])))
 			return;
 	
 					
@@ -2272,7 +2250,6 @@ const RECT c_mixed_square = { 353,169,381,205 };
 	RECT store_rect;
 	
 	RECT terrain_from;
-	long dummy;
 	short del_len,sound_key;
 	short x_adj = 0,y_adj = 0,which_m;
 
@@ -2327,13 +2304,13 @@ const RECT c_mixed_square = { 353,169,381,205 };
 	}
 		play_sound(c_sound_to_play[sound]);
 		if ((sound == 6) && (fast_bang == 0))
-			Delay(12, &dummy);
+			Delay(12);
 
-	Delay(10,&dummy);
+	Delay(10);
 	if (fast_bang == 0) {
 		del_len = PSD[306][6] * 3 + 4;
 		if (play_sounds == FALSE)
-			Delay(del_len, &dummy);
+			Delay(del_len);
 		}
 	redraw_terrain();
 	if ((cartoon_happening == FALSE) && (overall_mode > 9) && (overall_mode != 35) && (overall_mode != 36) && (overall_mode != 50))
@@ -2412,7 +2389,6 @@ void draw_targeting_line(POINT where_curs)
 {
 	location which_space,store_loc;
 	short i,j,k,l;
-	long dummy;
 	RECT redraw_rect,redraw_rect2,terrain_rect = {0,0,279,351},target_rect;
 	location from_loc;
 	RECT on_screen_terrain_area = {18, 18, 269,341};
@@ -2510,7 +2486,7 @@ void draw_targeting_line(POINT where_curs)
 				SelectObject(main_dc,store_pen);
 				DeleteObject(white_pen);
 
-				Delay(4,&dummy);
+				Delay(4);
 
 				InflateRect(&redraw_rect2,5,5);
 				redraw_partial_terrain(redraw_rect2);

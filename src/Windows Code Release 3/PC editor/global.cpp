@@ -5,13 +5,6 @@
 
 extern short give_delays;
 
-Boolean same_point(location p1,location p2)
-{
-	if ((p1.x == p2.x) & (p1.y == p2.y))
-		return TRUE;
-		else return FALSE;
-}
-
 short s_pow(short x,short y)
 {
 	return (short) pow((double) x, (double) y);
@@ -30,25 +23,8 @@ short ex_abs(short x)
 		else return x;
 }
 
-void Delay(short val,long *dummy)
-{
-	long then,now,wait_val;
-
-	wait_val = (long) val;
-	wait_val = wait_val * 16;
-	then = (long)GetCurrentTime();
-	now = then;
-	while (now - then < wait_val)   {
-		now = (long) GetCurrentTime();
-		}
-}
-
 void pause(short length)
 {
-	long dummy,len;
-	
-	len = (long) length;
-	
 	if (give_delays == 0)
-		Delay(len, &dummy);
+		Delay(length);
 }

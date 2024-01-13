@@ -13,6 +13,7 @@
 #include "edsound.h"
 #include "boe/scenario.hpp"
 #include "boe/compatibility.hpp"
+#include "boe/registration.hpp"
 #include "scened_globals.hpp"
 
 
@@ -2575,7 +2576,7 @@ void build_scenario()
 		reset_pwd();
 		save_scenario();	
 		}
-	//Delay(200,&dummy);
+	//Delay(200);
 	load_town(0);
 	augment_terrain(cur_out);
 	update_item_menu();
@@ -2769,28 +2770,4 @@ short enter_password()
 	cd_kill_dialog(823,0);
 
 	return i;
-}
-
-short wd_to_pwd(char *str)
-{
-	char pwd[8] = "aaaaaa";
-	short i;
-	long val = 0,pow[6] = {1,10,100,1000,9999,99999};
-	
-	for (i = 0; i < 6; i++) {
-		if (str[i] == 0) 
-			i = 6;
-			else {
-				if ((str[i] >= 65) && (str[i] <= 90))
-					pwd[i] = str[i] + 32;
-				else if ((str[i] >= 48) && (str[i] <= 57))
-					pwd[i] = str[i] + 49;
-				else if ((str[i] >= 97) && (str[i] <= 122))
-					pwd[i] = str[i];
-				}
-		}
-	for (i = 0; i < 6; i++)
-		val = val + pow[i] * (long) (pwd[i] - 97);
-	val = val % 30000;
-	return (short) val;
 }

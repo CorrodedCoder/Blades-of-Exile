@@ -330,24 +330,88 @@ bool pc_affect(pc_record_type& pc, affect type, short how_much)
 
 short pc_carry_weight(const pc_record_type& pc)
 {
-	short i, storage = 0;
+	short storage = 0;
 	Boolean airy = BOE_FALSE, heavy = BOE_FALSE;
 
-	for (i = 0; i < 24; i++)
-		if (pc.items[i].variety > item_variety::None) {
-			storage += item_weight(pc.items[i]);
-			if (pc.items[i].ability == 44)
+	for (const auto& item: pc.items)
+	{
+		if (item.variety > item_variety::None)
+		{
+			storage += item_weight(item);
+			if (item.ability == 44)
+			{
 				airy = BOE_TRUE;
-			if (pc.items[i].ability == 45)
+			}
+			if (item.ability == 45)
+			{
 				heavy = BOE_TRUE;
+			}
 		}
+	}
 	if (airy == BOE_TRUE)
+	{
 		storage -= 30;
+	}
 	if (heavy == BOE_TRUE)
+	{
 		storage += 30;
+	}
 	if (storage < 0)
+	{
 		storage = 0;
+	}
 	return storage;
+}
+
+// returns 1 if OK, 2 if no room, 4 if too heavy, 5 if too many of item
+short pc_could_accept(const pc_record_type& pc, const item_record_type& item)
+{
+	if ((item.variety != item_variety::Gold) && (item.variety != item_variety::Food))
+	{
+		for (const auto& pc_item: pc.items)
+		{
+			if ((pc_item.variety > item_variety::None) && (pc_item.type_flag == item.type_flag) && (pc_item.charges > 123))
+			{
+				return 5;
+			}
+		}
+
+		if (pc_has_space(pc) == static_cast<short>(std::size(pc.items)))
+		{
+			return 2;
+		}
+
+		if (item_weight(item) > pc_amount_can_carry(pc) - pc_carry_weight(pc))
+		{
+			return 4;
+		}
+	}
+	return 1;
+}
+
+// Returns true if the item removed was a poisoned weapon
+bool pc_remove_item(pc_record_type& pc, short which_item)
+{
+	bool poison_removed = false;
+	if ((pc.weap_poisoned == which_item) && (pc.gaffect(affect::PoisonedWeapon) > 0))
+	{
+		pc.gaffect(affect::PoisonedWeapon) = 0;
+		poison_removed = true;
+	}
+	if ((pc.weap_poisoned > which_item) && (pc.gaffect(affect::PoisonedWeapon) > 0))
+	{
+		pc.weap_poisoned--;
+	}
+
+	for (short i = which_item; i < 23; i++)
+	{
+		pc.items[i] = pc.items[i + 1];
+		pc.equip[i] = pc.equip[i + 1];
+	}
+	pc.items[23] = item_record_type{};
+	pc.equip[23] = BOE_FALSE;
+
+	return poison_removed;
 }
 
 short pc_luck(const pc_record_type& pc)

@@ -2194,7 +2194,7 @@ void sanctify_space(location where)
 	location l = {25,13};
 
 		for (i = 0; i < 50; i++)
-			if ((same_point(where,c_town.town.special_locs[i]) == TRUE) &&
+			if ((same_point(where,c_town.town.special_locs[i])) &&
 				(c_town.town.spec_id[i] >= 0)) {
 				if (c_town.town.specials[c_town.town.spec_id[i]].type == 24) 
 					run_special(16,2,c_town.town.spec_id[i],where,&s1,&s2,&s3);

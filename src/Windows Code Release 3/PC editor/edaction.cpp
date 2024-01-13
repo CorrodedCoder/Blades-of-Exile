@@ -1,5 +1,6 @@
 #include <Windows.h>
 #include <array>
+#include <string>
 #include <cstdio>
 
 #include "boe/pc.hpp"
@@ -18,7 +19,7 @@
 extern party_record_type party;
 extern Adventurers adven;
 extern Boolean dialog_not_toast,ed_reg;
-extern long ed_flag;
+extern int ed_flag;
 extern HWND mainPtr;
 extern Boolean file_in_mem;
 extern short dialog_answer;
@@ -126,25 +127,18 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 
 void flash_rect(RECT to_flash)
 {
-	long dummy;
-	HDC hdc;
-
-	hdc = GetDC(mainPtr);
+	HDC hdc = GetDC(mainPtr);
 	SetViewportOrgEx(hdc,ulx,uly,nullptr);
 	InvertRect (hdc,&to_flash);
 	play_sound(37);
-	Delay(5,&dummy);
+	Delay(5);
 	InvertRect (hdc,&to_flash);
 	fry_dc(mainPtr,hdc);
 }
 
 void edit_gold_or_food_event_filter (short item_hit)
 {
-	char get_text[256];
-	
-	cd_get_text_edit_str((store_which_to_edit == 0) ? 1012 : 947,(char *) get_text);
-	dialog_answer = 0;
-	sscanf(get_text,"%hd",&dialog_answer);
+	dialog_answer = std::stoi(cd_get_text_edit_str((store_which_to_edit == 0) ? 1012 : 947));
 	dialog_not_toast = FALSE;
 }
 
@@ -183,10 +177,7 @@ void edit_gold_or_food(short which_to_edit)
 
 void edit_day_event_filter (short item_hit)
 {
-	char get_text[256];
-	cd_get_text_edit_str(917,(char *) get_text);
-	dialog_answer = 0;
-	sscanf(get_text,"%hd",&dialog_answer);
+	dialog_answer = std::stoi(cd_get_text_edit_str(917));
 	dialog_not_toast = FALSE;
 }
 
@@ -201,7 +192,7 @@ void edit_day()
 		ModalDialog();	
 	cd_kill_dialog(917,0);
 	dialog_answer = boe_clamp(dialog_answer,0,500);
-	party.age = (long) (3700) * (long) (dialog_answer);
+	party.age = (int) (3700) * (int) (dialog_answer);
 }
 
 
@@ -581,12 +572,7 @@ void give_reg_info()
 
 void do_registration_event_filter (short item_hit)
 {
-	char get_text[256];
-	
-	cd_get_text_edit_str(1075,(char *) get_text);
-	dialog_answer = 0;
-	sscanf(get_text,"%hd",&dialog_answer);
-		
+	dialog_answer = std::stoi(cd_get_text_edit_str(1075));
 	dialog_not_toast = FALSE;
 }
 
@@ -624,12 +610,7 @@ void do_registration()
 
 void edit_xp_event_filter (short item_hit)
 {
-	char get_text[256];
-	
-	cd_get_text_edit_str(1024,(char *) get_text);
-	dialog_answer = 0;
-	sscanf(get_text,"%hd",&dialog_answer);
-
+	dialog_answer = std::stoi(cd_get_text_edit_str(1024));
 	dialog_not_toast = FALSE;
 }
 

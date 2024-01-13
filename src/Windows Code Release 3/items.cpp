@@ -21,6 +21,39 @@
 #include "boe/item.hpp"
 #include "game_globals.hpp"
 
+static const short c_treas_chart[5][6]{
+	{0,-1,-1,-1,-1,-1},
+	{1,-1,-1,-1,-1,-1},
+	{2,1,1,-1,-1,-1},
+	{3,2,1,1,-1,-1},
+	{4,3,2,2,1,1}
+};
+static const short c_treas_odds[5][6]{
+	{10,0,0,0,0,0},
+	{50,0,0,0,0,0},
+	{60,50,40,0,0,0},
+	{100,90,80,70,0,0},
+	{100,80,80,75,75,75}
+};
+static const short c_id_odds[21]{
+	0,10,15,20,25,30,35,39,43,47, 
+	51,55,59,63,67,71,73,75,77,79,81
+};
+static const short c_max_mult[5][10]{
+	{0,0,0,0,0,0,0,0,0,1},
+	{0,0,1,1,1,1,2,3,5,20},
+	{0,0,1,1,2,2,4,6,10,25},
+	{5,10,10,10,15,20,40,80,100,100},
+	{25,25,50,50,50,100,100,100,100,100}
+};
+static const short c_min_chart[5][10]{
+	{0,0,0,0,0,0,0,0,0,1},
+	{0,0,0,0,0,0,0,0,5,20},
+	{0,0,0,0,1,1,5,10,15,40},
+	{10,10,15,20,20,30,40,50,75,100},
+	{50,100,100,100,100,200,200,200,200,200}
+};
+
 extern short stat_window,overall_mode,current_cursor,which_combat_type,current_pc;
 extern party_record_type party;
 extern talking_record_type talking;
@@ -55,7 +88,7 @@ short item_array[130]; // NUM_TOWN_ITEMS + a bit
 
 short answer_given = 1;
 
-char *store_str;
+static char *store_str;
 short store_dnum;
 
 HWND test_dlog3;
@@ -228,54 +261,32 @@ short take_food(short amount,Boolean print_result)
 }
 
 // returns 1 if OK, 2 if no room, 3 if not enough cash, 4 if too heavy, 5 if too many of item
-short pc_ok_to_buy(short pc_num,short cost,const item_record_type& item)
+short pc_ok_to_buy(const pc_record_type& pc, short cost, const item_record_type& item)
 {
-	short i;
-	
-	if ((item.variety != item_variety::Gold) && (item.variety != item_variety::Food)) {
-		for (i = 0; i < 24; i++)
-			if ((adven[pc_num].items[i].variety > item_variety::None) && (adven[pc_num].items[i].type_flag == item.type_flag)
-				&& (adven[pc_num].items[i].charges > 123))
-					return 5;
-
-		if (pc_has_space(adven[pc_num]) == 24)
-			return 2;
-		if (item_weight(item) > 
-		  pc_amount_can_carry(adven[pc_num]) - pc_carry_weight(adven[pc_num])) {
-	  		return 4;
-	  		}	
-	  	}
-	if (take_gold(cost,FALSE) == FALSE)
-		return 3;
-	return 1;
-
-
+	const short could_accept = pc_could_accept(pc, item);
+	if (could_accept == 1)
+	{
+		if (take_gold(cost, FALSE) == FALSE)
+			return 3;
+	}
+	return could_accept;
 }
 
 void take_item(short pc_num,short which_item)
 //short pc_num,which_item;  // if which_item > 30, don't update stat win, item is which_item - 30
 {
-	short i;
 	Boolean do_print = TRUE;
 	
-	if (which_item >= 30) {
+	if (which_item >= 30)
+	{
 		do_print = FALSE;
 		which_item -= 30;
-		}
-		
-	if ((adven[pc_num].weap_poisoned == which_item) && (adven[pc_num].gaffect(affect::PoisonedWeapon) > 0)) {
-			add_string_to_buf("  Poison lost.           ");
-			adven[pc_num].gaffect(affect::PoisonedWeapon) = 0;
-		}
-	if ((adven[pc_num].weap_poisoned > which_item) && (adven[pc_num].gaffect(affect::PoisonedWeapon) > 0)) 
-		adven[pc_num].weap_poisoned--;
-		
-	for (i = which_item; i < 23; i++) {
-		adven[pc_num].items[i] = adven[pc_num].items[i + 1];
-		adven[pc_num].equip[i] = adven[pc_num].equip[i + 1];
-		}
-	adven[pc_num].items[23] = item_record_type{};
-	adven[pc_num].equip[23] = FALSE;
+	}
+
+	if (pc_remove_item(adven[pc_num], which_item))
+	{
+		add_string_to_buf("  Poison lost.           ");
+	}
 	
 	if ((stat_window == pc_num) && (do_print == TRUE))
 		put_item_screen(stat_window,1);
@@ -295,132 +306,96 @@ void remove_charge(short pc_num,short which_item)
 
 }
 
-void enchant_weapon(short pc_num,short item_hit,short enchant_type,short new_val)
-{
-	std::string store_name;
-
-	////
-	if (is_magic(adven[pc_num].items[item_hit]) ||
-		(adven[pc_num].items[item_hit].ability != 0))
-			return;
-	adven[pc_num].items[item_hit].item_properties |= 4;
-	switch (enchant_type) {
-		case 0:
-			store_name = std::format("{} (+1)",adven[pc_num].items[item_hit].full_name);
-			adven[pc_num].items[item_hit].bonus++;
-			adven[pc_num].items[item_hit].value = new_val;
-			break;
-		case 1:
-			store_name = std::format("{} (+2)",adven[pc_num].items[item_hit].full_name);
-			adven[pc_num].items[item_hit].bonus += 2;
-			adven[pc_num].items[item_hit].value = new_val;
-			break;
-		case 2:
-			store_name = std::format("{} (+3)",adven[pc_num].items[item_hit].full_name);
-			adven[pc_num].items[item_hit].bonus += 3;
-			adven[pc_num].items[item_hit].value = new_val;
-			break;
-		case 3:
-			store_name = std::format("{} (F)",adven[pc_num].items[item_hit].full_name);
-			adven[pc_num].items[item_hit].ability = 110;
-			adven[pc_num].items[item_hit].ability_strength = 5;
-			adven[pc_num].items[item_hit].charges = 8;
-			break;
-		case 4:
-			store_name = std::format("{} (F!)",adven[pc_num].items[item_hit].full_name);
-			adven[pc_num].items[item_hit].value = new_val;
-			adven[pc_num].items[item_hit].ability = 1;
-			adven[pc_num].items[item_hit].ability_strength = 5;
-			break;
-		case 5:
-			store_name = std::format("{} (+5)",adven[pc_num].items[item_hit].full_name);
-			adven[pc_num].items[item_hit].value = new_val;
-			adven[pc_num].items[item_hit].bonus += 5;
-			break;
-		case 6:
-			store_name = std::format("{} (B)",adven[pc_num].items[item_hit].full_name);
-			adven[pc_num].items[item_hit].bonus++;
-			adven[pc_num].items[item_hit].ability = 71;
-			adven[pc_num].items[item_hit].ability_strength = 5;
-			adven[pc_num].items[item_hit].magic_use_type = 0;
-			adven[pc_num].items[item_hit].charges = 8;
-			break;
-		default:
-			store_name = adven[pc_num].items[item_hit].full_name;
-			break;
-		}
-	if (adven[pc_num].items[item_hit].value > 15000)
-		adven[pc_num].items[item_hit].value = 15000;
-	if (adven[pc_num].items[item_hit].value < 0)
-		adven[pc_num].items[item_hit].value = 15000;
-	strcpy(adven[pc_num].items[item_hit].full_name,store_name.c_str());
-}
-
-void equip_item(short pc_num,short item_num)
+void equip_item(short pc_num, short item_num)
 {
 	short num_equipped_of_this_type = 0;
 	short num_hands_occupied = 0;
 	short i;
 	short equip_item_type = 0;
-	
-if ((overall_mode == 10) && (adven[pc_num].items[item_num].variety == item_variety::Food))
-		add_string_to_buf("Equip: Not in combat");
-	else {
 
+	if ((overall_mode == 10) && (adven[pc_num].items[item_num].variety == item_variety::Food))
+	{
+		add_string_to_buf("Equip: Not in combat");
+	}
+	else
+	{
 		// unequip
-	if (adven[pc_num].equip[item_num] == TRUE) {
-		if ((adven[pc_num].equip[item_num] == TRUE) &&
-			is_cursed(adven[pc_num].items[item_num]))
-			add_string_to_buf("Equip: Item is cursed.           ");
-  			else {
+		if (adven[pc_num].equip[item_num] == TRUE)
+		{
+			if ((adven[pc_num].equip[item_num] == TRUE) && is_cursed(adven[pc_num].items[item_num]))
+			{
+				add_string_to_buf("Equip: Item is cursed.           ");
+			}
+			else
+			{
 				adven[pc_num].equip[item_num] = FALSE;
 				add_string_to_buf("Equip: Unequipped");
-				if ((adven[pc_num].weap_poisoned == item_num) && (adven[pc_num].gaffect(affect::PoisonedWeapon) > 0)) {
-						add_string_to_buf("  Poison lost.           ");
-						adven[pc_num].gaffect(affect::PoisonedWeapon) = 0;
-					}
+				if ((adven[pc_num].weap_poisoned == item_num) && (adven[pc_num].gaffect(affect::PoisonedWeapon) > 0))
+				{
+					add_string_to_buf("  Poison lost.           ");
+					adven[pc_num].gaffect(affect::PoisonedWeapon) = 0;
+				}
 			}
 		}
-
-	else {  // equip
-		if (!equippable(adven[pc_num].items[item_num].variety))
-			add_string_to_buf("Equip: Can't equip this item.");
-				else {
-					for (i = 0; i < 24; i++) 
-						if (adven[pc_num].equip[i] == TRUE) {
-							if (adven[pc_num].items[i].variety == adven[pc_num].items[item_num].variety)
-								num_equipped_of_this_type++;
-							num_hands_occupied = num_hands_occupied + num_hands_to_use(adven[pc_num].items[i].variety);
+		else // equip
+		{
+			if (!equippable(adven[pc_num].items[item_num].variety))
+			{
+				add_string_to_buf("Equip: Can't equip this item.");
+			}
+			else
+			{
+				for (i = 0; i < 24; i++)
+				{
+					if (adven[pc_num].equip[i] == TRUE)
+					{
+						if (adven[pc_num].items[i].variety == adven[pc_num].items[item_num].variety)
+						{
+							num_equipped_of_this_type++;
 						}
-						
-						
-					equip_item_type = excluding_types(adven[pc_num].items[item_num].variety);
-					// Now if missile is already equipped, no more missiles
-					if (equip_item_type > 0) {
-						for (i = 0; i < 24; i++) 
-							if ((adven[pc_num].equip[i] == TRUE) && (excluding_types(adven[pc_num].items[i].variety) == equip_item_type)) {
-								add_string_to_buf("Equip: You have something of");
-								add_string_to_buf("  this type equipped.");
-								return;
-								}
-						}
-
-					if (is_combat() && (adven[pc_num].items[item_num].variety == item_variety::Armor))
-						add_string_to_buf("Equip: Not armor in combat");
-						else if ((2 - num_hands_occupied) < num_hands_to_use(adven[pc_num].items[item_num].variety))
-							add_string_to_buf("Equip: Not enough free hands");
-							else if (num_that_can_equip(adven[pc_num].items[item_num].variety) <= num_equipped_of_this_type)
-								add_string_to_buf("Equip: Can't equip another");
-								else {
-									adven[pc_num].equip[item_num] = TRUE;
-									add_string_to_buf("Equip: OK");
-									}
+						num_hands_occupied = num_hands_occupied + num_hands_to_use(adven[pc_num].items[i].variety);
 					}
-			
+				}
+
+				equip_item_type = excluding_types(adven[pc_num].items[item_num].variety);
+				// Now if missile is already equipped, no more missiles
+				if (equip_item_type > 0)
+				{
+					for (i = 0; i < 24; i++)
+					{
+						if ((adven[pc_num].equip[i] == TRUE) && (excluding_types(adven[pc_num].items[i].variety) == equip_item_type))
+						{
+							add_string_to_buf("Equip: You have something of");
+							add_string_to_buf("  this type equipped.");
+							return;
+						}
+					}
+				}
+
+				if (is_combat() && (adven[pc_num].items[item_num].variety == item_variety::Armor))
+				{
+					add_string_to_buf("Equip: Not armor in combat");
+				}
+				else if ((2 - num_hands_occupied) < num_hands_to_use(adven[pc_num].items[item_num].variety))
+				{
+					add_string_to_buf("Equip: Not enough free hands");
+				}
+				else if (num_that_can_equip(adven[pc_num].items[item_num].variety) <= num_equipped_of_this_type)
+				{
+					add_string_to_buf("Equip: Can't equip another");
+				}
+				else
+				{
+					adven[pc_num].equip[item_num] = TRUE;
+					add_string_to_buf("Equip: OK");
+				}
+			}
 		}
 	}
 	if (stat_window == pc_num)
-		put_item_screen(stat_window,1);
+	{
+		put_item_screen(stat_window, 1);
+	}
 }
 
 
@@ -898,7 +873,7 @@ static short display_item(location from_loc,short pc_num,short mode, bool check_
 				 ((dist(from_loc,t_i.items[i].item_loc) <= 4) || (is_combat() && (which_combat_type == 0)))
 				  && (can_see(from_loc,t_i.items[i].item_loc,0) < 5))) &&
 				  (is_contained(t_i.items[i]) == check_container) &&
-				  (!check_container || (same_point(t_i.items[i].item_loc,from_loc) == TRUE))) 
+				  (!check_container || (same_point(t_i.items[i].item_loc,from_loc)))) 
 			{
 			 	item_array[array_position] = i;
 				array_position++;
@@ -1059,11 +1034,7 @@ short select_pc(short active_only,short free_inv_only)
 
 void get_num_of_items_event_filter (short item_hit)
 {
-	char get_text[256];
-	
-	cd_get_text_edit_str(1012, get_text);
-	dialog_answer = 0;
-	sscanf(get_text,"%hd",&dialog_answer);
+	dialog_answer = std::stoi(cd_get_text_edit_str(1012));
 	dialog_not_toast = FALSE;
 }
 
@@ -1227,28 +1198,6 @@ void place_treasure(location where,short level,short loot,short mode)
 
 	item_record_type new_item;
 	short amt,r1,i,j;
-	short treas_chart[5][6] = {{0,-1,-1,-1,-1,-1},
-								{1,-1,-1,-1,-1,-1},
-								{2,1,1,-1,-1,-1},
-								{3,2,1,1,-1,-1},
-								{4,3,2,2,1,1}};
-	short treas_odds[5][6] = {{10,0,0,0,0,0},
-								{50,0,0,0,0,0},
-								{60,50,40,0,0,0},
-								{100,90,80,70,0,0},
-								{100,80,80,75,75,75}};
-	short id_odds[21] = {0,10,15,20,25,30,35,39,43,47,
-							51,55,59,63,67,71,73,75,77,79,81};
-	short max_mult[5][10] = {{0,0,0,0,0,0,0,0,0,1},
-							{0,0,1,1,1,1,2,3,5,20},
-							{0,0,1,1,2,2,4,6,10,25},
-							{5,10,10,10,15,20,40,80,100,100},
-							{25,25,50,50,50,100,100,100,100,100}};
-	short min_chart[5][10] = {{0,0,0,0,0,0,0,0,0,1},
-						{0,0,0,0,0,0,0,0,5,20},
-						{0,0,0,0,1,1,5,10,15,40},
-						{10,10,15,20,20,30,40,50,75,100},
-						{50,100,100,100,100,200,200,200,200,200}};
 	short max,min;
 	
 	if (loot == 1)
@@ -1270,11 +1219,11 @@ void place_treasure(location where,short level,short loot,short mode)
 		}
 	for (j = 0; j < 5; j++) {
 		r1 = rand_short(0,100);
-		if ((treas_chart[loot][j] >= 0) && (r1 <= treas_odds[loot][j] + adventurers_luck_total(adven))) {
+		if ((c_treas_chart[loot][j] >= 0) && (r1 <= c_treas_odds[loot][j] + adventurers_luck_total(adven))) {
 			r1 = rand_short(0,9);
-			min = min_chart[treas_chart[loot][j]][r1];
+			min = c_min_chart[c_treas_chart[loot][j]][r1];
 			r1 = rand_short(0,9);
-			max = (min + level + (2 * (loot - 1)) + (adventurers_luck_total(adven) / 3)) * max_mult[treas_chart[loot][j]][r1];
+			max = (min + level + (2 * (loot - 1)) + (adventurers_luck_total(adven) / 3)) * c_max_mult[c_treas_chart[loot][j]][r1];
 			if (rand_short(0,1000) == 500) {
 				max = 10000;
 				min = 100;
@@ -1287,11 +1236,11 @@ void place_treasure(location where,short level,short loot,short mode)
 				max = 200;
 				
 				
-				new_item = return_treasure(treas_chart[loot][j],level,mode);
+				new_item = item_source.treasure(c_treas_chart[loot][j],level,mode);
 				if ((item_val(new_item) < min) || (item_val(new_item) > max)) {
-					new_item = return_treasure(treas_chart[loot][j],level,mode);
+					new_item = item_source.treasure(c_treas_chart[loot][j],level,mode);
 					if ((item_val(new_item) < min) || (item_val(new_item) > max)) {
-						new_item = return_treasure(treas_chart[loot][j],level,mode);
+						new_item = item_source.treasure(c_treas_chart[loot][j],level,mode);
 						if (item_val(new_item) > max)
 							new_item.variety = item_variety::None;
 						}
@@ -1310,7 +1259,7 @@ void place_treasure(location where,short level,short loot,short mode)
 			// if forced, keep dipping until a treasure comes uo
 			if ((mode == 1)	&& (max >= 20)) {
 				do
-					new_item = return_treasure(treas_chart[loot][j],level,mode);
+					new_item = item_source.treasure(c_treas_chart[loot][j],level,mode);
 					while ((new_item.variety == item_variety::None) || (item_val(new_item) > max));
 				}
 
@@ -1321,7 +1270,7 @@ void place_treasure(location where,short level,short loot,short mode)
 			if (new_item.variety != item_variety::None) {
 				for (i = 0; i < 6; i++)
 					if ((adven[i].main_status == status_type::Normal) 
-						&& (rand_short(0,100) < id_odds[adven[i].skills[skill::ItemLore]]))
+						&& (rand_short(0,100) < c_id_odds[adven[i].skills[skill::ItemLore]]))
 							new_item.item_properties = new_item.item_properties | 1;
 				place_item(new_item,where,FALSE);
 				}			
@@ -1330,46 +1279,6 @@ void place_treasure(location where,short level,short loot,short mode)
 
 }
 
-item_record_type return_treasure(short loot,short level,short mode)
-//short mode; // 0 - normal  1 - force
-{
-	item_record_type treas;
-	short which_treas_chart[48] = {1,1,1,1,1,2,2,2,2,2,
-								3,3,3,3,3,2,2,2,4,4,
-								4,4,5,5,5,6,6,6,7,7,
-								7,8,8,9,9,10,11,12,12,13,
-								13,14, 9,10,11,9,10,11};
-	short r1;
-	
-	treas.variety = item_variety::None;
-	r1 = rand_short(0,41);
-	if (loot >= 3)
-		r1 += 3;
-	if (loot == 4)
-		r1 += 3;
-	switch (which_treas_chart[r1]) {
-		case 1: treas = item_source.food(); break;
-		case 2: treas = item_source.weapon(loot,level);	break;
-		case 3: treas = item_source.armor(loot,level); break;
-		case 4: treas = item_source.shield(loot); break;
-		case 5: treas = item_source.helm(loot); break;
-		case 6: treas = item_source.missile(loot); break;
-		case 7: treas = item_source.potion(loot); break;
-		case 8: treas = item_source.scroll(loot); break;
-		case 9: treas = item_source.wand(loot); break;
-		case 10: treas = item_source.ring(loot); break;
-		case 11: treas = item_source.necklace(loot); break;
-		case 12: treas = item_source.poison(loot,level); break;
-		case 13: treas = item_source.gloves(loot); break;
-		case 14: treas = item_source.boots(loot); break;
-		} 
-	if (treas.variety == item_variety::None)
-		treas.value = 0;	
-	return treas;
-
-}
-
-
 void refresh_store_items()
 {
 	short i,j;
@@ -1377,7 +1286,7 @@ void refresh_store_items()
 	
 	for (i = 0; i < 5; i++)
 		for (j = 0; j < 10; j++) {
-			party.magic_store_items[i][j] = return_treasure(loot_index[j],7,1);
+			party.magic_store_items[i][j] = item_source.treasure(loot_index[j],7,1);
 			if ((party.magic_store_items[i][j].variety == item_variety::Gold) ||
 				(party.magic_store_items[i][j].variety == item_variety::Food))
 				party.magic_store_items[i][j] = item_record_type{};
@@ -1389,7 +1298,7 @@ void refresh_store_items()
 
 void get_text_response_event_filter (short item_hit)
 {
-	cd_get_text_edit_str(store_dnum, store_str);
+	strcpy(store_str, cd_get_text_edit_str(store_dnum).c_str());
 	dialog_not_toast = FALSE;
 }
 

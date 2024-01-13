@@ -1273,7 +1273,7 @@ short get_town_spec_id(location where)
 {
 	short i = 0;
 
-	while ((same_point(c_town.town.special_locs[i],where) == FALSE)	&& (i < 50))
+	while ((not_same_point(c_town.town.special_locs[i],where))	&& (i < 50))
 		i++;
 	return i;
 }

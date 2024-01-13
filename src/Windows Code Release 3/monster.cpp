@@ -652,7 +652,7 @@ Boolean rand_move(char i)
 		return outdoor_move_monster(i,store_loc);
 		}
 		
-	if (same_point(monster_targs[i],c_town.monst.dudes[i].m_loc) == TRUE)
+	if (same_point(monster_targs[i],c_town.monst.dudes[i].m_loc))
 		monster_targs[i].x = 0;
 			
 	// FIrst, try to move to monst_targs. If it don't work, then we'll shift.
@@ -818,7 +818,7 @@ location find_clear_spot(location from_where,short mode)
 		if ((loc_off_act_area(loc) == FALSE) && is_not_blocked(loc)
 			&& (can_see(from_where,loc,1) == 0)
 			&& (is_not_combat() || (pc_there(loc) == 6))
-			&& (is_not_town() || (same_point(loc,c_town.p_loc) == FALSE))
+			&& (is_not_town() || (not_same_point(loc,c_town.p_loc)))
 			 && (!(misc_i[loc.x][loc.y] & 248)) &&
 			(!(c_town.explored[loc.x][loc.y] & 254))) {
 				if ((mode == 0) || ((mode == 1) && (adjacent(from_where,loc) == TRUE)))
@@ -834,7 +834,7 @@ short pc_there(location where)
 	short i;
 
 	for (i = 0; i < 6; i++)
-			if ((same_point(where,pc_pos[i]) == TRUE) && (adven[i].main_status == status_type::Normal))
+			if ((same_point(where,pc_pos[i])) && (adven[i].main_status == status_type::Normal))
 				return i;
 	return 6;	
 }
@@ -854,7 +854,7 @@ Boolean outdoor_move_monster(short num,location dest)
 {
 
 	if ((outd_is_blocked(dest) == FALSE) && (outd_is_special(dest) == FALSE) && 
-		(same_point(dest, party.p_loc) != TRUE) && 
+		(not_same_point(dest, party.p_loc)) &&
 		((out[dest.x][dest.y] > 21) || (out[dest.x][dest.y] < 5))) {
 		party.out_c[num].direction = 
 				set_direction(party.out_c[num].m_loc, dest);
@@ -957,7 +957,7 @@ void monst_inflict_fields(short which_monst)
 				is_barrel(where_check.x,where_check.y) )
 				for (k = 0; k < NUM_TOWN_ITEMS; k++)
 					if ((t_i.items[k].variety > item_variety::None) && is_contained(t_i.items[k])
-					&& (same_point(t_i.items[k].item_loc,where_check) == TRUE))
+					&& (same_point(t_i.items[k].item_loc,where_check)))
 						t_i.items[k].item_properties = t_i.items[k].item_properties & 247;
 			take_crate(where_check.x,where_check.y);
 			take_barrel(where_check.x,where_check.y);

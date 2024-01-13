@@ -27,6 +27,7 @@
 #include "dlogtool.h"
 #include "graphutl.h"
 #include "game_globals.hpp"
+#include "boe/item.hpp"
 
 static std::array<RECT, 7> bottom_buttons;
 static std::array<RECT, 10> town_buttons;
@@ -79,14 +80,14 @@ std::array<short, 9> item_bottom_button_active{0,0,0,0,0, 0,1,1,1};
 
 static RECT pc_help_button,pc_area_rect,item_area_rect;
 
-static short num_out_moves = 0;
+static short num_out_moves;
 static short store_drop_item;
 static short current_switch = 6;
 out_wandering_type store_wandering_special;
 short store_shop_type;
 
-static short debug_ok = 0;
-std::array<short, 8> store_selling_values{ {0,0,0,0,0,0,0,0} };
+static short debug_ok;
+std::array<short, 8> store_selling_values;
 
 extern short overall_mode, stat_window;
 extern std::array<short, 6> pc_moves;
@@ -812,7 +813,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 						else find_direction_from = 1;
 					
 						for (i = 0; i < 8; i++) 
-							if (same_point(party.loc_in_sec,outdoors[party.i_w_c.x][party.i_w_c.y].exit_locs[i]) == TRUE) {	
+							if (same_point(party.loc_in_sec,outdoors[party.i_w_c.x][party.i_w_c.y].exit_locs[i])) {	
 								which_t = outdoors[party.i_w_c.x][party.i_w_c.y].exit_dests[i];
 								if (which_t >= 0)
 									start_town_mode(outdoors[party.i_w_c.x][party.i_w_c.y].exit_dests[i], find_direction_from);
@@ -1242,7 +1243,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 											else {
 												play_sound(51);
 												ASB("Your item is now enchanted.");
-												enchant_weapon(stat_window,item_hit,shop_identify_cost,store_selling_values[i]);
+												enchant_weapon(adven[stat_window].items[item_hit], shop_identify_cost, store_selling_values[i]);
 												}
 										break;
 									}
@@ -1482,8 +1483,13 @@ void check_cd_event(HWND hwnd,UINT message,UINT wparam,LONG lparam)
 	switch (message) {
 		case WM_COMMAND:
 			// pare out command messages sent from text box
-			if (wparam == 150)
-         	break;
+			// CC: See https://github.com/CorrodedCoder/Blades-of-Exile/issues/58
+			// In essence we are stripping off any EN_* notification codes
+			// so that we reject all messages coming from the text box.
+			if (LOWORD(wparam) == 150)
+			{
+				break;
+			}
 			cd_find_dlog(hwnd,&wind_hit,&item_hit); // item_hit is dummy
 			item_hit = (short) wparam;
 			break;
@@ -1553,14 +1559,11 @@ void check_cd_event(HWND hwnd,UINT message,UINT wparam,LONG lparam)
 
 void flash_rect(RECT to_flash)
 {
-	long dummy;
-	HDC hdc;
-
-	hdc = GetDC(mainPtr);
+	HDC hdc = GetDC(mainPtr);
 	SetViewportOrgEx(hdc,ulx,uly,nullptr);
 	InvertRect (hdc,&to_flash);
 	play_sound(37);
-	Delay(5,&dummy);
+	Delay(5);
 	InvertRect (hdc,&to_flash);
 	fry_dc(mainPtr,hdc);
 }
@@ -1568,14 +1571,12 @@ void flash_rect(RECT to_flash)
 
 void button_flash_rect(RECT to_flash)
 {
-	long dummy;
-	HDC hdc;
-
-	hdc = GetDC(mainPtr);
+	HDC hdc = GetDC(mainPtr);
 	InvertRect (hdc,&to_flash);
 	if (play_sounds == TRUE)
 		play_sound(34);
-		else Delay(5,&dummy);
+	else
+		Delay(5);
 	InvertRect (hdc,&to_flash);
 	fry_dc(mainPtr,hdc);
 }
@@ -1583,14 +1584,11 @@ void button_flash_rect(RECT to_flash)
 
  void flash_round_rect(RECT to_flash,short radius)
 {
-	long dummy;
-	HDC hdc;
-
-	hdc = GetDC(mainPtr);
+	HDC hdc = GetDC(mainPtr);
 	SetViewportOrgEx(hdc, ulx, uly, nullptr);
 	InvertRect (hdc,&to_flash);
 	play_sound(37);
-	Delay(5,&dummy);
+	Delay(5);
 	InvertRect (hdc,&to_flash);
 	fry_dc(mainPtr,hdc);
 }
@@ -1637,7 +1635,7 @@ void button_flash_rect(RECT to_flash)
 		return;
 		}
 
-//	Delay((long) 100,&dummy);
+	// Delay(100);
 							
 	start_outdoor_combat(party.out_c[i], out[party.p_loc.x][party.p_loc.y],count_walls(party.p_loc));
 
@@ -2712,7 +2710,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 
 	//if (forced == TRUE)
 	//	for (i = 0; i < 10; i++)
-	//		if (same_point(destination,party.out_c[i].m_loc) == TRUE)
+	//		if (same_point(destination,party.out_c[i].m_loc))
 	//				party.out_c[i].exists = FALSE;
 
 	const auto& terrain{ scenario.ter_type(out[real_dest.x][real_dest.y]) };

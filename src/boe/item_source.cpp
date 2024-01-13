@@ -3,10 +3,20 @@
 #include <array>
 #include <cassert>
 
-static const std::array<short, 5> c_loot_min{0,0,5,50,400};
-static const std::array<short, 5> c_loot_max{3,8,40,800,4000};
+namespace {
+	const std::array<short, 5> c_loot_min{ 0,0,5,50,400 };
+	const std::array<short, 5> c_loot_max{ 3,8,40,800,4000 };
+	
+	const std::array<short, 48> which_treas_chart{
+		1,1,1,1,1,2,2,2,2,2,
+		3,3,3,3,3,2,2,2,4,4,
+		4,4,5,5,5,6,6,6,7,7,
+		7,8,8,9,9,10,11,12,12,13,
+		13,14, 9,10,11,9,10,11
+	};
 
-static const item_record_type c_null_item{};
+	const item_record_type c_null_item{};
+}
 
 ItemSource::ItemSource(const ScenarioExtra& scenario_extra)
 	: scenario_extra_(scenario_extra)
@@ -145,3 +155,43 @@ const item_record_type& ItemSource::necklace(short loot) const
 {
 	return item_of_type(loot, item_variety::Necklace, item_variety::Invalid, item_variety::Invalid);
 } 
+
+item_record_type ItemSource::treasure(short loot, short level, short mode) const
+//short mode; // 0 - normal  1 - force
+{
+	(void)mode;
+	short r1 = rand_short(0, 41);
+	if (loot >= 3)
+	{
+		r1 += 3;
+	}
+	if (loot == 4)
+	{
+		r1 += 3;
+	}
+	item_record_type treas;
+	treas.variety = item_variety::None;
+	switch (which_treas_chart.at(static_cast<size_t>(r1)))
+	{
+	case 1: treas = food(); break;
+	case 2: treas = weapon(loot, level); break;
+	case 3: treas = armor(loot, level); break;
+	case 4: treas = shield(loot); break;
+	case 5: treas = helm(loot); break;
+	case 6: treas = missile(loot); break;
+	case 7: treas = potion(loot); break;
+	case 8: treas = scroll(loot); break;
+	case 9: treas = wand(loot); break;
+	case 10: treas = ring(loot); break;
+	case 11: treas = necklace(loot); break;
+	case 12: treas = poison(loot, level); break;
+	case 13: treas = gloves(loot); break;
+	case 14: treas = boots(loot); break;
+	}
+	if (treas.variety == item_variety::None)
+	{
+		treas.value = 0;
+	}
+	return treas;
+
+}

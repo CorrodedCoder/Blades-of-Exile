@@ -11,9 +11,11 @@ add_library(boe STATIC
 	adventurers.cpp
 	dump_game_structures.cpp
 	endian_adjust.cpp
+	game_file_structures.cpp
 	item.cpp
 	item_source.cpp
 	pc.cpp
+	registration.cpp
 	savedata_serialization.cpp
 	scenario.cpp
 	scenario_extra.cpp

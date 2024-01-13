@@ -830,7 +830,7 @@ void place_target(location target)
 				 return;
 				 }
 		for (i = 0; i < 8; i++) {
-			if (same_point(spell_targets[i],target) == TRUE) {
+			if (same_point(spell_targets[i],target)) {
 				add_string_to_buf("  Target removed.");
 				num_targets_left++;
 				spell_targets[i].x = 120;
@@ -3594,8 +3594,8 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,Boolean 
 				spot_hit.x = i;
 				spot_hit.y = j;
 				if ((get_obscurity(i,j) < 5) && (adven[k].main_status == status_type::Normal)
-					&& ((is_combat() &&(same_point(pc_pos[k],spot_hit) == TRUE)) ||
-					(is_town() && (same_point(c_town.p_loc,spot_hit) == TRUE)))) {
+					&& ((is_combat() &&(same_point(pc_pos[k],spot_hit))) ||
+					(is_town() && (same_point(c_town.p_loc,spot_hit))))) {
 					effect = pat.pattern[i - center.x + 4][j - center.y + 4];
 					switch (effect) {
 						case 4: 
@@ -3826,12 +3826,12 @@ void hit_space(location target,short dam,short type,short report,short hit_all)
 	if (overall_mode >= 10)
 		for (i = 0; i < 6; i++)
 			if ((adven[i].main_status == status_type::Normal) && (stop_hitting == FALSE))
-				if (same_point(pc_pos[i],target) == TRUE) {
+				if (same_point(pc_pos[i],target)) {
 						damage_pc(i,dam,type,-1);					
 						stop_hitting = (hit_all == 1) ? FALSE : TRUE;				
 					}
 	if (overall_mode < 10)
-		if (same_point(target,c_town.p_loc) == TRUE) {
+		if (same_point(target,c_town.p_loc)) {
 			fast_bang = 1;
 			hit_party(dam,type);
 			fast_bang = 0;
@@ -4650,11 +4650,11 @@ void scloud_space(short m,short n)
 	if (overall_mode >= 10)
 		for (i = 0; i < 6; i++)
 			if (adven[i].main_status == status_type::Normal)
-				if (same_point(pc_pos[i],target) == TRUE) {
+				if (same_point(pc_pos[i],target)) {
 						curse_pc(i,rand_short(1,2));					
 					}
 	if (overall_mode < 10)
-		if (same_point(target,c_town.p_loc) == TRUE) {
+		if (same_point(target,c_town.p_loc)) {
 			for (i = 0; i < 6; i++)
 				if (adven[i].main_status == status_type::Normal)
 					curse_pc(i,rand_short(1,2));					
@@ -4675,11 +4675,11 @@ void web_space(short m,short n)
 	if (overall_mode >= 10)
 		for (i = 0; i < 6; i++)
 			if (adven[i].main_status == status_type::Normal)
-				if (same_point(pc_pos[i],target) == TRUE) {
+				if (same_point(pc_pos[i],target)) {
 						web_pc(i,3);					
 					}
 	if (overall_mode < 10)
-		if (same_point(target,c_town.p_loc) == TRUE) {
+		if (same_point(target,c_town.p_loc)) {
 			for (i = 0; i < 6; i++)
 					web_pc(i,3);					
 			}
@@ -4698,11 +4698,11 @@ void sleep_cloud_space(short m,short n)
 	if (overall_mode >= 10)
 		for (i = 0; i < 6; i++)
 			if (adven[i].main_status == status_type::Normal)
-				if (same_point(pc_pos[i],target) == TRUE) {
+				if (same_point(pc_pos[i],target)) {
 					sleep_pc(i,3,11,0);
 					}
 	if (overall_mode < 10)
-		if (same_point(target,c_town.p_loc) == TRUE) {
+		if (same_point(target,c_town.p_loc)) {
 			for (i = 0; i < 6; i++)
 				sleep_pc(i,3,11,0);
 			}

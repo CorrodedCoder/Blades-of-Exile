@@ -24,6 +24,7 @@
 #include "graphutl.h"
 #include "boe/utility.hpp"
 #include "boe/item.hpp"
+#include "boe/registration.hpp"
 #include "game_globals.hpp"
 
 #define	NUM_HINTS	30
@@ -34,13 +35,10 @@ extern current_town_type c_town;
 extern party_record_type party;
 extern piles_of_stuff_dumping_type data_store;
 extern talking_record_type talking;
-
 extern Boolean in_startup_mode,play_sounds,sys_7_avail,give_intro_hint;
 extern HWND mainPtr;
-
 extern short display_mode,stat_screen_mode,current_pc;
-extern long register_flag;
-extern long ed_flag,ed_key;
+extern int register_flag;
 extern Boolean registered,ed_reg,save_maps;
 extern short give_delays;
 extern Adventurers adven;
@@ -48,26 +46,32 @@ extern location center;
 extern HWND text_sbar,item_sbar,shop_sbar;
 extern Boolean modeless_exists[18];
 extern HWND modeless_dialogs[18] ;
-
-extern Boolean cd_event_filter();
 extern Boolean dialog_not_toast;
-
 extern Boolean game_run_before;
-
 extern HPALETTE hpal;
 extern PALETTEENTRY ape[256];
 extern HDC main_dc,main_dc2,main_dc3;
 extern Boolean cursor_shown;
 extern piles_of_stuff_dumping_type3 data_store3;
+extern const std::array<word_rect_type, 9> preset_words;
+// 0 - whole area, 1 - active area 2 - graphic 3 - item name
+// 4 - item cost 5 - item extra str  6 - item help button
+extern RECT shopping_rects[8][7];
+extern const RECT bottom_help_rects[4] = { {6,356,250,368},{6,374,270,386},{6,386,250,398},{6,398,250,410} };
+extern const RECT shop_frame = { 10,62,269,352 };
+extern const RECT shop_done_rect = { 212,388,275,411 };
+extern short store_shop_type;
+
+
+static const short heal_costs[9] = { 50,30,80,100,250,500,1000,3000,100 };
+static const int cost_mult[7] = { 5,7,10,13,16,20,25 };
 
 
 HBITMAP pcs_gworld = NULL;
-
 short sign_mode,person_graphic,store_person_graphic,store_sign_mode;
-long num_talk_entries;
+int num_talk_entries;
 char null_string[256] = "";
 short store_tip_page_on = 0;
-
 // Talking vars
 word_rect_type store_words[50];
 short store_pre_talk_mode,store_personality,store_personality_graphic,shop_identify_cost;
@@ -77,19 +81,16 @@ char old_str1[256];
 char old_str2[256];
 char one_back1[256];
 char one_back2[256]; 
-extern const std::array<word_rect_type, 9> preset_words;
-RECT talk_area_rect = {5,5,284,420}, word_place_rect = {7,44,257,372},talk_help_rect = {254,5,272,21};
-/**/
+extern const RECT talk_area_rect = { 5,5,284,420 }, word_place_rect = { 7,44,257,372 };
+extern RECT talk_help_rect = { 254,5,272,21 };
 char title_string[50];
 unsigned char store_monst_type;
 short store_m_num;
-RECT dummy_rect = {0,0,0,0};
 hold_responses store_resp[83];
 short strnum1,strnum2,oldstrnum1,oldstrnum2;
 short store_talk_face_pic,cur_town_talk_loaded = -1;
 
 // Shopping vars
-
 // 1 - 499 ... regular items
 // 500 alchemy
 // 600-620 ... food
@@ -102,24 +103,9 @@ short store_shop_costs[30];
 // talk_area_rect and talk_help_rect used for this too
 short store_shop_min,store_shop_max,store_pre_shop_mode,store_cost_mult;
 char store_store_name[256];
-// 0 - whole area, 1 - active area 2 - graphic 3 - item name
-// 4 - item cost 5 - item extra str  6 - item help button
-extern RECT shopping_rects[8][7];
-RECT bottom_help_rects[4] = {{6,356,250,368},{6,374,270,386},{6,386,250,398},{6,398,250,410}};
-RECT shop_name_str = {6,44,200,56};
-RECT shop_frame = {10,62,269,352};
-RECT shop_done_rect = {212,388,275,411}; /**/
-
-extern short store_shop_type;
-
-short heal_costs[9] = {50,30,80,100,250,500,1000,3000,100};
-long cost_mult[7] = {5,7,10,13,16,20,25};
 short cur_display_mode;
-
 short terrain_pic[256]; 
-
 scen_header_type scen_headers[25];
-
 short store_scen_page_on,store_num_scen;
 
 /*
@@ -245,7 +231,7 @@ void handle_sale(short what_chosen,short cost)
 			base_item = item_source.stored_item(what_chosen);
 			base_item.item_properties = base_item.item_properties | 1;
 			//cost = (base_item.charges == 0) ? base_item.value : base_item.value * base_item.charges;
-			switch (pc_ok_to_buy(current_pc,cost,base_item)) {
+			switch (pc_ok_to_buy(adven[current_pc],cost,base_item)) {
 				case 1: play_sound(-38); give_to_pc(current_pc,base_item,TRUE); break;
 				case 2: ASB("Can't carry any more items."); break;
 				case 3: ASB("Not enough cash."); break;
@@ -332,7 +318,7 @@ void handle_sale(short what_chosen,short cost)
 			what_magic_shop_item = what_chosen % 1000;
 			base_item = party.magic_store_items[what_magic_shop][what_magic_shop_item];
 			base_item.item_properties = base_item.item_properties | 1;
-			switch (pc_ok_to_buy(current_pc,cost,base_item)) {
+			switch (pc_ok_to_buy(adven[current_pc],cost,base_item)) {
 				case 1: play_sound(-38); give_to_pc(current_pc,base_item,TRUE); 
 					party.magic_store_items[what_magic_shop][what_magic_shop_item].variety = item_variety::None;
 					break;
@@ -392,7 +378,7 @@ void set_up_shop_array()
 	short i,shop_pos = 0;
 	Boolean cursed_item = FALSE;
 	item_record_type store_i;
-	long store_l;
+	int store_l;
 	
 	for (i = 0; i < 30; i++)
 		store_shop_items[i] = -1;
@@ -505,7 +491,7 @@ void set_up_shop_array()
 		if (store_shop_items[i] >= 0) {
 			store_l = store_shop_costs[i];
 			store_l = (store_l * cost_mult[store_cost_mult]) / 10;
-			store_shop_costs[i] = (short) store_l;
+			store_shop_costs[i] = store_l;
 			}
   	i = max(0,shop_pos - 8);
 	SetScrollRange(shop_sbar,SB_CTL,0,i,TRUE);
@@ -551,7 +537,7 @@ void start_talk_mode(short m_num,short personality,unsigned char monst_type,shor
 	strcpy(old_str2, place_string2);
 	strcpy(one_back1, place_string1);
 	strcpy(one_back2, place_string2);
-	place_talk_str( place_string1, place_string2,0,dummy_rect);
+	place_talk_str(place_string1, place_string2, 0, {});
 	
 	put_item_screen(stat_window,0);
 	give_help(5,6,0);
@@ -695,7 +681,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 				strcpy(one_back2, old_str2);
 				strcpy(old_str1, place_string1);
 				strcpy(old_str2, place_string2);
-				place_talk_str(place_string1, place_string2,0,dummy_rect);
+				place_talk_str(place_string1, place_string2, 0, {});
 				return;
 				break;
 			case 4: // buy button
@@ -728,7 +714,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 				strcpy(one_back2, old_str2);
 				strcpy(old_str1, place_string1);
 				strcpy(old_str2, place_string2);
-				place_talk_str(place_string1, place_string2,0,dummy_rect);
+				place_talk_str(place_string1, place_string2, 0, {});
 				return;
 				break;
 			}
@@ -742,7 +728,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 		format_to_buf(old_str1,"{}",data_store3.talk_strs[store_personality % 10 + 160]);
 		if (strlen(old_str1) < 2)
 			format_to_buf(old_str1,"You get no response.");
-		place_talk_str(old_str1, old_str2,0,dummy_rect);
+		place_talk_str(old_str1, old_str2, 0, {});
 		strnum1 = -1;
 		return;	
 		}
@@ -1050,7 +1036,7 @@ void handle_talk_event(POINT p,Boolean right_button)
 	strcpy(one_back2, old_str2);
 	strcpy(old_str1, place_string1);
 	strcpy(old_str2, place_string2);
-	place_talk_str(old_str1, old_str2,0,dummy_rect);
+	place_talk_str(old_str1, old_str2, 0, {});
 	
 }
 
@@ -1134,16 +1120,9 @@ void give_reg_info()
 
 }
 
-
-
-
 void do_registration_event_filter (short item_hit)
 {
-	char get_text[256];
-	
-	cd_get_text_edit_str(1075, get_text);
-	dialog_answer = 0;
-	sscanf(get_text,"%hd",&dialog_answer);
+	dialog_answer = std::stoi(cd_get_text_edit_str(1075));
 	dialog_not_toast = FALSE;
 }
 
@@ -1624,44 +1603,15 @@ void give_password_filter (short item_hit)
 Boolean enter_password()
 // ignore parent in Mac version
 {
-	short i;
-	char temp_str[256];
-		
 	cd_create_dialog_parent_num(823,0);
-	
 	cd_set_text_edit_str(823,"");
 	
 	while (dialog_not_toast)
 		ModalDialog();
 
-	cd_get_text_edit_str(823, temp_str);
-	i = wd_to_pwd(temp_str);
+	const short i = wd_to_pwd(cd_get_text_edit_str(823));
 	
 	cd_kill_dialog(823,0);
 	
 	return check_p(i);
-}
-
-short wd_to_pwd(char *str)
-{
-	char pwd[8] = "aaaaaa";
-	short i;
-	long val = 0,pow[6] = {1,10,100,1000,9999,99999};
-	
-	for (i = 0; i < 6; i++) {
-		if (str[i] == 0) 
-			i = 6;
-			else {
-				if ((str[i] >= 65) && (str[i] <= 90))
-					pwd[i] = str[i] + 32;
-				else if ((str[i] >= 48) && (str[i] <= 57))
-					pwd[i] = str[i] + 49;
-				else if ((str[i] >= 97) && (str[i] <= 122))
-					pwd[i] = str[i];
-				}
-		}
-	for (i = 0; i < 6; i++)
-		val = val + pow[i] * (long) (pwd[i] - 97);
-	val = val % 30000;
-	return (short) val;
 }

@@ -11,7 +11,10 @@ bool is_contained(const item_record_type& item);
 bool is_cursed(const item_record_type& item);
 bool is_property(const item_record_type& item);
 
+void enchant_weapon(item_record_type& item, short enchant_type, short new_val);
+
 bool equippable(item_variety variety);
 short num_hands_to_use(item_variety variety);
 short num_that_can_equip(item_variety variety);
 short excluding_types(item_variety variety);
+

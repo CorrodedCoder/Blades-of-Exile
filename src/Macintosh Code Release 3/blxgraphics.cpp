@@ -1977,10 +1977,10 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 	targ.x = q;
 	targ.y = r;
 	if ((supressing_some_spaces == TRUE) && 
-		(same_point(targ,ok_space[0]) == FALSE) &&
-		(same_point(targ,ok_space[1]) == FALSE) &&
-		(same_point(targ,ok_space[2]) == FALSE) &&
-		(same_point(targ,ok_space[3]) == FALSE))
+		(not_same_point(targ,ok_space[0])) &&
+		(not_same_point(targ,ok_space[1])) &&
+		(not_same_point(targ,ok_space[2])) &&
+		(not_same_point(targ,ok_space[3])))
 			return;
 	
 					

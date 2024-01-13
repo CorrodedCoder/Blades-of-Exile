@@ -25,7 +25,6 @@ static const std::array heal_types{"Heal Damage","Cure Poison","Cure Disease","C
 
 extern short ulx,uly;
 extern RECT	windRect;
-extern long anim_ticks;
 extern HBRUSH bg[14];
 extern short dungeon_font_num,geneva_font_num,overall_mode,town_type,which_combat_type;
 extern Boolean play_sounds,boom_anim_active,cartoon_happening,in_startup_mode;
@@ -64,7 +63,8 @@ extern char old_str2[256];
 extern char one_back1[256];
 extern char one_back2[256];
 extern const std::array<word_rect_type, 9> preset_words;
-extern RECT talk_area_rect, word_place_rect,talk_help_rect;
+extern const RECT talk_area_rect, word_place_rect;
+extern RECT talk_help_rect;
 extern char title_string[50];
 extern unsigned char store_monst_type;
 extern hold_responses store_resp[83];
@@ -75,10 +75,9 @@ extern short store_shop_costs[30];
 extern short store_shop_type,store_shop_min,store_shop_max,store_pre_shop_mode,store_cost_mult;
 extern char store_store_name[256];
 extern RECT shopping_rects[8][7];
-extern RECT bottom_help_rects[4];
-extern RECT shop_name_str;
-extern RECT shop_frame ;
-extern RECT shop_done_rect;
+extern const RECT bottom_help_rects[4];
+extern const RECT shop_frame ;
+extern const RECT shop_done_rect;
 extern item_record_type food_types[15];
 extern short heal_costs[8];
 extern short terrain_there[9][9];
@@ -411,7 +410,7 @@ void add_missile(location dest,short missile_type,short path_type,short x_adj,sh
 	// lose redundant missiles
 	for (i = 0; i < 30; i++)
 	{
-		if ((store_missiles[i].missile_type >= 0) && (same_point(dest, store_missiles[i].dest) == TRUE))
+		if ((store_missiles[i].missile_type >= 0) && (same_point(dest, store_missiles[i].dest)))
 		{
 			return;
 		}
@@ -484,7 +483,7 @@ void add_explosion(location dest,short val_to_place,short place_type,short boom_
 	// lose redundant explosions
 	for (i = 0; i < 30; i++)
 	{
-		if ((store_booms[i].boom_type >= 0) && (same_point(dest, store_booms[i].dest) == TRUE)
+		if ((store_booms[i].boom_type >= 0) && (same_point(dest, store_booms[i].dest))
 			&& (place_type == 0))
 		{
 			if (val_to_place > 0)
@@ -522,12 +521,11 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 	RECT missile_place_rect[30],missile_origin_rect[30],store_erase_rect[30];
 	POINT current_terrain_ul; 
 	HBITMAP temp_gworld;
-	long delay_dummy;
 	RECT ter_scrn_rect = {0,0,279,351};
-	long t1,t2;
-	long pause_len = 0;
+	DWORD t1,t2;
+	DWORD pause_len = 0;
 
-	t2 = t1 = (long) GetCurrentTime();
+	t2 = t1 = GetCurrentTime();
 	if (sound_num == 11) { pause_len = 660; }
 	if (sound_num == 12) { pause_len = 410; }
 	if (sound_num == 14) { pause_len = 200; }
@@ -586,7 +584,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 	for (i = 0; i < 30; i++)
 	{
 		SetRectEmpty(&store_erase_rect[i]);
-		if ((store_missiles[i].missile_type >= 0) && (same_point(missile_origin, store_missiles[i].dest) == TRUE))
+		if ((store_missiles[i].missile_type >= 0) && (same_point(missile_origin, store_missiles[i].dest)))
 		{
 			store_missiles[i].missile_type = -1;
 		}
@@ -677,11 +675,11 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 		}
 		if ((PSD[306][6] == 3) || ((PSD[306][6] == 1) && (t % 4 == 0)) || ((PSD[306][6] == 2) && (t % 3 == 0)))
 		{
-			Delay(1, &delay_dummy);
+			Delay(1);
 		}
 		if ((cartoon_happening == TRUE) && (t % 3 == 0))
 		{
-			Delay(1, &delay_dummy);
+			Delay(1);
 		}
 	}
 
@@ -698,7 +696,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 
 	while (t2 - t1 < pause_len + 40)
 	{
-		t2 = (long)GetCurrentTime();
+		t2 = GetCurrentTime();
 	}
 	play_sound(99);
 }
@@ -759,17 +757,16 @@ void do_explosion_anim(short sound_num,short special_draw)
 	short t,cur_boom_type = 0; 
 	POINT current_terrain_ul; 
 	HBITMAP temp_gworld;
-	long delay_dummy;
 	short boom_type_sound[3] = {5,10,53};
 	RECT ter_scrn_rect = {0,0,279,351};
 	HDC hdc;
 	COLORREF colors[5] = {RGB(0,0,0),RGB(255,0,0),RGB(128,0,0),RGB(0,160,0),RGB(255,255,255)};
 	UINT c[5];
 	HGDIOBJ store_bmp;
-	long t1,t2;
-	long snd_len[3] = {1500,1410,1100};
+	DWORD t1,t2;
+	DWORD snd_len[3] = {1500,1410,1100};
 
-	t2 = t1 = (long) GetCurrentTime();
+	t2 = t1 = GetCurrentTime();
 
 	if ((have_boom == FALSE) || (boom_anim_active == FALSE))
 	{
@@ -917,10 +914,10 @@ void do_explosion_anim(short sound_num,short special_draw)
 		}
 
 		//if (((PSD[306][6] == 1) && (t % 3 == 0)) || ((PSD[306][6] == 2) && (t % 2 == 0)))
-		Delay(2 * (1 + PSD[306][6]),&delay_dummy);
+		Delay(2 * (1 + PSD[306][6]));
 		if (cartoon_happening == TRUE)
 		{
-			Delay(1, &delay_dummy);
+			Delay(1);
 		}
 	}
 		
@@ -940,7 +937,7 @@ void do_explosion_anim(short sound_num,short special_draw)
 	{
 		while (t2 - t1 < snd_len[cur_boom_type] + 100)
 		{
-			t2 = (long)GetCurrentTime();
+			t2 = GetCurrentTime();
 		}
 		play_sound(99);
 	}
@@ -964,7 +961,6 @@ shop_type:
 */
 void click_shop_rect(RECT area_rect)
 {
-	long dum;
 	draw_shop_graphics(1,area_rect);
 	if (play_sounds == TRUE)
 	{
@@ -972,7 +968,7 @@ void click_shop_rect(RECT area_rect)
 	}
 	else
 	{
-		Delay(5, &dum);
+		Delay(5);
 	}
 	draw_shop_graphics(0,area_rect);
 
@@ -1213,7 +1209,6 @@ void refresh_shopping()
 
 void click_talk_rect(char *str_to_place,char *str_to_place2,RECT c_rect)
 {
-	long dum;
 	place_talk_str(str_to_place,str_to_place2,1,c_rect);
 	if (play_sounds == TRUE)
 	{
@@ -1221,7 +1216,7 @@ void click_talk_rect(char *str_to_place,char *str_to_place2,RECT c_rect)
 	}
 	else
 	{
-		Delay(5, &dum);
+		Delay(5);
 	}
 	place_talk_str(str_to_place,str_to_place2,0,c_rect);
 }

@@ -44,6 +44,4 @@ short dist(location p1,location p2);
 void pause(short length);
 void beep();
 void SysBeep(short a);
-void Delay(short val,long *dummy);
-
 short abs(short x);

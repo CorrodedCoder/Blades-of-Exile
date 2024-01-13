@@ -1314,7 +1314,7 @@ void erase_out_specials()
 short get_town_spec_id(location where)
 {
 	short i = 0;
-	while ((same_point(c_town.town.special_locs[i], where) == FALSE) && (i < 40))
+	while ((not_same_point(c_town.town.special_locs[i], where)) && (i < 40))
 	{
 		++i;
 	}

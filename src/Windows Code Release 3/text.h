@@ -48,7 +48,6 @@ void ClipRect(RECT *rect);
 void beep();
 void SysBeep(short a);
 void GetIndString(char *str,short i, short j) ;
-void StringToNum(char *the_string,long *number_given);
 void force_reprint();
 void MeasureText(short str_len,char *str, short *len_array,HDC hdc);
 void MoveTo(short x, short y);

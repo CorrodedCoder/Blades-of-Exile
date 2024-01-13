@@ -50,9 +50,7 @@
 short s_pow(short x,short y);
 short a_v(short x);
 short ex_abs(short x);
-Boolean same_point(location p1,location p2);
 void pause(short length);
-void Delay(short val,long *dummy);
 Boolean sd_legit(short a, short b);
 
 // Windows RECT structure layout is: left, top, right, bottom

@@ -88,7 +88,7 @@ static Boolean can_choose_caster;
 
 // Variables for spending xp
 static short store_skills[20], store_h, store_sp, store_skp, which_skill;
-static long store_g;
+static int store_g;
 static short store_train_mode, store_train_pc;
 
 // Dialog vars
@@ -2346,7 +2346,7 @@ void sanctify_space(location where)
 	short i, s1, s2, s3;
 	for (i = 0; i < 50; i++)
 	{
-		if ((same_point(where, c_town.town.special_locs[i]) == TRUE) && (c_town.town.spec_id[i] >= 0))
+		if ((same_point(where, c_town.town.special_locs[i])) && (c_town.town.spec_id[i] >= 0))
 		{
 			if (c_town.town.specials[c_town.town.spec_id[i]].type == 24)
 			{
@@ -3391,9 +3391,7 @@ Boolean pick_pc_graphic(short pc_num,short mode,short parent_num)
 
 void pc_name_event_filter (short item_hit)
 {
-	char get_text[256];
-	
-	cd_get_text_edit_str(1051,(char *) get_text);
+	const std::string get_text{ cd_get_text_edit_str(1051) };
 	if ((get_text[0] < 33) || (get_text[0] > 126))
 	{
 		csit(1051,6,"Must begin with a letter.");

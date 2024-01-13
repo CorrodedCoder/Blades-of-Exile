@@ -71,11 +71,9 @@ HWND right_sbar;
 Boolean bgm_on = FALSE,bgm_init = FALSE;
 
 Boolean gInBackground = FALSE;
-long start_time;
 
 // Shareware globals
 Boolean registered = FALSE,ed_reg = FALSE;
-long register_flag = 0,ed_flag = 0;
 Boolean game_run_before = TRUE,save_blocked = FALSE;
 
 short current_active_pc = 0;
@@ -100,7 +98,6 @@ location store_choice_loc;
 short town_size[3] = {64,48,24};
 short which_item_page[6] = {0,0,0,0,0,0}; // Remembers which of the 2 item pages pc looked at
 //short display_mode = 0; // 0 - center 1- ul 2 - ur 3 - dl 4 - dr 5 - small win
-long stored_key;
 short pixel_depth,dialog_answer;
 
 char file_path_name[256];
@@ -758,13 +755,19 @@ short check_cd_event(HWND hwnd,UINT message,UINT wparam,LONG lparam)
 
 	switch (message) {
 		case WM_COMMAND:
-			if ((wparam >= 150) && (wparam <= 250))  {
-
-				if (HIWORD(lparam) == EN_ERRSPACE)
+			// Per: https://github.com/CorrodedCoder/Blades-of-Exile/issues/58
+			// I *think* I need to do to block out EN_ notification codes at
+			// comparison time in the next block The comparison below against
+			// EN_ERRSPACE with lparam seems particularly odd since that should
+			// be the high word of wparam rather than lparam.
+			if ((LOWORD(wparam) >= 150) && (LOWORD(wparam) <= 250))
+			{
+				if (HIWORD(wparam) == EN_ERRSPACE)
+				{
 					play_sound(0);
-
-				return 0;
 				}
+				return 0;
+			}
 			cd_find_dlog(hwnd,&wind_hit,&item_hit); // item_hit is dummy
 			item_hit = (short) wparam;
 			break;

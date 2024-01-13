@@ -29,9 +29,9 @@ extern stored_outdoor_maps_type o_maps;
 
 extern Boolean registered,play_sounds,sys_7_avail,save_blocked,ed_reg,party_in_scen;
 extern short current_active_pc;
-extern long register_flag,stored_key;
+extern int register_flag;
 extern HWND mainPtr;
-extern long ed_flag,ed_key;
+extern int ed_flag;
 
 extern Boolean file_in_mem;
 
@@ -59,8 +59,8 @@ short display_mode = 0;
 	 "All Files (*.*)\0" "*.*\0"
 	 };
 
-static short FSWrite(HFILE file, long* len, char* buffer);
-static short FSRead(HFILE file, long* len, char* buffer);
+static short FSWrite(HFILE file, size_t* len, char* buffer);
+static short FSRead(HFILE file, size_t* len, char* buffer);
 static short FSClose(HFILE file);
 
 void file_initialize()
@@ -90,7 +90,7 @@ void file_initialize()
 void load_file()
 {
 
-	long file_size;
+	size_t file_size;
 	HFILE file_id;
 	short i;
 	Boolean town_restore = FALSE;
@@ -99,7 +99,7 @@ void load_file()
 
 	char flag_data[8];
 
-	long len;
+	size_t len;
 	UINT store_len,count,error;
 	char *party_ptr;
 	char *pc_ptr;
@@ -192,7 +192,7 @@ void load_file()
 	if (in_scen == TRUE) {
 	
 	// LOAD OUTDOOR MAP
-	len = (long) sizeof(out_info_type);
+	len = sizeof(out_info_type);
 	if ((error = FSRead(file_id, &len, (char *) out_e)) != 0){
 		FSClose(file_id);
 		play_sound(0);
@@ -202,7 +202,7 @@ void load_file()
 
 	// LOAD TOWN 
 	if (town_restore == TRUE) {
-		len = (long) sizeof(current_town_type);
+		len = sizeof(current_town_type);
 		if ((error = FSRead(file_id, &len, (char *) &c_town)) != 0){
 				FSClose(file_id);
 				play_sound(0);
@@ -210,7 +210,7 @@ void load_file()
 				return;
 				}
 	
-		len = (long) sizeof(big_tr_type);
+		len = sizeof(big_tr_type);
 		if ((error = FSRead(file_id, &len, (char *) &t_d)) != 0){
 				FSClose(file_id);
 				play_sound(0);
@@ -218,7 +218,7 @@ void load_file()
 				return;
 				}
 
-		len = (long) sizeof(town_item_list);
+		len = sizeof(town_item_list);
 		if ((error = FSRead(file_id, &len, (char *) &t_i))  != 0){
 			FSClose(file_id);
 			play_sound(0);
@@ -230,7 +230,7 @@ void load_file()
 
 	// LOAD STORED ITEMS
 	for (i = 0; i < 3; i++) {
-		len = (long) sizeof(stored_items_list_type);
+		len = sizeof(stored_items_list_type);
 		if ((error = FSRead(file_id, &len, (char *) &stored_items[i]))  != 0){
 				FSClose(file_id);
 				play_sound(0);
@@ -241,14 +241,14 @@ void load_file()
 
 	// LOAD SAVED MAPS
 	if (maps_there == TRUE) {
-		len = (long) sizeof(stored_town_maps_type);
+		len = sizeof(stored_town_maps_type);
 		if ((error = FSRead(file_id, &len, (char *) &(town_maps)))  != 0){
 				FSClose(file_id);
 				play_sound(0);
 				FCD(1064,0);
 				return;
 				}
-		len = (long) sizeof(stored_town_maps_type);
+		len = sizeof(stored_town_maps_type);
 		if ((error = FSRead(file_id, &len, (char *) &(town_maps2)))  != 0){
 				FSClose(file_id);
 				play_sound(0);
@@ -256,7 +256,7 @@ void load_file()
 				return;
 				}
 	
-		len = (long) sizeof(stored_outdoor_maps_type);
+		len = sizeof(stored_outdoor_maps_type);
 		if ((error = FSRead(file_id, &len, (char *) &o_maps)) != 0) {
 				FSClose(file_id);
 				play_sound(0);
@@ -266,7 +266,7 @@ void load_file()
 		}
 
 	// LOAD SFX & MISC_I
-		len = (long) (64 * 64);
+		len = (size_t) (64 * 64);
 		if ((error = FSRead(file_id, &len, (char *) sfx))  != 0){
 				FSClose(file_id);
 				play_sound(0);
@@ -310,7 +310,7 @@ void save_file(short mode)
 
 	short i;
 
-	long len,store_len,count;
+	size_t len,store_len,count;
 	flag_type flag;
 	flag_type *store;
 	party_record_type *party_ptr;
@@ -479,7 +479,7 @@ void save_file(short mode)
 	// Save stored items 
 	for (i = 0; i < 3; i++) {
 		items_ptr = &stored_items[i];
-		len = (long) sizeof(stored_items_list_type);
+		len = sizeof(stored_items_list_type);
 		if ((error = FSWrite(file_id, &len, (char *) items_ptr))  != 0){
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			FSClose(file_id);
@@ -491,7 +491,7 @@ void save_file(short mode)
 	// If saving maps, save maps
 	if (save_maps == TRUE) {
 		maps_ptr = &(town_maps);
-		len = (long) sizeof(stored_town_maps_type);
+		len = sizeof(stored_town_maps_type);
 		if ((error = FSWrite(file_id, &len, (char *) maps_ptr))  != 0){
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			FSClose(file_id);
@@ -499,7 +499,7 @@ void save_file(short mode)
 			return;
 			}	
 		maps_ptr = &(town_maps2);
-		len = (long) sizeof(stored_town_maps_type);
+		len = sizeof(stored_town_maps_type);
 		if ((error = FSWrite(file_id, &len, (char *) maps_ptr))  != 0){
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			FSClose(file_id);
@@ -508,7 +508,7 @@ void save_file(short mode)
 			}	
 
 		o_maps_ptr = &o_maps;
-		len = (long) sizeof(stored_outdoor_maps_type);
+		len = sizeof(stored_outdoor_maps_type);
 		if ((error = FSWrite(file_id, &len, (char *) o_maps_ptr)) != 0) {
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			FSClose(file_id);
@@ -518,7 +518,7 @@ void save_file(short mode)
 		} 
 	
 	// SAVE SFX and MISC_I
-		len = (long) (64 * 64);
+		len = (size_t) (64 * 64);
 		if ((error = FSWrite(file_id, &len, (char *) sfx))  != 0){
 			add_string_to_buf("Save: Couldn't write to file.         ");
 			FSClose(file_id);
@@ -558,9 +558,9 @@ void remove_party_from_scen()
 
 
 
-long do_waterfall(long flag)
+int do_waterfall(int flag)
 {
-	long k = 0;
+	int k = 0;
 		
 	k = flag;
 	k = k * k;
@@ -574,9 +574,9 @@ long do_waterfall(long flag)
 
 }
 
-long init_data(long flag)
+int init_data(int flag)
 {
-	long k = 0;
+	int k = 0;
 		
 	k = flag;
 	k = k * k;
@@ -592,7 +592,7 @@ void get_reg_data()
 {
 	HFILE f;
 	short i;
-	long vals[10];
+	int vals[10];
 	OFSTRUCT store;
 
 	return;
@@ -648,7 +648,7 @@ void build_data_file(short mode)
 //mode; // 0 - make first time file  1 - customize  2 - new write
 {
 	short i;
-	long val_store,s_vals[10] = {0,0,0,0,0, 0,0,0,0,0};
+	int val_store,s_vals[10] = {0,0,0,0,0, 0,0,0,0,0};
 	OFSTRUCT store;
 	HFILE f;
 
@@ -674,7 +674,7 @@ void build_data_file(short mode)
 
 	for (i = 0; i < 10; i++) {
 		if (mode < 2)
-			val_store = (long) (rand_short(5000,25000));
+			val_store = (int) (rand_short(5000,25000));
 			else val_store = s_vals[i];
 		switch (i) {
 			case 2: // tip of day
@@ -709,7 +709,7 @@ void build_data_file(short mode)
 				break;
 			case 8:
 				if (mode < 2)
-					val_store = (long) (rand_short(1000,5000));
+					val_store = (int) (rand_short(1000,5000));
 					else val_store = s_vals[i];
 				ed_flag = val_store;
 				break;
@@ -734,18 +734,18 @@ void reg_alert()
 	  "File Error",MB_OK | MB_ICONEXCLAMATION);
 }
 
-static short FSWrite(HFILE file,long *len,char *buffer)
+static short FSWrite(HFILE file, size_t*len,char *buffer)
 {
-	long error = 0;
+	size_t error = 0;
 
 	if ((error = _lwrite(file, (char *) buffer, (UINT) (*len)))  == HFILE_ERROR)
 		return -1;
 	return 0;
 }
 
-static short FSRead(HFILE file,long *len,char *buffer)
+static short FSRead(HFILE file, size_t*len,char *buffer)
 {
-	long error = 0;
+	size_t error = 0;
 
 	if ((error = _lread(file, (char *) buffer, (UINT) (*len)))  == HFILE_ERROR)
 		return -1;

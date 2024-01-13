@@ -81,7 +81,7 @@ char text_short_str[140][35];
 char labels[NL][25];
 Boolean label_taken[NL];
 
-HWND edit_box = NULL;
+static HWND edit_box = NULL;
 HWND store_edit_parent; // kludgy
 WNDPROC edit_proc,old_edit_proc;
 
@@ -90,7 +90,7 @@ HDC dlg_force_dc = NULL; // save HDCs when dealing with dlogs
 short store_free_slot,store_dlog_num;
 HWND store_parent;
 
-short available_dlog_buttons[NUM_DLOG_B] = {0,63,64,65,1,4,5,8, 
+static const short available_dlog_buttons[NUM_DLOG_B] = {0,63,64,65,1,4,5,8, 
 								128,
 								9,
 								10, // 10
@@ -100,7 +100,7 @@ short available_dlog_buttons[NUM_DLOG_B] = {0,63,64,65,1,4,5,8,
 								66,69,70, 71,72,73,74,79,
 								80,83,86,87,88, 91,92,93,99,100,
 								101,102,104, 129,130,131,132,133,134,135,136,137};
-short button_type[150] = {1,1,4,5,1,1,0,0,1,1,
+static const short button_type[150] = {1,1,4,5,1,1,0,0,1,1,
 						 1,1,1,1,1,1,1,1,8,8,
 						 9,9,9,1,1,2,1,6,7,1,
 						 1,12,1,1,2,0,0,0,0,0,
@@ -131,7 +131,7 @@ static const std::array button_strs{"Done ","Ask"," "," ","Keep", "Cancel","+","
 						"Insert","Remove","Accept","Refuse","Open","Close","Sit","Stand","","",
 						"18","19","20","Invisible!","","","","","",""};
 
-short button_left_adj[150] = {0,0,0,0,0, 0,0,0,0,0,
+static const short button_left_adj[150] = {0,0,0,0,0, 0,0,0,0,0,
 0,0,0,0,0, 0,0,0,0,0,
 0,0,0,0,0, 0,0,0,0,0,
 0,0,0,0,0, 0,0,0,0,0,
@@ -146,7 +146,7 @@ short button_left_adj[150] = {0,0,0,0,0, 0,0,0,0,0,
 0,0,0,0,0, 0,0,0,0,0,
 0,0,0,0,0, 0,0,0,0,0,
 0,0,0,0,0, 0,0,0,0,0};
-char button_def_key[150] = {0,0,20,21,'k', 24,0,0,0,0,
+static const char button_def_key[150] = {0,0,20,21,'k', 24,0,0,0,0,
 							'g','1','2','3','4', '5','6',0,0,0,
 							0,0,0,0,0,' ',0,22,23,0,
 							0,0,0,0,0,'1','2','3','4','5',
@@ -165,10 +165,10 @@ char button_def_key[150] = {0,0,20,21,'k', 24,0,0,0,0,
 							// specials ... 20 - <-  21 - ->  22 up  23 down  24 esc
 							// 25-30  ctrl 1-6  31 - return
 
-short button_ul_x[15] = {0,46,0,126,0, 0,126,126,126,138, 166,0,0,126,172};
-short button_ul_y[15] = {0,0,132,23,46, 69,46,69,36,36, 36,23,92,92,0};
-short button_width[15] = {23,63,102,16,63, 63,63,63,6,14, 14,63,63,63,30};
-short button_height[15] = {23,23,23,13,23, 23,23,23,6,10,10,23,40,40,30};
+static const short button_ul_x[15] = {0,46,0,126,0, 0,126,126,126,138, 166,0,0,126,172};
+static const short button_ul_y[15] = {0,0,132,23,46, 69,46,69,36,36, 36,23,92,92,0};
+static const short button_width[15] = {23,63,102,16,63, 63,63,63,6,14, 14,63,63,63,30};
+static const short button_height[15] = {23,23,23,13,23, 23,23,23,6,10,10,23,40,40,30};
 
 INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK fresh_edit_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
@@ -993,12 +993,17 @@ void cd_get_item_text(short dlog_num, short item_num, char* str)
 }
 #endif
 
-void cd_get_text_edit_str(short dlog_num, char *str)
+std::string cd_get_text_edit_str(short dlog_num)
 {
-		if (edit_box != NULL)
-			GetWindowText(edit_box,str,255);
-			else str[0] = 0;
+	if (edit_box != NULL)
+	{
+		char str[256]{};
+		GetWindowText(edit_box, str, 255);
+		return str;
+	}
+	return {};
 }
+
 // NOTE!!! Expects a c string
 void cd_set_text_edit_str(short dlog_num, std::string_view str)
 {
@@ -1481,7 +1486,6 @@ void cd_erase_rect(short dlog_num,RECT to_fry)
 void cd_press_button(short dlog_num, short item_num)
 {
 	short dlg_index,item_index;
-	long dummy;
 	HDC win_dc;
 	RECT from_rect;
 	COLORREF colors[3] = {RGB(0,0,0),RGB(0,0,112),RGB(0,255,255)};
@@ -1508,9 +1512,9 @@ void cd_press_button(short dlog_num, short item_num)
 
 	if (play_sounds == TRUE) {
 		play_sound(37);
-		Delay(6,&dummy);
+		Delay(6);
 		}
-		else Delay(14,&dummy);
+		else Delay(14);
 
 	OffsetRect(&from_rect,-1 * button_width[item_flag[item_index]],0);
 	rect_draw_some_item_dc(dlgbtns_gworld,from_rect,win_dc,item_rect[item_index],0,2);
@@ -1542,9 +1546,9 @@ void cd_press_button(short dlog_num, short item_num)
 
 	if (play_sounds == TRUE) {
 		play_sound(37);
-		Delay(6,&dummy);
+		Delay(6);
 		}
-		else Delay(10,&dummy);
+		else Delay(10);
 
 	OffsetRect(&from_rect,-1 * button_width[button_type[item_flag[item_index]]],0);
 	rect_draw_some_item_dc(dlg_buttons_gworld,from_rect,win_dc,item_rect[item_index],0,2);

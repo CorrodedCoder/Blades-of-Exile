@@ -127,8 +127,6 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 	short right_top,right_hit;
 	short old_mode;
 	RECT temp_rect;
-	long dummy;
-	
 	Boolean ctrl_key = FALSE;
 	Boolean right_button = FALSE;
 
@@ -146,7 +144,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 			&& (left_button_status[i] >= 10))  {
 			draw_lb_slot(i,1);
 			play_sound(37);
-			Delay(10,&dummy);
+			Delay(10);
 			draw_lb_slot(i,0);
 			if (overall_mode == 61) {
 				switch(i)
@@ -263,7 +261,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 				//flash_rect(left_buttons[i][0]);
 				draw_rb_slot(i + right_top,1);
 				play_sound(37);
-				Delay(10,&dummy);
+				Delay(10);
 				draw_rb_slot(i + right_top,0);
 				change_made = TRUE;
 				switch(right_hit / 1000)
@@ -1177,14 +1175,11 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 
 void flash_rect(RECT to_flash)
 {
-	long dummy;
-	HDC hdc;
-
-	hdc = GetDC(mainPtr);
+	HDC hdc = GetDC(mainPtr);
 	SetViewportOrgEx(hdc,ulx,uly,nullptr);
 	InvertRect (hdc,&to_flash);
 	play_sound(37);
-	Delay(5,&dummy);
+	Delay(5);
 	InvertRect (hdc,&to_flash);
 	fry_dc(mainPtr,hdc);
 }

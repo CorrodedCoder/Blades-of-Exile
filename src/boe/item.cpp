@@ -1,5 +1,8 @@
 #include "boe/item.hpp"
+#include "boe/compatibility.hpp"
 #include <array>
+#include <format>
+#include <string>
 
 namespace {
 
@@ -84,3 +87,61 @@ short excluding_types(item_variety variety)
 	return c_excluding_types.at(static_cast<size_t>(variety));
 }
 
+void enchant_weapon(item_record_type& item, short enchant_type, short new_val)
+{
+	if (is_magic(item) || (item.ability != 0))
+	{
+		return;
+	}
+	const std::string full_name(item.full_name);
+	item.item_properties |= 4;
+	switch (enchant_type)
+	{
+	case 0:
+		format_to_buf(item.full_name, "{} (+1)", full_name);
+		item.bonus++;
+		item.value = new_val;
+		break;
+	case 1:
+		format_to_buf(item.full_name, "{} (+2)", full_name);
+		item.bonus += 2;
+		item.value = new_val;
+		break;
+	case 2:
+		format_to_buf(item.full_name, "{} (+3)", full_name);
+		item.bonus += 3;
+		item.value = new_val;
+		break;
+	case 3:
+		format_to_buf(item.full_name, "{} (F)", full_name);
+		item.ability = 110;
+		item.ability_strength = 5;
+		item.charges = 8;
+		break;
+	case 4:
+		format_to_buf(item.full_name, "{} (F!)", full_name);
+		item.value = new_val;
+		item.ability = 1;
+		item.ability_strength = 5;
+		break;
+	case 5:
+		format_to_buf(item.full_name, "{} (+5)", full_name);
+		item.value = new_val;
+		item.bonus += 5;
+		break;
+	case 6:
+		format_to_buf(item.full_name, "{} (B)", full_name);
+		item.bonus++;
+		item.ability = 71;
+		item.ability_strength = 5;
+		item.magic_use_type = 0;
+		item.charges = 8;
+		break;
+	default:
+		break;
+	}
+	if ((item.value > 15000) || (item.value < 0))
+	{
+		item.value = 15000;
+	}
+}

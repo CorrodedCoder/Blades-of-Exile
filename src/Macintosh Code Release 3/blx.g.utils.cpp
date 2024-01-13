@@ -165,10 +165,10 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw,short dest)
 	
 	l.x = i; l.y = j;
 	if ((supressing_some_spaces == TRUE) && 
-		(same_point(l,ok_space[0]) == FALSE) &&
-		(same_point(l,ok_space[1]) == FALSE) &&
-		(same_point(l,ok_space[2]) == FALSE) &&
-		(same_point(l,ok_space[3]) == FALSE))
+		(not_same_point(l,ok_space[0])) &&
+		(not_same_point(l,ok_space[1])) &&
+		(not_same_point(l,ok_space[2])) &&
+		(not_same_point(l,ok_space[3])))
 			return;
 
 	where_draw = calc_rect(i,j);
@@ -436,10 +436,10 @@ void draw_items()
 			where_draw.y = t_i.items[i].item_loc.y - center.y + 4;
 
 			if ((supressing_some_spaces == TRUE) && 
-				(same_point(where_draw,ok_space[0]) == FALSE) &&
-				(same_point(where_draw,ok_space[1]) == FALSE) &&
-				(same_point(where_draw,ok_space[2]) == FALSE) &&
-				(same_point(where_draw,ok_space[3]) == FALSE))
+				(not_same_point(where_draw,ok_space[0])) &&
+				(not_same_point(where_draw,ok_space[1])) &&
+				(not_same_point(where_draw,ok_space[2])) &&
+				(not_same_point(where_draw,ok_space[3])))
 				;
 			else if ((point_onscreen(center, t_i.items[i].item_loc) == TRUE) &&
 				!is_contained(t_i.items[i]) &&

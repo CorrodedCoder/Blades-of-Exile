@@ -27,40 +27,20 @@ short abs(short x)
 		return x * -1;
 	return x;
 }
-void Delay(short val,long *dummy)
-{
-	long then,now,wait_val;
-
-	wait_val = (long) val;
-	wait_val = wait_val * 16;
-	then = (long)GetCurrentTime();
-	now = then;
-	while (now - then < wait_val)   {
-		now = (long) GetCurrentTime();
-		}
-}
 
 void pause(short length)
 {
-	long dummy,len;
-	
-	len = (long) length;
-	
 	if (give_delays == 0)
-		Delay(len, &dummy);
+		Delay(length);
 }
 
 void beep()
 {
-	long dummy;
-
 	MessageBeep(MB_OK);
-	Delay(200,&dummy);
-
-	}
+	Delay(200);
+}
 
 void SysBeep(short a)
 {
 	MessageBeep(MB_ICONQUESTION);
-
 }

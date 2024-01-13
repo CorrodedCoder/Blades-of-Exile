@@ -16,7 +16,7 @@ void fix_boats();
 void load_outdoors(short to_create_x, short to_create_y, short targ_x, short targ_y,
 	short mode,short extra,char *str);
 void get_reg_data();
-long do_waterfall(long flag);
+int do_waterfall(int flag);
 short init_data(short flag);
 void start_data_dump();
 void end_data_dump();

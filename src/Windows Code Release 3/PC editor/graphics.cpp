@@ -25,16 +25,11 @@ extern setup_save_type setup_save;
 extern stored_items_list_type stored_items[3];
 extern stored_town_maps_type maps;
 extern stored_outdoor_maps_type o_maps;
-
 extern HWND	mainPtr;
 extern Boolean file_in_mem;
-
 extern HBITMAP button_num_gworld;
 extern short current_active_pc,ulx,uly;
 extern Boolean dialog_not_toast,ed_reg,party_in_scen;
-
-extern long register_flag,stored_key;
-extern long ed_flag,ed_key;
 extern HFONT font,italic_font,underline_font,bold_font,tiny_font,small_bold_font;
 extern HCURSOR arrow_curs[3][3], sword_curs, boot_curs, key_curs, target_curs,talk_curs,look_curs;
 extern HPALETTE hpal;
@@ -44,7 +39,7 @@ HBITMAP dlg_buttons_gworld,mixed_gworld,dialog_pattern_gworld,pattern_gworld;
 //HBITMAP race_dark,train_dark,items_dark,spells_dark;
 //HBITMAP race_light,train_light,items_light,spells_light;
 RECT whole_win_rect;
-	RECT title_from = {41,0,380,70};
+RECT title_from = {41,0,380,70};
 extern RECT pc_area_buttons[6][4] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
 extern RECT item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 - 
 extern RECT pc_info_rect; // Frame that holds a pc's basic info and items
@@ -380,12 +375,10 @@ void draw_main_screen()
 
 void do_button_action(short which_pc,short which_button)
 {
-	long dummy;
-
 	current_pressed_button = which_button;
 	display_party(6,0);
 	play_sound(34);
-	Delay(10,&dummy);
+	Delay(10);
 	current_pressed_button = -1;
 	display_party(6,0);
 }

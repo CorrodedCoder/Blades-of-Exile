@@ -1,6 +1,7 @@
 
 #include <Windows.h>
 #include <array>
+#include <string>
 #include <cassert>
 
 #define ND	15
@@ -861,21 +862,24 @@ void cd_retrieve_text_edit_str(short dlog_num, short item_num, char *str)
 	
 short cd_retrieve_text_edit_num(short dlog_num, short item_num)
 {
-	short i;
-	short num_given;
-	char str[256];
-	
-	for (i = 0; i < 80; i++)
-		if ((store_edit_parent_num[i] == dlog_num) && (store_edit_item[i] == item_num)
-			&& (edit_box[i] != NULL)) {
-				GetWindowText(edit_box[i],str,255);
-				sscanf(str,"%hd",&num_given);
-				return (short) num_given;
-				}
+	for (short i = 0; i < 80; i++)
+	{
+		if ((store_edit_parent_num[i] == dlog_num) && (store_edit_item[i] == item_num) && (edit_box[i] != NULL))
+		{
+			char str[256];
+			GetWindowText(edit_box[i], str, 255);
+			try
+			{
+				return std::stoi(str);
+			}
+			catch (std::invalid_argument const&)
+			{
+				return -1;
+			}
+		}
+	}
 	return -1;
-				
-
-}	
+}
 
 
 // NOTE!!! Expects a c string
@@ -1426,7 +1430,6 @@ void cd_erase_rect(short dlog_num,RECT to_fry)
 void cd_press_button(short dlog_num, short item_num)
 {
 	short dlg_index,item_index;
-	long dummy;
 	HDC win_dc;
 	RECT from_rect;
 	COLORREF colors[3] = {RGB(0,0,0),RGB(0,0,112),RGB(0,255,255)};
@@ -1453,9 +1456,9 @@ void cd_press_button(short dlog_num, short item_num)
 
 	if (play_sounds == TRUE) {
 		play_sound(37);
-		Delay(6,&dummy);
+		Delay(6);
 		}
-		else Delay(14,&dummy);
+		else Delay(14);
 
 	OffsetRect(&from_rect,-1 * button_width[item_flag[item_index]],0);
 	rect_draw_some_item_dc(dlgbtns_gworld,from_rect,win_dc,item_rect[item_index],0,2);
@@ -1487,7 +1490,7 @@ void cd_press_button(short dlog_num, short item_num)
 
 	if (play_sounds == TRUE) {
 		play_sound(37);
-		Delay(6,&dummy);
+		Delay(6);
 		}
 
 	OffsetRect(&from_rect,-1 * button_width[button_type[item_flag[item_index]]],0);
