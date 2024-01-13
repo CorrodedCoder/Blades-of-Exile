@@ -2826,7 +2826,6 @@ Boolean monst_cast_mage(creature_data_type* caster, short targ)
 	Boolean acted = FALSE;
 	location target, vict_loc, ashes_loc = { 0,0 }, l;
 	creature_data_type* affected;
-	long dummy;
 
 	if (is_antimagic(caster->m_loc.x, caster->m_loc.y)) {
 		return FALSE;
@@ -2962,7 +2961,7 @@ Boolean monst_cast_mage(creature_data_type* caster, short targ)
 			if (r1 < 0)
 				break;
 			x = get_ran(3, 1, 4);
-			//Delay(12,&dummy); // gives sound time to end
+			//Delay(12); // gives sound time to end
 			play_sound(25);
 			play_sound(-61);
 			summon_monster(r1, caster->m_loc,
@@ -3000,7 +2999,7 @@ Boolean monst_cast_mage(creature_data_type* caster, short targ)
 					break;
 				j = rand_short(2, 3);
 			}
-			Delay(12, &dummy); // gives sound time to end
+			Delay(12); // gives sound time to end
 			x = get_ran(4, 1, 4);
 			for (i = 0; i < j; i++) {
 				play_sound(-61);
@@ -3085,7 +3084,7 @@ Boolean monst_cast_mage(creature_data_type* caster, short targ)
 			x = get_ran(3, 1, 4);
 			play_sound(25);
 			play_sound(-61);
-			Delay(12, &dummy); // gives sound time to end
+			Delay(12); // gives sound time to end
 			summon_monster(85, caster->m_loc,
 				((caster->attitude % 2 != 1) ? 0 : 100) + x, caster->attitude);
 			break;

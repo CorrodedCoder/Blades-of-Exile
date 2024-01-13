@@ -127,14 +127,11 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 
 void flash_rect(RECT to_flash)
 {
-	long dummy;
-	HDC hdc;
-
-	hdc = GetDC(mainPtr);
+	HDC hdc = GetDC(mainPtr);
 	SetViewportOrgEx(hdc,ulx,uly,nullptr);
 	InvertRect (hdc,&to_flash);
 	play_sound(37);
-	Delay(5,&dummy);
+	Delay(5);
 	InvertRect (hdc,&to_flash);
 	fry_dc(mainPtr,hdc);
 }

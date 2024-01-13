@@ -10,7 +10,7 @@ short wd_to_pwd(std::string_view str)
 {
 	char pwd[8] = "aaaaaa";
 
-	for (int i = 0; i < std::min(6, static_cast<int>(str.size())); ++i)
+	for (size_t i = 0; i < std::min(static_cast<size_t>(6), str.size()); ++i)
 	{
 		if ((str[i] >= 65) && (str[i] <= 90))
 		{
@@ -27,11 +27,11 @@ short wd_to_pwd(std::string_view str)
 	}
 
 	int val = 0;
-	for (int i = 0; i < 6; ++i)
+	for (size_t i = 0; i < 6; ++i)
 	{
-		val += c_pow[i] * (int)(pwd[i] - 97);
+		val += c_pow[i] * static_cast<int>(pwd[i] - 97);
 	}
 	val %= 30000;
 
-	return (short)val;
+	return static_cast<short>(val);
 }

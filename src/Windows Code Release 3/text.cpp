@@ -1707,9 +1707,8 @@ void ClipRect(RECT *rect)
 
 void beep()
 {
-	long dummy;
 	MessageBeep(MB_OK);
-	Delay(30,&dummy);
+	Delay(30);
 }
 
 void SysBeep(short a)

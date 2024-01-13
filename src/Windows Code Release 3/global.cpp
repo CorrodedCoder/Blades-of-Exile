@@ -33,7 +33,7 @@ short ex_abs(short x)
 		else return x;
 }
 
-void Delay(short val,long *dummy)
+void Delay(short val)
 {
 	long then,now,wait_val;
 
@@ -48,12 +48,8 @@ void Delay(short val,long *dummy)
 
 void pause(short length)
 {
-	long dummy,len;
-	
-	len = (long) length;
-	
 	if (give_delays == 0)
-		Delay(len, &dummy);
+		Delay(length);
 }
 
 // stuff done legit, i.e. flags are within proper ranges for stuff done flag

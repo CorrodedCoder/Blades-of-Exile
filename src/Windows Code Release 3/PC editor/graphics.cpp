@@ -380,12 +380,10 @@ void draw_main_screen()
 
 void do_button_action(short which_pc,short which_button)
 {
-	long dummy;
-
 	current_pressed_button = which_button;
 	display_party(6,0);
 	play_sound(34);
-	Delay(10,&dummy);
+	Delay(10);
 	current_pressed_button = -1;
 	display_party(6,0);
 }

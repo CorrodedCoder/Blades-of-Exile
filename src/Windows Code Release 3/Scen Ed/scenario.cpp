@@ -2576,7 +2576,7 @@ void build_scenario()
 		reset_pwd();
 		save_scenario();	
 		}
-	//Delay(200,&dummy);
+	//Delay(200);
 	load_town(0);
 	augment_terrain(cur_out);
 	update_item_menu();

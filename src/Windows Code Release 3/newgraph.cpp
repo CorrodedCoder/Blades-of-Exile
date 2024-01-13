@@ -522,7 +522,6 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 	RECT missile_place_rect[30],missile_origin_rect[30],store_erase_rect[30];
 	POINT current_terrain_ul; 
 	HBITMAP temp_gworld;
-	long delay_dummy;
 	RECT ter_scrn_rect = {0,0,279,351};
 	long t1,t2;
 	long pause_len = 0;
@@ -677,11 +676,11 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 		}
 		if ((PSD[306][6] == 3) || ((PSD[306][6] == 1) && (t % 4 == 0)) || ((PSD[306][6] == 2) && (t % 3 == 0)))
 		{
-			Delay(1, &delay_dummy);
+			Delay(1);
 		}
 		if ((cartoon_happening == TRUE) && (t % 3 == 0))
 		{
-			Delay(1, &delay_dummy);
+			Delay(1);
 		}
 	}
 
@@ -759,7 +758,6 @@ void do_explosion_anim(short sound_num,short special_draw)
 	short t,cur_boom_type = 0; 
 	POINT current_terrain_ul; 
 	HBITMAP temp_gworld;
-	long delay_dummy;
 	short boom_type_sound[3] = {5,10,53};
 	RECT ter_scrn_rect = {0,0,279,351};
 	HDC hdc;
@@ -917,10 +915,10 @@ void do_explosion_anim(short sound_num,short special_draw)
 		}
 
 		//if (((PSD[306][6] == 1) && (t % 3 == 0)) || ((PSD[306][6] == 2) && (t % 2 == 0)))
-		Delay(2 * (1 + PSD[306][6]),&delay_dummy);
+		Delay(2 * (1 + PSD[306][6]));
 		if (cartoon_happening == TRUE)
 		{
-			Delay(1, &delay_dummy);
+			Delay(1);
 		}
 	}
 		
@@ -964,7 +962,6 @@ shop_type:
 */
 void click_shop_rect(RECT area_rect)
 {
-	long dum;
 	draw_shop_graphics(1,area_rect);
 	if (play_sounds == TRUE)
 	{
@@ -972,7 +969,7 @@ void click_shop_rect(RECT area_rect)
 	}
 	else
 	{
-		Delay(5, &dum);
+		Delay(5);
 	}
 	draw_shop_graphics(0,area_rect);
 
@@ -1213,7 +1210,6 @@ void refresh_shopping()
 
 void click_talk_rect(char *str_to_place,char *str_to_place2,RECT c_rect)
 {
-	long dum;
 	place_talk_str(str_to_place,str_to_place2,1,c_rect);
 	if (play_sounds == TRUE)
 	{
@@ -1221,7 +1217,7 @@ void click_talk_rect(char *str_to_place,char *str_to_place2,RECT c_rect)
 	}
 	else
 	{
-		Delay(5, &dum);
+		Delay(5);
 	}
 	place_talk_str(str_to_place,str_to_place2,0,c_rect);
 }

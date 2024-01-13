@@ -1559,14 +1559,11 @@ void check_cd_event(HWND hwnd,UINT message,UINT wparam,LONG lparam)
 
 void flash_rect(RECT to_flash)
 {
-	long dummy;
-	HDC hdc;
-
-	hdc = GetDC(mainPtr);
+	HDC hdc = GetDC(mainPtr);
 	SetViewportOrgEx(hdc,ulx,uly,nullptr);
 	InvertRect (hdc,&to_flash);
 	play_sound(37);
-	Delay(5,&dummy);
+	Delay(5);
 	InvertRect (hdc,&to_flash);
 	fry_dc(mainPtr,hdc);
 }
@@ -1574,14 +1571,12 @@ void flash_rect(RECT to_flash)
 
 void button_flash_rect(RECT to_flash)
 {
-	long dummy;
-	HDC hdc;
-
-	hdc = GetDC(mainPtr);
+	HDC hdc = GetDC(mainPtr);
 	InvertRect (hdc,&to_flash);
 	if (play_sounds == TRUE)
 		play_sound(34);
-		else Delay(5,&dummy);
+	else
+		Delay(5);
 	InvertRect (hdc,&to_flash);
 	fry_dc(mainPtr,hdc);
 }
@@ -1589,14 +1584,11 @@ void button_flash_rect(RECT to_flash)
 
  void flash_round_rect(RECT to_flash,short radius)
 {
-	long dummy;
-	HDC hdc;
-
-	hdc = GetDC(mainPtr);
+	HDC hdc = GetDC(mainPtr);
 	SetViewportOrgEx(hdc, ulx, uly, nullptr);
 	InvertRect (hdc,&to_flash);
 	play_sound(37);
-	Delay(5,&dummy);
+	Delay(5);
 	InvertRect (hdc,&to_flash);
 	fry_dc(mainPtr,hdc);
 }
@@ -1643,7 +1635,7 @@ void button_flash_rect(RECT to_flash)
 		return;
 		}
 
-//	Delay((long) 100,&dummy);
+	// Delay(100);
 							
 	start_outdoor_combat(party.out_c[i], out[party.p_loc.x][party.p_loc.y],count_walls(party.p_loc));
 

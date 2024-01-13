@@ -542,29 +542,24 @@ void draw_start_button(short which_position,short which_button)
 
 void main_button_click(short mode,RECT button_rect)
 {
-	long dummy;
-
-
 	ClipRect(&button_rect);
-
 	draw_buttons(1);
 	if (play_sounds == TRUE)
 		play_sound(37);
-		else Delay(5,&dummy);
+	else
+		Delay(5);
 	draw_buttons(0);			
 	undo_clip();
 }
 
 void arrow_button_click(RECT button_rect)
 {
-	long dummy;
-
 	ClipRect(&button_rect);
-	
 	refresh_stat_areas(1);
 	if (play_sounds == TRUE)
 		play_sound(37);
-		else Delay(5,&dummy);
+	else
+		Delay(5);
 	refresh_stat_areas(0);
 	undo_clip();
 }
@@ -2258,7 +2253,6 @@ const RECT c_mixed_square = { 353,169,381,205 };
 	RECT store_rect;
 	
 	RECT terrain_from;
-	long dummy;
 	short del_len,sound_key;
 	short x_adj = 0,y_adj = 0,which_m;
 
@@ -2313,13 +2307,13 @@ const RECT c_mixed_square = { 353,169,381,205 };
 	}
 		play_sound(c_sound_to_play[sound]);
 		if ((sound == 6) && (fast_bang == 0))
-			Delay(12, &dummy);
+			Delay(12);
 
-	Delay(10,&dummy);
+	Delay(10);
 	if (fast_bang == 0) {
 		del_len = PSD[306][6] * 3 + 4;
 		if (play_sounds == FALSE)
-			Delay(del_len, &dummy);
+			Delay(del_len);
 		}
 	redraw_terrain();
 	if ((cartoon_happening == FALSE) && (overall_mode > 9) && (overall_mode != 35) && (overall_mode != 36) && (overall_mode != 50))
@@ -2398,7 +2392,6 @@ void draw_targeting_line(POINT where_curs)
 {
 	location which_space,store_loc;
 	short i,j,k,l;
-	long dummy;
 	RECT redraw_rect,redraw_rect2,terrain_rect = {0,0,279,351},target_rect;
 	location from_loc;
 	RECT on_screen_terrain_area = {18, 18, 269,341};
@@ -2496,7 +2489,7 @@ void draw_targeting_line(POINT where_curs)
 				SelectObject(main_dc,store_pen);
 				DeleteObject(white_pen);
 
-				Delay(4,&dummy);
+				Delay(4);
 
 				InflateRect(&redraw_rect2,5,5);
 				redraw_partial_terrain(redraw_rect2);

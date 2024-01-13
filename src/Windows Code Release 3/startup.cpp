@@ -25,9 +25,7 @@ std::array<RECT, 6> startup_button;
 
 Boolean handle_startup_press(POINT the_point)
 {
-
 	short i,scen;
-	long dummy;
 
 	the_point.x -= ulx;
 	the_point.y -= uly;
@@ -41,7 +39,7 @@ Boolean handle_startup_press(POINT the_point)
 		draw_start_button(i,5);
 		if (play_sounds == TRUE)
 			play_sound(37);
-			else Delay(5,&dummy);
+			else Delay(5);
 		draw_start_button(i,0);			
 			switch (i) {
 				case 0:
@@ -108,7 +106,7 @@ Boolean handle_startup_press(POINT the_point)
 					break;
 
 				case 5:
-					Delay(50,&dummy);
+					Delay(50);
 					return TRUE;
 					break;
 			

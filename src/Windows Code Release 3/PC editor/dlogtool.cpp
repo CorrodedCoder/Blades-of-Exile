@@ -1466,7 +1466,6 @@ void cd_erase_rect(short dlog_num,RECT to_fry)
 void cd_press_button(short dlog_num, short item_num)
 {
 	short dlg_index,item_index;
-	long dummy;
 	HDC win_dc;
 	RECT from_rect;
 	COLORREF colors[3] = {RGB(0,0,0),RGB(0,0,112),RGB(0,255,255)};
@@ -1493,9 +1492,9 @@ void cd_press_button(short dlog_num, short item_num)
 
 	if (play_sounds == TRUE) {
 		play_sound(37);
-		Delay(6,&dummy);
+		Delay(6);
 		}
-		else Delay(14,&dummy);
+		else Delay(14);
 
 	OffsetRect(&from_rect,-1 * button_width[item_flag[item_index]],0);
 	rect_draw_some_item_dc(dlgbtns_gworld,from_rect,win_dc,item_rect[item_index],0,2);
@@ -1527,9 +1526,9 @@ void cd_press_button(short dlog_num, short item_num)
 
 	if (play_sounds == TRUE) {
 		play_sound(37);
-		Delay(6,&dummy);
+		Delay(6);
 		}
-		else Delay(10,&dummy);
+		else Delay(10);
 
 	OffsetRect(&from_rect,-1 * button_width[button_type[item_flag[item_index]]],0);
 	rect_draw_some_item_dc(dlg_buttons_gworld,from_rect,win_dc,item_rect[item_index],0,2);
