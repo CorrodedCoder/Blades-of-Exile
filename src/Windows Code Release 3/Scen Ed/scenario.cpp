@@ -2779,7 +2779,7 @@ short wd_to_pwd(std::string_view str)
 
 	for (i = 0; i < 6; i++)
 	{
-		if (str[i] == 0)
+		if (i >= str.size())
 		{
 			i = 6;
 		}
