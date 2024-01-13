@@ -39,7 +39,7 @@ extern Boolean in_startup_mode, registered, play_sounds, in_scen_debug, sys_7_av
 extern current_town_type	c_town;
 extern town_item_list 	t_i;
 extern location center;
-extern long register_flag;
+extern int register_flag;
 extern HWND mainPtr;
 extern stored_items_list_type stored_items[3];
 extern stored_outdoor_maps_type o_maps;
@@ -59,7 +59,7 @@ extern HWND modeless_dialogs[18];
 extern short which_combat_type;
 extern Boolean game_run_before;
 extern Boolean ed_reg;
-extern long ed_flag, ed_key;
+extern int ed_flag;
 extern short display_mode, cur_town_talk_loaded;
 extern Boolean give_intro_hint;
 extern char terrain_blocked[256];
@@ -1038,7 +1038,7 @@ void get_reg_data()
 {
 	std::ifstream f;
 	short i;
-	long vals[10];
+	int vals[10];
 
 	// Was: OpenFile("bladmisc.dat", &store, OF_READ /* | OF_SEARCH */);
 	f.open("bladmisc.dat", std::ios_base::binary);
@@ -1091,7 +1091,7 @@ void build_data_file(short mode)
 //mode; // 0 - make first time file  1 - customize  2 - new write
 {
 	short i;
-	long val_store, s_vals[10] = { 0,0,0,0,0, 0,0,0,0,0 };
+	int val_store, s_vals[10] = { 0,0,0,0,0, 0,0,0,0,0 };
 	std::fstream f;
 
 	// Was: OpenFile("bladmisc.dat", &store, OF_READWRITE /* | OF_SEARCH */);
@@ -1120,7 +1120,7 @@ void build_data_file(short mode)
 
 	for (i = 0; i < 10; i++) {
 		if (mode < 2)
-			val_store = (long)(rand_short(20000, 30000));
+			val_store = (int)(rand_short(20000, 30000));
 		else val_store = s_vals[i];
 		switch (i) {
 		case 2: // tip of day
@@ -1155,7 +1155,7 @@ void build_data_file(short mode)
 			break;
 		case 8:
 			if (mode < 2)
-				val_store = (long)(rand_short(1000, 5000));
+				val_store = (int)(rand_short(1000, 5000));
 			else val_store = s_vals[i];
 			ed_flag = val_store;
 			break;
@@ -1216,7 +1216,7 @@ Boolean load_scenario()
 		endian_adjust(data_store2.scen_item_list);
 	}
 	for (i = 0; i < 270; i++) {
-		const long len = (long)(scenariodata.scen_str_len[i]);
+		const int len = (int)(scenariodata.scen_str_len[i]);
 		if (i < 160) {
 			file_read_string(file_id, len, data_store5.scen_strs[i]);
 		}
@@ -1378,9 +1378,9 @@ void load_spec_graphics()
 
 short init_data(short flag)
 {
-	long k = 0;
+	int k = 0;
 
-	k = (long)flag;
+	k = (int)flag;
 	k = k * k;
 	jl = jl * jl + 84 + k;
 	k = k + 51;
@@ -1397,9 +1397,9 @@ short init_data(short flag)
 
 short town_s(short flag)
 {
-	long k = 0;
+	int k = 0;
 
-	k = (long)flag;
+	k = (int)flag;
 	k = k * k * k;
 	jl = jl * 54;
 	jl = jl * 2 + 1234 + k;
@@ -1416,9 +1416,9 @@ short town_s(short flag)
 
 short out_s(short flag)
 {
-	long k = 0;
+	int k = 0;
 
-	k = (long)flag;
+	k = (int)flag;
 	k = k * k * k;
 	jl = jl * jl + 84 + k;
 	k = k + scenariodata.out_data_size[0][1];
@@ -1435,9 +1435,9 @@ short out_s(short flag)
 
 static short str_size_1(short flag)
 {
-	long k = 0;
+	int k = 0;
 
-	k = (long)flag;
+	k = (int)flag;
 	k = k * k;
 	jl = jl * 2 + 1234 + k;
 	jl = jl * jl + 84 + k;
@@ -1455,9 +1455,9 @@ static short str_size_1(short flag)
 
 static short str_size_2(short flag)
 {
-	long k = 0;
+	int k = 0;
 
-	k = (long)flag;
+	k = (int)flag;
 	jl = jl * jl + 84 + k;
 	k = k * k * k * k;
 	jl = jl * 54;
@@ -1474,9 +1474,9 @@ static short str_size_2(short flag)
 
 static short str_size_3(short flag)
 {
-	long k = 0;
+	int k = 0;
 
-	k = (long)flag;
+	k = (int)flag;
 	k = k * (scenariodata.town_data_size[0][0] + scenariodata.town_data_size[0][1] + scenariodata.town_data_size[0][2] + scenariodata.town_data_size[0][3]);
 	k = k + 80;
 	jl = jl * jl + 84 + k;
@@ -1493,9 +1493,9 @@ static short str_size_3(short flag)
 
 short get_buf_ptr(short flag)
 {
-	long k = 0;
+	int k = 0;
 
-	k = (long)flag;
+	k = (int)flag;
 	jl = jl * jl + 84 + k;
 	k = k * (scenario.out_width() + scenario.out_width() + scenario.out_height() + scenariodata.town_data_size[0][3]);
 	k = k + 80;

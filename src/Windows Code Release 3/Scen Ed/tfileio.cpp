@@ -41,10 +41,9 @@ extern char talk_strs[170][256];
 extern char town_strs[180][256];
 extern HBITMAP spec_scen_g;
 extern char current_string[256] ;
-short specials_res_id,data_dump_file_id;
+short data_dump_file_id;
 char start_name[256];
-short start_volume,data_volume,jl = 0;
-long start_dir,data_dir;
+short jl = 0;
 
 Boolean cur_scen_is_win = TRUE;
 talking_record_type *dummy_talk_ptr;			
@@ -1299,11 +1298,12 @@ Boolean import_check_p (short pword)
 
 	return TRUE;
 }
+
 short init_data(short flag)
 {
-	long k = 0;
+	int k = 0;
 		
-	k = (long) flag;
+	k = (int) flag;
 	k = k * k;
 	jl = jl * jl + 84 + k;
 	k = k + 51;
@@ -1320,9 +1320,9 @@ k = k % 3000;
 
 short town_s(short flag)
 {
-	long k = 0;
+	int k = 0;
 		
-	k = (long) flag;
+	k = (int) flag;
 	k = k * k * k;
 	jl = jl * 54;
 	jl = jl * 2 + 1234 + k;
@@ -1339,9 +1339,9 @@ short town_s(short flag)
 
 short out_s(short flag)
 {
-	long k = 0;
+	int k = 0;
 		
-	k = (long) flag;
+	k = (int) flag;
 	k = k * k * k;
 	jl = jl * jl + 84 + k;
 	k = k + scenariodata.out_data_size[0][1];
@@ -1358,9 +1358,9 @@ short out_s(short flag)
 
 short str_size_1(short flag)
 {
-	long k = 0;
+	int k = 0;
 		
-	k = (long) flag;
+	k = (int) flag;
 	k = k * k;
 	jl = jl * 2 + 1234 + k;
 	jl = jl * jl + 84 + k;
@@ -1378,9 +1378,9 @@ short str_size_1(short flag)
 
 short str_size_2(short flag)
 {
-	long k = 0;
+	int k = 0;
 		
-	k = (long) flag;
+	k = (int) flag;
 	jl = jl * jl + 84 + k;
 	k = k * k * k * k;
 	jl = jl * 54;
@@ -1397,9 +1397,9 @@ short str_size_2(short flag)
 
 short str_size_3(short flag)
 {
-	long k = 0;
+	int k = 0;
 		
-	k = (long) flag;
+	k = (int) flag;
 	k = k * (scenariodata.town_data_size[0][0] +  scenariodata.town_data_size[0][1] +  scenariodata.town_data_size[0][2] +  scenariodata.town_data_size[0][3]);
 	k = k + 80;
 	jl = jl * jl + 84 + k;
@@ -1416,9 +1416,9 @@ short str_size_3(short flag)
 
 short get_buf_ptr(short flag)
 {
-	long k = 0;
+	int k = 0;
 		
-	k = (long) flag;
+	k = (int) flag;
 	jl = jl * jl + 84 + k;
 	k = k * (scenario.out_width() +  scenario.out_width() +  scenario.out_height() +  scenariodata.town_data_size[0][3]);
 	k = k + 80;

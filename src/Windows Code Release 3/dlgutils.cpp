@@ -38,8 +38,7 @@ extern talking_record_type talking;
 extern Boolean in_startup_mode,play_sounds,sys_7_avail,give_intro_hint;
 extern HWND mainPtr;
 extern short display_mode,stat_screen_mode,current_pc;
-extern long register_flag;
-extern long ed_flag,ed_key;
+extern int register_flag;
 extern Boolean registered,ed_reg,save_maps;
 extern short give_delays;
 extern Adventurers adven;
@@ -65,12 +64,12 @@ extern short store_shop_type;
 
 
 static const short heal_costs[9] = { 50,30,80,100,250,500,1000,3000,100 };
-static const long cost_mult[7] = { 5,7,10,13,16,20,25 };
+static const int cost_mult[7] = { 5,7,10,13,16,20,25 };
 
 
 HBITMAP pcs_gworld = NULL;
 short sign_mode,person_graphic,store_person_graphic,store_sign_mode;
-long num_talk_entries;
+int num_talk_entries;
 char null_string[256] = "";
 short store_tip_page_on = 0;
 // Talking vars
@@ -379,7 +378,7 @@ void set_up_shop_array()
 	short i,shop_pos = 0;
 	Boolean cursed_item = FALSE;
 	item_record_type store_i;
-	long store_l;
+	int store_l;
 	
 	for (i = 0; i < 30; i++)
 		store_shop_items[i] = -1;
@@ -492,7 +491,7 @@ void set_up_shop_array()
 		if (store_shop_items[i] >= 0) {
 			store_l = store_shop_costs[i];
 			store_l = (store_l * cost_mult[store_cost_mult]) / 10;
-			store_shop_costs[i] = (short) store_l;
+			store_shop_costs[i] = store_l;
 			}
   	i = max(0,shop_pos - 8);
 	SetScrollRange(shop_sbar,SB_CTL,0,i,TRUE);

@@ -88,7 +88,7 @@ static Boolean can_choose_caster;
 
 // Variables for spending xp
 static short store_skills[20], store_h, store_sp, store_skp, which_skill;
-static long store_g;
+static int store_g;
 static short store_train_mode, store_train_pc;
 
 // Dialog vars

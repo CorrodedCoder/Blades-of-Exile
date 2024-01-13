@@ -75,7 +75,6 @@ long start_time;
 
 // Shareware globals
 Boolean registered = FALSE,ed_reg = FALSE;
-long register_flag = 0,ed_flag = 0;
 Boolean game_run_before = TRUE,save_blocked = FALSE;
 
 short current_active_pc = 0;
@@ -100,7 +99,6 @@ location store_choice_loc;
 short town_size[3] = {64,48,24};
 short which_item_page[6] = {0,0,0,0,0,0}; // Remembers which of the 2 item pages pc looked at
 //short display_mode = 0; // 0 - center 1- ul 2 - ur 3 - dl 4 - dr 5 - small win
-long stored_key;
 short pixel_depth,dialog_answer;
 
 char file_path_name[256];

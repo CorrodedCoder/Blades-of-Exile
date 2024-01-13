@@ -2319,7 +2319,7 @@ void monster_attack_pc(short who_att,short target)
 							add_string_to_buf("  Steals food!                 ");
 							print_buf();
 							play_sound(26);
-							party.food = (long) max(0, (short) (party.food) - rand_short(0,10) - 10);
+							party.food = max(0, (short) (party.food) - rand_short(0,10) - 10);
 							put_pc_screen();
 							}
 							

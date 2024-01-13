@@ -19,7 +19,7 @@
 extern party_record_type party;
 extern Adventurers adven;
 extern Boolean dialog_not_toast,ed_reg;
-extern long ed_flag;
+extern int ed_flag;
 extern HWND mainPtr;
 extern Boolean file_in_mem;
 extern short dialog_answer;
@@ -192,7 +192,7 @@ void edit_day()
 		ModalDialog();	
 	cd_kill_dialog(917,0);
 	dialog_answer = boe_clamp(dialog_answer,0,500);
-	party.age = (long) (3700) * (long) (dialog_answer);
+	party.age = (int) (3700) * (int) (dialog_answer);
 }
 
 

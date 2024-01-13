@@ -29,9 +29,9 @@ extern stored_outdoor_maps_type o_maps;
 
 extern Boolean registered,play_sounds,sys_7_avail,save_blocked,ed_reg,party_in_scen;
 extern short current_active_pc;
-extern long register_flag,stored_key;
+extern int register_flag;
 extern HWND mainPtr;
-extern long ed_flag,ed_key;
+extern int ed_flag;
 
 extern Boolean file_in_mem;
 
@@ -558,9 +558,9 @@ void remove_party_from_scen()
 
 
 
-long do_waterfall(long flag)
+int do_waterfall(int flag)
 {
-	long k = 0;
+	int k = 0;
 		
 	k = flag;
 	k = k * k;
@@ -574,9 +574,9 @@ long do_waterfall(long flag)
 
 }
 
-long init_data(long flag)
+int init_data(int flag)
 {
-	long k = 0;
+	int k = 0;
 		
 	k = flag;
 	k = k * k;
@@ -592,7 +592,7 @@ void get_reg_data()
 {
 	HFILE f;
 	short i;
-	long vals[10];
+	int vals[10];
 	OFSTRUCT store;
 
 	return;
@@ -648,7 +648,7 @@ void build_data_file(short mode)
 //mode; // 0 - make first time file  1 - customize  2 - new write
 {
 	short i;
-	long val_store,s_vals[10] = {0,0,0,0,0, 0,0,0,0,0};
+	int val_store,s_vals[10] = {0,0,0,0,0, 0,0,0,0,0};
 	OFSTRUCT store;
 	HFILE f;
 
@@ -674,7 +674,7 @@ void build_data_file(short mode)
 
 	for (i = 0; i < 10; i++) {
 		if (mode < 2)
-			val_store = (long) (rand_short(5000,25000));
+			val_store = (int) (rand_short(5000,25000));
 			else val_store = s_vals[i];
 		switch (i) {
 			case 2: // tip of day
@@ -709,7 +709,7 @@ void build_data_file(short mode)
 				break;
 			case 8:
 				if (mode < 2)
-					val_store = (long) (rand_short(1000,5000));
+					val_store = (int) (rand_short(1000,5000));
 					else val_store = s_vals[i];
 				ed_flag = val_store;
 				break;

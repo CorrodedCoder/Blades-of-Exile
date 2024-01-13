@@ -86,8 +86,8 @@ HCURSOR arrow_curs[3][3], sword_curs, key_curs, target_curs,talk_curs,look_curs;
 
 // Shareware globals
 Boolean registered = TRUE,ed_reg = FALSE;
-long register_flag = 0;
-long ed_flag = 0,ed_key;
+int register_flag = 0;
+int ed_flag = 0;
 Boolean game_run_before = TRUE;
 
 Boolean debug_on = FALSE,give_intro_hint = TRUE;
@@ -122,7 +122,6 @@ short town_size[3] = {64,48,32};
 short which_item_page[6]; // Remembers which of the 2 item pages pc looked at
 short ulx, uly;
 short display_mode; // 0 - center 1- ul 2 - ur 3 - dl 4 - dr 5 - small win
-long stored_key;
 short pixel_depth,old_depth = 8;
 short current_ground, stat_screen_mode;
 short anim_step = -1;
