@@ -57,9 +57,9 @@ OPENFILENAME ofn;
 	OFSTRUCT store;
 Boolean suppress_load_file_name = FALSE;
 
-static short FSWrite(HFILE file, long* len, const char* buffer);
-static short FSRead(HFILE file, long* len, char* buffer);
-static short SetFPos(HFILE file, short mode, long len);
+static short FSWrite(HFILE file, size_t* len, const char* buffer);
+static short FSRead(HFILE file, size_t* len, char* buffer);
+static short SetFPos(HFILE file, short mode, size_t len);
 
 static const char szFilter[]{
 	"Blades of Exile Scenarios (*.EXS)\0" "*.exs\0"
@@ -104,9 +104,9 @@ void save_scenario()
 	char buffer[100005];
 	short error;
 	short out_num;
-	long len,scen_ptr_move = 0,save_town_size = 0,save_out_size = 0;
+	size_t len,scen_ptr_move = 0,save_town_size = 0,save_out_size = 0;
 	outdoor_record_type *dummy_out_ptr;
-	long total_file_size = 0;
+	size_t total_file_size = 0;
 
 	if (check_p(user_given_password) == FALSE) {
 		fancy_choice_dialog(868,0);
@@ -135,10 +135,10 @@ void save_scenario()
 	// Now, the pointer in scen_f needs to move along, so that the correct towns are sucked in.
 	// To do so, we'll remember the size of the saved town and out now.
 	out_num = cur_out.y * scenario.out_width() + cur_out.x;
-	save_out_size = (long) (scenariodata.out_data_size[out_num][0]) + (long) (scenariodata.out_data_size[out_num][1]);
-	save_town_size = (long) (scenariodata.town_data_size[cur_town][0]) + (long) (scenariodata.town_data_size[cur_town][1])
-					+ (long) (scenariodata.town_data_size[cur_town][2]) + (long) (scenariodata.town_data_size[cur_town][3])
-					+ (long) (scenariodata.town_data_size[cur_town][4]);
+	save_out_size = (size_t) (scenariodata.out_data_size[out_num][0]) + (size_t) (scenariodata.out_data_size[out_num][1]);
+	save_town_size = (size_t) (scenariodata.town_data_size[cur_town][0]) + (size_t) (scenariodata.town_data_size[cur_town][1])
+					+ (size_t) (scenariodata.town_data_size[cur_town][2]) + (size_t) (scenariodata.town_data_size[cur_town][3])
+					+ (size_t) (scenariodata.town_data_size[cur_town][4]);
 	scen_ptr_move = sizeof(scenario_data_type);
 	scen_ptr_move += sizeof(scen_item_data_type);
 	for (i = 0; i < 270; i++)  // scenario strings
@@ -210,7 +210,7 @@ void save_scenario()
 		return;
 		}	
 	for (i = 0; i < 270; i++) { // scenario strings
-		len = (long) scenariodata.scen_str_len[i];
+		len = (size_t) scenariodata.scen_str_len[i];
 		if ( i < 160) {
 			if ((error = FSWrite(dummy_f, &len, (char *) &(scen_strs[i]))) != 0) {
 				SysBeep(2); _lclose(scen_f); _lclose(dummy_f);oops_error(17);
@@ -241,14 +241,14 @@ void save_scenario()
 			if (error != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(18);}
 			
 			for (j = 0; j < 120; j++) {
-				len = (long) current_terrain.strlens[j];
+				len = (size_t) current_terrain.strlens[j];
 				FSWrite(dummy_f, &len, (char *) &(data_store.out_strs[j]));
 				}
 
 			SetFPos(scen_f,3,save_out_size);
 			}
 			else {
-				len = (long) (scenariodata.out_data_size[i][0]) + (long) (scenariodata.out_data_size[i][1]);
+				len = (size_t) (scenariodata.out_data_size[i][0]) + (size_t) (scenariodata.out_data_size[i][1]);
 				error = FSRead(scen_f, &len, buffer);
 				dummy_out_ptr = (outdoor_record_type *) buffer;
 				if (cur_scen_is_win != TRUE)
@@ -315,7 +315,7 @@ void save_scenario()
 					break;
 				}
 			for (j = 0; j < 140; j++) {
-				len = (long) town.strlens[j];
+				len = (size_t) town.strlens[j];
 				FSWrite(dummy_f, &len, (char *) &(town_strs[j]));
 				}
 
@@ -327,7 +327,7 @@ void save_scenario()
 			error = FSWrite(dummy_f, &len, (char *) &talking); 
 			if (error != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(22);}
 			for (j = 0; j < 170; j++) {
-				len = (long) talking.strlens[j];
+				len = (size_t) talking.strlens[j];
 				FSWrite(dummy_f, &len, (char *) &(talk_strs[j]));
 				}
 			
@@ -335,7 +335,7 @@ void save_scenario()
 			}
 			else { /// load unedited town into buffer and save, doing translataions when necessary
 
-				len = (long) (sizeof(town_record_type));
+				len = sizeof(town_record_type);
 				error = FSRead(scen_f, &len, buffer);
 				if (error != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(24);}
 				dummy_town_ptr = (town_record_type *) buffer;
@@ -346,10 +346,10 @@ void save_scenario()
 				if ((error = FSWrite(dummy_f, &len, buffer)) != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(23);return;}
 		
 				if (scenario.town_size(k) == 0) 
-					len = (long) ( sizeof(big_tr_type));
+					len = sizeof(big_tr_type);
 				else if (scenario.town_size(k) == 1) 
-					len = (long) ( sizeof(ave_tr_type));
-					else len = (long) ( sizeof(tiny_tr_type));
+					len = sizeof(ave_tr_type);
+					else len = sizeof(tiny_tr_type);
 				error = FSRead(scen_f, &len, buffer);
 				if (error != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(24);}
 
@@ -371,13 +371,13 @@ void save_scenario()
 
 				if ((error = FSWrite(dummy_f, &len, buffer)) != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(23);return;}						
 				
-				len = (long) (scenariodata.town_data_size[k][1])
-					+ (long) (scenariodata.town_data_size[k][2]);
+				len = (size_t) (scenariodata.town_data_size[k][1])
+					+ (size_t) (scenariodata.town_data_size[k][2]);
 				error = FSRead(scen_f, &len, buffer);
 				if (error != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(24);}
 				if ((error = FSWrite(dummy_f, &len, buffer)) != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(23);return;}						
 			
-				len = (long) (scenariodata.town_data_size[k][3]);
+				len = (size_t) (scenariodata.town_data_size[k][3]);
 				error = FSRead(scen_f, &len, buffer);
 				if (error != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(24);}
 				dummy_talk_ptr = (talking_record_type *) buffer;
@@ -386,7 +386,7 @@ void save_scenario()
 					endian_adjust(*dummy_talk_ptr);
 				}
 				if ((error = FSWrite(dummy_f, &len, buffer)) != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(23);return;}
-				len = (long) (scenariodata.town_data_size[k][4]);
+				len = (size_t) (scenariodata.town_data_size[k][4]);
 				error = FSRead(scen_f, &len, buffer);
 				if (error != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(24);}
 				if ((error = FSWrite(dummy_f, &len, buffer)) != 0) {_lclose(scen_f); _lclose(dummy_f);oops_error(23);return;}
@@ -433,7 +433,7 @@ void load_scenario()
 	Boolean file_ok = FALSE;
 	HFILE file_id;
 	short error;
-	long len;
+	size_t len;
 
 	ofn.hwndOwner = mainPtr;
 	ofn.lpstrFile = szFileName;
@@ -449,7 +449,7 @@ void load_scenario()
 		return;
 		}
 
-	len = (long) sizeof(scenario_data_type);
+	len = sizeof(scenario_data_type);
 	if ((error = FSRead(file_id, &len, (char *) &scenariodata)) != 0){
 		_lclose(file_id); oops_error(29); return;
 		}
@@ -484,7 +484,7 @@ void load_scenario()
 		endian_adjust(scen_item_list);
 	}
 	for (i = 0; i < 270; i++) {
-		len = (long) (scenariodata.scen_str_len[i]);
+		len = (size_t) (scenariodata.scen_str_len[i]);
 		if (i < 160) {
 			FSRead(file_id, &len, (char *) &(scen_strs[i]));
 			scen_strs[i][len] = 0;
@@ -588,7 +588,7 @@ void augment_terrain(location to_create)
 void load_outdoors(location which_out,short mode)
 {
 	short i,j,file_id;
-	long len,len_to_jump,store;
+	size_t len,len_to_jump,store;
 	short out_sec_num;
 	outdoor_record_type store_out;
 	short error;
@@ -608,11 +608,11 @@ void load_outdoors(location which_out,short mode)
 	len_to_jump = sizeof(scenario_data_type);
 	len_to_jump += sizeof(scen_item_data_type);
 	for (i = 0; i < 300; i++)
-		len_to_jump += (long) scenariodata.scen_str_len[i];
+		len_to_jump += (size_t) scenariodata.scen_str_len[i];
 	store = 0;
 	for (i = 0; i < out_sec_num; i++)
 		for (j = 0; j < 2; j++)
-			store += (long) (scenariodata.out_data_size[i][j]);
+			store += (size_t) (scenariodata.out_data_size[i][j]);
 	len_to_jump += store;
 	
 	error = SetFPos (file_id, 1, len_to_jump);	
@@ -629,7 +629,7 @@ void load_outdoors(location which_out,short mode)
 			endian_adjust(current_terrain);
 		}
 		for (i = 0; i < 120; i++) {
-			len = (long) (current_terrain.strlens[i]);
+			len = (size_t) (current_terrain.strlens[i]);
 			FSRead(file_id, &len, (char *) &(data_store.out_strs[i]));
 			data_store.out_strs[i][len] = 0;
 			}
@@ -667,7 +667,7 @@ void load_outdoors(location which_out,short mode)
 void load_town(short which_town)
 {
 	short i,j,file_id;
-	long len,len_to_jump = 0,store;
+	size_t len,len_to_jump = 0,store;
 	short error;
 	
 	
@@ -684,14 +684,14 @@ void load_town(short which_town)
 	len_to_jump = sizeof(scenario_data_type);
 	len_to_jump += sizeof(scen_item_data_type);
 	for (i = 0; i < 300; i++)
-		len_to_jump += (long) scenariodata.scen_str_len[i];
+		len_to_jump += (size_t) scenariodata.scen_str_len[i];
 	store = 0;
 	for (i = 0; i < 100; i++)
 		for (j = 0; j < 2; j++)
-			store += (long) (scenariodata.out_data_size[i][j]);
+			store += (size_t) (scenariodata.out_data_size[i][j]);
 	for (i = 0; i < which_town; i++)
 		for (j = 0; j < 5; j++)
-			store += (long) (scenariodata.town_data_size[i][j]);
+			store += (size_t) (scenariodata.town_data_size[i][j]);
 	len_to_jump += store;
 	
 	error = SetFPos (file_id, 1, len_to_jump);
@@ -765,7 +765,7 @@ void load_town(short which_town)
 
 
 	for (i = 0; i < 140; i++) {
-		len = (long) (town.strlens[i]);
+		len = (size_t) (town.strlens[i]);
 		FSRead(file_id, &len, (char *) &(town_strs[i]));
 		town_strs[i][len] = 0;
 		}
@@ -779,7 +779,7 @@ void load_town(short which_town)
 	}
 
 	for (i = 0; i < 170; i++) {
-		len = (long) (talking.strlens[i]);
+		len = (size_t) (talking.strlens[i]);
 		FSRead(file_id, &len, (char *) &(talk_strs[i]));
 		talk_strs[i][len] = 0;
 		}
@@ -797,7 +797,7 @@ void import_town(short which_town)
 	HFILE file_id;
 	Boolean file_ok = FALSE;
 	short error;
-	long len,len_to_jump = 0,store;
+	size_t len,len_to_jump = 0,store;
 	char buffer[100000];
 	short import_user_given_password;
 	char szFileName3 [128] = "scen.exs";
@@ -824,7 +824,7 @@ void import_town(short which_town)
 		return;
 		}
 	
-	len = (long) sizeof(scenario_data_type);
+	len = sizeof(scenario_data_type);
 	if ((error = FSRead(file_id, &len, buffer)) != 0){
 		_lclose(file_id); oops_error(43); return;
 		}
@@ -869,14 +869,14 @@ void import_town(short which_town)
 	len_to_jump = sizeof(scenario_data_type);
 	len_to_jump += sizeof(scen_item_data_type);
 	for (i = 0; i < 300; i++)
-		len_to_jump += (long) temp_scenario->scen_str_len[i];
+		len_to_jump += (size_t) temp_scenario->scen_str_len[i];
 	store = 0;
 	for (i = 0; i < 100; i++)
 		for (j = 0; j < 2; j++)
-			store += (long) (temp_scenario->out_data_size[i][j]);
+			store += (size_t) (temp_scenario->out_data_size[i][j]);
 	for (i = 0; i < which_town; i++)
 		for (j = 0; j < 5; j++)
-			store += (long) (temp_scenario->town_data_size[i][j]);
+			store += (size_t) (temp_scenario->town_data_size[i][j]);
 	len_to_jump += store;
 	error = SetFPos (file_id, 1, len_to_jump);
 	if (error != 0) {_lclose(file_id);oops_error(44);}
@@ -931,7 +931,7 @@ void import_town(short which_town)
 		}
 
 	for (i = 0; i < 140; i++) {
-		len = (long) (town.strlens[i]);
+		len = (size_t) (town.strlens[i]);
 		FSRead(file_id, &len, (char *) &(town_strs[i]));
 		town_strs[i][len] = 0;
 		}
@@ -941,7 +941,7 @@ void import_town(short which_town)
 	if (error != 0) {_lclose(file_id);oops_error(46);}
 	
 	for (i = 0; i < 170; i++) {
-		len = (long) (talking.strlens[i]);
+		len = (size_t) (talking.strlens[i]);
 		FSRead(file_id, &len, (char *) &(talk_strs[i]));
 		talk_strs[i][len] = 0;
 		}
@@ -957,7 +957,7 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 	short i,j,k,num_outdoors;
 	HFILE dummy_f,file_id;
 	short error;
-	long len,scen_ptr_move = 0;
+	size_t len,scen_ptr_move = 0;
 	location loc;
 	short x,y;
 
@@ -972,7 +972,7 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 			}
 	strcpy(szFileName,file_name);
 
-	len = (long) sizeof(scenario_data_type);
+	len = sizeof(scenario_data_type);
 	if ((error = FSRead(file_id, &len, (char *) &scenariodata)) != 0){
 		_lclose(file_id); oops_error(82); return;
 		}
@@ -982,7 +982,7 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 		_lclose(file_id); oops_error(83); return;
 		}
 	for (i = 0; i < 270; i++) {
-		len = (long) (scenariodata.scen_str_len[i]);
+		len = (size_t) (scenariodata.scen_str_len[i]);
 		if (i < 160) {
 			FSRead(file_id, &len, (char *) &(scen_strs[i]));
 			scen_strs[i][len] = 0;
@@ -1086,7 +1086,7 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 		return;
 		}	
 	for (i = 0; i < 270; i++) { // scenario strings
-		len = (long) scenariodata.scen_str_len[i];
+		len = (size_t) scenariodata.scen_str_len[i];
 		scen_ptr_move += len;
 		if (i < 160) {
 			if ((error = FSWrite(dummy_f, &len, (char *) &(scen_strs[i]))) != 0) {
@@ -1141,7 +1141,7 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 			if (error != 0) {_lclose(dummy_f);oops_error(6);}
 
 			for (j = 0; j < 120; j++) {
-				len = (long) current_terrain.strlens[j];
+				len = (size_t) current_terrain.strlens[j];
 				error = FSWrite(dummy_f, &len, (char *) &(data_store.out_strs[j]));
 				if (error != 0) {_lclose(dummy_f);oops_error(7);}
 				}
@@ -1202,7 +1202,7 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 					break;
 				}
 			for (j = 0; j < 140; j++) {
-				len = (long) town.strlens[j];
+				len = (size_t) town.strlens[j];
 				FSWrite(dummy_f, &len, (char *) &(town_strs[j]));
 				}
 
@@ -1214,7 +1214,7 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 			error = FSWrite(dummy_f, &len, (char *) &talking); 
 			if (error != 0) {_lclose(dummy_f);oops_error(9);}
 			for (j = 0; j < 170; j++) {
-				len = (long) talking.strlens[j];
+				len = (size_t) talking.strlens[j];
 				FSWrite(dummy_f, &len, (char *) &(talk_strs[j]));
 				}
 			
@@ -1460,51 +1460,51 @@ void start_data_dump()
 	SetFPos (data_dump_file_id, 2, 0);
 
 	auto get_text{ std::format("Scenario data for {}:\n",scen_strs[0]) };
-	long len = (long)get_text.size();
+	size_t len = get_text.size();
 	FSWrite(data_dump_file_id, &len, get_text.c_str());
 
 	get_text = "\n";
-	len = (long)get_text.size();
+	len = get_text.size();
 	FSWrite(data_dump_file_id, &len, get_text.c_str());
 
 	get_text = std::format("Terrain types for {}:\n",scen_strs[0]);
-	len = (long)get_text.size();
+	len = get_text.size();
 	FSWrite(data_dump_file_id, &len, get_text.c_str());
 
 	for (short i = 0; i < 256; i++)
 	{
 		get_text = std::format("  Terrain type {:d}: {}\n",i,scen_item_list.ter_names[i]);
-		len = (long)get_text.size();
+		len = get_text.size();
 		FSWrite(data_dump_file_id, &len, get_text.c_str());
 	}
 
 	get_text = "\n";
-	len = (long)get_text.size();
+	len = get_text.size();
 	FSWrite(data_dump_file_id, &len, get_text.c_str());
 
 	get_text = std::format("Monster types for {}:\n",scen_strs[0]);
-	len = (long)get_text.size();
+	len = get_text.size();
 	FSWrite(data_dump_file_id, &len, get_text.c_str());
 
 	for (short i = 0; i < 256; i++)
 	{
 		get_text = std::format("  Monster type {:d}: {}\n",i,scen_item_list.monst_names[i]);
-		len = (long)get_text.size();
+		len = get_text.size();
 		FSWrite(data_dump_file_id, &len, get_text.c_str());
 	}
 
 	get_text = "\n";
-	len = (long)get_text.size();
+	len = get_text.size();
 	FSWrite(data_dump_file_id, &len, get_text.c_str());
 
 	get_text = std::format("Item types for {}:\n",scen_strs[0]);
-	len = (long)get_text.size();
+	len = get_text.size();
 	FSWrite(data_dump_file_id, &len, get_text.c_str());
 
 	for (short i = 0; i < 400; i++)
 	{
 		get_text = std::format("  Item type {:d}: {}\n",i,scen_item_list.scen_items[i].full_name);
-		len = (long)get_text.size();
+		len = get_text.size();
 		FSWrite(data_dump_file_id, &len, get_text.c_str());
 	}
 	_lclose(data_dump_file_id);
@@ -1524,24 +1524,24 @@ void scen_text_dump()
 	location out_sec;
 
 	//	format_to_buf(empty_line,"\r");
-	//	empty_len = (long) (strlen(empty_line));
+	//	empty_len = strlen(empty_line);
 
 	SetFPos (data_dump_file_id, 2, 0);
 
 	auto get_text{ std::format("Scenario text for {}:\n",scen_strs[0]) };
-	long len = (long)get_text.size();
+	size_t len = get_text.size();
 	FSWrite(data_dump_file_id, &len, get_text.c_str());
 
 	get_text = "\n";
-	len = (long)get_text.size();
+	len = get_text.size();
 	FSWrite(data_dump_file_id, &len, get_text.c_str());
 
 	get_text = std::format("Scenario Text:\n");
-	len = (long)get_text.size();
+	len = get_text.size();
 	FSWrite(data_dump_file_id, &len, get_text.c_str());
 
 	get_text = "\n";
-	len = (long)get_text.size();
+	len = get_text.size();
 	FSWrite(data_dump_file_id, &len, get_text.c_str());
 
 	for (i = 0; i < 260; i++)
@@ -1551,31 +1551,31 @@ void scen_text_dump()
 				get_text = std::format("  Message {:d}: {}\n",i,scen_strs[i]);
 			else
 				get_text = std::format("  Message {:d}: {}\n",i,scen_strs2[i - 160]);
-			len = (long)get_text.size();
+			len = get_text.size();
 			FSWrite(data_dump_file_id, &len, get_text.c_str());
 		}
 
 	get_text = "\n";
-	len = (long)get_text.size();
+	len = get_text.size();
 	FSWrite(data_dump_file_id, &len, get_text.c_str());
 
 	get_text = std::format("Outdoor Sections Text:\n");
-	len = (long)get_text.size();
+	len = get_text.size();
 	FSWrite(data_dump_file_id, &len, get_text.c_str());
 
 	get_text = "\n";
-	len = (long)get_text.size();
+	len = get_text.size();
 	FSWrite(data_dump_file_id, &len, get_text.c_str());
 
 	for (out_sec.x = 0; out_sec.x < scenario.out_width() ; out_sec.x++)
 		for (out_sec.y = 0; out_sec.y < scenario.out_height() ; out_sec.y++)
 		{
 			get_text = std::format("  Section X = {:d}, Y = {:d}:\n",(short) out_sec.x,(short) out_sec.y);
-			len = (long)get_text.size();
+			len = get_text.size();
 			FSWrite(data_dump_file_id, &len, get_text.c_str());
 
 			get_text = "\n";
-			len = (long)get_text.size();
+			len = get_text.size();
 			FSWrite(data_dump_file_id, &len, get_text.c_str());
 
 			load_outdoors(out_sec,0);
@@ -1584,23 +1584,23 @@ void scen_text_dump()
 				if (data_store.out_strs[i][0] != '*')
 				{
 					get_text = std::format("  Message {:d}: {}\n",i,data_store.out_strs[i]);
-					len = (long)get_text.size();
+					len = get_text.size();
 					FSWrite(data_dump_file_id, &len, get_text.c_str());
 				}
 
 			get_text = "\n";
-			len = (long)get_text.size();
+			len = get_text.size();
 			FSWrite(data_dump_file_id, &len, get_text.c_str());
 		}
 
 	augment_terrain(out_sec);
 
 	get_text = std::format("Town Text:\n");
-	len = (long)get_text.size();
+	len = get_text.size();
 	FSWrite(data_dump_file_id, &len, get_text.c_str());
 
 	get_text = "\n";
-	len = (long)get_text.size();
+	len = get_text.size();
 	FSWrite(data_dump_file_id, &len, get_text.c_str());
 
 	for (j = 0; j < scenario.num_towns(); j++)
@@ -1608,57 +1608,57 @@ void scen_text_dump()
 		load_town(j);
 
 		get_text = std::format("  Town: {}\n",town_strs[0]);
-		len = (long)get_text.size();
+		len = get_text.size();
 		FSWrite(data_dump_file_id, &len, get_text.c_str());
 
 		get_text = "\n";
-		len = (long)get_text.size();
+		len = get_text.size();
 		FSWrite(data_dump_file_id, &len, get_text.c_str());
 
 		get_text = std::format("  Town Messages:");
-		len = (long)get_text.size();
+		len = get_text.size();
 		FSWrite(data_dump_file_id, &len, get_text.c_str());
 
 		get_text = "\n";
-		len = (long)get_text.size();
+		len = get_text.size();
 		FSWrite(data_dump_file_id, &len, get_text.c_str());
 
 		for (i = 0; i < 135; i++)
 			if (town_strs[i][0] != '*')
 			{
 				get_text = std::format("  Message {:d}: {}\n",i,town_strs[i]);
-				len = (long)get_text.size();
+				len = get_text.size();
 				FSWrite(data_dump_file_id, &len, get_text.c_str());
 			}
 
 		get_text = std::format("  Town Dialogue:");
-		len = (long)get_text.size();
+		len = get_text.size();
 		FSWrite(data_dump_file_id, &len, get_text.c_str());
 
 		get_text = "\n";
-		len = (long)get_text.size();
+		len = get_text.size();
 		FSWrite(data_dump_file_id, &len, get_text.c_str());
 
 		for (i = 0; i < 10; i++)
 		{
 			get_text = std::format("  Personality {:d} name: {}\n",j * 10 + i,talk_strs[i]);
-			len = (long)get_text.size();
+			len = get_text.size();
 			FSWrite(data_dump_file_id, &len, get_text.c_str());
 
 			get_text = std::format("  Personality {:d} look: {}\n",j * 10 + i,talk_strs[i + 10]);
-			len = (long)get_text.size();
+			len = get_text.size();
 			FSWrite(data_dump_file_id, &len, get_text.c_str());
 
 			get_text = std::format("  Personality {:d} ask name: {}\n",j * 10 + i,talk_strs[i + 20]);
-			len = (long)get_text.size();
+			len = get_text.size();
 			FSWrite(data_dump_file_id, &len, get_text.c_str());
 
 			get_text = std::format("  Personality {:d} ask job: {}\n",j * 10 + i,talk_strs[i + 30]);
-			len = (long)get_text.size();
+			len = get_text.size();
 			FSWrite(data_dump_file_id, &len, get_text.c_str());
 
 			get_text = std::format("  Personality {:d} confused: {}\n",j * 10 + i,talk_strs[i + 160]);
-			len = (long)get_text.size();
+			len = get_text.size();
 			FSWrite(data_dump_file_id, &len, get_text.c_str());
 		}
 
@@ -1666,30 +1666,30 @@ void scen_text_dump()
 			if (strlen((talk_strs[i])) > 0)
 			{
 				get_text = std::format("  Node {:d}: {}\n",(i - 40) / 2,talk_strs[i]);
-				len = (long)get_text.size();
+				len = get_text.size();
 				FSWrite(data_dump_file_id, &len, get_text.c_str());
 			}
 
 		get_text = "\n";
-		len = (long)get_text.size();
+		len = get_text.size();
 		FSWrite(data_dump_file_id, &len, get_text.c_str());
 	}
 
 	_lclose(data_dump_file_id);
 }
 
-static short FSWrite(HFILE file,long *len, const char *buffer)
+static short FSWrite(HFILE file, size_t*len, const char *buffer)
 {
-	long error = 0;
+	size_t error = 0;
 
 	if ((error = _lwrite(file, buffer, (UINT) (*len)))  == HFILE_ERROR)
 		return -1;
 	return 0;
 }
 
-static short FSRead(HFILE file,long *len,char *buffer)
+static short FSRead(HFILE file, size_t*len,char *buffer)
 {
-	long error = 0;
+	size_t error = 0;
 
 	if ((error = _lread(file, buffer, (UINT) (*len)))  == HFILE_ERROR)
 		return -1;
@@ -1697,9 +1697,9 @@ static short FSRead(HFILE file,long *len,char *buffer)
 		
 }
 
-static short SetFPos(HFILE file, short mode, long len)
+static short SetFPos(HFILE file, short mode, size_t len)
 {
-	long error = 0; 
+	size_t error = 0;
 	
 	switch (mode) {
 		case 1: error = _llseek(file,len,0); break; 
