@@ -337,7 +337,7 @@ void add_missile(location dest,short missile_type,short path_type,short x_adj,sh
 		return;
 	// lose redundant missiles
 	for (i = 0; i < 30; i++)
-		if ((store_missiles[i].missile_type >= 0) && (same_point(dest,store_missiles[i].dest) == TRUE))
+		if ((store_missiles[i].missile_type >= 0) && (same_point(dest,store_missiles[i].dest)))
 			return;
 	for (i = 0; i < 30; i++)
 		if (store_missiles[i].missile_type < 0) {
@@ -396,7 +396,7 @@ void add_explosion(location dest,short val_to_place,short place_type,short boom_
 		return;
 	// lose redundant explosions
 	for (i = 0; i < 30; i++)
-		if ((store_booms[i].boom_type >= 0) && (same_point(dest,store_booms[i].dest) == TRUE)
+		if ((store_booms[i].boom_type >= 0) && (same_point(dest,store_booms[i].dest))
 		 && (place_type == 0)) {
 			if (val_to_place > 0)
 				store_booms[i].val_to_place = val_to_place;
@@ -475,7 +475,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 	// init missile paths
 	for (i = 0; i < 30; i++) {
 		SetRect(&store_erase_rect[i],0,0,0,0);
-		if ((store_missiles[i].missile_type >= 0) && (same_point(missile_origin,store_missiles[i].dest) == TRUE))
+		if ((store_missiles[i].missile_type >= 0) && (same_point(missile_origin,store_missiles[i].dest)))
 			store_missiles[i].missile_type = -1;
 		}
 	screen_ul.x = center.x - 4; screen_ul.y = center.y - 4;

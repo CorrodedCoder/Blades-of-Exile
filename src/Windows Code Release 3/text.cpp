@@ -957,7 +957,7 @@ short do_look(location space)
 	from_where = get_cur_loc();
 	is_lit = pt_in_light(from_where,space);
 
-	if ((is_out() && (same_point(space, party.p_loc) == TRUE)) ||
+	if ((is_out() && (same_point(space, party.p_loc))) ||
 		(is_town() && (same_point(space, c_town.p_loc))))
 	{
 		add_string_to_buf("    Your party");
@@ -967,7 +967,7 @@ short do_look(location space)
 	{
 		for (i = 0; i < 6; i++)
 		{
-			if ((same_point(space, pc_pos[i]) == TRUE) && (adven[i].main_status == status_type::Normal)
+			if ((same_point(space, pc_pos[i])) && (adven[i].main_status == status_type::Normal)
 				&& (is_lit == TRUE) && (can_see(pc_pos[current_pc], space, 0) < 5))
 			{
 				add_string_to_buf("    {}", adven[i].name);
@@ -1016,7 +1016,7 @@ short do_look(location space)
 		for (i = 0; i < 10; i++)
 		{
 			if ((party.out_c[i].exists == TRUE)
-				&& (same_point(space,party.out_c[i].m_loc) == TRUE))
+				&& (same_point(space,party.out_c[i].m_loc)))
 			{
 				for (j = 0; j < 7; j++)
 				{
@@ -1084,7 +1084,7 @@ short do_look(location space)
 
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
 		{
-			if ((t_i.items[i].variety != item_variety::None) && (same_point(space,t_i.items[i].item_loc) == TRUE)
+			if ((t_i.items[i].variety != item_variety::None) && (same_point(space,t_i.items[i].item_loc))
 				&& (is_lit == TRUE))
 			{
 				if (t_i.items[i].variety == item_variety::Gold)
@@ -1115,7 +1115,7 @@ short do_look(location space)
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
 			{
 				if ((t_i.items[i].variety != item_variety::None) && (t_i.items[i].variety != item_variety::Gold) && (t_i.items[i].variety != item_variety::Food) &&
-					(same_point(space, t_i.items[i].item_loc) == TRUE) && !is_contained(t_i.items[i]))
+					(same_point(space, t_i.items[i].item_loc)) && !is_contained(t_i.items[i]))
 				{
 					if (is_ident(t_i.items[i]))
 					{
@@ -1147,7 +1147,7 @@ short town_boat_there(location where)
 	for (i = 0; i < 30; i++)
 	{
 		if ((party.boats[i].exists == TRUE) && (party.boats[i].which_town == c_town.town_num)
-			&& (same_point(where, party.boats[i].boat_loc) == TRUE))
+			&& (same_point(where, party.boats[i].boat_loc)))
 		{
 			return i;
 		}
@@ -1161,7 +1161,7 @@ short out_boat_there(location where)
 	
 	for (i = 0; i < 30; i++)
 	{
-		if ((party.boats[i].exists == TRUE) && (same_point(where, party.boats[i].boat_loc) == TRUE)
+		if ((party.boats[i].exists == TRUE) && (same_point(where, party.boats[i].boat_loc))
 			&& (party.boats[i].which_town == 200))
 		{
 			return i;
@@ -1178,7 +1178,7 @@ short town_horse_there(location where)
 	for (i = 0; i < 30; i++)
 	{
 		if ((party.horses[i].exists == TRUE) && (party.horses[i].which_town == c_town.town_num)
-			&& (same_point(where, party.horses[i].horse_loc) == TRUE))
+			&& (same_point(where, party.horses[i].horse_loc)))
 		{
 			return i;
 		}
@@ -1191,7 +1191,7 @@ short out_horse_there(location where)
 	short i;
 	for (i = 0; i < 30; i++)
 	{
-		if ((party.horses[i].exists == TRUE) && (same_point(where, party.horses[i].horse_loc) == TRUE)
+		if ((party.horses[i].exists == TRUE) && (same_point(where, party.horses[i].horse_loc))
 			&& (party.horses[i].which_town == 200))
 		{
 			return i;
@@ -1499,10 +1499,10 @@ void Draw_Some_Item (HBITMAP src_gworld, RECT src_rect, HBITMAP targ_gworld, loc
 		return;
 	}
 	if ((supressing_some_spaces == TRUE) &&
-		(same_point(target, ok_space[0]) == FALSE) &&
-		(same_point(target, ok_space[1]) == FALSE) &&
-		(same_point(target, ok_space[2]) == FALSE) &&
-		(same_point(target, ok_space[3]) == FALSE))
+		(not_same_point(target, ok_space[0])) &&
+		(not_same_point(target, ok_space[1])) &&
+		(not_same_point(target, ok_space[2])) &&
+		(not_same_point(target, ok_space[3])))
 	{
 		return;
 	}

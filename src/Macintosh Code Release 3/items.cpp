@@ -1006,7 +1006,7 @@ static short display_item(location from_loc,short pc_num,short mode, bool check_
 				 ((dist(from_loc,t_i.items[i].item_loc) <= 4) || (is_combat() && (which_combat_type == 0)))
 				  && (can_see(from_loc,t_i.items[i].item_loc,0) < 5))) &&
 				  (is_contained(t_i.items[i]) == check_container) &&
-				  (!check_container || (same_point(t_i.items[i].item_loc,from_loc) == TRUE))) {
+				  (!check_container || (same_point(t_i.items[i].item_loc,from_loc)))) {
 				  	item_array[array_position] = i;
 			  		array_position++;
 			  		total_items_gettable++;

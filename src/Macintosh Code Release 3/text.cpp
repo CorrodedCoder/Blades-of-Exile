@@ -832,12 +832,12 @@ short do_look(location space)
 	from_where = get_cur_loc();
 	is_lit = pt_in_light(from_where,space);
 
-	if (((overall_mode == 35) && (same_point(space,party.p_loc) == TRUE)) ||
+	if (((overall_mode == 35) && (same_point(space,party.p_loc))) ||
 		((overall_mode == 36) && (same_point(space,c_town.p_loc))))
 			add_string_to_buf("    Your party");
 	if (overall_mode == 37)
 		for (i = 0; i < 6; i++)
-			if ((same_point(space,pc_pos[i]) == TRUE) && (adven[i].main_status == status_type::Normal)
+			if ((same_point(space,pc_pos[i])) && (adven[i].main_status == status_type::Normal)
 				&& (is_lit == TRUE) && (can_see(pc_pos[current_pc],space,0) < 5)) {
 				format_to_buf(store_string, "    {}", (char *) adven[i].name);
 				add_string_to_buf( store_string);					
@@ -871,7 +871,7 @@ short do_look(location space)
 	if (overall_mode == 35) {
 		for (i = 0; i < 10; i++) {
 			if ((party.out_c[i].exists == TRUE) 
-				&& (same_point(space,party.out_c[i].m_loc) == TRUE)) {
+				&& (same_point(space,party.out_c[i].m_loc))) {
 					for (j = 0; j < 7; j++) 
 						if (party.out_c[i].what_monst.monst[j] != 0)
 						{
@@ -936,7 +936,7 @@ short do_look(location space)
 			add_string_to_buf("    Rubble               ");
 		
 		for (i = 0; i < NUM_TOWN_ITEMS; i++) {
-			if ((t_i.items[i].variety != 0) && (same_point(space,t_i.items[i].item_loc) == TRUE)
+			if ((t_i.items[i].variety != 0) && (same_point(space,t_i.items[i].item_loc))
 				&& (is_lit == TRUE)) {
 				if (t_i.items[i].variety == 3)
 					gold_here = TRUE;
@@ -953,7 +953,7 @@ short do_look(location space)
 			add_string_to_buf("    Many items");
 			else for (i = 0; i < NUM_TOWN_ITEMS; i++) {
 				if ((t_i.items[i].variety != 0) && (t_i.items[i].variety != 3) &&(t_i.items[i].variety != 11) &&
-				    (same_point(space,t_i.items[i].item_loc) == TRUE) && !is_contained(t_i.items[i])) {
+				    (same_point(space,t_i.items[i].item_loc)) && !is_contained(t_i.items[i])) {
 					if (is_ident(t_i.items[i]))
 						format_to_buf(store_string, "    {}",t_i.items[i].full_name); 
 						else format_to_buf(store_string, "    {}",t_i.items[i].name);				
@@ -977,7 +977,7 @@ short town_boat_there(location where)
 	// Num boats stores highest # of boat in town
 	for (i = 0; i < 30; i++)
 		if ((party.boats[i].exists == TRUE) && (party.boats[i].which_town == c_town.town_num) 
-		 && (same_point(where,party.boats[i].boat_loc) == TRUE))
+		 && (same_point(where,party.boats[i].boat_loc)))
 			return i;
 	return 30;
 }
@@ -986,7 +986,7 @@ short out_boat_there(location where)
 	short i;
 	
 	for (i = 0; i < 30; i++)
-		if ((party.boats[i].exists == TRUE) && (same_point(where,party.boats[i].boat_loc) == TRUE)
+		if ((party.boats[i].exists == TRUE) && (same_point(where,party.boats[i].boat_loc))
 			&& (party.boats[i].which_town == 200))
 			return i;
 	return 30;
@@ -999,7 +999,7 @@ short town_horse_there(location where)
 	// Num boats stores highest # of boat in town
 	for (i = 0; i < 30; i++)
 		if ((party.horses[i].exists == TRUE) && (party.horses[i].which_town == c_town.town_num) 
-		 && (same_point(where,party.horses[i].horse_loc) == TRUE))
+		 && (same_point(where,party.horses[i].horse_loc)))
 			return i;
 	return 30;
 }
@@ -1008,7 +1008,7 @@ short out_horse_there(location where)
 	short i;
 	
 	for (i = 0; i < 30; i++)
-		if ((party.horses[i].exists == TRUE) && (same_point(where,party.horses[i].horse_loc) == TRUE)
+		if ((party.horses[i].exists == TRUE) && (same_point(where,party.horses[i].horse_loc))
 			&& (party.horses[i].which_town == 200))
 			return i;
 	return 30;
@@ -1360,10 +1360,10 @@ BitMap store_dest;
 	if (src_gworld == NULL)
 		return;
 	if ((supressing_some_spaces == TRUE) && 
-		(same_point(target,ok_space[0]) == FALSE) &&
-		(same_point(target,ok_space[1]) == FALSE) &&
-		(same_point(target,ok_space[2]) == FALSE) &&
-		(same_point(target,ok_space[3]) == FALSE))
+		(not_same_point(target,ok_space[0])) &&
+		(not_same_point(target,ok_space[1])) &&
+		(not_same_point(target,ok_space[2])) &&
+		(not_same_point(target,ok_space[3])))
 			return;
 	terrain_there[target.x][target.y] = -1;
 	

@@ -177,7 +177,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 				out_where = global_to_local(where_check);
 
 				for (i = 0; i < 18; i++) 
-					if (same_point(out_where,outdoors[party.i_w_c.x][party.i_w_c.y].special_locs[i]) == TRUE) {
+					if (same_point(out_where,outdoors[party.i_w_c.x][party.i_w_c.y].special_locs[i])) {
 						*spec_num = outdoors[party.i_w_c.x][party.i_w_c.y].special_id[i];
 						if ((*spec_num >= 0) &&
 							(outdoors[party.i_w_c.x][party.i_w_c.y].specials[*spec_num].type == 4))
@@ -204,7 +204,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 				return FALSE;
 				}
 			for (i = 0; i < 50; i++)
-				if ((same_point(where_check,c_town.town.special_locs[i]) == TRUE) &&
+				if ((same_point(where_check,c_town.town.special_locs[i])) &&
 					(c_town.town.spec_id[i] >= 0)) {
 					if (c_town.town.specials[c_town.town.spec_id[i]].type == 4) {
 						*forced = TRUE;
@@ -903,7 +903,7 @@ Boolean use_space(location where)
 		}
 	if (is_crate(where.x,where.y)) {
 		to_loc = push_loc(from_loc,where);
-		if (same_point(from_loc,to_loc) == TRUE) {
+		if (same_point(from_loc,to_loc)) {
 			add_string_to_buf("  Can't push crate.");
 			return FALSE;
 			}
@@ -917,7 +917,7 @@ Boolean use_space(location where)
 		}
 	if (is_barrel(where.x,where.y)) {
 		to_loc = push_loc(from_loc,where);
-		if (same_point(from_loc,to_loc) == TRUE) {
+		if (same_point(from_loc,to_loc)) {
 			add_string_to_buf("  Can't push barrel.");
 			return FALSE;
 			}
@@ -932,7 +932,7 @@ Boolean use_space(location where)
 		
 	switch (scenario.ter_type(ter).special) {
 		case terrain_special::CanBeUsed:
-			if (same_point(where,from_loc) == TRUE) {
+			if (same_point(where,from_loc)) {
 				add_string_to_buf("  Not while on space.");
 				return FALSE;
 				}
@@ -964,7 +964,7 @@ Boolean adj_town_look(location where)
 
 	for (i = 0; i < NUM_TOWN_ITEMS; i++) 
 		if ((t_i.items[i].variety > item_variety::None) && is_contained(t_i.items[i]) &&
-			(same_point(where,t_i.items[i].item_loc) == TRUE))
+			(same_point(where,t_i.items[i].item_loc)))
 				item_there = TRUE;
 
 	terrain = t_d.terrain[where.x][where.y];
@@ -973,7 +973,7 @@ Boolean adj_town_look(location where)
 			add_string_to_buf("  Not close enough to search.");
 			else {
 				for (i = 0; i < 50; i++)
-					if (same_point(where,c_town.town.special_locs[i]) == TRUE) {
+					if (same_point(where,c_town.town.special_locs[i])) {
 						if (get_blockage(t_d.terrain[where.x][where.y]) > 0) { 
 						// tell party you find something, if looking at a space they can't step in
 							//if (c_town.town.special_id[i] >= 10) 
@@ -1467,7 +1467,7 @@ void push_things()
 				case terrain_special::ConveyorWest: l.x--; break;
 				default: break; // CC: Not present in original source
 				}
-			if (same_point(l,c_town.monst.dudes[i].m_loc) == FALSE) {
+			if (not_same_point(l,c_town.monst.dudes[i].m_loc)) {
 				c_town.monst.dudes[i].m_loc = l;
 				if ((point_onscreen(center,c_town.monst.dudes[i].m_loc) == TRUE) || 
 					(point_onscreen(center,l) == TRUE))
@@ -1485,7 +1485,7 @@ void push_things()
 				case terrain_special::ConveyorWest: l.x--; break;
 				default: break; // CC: Not present in original source
 			}
-			if (same_point(l,t_i.items[i].item_loc) == FALSE) {
+			if (not_same_point(l,t_i.items[i].item_loc)) {
 				t_i.items[i].item_loc = l;
 				if ((point_onscreen(center,t_i.items[i].item_loc) == TRUE) || 
 					(point_onscreen(center,l) == TRUE))
@@ -1503,7 +1503,7 @@ void push_things()
 			case terrain_special::ConveyorWest: l.x--; break;
 			default: break; // CC: Not present in original source
 			}
-		if (same_point(l,c_town.p_loc) == FALSE) {
+		if (not_same_point(l,c_town.p_loc)) {
 			ASB("You get pushed.");
 			if (scenario.ter_type(ter).special >= terrain_special::ConveyorNorth)
 				draw_terrain(0);
@@ -1522,7 +1522,7 @@ void push_things()
 				}
 			for (k = 0; k < NUM_TOWN_ITEMS; k++)
 				if ((t_i.items[k].variety > item_variety::None) && is_contained(t_i.items[k])
-				&& (same_point(t_i.items[k].item_loc,c_town.p_loc) == TRUE))
+				&& (same_point(t_i.items[k].item_loc,c_town.p_loc)))
 					t_i.items[k].item_properties = t_i.items[k].item_properties & 247;				
 			redraw = TRUE;
 			}	
@@ -1539,7 +1539,7 @@ void push_things()
 					case terrain_special::ConveyorWest: l.x--; break;
 					default: break; // CC: Not present in original source
 				}
-				if (same_point(l, pc_pos[i]) == FALSE) {
+				if (not_same_point(l, pc_pos[i])) {
 					ASB("Someone gets pushed.");	
 					ter = t_d.terrain[l.x][l.y];
 					if (scenario.ter_type(ter).special >= terrain_special::ConveyorNorth)
@@ -1557,7 +1557,7 @@ void push_things()
 						}
 					for (k = 0; k < NUM_TOWN_ITEMS; k++)
 						if ((t_i.items[k].variety > item_variety::None) && is_contained(t_i.items[k])
-						&& (same_point(t_i.items[k].item_loc,pc_pos[i]) == TRUE))
+						&& (same_point(t_i.items[k].item_loc,pc_pos[i])))
 							t_i.items[k].item_properties = t_i.items[k].item_properties & 247;		
 					redraw = TRUE;
 					}				
@@ -2372,7 +2372,7 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 			l.x = spec.ex1a; l.y = spec.ex1b;
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
 				if ((t_i.items[i].variety > item_variety::None) && (t_i.items[i].special_class == spec.ex2a)
-					&& (same_point(l,t_i.items[i].item_loc) == TRUE))
+					&& (same_point(l,t_i.items[i].item_loc)))
 						*next_spec = spec.ex2b;
 			break;
 		case 140:
@@ -2405,7 +2405,7 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 			l.x = spec.ex1a; l.y = spec.ex1b;
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
 				if ((t_i.items[i].variety > item_variety::None) && (t_i.items[i].special_class == spec.ex2a)
-					&& (same_point(l,t_i.items[i].item_loc) == TRUE)) {
+					&& (same_point(l,t_i.items[i].item_loc))) {
 						*next_spec = spec.ex2b;
 						*redraw = 1;
 						t_i.items[i].variety = item_variety::None;
@@ -2849,14 +2849,14 @@ void rect_spec(short which_mode,special_node_type cur_node,short cur_spec_type,
 					} break;
 		case 212:
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
-				if ((t_i.items[i].variety > item_variety::None) && (same_point(t_i.items[i].item_loc,l) == TRUE)) {
+				if ((t_i.items[i].variety > item_variety::None) && (same_point(t_i.items[i].item_loc,l))) {
 					t_i.items[i].item_loc.x = spec.sd1;
 					t_i.items[i].item_loc.y = spec.sd2;
 					}					
 			break;
 		case 213:
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
-				if ((t_i.items[i].variety > item_variety::None) && (same_point(t_i.items[i].item_loc,l) == TRUE)) {
+				if ((t_i.items[i].variety > item_variety::None) && (same_point(t_i.items[i].item_loc,l))) {
 					t_i.items[i].variety = item_variety::None;
 					}					
 			break;

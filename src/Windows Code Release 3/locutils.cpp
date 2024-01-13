@@ -406,7 +406,7 @@ bool is_blocked(location to_check)
 			return true;
 		for (i = 0; i < 20; i++)
 			if ((party.out_c[i].exists) == TRUE)  
-				if (same_point(party.out_c[i].m_loc, to_check) == TRUE)
+				if (same_point(party.out_c[i].m_loc, to_check))
 					return true;
 		return false;
 		}
@@ -565,7 +565,7 @@ Boolean outd_is_blocked(location to_check)
 			}
 		for (i = 0; i < 10; i++)
 			if ((party.out_c[i].exists) == TRUE)  				
-				if (same_point(party.out_c[i].m_loc, to_check) == TRUE)
+				if (same_point(party.out_c[i].m_loc, to_check))
 					return TRUE;
 		return FALSE;
 		}

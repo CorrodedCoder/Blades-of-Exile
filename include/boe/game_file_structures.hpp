@@ -734,4 +734,5 @@ static_assert(sizeof(stored_outdoor_maps_type) == 28800);
 
 using Adventurers = std::array<pc_record_type, 6>;
 
-Boolean same_point(location p1, location p2);
+bool same_point(location p1, location p2);
+bool not_same_point(location p1, location p2);

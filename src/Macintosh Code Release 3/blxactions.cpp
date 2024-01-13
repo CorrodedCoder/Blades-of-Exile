@@ -804,7 +804,7 @@ Boolean handle_action(EventRecord event)
 						else find_direction_from = 1;
 					
 						for (i = 0; i < 8; i++) 
-							if (same_point(party.loc_in_sec,outdoors[party.i_w_c.x][party.i_w_c.y].exit_locs[i]) == TRUE) {	
+							if (same_point(party.loc_in_sec,outdoors[party.i_w_c.x][party.i_w_c.y].exit_locs[i])) {	
 								which_t = outdoors[party.i_w_c.x][party.i_w_c.y].exit_dests[i];
 								if (which_t >= 0)
 									start_town_mode(outdoors[party.i_w_c.x][party.i_w_c.y].exit_dests[i], find_direction_from);
@@ -2590,7 +2590,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 
 	//if (forced == TRUE)
 	//	for (i = 0; i < 10; i++)
-	//		if (same_point(destination,party.out_c[i].m_loc) == TRUE)
+	//		if (same_point(destination,party.out_c[i].m_loc))
 	//				party.out_c[i].exists = FALSE;
 
 		ter = out[real_dest.x][real_dest.y];
