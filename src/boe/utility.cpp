@@ -1,5 +1,7 @@
 #include "boe/utility.hpp"
 #include <algorithm>
+#include <thread>
+#include <chrono>
 #include <cstdlib>
 
 short boe_clamp(short k, short low, short high)
@@ -43,4 +45,9 @@ short get_ran(short times, short low, short high)
 short rand_short(short low, short high)
 {
 	return get_ran(1, low, high);
+}
+
+void Delay(short val)
+{
+	std::this_thread::sleep_for(std::chrono::milliseconds(val * 16));
 }

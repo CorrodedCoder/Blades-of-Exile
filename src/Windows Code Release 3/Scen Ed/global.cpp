@@ -27,19 +27,6 @@ short abs(short x)
 		return x * -1;
 	return x;
 }
-void Delay(short val)
-{
-	long then,now,wait_val;
-
-	wait_val = (long) val;
-	wait_val = wait_val * 16;
-	then = (long)GetCurrentTime();
-	now = then;
-	while (now - then < wait_val)
-	{
-		now = (long) GetCurrentTime();
-	}
-}
 
 void pause(short length)
 {
