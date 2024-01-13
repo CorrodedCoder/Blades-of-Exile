@@ -2775,7 +2775,7 @@ short wd_to_pwd(std::string_view str)
 {
 	char pwd[8] = "aaaaaa";
 	short i;
-	long val = 0, pow[6] = { 1,10,100,1000,9999,99999 };
+	int val = 0, pow[6] = { 1,10,100,1000,9999,99999 };
 
 	for (i = 0; i < 6; i++)
 	{
@@ -2801,7 +2801,7 @@ short wd_to_pwd(std::string_view str)
 	}
 	for (i = 0; i < 6; i++)
 	{
-		val = val + pow[i] * (long)(pwd[i] - 97);
+		val = val + pow[i] * (int)(pwd[i] - 97);
 	}
 	val = val % 30000;
 	return (short)val;
