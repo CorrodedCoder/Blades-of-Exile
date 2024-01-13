@@ -2771,13 +2771,12 @@ short enter_password()
 	return i;
 }
 
+static const std::array<int, 6> c_pow{ 1,10,100,1000,9999,99999 };
+
 short wd_to_pwd(std::string_view str)
 {
 	char pwd[8] = "aaaaaa";
-	short i;
-	int val = 0, pow[6] = { 1,10,100,1000,9999,99999 };
-
-	for (i = 0; i < 6; i++)
+	for (short i = 0; i < 6; ++i)
 	{
 		if (i >= str.size())
 		{
@@ -2799,10 +2798,13 @@ short wd_to_pwd(std::string_view str)
 			}
 		}
 	}
-	for (i = 0; i < 6; i++)
+
+	int val = 0;
+	for (short i = 0; i < 6; ++i)
 	{
-		val = val + pow[i] * (int)(pwd[i] - 97);
+		val += c_pow[i] * (int)(pwd[i] - 97);
 	}
-	val = val % 30000;
+	val %= 30000;
+
 	return (short)val;
 }

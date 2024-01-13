@@ -868,7 +868,14 @@ short cd_retrieve_text_edit_num(short dlog_num, short item_num)
 		{
 			char str[256];
 			GetWindowText(edit_box[i], str, 255);
-			return std::stoi(str);
+			try
+			{
+				return std::stoi(str);
+			}
+			catch (std::invalid_argument const&)
+			{
+				return -1;
+			}
 		}
 	}
 	return -1;
