@@ -1,7 +1,8 @@
 #include <Windows.h>
 #include <cmath>
 #include <mmsystem.h>
-
+#include <thread>
+#include <chrono>
 #include <cstdio>
 
 #include "global.h"
@@ -233,7 +234,7 @@ void force_play_sound(short which)
 
 			num_fails++;
 			if (num_fails < 40)
-				sound_pause(25);
+				std::this_thread::sleep_for(std::chrono::milliseconds(25));
 				else {
 					MessageBox(mainPtr,"Cannot play sounds - Sounds stuck error a. Game can still be played, but quietly. Check to make sure your sound drivers are up to date and not corrupted.",
 					  "Sound Error",MB_OK | MB_ICONEXCLAMATION);
@@ -264,7 +265,7 @@ void force_play_sound(short which)
 
 			num_fails++;
 			if (num_fails < 40)
-				sound_pause(25);
+				std::this_thread::sleep_for(std::chrono::milliseconds(25));
 				else {
 					MessageBox(mainPtr,"Cannot play sounds - Sounds stuck error b. Game can still be played, but quietly. Check to make sure your sound drivers are up to date and not corrupted.",
 					 "Sound Error",MB_OK | MB_ICONEXCLAMATION);
@@ -326,15 +327,6 @@ void flip_sound()
 	play_sounds = (play_sounds == TRUE) ? FALSE : TRUE;
 }
 
-void sound_pause(long len) {
-	long t1,t2;
-
-	t1 = (long) GetCurrentTime();
-	t2 = t1;
-	while (t2 - t1 < len) {
-		t2 = (long)GetCurrentTime();
-		}
-}
 void move_sound(unsigned char ter,short step)
 {
 	const auto& terrain = scenario.ter_type(ter);

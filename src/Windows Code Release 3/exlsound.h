@@ -7,5 +7,4 @@ void play_sound(short which) ;
 void load_sounds ();
 Boolean sound_going(short which_s);
 void incidental_noises();
-void sound_pause(long len);
 void kill_sound();
