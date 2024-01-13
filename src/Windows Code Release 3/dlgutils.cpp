@@ -24,6 +24,7 @@
 #include "graphutl.h"
 #include "boe/utility.hpp"
 #include "boe/item.hpp"
+#include "boe/registration.hpp"
 #include "game_globals.hpp"
 
 #define	NUM_HINTS	30
@@ -1614,28 +1615,4 @@ Boolean enter_password()
 	cd_kill_dialog(823,0);
 	
 	return check_p(i);
-}
-
-short wd_to_pwd(std::string_view str)
-{
-	char pwd[8] = "aaaaaa";
-	short i;
-	long val = 0,pow[6] = {1,10,100,1000,9999,99999};
-	
-	for (i = 0; i < 6; i++) {
-		if (str[i] == 0) 
-			i = 6;
-			else {
-				if ((str[i] >= 65) && (str[i] <= 90))
-					pwd[i] = str[i] + 32;
-				else if ((str[i] >= 48) && (str[i] <= 57))
-					pwd[i] = str[i] + 49;
-				else if ((str[i] >= 97) && (str[i] <= 122))
-					pwd[i] = str[i];
-				}
-		}
-	for (i = 0; i < 6; i++)
-		val = val + pow[i] * (long) (pwd[i] - 97);
-	val = val % 30000;
-	return (short) val;
 }
