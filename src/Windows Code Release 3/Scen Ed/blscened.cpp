@@ -758,13 +758,19 @@ short check_cd_event(HWND hwnd,UINT message,UINT wparam,LONG lparam)
 
 	switch (message) {
 		case WM_COMMAND:
-			if ((wparam >= 150) && (wparam <= 250))  {
-
-				if (HIWORD(lparam) == EN_ERRSPACE)
+			// Per: https://github.com/CorrodedCoder/Blades-of-Exile/issues/58
+			// I *think* I need to do to block out EN_ notification codes at
+			// comparison time in the next block The comparison below against
+			// EN_ERRSPACE with lparam seems particularly odd since that should
+			// be the high word of wparam rather than lparam.
+			if ((LOWORD(wparam) >= 150) && (LOWORD(wparam) <= 250))
+			{
+				if (HIWORD(wparam) == EN_ERRSPACE)
+				{
 					play_sound(0);
-
-				return 0;
 				}
+				return 0;
+			}
 			cd_find_dlog(hwnd,&wind_hit,&item_hit); // item_hit is dummy
 			item_hit = (short) wparam;
 			break;

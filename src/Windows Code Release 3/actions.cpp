@@ -1483,8 +1483,13 @@ void check_cd_event(HWND hwnd,UINT message,UINT wparam,LONG lparam)
 	switch (message) {
 		case WM_COMMAND:
 			// pare out command messages sent from text box
-			if (wparam == 150)
-         	break;
+			// CC: See https://github.com/CorrodedCoder/Blades-of-Exile/issues/58
+			// In essence we are stripping off any EN_* notification codes
+			// so that we reject all messages coming from the text box.
+			if (LOWORD(wparam) == 150)
+			{
+				break;
+			}
 			cd_find_dlog(hwnd,&wind_hit,&item_hit); // item_hit is dummy
 			item_hit = (short) wparam;
 			break;
