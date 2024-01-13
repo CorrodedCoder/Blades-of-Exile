@@ -6,13 +6,6 @@
 
 extern short give_delays;
 
-Boolean same_point(location p1,location p2)
-{
-	if ((p1.x == p2.x) & (p1.y == p2.y))
-		return TRUE;
-		else return FALSE;
-}
-
 short s_pow(short x,short y)
 {
 	if (y == 0)
