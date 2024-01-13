@@ -636,9 +636,6 @@ Boolean display_help_event_filter (short item_hit)
 
 void display_help(short mode,short parent)
 {
-	char get_text[256];
-   long get_val;
-	
 	store_help_mode = mode;
 	cur_entry = 3;
 
@@ -646,17 +643,18 @@ void display_help(short mode,short parent)
 
 	cd_create_dialog_parent_num(997,parent);
 
-		get_str (get_text, 25 + mode, 1);
-		csit( 997,6, get_text);
-		GetIndString (get_text, 25 + mode, 2);
-		StringToNum(get_text,&get_val);
-		num_entries = (short) get_val;
-		get_str (get_text, 25 + mode, cur_entry);
-		csit( 997,7, get_text);
+	char get_text[256]{};
+	get_str (get_text, 25 + mode, 1);
+	csit( 997,6, get_text);
+	GetIndString (get_text, 25 + mode, 2);
+	num_entries = std::stoi(get_text);
+	get_str (get_text, 25 + mode, cur_entry);
+	csit( 997,7, get_text);
 
 	while (dialog_not_toast)
-		ModalDialog();	cd_kill_dialog(997,0);
+		ModalDialog();
 
+	cd_kill_dialog(997,0);
 }
 
 

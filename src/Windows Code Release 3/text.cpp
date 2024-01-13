@@ -1742,13 +1742,6 @@ void GetIndString(char *str,short i, short j) {
 	}
 }
 
-void StringToNum(char *the_string,long *number_given)
-{
-	long store_short;
-	sscanf(the_string,"%ld",&store_short);
-	*number_given = (long) store_short;
-}
-
 void InsetRect(RECT *rect,short x, short y)
 {
 	InflateRect(rect,-1 * x, -1 * y);
