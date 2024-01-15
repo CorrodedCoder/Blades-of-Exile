@@ -2993,15 +2993,15 @@ Boolean town_move_party(location destination,short forced)
 	return FALSE;
 }
 
-static bool pc_poisoned(short i)
+static bool pc_poisoned(const pc_record_type& pc)
 {
-	return (adven[i].main_status == status_type::Normal) && (adven[i].gaffect(affect::Poisoned) > 0);
+	return (pc.main_status == status_type::Normal) && (pc.gaffect(affect::Poisoned) > 0);
 }
 
 bool someone_poisoned()
 {
 	for (short i = 0; i < 6; i++)
-		if (pc_poisoned(i))
+		if (pc_poisoned(adven[i]))
 			return true;
 	return false;
 }
