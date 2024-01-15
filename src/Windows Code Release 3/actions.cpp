@@ -2426,30 +2426,26 @@ void increase_age()
 
 void handle_cave_lore()
 {
-	short i,pic;
-	unsigned char ter;
-	
 	if (is_not_out())
 		return;
-	
-	ter = out[party.p_loc.x][party.p_loc.y];
-	pic = scenario.ter_type(ter).picture;
-	for (i = 0; i < 6; i++)
-		if ( pc_has_cave_lore(adven[i]) && (rand_short(0,12) == 5)
-			&& (((pic >= 0) && (pic <= 1)) || ((pic >= 70) && (pic <= 76))) ) {
-			party.food += get_ran(2,1,6);
-			add_string_to_buf("{} hunts.", adven[i].name);
-			put_pc_screen();
-			}
-	for (i = 0; i < 6; i++)
-		if ( pc_has_woodsman(adven[i]) && (rand_short(0,12) == 5)
-			&& (((pic >= 2) && (pic <= 4)) || ((pic >= 79) && (pic <= 84)))) {
-			party.food += get_ran(2,1,6);
-			add_string_to_buf("{} hunts.", adven[i].name);
-			put_pc_screen();
-			}
-			
 
+	const short pic = scenario.ter_type(out[party.p_loc.x][party.p_loc.y]).picture;
+	for (short i = 0; i < 6; i++)
+		if (pc_has_cave_lore(adven[i]) && (rand_short(0, 12) == 5)
+			&& (((pic >= 0) && (pic <= 1)) || ((pic >= 70) && (pic <= 76)))) 
+		{
+			party.food += get_ran(2, 1, 6);
+			add_string_to_buf("{} hunts.", adven[i].name);
+			put_pc_screen();
+		}
+	for (short i = 0; i < 6; i++)
+		if (pc_has_woodsman(adven[i]) && (rand_short(0, 12) == 5)
+			&& (((pic >= 2) && (pic <= 4)) || ((pic >= 79) && (pic <= 84))))
+		{
+			party.food += get_ran(2, 1, 6);
+			add_string_to_buf("{} hunts.", adven[i].name);
+			put_pc_screen();
+		}
 }
 
 void switch_pc(short which)
