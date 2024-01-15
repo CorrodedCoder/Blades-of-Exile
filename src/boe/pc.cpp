@@ -140,12 +140,14 @@ bool pc_cure(pc_record_type& pc, short amt)
 	return true;
 }
 
-void pc_restore_sp(pc_record_type& pc, short amt)
+bool pc_restore_sp(pc_record_type& pc, short amt)
 {
 	if (pc.cur_sp < pc.max_sp)
 	{
 		pc.cur_sp = std::min(static_cast<short>(pc.cur_sp + amt), pc.max_sp);
+		return true;
 	}
+	return false;
 }
 
 void pc_setup_blank(pc_record_type& pc)

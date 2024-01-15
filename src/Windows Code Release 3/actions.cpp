@@ -2360,18 +2360,12 @@ void increase_age()
 			}
 	if (is_out()) {
 			if (party.age % 80 == 0) {
-			for (i = 0; i < 6; i++)
-				if ((adven[i].main_status == status_type::Normal) && (adven[i].cur_sp < adven[i].max_sp))
-					update_stat = TRUE;
-				adventurers_restore_sp(adven, 2);
+				update_stat = adventurers_restore_sp(adven, 2) ? TRUE : FALSE;
 				}
 			}
 		else {	
 			if (party.age % 40 == 0) {
-			for (i = 0; i < 6; i++)
-				if ((adven[i].main_status == status_type::Normal) && (adven[i].cur_sp < adven[i].max_sp))
-					update_stat = TRUE;
-				adventurers_restore_sp(adven, 1);
+				update_stat = adventurers_restore_sp(adven, 1) ? TRUE : FALSE;
 				}
 			}
 

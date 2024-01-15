@@ -58,12 +58,17 @@ bool adventurers_cure(Adventurers& adventurers, short amt)
 	return 0 != std::ranges::count_if(adventurers, [amt](auto& pc) { return pc_cure(pc, amt); });
 }
 
-void adventurers_restore_sp(Adventurers& adventurers, short amt)
+bool adventurers_restore_sp(Adventurers& adventurers, short amt)
 {
+	bool someone_restored = false;
 	for (auto& pc : adventurers | std::views::filter(is_normal))
 	{
-		pc_restore_sp(pc, amt);
+		if (pc_restore_sp(pc, amt))
+		{
+			someone_restored = true;
+		}
 	}
+	return someone_restored;
 }
 
 bool adventurers_has_ability(const Adventurers& adventurers, short abil)
