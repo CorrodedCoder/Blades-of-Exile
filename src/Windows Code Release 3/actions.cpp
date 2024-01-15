@@ -2475,16 +2475,14 @@ void switch_pc(short which)
 
 void drop_pc(short which)
 {
-	short choice,i;
-	
-	choice = fancy_choice_dialog(1053,0);
-	if (choice == 1) {
+	if (fancy_choice_dialog(1053, 0) == 1)
+	{
 		add_string_to_buf("Delete PC: Cancelled.           ");
 		return;
-		}
+	}
 	add_string_to_buf("Delete PC: OK.                  ");
 	kill_pc(which, status_type::Absent);
-	for (i = which; i < 5; i++)
+	for (short i = which; i < 5; i++)
 		adven[i] = adven[i + 1];
 	adven[5].main_status = status_type::Absent;
 	set_stat_window(0);
