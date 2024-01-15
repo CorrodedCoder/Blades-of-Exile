@@ -496,7 +496,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 						ter = out[party.p_loc.x][party.p_loc.y];
   						if (party.in_boat >= 0)
 							add_string_to_buf("Rest:  Not in boat.               ");
-						else if (someone_poisoned() == TRUE)
+						else if (someone_poisoned())
 							add_string_to_buf("Rest: Someone poisoned.           ");
 							else if (party.food <= 12)
 								add_string_to_buf("Rest: Not enough food.            ");
@@ -2995,14 +2995,12 @@ Boolean town_move_party(location destination,short forced)
 
 
 
-Boolean someone_poisoned()
+bool someone_poisoned()
 {
-	short i;
-	
-	for (i = 0; i < 6; i++)
+	for (short i = 0; i < 6; i++)
 		if ((adven[i].main_status == status_type::Normal) && (adven[i].gaffect(affect::Poisoned) > 0))
-			return TRUE;
-	return FALSE;
+			return true;
+	return false;
 }
 
 short nearest_monster()
