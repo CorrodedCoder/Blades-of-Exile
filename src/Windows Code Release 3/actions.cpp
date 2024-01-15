@@ -404,7 +404,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 			switch(button_hit)
 			{
 				case 0: case 1:
-					if (!someone_awake()) {
+					if (!someone_awake(adven)) {
 						ASB("Everyone's asleep/paralyzed.");
 						need_reprint = TRUE;
 						need_redraw = TRUE;						
@@ -768,7 +768,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 					menu_activate(1);
 					}					
 				if ((right_button == FALSE) && (overall_mode == 1)) {
-					if (!someone_awake()) {
+					if (!someone_awake(adven)) {
 						ASB("Everyone's asleep/paralyzed.");
 						need_reprint = TRUE;
 						need_redraw = TRUE;
@@ -1470,10 +1470,10 @@ static bool pc_awake(const pc_record_type& pc)
 	return (pc.main_status == status_type::Normal) && (pc.gaffect(affect::Asleep) <= 0) && (pc.gaffect(affect::Paralyzed) <= 0);
 }
 
-bool someone_awake()
+bool someone_awake(const Adventurers& adventurers)
 {
 	for (short i = 0; i < 6; i++)
-		if (pc_awake(adven[i]))
+		if (pc_awake(adventurers[i]))
 			return true;
 	return false;
 }
