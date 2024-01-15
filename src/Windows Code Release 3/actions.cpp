@@ -2993,14 +2993,6 @@ Boolean town_move_party(location destination,short forced)
 	return FALSE;
 }
 
-bool someone_poisoned(const Adventurers& adventurers)
-{
-	for (short i = 0; i < 6; i++)
-		if (pc_poisoned(adventurers[i]))
-			return true;
-	return false;
-}
-
 short nearest_monster()
 {
 	short i = 100,j,s;

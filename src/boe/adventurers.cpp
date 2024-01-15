@@ -9,6 +9,11 @@ namespace
 	auto is_normal = [](const auto& adventurer) { return adventurer.main_status == status_type::Normal; };
 }
 
+bool someone_poisoned(const Adventurers& adventurers)
+{
+	return std::ranges::any_of(adventurers, pc_poisoned);
+}
+
 bool cave_lore_present(const Adventurers& adventurers)
 {
 	return std::ranges::any_of(adventurers, pc_has_cave_lore);
