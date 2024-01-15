@@ -1465,9 +1465,9 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 	return are_done;
 }
 
-static bool pc_awake(short i)
+static bool pc_awake(const pc_record_type& pc)
 {
-	return (adven[i].main_status == status_type::Normal) && (adven[i].gaffect(affect::Asleep) <= 0) && (adven[i].gaffect(affect::Paralyzed) <= 0);
+	return (pc.main_status == status_type::Normal) && (pc.gaffect(affect::Asleep) <= 0) && (pc.gaffect(affect::Paralyzed) <= 0);
 }
 
 Boolean someone_awake()
@@ -1475,7 +1475,7 @@ Boolean someone_awake()
 	short i;
 
 	for (i = 0; i < 6; i++)
-		if (pc_awake(i))
+		if (pc_awake(adven[i]))
 			return TRUE;
 	return FALSE;
 }
