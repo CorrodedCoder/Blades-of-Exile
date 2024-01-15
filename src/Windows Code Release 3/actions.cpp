@@ -496,7 +496,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 						ter = out[party.p_loc.x][party.p_loc.y];
   						if (party.in_boat >= 0)
 							add_string_to_buf("Rest:  Not in boat.               ");
-						else if (someone_poisoned())
+						else if (someone_poisoned(adven))
 							add_string_to_buf("Rest: Someone poisoned.           ");
 							else if (party.food <= 12)
 								add_string_to_buf("Rest: Not enough food.            ");
@@ -2993,10 +2993,10 @@ Boolean town_move_party(location destination,short forced)
 	return FALSE;
 }
 
-bool someone_poisoned()
+bool someone_poisoned(const Adventurers& adventurers)
 {
 	for (short i = 0; i < 6; i++)
-		if (pc_poisoned(adven[i]))
+		if (pc_poisoned(adventurers[i]))
 			return true;
 	return false;
 }

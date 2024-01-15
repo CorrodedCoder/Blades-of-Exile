@@ -23,7 +23,7 @@ void start_new_game();
 location get_cur_direction(POINT the_point);
 Boolean outd_move_party(location destination,Boolean forced);
 Boolean town_move_party(location destination,short forced);
-bool someone_poisoned();
+bool someone_poisoned(const Adventurers& adventurers);
 short nearest_monster();
 void setup_outdoors(location where);
 short get_outdoor_num();
