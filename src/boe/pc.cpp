@@ -100,6 +100,11 @@ namespace
 
 } // unnamed namespace
 
+bool pc_poisoned(const pc_record_type& pc)
+{
+	return (pc.main_status == status_type::Normal) && (pc.gaffect(affect::Poisoned) > 0);
+}
+
 bool pc_has_cave_lore(const pc_record_type& pc)
 {
 	return (pc.main_status == status_type::Normal) && pc.has_trait_b(trait::CaveLore);
