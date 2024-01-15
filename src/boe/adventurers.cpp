@@ -14,6 +14,14 @@ bool someone_poisoned(const Adventurers& adventurers)
 	return std::ranges::any_of(adventurers, pc_poisoned);
 }
 
+bool someone_awake(const Adventurers& adventurers)
+{
+	for (short i = 0; i < 6; i++)
+		if (pc_awake(adventurers[i]))
+			return true;
+	return false;
+}
+
 bool cave_lore_present(const Adventurers& adventurers)
 {
 	return std::ranges::any_of(adventurers, pc_has_cave_lore);

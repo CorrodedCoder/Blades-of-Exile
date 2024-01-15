@@ -1465,19 +1465,6 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 	return are_done;
 }
 
-static bool pc_awake(const pc_record_type& pc)
-{
-	return (pc.main_status == status_type::Normal) && (pc.gaffect(affect::Asleep) <= 0) && (pc.gaffect(affect::Paralyzed) <= 0);
-}
-
-bool someone_awake(const Adventurers& adventurers)
-{
-	for (short i = 0; i < 6; i++)
-		if (pc_awake(adventurers[i]))
-			return true;
-	return false;
-}
-
 void check_cd_event(HWND hwnd,UINT message,UINT wparam,LONG lparam)
 {
 	POINT press;
