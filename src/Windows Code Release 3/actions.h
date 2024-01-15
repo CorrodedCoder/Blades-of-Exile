@@ -1,7 +1,7 @@
 void init_screen_locs();
 Boolean prime_time();
 Boolean handle_action(POINT the_point, UINT wparam, LONG lparam );
-Boolean someone_awake();
+bool someone_awake();
 void flash_rect(RECT to_flash);
 void flash_round_rect(RECT to_flash,short radius);
 void button_flash_rect(RECT to_flash);
