@@ -1465,12 +1465,17 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 	return are_done;
 }
 
+static bool pc_awake(short i)
+{
+	return (adven[i].main_status == status_type::Normal) && (adven[i].gaffect(affect::Asleep) <= 0) && (adven[i].gaffect(affect::Paralyzed) <= 0);
+}
+
 Boolean someone_awake()
 {
 	short i;
 
 	for (i = 0; i < 6; i++)
-		if ((adven[i].main_status == status_type::Normal) && (adven[i].gaffect(affect::Asleep) <= 0) && (adven[i].gaffect(affect::Paralyzed) <= 0))
+		if (pc_awake(i))
 			return TRUE;
 	return FALSE;
 }
