@@ -40,12 +40,17 @@ short mage_lore_total(const Adventurers& adventurers)
 #endif
 }
 
-void adventurers_heal(Adventurers& adventurers, short amt)
+bool adventurers_heal(Adventurers& adventurers, short amt)
 {
+	bool someone_healed = false;
 	for (auto& pc : adventurers)
 	{
-		pc_heal(pc, amt);
+		if (pc_heal(pc, amt))
+		{
+			someone_healed = true;
+		}
 	}
+	return someone_healed;
 }
 
 bool adventurers_cure(Adventurers& adventurers, short amt)

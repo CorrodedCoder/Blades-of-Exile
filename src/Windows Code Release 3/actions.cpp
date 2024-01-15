@@ -2350,18 +2350,12 @@ void increase_age()
 	// Healing and restoration of spell pts.
 	if (is_out()) {
 			if (party.age % 100 == 0) {
-				for (i = 0; i < 6; i++)
-					if ((adven[i].main_status == status_type::Normal) && (adven[i].cur_health < adven[i].max_health))
-						update_stat = TRUE;
-				adventurers_heal(adven, 2);
+				update_stat = adventurers_heal(adven, 2) ? TRUE : FALSE;
 				}
 			}
 		else {
 			if (party.age % 50 == 0) {
-				for (i = 0; i < 6; i++)
-					if ((adven[i].main_status == status_type::Normal) && (adven[i].cur_health < adven[i].max_health))
-						update_stat = TRUE;
-				adventurers_heal(adven, 1);
+				update_stat = adventurers_heal(adven, 1) ? TRUE : FALSE;
 				}
 			}
 	if (is_out()) {
