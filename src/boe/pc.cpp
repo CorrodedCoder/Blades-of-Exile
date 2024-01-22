@@ -100,6 +100,16 @@ namespace
 
 } // unnamed namespace
 
+bool pc_poisoned(const pc_record_type& pc)
+{
+	return (pc.main_status == status_type::Normal) && (pc.gaffect(affect::Poisoned) > 0);
+}
+
+bool pc_awake(const pc_record_type& pc)
+{
+	return (pc.main_status == status_type::Normal) && (pc.gaffect(affect::Asleep) <= 0) && (pc.gaffect(affect::Paralyzed) <= 0);
+}
+
 bool pc_has_cave_lore(const pc_record_type& pc)
 {
 	return (pc.main_status == status_type::Normal) && pc.has_trait_b(trait::CaveLore);
@@ -110,12 +120,14 @@ bool pc_has_woodsman(const pc_record_type& pc)
 	return (pc.main_status == status_type::Normal) && pc.has_trait_b(trait::Woodsman);
 }
 
-void pc_heal(pc_record_type& pc, short amt)
+bool pc_heal(pc_record_type& pc, short amt)
 {
 	if ((pc.main_status == status_type::Normal) && (pc.cur_health < pc.max_health))
 	{
 		pc.cur_health = std::min(static_cast<short>(pc.cur_health + amt), pc.max_health);
+		return true;
 	}
+	return false;
 }
 
 bool pc_cure(pc_record_type& pc, short amt)
@@ -128,12 +140,14 @@ bool pc_cure(pc_record_type& pc, short amt)
 	return true;
 }
 
-void pc_restore_sp(pc_record_type& pc, short amt)
+bool pc_restore_sp(pc_record_type& pc, short amt)
 {
 	if (pc.cur_sp < pc.max_sp)
 	{
 		pc.cur_sp = std::min(static_cast<short>(pc.cur_sp + amt), pc.max_sp);
+		return true;
 	}
+	return false;
 }
 
 void pc_setup_blank(pc_record_type& pc)

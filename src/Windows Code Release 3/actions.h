@@ -1,7 +1,6 @@
 void init_screen_locs();
 Boolean prime_time();
 Boolean handle_action(POINT the_point, UINT wparam, LONG lparam );
-Boolean someone_awake();
 void flash_rect(RECT to_flash);
 void flash_round_rect(RECT to_flash,short radius);
 void button_flash_rect(RECT to_flash);
@@ -23,7 +22,6 @@ void start_new_game();
 location get_cur_direction(POINT the_point);
 Boolean outd_move_party(location destination,Boolean forced);
 Boolean town_move_party(location destination,short forced);
-Boolean someone_poisoned();
 short nearest_monster();
 void setup_outdoors(location where);
 short get_outdoor_num();

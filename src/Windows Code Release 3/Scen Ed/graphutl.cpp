@@ -362,7 +362,13 @@ HBITMAP ReadDib(const char * name,HDC hdc)
 	{
 		strcpy(real_name, name);
 	}
-	hFile = OpenFile(real_name,&store,OF_READ | OF_SHARE_DENY_WRITE /* | OF_SEARCH */ );
+
+	{
+		// CC: Temporary kludge for long filenames as OpenFile can only handle up to 128 characters
+		char real_name_short[256] = "";
+		(void)GetShortPathName(real_name, real_name_short, sizeof(real_name_short));
+		hFile = OpenFile(real_name_short, &store, OF_READ | OF_SHARE_DENY_WRITE /* | OF_SEARCH */);
+	}
 
 	if (hFile == HFILE_ERROR)
 		return NULL;

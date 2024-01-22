@@ -9,6 +9,16 @@ namespace
 	auto is_normal = [](const auto& adventurer) { return adventurer.main_status == status_type::Normal; };
 }
 
+bool someone_poisoned(const Adventurers& adventurers)
+{
+	return std::ranges::any_of(adventurers, pc_poisoned);
+}
+
+bool someone_awake(const Adventurers& adventurers)
+{
+	return std::ranges::any_of(adventurers, pc_awake);
+}
+
 bool cave_lore_present(const Adventurers& adventurers)
 {
 	return std::ranges::any_of(adventurers, pc_has_cave_lore);
@@ -30,12 +40,17 @@ short mage_lore_total(const Adventurers& adventurers)
 #endif
 }
 
-void adventurers_heal(Adventurers& adventurers, short amt)
+bool adventurers_heal(Adventurers& adventurers, short amt)
 {
+	bool someone_healed = false;
 	for (auto& pc : adventurers)
 	{
-		pc_heal(pc, amt);
+		if (pc_heal(pc, amt))
+		{
+			someone_healed = true;
+		}
 	}
+	return someone_healed;
 }
 
 bool adventurers_cure(Adventurers& adventurers, short amt)
@@ -43,12 +58,17 @@ bool adventurers_cure(Adventurers& adventurers, short amt)
 	return 0 != std::ranges::count_if(adventurers, [amt](auto& pc) { return pc_cure(pc, amt); });
 }
 
-void adventurers_restore_sp(Adventurers& adventurers, short amt)
+bool adventurers_restore_sp(Adventurers& adventurers, short amt)
 {
+	bool someone_restored = false;
 	for (auto& pc : adventurers | std::views::filter(is_normal))
 	{
-		pc_restore_sp(pc, amt);
+		if (pc_restore_sp(pc, amt))
+		{
+			someone_restored = true;
+		}
 	}
+	return someone_restored;
 }
 
 bool adventurers_has_ability(const Adventurers& adventurers, short abil)

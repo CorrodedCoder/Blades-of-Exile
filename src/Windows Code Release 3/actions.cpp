@@ -404,7 +404,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 			switch(button_hit)
 			{
 				case 0: case 1:
-					if (someone_awake() == FALSE) {
+					if (!someone_awake(adven)) {
 						ASB("Everyone's asleep/paralyzed.");
 						need_reprint = TRUE;
 						need_redraw = TRUE;						
@@ -496,7 +496,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 						ter = out[party.p_loc.x][party.p_loc.y];
   						if (party.in_boat >= 0)
 							add_string_to_buf("Rest:  Not in boat.               ");
-						else if (someone_poisoned() == TRUE)
+						else if (someone_poisoned(adven))
 							add_string_to_buf("Rest: Someone poisoned.           ");
 							else if (party.food <= 12)
 								add_string_to_buf("Rest: Not enough food.            ");
@@ -768,7 +768,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 					menu_activate(1);
 					}					
 				if ((right_button == FALSE) && (overall_mode == 1)) {
-					if (someone_awake() == FALSE) {
+					if (!someone_awake(adven)) {
 						ASB("Everyone's asleep/paralyzed.");
 						need_reprint = TRUE;
 						need_redraw = TRUE;
@@ -1463,16 +1463,6 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
   //	MessageBox(mainPtr,"At end","Debug note",MB_OK | MB_ICONEXCLAMATION);
 	are_done = All_Done;
 	return are_done;
-}
-
-Boolean someone_awake()
-{
-	short i;
-
-	for (i = 0; i < 6; i++)
-		if ((adven[i].main_status == status_type::Normal) && (adven[i].gaffect(affect::Asleep) <= 0) && (adven[i].gaffect(affect::Paralyzed) <= 0))
-			return TRUE;
-	return FALSE;
 }
 
 void check_cd_event(HWND hwnd,UINT message,UINT wparam,LONG lparam)
@@ -2360,34 +2350,22 @@ void increase_age()
 	// Healing and restoration of spell pts.
 	if (is_out()) {
 			if (party.age % 100 == 0) {
-				for (i = 0; i < 6; i++)
-					if ((adven[i].main_status == status_type::Normal) && (adven[i].cur_health < adven[i].max_health))
-						update_stat = TRUE;
-				adventurers_heal(adven, 2);
+				update_stat = adventurers_heal(adven, 2) ? TRUE : FALSE;
 				}
 			}
 		else {
 			if (party.age % 50 == 0) {
-				for (i = 0; i < 6; i++)
-					if ((adven[i].main_status == status_type::Normal) && (adven[i].cur_health < adven[i].max_health))
-						update_stat = TRUE;
-				adventurers_heal(adven, 1);
+				update_stat = adventurers_heal(adven, 1) ? TRUE : FALSE;
 				}
 			}
 	if (is_out()) {
 			if (party.age % 80 == 0) {
-			for (i = 0; i < 6; i++)
-				if ((adven[i].main_status == status_type::Normal) && (adven[i].cur_sp < adven[i].max_sp))
-					update_stat = TRUE;
-				adventurers_restore_sp(adven, 2);
+				update_stat = adventurers_restore_sp(adven, 2) ? TRUE : FALSE;
 				}
 			}
 		else {	
 			if (party.age % 40 == 0) {
-			for (i = 0; i < 6; i++)
-				if ((adven[i].main_status == status_type::Normal) && (adven[i].cur_sp < adven[i].max_sp))
-					update_stat = TRUE;
-				adventurers_restore_sp(adven, 1);
+				update_stat = adventurers_restore_sp(adven, 1) ? TRUE : FALSE;
 				}
 			}
 
@@ -2448,30 +2426,26 @@ void increase_age()
 
 void handle_cave_lore()
 {
-	short i,pic;
-	unsigned char ter;
-	
 	if (is_not_out())
 		return;
-	
-	ter = out[party.p_loc.x][party.p_loc.y];
-	pic = scenario.ter_type(ter).picture;
-	for (i = 0; i < 6; i++)
-		if ( pc_has_cave_lore(adven[i]) && (rand_short(0,12) == 5)
-			&& (((pic >= 0) && (pic <= 1)) || ((pic >= 70) && (pic <= 76))) ) {
-			party.food += get_ran(2,1,6);
-			add_string_to_buf("{} hunts.", adven[i].name);
-			put_pc_screen();
-			}
-	for (i = 0; i < 6; i++)
-		if ( pc_has_woodsman(adven[i]) && (rand_short(0,12) == 5)
-			&& (((pic >= 2) && (pic <= 4)) || ((pic >= 79) && (pic <= 84)))) {
-			party.food += get_ran(2,1,6);
-			add_string_to_buf("{} hunts.", adven[i].name);
-			put_pc_screen();
-			}
-			
 
+	const short pic = scenario.ter_type(out[party.p_loc.x][party.p_loc.y]).picture;
+	for (short i = 0; i < 6; i++)
+		if (pc_has_cave_lore(adven[i]) && (rand_short(0, 12) == 5)
+			&& (((pic >= 0) && (pic <= 1)) || ((pic >= 70) && (pic <= 76)))) 
+		{
+			party.food += get_ran(2, 1, 6);
+			add_string_to_buf("{} hunts.", adven[i].name);
+			put_pc_screen();
+		}
+	for (short i = 0; i < 6; i++)
+		if (pc_has_woodsman(adven[i]) && (rand_short(0, 12) == 5)
+			&& (((pic >= 2) && (pic <= 4)) || ((pic >= 79) && (pic <= 84))))
+		{
+			party.food += get_ran(2, 1, 6);
+			add_string_to_buf("{} hunts.", adven[i].name);
+			put_pc_screen();
+		}
 }
 
 void switch_pc(short which)
@@ -2501,16 +2475,14 @@ void switch_pc(short which)
 
 void drop_pc(short which)
 {
-	short choice,i;
-	
-	choice = fancy_choice_dialog(1053,0);
-	if (choice == 1) {
+	if (fancy_choice_dialog(1053, 0) == 1)
+	{
 		add_string_to_buf("Delete PC: Cancelled.           ");
 		return;
-		}
+	}
 	add_string_to_buf("Delete PC: OK.                  ");
 	kill_pc(which, status_type::Absent);
-	for (i = which; i < 5; i++)
+	for (short i = which; i < 5; i++)
 		adven[i] = adven[i + 1];
 	adven[5].main_status = status_type::Absent;
 	set_stat_window(0);
@@ -2990,18 +2962,6 @@ Boolean town_move_party(location destination,short forced)
 			return FALSE;
 			}
 		}
-	return FALSE;
-}
-
-
-
-Boolean someone_poisoned()
-{
-	short i;
-	
-	for (i = 0; i < 6; i++)
-		if ((adven[i].main_status == status_type::Normal) && (adven[i].gaffect(affect::Poisoned) > 0))
-			return TRUE;
 	return FALSE;
 }
 
