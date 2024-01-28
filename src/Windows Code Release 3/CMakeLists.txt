@@ -105,7 +105,7 @@ target_link_libraries(Blades-of-Exile boe Winmm.lib)
 file(COPY
 	${CMAKE_SOURCE_DIR}/res/images/SPIDLOGO.BMP
 	${CMAKE_SOURCE_DIR}/res/images/STATAREA.BMP
-	#${CMAKE_SOURCE_DIR}/res/images/TEXTBAR.BMP
+	${CMAKE_SOURCE_DIR}/res/images/TEXTBAR.BMP
 	${CMAKE_SOURCE_DIR}/res/images/BUTTONS.BMP
 	${CMAKE_SOURCE_DIR}/res/images/TERSCRN.BMP
 	${CMAKE_SOURCE_DIR}/res/images/TER1.BMP
@@ -118,9 +118,9 @@ file(COPY
 	${CMAKE_SOURCE_DIR}/res/images/FIELDS.BMP
 	${CMAKE_SOURCE_DIR}/res/images/STARTUP.BMP
 	${CMAKE_SOURCE_DIR}/res/images/DLOGPICS.BMP
-	#${CMAKE_SOURCE_DIR}/res/images/TALKPORT.BMP
+	${CMAKE_SOURCE_DIR}/res/images/TALKPORT.BMP
 	${CMAKE_SOURCE_DIR}/res/images/MISSILES.BMP
-	#${CMAKE_SOURCE_DIR}/res/images/TINYOBJ.BMP
+	${CMAKE_SOURCE_DIR}/res/images/TINYOBJ.BMP
 	${CMAKE_SOURCE_DIR}/res/images/OBJECTS.BMP
 	${CMAKE_SOURCE_DIR}/res/images/PCS.BMP
 	${CMAKE_SOURCE_DIR}/res/images/MIXED.BMP
@@ -158,7 +158,7 @@ add_custom_command(
 add_custom_command(
         TARGET Blades-of-Exile POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
-               "${CMAKE_SOURCE_DIR}/src/Macintosh Code Release 3/Blades of Exile Scenarios"
+               "${CMAKE_CURRENT_SOURCE_DIR}/BLADSCEN"
                "${CMAKE_CURRENT_BINARY_DIR}/bladscen")
 
 add_subdirectory("PC Editor")

@@ -17,7 +17,7 @@ target_link_libraries(PC-editor boe Winmm.lib)
 file(COPY
 	${CMAKE_SOURCE_DIR}/res/images/SPIDLOGO.BMP
 	${CMAKE_SOURCE_DIR}/res/images/STATAREA.BMP
-	#${CMAKE_SOURCE_DIR}/res/images/TEXTBAR.BMP
+	${CMAKE_SOURCE_DIR}/res/images/TEXTBAR.BMP
 	${CMAKE_SOURCE_DIR}/res/images/BUTTONS.BMP
 	${CMAKE_SOURCE_DIR}/res/images/TERSCRN.BMP
 	${CMAKE_SOURCE_DIR}/res/images/TER1.BMP
@@ -30,9 +30,9 @@ file(COPY
 	${CMAKE_SOURCE_DIR}/res/images/FIELDS.BMP
 	${CMAKE_SOURCE_DIR}/res/images/STARTUP.BMP
 	${CMAKE_SOURCE_DIR}/res/images/DLOGPICS.BMP
-	#${CMAKE_SOURCE_DIR}/res/images/TALKPORT.BMP
+	${CMAKE_SOURCE_DIR}/res/images/TALKPORT.BMP
 	${CMAKE_SOURCE_DIR}/res/images/MISSILES.BMP
-	#${CMAKE_SOURCE_DIR}/res/images/TINYOBJ.BMP
+	${CMAKE_SOURCE_DIR}/res/images/TINYOBJ.BMP
 	${CMAKE_SOURCE_DIR}/res/images/OBJECTS.BMP
 	${CMAKE_SOURCE_DIR}/res/images/PCS.BMP
 	${CMAKE_SOURCE_DIR}/res/images/MIXED.BMP
