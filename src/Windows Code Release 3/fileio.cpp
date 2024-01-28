@@ -409,6 +409,22 @@ void change_rect_terrain(BoeRect r, unsigned char terrain_type, short probabilit
 		}
 }
 
+static std::string build_scen_ed_name(void)
+{
+	short last_slash = -1;
+	for (short i = 0; i < 256; i++)
+		if ((file_path_name[i] == 92) || (file_path_name[i] == '/'))
+			last_slash = i;
+	if (last_slash < 0)
+	{
+		return "BLSCENED\\bladdata.bld";
+	}
+	char file_name[256];
+	strcpy(file_name, file_path_name);
+	format_to_buf(file_name + last_slash + 1, "BLSCENED\\bladdata.bld");
+	return file_name;
+}
+
 static std::string build_scen_file_name(void)
 {
 	short last_slash = -1;
@@ -417,11 +433,11 @@ static std::string build_scen_file_name(void)
 			last_slash = i;
 	if (last_slash < 0)
 	{
-		return std::format("BLADSCEN/{}", party.scen_name);
+		return std::format("BLADSCEN\\{}", party.scen_name);
 	}
 	char file_name[256];
 	strcpy(file_name, file_path_name);
-	format_to_buf(file_name + last_slash + 1, "BLADSCEN/{}", party.scen_name);
+	format_to_buf(file_name + last_slash + 1, "BLADSCEN\\{}", party.scen_name);
 	return file_name;
 }
 
@@ -1552,8 +1568,8 @@ void reg_alert()
 Boolean load_blades_data()
 {
 	std::ifstream file_id;
-	// Was: OpenFile(build_scen_file_name(), &store, OF_READ /* | OF_SEARCH */);
-	file_id.open(build_scen_file_name(), std::ios_base::binary);
+	// Was: OpenFile(build_scen_ed_name(), &store, OF_READ /* | OF_SEARCH */);
+	file_id.open(build_scen_ed_name(), std::ios_base::binary);
 	if (file_id.fail()) {
 		return FALSE;
 	}
