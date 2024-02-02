@@ -58,9 +58,3 @@ file(COPY
 	#${CMAKE_SOURCE_DIR}/res/images/DLOGMAPS.BMP
 	DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/blscened
 	)
-
-add_custom_command(
-	TARGET PC-editor POST_BUILD
-	COMMAND	${CMAKE_COMMAND} -E copy_directory
-			"${CMAKE_CURRENT_SOURCE_DIR}/../Scen Ed"
-			"${CMAKE_CURRENT_BINARY_DIR}/blscened")

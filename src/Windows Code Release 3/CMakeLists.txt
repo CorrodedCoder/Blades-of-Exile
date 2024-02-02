@@ -142,18 +142,22 @@ file(COPY
 	${CMAKE_SOURCE_DIR}/res/images/START.BMP
 
 	${CMAKE_SOURCE_DIR}/res/images/STANIM.BMP
+	${CMAKE_SOURCE_DIR}/res/images/STANIM_Demo.BMP
+	${CMAKE_SOURCE_DIR}/res/images/STANIM_Registered.BMP
 	${CMAKE_SOURCE_DIR}/res/images/STARTBUT.BMP
 	${CMAKE_SOURCE_DIR}/res/images/SCENPICS.BMP
 	#${CMAKE_SOURCE_DIR}/res/images/DLOGMAPS.BMP
 	${CMAKE_SOURCE_DIR}/res/images/BIGSCEN.BMP
+
+	"${CMAKE_CURRENT_SOURCE_DIR}/Scen Ed/bladdata.bld"
+
 	DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/blscened
 	)
 
-add_custom_command(
-        TARGET Blades-of-Exile POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-               "${CMAKE_CURRENT_SOURCE_DIR}/Scen Ed"
-               "${CMAKE_CURRENT_BINARY_DIR}/blscened")
+file(COPY
+	BLADHELP.HLP
+	DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
+	)
 
 add_custom_command(
         TARGET Blades-of-Exile POST_BUILD

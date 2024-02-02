@@ -65,14 +65,13 @@ file(COPY
 	${CMAKE_SOURCE_DIR}/res/images/EDBTNS.BMP
 	${CMAKE_SOURCE_DIR}/res/images/BIGSCEN.BMP
 
+	"${CMAKE_CURRENT_SOURCE_DIR}/bladbase.exs"
+	"${CMAKE_CURRENT_SOURCE_DIR}/bladbase_registered.exs"
+	"${CMAKE_CURRENT_SOURCE_DIR}/bladdata.bld"
+	"${CMAKE_CURRENT_SOURCE_DIR}/bladedit.hlp"
+
 	DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
 	)
-
-add_custom_command(
-        TARGET Scen-Ed POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-               "${CMAKE_CURRENT_SOURCE_DIR}"
-               "${CMAKE_CURRENT_BINARY_DIR}")
 
 add_custom_command(
         TARGET Scen-Ed POST_BUILD
