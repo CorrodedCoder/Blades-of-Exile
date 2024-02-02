@@ -130,11 +130,10 @@ ACCELERATORS_1 ACCELERATORS
 
 122 CURSOR "key.cur"
 
-/* The original referred to the following, but that file doesn't appear in the archive.
-* For now, use the boot.cur which doesn't otherwise appear to be referenced anywhere:
-* 129 CURSOR "look.cur"
+/* The original referred to the following filename but that file doesn't appear in the orginal archive.
+* This file was extracted from the original registered executable.
 */
-129 CURSOR "boot.cur"
+129 CURSOR "look.cur"
 
 10 ICON "bladexil.ico"
 

@@ -425,7 +425,7 @@ HBITMAP load_pict(short pict_num, HDC model_hdc)
 	case 820: got_bitmap = ReadDib("blscened/TERANIM.BMP", model_hdc); break;
 	case 821: got_bitmap = ReadDib("blscened/FIELDS.BMP", model_hdc); break;
 	case 830: got_bitmap = ReadDib("blscened/STARTUP.BMP", model_hdc); break;
-	case 831: got_bitmap = ReadDib("blscened/STANIM.BMP", model_hdc); break;
+	case 831: got_bitmap = ReadDib("blscened/STANIM_Registered.BMP", model_hdc); break;
 	case 832: got_bitmap = ReadDib("blscened/STARTBUT.BMP", model_hdc); break;
 	case 850: got_bitmap = ReadDib("blscened/DLOGPICS.BMP", model_hdc); break;
 	case 851: got_bitmap = ReadDib("blscened/SCENPICS.BMP", model_hdc); break;
