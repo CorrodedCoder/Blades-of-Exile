@@ -3,10 +3,14 @@
 #include <fstream>
 #include <format>
 
+namespace {
+
 DWORD GetDibInfoHeaderSize(const BYTE* lpDib)
 {
 	return reinterpret_cast<const BITMAPINFOHEADER*>(lpDib)->biSize;
 }
+
+} // anonymous namespace
 
 const BYTE* GetDibBitsAddr(const BYTE* lpDib)
 {
