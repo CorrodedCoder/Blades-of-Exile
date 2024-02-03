@@ -3,7 +3,8 @@
 #include <Windows.h>
 #include <vector>
 #include <string_view>
+#include <span>
 
-const BYTE* GetDibBitsAddr(const BYTE* lpDib);
-HPALETTE CreatePaletteFromDib(const BYTE* lpDib);
+std::span<const BYTE> GetDibBitsAddr(std::span<const BYTE> data);
+HPALETTE CreatePaletteFromDib(std::span<const BYTE> data);
 std::vector<BYTE> LoadDibData(const char * name);

@@ -31,13 +31,13 @@ short dlog_pat_placed = 0;
 short current_pattern = -1;
 HPALETTE syspal = NULL;
 
-static void init_palette(const BYTE * lpDib)
+static void init_palette(std::span<const BYTE> dib)
 {
 	if (pal_ok == TRUE)
 		return;
 	pal_ok = TRUE;
 
-	hpal = CreatePaletteFromDib(lpDib);
+	hpal = CreatePaletteFromDib(dib);
 	HDC hdc = ::GetDC(mainPtr);
 	::GetSystemPaletteEntries(hdc,0,255,ape);
 	inflict_palette();
@@ -51,9 +51,9 @@ static void init_palette(const BYTE * lpDib)
 
 // extracts and inflicts palette from given dib. WARNING ...
 // does NOT do any deleting or cleanup
-static void extract_given_palette(const BYTE * lpDib)
+static void extract_given_palette(std::span<const BYTE> dib)
 {
-	opening_palette = CreatePaletteFromDib(lpDib);
+	opening_palette = CreatePaletteFromDib(dib);
 	HDC hdc = ::GetDC(mainPtr);
 	//GetSystemPaletteEntries(hdc,0,255,(PALETTEENTRY FAR*) ape);
 	//inflict_palette();
@@ -154,15 +154,15 @@ HBITMAP ReadDib(const char * name,HDC hdc)
 {
 	const auto dib(LoadDibData(name));
 
-	init_palette(&dib[0]);
+	init_palette(dib);
 	::SelectPalette(hdc,hpal,0);
 
 	if ((name[0] == 'S') && (name[1] == 'T') && (name[5] == '.'))
 	{
-		extract_given_palette(&dib[0]);
+		extract_given_palette(dib);
 	}
 	return ::CreateDIBitmap(hdc,(const BITMAPINFOHEADER *)&dib[0], CBM_INIT,
-		GetDibBitsAddr(&dib[0]), (const BITMAPINFO *)&dib[0], DIB_RGB_COLORS);
+		GetDibBitsAddr(dib).data(), (const BITMAPINFO*)&dib[0], DIB_RGB_COLORS);
 }
 
 static std::string_view lookup_picname(short id)

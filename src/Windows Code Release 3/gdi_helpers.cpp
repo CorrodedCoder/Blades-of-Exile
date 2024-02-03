@@ -5,30 +5,30 @@
 
 namespace {
 
-DWORD GetDibInfoHeaderSize(const BYTE* lpDib)
+DWORD GetDibInfoHeaderSize(std::span<const BYTE> dib)
 {
-	return reinterpret_cast<const BITMAPINFOHEADER*>(lpDib)->biSize;
+	return reinterpret_cast<const BITMAPINFOHEADER*>(dib.data())->biSize;
 }
 
 } // anonymous namespace
 
-const BYTE* GetDibBitsAddr(const BYTE* lpDib)
+std::span<const BYTE> GetDibBitsAddr(std::span<const BYTE> dib)
 {
 	DWORD dwColorTableSize = 0;
 
-	if (GetDibInfoHeaderSize(lpDib) == sizeof(BITMAPCOREHEADER))
+	if (GetDibInfoHeaderSize(dib) == sizeof(BITMAPCOREHEADER))
 	{
-		auto core_header = reinterpret_cast<const BITMAPCOREHEADER*>(lpDib);
+		auto core_header = reinterpret_cast<const BITMAPCOREHEADER*>(dib.data());
 		const WORD wBitCount = core_header->bcBitCount;
 		const DWORD dwNumColors = (wBitCount != 24) ? (1L << wBitCount) : 0;
 		dwColorTableSize = dwNumColors * sizeof(RGBTRIPLE);
 	}
 	else
 	{
-		auto info_header = reinterpret_cast<const BITMAPINFOHEADER*>(lpDib);
+		auto info_header = reinterpret_cast<const BITMAPINFOHEADER*>(dib.data());
 		const WORD wBitCount = info_header->biBitCount;
 		DWORD dwNumColors = 0;
-		if (GetDibInfoHeaderSize(lpDib) >= 36)
+		if (GetDibInfoHeaderSize(dib) >= 36)
 		{
 			dwNumColors = info_header->biClrUsed;
 		}
@@ -39,23 +39,23 @@ const BYTE* GetDibBitsAddr(const BYTE* lpDib)
 		dwColorTableSize = dwNumColors * sizeof(RGBQUAD);
 	}
 
-	return lpDib + GetDibInfoHeaderSize(lpDib) + dwColorTableSize;
+	return dib.subspan(GetDibInfoHeaderSize(dib) + dwColorTableSize);
 }
 
-HPALETTE CreatePaletteFromDib(const BYTE* lpDib)
+HPALETTE CreatePaletteFromDib(std::span<const BYTE> dib)
 {
 	RGBTRIPLE store_c[256];
 	DWORD dwColorTableSize = 0;
 	DWORD dwNumColors = 0;
 
-	if (GetDibInfoHeaderSize(lpDib) == sizeof(BITMAPCOREHEADER))
+	if (GetDibInfoHeaderSize(dib) == sizeof(BITMAPCOREHEADER))
 	{
-		auto& core_header = *reinterpret_cast<const BITMAPCOREHEADER*>(lpDib);
+		auto& core_header = *reinterpret_cast<const BITMAPCOREHEADER*>(dib.data());
 		const WORD wBitCount = core_header.bcBitCount;
 		dwNumColors = (wBitCount != 24) ? (1L << wBitCount) : 0;
 		dwColorTableSize = dwNumColors * sizeof(RGBTRIPLE);
 
-		auto& core_info = *reinterpret_cast<const BITMAPCOREINFO*>(lpDib);
+		auto& core_info = *reinterpret_cast<const BITMAPCOREINFO*>(dib.data());
 		for (DWORD i = 0; i < dwNumColors; i++)
 		{
 			store_c[i].rgbtRed = core_info.bmciColors[i].rgbtRed;
@@ -65,9 +65,9 @@ HPALETTE CreatePaletteFromDib(const BYTE* lpDib)
 	}
 	else
 	{
-		auto& info_header = *reinterpret_cast<const BITMAPINFOHEADER*>(lpDib);
+		auto& info_header = *reinterpret_cast<const BITMAPINFOHEADER*>(dib.data());
 		const WORD wBitCount = info_header.biBitCount;
-		if (GetDibInfoHeaderSize(lpDib) >= 36)
+		if (GetDibInfoHeaderSize(dib) >= 36)
 		{
 			dwNumColors = info_header.biClrUsed;
 		}
@@ -77,7 +77,7 @@ HPALETTE CreatePaletteFromDib(const BYTE* lpDib)
 		}
 		dwColorTableSize = dwNumColors * sizeof(RGBQUAD);
 
-		auto& bitmap_info = *reinterpret_cast<const BITMAPINFO*>(lpDib);
+		auto& bitmap_info = *reinterpret_cast<const BITMAPINFO*>(dib.data());
 		for (DWORD i = 0; i < dwNumColors; i++)
 		{
 			store_c[i].rgbtRed = bitmap_info.bmiColors[i].rgbRed;
@@ -114,7 +114,7 @@ std::vector<BYTE> LoadDibData(const char* name)
 	std::vector<BYTE> dib(bmfh.bfSize - sizeof(BITMAPFILEHEADER));
 	input.read(reinterpret_cast<char *>(&dib[0]), dib.size());
 
-	const DWORD dwHeaderSize = GetDibInfoHeaderSize(&dib[0]);
+	const DWORD dwHeaderSize = GetDibInfoHeaderSize(dib);
 	if ((dwHeaderSize < 12) || ((dwHeaderSize > 12) && (dwHeaderSize < 16)))
 	{
 		throw std::runtime_error(std::format("Bad header size ({}) for bitmap {}", dwHeaderSize, name));
