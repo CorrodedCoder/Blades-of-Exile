@@ -96,7 +96,7 @@ add_executable (Blades-of-Exile WIN32
 	BLADES.RC
 	GAMEDLOG.RC
 	GAMESTR.RC
-	)
+	 "gdi_helpers.cpp")
 
 target_compile_definitions(Blades-of-Exile PRIVATE BOE_DEFAULT_VOLUME=32)
 

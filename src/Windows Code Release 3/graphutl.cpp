@@ -13,6 +13,7 @@
 #include "exlsound.h"
 #include "graphutl.h"
 #include "graphutl_helpers.hpp"
+#include "gdi_helpers.hpp"
 
 extern HWND mainPtr;
 extern HPALETTE hpal,opening_palette;
@@ -30,8 +31,6 @@ Boolean syscolors_stored = FALSE;
 short dlog_pat_placed = 0;
 short current_pattern = -1;
 HPALETTE syspal = NULL;
-
-static DWORD GetDibInfoHeaderSize(BYTE* lpDib);
 
 static void init_palette(BYTE * lpDib)
 {
@@ -83,12 +82,10 @@ static void init_palette(BYTE * lpDib)
 			}
 		}
 
-  hdc = GetDC(mainPtr);
+	hdc = GetDC(mainPtr);
 
-l = LocalAlloc(LHND,
-		sizeof(LOGPALETTE) + dwNumColors * sizeof(PALETTEENTRY));
-plgpl = (LOGPALETTE*) LocalLock(l);
-
+	l = LocalAlloc(LHND, sizeof(LOGPALETTE) + dwNumColors * sizeof(PALETTEENTRY));
+	plgpl = (LOGPALETTE*) LocalLock(l);
 	plgpl->palNumEntries = (WORD) (dwNumColors);
 	plgpl->palVersion = 0x300;
 
@@ -291,46 +288,13 @@ void reset_palette()
 
 }
 
-static DWORD GetDibInfoHeaderSize(BYTE * lpDib)
-{
-	return ((BITMAPINFOHEADER *) lpDib)->biSize;
-}
-
-BYTE * GetDibBitsAddr(BYTE * lpDib)
-{
-	DWORD dwNumColors, dwColorTableSize;
-	WORD wBitCount;
-
-	if (GetDibInfoHeaderSize(lpDib) == sizeof(BITMAPCOREHEADER)) {
-		wBitCount = ((BITMAPCOREHEADER *) lpDib)->bcBitCount;
-		if (wBitCount != 24)
-			dwNumColors = 1L << wBitCount;
-			else dwNumColors = 0;
-	dwColorTableSize = dwNumColors * sizeof(RGBTRIPLE);
-	}
-	else {
-		wBitCount = ((BITMAPINFOHEADER *) lpDib)->biBitCount;
-		if (GetDibInfoHeaderSize(lpDib) >= 36)
-			dwNumColors = ((BITMAPINFOHEADER *) lpDib)->biClrUsed;
-		if (dwNumColors == 0) {
-			if (wBitCount != 24)
-				dwNumColors = 1L << wBitCount;
-				else dwNumColors = 0;
-			}
-		dwColorTableSize = dwNumColors * sizeof(RGBQUAD);
-		}
-
-
-	return lpDib + GetDibInfoHeaderSize(lpDib) + dwColorTableSize;
-	}
-
 HBITMAP ReadDib(const char * name,HDC hdc) {
 	BITMAPFILEHEADER bmfh;
 	BYTE * lpDib;
 	DWORD dwDibSize, dwOffset, dwHeaderSize;
 	int hFile;
 	WORD wDibRead;
-	BYTE * lpDibBits;
+	const BYTE * lpDibBits;
 	HBITMAP bmap;
 	OFSTRUCT store;
 	char real_name[256] = "";

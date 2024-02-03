@@ -8,6 +8,7 @@ add_executable (PC-editor WIN32
 	edfileio.cpp
 	edaction.cpp
 	global.cpp
+	../gdi_helpers.cpp
 
 	BLADPCED.RC
 	)
