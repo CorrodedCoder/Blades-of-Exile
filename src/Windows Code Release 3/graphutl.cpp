@@ -1,5 +1,3 @@
-#define xmin(a,b)	((a) < (b) ?  (a) : (b))
-
 #include <Windows.h>
 #include <windowsx.h>
 #include <commdlg.h>
