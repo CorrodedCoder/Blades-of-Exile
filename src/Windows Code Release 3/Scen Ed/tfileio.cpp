@@ -438,7 +438,7 @@ void load_scenario()
 	ofn.hwndOwner = mainPtr;
 	ofn.lpstrFile = szFileName;
 	ofn.lpstrFileTitle = szTitleName;
-	ofn.Flags = 0;
+	ofn.Flags = OFN_NOCHANGEDIR;
 
 	if (GetOpenFileName(&ofn) == 0)
 		return;
@@ -807,7 +807,7 @@ void import_town(short which_town)
 		ofn.hwndOwner = mainPtr;
 		ofn.lpstrFile = szFileName3;
 		ofn.lpstrFileTitle = szTitleName;
-		ofn.Flags = 0;
+		ofn.Flags = OFN_NOCHANGEDIR;
 
 		if (GetOpenFileName(&ofn) == 0)
 			return;

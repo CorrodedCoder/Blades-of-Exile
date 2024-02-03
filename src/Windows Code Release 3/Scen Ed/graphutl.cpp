@@ -154,96 +154,18 @@ void reset_palette()
 
 HBITMAP ReadDib(const char * name,HDC hdc)
 {
-	BITMAPFILEHEADER bmfh;
-	BYTE * lpDib;
-	DWORD dwDibSize, dwOffset, dwHeaderSize;
-	int hFile;
-	WORD wDibRead;
-	const BYTE * lpDibBits;
-	HBITMAP bmap;
-	OFSTRUCT store;
-	char real_name[256] = "";
+	const auto dib(LoadDibData(name));
 
-	if (suppress_load_file_name == FALSE)
+	init_palette(&dib[0]);
+	::SelectPalette(hdc,hpal,0);
+
+	if ((name[0] == 'S') && (name[1] == 'T') && (name[5] == '.'))
 	{
-		short last_slash = -1;
-		for (short i = 0; i < 256; i++)
-			if ((file_path_name[i] == 92) || (file_path_name[i] == '/'))
-				last_slash = i;
-		if (last_slash < 0)
-		{
-			strcpy(real_name,name);
-		}
-		else
-		{
-			strcpy(real_name, file_path_name);
-			strcpy(real_name + last_slash + 1, name);
-		}
+		extract_given_palette(&dib[0]);
 	}
-	else
-	{
-		strcpy(real_name, name);
-	}
-
-	{
-		// CC: Temporary kludge for long filenames as OpenFile can only handle up to 128 characters
-		char real_name_short[256] = "";
-		(void)GetShortPathName(real_name, real_name_short, sizeof(real_name_short));
-		hFile = OpenFile(real_name_short, &store, OF_READ | OF_SHARE_DENY_WRITE /* | OF_SEARCH */);
-	}
-
-	if (hFile == HFILE_ERROR)
-		return NULL;
-//	if (-1 == (hFile = _lopen(name,OF_READ|OF_SHARE_DENY_WRITE)))
-//		return NULL;
-	if (_lread(hFile, (LPSTR) &bmfh, sizeof(BITMAPFILEHEADER))
-	!= sizeof(BITMAPFILEHEADER)) {
-		_lclose(hFile);
-		return NULL;
-		}
-
-//	if (bmfh.bfType != * (WORD *) "BM") {
-//		_lclose(hFile);
-//		return NULL;
-//		}
-	dwDibSize = bmfh.bfSize - sizeof(BITMAPFILEHEADER);
-	lpDib = (BYTE *) GlobalAllocPtr(GMEM_MOVEABLE, dwDibSize);
-	if (lpDib == NULL){
-		_lclose(hFile);
-		return NULL;
-		}
-	dwOffset = 0;
-	while (dwDibSize > 0) {
-		wDibRead = (WORD) xmin(32768ul,dwDibSize);
-		if (wDibRead != _lread(hFile, (LPSTR) (lpDib + dwOffset),
-			wDibRead)) {
-				_lclose(hFile);
-				GlobalFreePtr(lpDib);
-				return NULL;
-				}
-			dwDibSize -= wDibRead;
-			dwOffset += wDibRead;
-		}
-	_lclose(hFile);
-	dwHeaderSize = GetDibInfoHeaderSize(lpDib);
-	if ((dwHeaderSize < 12) || ((dwHeaderSize > 12) && (dwHeaderSize < 16))) {
-		GlobalFreePtr(lpDib);
-		return NULL;
-		}
-
-	init_palette(lpDib);
-	SelectPalette(hdc,hpal,0);
-
-	if ((name[0] == 'S') && (name[1] == 'T') && (name[5] == '.'))  {
-		extract_given_palette(lpDib);
-		}
-	lpDibBits = GetDibBitsAddr(lpDib);
-	bmap = CreateDIBitmap(hdc,(LPBITMAPINFOHEADER) lpDib, CBM_INIT,
-		(LPSTR) lpDibBits, (LPBITMAPINFO) lpDib, DIB_RGB_COLORS);
-	GlobalFreePtr(lpDib);
-	return bmap;
+	return ::CreateDIBitmap(hdc,(const BITMAPINFOHEADER *)&dib[0], CBM_INIT,
+		GetDibBitsAddr(&dib[0]), (const BITMAPINFO *)&dib[0], DIB_RGB_COLORS);
 }
-
 
 static std::string_view lookup_picname(short id)
 {

@@ -113,7 +113,7 @@ void load_file()
 	ofn.hwndOwner = mainPtr;
 	ofn.lpstrFile = szFileName;
 	ofn.lpstrFileTitle = szTitleName;
-	ofn.Flags = 0;
+	ofn.Flags = OFN_NOCHANGEDIR;
 
 	if (GetOpenFileName(&ofn) == 0)
 		return;
@@ -350,7 +350,7 @@ void save_file(short mode)
 	ofn.hwndOwner = mainPtr;
 	ofn.lpstrFile = szFileName;
 	ofn.lpstrFileTitle = szTitleName;
-	ofn.Flags = OFN_OVERWRITEPROMPT;
+	ofn.Flags = OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR;
 
 	if (mode == 1) {
 		if (GetSaveFileName(&ofn) == 0)

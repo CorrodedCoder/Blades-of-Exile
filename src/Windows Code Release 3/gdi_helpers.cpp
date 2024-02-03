@@ -1,5 +1,7 @@
 #include "gdi_helpers.hpp"
 #include <vector>
+#include <fstream>
+#include <format>
 
 DWORD GetDibInfoHeaderSize(const BYTE* lpDib)
 {
@@ -99,4 +101,23 @@ HPALETTE CreatePaletteFromDib(const BYTE* lpDib)
 	}
 
 	return ::CreatePalette(plgpl);
+}
+
+std::vector<BYTE> LoadDibData(const char* name)
+{
+	std::ifstream input(name, std::ios_base::binary);
+	input.exceptions(std::ios::failbit);
+
+	BITMAPFILEHEADER bmfh;
+	input.read(reinterpret_cast<char *>(&bmfh), sizeof(bmfh));
+
+	std::vector<BYTE> dib(bmfh.bfSize - sizeof(BITMAPFILEHEADER));
+	input.read(reinterpret_cast<char *>(&dib[0]), dib.size());
+
+	const DWORD dwHeaderSize = GetDibInfoHeaderSize(&dib[0]);
+	if ((dwHeaderSize < 12) || ((dwHeaderSize > 12) && (dwHeaderSize < 16)))
+	{
+		throw std::runtime_error(std::format("Bad header size ({}) for bitmap {}", dwHeaderSize, name));
+	}
+	return dib;
 }
