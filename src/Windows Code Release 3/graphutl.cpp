@@ -5,6 +5,8 @@
 #include <commdlg.h>
 #include <cstdlib>
 #include <cstdio>
+#include <format>
+#include <string_view>
 #include "global.h"
 #include "text.h"
 #include <cstring>
@@ -407,60 +409,65 @@ HBITMAP ReadDib(const char * name,HDC hdc) {
 	return bmap;
 }
 
+static std::string_view lookup_picname(short id)
+{
+	std::string_view res;
+	switch (id)
+	{
+	case 700: case 701: case 702: res = "STATAREA"; break;
+	case 703: res = "TEXTBAR"; break;
+	case 704: res = "BUTTONS"; break;
+	case 705: res = "TERSCRN"; break;
+	case 800: res = "TER1"; break;
+	case 801: res = "TER2"; break;
+	case 802: res = "TER3"; break;
+	case 803: res = "TER4"; break;
+	case 804: res = "TER5"; break;
+	case 805: res = "TER6"; break;
+	case 820: res = "TERANIM"; break;
+	case 821: res = "FIELDS"; break;
+	case 830: res = "STARTUP"; break;
+	case 831: res = "STANIM_Registered"; break;
+	case 832: res = "STARTBUT"; break;
+	case 850: res = "DLOGPICS"; break;
+	case 851: res = "SCENPICS"; break;
+	case 860: res = "TALKPORT"; break;
+	case 875: res = "DLOGMAPS"; break;
+	case 880: res = "MISSILES"; break;
+	case 900: res = "TINYOBJ"; break;
+	case 901: res = "OBJECTS"; break;
+	case 902: res = "PCS"; break;
+	case 905: res = "PCS"; break;
+	case 903: case 904: res = "MIXED"; break;
+	case 910: case 911: case 912: res = "BIGSCEN"; break;
+	case 1100: case 1200: res = "MONST1"; break;
+	case 1101: case 1201: res = "MONST2"; break;
+	case 1102: case 1202: res = "MONST3"; break;
+	case 1103: case 1203: res = "MONST4"; break;
+	case 1104: case 1204: res = "MONST5"; break;
+	case 1105: case 1205: res = "MONST6"; break;
+	case 1106: case 1206: res = "MONST7"; break;
+	case 1107: case 1207: res = "MONST8"; break;
+	case 1108: case 1208: res = "MONST9"; break;
+	case 1109: case 1209: res = "MONST10"; break;
+	case 1400: res = "STSCICON"; break;
+	case 1401: res = "HELPPICS"; break;
+	case 1402: res = "APPIC"; break;
+	case 1500: case 1501: case 1502: case 1503: case 1504: case 1505: case 1506: case 1507:
+		res = "BIGMAPS"; break;
+	case 2000: res = "DLOGBTNS"; break;
+	case 3000: res = "START"; break;
+	case 3001: res = "SPIDLOGO"; break;
+	default:
+		throw std::runtime_error(std::format("Unable to find picture for id={}", id));
+		break;
+	}
+	return res;
+}
+
 HBITMAP load_pict(short pict_num, HDC model_hdc)
 {
-	HBITMAP got_bitmap;
-
-	switch (pict_num) {
-	case 700: case 701: case 702: got_bitmap = ReadDib("blscened/STATAREA.BMP", model_hdc); break;
-	case 703: got_bitmap = ReadDib("blscened/TEXTBAR.BMP", model_hdc); break;
-	case 704: got_bitmap = ReadDib("blscened/BUTTONS.BMP", model_hdc); break;
-	case 705: got_bitmap = ReadDib("blscened/TERSCRN.BMP", model_hdc); break;
-	case 800: got_bitmap = ReadDib("blscened/TER1.BMP", model_hdc); break;
-	case 801: got_bitmap = ReadDib("blscened/TER2.BMP", model_hdc); break;
-	case 802: got_bitmap = ReadDib("blscened/TER3.BMP", model_hdc); break;
-	case 803: got_bitmap = ReadDib("blscened/TER4.BMP", model_hdc); break;
-	case 804: got_bitmap = ReadDib("blscened/TER5.BMP", model_hdc); break;
-	case 805: got_bitmap = ReadDib("blscened/TER6.BMP", model_hdc); break;
-	case 820: got_bitmap = ReadDib("blscened/TERANIM.BMP", model_hdc); break;
-	case 821: got_bitmap = ReadDib("blscened/FIELDS.BMP", model_hdc); break;
-	case 830: got_bitmap = ReadDib("blscened/STARTUP.BMP", model_hdc); break;
-	case 831: got_bitmap = ReadDib("blscened/STANIM_Registered.BMP", model_hdc); break;
-	case 832: got_bitmap = ReadDib("blscened/STARTBUT.BMP", model_hdc); break;
-	case 850: got_bitmap = ReadDib("blscened/DLOGPICS.BMP", model_hdc); break;
-	case 851: got_bitmap = ReadDib("blscened/SCENPICS.BMP", model_hdc); break;
-	case 860: got_bitmap = ReadDib("blscened/TALKPORT.BMP", model_hdc); break;
-	case 875: got_bitmap = ReadDib("blscened/DLOGMAPS.BMP", model_hdc); break;
-	case 880: got_bitmap = ReadDib("blscened/MISSILES.BMP", model_hdc); break;
-	case 900: got_bitmap = ReadDib("blscened/TINYOBJ.BMP", model_hdc); break;
-	case 901: got_bitmap = ReadDib("blscened/OBJECTS.BMP", model_hdc); break;
-	case 902: got_bitmap = ReadDib("blscened/PCS.BMP", model_hdc); break;
-	case 905: got_bitmap = ReadDib("blscened/PCS.BMP", model_hdc); break;
-	case 903: case 904: got_bitmap = ReadDib("blscened/MIXED.BMP", model_hdc); break;
-		//		case 903: case 904: got_bitmap = ReadDib("blscened/blscened\MIXED.BMP",model_hdc); break;
-	case 910: case 911: case 912: got_bitmap = ReadDib("blscened/BIGSCEN.BMP", model_hdc); break;
-	case 1100: case 1200: got_bitmap = ReadDib("blscened/MONST1.BMP", model_hdc); break;
-	case 1101: case 1201: got_bitmap = ReadDib("blscened/MONST2.BMP", model_hdc); break;
-	case 1102: case 1202: got_bitmap = ReadDib("blscened/MONST3.BMP", model_hdc); break;
-	case 1103: case 1203: got_bitmap = ReadDib("blscened/MONST4.BMP", model_hdc); break;
-	case 1104: case 1204: got_bitmap = ReadDib("blscened/MONST5.BMP", model_hdc); break;
-	case 1105: case 1205: got_bitmap = ReadDib("blscened/MONST6.BMP", model_hdc); break;
-	case 1106: case 1206: got_bitmap = ReadDib("blscened/MONST7.BMP", model_hdc); break;
-	case 1107: case 1207: got_bitmap = ReadDib("blscened/MONST8.BMP", model_hdc); break;
-	case 1108: case 1208: got_bitmap = ReadDib("blscened/MONST9.BMP", model_hdc); break;
-	case 1109: case 1209: got_bitmap = ReadDib("blscened/MONST10.BMP", model_hdc); break;
-	case 1400: got_bitmap = ReadDib("blscened/STSCICON.BMP", model_hdc); break;
-	case 1401: got_bitmap = ReadDib("blscened/HELPPICS.BMP", model_hdc); break;
-	case 1402: got_bitmap = ReadDib("blscened/APPIC.BMP", model_hdc); break;
-	case 1500: case 1501: case 1502: case 1503: case 1504: case 1505: case 1506: case 1507:
-		got_bitmap = ReadDib("blscened/BIGMAPS.BMP", model_hdc); break;
-	case 2000: got_bitmap = ReadDib("blscened/DLOGBTNS.BMP", model_hdc); break;
-	case 3000: got_bitmap = ReadDib("blscened/START.BMP", model_hdc); break;
-	case 3001: got_bitmap = ReadDib("blscened/SPIDLOGO.BMP", model_hdc); break;
-
-	default: got_bitmap = NULL;
-	}
-	return got_bitmap;
+	return ReadDib(std::format("blscened\\{}.BMP", lookup_picname(pict_num)).c_str(), model_hdc);
 }
 
 void rect_draw_some_item(HBITMAP src,RECT src_rect, RectDrawDestination dest,RECT dest_rect,
