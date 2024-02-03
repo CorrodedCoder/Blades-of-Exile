@@ -115,39 +115,35 @@ void inflict_palette()
 
 void reset_palette()
 {
-	LOGPALETTE *plgpl = NULL;
-	LOCALHANDLE l;
-	short i;
+	if (syspal == NULL)
+	{
+		const WORD palette_size = 255;
+		std::vector<BYTE> bytes(sizeof(LOGPALETTE) + (palette_size * sizeof(PALETTEENTRY)));
+		auto& lpal = *reinterpret_cast<LOGPALETTE*>(&bytes[0]);
 
-	if (syspal == NULL) {
-			l = LocalAlloc(LHND,
-		sizeof(LOGPALETTE) + 255 * sizeof(PALETTEENTRY));
-	plgpl = (LOGPALETTE*) LocalLock(l);
+		lpal.palNumEntries = palette_size;
+		lpal.palVersion = 0x300;
 
-	plgpl->palNumEntries = (WORD) (255);
-	plgpl->palVersion = 0x300;
-
-	for (i = 0; i < 255; i++) {
-				plgpl->palPalEntry[i].peRed = ape[i].peRed;
-				plgpl->palPalEntry[i].peGreen = ape[i].peGreen;
-				plgpl->palPalEntry[i].peBlue = ape[i].peBlue;
-				plgpl->palPalEntry[i].peFlags = PC_NOCOLLAPSE;
-			}
-
-		syspal = CreatePalette(plgpl);
+		for (WORD i = 0; i < palette_size; i++)
+		{
+			lpal.palPalEntry[i].peRed = ape[i].peRed;
+			lpal.palPalEntry[i].peGreen = ape[i].peGreen;
+			lpal.palPalEntry[i].peBlue = ape[i].peBlue;
+			lpal.palPalEntry[i].peFlags = PC_NOCOLLAPSE;
 		}
-	SetSystemPaletteUse(main_dc,SYSPAL_STATIC);
-	UnrealizeObject(hpal);
-	SelectPalette(main_dc,syspal,0);
-	RealizePalette(main_dc);
+
+		syspal = ::CreatePalette(&lpal);
+	}
+	::SetSystemPaletteUse(main_dc, SYSPAL_STATIC);
+	::UnrealizeObject(hpal);
+	::SelectPalette(main_dc, syspal, 0);
+	::RealizePalette(main_dc);
 #ifdef REENABLE_SENDMESSAGE_CALLS
-	SendMessage(HWND_BROADCAST, WM_SYSCOLORCHANGE, 0, 0);
+	::SendMessage(HWND_BROADCAST, WM_SYSCOLORCHANGE, 0, 0);
 #else
-	PostMessage(HWND_BROADCAST, WM_SYSCOLORCHANGE, 0, 0);
+	::PostMessage(HWND_BROADCAST, WM_SYSCOLORCHANGE, 0, 0);
 #endif
-	SetSysColors(5,elements,store_element_colors);
-
-
+	::SetSysColors(5, elements, store_element_colors);
 }
 
 HBITMAP ReadDib(const char * name,HDC hdc)

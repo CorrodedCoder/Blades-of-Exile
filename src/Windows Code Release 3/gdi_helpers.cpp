@@ -92,7 +92,7 @@ HPALETTE CreatePaletteFromDib(std::span<const BYTE> dib)
 	lpal.palNumEntries = (WORD)(dwNumColors);
 	lpal.palVersion = 0x300;
 
-	for (short i = 0; i < dwNumColors; i++) {
+	for (DWORD i = 0; i < dwNumColors; i++) {
 
 		lpal.palPalEntry[i].peRed = store_c[i].rgbtRed;
 		lpal.palPalEntry[i].peGreen = store_c[i].rgbtGreen;
