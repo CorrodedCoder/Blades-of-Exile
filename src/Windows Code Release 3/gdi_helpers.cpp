@@ -52,7 +52,8 @@ HPALETTE CreatePaletteFromDib(const BYTE* lpDib)
 		wBitCount = ((BITMAPCOREHEADER*)lpDib)->bcBitCount;
 		if (wBitCount != 24)
 			dwNumColors = 1L << wBitCount;
-		else dwNumColors = 0;
+		else
+			dwNumColors = 0;
 		dwColorTableSize = dwNumColors * sizeof(RGBTRIPLE);
 
 		store_core_info = (BITMAPCOREINFO*)lpDib;
@@ -69,12 +70,14 @@ HPALETTE CreatePaletteFromDib(const BYTE* lpDib)
 		if (dwNumColors == 0) {
 			if (wBitCount != 24)
 				dwNumColors = 1L << wBitCount;
-			else dwNumColors = 0;
+			else
+				dwNumColors = 0;
 		}
 		dwColorTableSize = dwNumColors * sizeof(RGBQUAD);
 
 		store_info = (BITMAPINFO*)lpDib;
-		for (i = 0; i < dwNumColors; i++) {
+		for (i = 0; i < dwNumColors; i++)
+		{
 			store_c[i].rgbtRed = store_info->bmiColors[i].rgbRed;
 			store_c[i].rgbtGreen = store_info->bmiColors[i].rgbGreen;
 			store_c[i].rgbtBlue = store_info->bmiColors[i].rgbBlue;
@@ -90,13 +93,9 @@ HPALETTE CreatePaletteFromDib(const BYTE* lpDib)
 	for (i = 0; i < dwNumColors; i++) {
 
 		plgpl->palPalEntry[i].peRed = store_c[i].rgbtRed;
-
 		plgpl->palPalEntry[i].peGreen = store_c[i].rgbtGreen;
-
 		plgpl->palPalEntry[i].peBlue = store_c[i].rgbtBlue;
-
 		plgpl->palPalEntry[i].peFlags = PC_NOCOLLAPSE;
-
 	}
 
 	return ::CreatePalette(plgpl);

@@ -32,88 +32,25 @@ short dlog_pat_placed = 0;
 short current_pattern = -1;
 HPALETTE syspal = NULL;
 
-static void init_palette(BYTE * lpDib)
+static void init_palette(const BYTE * lpDib)
 {
-	HDC hdc;
-	short i;
-	LOGPALETTE *plgpl = NULL;
-	LOCALHANDLE l;
-
-	BITMAPINFO *store_info;
-	BITMAPCOREINFO *store_core_info;
-	RGBTRIPLE store_c[256];
-	DWORD dwNumColors, dwColorTableSize;
-	WORD wBitCount;
  	if (pal_ok == TRUE)
 		return;
 	pal_ok = TRUE;
 
-	if (GetDibInfoHeaderSize(lpDib) == sizeof(BITMAPCOREHEADER)) {
-		wBitCount = ((BITMAPCOREHEADER *) lpDib)->bcBitCount;
-		if (wBitCount != 24)
-			dwNumColors = 1L << wBitCount;
-			else dwNumColors = 0;
-	dwColorTableSize = dwNumColors * sizeof(RGBTRIPLE);
+	hpal = CreatePaletteFromDib(lpDib);
 
-	store_core_info = (BITMAPCOREINFO*) lpDib;
-	for (i = 0; i < dwNumColors; i++) {
-		store_c[i].rgbtRed = store_core_info->bmciColors[i].rgbtRed;
-		store_c[i].rgbtGreen = store_core_info->bmciColors[i].rgbtGreen;
-		store_c[i].rgbtBlue = store_core_info->bmciColors[i].rgbtBlue;
-		}
-	}
-	else {
-		wBitCount = ((BITMAPINFOHEADER *) lpDib)->biBitCount;
-		if (GetDibInfoHeaderSize(lpDib) >= 36)
-			dwNumColors = ((BITMAPINFOHEADER *) lpDib)->biClrUsed;
-		if (dwNumColors == 0) {
-			if (wBitCount != 24)
-				dwNumColors = 1L << wBitCount;
-				else dwNumColors = 0;
-			}
-		dwColorTableSize = dwNumColors * sizeof(RGBQUAD);
+	HDC hdc = ::GetDC(mainPtr);
 
-		store_info = (BITMAPINFO *) lpDib;
-		for (i = 0; i < dwNumColors; i++) {
-			store_c[i].rgbtRed = store_info->bmiColors[i].rgbRed;
-			store_c[i].rgbtGreen = store_info->bmiColors[i].rgbGreen;
-			store_c[i].rgbtBlue = store_info->bmiColors[i].rgbBlue;
-			}
-		}
-
-	hdc = GetDC(mainPtr);
-
-	l = LocalAlloc(LHND, sizeof(LOGPALETTE) + dwNumColors * sizeof(PALETTEENTRY));
-	plgpl = (LOGPALETTE*) LocalLock(l);
-	plgpl->palNumEntries = (WORD) (dwNumColors);
-	plgpl->palVersion = 0x300;
-
-	for (i = 0; i < dwNumColors; i++) {
-			ape[i].peRed =
-				plgpl->palPalEntry[i].peRed = store_c[i].rgbtRed;
-			ape[i].peGreen =
-				plgpl->palPalEntry[i].peGreen = store_c[i].rgbtGreen;
-			ape[i].peBlue =
-				plgpl->palPalEntry[i].peBlue = store_c[i].rgbtBlue;
-			ape[i].peFlags =
-				plgpl->palPalEntry[i].peFlags = PC_NOCOLLAPSE;
-
-		}
-
-	hpal = CreatePalette(plgpl);
-
-	GetSystemPaletteEntries(hdc,0,255,(PALETTEENTRY FAR*) ape);
+	::GetSystemPaletteEntries(hdc,0,255,ape);
 
 	inflict_palette();
 
-	LocalUnlock(l);
-	LocalFree(l);
-
-	fry_dc(mainPtr,hdc);
+	::ReleaseDC(mainPtr,hdc);
 #ifdef REENABLE_SENDMESSAGE_CALLS
-	SendMessage(HWND_BROADCAST, WM_SYSCOLORCHANGE, 0, 0);
+	::SendMessage(HWND_BROADCAST, WM_SYSCOLORCHANGE, 0, 0);
 #else
-	PostMessage(HWND_BROADCAST, WM_SYSCOLORCHANGE, 0, 0);
+	::PostMessage(HWND_BROADCAST, WM_SYSCOLORCHANGE, 0, 0);
 #endif
 }
 
