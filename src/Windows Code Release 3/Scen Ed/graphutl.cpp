@@ -21,11 +21,6 @@ extern HDC main_dc,main_dc2,main_dc3;
 extern short ulx,uly;
 extern HBITMAP mixed_gworld,dialog_pattern_gworld,pattern_gworld,status_pattern_gworld;
 extern Boolean suppress_load_file_name;
-
-extern char scen_strs[160][256];
-extern char scen_strs2[110][256];
-extern char talk_strs[170][256];
-extern char town_strs[180][256];
 extern char file_path_name[256];
 HPALETTE opening_palette;
 
@@ -38,7 +33,7 @@ short dlog_pat_placed = 0;
 short current_pattern = -1;
 HPALETTE syspal = NULL;
 
-static void init_palette(BYTE * lpDib)
+static void init_palette(const BYTE * lpDib)
 {
  	if (pal_ok == TRUE)
 		return;

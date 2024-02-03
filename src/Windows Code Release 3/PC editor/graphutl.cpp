@@ -33,7 +33,7 @@ short dlog_pat_placed = 0;
 short current_pattern = -1;
 HPALETTE syspal = NULL;
 
-static void init_palette(BYTE * lpDib)
+static void init_palette(const BYTE * lpDib)
 {
 	if (pal_ok == TRUE)
 		return;
@@ -41,7 +41,7 @@ static void init_palette(BYTE * lpDib)
 
 	hpal = CreatePaletteFromDib(lpDib);
 	HDC hdc = ::GetDC(mainPtr);
-	::GetSystemPaletteEntries(hdc,0,255,(PALETTEENTRY FAR*) ape);
+	::GetSystemPaletteEntries(hdc,0,255,ape);
 	inflict_palette();
 	::ReleaseDC(mainPtr,hdc);
 #ifdef REENABLE_SENDMESSAGE_CALLS

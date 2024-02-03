@@ -3,13 +3,12 @@
 #include <Windows.h>
 #include <windowsx.h>
 #include <commdlg.h>
-#include <cstdlib>
-#include <cstdio>
 #include <format>
 #include <string_view>
-#include "global.h"
-#include "text.h"
+#include <cstdlib>
+#include <cstdio>
 #include <cstring>
+#include "global.h"
 #include "exlsound.h"
 #include "graphutl.h"
 #include "graphutl_helpers.hpp"
@@ -39,13 +38,9 @@ static void init_palette(const BYTE * lpDib)
 	pal_ok = TRUE;
 
 	hpal = CreatePaletteFromDib(lpDib);
-
 	HDC hdc = ::GetDC(mainPtr);
-
 	::GetSystemPaletteEntries(hdc,0,255,ape);
-
 	inflict_palette();
-
 	::ReleaseDC(mainPtr,hdc);
 #ifdef REENABLE_SENDMESSAGE_CALLS
 	::SendMessage(HWND_BROADCAST, WM_SYSCOLORCHANGE, 0, 0);
@@ -155,7 +150,8 @@ void reset_palette()
 
 }
 
-HBITMAP ReadDib(const char * name,HDC hdc) {
+HBITMAP ReadDib(const char * name,HDC hdc)
+{
 	BITMAPFILEHEADER bmfh;
 	BYTE * lpDib;
 	DWORD dwDibSize, dwOffset, dwHeaderSize;
