@@ -128,12 +128,12 @@ static void extract_given_palette(const BYTE * lpDib)
 	HDC hdc = ::GetDC(mainPtr);
 	//GetSystemPaletteEntries(hdc,0,255,(PALETTEENTRY FAR*) ape);
 	//inflict_palette();
-	SelectPalette(main_dc,opening_palette,0);
-	RealizePalette(main_dc);
-	SetSystemPaletteUse(main_dc,SYSPAL_NOSTATIC);
-	UnrealizeObject(opening_palette);
-	RealizePalette(main_dc);
-	fry_dc(mainPtr,hdc);
+	::SelectPalette(main_dc,opening_palette,0);
+	::RealizePalette(main_dc);
+	::SetSystemPaletteUse(main_dc,SYSPAL_NOSTATIC);
+	::UnrealizeObject(opening_palette);
+	::RealizePalette(main_dc);
+	::ReleaseDC(mainPtr,hdc);
 	//SendMessage(HWND_BROADCAST,WM_SYSCOLORCHANGE,0,0);
 }
 
